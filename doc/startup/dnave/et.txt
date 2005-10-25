@@ -1,0 +1,129 @@
+NOTES ON EXPRESSION TEMPLATES
+
+Initial design notes:
+
+Even with the best compiler (in this case, Intel's for Linux), the NRVO-only
+version of the CML's vector/matrix library is more than 100x(!) slower just
+for fixed-size vector addition.  This is entirely due to the instantiation,
+filling, and then copying of a temporary vector to compute e.g. v3 = v1+v2.
+In this case, the temporary is created as vtmp = v1+v2, then it is copied into
+v3 to set the result.
+
+Update:
+
+Manipulating various compiler flags indicates that NRVO in at least one
+case is the best choice (Intel 9 on Windows).  In the other cases, ET is
+close to or as efficient as the C implementation for the tested expression.
+This is a reasonable justification for expression templates, although some
+experimenting remains to be done.
+
+Implementation:
+
+Expression templates are complex to implement, but are worth the trouble for
+performance reasons.  Fortunately, the additional coding needed does not
+significantly affect what's already been done, particularly the use of generic
+storage types and memory layouts.
+
+Once the expression template code is implemented, here are the expressions
+that will be implemented first:
+
+- Binary vector expressions:
+
+  Vector + Vector: Vector
+  Vector - Vector: Vector
+  Scalar * Vector: Vector
+  Vector * Scalar: Vector
+  Vector / Scalar: Vector
+  Vector dot Vector: Scalar
+
+  (Note: "Vector cross Vector: Vector" requires knowledge of the coordinate
+  system, so it needs to be implemented in a higher-level part of the library)
+
+
+- Unary vector expressions:
+
+  - Vector: Vector (negation)
+
+
+- Binary matrix/vector expressions:
+
+  Matrix * Vector: Vector
+  Vector * Matrix: Vector
+  Vector outer Vector: Matrix (or, also product of Nx1 and 1xM matrices)
+
+
+- Binary matrix expressions:
+
+  Matrix + Matrix: Matrix
+  Matrix - Matrix: Matrix
+  Matrix * Matrix: Matrix
+  Scalar * Matrix: Matrix
+  Matrix * Scalar: Matrix
+  Matrix / Scalar: Matrix
+
+
+- Unary matrix expressions:
+
+  - Matrix: Matrix (negation)
+  determinant(Matrix): Scalar
+  transpose(Matrix): Matrix
+  inverse(Matrix): Matrix (must internally use a temporary)
+  adjoint(Matrix): Matrix (must internally use a temporary)
+
+
+Here, I am assuming that certain operations will be pushed up into
+a higher-level part of the system, particularly quaternion operations and
+vector cross product, which depend upon specific configurable features that
+are not relevant for the vector/matrix library (e.g. the coordinate system
+handedness).
+
+The implementation will be challenging, but the end result will be that
+expressions like "vector<> v = 2.*M*x + b" will run at (or nearly at) the
+speed of the equivalent C code.  And this is where we need to be for the
+library to be truly useful.
+
+
+
+The expression classes
+
+* Although some operators take two different vector types, they are not
+  guaranteed to work as expected (yet).
+
+* "Literal" has been dropped to refer to literals as Scalar, Vector, and
+  Matrix for easier reading.
+
+* To avoid strange results (like adding a Scalar to a Vector), most of the
+  valid operators must be explicitly created.
+
+
+Binary vector expressions:
+
+- Binary vector expression:
+  . LeftT and RightT are any expression type returning a vector:
+	BinaryVectorExprOp<LeftT, RightT, OpT>
+
+- Vector dot product:
+   . result is a Scalar, returned by a creator function dot()
+   . computed on demand each time it is evaluated (i.e. the result is not
+     stored, since the elements of the arguments can change)
+	VectorDot<typename ET1, class AT1, typename ET2, class AT2>
+
+
+- Unary vector expressions:
+  . ExprT is any expression type returning a vector:
+	UnaryVectorExprOp<ExprT, OpT>
+
+
+- Binary matrix/vector expressions:
+  . LeftT and RightT are any expression type, one returning a vector,
+    the other returning a matrix:
+	BinaryMatVecExprOp<LeftT, RightT, OpT>
+	(may not be needed)
+
+- Binary matrix expressions:
+  . LeftT and RightT are any expression type returning a matrix:
+	BinaryMatrixExprOp<LeftT, RightT, OpT>
+
+- Unary matrix expressions:
+  . ExprT is any expression type returning a vector:
+	UnaryVectorExprOp<ExprT, OpT>

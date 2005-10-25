@@ -1,0 +1,172 @@
+Configurable Math Library Overview
+
+Project description
+
+The CML is intended to be a cross-platform, open-source game math library that can be configured at compile time to support the following differing conventions common in the game and graphics industry:
+
+1. Angles represented as radians or degrees
+2. Use of row or column vectors
+3. Right- or left-handed coordinate systems
+4. Right- or left-handed rotations
+5. Standard or reverse quaternion multiplication order
+6. Compile- or run-time sized vector and matrix classes
+7. Row- or column-major matrix storage
+
+The objectives of the library are a) to provide a reference for those who want to develop an in-depth understanding of math for games and graphics, and b) to provide a hassle-free option for those who want a math library that will work 'out of the box', regardless of preferred conventions or external requirements such as those imposed by an API.
+
+Performance
+
+The library is intended to be efficient, and I hope to leave the door open for platform-specific implementations that take advantage of specific processors or architectures. However, the focus is on flexibility, portability, and ease of use.
+
+Disclaimer
+
+I'm self-taught, and an intermediate level c++ programmer, so it's quite possible that in working on this library I will commit or have already committed various programming faux pas, or done things that any first-year computer science student would know not to do. That's why I'm hiring a professional programmer - to help me with the more involved software design issues, and to help ensure that the final product is production quality.
+
+Partial template specialization
+
+I've just started learning about more advanced (to me, at least) template techniques such as the above. I suspect that partial template specialization (PTS from here on) may be a solution to some of the design problems I've encountered, but I don't really understand it well enough to be sure. Here's a simple example of what I understand PTS to be:
+
+template <class A, class B>
+class Foo
+{
+public:
+    void Hello() const {cout << "I'm a Foo<A, B>" << endl;}
+};
+
+template <class B>
+class Foo<int, B>
+{
+public:
+    void Hello() const {cout << "I'm a Foo<int, B>" << endl;}
+};
+
+template <class A, class B> void Bar(const Foo<A, B>& foo)
+{
+    cout << "Barred a Foo<A, B>" << endl;
+}
+
+template <class B> void Bar(const Foo<int, B>& foo)
+{
+    cout << "Barred a Foo<int, B>" << endl;
+}
+
+If this is wrong, then some of the material later in this document is probably wrong too.
+
+Public access
+
+Whatever the internal representation, it's my intention that vector elements be publicly accessible via operator[], X(), Y(), Z(), etc., and that matrix elements be accessible via operator( ). There will definitely be versions of these accessors that return constant references. In other libraries, I've seen non-constant versions as well, which allow the elements to be set directly from outside the class. I don't know for sure whether this is a good or bad idea, so that's something I'm hoping to get input on.
+
+General math functions
+
+I can think of two ways to wrap general math functions:
+
+1. Templated functions in a namespace
+2. Static functions in a templated class
+
+I can think of some cases where I would think the syntax for the first would be more awkward than for the second. But overall, I'm looking for input on how best to wrap and group together the basic math library functions.
+
+This class or namespace will include wrappers for c++ math functions, other simple functions such as Clamp(), Min(), Max(), etc., and commonly used constants.
+
+One thing I'm not sure of is how best to wrap the c++ functions. I know that there are specific functions (suffixed with f) for floats, such as cosf(). I'm also under the impression that without the f, the function is overloaded for floats and doubles. Other types, such as custom rationals, would have to be converted. Should there be specific implementations for float and double that call cos() and cosf()? Or should there be just one implementation that always casts to a double and calls cos()? (cos is just an example - I'm talking about all c++ math functions here.)
+
+Radians/degrees
+
+My idea for this is to have two simple classes or structs, Radians and Degrees, each of which implements a ConvertInput() and a ConvertOutput() function. For Radians, the functions would just return the input argument, which I'm guessing would just be compiled out. For Degrees, the appropriate conversion would be performed.
+
+The math class (we'll assume it's a static class rather than a namespace for now) would be parameterized by scalar type and 'angle representation' type:
+
+template <class Real, class AngleRep>
+class Math
+{?};
+
+Functions that take an angle as an argument would first call the ConvertInput() function associated with the AngleRep class, while functions that output an angle would call ConvertOutput() before returning a value.
+
+Another way I can think of to do it is to simply have AngleRep be a named constant or dummy struct, and then use PTS:
+
+template <class Real> Real Math<Real, RADIANS>::Sin(Real angle)
+{
+    return (Real)sin((double)angle);
+}
+
+template <class Real> Real Math<Real, DEGREES>::Sin(Real angle)
+{
+    return (Real)sin((double)DegToRad(angle));
+}
+
+In either case, the syntax for calling such functions would be a bit awkward:
+
+float c = Math<float, DEGREES>::Sin(45.0f);
+
+However, I'm assuming the user could just typedef:
+
+typedef cml::Math<float, DEGREES> Math;
+
+And then write:
+
+float c = Math::Sin(45.0f);
+
+Within math library classes that are themselves parameterized, I'm guessing the full syntax would have to be used. But as that code is internal to the library, I think that would be acceptable.
+
+This is all just to give an idea of what I have in mind. What the best or most correct way to do this is, I really don't know.
+
+Row/Column vectors
+
+There are a few different issues here, the first of which is matrix-vector multiplication. Although I think pre- or post-multiplication only could be enforced through PTS, unless others disagree I will probably allow both regardless of vector convention. This is to accommodate mathematical expressions such as v*M*v, where one of the v's is transposed. This sort of expression pops occasionally (such as in computations involving ellipses and ellipsoids), so I think it should be supported.
+
+Other than that, vector convention will affect any function that deals with basis vectors, translation, projection, and probably some other things I'm not thinking of. I'm not sure what the best way to handle this is.
+
+Rotation
+
+This involves three parameters: vector convention, coordinate system handedness, and rotation handedness. If I've got my math right, there are two possibilities (transposes of each other) grouped as follows:
+
+Group1
+Row, RH, RH
+Row, LH, LH
+Column, RH, LH
+Column, LH, RH
+
+Group 2
+	Column, RH, RH
+	Column, LH, LH
+	Row, RH, LH
+	Row, LH, RH
+
+So somehow we'll have to figure out how to 'switch off' based on those three template arguments.
+
+Quaternion multiplication order
+
+This should be an easy one, I think. This is to support both standard order (corresponding to OpenGL/column vectors) and 'reverse' order (corresponding to DirectX/row vectors), where the cross product arguments are switched. I'm guessing it could simply be something like this:
+
+template <class Real> Quaternion<Real, Standard> operator*(
+	const Quaternion<Real, Standard>& q0?)
+{
+	// [w0w1-v0.v1, w0v1+w1v0+v0xv1]
+}
+
+template <class Real> Quaternion<Real, Reverse> operator*(
+	const Quaternion<Real, Reverse>& q0?)
+{
+	// [w0w1-v0.v1, w0v1+w1v0+v1xv0]
+}
+
+Matrix/vector storage and access
+
+This is the problem I have the least idea of how to solve. Somehow, the following parameters have to be incorporated:
+
+1. Compile-time sized or run-time sized
+2. Custom allocator if desired
+3. Row-major or column-major access
+
+Although I have a few ideas, I'm not even going to bother making any suggestions here. This is an area where I definitely need some help from an experienced coder.
+
+Epsilons
+
+The approach I've taken so far is to make the epsilon an argument, with a default value, to any function that needs it. Floating-point precision issues is not an area of expertise for me, so I'm definitely looking for input on a) good default values for various situations, and b) how epsilons should be handled overall.
+
+Code reuse
+
+There's a lot of code that seems like it will be doubled up if approached naively. For example, both 3x3 and 4x4 matrices will have functions to load and extract 3d rotations or set up various linear transformations. The code for these functions should be exactly the same in both classes, but I'm not sure how to factor it out so it only appears once.
+
+Conclusion
+
+There's probably more, but I think I'll wrap this up for now. Please let me know if you have any questions.

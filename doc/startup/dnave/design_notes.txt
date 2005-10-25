@@ -1,0 +1,138 @@
+General notes
+
+- Generally speaking, if a vector or matrix is being assigned to (especially
+  matrices), it should not also appear in the expression that it is being
+  assigned from, otherwise incorrect results can happen.  The safest way is to
+  use a temporary value to compute the part of the expression containing the
+  assigned-to object first, then use the temporary to continue the expression.
+  There is a generic way to handle this problem, but it greatly slows things
+  down (and greatly complicates the expression template code).  The ET code
+  will handle generating temporaries as necessary, but probably not in all
+  possible cases.
+
+- We should assume the compiler implements NRVO (named return value
+  optimization) to avoid substantial abstraction penalty.  Otherwise,
+  a C version of this library would *greatly* outperform a C++ version.  The
+  GNU compilers after 3.1, and supposedly VC7.1+ implement NRVO, but mileage
+  will definitely vary for other compilers.
+
+- Square matrices should be a special case of the matrix class, since common
+  linear algebra operations do not work with non-square matrices.  This can be
+  implemented by matrix traits and/or template arguments, but it has to fit
+  into the scheme below.
+
+- Instead of cml::Matrix4, we should implement individual transformation
+  classes (Rotate, Scale, Translate, Shear) which are just 4x4 matrices and
+  can be operated on as such, but serve special purposes.  e.g. a Rotate
+  instance can be loaded or saved to a quaternion.  There can also be
+  a Transform class (also a 4x4 matrix) which is able to combine each of these
+  in pre- or post-multiplication order.  Individual transformations also
+  allows for easier handling of right- and left-handed coordinate systems.
+
+- Which compilers? VC6 requires a lot of munging and won't give optimal code,
+  but a lot of people are still using it.  This would probably require going
+  to an external source, like the Boost.org libs (www.boost.org), for the code
+  to support VC6 and other old compilers.
+
+
+Row- or col-major matrix storage
+
+	Notes:
+	- independent of using row or col vectors; only defines memory layout
+	  for matrices
+
+	- changes only order of memory access (i.e. row-then-col or
+	  col-then-row); operator() is the same, can use proxy for e.g. entire
+	  row- or col-vector access to matrix (operator[])
+
+	How to:
+	- template parameter of matrix's base class
+
+	  template<typename Layout> class static_matrix_data {}
+	  template<typename Layout> class dynamic_matrix_data {}
+
+	  with Layout = row_major or col_major
+
+
+Static or dynamic allocation
+
+	Notes:
+	- can't switch from one to the other only with a recompile (without
+	  using preprocessor macros, at least), since dynamic matrices require
+	  the size to be specified at run-time
+
+	- possible to make both kinds work together in same program, i.e.
+	  taking the dot product of a static and a dynamic matrix
+
+	- implementation: defer instantiation of array type:
+
+        /* fixed<N,M>::template rebind<E>::other chooses the actual array
+	 * type of E's, where N and M are the array dimensions:
+	 */
+	template<int Dim1 = 0, int Dim2 = 0> class fixed {
+	  template<typename Element, typename Orient = void> struct rebind;
+	};
+
+        - fixed<> arrays also have a fixed size; dynamic arrays can have
+	  a fixed or dynamic size.
+
+
+Row or column vectors
+
+	Notes:
+	- need operators specific for each orientation?
+
+	How to:
+	- use a "tag" to make the orientation part of the type
+	  typedef vector<row_tag,...> vector_type;
+	  typedef vector<col_tag,...> vector_type;
+
+	- use a traits class that specifies the orientation
+	  struct vector_traits<...> { typedef row_tag orientation; }
+	  struct vector_traits<...> { typedef col_tag orientation; }
+
+
+Basic vector/matrix operators and global functions
+
+	Notes:
+	- +, - (implemented with in-class +=, -= for NRVO)
+
+	- explicit dot(), cross() and outer() functions for vectors, since
+	  '*' is ambiguous (it could mean dot or outer product, or even
+	  cross), but operator*() for matrices and vector/matrix products
+	  would be reasonable.
+
+	- also explicit transpose(), determinant(), inverse(), adjoint()
+	  functions (can put inside vector/matrix classes for self-modifying
+	  versions)
+
+	- is it worthwhile to make transpose() an adaptor, rather than
+	  a function that returns a copy of the matrix or vector argument
+	  (i.e. change order of access, rather than transpose a copy)?  May
+	  require special handling for algorithms that need to access matrix
+	  memory directly (like dumping into OpenGL state)
+
+	- specialize cross(), inverse() and determinant() for small matrices
+	  (general version of cross() requires expensive cofactor expansion on
+	  matrix of vectors)
+
+
+Quaternions
+
+	Notes:
+	- implement quaternions like 4-element vector for easy operations with
+	  3- and 4-vectors (e.g. q*v*q' to transform a vector); just derive
+	  from a static or dynamic vector class to get proper allocator (or
+	  would it be better to have a separate class that wraps
+	  a 3-vector+scalar?)
+
+	- quaternion multiplication is well-defined, so operator*() makes
+	  sense when multipliying two quaternions, or a quaternion and a 3- or
+	  4-vector
+
+	- conjugate() can be a self-modifying class method and global
+	  function, as can inverse(), which return values in-line
+
+	- transforming to/from a rotation matrix can be handled by the Rotate
+	  transformation class mentioned in 'General notes' above, since that
+	  class knows it's orientation

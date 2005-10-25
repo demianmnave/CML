@@ -1,0 +1,8 @@
+*.cmake
+cmake.*
+CMakeTmp
+CMakeOutput.log
+CMakeCache.txt
+.*.swp
+install_manifest.txt
+.depend

@@ -1,0 +1,56 @@
+Existing 3D game/graphics math libraries make assumptions on the
+form and/or function of the mathematical objects they implement.
+For example, a common design decision is to choose either row or
+column vectors, and impose that decision across the entire
+implementation.  The purpose of the Configurable Math Library
+(CML) is to eliminate as many assumptions as possible, thereby
+allowing developers to choose the mathematical programming
+paradigm they are most familiar with.
+
+The core of the CML is a new, advanced, and generic matrix/vector
+library which uses Expression Template(1) techniques to achieve
+very high performance, while allowing a developer to use natural
+algebraic equations to express vector and matrix operations.
+This core library implements fixed-size (statically and
+dynamically allocated), and dynamically sized, dynamically
+allocated vectors and matrices.  Also, either row-major or
+column-major access can be specified to match C or Fortran array
+conventions.  Currently, only similarly-typed objects can be
+combined in operators, but this is not an inherent limitation.
+Also, 1-based array indexing is not yet supported.  Again, this
+is not an inherent limitation.
+
+Our vector and matrix basic operator benchmarks on Linux,
+Windows, and Mac OS/X machines, with recent versions of Intel
+C++, Visual C++, and GNU C++, and using the proper compiler
+optimization options, indicate that performance is as good as,
+and sometimes better than, comparable, hand-optimized operations.
+This is in contrast to currently available Expression
+Template-based codes (e.g. exmat (2), met(3), and Blitz++(4)),
+all of which incur significant overheads relative to
+hand-optimized code.
+
+There is still significant development effort to complete,
+including automatic temporary generation for compound operations
+(like M = (A*B)*C), and the higher-level 3D game math operations
+(like transformations and quaternions).  We plan to use Novell
+Forge to coordinate development between two developers (to
+start), with the goal being an initial release to the general
+public under an OSI-approved license in 2-3 months.  We chose
+Novell Forge due to its flexibility, particularly in allowing us
+to maintain a closed project until the initial release is ready
+for public use.
+
+
+References:
+
+(1) Expression Templates. Todd Veldhuizen.
+http://osl.iu.edu/~tveldhui/papers/Expression-Templates/exprtmpl.html
+
+(2) The Expression Template Matrix Library.
+http://exmat.sourceforge.net
+
+(3) Matrix Expression Templates (MET).
+http://met.sourceforge.net
+
+(4) Blitz++. http://oonumerics.org/blitz

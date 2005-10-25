@@ -1,0 +1,69 @@
+#if 0
+/** Simple type deduction for binary ops. */
+template<class LeftT, class RightT> struct DeduceBinaryOpTag;
+
+/** The simple case of (Scalar,Vector)->Vector. */
+template<> struct DeduceBinaryOpTag<scalar_result,vector_result> {
+    typedef vector_op tag;
+};
+
+/** The simple case of (Vector,Scalar)->Vector. */
+template<> struct DeduceBinaryOpTag<vector_result,scalar_result> {
+    typedef vector_op tag;
+};
+
+/** The simple case of (Vector,Vector)->Vector. */
+template<> struct DeduceBinaryOpTag<vector_result,vector_result> {
+    typedef vector_op tag;
+};
+
+/** The simple case of (Scalar,Matrix)->Matrix. */
+template<> struct DeduceBinaryOpTag<scalar_result,matrix_result> {
+    typedef matrix_op tag;
+};
+
+/** The simple case of (Matrix,Scalar)->Matrix. */
+template<> struct DeduceBinaryOpTag<matrix_result,scalar_result> {
+    typedef matrix_op tag;
+};
+
+/** The simple case of (Matrix,Matrix)->Matrix. */
+template<> struct DeduceBinaryOpTag<matrix_result,matrix_result> {
+    typedef matrix_op tag;
+};
+
+
+
+struct true_type {};
+struct false_type {};
+
+template<bool T> struct STATIC_ASSERTION_FAILURE;
+template<> struct STATIC_ASSERTION_FAILURE<false> {
+    typedef true_type result;
+    enum { value = true };
+};
+
+#define CML_JOIN(X,Y) CML_DO_JOIN(X,Y)
+#define CML_DO_JOIN(X,Y) CML_DO_JOIN2(X,Y)
+#define CML_DO_JOIN2(X,Y) X##Y
+
+#define CML_STATIC_REQUIRE(_E_) \
+    typedef typename STATIC_ASSERTION_FAILURE<!(_E_)>::result \
+        CML_JOIN(__cml_assert_test_typedef_, __LINE__)
+
+
+template<typename T1, typename T2> struct same_type_t {
+    typedef false_type result;
+    enum { value = false };
+};
+
+template<typename T> struct same_type_t<T,T> {
+    typedef true_type result;
+    enum { value = true };
+};
+
+#define CML_SAME_TYPE(_T1,_T2)      same_type_t<_T1,_T2>::value
+#endif
+
+
+

@@ -1,0 +1,8 @@
+Existing 3D game/graphics math libraries make assumptions on the
+form and/or function of the mathematical objects they implement.
+For example, a common design decision is to choose either row or
+column vectors, and impose that decision across the entire
+implementation.  The purpose of the Configurable Math Library
+(CML) is to eliminate as many assumptions as possible, thereby
+allowing you to choose the mathematical programming paradigm your
+are most familiar with.

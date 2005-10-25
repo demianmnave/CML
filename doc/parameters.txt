@@ -1,0 +1,56 @@
+
+CML_NO_DEFAULT_EXPR_TRAITS
+- Don't use default expression traits for built-in types.  This is handy
+  for debugging, since no classes or built-in types will have an expression
+  traits class by default (i.e. the expression traits class must be created
+  explicitly).
+
+
+CML_VECTOR_UNROLL_LIMIT=<N>
+- <N> is the maximum vector length that should be automatically unrolled by
+  the expression template engine.  If the vector (expression) is longer,
+  the normal for loop is used.  Note also that unrolling is available only
+  for fixed-size vectors.
+
+
+CML_2D_UNROLLER
+- Use a 2D unroller for matrix expressions.  This causes very poor code for
+  most of the supported compilers, but with GCC4/G5, it's required for
+  optimal code.  Note that unrolling is available only for fixed-size
+  matrices.
+
+
+CML_2D_TO_1D_UNROLLER
+- Unroll a matrix expression linearly, i.e. access elements of the matrix
+  using the operator() linear access function.  This is here for
+  completeness, as it generates terrible code on all of the supported
+  compilers.  Note that unrolling is available only for fixed-size
+  matrices.
+
+
+CML_MATRIX_UNROLL_LIMIT=<N>
+- <N> is the maximum number of matrix elements (#rows x #cols) that
+  a matrix (expression) can have before being unrolled.  A 2D loop is used
+  for matrices with more than <N> elements.  When either CML_2D_UNROLLER or
+  CML_2D_TO_1D_UNROLLER is defined, this must also be defined.
+
+
+CML_NO_2D_UNROLLER
+- Don't unroll at all, just use a loop.  This seems to generate the best
+  code on at least GCC4/x86 and Intel 9/Linux/x86.
+
+
+CML_USE_MAT_UNIOP_REF
+- When a unary expression appears as a child node in an expression tree,
+  use a reference to the compiler's temporary.  If this is not defined,
+  then the whole expression is referred to by value.  Some compilers can
+  avoid the copy and inline the results directly, others can't.  Note that
+  this is not currently used by (or tested for) any compiler
+
+
+CML_USE_MAT_BINOP_REF
+- When a biary expression appears as a child node in an expression tree,
+  use a reference to the compiler's temporary.  If this is not defined,
+  then the whole expression is referred to by value.  Some compilers can
+  avoid the copy and inline the results directly, others can't.  This
+  appears to be the best option for Intel 9/Linux/x86.
