@@ -1,0 +1,55 @@
+COMPILER NOTES
+
+Performance on Linux/x86 and Windows/x86 using various compilers (for certain
+expressions):
+
+Intel C++ 9.0 (Linux/x86, P4-M 1.7GHz)
+C:.073 NRVO:.073 ET:.073 (10e6 iters)
+- v = v+v1+v2+v3 : both NRVO and ET have similar performance to C version
+    . -ftemplate-depth-50 -xN -O3 -Ob2 -no-ipo -funroll-loops -finline-functions
+- it's twice as slow if assignment to v is unrolled by hand rather than by the
+  compiler
+- a little more than 25% faster than GNU C++ 4.0 due to vectorization, but
+  without vectorization it's *much* slower
+
+GNU C++ 4.0 (Linux/x86, P4-M 1.7GHz)
+C:.093 NRVO:.093 ET: .093 (10e6 iters)
+- v = v+v1+v2+v3 : both NRVO and ET have similar performance to C version
+    . -march=pentium4 -mtune=pentium4 -O3 -funroll-loops \
+      -finline-functions -finline-limit=100000000
+- requires manual loop unrolling when copying values to output vector (all
+  versions)
+- slower than Intel C++ 9.0, which vectorizes loops (but without
+  vectorization, it's much faster)
+
+MinGW GNU C++ 3.4.2 (WinXP2/x86, P4-M 1.7GHz)
+C:.11 NRVO:.78 ET:.11 (10e6 iters)
+- v = v+v1+v2+v3 : ET has similar performance to C version, NRVO is around
+  7 times slower(!)
+    . -march=pentium4 -mtune=pentium4 -O3 -funroll-loops \
+      -finline-functions -finline-limit=100000000
+- requires manual loop unrolling when copying values to output vector
+
+VC++ Visual Studio 2003, 13.10.3077 (WinXP2/x86, P4-M 1.7GHz)
+C:.20 NRVO:1.15 ET:.31 (10e6 iters)
+- v = v+v1+v2+v3 : ET is slow compared to the C version, but NRVO is much
+  slower!
+    .  /nologo /O2 /Ob2 /Og /Oi /Ot /Oy /G7 /EHsc /I..
+- it is at least twice as slow as MinGW G++ 3.4.2
+- /Oa (assume no function argument aliasing) causes VC++ to generate incorrect
+  code---changing to v += v1+v2+v3 results in the right answer, but changes
+  the expression.
+
+Intel C++ 9.0 (WinXP2/x86, P4-M 1.7GHz)
+C:.145 NRVO:.127 ET:.2 (10e6 iters)
+- v = v+v1+v2+v3 : NRVO is faster than C version, ET is slowest version
+  (but not by much)
+  . /nologo /O3 /Ob2 /Og /Oi /Ot /Oy /Oa /QxN /EHsc /Qip  \
+    /Qtemplate-depth50 /I..
+- does not need manual loop unrolling like g++, VC++ (doesn't hurt though)
+- performance requires /Qx<c> (vectorization), where <c> is the proper CPU
+  target
+- slower than g++ (even with vectorization), faster than VC++
+- To get working with VC++ 2003 command-line, edit icl.cfg and comment out
+  -Qlocation,linker,"\Bin", and edit iclvars.bat and change @call
+  "\Bin\vcvars32.bat" to @call "vcvars32.bat"
