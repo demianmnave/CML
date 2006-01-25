@@ -53,7 +53,7 @@ class VectorXpr
 
   public:
 
-    /** Record result size as an enum (if applicable). */
+    /** Record result size as an enum. */
     enum { array_size = ExprT::array_size };
 
 
@@ -146,7 +146,7 @@ class UnaryVectorOp
 
   public:
 
-    /** Record result size as an enum (if applicable). */
+    /** Record result size as an enum. */
     enum { array_size = ArgT::array_size };
 
 

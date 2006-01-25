@@ -32,7 +32,11 @@ struct ArrayPromote
     typedef typename AT2::size_tag right_tag;
 
 
-    /** Promote fixed-size/fixed-size to fixed<>. */
+    /** Promote fixed-size/fixed-size to fixed<>.
+     *
+     * @internal This is needed to disambiguate fixed-size/any and
+     * any/fixed-size below.
+     */
     template<typename U> struct deduce<fixed_size_tag,fixed_size_tag,U> {
         typedef cml::fixed< ((L1>L2)?L1:L2) > type;
     };

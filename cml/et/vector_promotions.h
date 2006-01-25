@@ -8,6 +8,7 @@
 #ifndef vector_promotions_h
 #define vector_promotions_h
 
+#include <cml/et/scalar_promotions.h>
 #include <cml/et/array_promotions.h>
 
 namespace cml {
@@ -27,7 +28,7 @@ struct VectorPromote< cml::vector<E1,AT1>, cml::vector<E2,AT2> >
 {
     /* The deduced vector result type: */
     typedef cml::vector<
-        E1,     /* XXX Should also promote this. */
+        typename ScalarPromote<E1,E2>::type,
         typename ArrayPromote<AT1,AT2>::type
             > type;
 };

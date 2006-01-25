@@ -12,14 +12,8 @@
 
 #include <cstddef>              // for size_t
 #include <cml/common.h>
-
-/* This is used to tell the enclosed headers that they are being included
- * from the vector.h header:
- */
-#define cml_vector_h
 #include <cml/et/vector_ops.h>
 #include <cml/et/vector_unroller.h>
-#undef cml_vector_h
 
 namespace cml {
 
@@ -174,8 +168,10 @@ class vector
 
     /** Declare a function to assign this vector from a scalar.
      *
-     * @param _op_ the operator (e.g. +=)
+     * @param _op_ the operator (e.g. *=)
      * @param _op_name_ the op functor (e.g. et::OpAssign)
+     *
+     * @internal This shouldn't be used for non-algebraic ops, like +=.
      */
 #define CML_ASSIGN_FROM_SCALAR(_op_, _op_name_)                         \
     vector_type& operator _op_ (const value_type& s) {                  \

@@ -336,23 +336,23 @@ _op_ (                                                                   \
  *
  * Unary expressions:
  *
- * op Vector
- * op VecXpr
+ * op Vector -> Vector
+ * op VecXpr -> Vector
  *
  *
  * Binary expressions:
  *
- * Literal op Vector
- * Vector op Literal
+ * Literal op Vector -> Vector
+ * Vector op Literal -> Vector
  *
- * Literal op VecXpr
- * VecXpr op Literal
+ * Literal op VecXpr -> VecXpr
+ * VecXpr op Literal -> VecXpr
  *
- * Vector op VecXpr
- * VecXpr op Vector
+ * Vector op VecXpr -> VecXpr
+ * VecXpr op Vector -> VecXpr
  *
- * Vector op Vector
- * VecXpr op VecXpr
+ * Vector op Vector -> Vector
+ * VecXpr op VecXpr -> VecXpr
  */
 
 CML_VEC_UNIOP(operator+, OpPos)

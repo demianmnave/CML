@@ -5,10 +5,6 @@
  *  @brief
  */
 
-#if !defined(cml_vector_h)
-#error "This should only be included from cml/vector.h"
-#else
-
 #ifndef vector_unroller_h
 #define vector_unroller_h
 
@@ -133,7 +129,6 @@ void UnrollAssignment(cml::vector<E,AT>& dest, const SrcT& src) {
 } // namespace cml
 
 #endif
-#endif // !defined(cml_vector_h)
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp
