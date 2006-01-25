@@ -106,8 +106,9 @@ ALL_SRC=$(C_VEC_TEST_SRC) \
 	$(DYNAMIC_VEC_TEST_SRC) \
 	$(C_MAT_TEST_SRC) \
 	$(FIXED_MAT_TEST_SRC) \
-	$(DYNAMIC_MAT_TEST_SRC) \
-	promote1.cpp
+	$(DYNAMIC_MAT_TEST_SRC)
+	
+	#\ promote1.cpp
 
 C_VEC_TESTS		= vector_c1$(exe)
 FIXED_VEC_TESTS		= fixed_vec_et1$(exe)
@@ -121,8 +122,9 @@ ALL=	$(C_VEC_TESTS) \
 	$(DYNAMIC_VEC_TESTS) \
 	$(C_MAT_TESTS) \
 	$(FIXED_MAT_TESTS) \
-	$(DYNAMIC_MAT_TESTS) \
-	promote1
+	$(DYNAMIC_MAT_TESTS)
+	
+	#\ promote1
 
 all: $(ALL)
 
