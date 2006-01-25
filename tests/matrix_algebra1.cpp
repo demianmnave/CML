@@ -15,7 +15,7 @@ inline void timed1(
         )
 {
     //matrix_d44 tmp, tmp2;
-    for(int i = 0; i < n_iter; ++ i) {
+    for(int i = 0; i < n_iter; ++i) {
         /* m = m1*m2*m3 -> tmp = m1*m2, m = tmp*m3 */
         //mult(m1,m2,tmp); mult(tmp,m3,m);
 

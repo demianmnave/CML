@@ -16,12 +16,6 @@
 
 namespace cml {
 
-/* Forward declare dynamic<> template.  This is partially specialized below to
- * generate fixed- or dynamic-sized arrays:
- */
-template<int Dim1 = 0, int Dim2 = 0, class Alloc = std::allocator<void*> >
-    class dynamic;
-
 /** Generate a dynamically-sized and allocated array (1D or 2D).
  *
  * This uses the STL's std::allocator<> if no allocator is provided.
@@ -29,8 +23,24 @@ template<int Dim1 = 0, int Dim2 = 0, class Alloc = std::allocator<void*> >
  * @sa cml::vector
  * @sa cml::matrix
  * @sa cml::fixed for more information on the rebinding mechanism.
+ *
+ * @internal The std::allocator<void*> default for Alloc is necessary to
+ * allow dynamic<> to work properly, but it's not actually used since the
+ * proper allocator is selected by rebinding from the derived class.
  */
-template<class Alloc> struct dynamic<0,0,Alloc> {
+template<class Alloc = std::allocator<void*> > struct dynamic
+{
+    /* Record array size for type deduction (for 1D and 2D dynamic-sized
+     * arrays, all sizes are -1):
+     */
+    enum { array_size = -1, array_rows = -1, array_cols = -1 };
+
+    /* Record size tag for type deduction: */
+    typedef dynamic_size_tag size_tag;
+
+    /* Record allocator type for type deduction: */
+    typedef Alloc allocator_type;
+
 
     /* Forward declare the rebinder class to be specialized: */
     template<typename Element, typename Orient = void> struct rebind;
@@ -40,7 +50,7 @@ template<class Alloc> struct dynamic<0,0,Alloc> {
 
         /* Have to rebind the allocator to the right element type: */
         typedef typename Alloc::template rebind<Element>::other allocator;
-	typedef dynamic_1D<Element,0,allocator> other;
+	typedef dynamic_1D<Element,allocator> other;
     };
 
     /** Select a dynamic 2D array of Element's with orientation Orient. */
@@ -48,51 +58,7 @@ template<class Alloc> struct dynamic<0,0,Alloc> {
 
         /* Have to rebind the allocator to the right element type: */
         typedef typename Alloc::template rebind<Element>::other allocator;
-	typedef dynamic_2D<Element,0,0,Orient,allocator> other;
-    };
-};
-
-/** Generate a dynamically-allocated, fixed-size 1D array.
- *
- * This uses the STL's std::allocator<> if no allocator is provided.
- *
- * @sa cml::vector
- * @sa cml::matrix
- * @sa cml::fixed for more information on the rebinding mechanism.
- */
-template<int Size, class Alloc> struct dynamic<Size,0,Alloc> {
-
-    /** Select a dynamic 1D array of Element's. */
-    template<typename Element> struct rebind {
-
-        /* Have to rebind the allocator to the right element type: */
-        typedef typename Alloc::template rebind<Element>::other allocator;
-	typedef dynamic_1D<Element,Size,allocator> other;
-    };
-};
-
-/** Generate a dynamically-allocated, fixed-size 2D array.
- *
- * This uses the STL's std::allocator<> if no allocator is provided.
- *
- * @sa cml::vector
- * @sa cml::matrix
- * @sa cml::fixed for more information on the rebinding mechanism.
- */
-template<int Rows, int Cols, class Alloc>
-class dynamic
-{
-  public:
-
-    /* Forward declare the rebinder class to be specialized: */
-    template<typename Element, typename Orient> struct rebind;
-
-    /** Select a 2D array of Element's with orientation Orient. */
-    template<typename Element, typename Orient> struct rebind {
-
-        /* Have to rebind the allocator to the right element type: */
-        typedef typename Alloc::template rebind<Element>::other allocator;
-	typedef dynamic_2D<Element,Rows,Cols,Orient,allocator> other;
+	typedef dynamic_2D<Element,Orient,allocator> other;
     };
 };
 

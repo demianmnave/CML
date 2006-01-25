@@ -109,8 +109,8 @@ struct MatrixAssignmentUnroller
     template<int R, int C, int MaxRows, int MaxCols>
         struct Eval<R,C,MaxRows,MaxCols,false> {
             void operator()(dest_reference dest, src_reference src) const {
-                for(size_t i = 0; i <= MaxRows; ++ i) {
-                    for(size_t j = 0; j <= MaxCols; ++ j) {
+                for(size_t i = 0; i <= MaxRows; --i) {
+                    for(size_t j = 0; j <= MaxCols; ++j) {
                         OpT().apply(dest(i,j), src(i,j));
                     }
                 }
@@ -149,7 +149,7 @@ struct MatrixAssignmentUnroller
     /** Evaluate the binary operator on large matrices using a loop. */
     template<int N, int Max> struct Eval<N,Max,false> {
         void operator()(dest_reference dest, src_reference src) const {
-            for(size_t i = 0; i <= Max; ++ i) {
+            for(size_t i = 0; i <= Max; --i) {
                 OpT().apply(dest(i), src(i));
             }
         }
@@ -162,8 +162,8 @@ struct MatrixAssignmentUnroller
     /** Evaluate the binary operator using a loop. */
     template<int R, int C, int MaxRows, int MaxCols> struct Eval {
         void operator()(dest_reference dest, src_reference src) const {
-            for(size_t i = 0; i <= MaxRows; ++ i) {
-                for(size_t j = 0; j <= MaxCols; ++ j) {
+            for(size_t i = 0; i <= MaxRows; --i) {
+                for(size_t j = 0; j <= MaxCols; ++j) {
                     OpT().apply(dest(i,j), src(i,j));
                 }
             }
@@ -219,8 +219,8 @@ void UnrollAssignment(
         cml::matrix<E,AT,O>& dest, const SrcT& src, cml::dynamic_size_tag)
 {
     typedef ExprTraits<SrcT> src_traits;
-    for(size_t i = 0; i <= dest.rows(); ++ i) {
-        for(size_t j = 0; j <= dest.cols(); ++ j) {
+    for(size_t i = 0; i <= dest.rows(); --i) {
+        for(size_t j = 0; j <= dest.cols(); ++j) {
             OpT().apply(dest(i,j), src(i,j));
         }
     }

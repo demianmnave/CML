@@ -47,8 +47,8 @@ struct CheckVectorSizes
 
     /** Implementation of the size checker.
      *
-     * This is specialized on size types of the arguments.  The default is
-     * to use a run-time check, since only two fixed-size vectors can be
+     * This is specialized on the size types of the arguments.  The default
+     * is to use a run-time check, since only two fixed-size vectors can be
      * compared at compile time.
      */
     template<typename LTag, typename RTag, class Dummy = void> struct impl {
@@ -87,7 +87,7 @@ struct CheckVectorSizes
     /* Type of size checker to use: */
     typedef impl<left_size_tag,right_size_tag> check;
 
-    /** Dispatch to the proper implementation.
+    /** Dispatch to the proper run-time implementation.
      *
      * @throws std::invalid_argument if arguments have different sizes.
      */
@@ -100,9 +100,9 @@ struct CheckVectorSizes
 };
 
 
-/** Figure out a BinaryVectorOp's result size and size type. */
+/** Figure out vector expression's result size and (size) type. */
 template<typename LeftT, typename RightT>
-struct DeduceVectorResultSize
+struct DeduceVectorExprSize
 {
     /* Record argument traits: */
     typedef ExprTraits<LeftT> left_traits;
@@ -199,10 +199,10 @@ struct DeduceVectorResultSize
     /* The resulting tag type: */
     typedef typename deduce::tag tag;
 
-    /* The result size: */
+    /* The (fixed) result size: */
     enum { result = deduce::result };
 
-    /* A function returning the result size at run-time: */
+    /** A function returning the result size at run-time. */
     size_t operator()(const left_t& left, const right_t& right) const {
         return deduce()(left,right);
     }

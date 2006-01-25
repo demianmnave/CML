@@ -26,7 +26,7 @@ namespace detail {
 
 /** Unroll a binary assignment operator on a fixed-size vector.
  *
- * This uses a forward iteration to make better use of the cache.
+ * This uses forward iteration to make better use of the cache.
  *
  * @sa cml::vector
  * @sa cml::et::OpAssign
@@ -34,46 +34,52 @@ namespace detail {
  * @bug Need to verify that OpT is actually an assignment operator.
  * @bug Need to verify that the vector sizes match.
  */
-template<class DestT, class SrcT, class OpT>
+template<class OpT, typename E, class AT,  class SrcT>
 struct VectorAssignmentUnroller
 {
     /* Forward declare: */
-    template<int N, int Max, bool can_unroll> struct Eval;
+    template<int N, int Last, bool can_unroll> struct Eval;
+
+    /* The vector type being assigned to: */
+    typedef cml::vector<E,AT> vector_type;
 
     /* Record traits for the arguments: */
-    typedef ExprTraits<DestT> dest_traits;
+    typedef ExprTraits<vector_type> dest_traits;
     typedef ExprTraits<SrcT> src_traits;
 
     /* Get argument reference types: */
     typedef typename dest_traits::reference dest_reference;
     typedef typename src_traits::const_reference src_reference;
 
-    /** Evaluate the binary operator at element Max. */
-    template<int Max> struct Eval<Max,Max,true> {
+    /** Evaluate the binary operator at element Last. */
+    template<int Last> struct Eval<Last,Last,true> {
         void operator()(dest_reference dest, src_reference src) const {
 
             /* Apply to last element: */
-            OpT().apply(dest[Max], src[Max]);
+            OpT().apply(dest[Last], src_traits().get(src,Last));
+            /* Note: we don't need get(), since we know dest is a vector. */
         }
     };
 
     /** Evaluate the binary operator for the first Max-1 elements. */
-    template<int N, int Max> struct Eval<N,Max,true> {
+    template<int N, int Last> struct Eval<N,Last,true> {
         void operator()(dest_reference dest, src_reference src) const {
 
             /* Apply to current N: */
-            OpT().apply(dest[N], src[N]);
+            OpT().apply(dest[N], src_traits().get(src,N));
+            /* Note: we don't need get(), since we know dest is a vector. */
 
             /* Apply to next N: */
-            Eval<N+1,Max,true>()(dest, src);
+            Eval<N+1,Last,true>()(dest, src);
         }
     };
 
     /** Evaluate the binary operator using a loop. */
-    template<int N, int Max> struct Eval<N,Max,false> {
+    template<int N, int Last> struct Eval<N,Last,false> {
         void operator()(dest_reference dest, src_reference src) const {
-            for(size_t i = 0; i <= Max; ++ i) {
-                OpT().apply(dest[i], src[i]);
+            for(size_t i = 0; i <= Last; ++i) {
+                OpT().apply(dest[i], src_traits().get(src,i));
+                /* Note: we don't need get(), since we know dest is a vector. */
             }
         }
     };
@@ -85,9 +91,11 @@ void UnrollAssignment(
     cml::vector<E,AT>& dest, const SrcT& src, cml::fixed_size_tag)
 {
     typedef cml::vector<E,AT> vector_type;
-    enum { Max = vector_type::array_size-1 };
-    typedef typename VectorAssignmentUnroller<vector_type,SrcT,OpT>
-        ::template Eval<0, Max, (Max <= CML_VECTOR_UNROLL_LIMIT)> Unroller;
+    enum { Len = vector_type::array_size };
+    typedef typename VectorAssignmentUnroller<OpT,E,AT,SrcT>
+        ::template Eval<0, Len-1, (Len <= CML_VECTOR_UNROLL_LIMIT)> Unroller;
+    /* Note: Max is the array size, so Len-1 is the last element. */
+
     Unroller()(dest,src);
 }
 
@@ -97,8 +105,9 @@ void UnrollAssignment(
         cml::vector<E,AT>& dest, const SrcT& src, cml::dynamic_size_tag)
 {
     typedef ExprTraits<SrcT> src_traits;
-    for(size_t i = 0; i <= dest.size(); ++ i) {
-        OpT().apply(dest[i], src[i]);
+    for(size_t i = 0; i < dest.size(); ++i) {
+        OpT().apply(dest[i], src_traits().get(src,i));
+        /* Note: we don't need get(), since we know dest is a vector. */
     }
 }
 

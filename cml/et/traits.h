@@ -62,6 +62,7 @@ template<> struct ExprTraits<double>
     typedef double const_reference;
     typedef scalar_result_tag result_tag;
     typedef unit_size_tag size_tag;
+    typedef double result_type;
 
     /** Vector-like access, just returns the value. */
     value_type get(const_reference v, size_t) const { return v; }

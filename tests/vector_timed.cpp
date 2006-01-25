@@ -15,7 +15,7 @@ typedef double Vec[4];
 inline void add(const Vec& a, const Vec& b, Vec& res)
 {
     int i;
-    for(i = 0; i < 4; ++ i)
+    for(i = 0; i < 4; ++i)
         res[i] = a[i]+b[i];
 }
 
@@ -29,7 +29,7 @@ inline void c_timed()
         int i;
         v1[0] = 1.; v1[1] = 7.; v1[2] = 6.; v1[3] = 1.;
         v2[0] = 8.; v2[1] = 13.; v2[2] = 9.; v2[3] = 7.;
-        for(i = 0; i < 10000000; ++ i) {
+        for(i = 0; i < 10000000; ++i) {
             add(v1,v2,v3);
         }
     }
@@ -40,7 +40,7 @@ inline void c_timed()
 
     /* Force result to be used: */
     printf("v3 = [");
-    for(size_t i = 0; i < 4; ++ i) {
+    for(size_t i = 0; i < 4; ++i) {
         printf(" %g", v3[i]);
     }
     printf(" ]\n");
@@ -62,7 +62,7 @@ template<typename Element, class ArrayType> std::ostream&
 operator<<(std::ostream& os, const cml::vector<Element,ArrayType>& v)
 {
     os << "[";
-    for(size_t i = 0; i < v.size(); ++ i) {
+    for(size_t i = 0; i < v.size(); ++i) {
         os << " " << v[i];
     }
     os << " ]";
@@ -85,9 +85,9 @@ inline void timed()
         cerr << "here!" << endl;
         v3 = v1+v2;
 #else
-        for(int i = 0; i < 10000000; ++ i) {
+        for(int i = 0; i < 10000000; ++i) {
 #if 0
-            for(int k = 0; k < 4; ++ k) {
+            for(int k = 0; k < 4; ++k) {
                 v3[k] = v1[k]+v2[k];
             }
 #else

@@ -39,10 +39,10 @@ template<class MatC, class MatA, class MatB> inline void
 gemm(MatC& C, const MatA& A, const MatB& B)
 {
     typedef typename MatC::value_type value_type;
-    for(size_t row = 0; row < A.rows(); ++ row) {
-        for(size_t col = 0; col < B.cols(); ++ col) {
+    for(size_t row = 0; row < A.rows(); ++row) {
+        for(size_t col = 0; col < B.cols(); ++col) {
             value_type sum(A(row,0)*B(0,col));
-            for(size_t k = 1; k < B.rows(); ++ k) {
+            for(size_t k = 1; k < B.rows(); ++k) {
                 sum = sum + (A(row,k)*B(k,col));
             }
             C(row,col) = sum;
@@ -124,10 +124,10 @@ operator*(const MatA& A, const MatB& B)
     //std::cerr << "in*!" << std::endl;
     //MatC C(A);
     MatC C;
-    for(size_t row = 0; row < A.rows(); ++ row) {
-        for(size_t col = 0; col < B.cols(); ++ col) {
+    for(size_t row = 0; row < A.rows(); ++row) {
+        for(size_t col = 0; col < B.cols(); ++col) {
             value_type sum(A(row,0)*B(0,col));
-            for(size_t k = 1; k < B.rows(); ++ k) {
+            for(size_t k = 1; k < B.rows(); ++k) {
                 sum = sum + (A(row,k)*B(k,col));
             }
             C(row,col) = sum;

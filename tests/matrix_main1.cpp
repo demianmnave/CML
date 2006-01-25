@@ -13,10 +13,10 @@ int main(int argc, char** argv)
     matrix_d44 MATINIT(m), MATINIT(m1), MATINIT(m2), MATINIT(m3);
 
     int i, j;
-    for(i = 0; i < 4; ++ i) for(j = 0; j < 4; ++ j) m[i][j] = 0.;
-    for(i = 0; i < 4; ++ i) for(j = 0; j < 4; ++ j) cin >> m1[i][j];
-    for(i = 0; i < 4; ++ i) for(j = 0; j < 4; ++ j) cin >> m2[i][j];
-    for(i = 0; i < 4; ++ i) for(j = 0; j < 4; ++ j) cin >> m3[i][j];
+    for(i = 0; i < 4; ++i) for(j = 0; j < 4; ++j) m[i][j] = 0.;
+    for(i = 0; i < 4; ++i) for(j = 0; j < 4; ++j) cin >> m1[i][j];
+    for(i = 0; i < 4; ++i) for(j = 0; j < 4; ++j) cin >> m2[i][j];
+    for(i = 0; i < 4; ++i) for(j = 0; j < 4; ++j) cin >> m3[i][j];
 
 
     //size_t n_iter = atoi(argv[1]);

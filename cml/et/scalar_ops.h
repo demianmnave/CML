@@ -14,8 +14,8 @@ namespace cml {
 namespace et {
 
 /** Declare a unary scalar operator, like negation. */
-#define CML_UNARY_SCALAR_OP(_op_, _name_)                               \
-template<typename ArgT> struct _name_ {                                 \
+#define CML_UNARY_SCALAR_OP(_op_, _op_name_)                            \
+template<typename ArgT> struct _op_name_ {                              \
     typedef ExprTraits<ArgT> arg_traits;                                \
     typedef typename arg_traits::const_reference arg_reference;         \
     typedef typename arg_traits::value_type value_type;                 \
@@ -28,8 +28,8 @@ template<typename ArgT> struct _name_ {                                 \
  * the proper resulting type of applying _op_ to the two argument.  e.g.
  * int + double yields double, but the result is int (LeftT) right now.
  */
-#define CML_BINARY_SCALAR_OP(_op_, _name_)                               \
-template<typename LeftT, typename RightT> struct _name_ {                \
+#define CML_BINARY_SCALAR_OP(_op_, _op_name_)                            \
+template<typename LeftT, typename RightT> struct _op_name_ {             \
     typedef ExprTraits<LeftT> left_traits;                               \
     typedef ExprTraits<RightT> right_traits;                             \
     typedef typename left_traits::const_reference left_reference;        \
@@ -49,8 +49,8 @@ template<typename LeftT, typename RightT> struct _name_ {                \
  * proper resulting type of applying _op_ to the two argument.  e.g.  int +=
  * double should yield double, but the result is int (LefT) right now.
  */
-#define CML_BINARY_SCALAR_OP_ASSIGN(_op_, _name_)                        \
-template<typename LeftT, typename RightT> struct _name_ {                \
+#define CML_BINARY_SCALAR_OP_ASSIGN(_op_, _op_name_)                     \
+template<typename LeftT, typename RightT> struct _op_name_ {             \
     typedef ExprTraits<LeftT> left_traits;                               \
     typedef ExprTraits<RightT> right_traits;                             \
     typedef typename left_traits::reference left_reference;              \
@@ -78,7 +78,15 @@ CML_BINARY_SCALAR_OP_ASSIGN(=, OpAssign)
 CML_BINARY_SCALAR_OP_ASSIGN(+=, OpAddAssign)
 CML_BINARY_SCALAR_OP_ASSIGN(-=, OpSubAssign)
 CML_BINARY_SCALAR_OP_ASSIGN(*=, OpMulAssign)
+
+#if defined(CML_RECIPROCAL_OPTIMIZATION)
+/* XXX Yikes... this should really be written out in full. *= 1./ is the
+ * "_op_" parameter to the macro (see above):
+ */
+CML_BINARY_SCALAR_OP_ASSIGN(*= 1./, OpDivAssign)
+#else
 CML_BINARY_SCALAR_OP_ASSIGN(/=, OpDivAssign)
+#endif
 
 #undef CML_UNARY_SCALAR_OP
 #undef CML_BINARY_SCALAR_OP

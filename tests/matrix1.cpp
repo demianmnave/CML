@@ -21,9 +21,9 @@ template<typename Element, class ArrayType, typename Orient> std::ostream&
 operator<<(std::ostream& os, const cml::matrix<Element,ArrayType,Orient>& m)
 {
     os << "[" << endl;
-    for(size_t i = 0; i < m.rows(); ++ i) {
+    for(size_t i = 0; i < m.rows(); ++i) {
         os << "  [";
-        for(size_t j = 0; j < m.cols(); ++ j) {
+        for(size_t j = 0; j < m.cols(); ++j) {
             os << " " << m(i,j);
         }
         os << " ]" << endl;

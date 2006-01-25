@@ -18,9 +18,9 @@ std::ostream&
 operator<<(std::ostream& os, const matrix_d44& m)
 {
     os << "[" << endl;
-    for(size_t i = 0; i < 4; ++ i) {
+    for(size_t i = 0; i < 4; ++i) {
         os << "  [";
-        for(size_t j = 0; j < 4; ++ j) {
+        for(size_t j = 0; j < 4; ++j) {
             os << " " << m[i][j];
         }
         os << " ]" << endl;
@@ -31,8 +31,8 @@ operator<<(std::ostream& os, const matrix_d44& m)
 
 inline void add(const matrix_d44 A, const matrix_d44 B, matrix_d44 res)
 {
-    for(int row = 0; row < 4; ++ row) {
-	for(int col = 0; col < 4; ++ col) {
+    for(int row = 0; row < 4; ++row) {
+	for(int col = 0; col < 4; ++col) {
             res[row][col] = A[row][col]+B[row][col];
 	}
     }
@@ -40,10 +40,10 @@ inline void add(const matrix_d44 A, const matrix_d44 B, matrix_d44 res)
 
 inline void mult(const matrix_d44 A, const matrix_d44 B, matrix_d44 res)
 {
-    for(int row = 0; row < 4; ++ row) {
-	for(int col = 0; col < 4; ++ col) {
+    for(int row = 0; row < 4; ++row) {
+	for(int col = 0; col < 4; ++col) {
 	    double sum = A[row][0]*B[0][col];
-	    for(int k = 1; k < 4; ++ k) {
+	    for(int k = 1; k < 4; ++k) {
 		sum += A[row][k]*B[k][col];
 	    }
 	    res[row][col] = sum;
@@ -61,7 +61,7 @@ inline void timed1(
         )
 {
     matrix_d44 tmp, tmp2; 
-    for(int i = 0; i < n_iter; ++ i) {
+    for(int i = 0; i < n_iter; ++i) {
         /* m = m1*m2*m3 -> tmp = m1*m2, m = tmp*m3 */
         //mult(m1,m2,tmp); mult(tmp,m3,m);
 
@@ -71,8 +71,8 @@ inline void timed1(
         //add(m,m1,m);
         //add(m,m2,m);
 
-        for(int row = 0; row < 4; ++ row) {
-            for(int col = 0; col < 4; ++ col) {
+        for(int row = 0; row < 4; ++row) {
+            for(int col = 0; col < 4; ++col) {
                 m[row][col] = m[row][col] + m1[row][col] + m2[row][col]
                     + m3[row][col] + m2[row][col];
             }

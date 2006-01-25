@@ -11,15 +11,11 @@
  * eventually between vectors of different storage types also.
  */
 
-#if !defined(cml_vector_h)
-#error "This should only be included from cml/vector.h"
-#else
-
 #ifndef vector_ops_h
 #define vector_ops_h
 
-#include <cml/et/vector_expr.h>
 #include <cml/et/scalar_ops.h>
+#include <cml/et/vector_expr.h>
 
 namespace cml {
 namespace vector_ops {
@@ -391,7 +387,6 @@ CML_LIT_VECXPR_BINOP(operator*, OpMul)
 } // cml
 
 #endif
-#endif // !defined(cml_vector_h)
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp

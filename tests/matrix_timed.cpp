@@ -16,10 +16,10 @@ typedef double Mat[3][3];
 inline void mult(const Mat& A, const Mat& B, Mat& res)
 {
     int row, col, k;
-    for(row = 0; row < 3; ++ row) {
-	for(col = 0; col < 3; ++ col) {
+    for(row = 0; row < 3; ++row) {
+	for(col = 0; col < 3; ++col) {
 	    double sum = A[row][0]*B[0][col];
-	    for(k = 1; k < 3; ++ k) {
+	    for(k = 1; k < 3; ++k) {
 		sum += A[row][k]*B[k][col];
 	    }
 	    res[row][col] = sum;
@@ -45,7 +45,7 @@ inline void c_timed()
         m2[1][0] = -sin(M_PI/6.); m2[1][1] = cos(M_PI/6.); m2[1][2] = 0.;
         m2[2][0] = 0.;            m2[2][1] = 0.;           m2[2][2] = 1.;
 
-        for(i = 0; i < 1000000; ++ i) {
+        for(i = 0; i < 1000000; ++i) {
             mult(m1,m2,m3);
         }
     }
@@ -59,9 +59,9 @@ inline void c_timed()
     if(1){
         size_t i, j;
         printf("m3 = [\n");
-        for(i = 0; i < 3; ++ i) {
+        for(i = 0; i < 3; ++i) {
             printf("[");
-            for(j = 0; j < 3; ++ j) {
+            for(j = 0; j < 3; ++j) {
                 printf(" %g", m3[i][j]);
             }
             printf("]\n");
@@ -88,9 +88,9 @@ template<typename Element, class ArrayType, typename Orient> std::ostream&
 operator<<(std::ostream& os, const cml::matrix<Element,ArrayType,Orient>& m)
 {
     os << "[" << endl;
-    for(size_t i = 0; i < m.rows(); ++ i) {
+    for(size_t i = 0; i < m.rows(); ++i) {
         os << "[";
-        for(size_t j = 0; j < m.cols(); ++ j) {
+        for(size_t j = 0; j < m.cols(); ++j) {
             os << " " << m(i,j);
         }
         os << "]" << endl;
@@ -103,10 +103,10 @@ template<class M1, class M2, class M3>
 inline void mult(const M1& A, const M2& B, M3& res)
 {
     int row, col, k;
-    for(row = 0; row < 3; ++ row) {
-	for(col = 0; col < 3; ++ col) {
+    for(row = 0; row < 3; ++row) {
+	for(col = 0; col < 3; ++col) {
 	    double sum = A(row,0)*B(0,col);
-	    for(k = 1; k < 3; ++ k) {
+	    for(k = 1; k < 3; ++k) {
 		sum += A(row,k)*B(k,col);
 	    }
 	    res(row,col) = sum;
@@ -138,7 +138,7 @@ inline void timed()
         cerr << "here!" << endl;
         m3 = m1*m2;
 #else
-        for(int i = 0; i < 1000000; ++ i) {
+        for(int i = 0; i < 1000000; ++i) {
             matrix_d3_3r mz = m1*m2;
             //gemm(m3,m1,m2);
             //mult(m1,m2,m3);

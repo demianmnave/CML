@@ -12,7 +12,7 @@
 #ifndef matrix_expr_h
 #define matrix_expr_h
 
-#include <cml/et/traits.h>
+#include <cml/et/matrix_traits.h>
 #include <cml/et/size_checking.h>
 
 namespace cml {
@@ -30,8 +30,15 @@ class MatrixXpr
 
     typedef MatrixXpr<ExprT> expr_type;
 
-    /* So far, no compiler likes this to be const expr_type&: */
+#if defined(CML_USE_MAT_XPR_REF)
+    /* Use a reference to the compiler's MatrixXpr<> temporary in
+     * expressions:
+     */
+    typedef const expr_type& expr_const_reference;
+#else
+    /* Copy the expression by value into higher-up expressions: */
     typedef expr_type expr_const_reference;
+#endif // CML_USE_MAT_XPR_REF
 
     typedef typename ExprT::value_type value_type;
     typedef matrix_result_tag result_tag;
@@ -42,6 +49,9 @@ class MatrixXpr
 
     /* Get the reference type: */
     typedef typename expr_traits::const_reference expr_reference;
+
+    /* Get the result type: */
+    typedef typename expr_traits::result_type result_type;
 
 
   public:
@@ -100,6 +110,7 @@ struct ExprTraits< MatrixXpr<ExprT> >
     typedef typename expr_type::value_type value_type;
     typedef typename expr_type::expr_const_reference const_reference;
     typedef typename expr_type::result_tag result_tag;
+    typedef typename expr_type::result_type result_type;
 
     /** This is used primarily for linear unrolling. */
     value_type get(const expr_type& e, size_t i) const { return e(i); }
@@ -143,6 +154,9 @@ class LinearUnaryMatrixOp
 
     /* Reference type for the subexpression: */
     typedef typename arg_traits::const_reference arg_reference;
+
+    /* Get the result type: */
+    typedef typename arg_traits::result_type result_type;
 
 
   public:
@@ -202,6 +216,7 @@ struct ExprTraits< LinearUnaryMatrixOp<ArgT,OpT> >
     typedef typename expr_type::value_type value_type;
     typedef typename expr_type::expr_const_reference const_reference;
     typedef typename expr_type::result_tag result_tag;
+    typedef typename expr_type::result_type result_type;
 
     /** This is used primarily for linear unrolling. */
     value_type get(const expr_type& e, size_t i) const { return e(i); }
@@ -252,6 +267,11 @@ class LinearBinaryMatrixOp
     /* Figure out the result size and type based on the subexpressions: */
     typedef DeduceMatrixResultSize<expr_type> deduce_size;
     typedef typename deduce_size::tag size_tag;
+
+#if 0
+    /* Get the result type: */
+    typedef typename expr_traits::result_type result_type;
+#endif
 
 
   public:
@@ -332,6 +352,7 @@ struct ExprTraits< LinearBinaryMatrixOp<LeftT,RightT,OpT> >
     typedef typename expr_type::value_type value_type;
     typedef typename expr_type::expr_const_reference const_reference;
     typedef typename expr_type::result_tag result_tag;
+    typedef typename expr_type::result_type result_type;
 
     /** This is used primarily for linear unrolling. */
     value_type get(const expr_type& e, size_t i) const { return e(i); }

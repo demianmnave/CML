@@ -22,7 +22,7 @@ template<typename Element, class ArrayType> std::ostream&
 operator<<(std::ostream& os, const cml::vector<Element,ArrayType>& v)
 {
     os << "[";
-    for(size_t i = 0; i < v.size(); ++ i) {
+    for(size_t i = 0; i < v.size(); ++i) {
         os << " " << v[i];
     }
     os << " ]";
@@ -75,7 +75,7 @@ inline void timed1(
         size_t n_iter
         )
 {
-    for(int i = 0; i < n_iter; ++ i) {
+    for(int i = 0; i < n_iter; ++i) {
         //v += v1+v2+v3;
         v = v+v1+v2+v3;
     }

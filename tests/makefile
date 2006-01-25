@@ -97,38 +97,30 @@ LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 C_VEC_TEST_SRC		= vector_c1.cpp
 FIXED_VEC_TEST_SRC	= fixed_vec_et1.cpp
 DYNAMIC_VEC_TEST_SRC	= dynamic_vec_et1.cpp
-DYNA_FIXED_VEC_TEST_SRC	= dyna_fixed_vec_et1.cpp
 C_MAT_TEST_SRC		= matrix_c1.cpp
 FIXED_MAT_TEST_SRC	= fixed_mat_et1.cpp
 DYNAMIC_MAT_TEST_SRC	= dynamic_mat_et1.cpp
-DYNA_FIXED_MAT_TEST_SRC	= dyna_fixed_mat_et1.cpp
 
 ALL_SRC=$(C_VEC_TEST_SRC) \
 	$(FIXED_VEC_TEST_SRC) \
 	$(DYNAMIC_VEC_TEST_SRC) \
-	$(DYNA_FIXED_VEC_TEST_SRC) \
 	$(C_MAT_TEST_SRC) \
 	$(FIXED_MAT_TEST_SRC) \
-	$(DYNAMIC_MAT_TEST_SRC) \
-	$(DYNA_FIXED_MAT_TEST_SRC)
+	$(DYNAMIC_MAT_TEST_SRC)
 
 C_VEC_TESTS		= vector_c1$(exe)
 FIXED_VEC_TESTS		= fixed_vec_et1$(exe)
 DYNAMIC_VEC_TESTS	= dynamic_vec_et1$(exe)
-DYNA_FIXED_VEC_TESTS	= dyna_fixed_vec_et1$(exe)
 C_MAT_TESTS		= matrix_c1$(exe)
 FIXED_MAT_TESTS		= fixed_mat_et1$(exe)
 DYNAMIC_MAT_TESTS	= dynamic_mat_et1$(exe)
-DYNA_FIXED_MAT_TESTS	= dyna_fixed_mat_et1$(exe)
 
 ALL=	$(C_VEC_TESTS) \
 	$(FIXED_VEC_TESTS) \
 	$(DYNAMIC_VEC_TESTS) \
-	$(DYNA_FIXED_VEC_TESTS) \
 	$(C_MAT_TESTS) \
 	$(FIXED_MAT_TESTS) \
-	$(DYNAMIC_MAT_TESTS) \
-	$(DYNA_FIXED_MAT_TESTS)
+	$(DYNAMIC_MAT_TESTS)
 
 all: $(ALL)
 

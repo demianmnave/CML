@@ -3,20 +3,13 @@
  *-----------------------------------------------------------------------*/
 /** @file
  *  @brief
- *
- *  @todo So far, no compiler prefers const expr_type& when storing
- *  nodes in the expression tree.  But, it could happen, so add options
- *  CML_USE_VEC_{UNI,BIN}OP_REF to decide at compiler time.
  */
-
-#if !defined(cml_vector_h)
-#error "This should only be included from cml/vector.h"
-#else
 
 #ifndef vector_expr_h
 #define vector_expr_h
 
-#include <cml/et/traits.h>
+#include <cml/et/vector_traits.h>
+#include <cml/et/vector_promotions.h>
 #include <cml/et/size_checking.h>
 
 namespace cml {
@@ -34,8 +27,15 @@ class VectorXpr
 
     typedef VectorXpr<ExprT> expr_type;
 
-    /* So far, no compiler likes this to be const expr_type&: */
+#if defined(CML_USE_VEC_XPR_REF)
+    /* Use a reference to the compiler's VectorXpr<> temporary in
+     * expressions:
+     */
+    typedef const expr_type& expr_const_reference;
+#else
+    /* Copy the expression by value into higher-up expressions: */
     typedef expr_type expr_const_reference;
+#endif // CML_USE_VEC_XPR_REF
 
     typedef typename ExprT::value_type value_type;
     typedef vector_result_tag result_tag;
@@ -46,6 +46,9 @@ class VectorXpr
 
     /* Get the reference type: */
     typedef typename expr_traits::const_reference expr_reference;
+
+    /* Get the result type: */
+    typedef typename expr_traits::result_type result_type;
 
 
   public:
@@ -99,6 +102,7 @@ struct ExprTraits< VectorXpr<ExprT> >
     typedef typename expr_type::expr_const_reference const_reference;
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
+    typedef typename expr_type::result_type result_type;
 
     value_type get(const expr_type& v, size_t i) const { return v[i]; }
     size_t size(const expr_type& e) const { return e.size(); }
@@ -116,8 +120,15 @@ class UnaryVectorOp
 
     typedef UnaryVectorOp<ArgT,OpT> expr_type;
 
-    /* So far, no compiler likes this to be const expr_type&: */
+#if defined(CML_USE_VEC_UNIOP_REF)
+    /* Use a reference to the compiler's UnaryVectorOp temporary in
+     * expressions:
+     */
+    typedef const expr_type& expr_const_reference;
+#else
+    /* Copy the expression by value into higher-up expressions: */
     typedef expr_type expr_const_reference;
+#endif // CML_USE_VEC_UNIOP_REF
 
     typedef typename OpT::value_type value_type;
     typedef vector_result_tag result_tag;
@@ -128,6 +139,9 @@ class UnaryVectorOp
 
     /* Reference type for the subexpression: */
     typedef typename arg_traits::const_reference arg_reference;
+
+    /* Get the result type (same as for subexpression): */
+    typedef typename arg_traits::result_type result_type;
 
 
   public:
@@ -184,6 +198,7 @@ struct ExprTraits< UnaryVectorOp<ArgT,OpT> >
     typedef typename expr_type::expr_const_reference const_reference;
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
+    typedef typename expr_type::result_type result_type;
 
     value_type get(const expr_type& v, size_t i) const { return v[i]; }
     size_t size(const expr_type& e) const { return e.size(); }
@@ -198,8 +213,15 @@ class BinaryVectorOp
 
     typedef BinaryVectorOp<LeftT,RightT,OpT> expr_type;
 
-    /* So far, no compiler likes this to be const expr_type&: */
+#if defined(CML_USE_VEC_BINOP_REF)
+    /* Use a reference to the compiler's BinaryVectorOp temporary in
+     * expressions:
+     */
+    typedef const expr_type& expr_const_reference;
+#else
+    /* Copy the expression by value into higher-up expressions: */
     typedef expr_type expr_const_reference;
+#endif // CML_USE_VEC_BINOP_REF
 
     typedef typename OpT::value_type value_type;
     typedef vector_result_tag result_tag;
@@ -216,14 +238,19 @@ class BinaryVectorOp
      * This automatically verifies that fixed-size vectors have the same
      * length:
      */
-    typedef DeduceVectorResultSize<LeftT,RightT> deduce_size;
+    typedef DeduceVectorExprSize<LeftT,RightT> deduce_size;
     typedef typename deduce_size::tag size_tag;
+
+    /* Figure out the expression's resulting (vector) type: */
+    typedef typename left_traits::result_type left_result;
+    typedef typename right_traits::result_type right_result;
+    typedef typename VectorPromote<left_result,right_result>::type result_type;
 
 
   public:
 
     /** Record result size as an enum (if applicable). */
-    enum { array_size = deduce_size::result };
+    enum { array_size = result_type::array_size };
 
 
   public:
@@ -277,6 +304,7 @@ struct ExprTraits< BinaryVectorOp<LeftT,RightT,OpT> >
     typedef typename expr_type::expr_const_reference const_reference;
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
+    typedef typename expr_type::result_type result_type;
 
     value_type get(const expr_type& v, size_t i) const { return v[i]; }
     size_t size(const expr_type& e) const { return e.size(); }
@@ -286,7 +314,6 @@ struct ExprTraits< BinaryVectorOp<LeftT,RightT,OpT> >
 } // namespace cml
 
 #endif
-#endif // !defined(cml_vector_h)
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp

@@ -15,7 +15,7 @@ inline void timed1(
         size_t n_iter
         )
 {
-    for(int i = 0; i < n_iter; ++ i) {
+    for(int i = 0; i < n_iter; ++i) {
         //v = v+v1;
         //v = v+v1+v2;
         //v = v+v1+v2+v3;

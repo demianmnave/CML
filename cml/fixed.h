@@ -16,7 +16,7 @@
 namespace cml {
 
 /* Forward declare the fixed<> array class; it's specialized below: */
-template<int Dim1, int Dim2 = 0> class fixed;
+template<int Dim1, int Dim2 = 0> struct fixed;
 
 /** Select a statically-allocated 1D array.
  *
@@ -31,7 +31,13 @@ template<int Dim1, int Dim2 = 0> class fixed;
  * @sa cml::vector
  * @sa cml::matrix
  */
-template<int Size> struct fixed<Size,0> {
+template<int Size> struct fixed<Size,0>
+{
+    /* Record array size for type deduction: */
+    enum { array_size = Size };
+
+    /* Record size tag for type deduction: */
+    typedef fixed_size_tag size_tag;
 
     /** Select a static 1D array of Element's. */
     template<typename Element> struct rebind {
@@ -52,7 +58,13 @@ template<int Size> struct fixed<Size,0> {
  * @sa cml::vector
  * @sa cml::matrix
  */
-template<int Rows, int Cols> struct fixed {
+template<int Rows, int Cols> struct fixed
+{
+    /* Record array size for type deduction: */
+    enum { array_rows = Rows, array_cols = Cols };
+
+    /* Record size tag for type deduction: */
+    typedef fixed_size_tag size_tag;
 
     /** Select a static 2D array of Element's. */
     template<typename Element, typename Orient> struct rebind {

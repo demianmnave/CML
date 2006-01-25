@@ -25,20 +25,20 @@ inline void mult(const matrix_d44& A, const matrix_d44& B, matrix_d44& res)
 {
     int row, col, k;
 #if 0
-    for(row = 0; row < 4; ++ row) {
-	for(col = 0; col < 4; ++ col) {
+    for(row = 0; row < 4; ++row) {
+	for(col = 0; col < 4; ++col) {
 	    double sum = A[row][0]*B[0][col];
-	    for(k = 1; k < 4; ++ k) {
+	    for(k = 1; k < 4; ++k) {
 		sum += A[row][k]*B[k][col];
 	    }
 	    res[row][col] = sum;
 	}
     }
 #else
-    for(row = 0; row < 4; ++ row) {
-	for(col = 0; col < 4; ++ col) {
+    for(row = 0; row < 4; ++row) {
+	for(col = 0; col < 4; ++col) {
 	    double sum = A(row,0)*B(0,col);
-	    for(k = 1; k < 4; ++ k) {
+	    for(k = 1; k < 4; ++k) {
 		sum += A(row,k)*B(k,col);
 	    }
 	    res(row,col) = sum;

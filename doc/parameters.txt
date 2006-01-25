@@ -45,7 +45,7 @@ CML_USE_MAT_UNIOP_REF
   use a reference to the compiler's temporary.  If this is not defined,
   then the whole expression is referred to by value.  Some compilers can
   avoid the copy and inline the results directly, others can't.  Note that
-  this is not currently used by (or tested for) any compiler
+  this is not currently used by (or tested for) any compiler.
 
 
 CML_USE_MAT_BINOP_REF
@@ -54,3 +54,20 @@ CML_USE_MAT_BINOP_REF
   then the whole expression is referred to by value.  Some compilers can
   avoid the copy and inline the results directly, others can't.  This
   appears to be the best option for Intel 9/Linux/x86.
+
+
+CML_USE_MAT_XPR_REF
+- Use a reference to the compiler's temporary in the root MatrixXpr node for
+  matrix expressions
+
+
+CML_USE_VEC_UNIOP_REF
+CML_USE_VEC_BINOP_REF
+CML_USE_VEC_XPR_REF
+- Same as CML_USE_MAT_UNIOP_REF, CML_USE_VEC_BINOP_REF, and
+  CML_USE_MAT_XPR_REF, but for vectors.
+
+
+CML_RECIPROCAL_OPTIMIZATION
+- Use "*= 1./x" instead of "/= x" for per-element division.  This isn't
+  currently tested for any configuration.

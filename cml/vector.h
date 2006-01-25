@@ -44,7 +44,10 @@ class vector
 {
   public:
 
-    /* Shorthand for the base array type: */
+    /* Record incoming array type: */
+    typedef ArrayType base_array_type;
+
+    /* Shorthand for the array type: */
     typedef typename ArrayType::template rebind<Element>::other array_type;
 
     /* Shorthand for the type of this vector: */
@@ -61,11 +64,14 @@ class vector
     typedef vector_type& expr_reference;
     typedef const vector_type& expr_const_reference;
 
-    /* For matching by storage type if necessary: */
+    /* For matching by storage type: */
     typedef typename array_type::memory_tag memory_tag;
 
-    /* For matching by size type if necessary: */
+    /* For matching by size type: */
     typedef typename array_type::size_tag size_tag;
+
+    /* For matching by result-type: */
+    typedef cml::et::vector_result_tag result_tag;
 
 
   public:
@@ -183,28 +189,6 @@ class vector
 
 #undef CML_ASSIGN_FROM_SCALAR
 };
-
-/* Specialize the expression traits for the vector class (has to happen
- * inside the et namespace):
- */
-namespace et {
-
-/** Expression traits for a vector<> type. */
-template<typename E, class AT>
-struct ExprTraits< cml::vector<E,AT> >
-{
-    typedef typename cml::vector<E,AT>::expr_type expr_type;
-    typedef typename expr_type::value_type value_type;
-    typedef typename expr_type::expr_reference reference;
-    typedef typename expr_type::expr_const_reference const_reference;
-    typedef vector_result_tag result_tag;
-    typedef typename expr_type::size_tag size_tag;
-
-    value_type get(const_reference v, size_t i) const { return v[i]; }
-    size_t size(const expr_type& v) const { return v.size(); }
-};
-
-} // namespace et
 
 } // namespace cml
 
