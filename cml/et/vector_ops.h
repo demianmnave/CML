@@ -255,6 +255,135 @@ _op_ (                                                                   \
 }
 
 
+#if 1
+/* XXX These return a value, unlike the ones that return an expression node
+ * below.  It's not quite obvious how to allow both, so that e.g. dot() can
+ * be used outside of an expression tree...  but, this works for now.
+ */
+
+/** Declare a reduction taking two cml::vector operands.
+ *
+ * The vectors must have the same type (for now).
+ */
+#define CML_VEC_VEC_BIN_REDOP(_op_, _OpT_, _ReduceT_)                    \
+template<typename E, class AT>                                           \
+inline typename _ReduceT_<                                               \
+            typename _OpT_ <E,E>::value_type,                            \
+            typename _OpT_ <E,E>::value_type                             \
+        >::value_type                                                    \
+_op_ (                                                                   \
+        const cml::vector<E,AT>& left,                                   \
+        const cml::vector<E,AT>& right)                                  \
+{                                                                        \
+    typedef _OpT_ <E,E> OpT;                                             \
+    typedef _ReduceT_ <                                                  \
+                typename OpT::value_type,                                \
+                typename OpT::value_type                                 \
+           > ReduceT;                                                    \
+    typedef cml::et::BinaryVectorReductionOp<                            \
+        cml::vector<E,AT>, cml::vector<E,AT>, OpT, ReduceT               \
+    > ExprT;                                                             \
+    return ExprT(left,right)();                                          \
+}
+
+
+/** Declare a reduction taking a cml::vector and a cml::et::VectorXpr.
+ *
+ * The resulting VectorXpr has a BinaryVectorReductionOp subexpression.
+ * The parse tree is automatically compressed by hoisting the VectorXpr's
+ * subexpression into the right subexpression of the BinaryVectorReductionOp.
+ */
+#define CML_VEC_VECXPR_BIN_REDOP(_op_, _OpT_, _ReduceT_)                 \
+template<typename E, class AT, typename XprT>                            \
+inline typename _ReduceT_<                                               \
+            typename _OpT_ <E, typename XprT::value_type>::value_type,   \
+            typename _OpT_ <E, typename XprT::value_type>::value_type    \
+        >::value_type                                                    \
+_op_ (                                                                   \
+        const cml::vector<E,AT>& left,                                   \
+        const cml::et::VectorXpr<XprT>& right)                           \
+{                                                                        \
+    typedef _OpT_ <E, typename XprT::value_type> OpT;                    \
+    typedef _ReduceT_ <                                                  \
+                typename OpT::value_type,                                \
+                typename OpT::value_type                                 \
+               > ReduceT;                                                \
+    typedef cml::et::BinaryVectorReductionOp<                            \
+        cml::vector<E,AT>, XprT, OpT, ReduceT                            \
+    > ExprT;                                                             \
+    return ExprT(left,right.expression())();                             \
+}
+
+
+/** Declare a reduction taking a cml::et::VectorXpr and a cml::vector.
+ *
+ * The resulting VectorXpr has a BinaryVectorReductionOp subexpression.
+ * The parse tree is automatically compressed by hoisting the VectorXpr's
+ * subexpression into the right subexpression of the BinaryVectorReductionOp.
+ */
+#define CML_VECXPR_VEC_BIN_REDOP(_op_, _OpT_, _ReduceT_)                 \
+template<typename XprT, typename E, class AT>                            \
+inline typename _ReduceT_<                                               \
+            typename _OpT_ <typename XprT::value_type,E>::value_type,    \
+            typename _OpT_ <typename XprT::value_type,E>::value_type     \
+        >::value_type                                                    \
+_op_ (                                                                   \
+        const cml::et::VectorXpr<XprT>& left,                            \
+        const cml::vector<E,AT>& right)                                  \
+{                                                                        \
+    typedef _OpT_ <E, typename XprT::value_type> OpT;                    \
+    typedef _ReduceT_ <                                                  \
+                typename OpT::value_type,                                \
+                typename OpT::value_type                                 \
+               > ReduceT;                                                \
+    typedef cml::et::BinaryVectorReductionOp<                            \
+        XprT, cml::vector<E,AT>, OpT, ReduceT                            \
+    > ExprT;                                                             \
+    return ExprT(left.expression(),right)();                             \
+}
+
+
+/** Declare an operator taking two cml::et::VectorXpr operands.
+ *
+ * The resulting VectorXpr has a BinaryVectorReductionOp subexpression.
+ * The parse tree is automatically compressed by hoisting the VectorXpr's
+ * subexpression into the subexpressions of the BinaryVectorOp.
+ */
+#define CML_VECXPR_VECXPR_BIN_REDOP(_op_, _OpT_, _ReduceT_)              \
+template<class XprT1, class XprT2>                                       \
+inline typename _ReduceT_<                                               \
+            typename _OpT_ <                                             \
+               typename XprT1::value_type,                               \
+               typename XprT2::value_type                                \
+            >::value_type,                                               \
+            typename _OpT_ <                                             \
+               typename XprT1::value_type,                               \
+               typename XprT2::value_type                                \
+            >::value_type                                                \
+        >::value_type                                                    \
+_op_ (                                                                   \
+        const cml::et::VectorXpr<XprT1>& left,                           \
+        const cml::et::VectorXpr<XprT2>& right)                          \
+{                                                                        \
+    typedef _OpT_ <                                                      \
+                typename XprT1::value_type,                              \
+                typename XprT2::value_type                               \
+               > OpT;                                                    \
+    typedef _ReduceT_ <                                                  \
+                typename OpT::value_type,                                \
+                typename OpT::value_type                                 \
+               > ReduceT;                                                \
+    typedef cml::et::BinaryVectorReductionOp<                            \
+        XprT1, XprT2, OpT, ReduceT                                       \
+    > ExprT;                                                             \
+    return ExprT(left.expression(),right.expression())();                \
+}
+
+#else
+/* XXX These return operator classes, but some reductions (like dot())
+ * should be able to be used outside of the expression template
+ * infrastructure.
+ */
 /** Declare a reduction taking two cml::vector operands.
  *
  * The vectors must have the same type (for now).
@@ -404,6 +533,7 @@ _op_ (                                                                   \
     return cml::et::VectorXpr<ExprT>(ExprT(left,right));                 \
 }
 
+#endif
 
 
 
@@ -462,10 +592,10 @@ CML_VEC_SCALAR_BINOP(operator/, cml::et::OpDiv)
 CML_VECXPR_SCALAR_BINOP(operator/, cml::et::OpDiv)
 
 /* Dot-product reduction operator, dot(V1,V2): */
-CML_VEC_VEC_BIN_REDOP(dot, cml::et::OpAdd, cml::et::OpMul)
-CML_VECXPR_VEC_BIN_REDOP(dot, cml::et::OpAdd, cml::et::OpMul)
-CML_VEC_VECXPR_BIN_REDOP(dot, cml::et::OpAdd, cml::et::OpMul)
-CML_VECXPR_VECXPR_BIN_REDOP(dot, cml::et::OpAdd, cml::et::OpMul)
+CML_VEC_VEC_BIN_REDOP(dot, cml::et::OpMul, cml::et::OpAdd)
+CML_VECXPR_VEC_BIN_REDOP(dot, cml::et::OpMul, cml::et::OpAdd)
+CML_VEC_VECXPR_BIN_REDOP(dot, cml::et::OpMul, cml::et::OpAdd)
+CML_VECXPR_VECXPR_BIN_REDOP(dot, cml::et::OpMul, cml::et::OpAdd)
 
 #undef CML_VEC_UNIOP
 #undef CML_VECXPR_UNIOP

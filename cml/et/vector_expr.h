@@ -325,8 +325,7 @@ struct ExprTraits< BinaryVectorOp<LeftT,RightT,OpT> >
 
 /** A binary vector reduction expression.
  *
- * Both operators must take two arguments, and the resulting type of
- * the reduction operator must be 0-assignable.
+ * Both operators must take two arguments.
  *
  * @internal The result of a reduction operation should be stored as a
  * temporary in the expression tree, otherwise it will be recomputed on
@@ -403,9 +402,15 @@ class BinaryVectorReductionOp
          */
         size_t sz = deduce_size()(m_left,m_right);
 
+        /* Initialize by computing the first value: */
+        value_type result(
+                OpT().apply(
+                    left_traits().get(m_left,0),
+                    right_traits().get(m_right,0))
+                );
+
         /* Loop through and compute the reduction: */
-        value_type result(0);
-        for(size_t i = 0; i < sz; ++i) {
+        for(size_t i = 1; i < sz; ++i) {
             result = ReduceT().apply(
                     result,
                     OpT().apply(

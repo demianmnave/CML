@@ -24,6 +24,7 @@ inline void timed1(
         //v = v+v1;
         //v = v+v1+v2+v3+v4;
         //v += v1+v2+v3;
+        //v += v3*dot(v2,(v1*dot(v1,v2)));
     }
 }
 
