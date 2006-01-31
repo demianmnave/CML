@@ -22,7 +22,7 @@ namespace detail {
 
 /** Unroll a binary assignment operator on a fixed-size vector.
  *
- * This uses forward iteration to make better use of the cache.
+ * This uses forward iteration to make efficient use of the cache.
  *
  * @sa cml::vector
  * @sa cml::et::OpAssign
@@ -119,9 +119,15 @@ void UnrollAssignment(
  *
  * @bug Need to verify that OpT is actually an assignment operator.
  */
-template<class OpT, typename E, class AT, class SrcT>
-void UnrollAssignment(cml::vector<E,AT>& dest, const SrcT& src) {
+template<class OpT, class SrcT, typename E, class AT>
+void UnrollAssignment(cml::vector<E,AT>& dest, const SrcT& src)
+{
     typedef cml::vector<E,AT> vector_type;
+
+    /* Record traits for the arguments: */
+    typedef ExprTraits<vector_type> dest_traits;
+    typedef ExprTraits<SrcT> src_traits;
+
     detail::UnrollAssignment<OpT>(dest, src, typename vector_type::size_tag());
 }
 

@@ -51,8 +51,8 @@ class vector
     typedef vector<Element, ArrayType> expr_type;
 
     /* Standard: */
-    typedef typename array_type::value_type     value_type;
-    typedef typename array_type::reference      reference;
+    typedef typename array_type::value_type value_type;
+    typedef typename array_type::reference reference;
     typedef typename array_type::const_reference const_reference;
 
     typedef vector_type& expr_reference;
@@ -96,20 +96,15 @@ class vector
     /** Construct from a vector of the same type.
      *
      * @param v the vector to copy from.
-     *
-     * @throws only if ArrayType::resize() throws.
      */
     vector(const vector_type& v) {
         typedef et::OpAssign<Element,Element> OpT;
-        this->resize(v.size());
-        et::UnrollAssignment<OpT>(*this,v);
+        et::UnrollAssignment<OpT,expr_const_reference>(*this,v);
     }
 
     /** Construct from a vector expression.
      *
      * @param expr the expression to copy from.
-     *
-     * @throws only if ArrayType::resize() throws.
      *
      * @bug The number of elements in the expression needs to be checked
      * against the size of the vector, especially for dynamic vectors.
@@ -117,7 +112,6 @@ class vector
     template<class XprT> vector(const et::VectorXpr<XprT>& expr) {
         typedef typename XprT::value_type src_value_type;
         typedef et::OpAssign<Element,src_value_type> OpT;
-        this->resize(expr.size());
         et::UnrollAssignment<OpT>(*this,expr);
     }
 
@@ -132,7 +126,6 @@ class vector
 #define CML_ASSIGN_FROM_VEC(_op_, _op_name_)                            \
     vector_type& operator _op_ (const vector_type& v) {                 \
         typedef _op_name_ <Element,Element> OpT;                        \
-        this->resize(v.size());                                         \
         et::UnrollAssignment<OpT>(*this,v);                             \
         return *this;                                                   \
     }
@@ -154,7 +147,6 @@ class vector
     operator _op_ (const et::VectorXpr<XprT>& expr) {                   \
         typedef typename XprT::value_type src_value_type;               \
         typedef _op_name_ <Element,src_value_type> OpT;                 \
-        this->resize(expr.size());                                      \
         et::UnrollAssignment<OpT>(*this,expr);                          \
         return *this;                                                   \
     }

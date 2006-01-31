@@ -47,7 +47,10 @@ template<typename T> struct ExprTraits
     value_type get(const_reference v, size_t, size_t) const { return v; }
 
     /** Size is always 1. */
-    size_t size(expr_type) const { return 1; }
+    size_t size(const_reference) const { return 1; }
+
+    /** This always returns true. */
+    bool check_sizes(const_reference) const { return true; }
 }
 #endif
 ;
@@ -65,13 +68,16 @@ template<> struct ExprTraits<double>
     typedef double result_type;
 
     /** Vector-like access, just returns the value. */
-    value_type get(const_reference v, size_t) const { return v; }
+    value_type get(double v, size_t) const { return v; }
 
     /** Matrix-like access, just returns the value. */
-    value_type get(const_reference v, size_t, size_t) const { return v; }
+    value_type get(double v, size_t, size_t) const { return v; }
 
     /** Size is always 1. */
-    size_t size(expr_type) const { return 1; }
+    size_t size(double) const { return 1; }
+
+    /** This always returns true. */
+    bool check_sizes(double) const { return true; }
 };
 #endif
 

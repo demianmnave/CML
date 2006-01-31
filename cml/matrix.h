@@ -12,14 +12,8 @@
 
 #include <cstddef>              // for size_t
 #include <cml/common.h>
-
-/* This is used to tell the enclosed headers that they are being included
- * from the matrix.h header:
- */
-#define cml_matrix_h
 #include <cml/et/matrix_ops.h>
 #include <cml/et/matrix_unroller.h>
-#undef cml_matrix_h
 
 namespace cml {
 
@@ -57,21 +51,21 @@ class matrix
     typedef matrix<Element,ArrayType,Orient> expr_type;
 
     /* Standard: */
-    typedef typename array_type::value_type     value_type;
-    typedef typename array_type::reference      reference;
+    typedef typename array_type::value_type value_type;
+    typedef typename array_type::reference reference;
     typedef typename array_type::const_reference const_reference;
 
     typedef matrix_type& expr_reference;
     typedef const matrix_type& expr_const_reference;
 
     /* For matching by memory layout: */
-    typedef typename array_type::orientation    orientation;
+    typedef typename array_type::orientation orientation;
 
     /* For matching by storage type if necessary: */
-    typedef typename array_type::memory_tag     memory_tag;
+    typedef typename array_type::memory_tag memory_tag;
 
     /* For matching by size type if necessary: */
-    typedef typename array_type::size_tag       size_tag;
+    typedef typename array_type::size_tag size_tag;
 
 
   public:

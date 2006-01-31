@@ -43,13 +43,13 @@ class dynamic_2D
     typedef typename array_impl::allocator_type allocator_type;
 
     /* For matching by memory layout: */
-    typedef Orient              orientation;
+    typedef Orient orientation;
 
     /* For matching by memory type: */
-    typedef dynamic_memory_tag  memory_tag;
+    typedef dynamic_memory_tag memory_tag;
 
     /* For matching by size type: */
-    typedef dynamic_size_tag    size_tag;
+    typedef dynamic_size_tag size_tag;
 
 
   protected:

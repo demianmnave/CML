@@ -81,14 +81,14 @@ struct CheckVectorSizes
 
 
     /* Type of size checker to use: */
-    typedef impl<left_size_tag,right_size_tag> check;
+    typedef impl<left_size_tag,right_size_tag> check_size;
 
     /** Dispatch to the proper run-time implementation.
      *
      * @throws std::invalid_argument if arguments have different sizes.
      */
     bool operator()(const left_t& left, const right_t& right) const {
-        if(!check()(left, right)) {
+        if(!check_size()(left, right)) {
             throw std::invalid_argument("vectors have incompatible sizes.");
         }
         return true;
@@ -100,6 +100,8 @@ struct CheckVectorSizes
 template<typename LeftT, typename RightT>
 struct DeduceVectorExprSize
 {
+  public:
+
     /* Record argument traits: */
     typedef ExprTraits<LeftT> left_traits;
     typedef ExprTraits<RightT> right_traits;
@@ -112,9 +114,6 @@ struct DeduceVectorExprSize
     typedef typename left_traits::size_tag left_size_tag;
     typedef typename right_traits::size_tag right_size_tag;
 
-    /* A checker to verify the argument sizes at compile- or run-time: */
-    typedef CheckVectorSizes<LeftT,RightT> check_size;
-
 
     /** This is specialized for each combination. */
     template<typename LTag, typename RTag, class Dummy = void> struct impl;
@@ -124,17 +123,12 @@ struct DeduceVectorExprSize
         typedef dynamic_size_tag tag;
         enum { result = -1 };
         size_t operator()(const left_t& left, const right_t& right) const {
-            if(!check_size()(left,right)) return 0;
-            return left.size();
+            return std::max(left.size(),right.size());
         }
     };
 
     /** Two fixed-size vectors result in a fixed-size vector. */
     template<class D> struct impl<fixed_size_tag,fixed_size_tag,D> {
-
-        /* Require that the vectors have the same size at compile time: */
-        CML_STATIC_REQUIRE(
-                (long)left_t::array_size == (long)right_t::array_size);
 
         /* Setup and return the size: */
         typedef fixed_size_tag tag;
@@ -190,18 +184,24 @@ struct DeduceVectorExprSize
     };
 
 
+
+  protected:
+
     /* Deduce the size tag and result size: */
-    typedef impl<left_size_tag,right_size_tag> deduce;
+    typedef impl<left_size_tag,right_size_tag> deduce_size;
+
+
+  public:
 
     /* The resulting tag type: */
-    typedef typename deduce::tag tag;
+    typedef typename deduce_size::tag tag;
 
     /* The (fixed) result size (-1 for dynamic vectors): */
-    enum { result = deduce::result };
+    enum { result = deduce_size::result };
 
     /** A function returning the result size at run-time. */
     size_t operator()(const left_t& left, const right_t& right) const {
-        return deduce()(left,right);
+        return deduce_size()(left,right);
     }
 };
 

@@ -3,10 +3,6 @@
  *-----------------------------------------------------------------------*/
 /** @file
  *  @brief
- *
- *  @internal This file isn't used right now, since vectors and matrices in
- *  an expression must automatically have consistent types (vectors must
- *  have the *same* type).
  */
 
 #ifndef scalar_promotions_h

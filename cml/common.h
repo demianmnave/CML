@@ -10,9 +10,6 @@
 
 namespace cml {
 
-/** Empty base class used before rebinding has happened. */
-struct empty_base_class {};
-
 /** Empty class to demarcate statically-allocated memory. */
 struct fixed_memory_tag {};
 
@@ -25,7 +22,7 @@ struct fixed_size_tag {};
 /** Empty class to demarcate dynamically-sized arrays. */
 struct dynamic_size_tag {};
 
-/** Empty class to demarcate constants. */
+/** Empty class to demarcate unit-sized arguments. */
 struct unit_size_tag {};
 
 /** Empty class to demarcate a matrix having row-major storage. */
@@ -33,6 +30,12 @@ struct row_major {};
 
 /** Empty class to demarcate a matrix having col-major storage. */
 struct col_major {};
+
+/** Marker for unary expression ops. */
+struct unary_expression {};
+
+/** Marker for biary expression ops. */
+struct binary_expression {};
 
 } // namespace cml
 

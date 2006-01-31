@@ -2,12 +2,13 @@
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 /** @file
- *  @brief
+ *  @brief Vector expression classes.
  */
 
 #ifndef vector_expr_h
 #define vector_expr_h
 
+#include <cml/common.h>
 #include <cml/et/vector_traits.h>
 #include <cml/et/vector_promotions.h>
 #include <cml/et/size_checking.h>
@@ -26,6 +27,9 @@ class VectorXpr
   public:
 
     typedef VectorXpr<ExprT> expr_type;
+
+    /* Record ary-ness of the expression: */
+    typedef typename ExprT::expr_ary expr_ary;
 
 #if defined(CML_USE_VEC_XPR_REF)
     /* Use a reference to the compiler's VectorXpr<> temporary in
@@ -120,6 +124,9 @@ class UnaryVectorOp
 
     typedef UnaryVectorOp<ArgT,OpT> expr_type;
 
+    /* Record ary-ness of the expression: */
+    typedef unary_expression expr_ary;
+
 #if defined(CML_USE_VEC_UNIOP_REF)
     /* Use a reference to the compiler's UnaryVectorOp temporary in
      * expressions:
@@ -213,6 +220,9 @@ class BinaryVectorOp
 
     typedef BinaryVectorOp<LeftT,RightT,OpT> expr_type;
 
+    /* Record ary-ness of the expression: */
+    typedef binary_expression expr_ary;
+
 #if defined(CML_USE_VEC_BINOP_REF)
     /* Use a reference to the compiler's BinaryVectorOp temporary in
      * expressions:
@@ -234,10 +244,12 @@ class BinaryVectorOp
     typedef typename left_traits::const_reference left_reference;
     typedef typename right_traits::const_reference right_reference;
 
-    /* Figure out the result size and type based on the subexpressions.
-     * This automatically verifies that fixed-size vectors have the same
-     * length:
+    /* A checker to verify the argument sizes at compile- or run-time. This
+     * automatically checks fixed-size vectors at compile time:
      */
+    typedef CheckVectorSizes<LeftT,RightT> check_size;
+
+    /* Figure out the result size and type based on the subexpressions: */
     typedef DeduceVectorExprSize<LeftT,RightT> deduce_size;
     typedef typename deduce_size::tag size_tag;
 
@@ -307,6 +319,140 @@ struct ExprTraits< BinaryVectorOp<LeftT,RightT,OpT> >
     typedef typename expr_type::result_type result_type;
 
     value_type get(const expr_type& v, size_t i) const { return v[i]; }
+    size_t size(const expr_type& e) const { return e.size(); }
+};
+
+
+/** A binary vector reduction expression.
+ *
+ * Both operators must take two arguments, and the resulting type of
+ * the reduction operator must be 0-assignable.
+ *
+ * @internal The result of a reduction operation should be stored as a
+ * temporary in the expression tree, otherwise it will be recomputed on
+ * each call.
+ */
+template<class LeftT, class RightT, class OpT, class ReduceT>
+class BinaryVectorReductionOp
+{
+  public:
+
+    typedef BinaryVectorReductionOp<LeftT,RightT,OpT,ReduceT> expr_type;
+
+    /* Record ary-ness of the expression: */
+    typedef binary_expression expr_ary;
+
+#if defined(CML_USE_VEC_BINOP_REF)
+    /* Use a reference to the compiler's BinaryVectorOp temporary in
+     * expressions:
+     */
+    typedef const expr_type& expr_const_reference;
+#else
+    /* Copy the expression by value into higher-up expressions: */
+    typedef expr_type expr_const_reference;
+#endif // CML_USE_VEC_BINOP_REF
+
+    typedef typename ReduceT::value_type value_type;
+    typedef scalar_result_tag result_tag;
+
+    /* Store the expression traits types for the two subexpressions: */
+    typedef ExprTraits<LeftT> left_traits;
+    typedef ExprTraits<RightT> right_traits;
+
+    /* Reference types for the two subexpressions: */
+    typedef typename left_traits::const_reference left_reference;
+    typedef typename right_traits::const_reference right_reference;
+
+    /* A checker to verify the argument sizes at compile- or run-time. This
+     * automatically checks fixed-size vectors at compile time:
+     */
+    typedef CheckVectorSizes<LeftT,RightT> check_size;
+
+    /* Figure out the number of elements to reduce: */
+    typedef DeduceVectorExprSize<LeftT,RightT> deduce_size;
+
+    /* Always unit size: */
+    typedef unit_size_tag size_tag;
+
+    /* The expression's resulting (vector) type: */
+    typedef typename ReduceT::value_type result_type;
+
+
+  public:
+
+    /** Record result size. */
+    enum { array_size = 1 };
+
+
+  public:
+
+    /** Return the size of the vector result. */
+    size_t size() const {
+        return 1;
+    }
+
+    /** Compute value of the reduction operator.
+     *
+     * @internal Should the loop be unrolled automatically?
+     */
+    value_type operator()() const {
+
+        /* Figure out the result size and type based on the subexpressions.
+         * This automatically verifies at run-time that dynamic-size
+         * vectors have the same length:
+         */
+        size_t sz = deduce_size()(m_left,m_right);
+
+        /* Loop through and compute the reduction: */
+        value_type result(0);
+        for(size_t i = 0; i < sz; ++i) {
+            result = ReduceT().apply(
+                    result,
+                    OpT().apply(
+                        left_traits().get(m_left,i),
+                        right_traits().get(m_right,i))
+                    );
+        }
+
+        return result;
+    }
+
+
+  public:
+
+    /** Construct from the two subexpressions. */
+    BinaryVectorReductionOp(const LeftT& left, const RightT& right)
+        : m_left(left), m_right(right) {}
+
+    /** Copy constructor. */
+    BinaryVectorReductionOp(const expr_type& e)
+        : m_left(e.m_left), m_right(e.m_right) {}
+
+
+  protected:
+
+    left_reference m_left;
+    right_reference m_right;
+
+
+  private:
+
+    /* Cannot be assigned to: */
+    expr_type& operator=(const expr_type&);
+};
+
+/** Expression traits class for BinaryVectorOp<>. */
+template<class LeftT, class RightT, class OpT, class ReduceT>
+struct ExprTraits< BinaryVectorReductionOp<LeftT,RightT,OpT,ReduceT> >
+{
+    typedef BinaryVectorReductionOp<LeftT,RightT,OpT,ReduceT> expr_type;
+    typedef typename expr_type::value_type value_type;
+    typedef typename expr_type::expr_const_reference const_reference;
+    typedef typename expr_type::result_tag result_tag;
+    typedef typename expr_type::size_tag size_tag;
+    typedef typename expr_type::result_type result_type;
+
+    value_type get(const expr_type& v, size_t) const { return v(); }
     size_t size(const expr_type& e) const { return e.size(); }
 };
 

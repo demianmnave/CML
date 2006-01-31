@@ -13,10 +13,6 @@
 
 namespace cml {
 
-/* Forward declare the dynamic array wrapepr. */
-template<typename Element, class Alloc = std::allocator<Element> >
-    class dynamic_1D;
-
 /** Dynamically-sized and allocated 1D array.
  *
  * @sa cml::dynamic
@@ -45,10 +41,10 @@ class dynamic_1D
     typedef typename array_impl::allocator_type allocator_type;
 
     /* For matching by memory type: */
-    typedef dynamic_memory_tag  memory_tag;
+    typedef dynamic_memory_tag memory_tag;
 
     /* For matching by size type: */
-    typedef dynamic_size_tag    size_tag;
+    typedef dynamic_size_tag size_tag;
 
 
   public:
@@ -90,7 +86,7 @@ class dynamic_1D
     const_reference operator[](size_t i) const { return this->m_data[i]; }
 
 
-  protected:
+  public:
 
     /** Set the array size to the given value.
      *

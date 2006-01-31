@@ -9,6 +9,7 @@
 #define ops_h
 
 #include <cml/et/traits.h>
+#include <cml/et/scalar_promotions.h>
 
 namespace cml {
 namespace et {
@@ -22,19 +23,16 @@ template<typename ArgT> struct _op_name_ {                              \
     value_type apply(arg_reference arg) const { return _op_ arg; }      \
 };
 
-/** Declare a binary scalar operator, like addition, s1+s2.
- *
- * @bug This still needs a proper type promotion to specify value_type as
- * the proper resulting type of applying _op_ to the two argument.  e.g.
- * int + double yields double, but the result is int (LeftT) right now.
- */
+/** Declare a binary scalar operator, like addition, s1+s2. */
 #define CML_BINARY_SCALAR_OP(_op_, _op_name_)                            \
 template<typename LeftT, typename RightT> struct _op_name_ {             \
     typedef ExprTraits<LeftT> left_traits;                               \
     typedef ExprTraits<RightT> right_traits;                             \
     typedef typename left_traits::const_reference left_reference;        \
     typedef typename right_traits::const_reference right_reference;      \
-    typedef typename left_traits::value_type value_type;                 \
+    typedef typename left_traits::value_type left_value;                 \
+    typedef typename right_traits::value_type right_value;               \
+    typedef typename ScalarPromote<left_value,right_value>::type value_type; \
     value_type apply(left_reference left, right_reference right) const { \
         return left _op_ right; }                                        \
 };
@@ -55,7 +53,9 @@ template<typename LeftT, typename RightT> struct _op_name_ {             \
     typedef ExprTraits<RightT> right_traits;                             \
     typedef typename left_traits::reference left_reference;              \
     typedef typename right_traits::const_reference right_reference;      \
-    typedef typename left_traits::value_type value_type;                 \
+    typedef typename left_traits::value_type left_value;                 \
+    typedef typename right_traits::value_type right_value;               \
+    typedef typename ScalarPromote<left_value,right_value>::type value_type; \
     value_type apply(left_reference left, right_reference right) const { \
         return left _op_ right; }                                        \
 };
