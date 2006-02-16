@@ -4,12 +4,32 @@
 /** @file
  *  @brief Defines the various combinations of vector expressions.
  *
+ * Create unary and binary operators with macros.  The available combinations
+ * are:
+ *
+ * Unary expressions:
+ *
+ * op Vector -> Vector
+ * op VecXpr -> Vector
+ *
+ * Binary expressions:
+ *
+ * Vector op Vector -> Vector
+ * VecXpr op Vector -> VecXpr
+ * Vector op VecXpr -> VecXpr
+ * VecXpr op VecXpr -> VecXpr
+ *
+ * Vector op Scalar -> Vector
+ * Scalar op Vector -> Vector
+ * VecXpr op Scalar -> VecXpr
+ * Scalar op VecXpr -> VecXpr
+ *
  * @todo Allow operators on vectors with different element types, and
  * eventually between vectors of different storage types also.
  */
 
-#ifndef vector_ops_h
-#define vector_ops_h
+#ifndef vecop_macros_h
+#define vecop_macros_h
 
 #include <cml/et/scalar_ops.h>
 #include <cml/et/vector_expr.h>
@@ -252,65 +272,6 @@ _op_ (                                                                   \
     return et::VectorXpr<ExprT>(ExprT(left,right.expression()));         \
 }
 
-
-/* Now, create the operators.  The combinations are:
- *
- * Unary expressions:
- *
- * op Vector -> Vector
- * op VecXpr -> Vector
- *
- *
- * Binary expressions:
- *
- * Vector op Vector -> Vector
- * VecXpr op Vector -> VecXpr
- * Vector op VecXpr -> VecXpr
- * VecXpr op VecXpr -> VecXpr
- *
- * Vector op Scalar -> Vector
- * Scalar op Vector -> Vector
- * VecXpr op Scalar -> VecXpr
- * Scalar op VecXpr -> VecXpr
- */
-
-
-CML_VEC_UNIOP(    operator+, et::OpPos)
-CML_VECXPR_UNIOP( operator+, et::OpPos)
-
-CML_VEC_UNIOP(    operator-, et::OpNeg)
-CML_VECXPR_UNIOP( operator-, et::OpNeg)
-
-CML_VEC_VEC_BINOP(       operator+, et::OpAdd)
-CML_VECXPR_VEC_BINOP(    operator+, et::OpAdd)
-CML_VEC_VECXPR_BINOP(    operator+, et::OpAdd)
-CML_VECXPR_VECXPR_BINOP( operator+, et::OpAdd)
-
-CML_VEC_VEC_BINOP(       operator-, et::OpSub)
-CML_VECXPR_VEC_BINOP(    operator-, et::OpSub)
-CML_VEC_VECXPR_BINOP(    operator-, et::OpSub)
-CML_VECXPR_VECXPR_BINOP( operator-, et::OpSub)
-
-CML_VEC_SCALAR_BINOP(    operator*, et::OpMul)
-CML_SCALAR_VEC_BINOP(    operator*, et::OpMul)
-CML_VECXPR_SCALAR_BINOP( operator*, et::OpMul)
-CML_SCALAR_VECXPR_BINOP( operator*, et::OpMul)
-
-CML_VEC_SCALAR_BINOP(    operator/, et::OpDiv)
-CML_VECXPR_SCALAR_BINOP( operator/, et::OpDiv)
-
-
-/* Cleanup: */
-#undef CML_VEC_UNIOP
-#undef CML_VECXPR_UNIOP
-#undef CML_VEC_VEC_BINOP
-#undef CML_VECXPR_VEC_BINOP
-#undef CML_VEC_VECXPR_BINOP
-#undef CML_VECXPR_VECXPR_BINOP
-#undef CML_VEC_SCALAR_BINOP
-#undef CML_SCALAR_VEC_BINOP
-#undef CML_VECXPR_SCALAR_BINOP
-#undef CML_SCALAR_VECXPR_BINOP
 
 } // cml
 

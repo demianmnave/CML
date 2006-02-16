@@ -8,7 +8,7 @@
 #ifndef fixed_1D_h
 #define fixed_1D_h
 
-#include <cml/common.h>
+#include <cml/core/common.h>
 
 namespace cml {
 

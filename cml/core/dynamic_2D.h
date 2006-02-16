@@ -9,7 +9,7 @@
 #define dynamic_2D_h
 
 #include <vector>
-#include <cml/common.h>
+#include <cml/core/common.h>
 
 namespace cml {
 

@@ -8,14 +8,14 @@
 #ifndef vector_expr_h
 #define vector_expr_h
 
-#include <cml/common.h>
+#include <cml/core/common.h>
 #include <cml/et/vector_traits.h>
 #include <cml/et/vector_promotions.h>
 #include <cml/et/size_checking.h>
 
 namespace cml {
 
-/* Forward declare for the vector expressions below: */
+/* Forward declare for the unrollers below: */
 template<typename Element, class ArrayType> class vector;
 
 namespace et {

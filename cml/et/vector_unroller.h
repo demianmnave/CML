@@ -15,6 +15,10 @@
 #include <cml/et/traits.h>
 
 namespace cml {
+
+/* Forward declare for the vector expressions below: */
+template<typename Element, class ArrayType> class vector;
+
 namespace et {
 
 /** Detail for the vector unroller code. */

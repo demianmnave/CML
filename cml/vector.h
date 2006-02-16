@@ -11,9 +11,9 @@
 #define vector_h
 
 #include <cstddef>              // for size_t
-#include <cml/common.h>
-#include <cml/et/vector_ops.h>
+#include <cml/core/common.h>
 #include <cml/et/vector_unroller.h>
+#include <cml/vector_ops.h>
 
 namespace cml {
 

@@ -8,7 +8,7 @@
 #ifndef fixed_2D_h
 #define fixed_2D_h
 
-#include <cml/common.h>
+#include <cml/core/common.h>
 
 namespace cml {
 namespace detail {

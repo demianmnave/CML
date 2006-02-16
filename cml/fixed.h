@@ -9,7 +9,6 @@
 #define fixed_h
 
 #include <cstddef>              // for size_t
-#include <cml/common.h>
 #include <cml/core/cml_assert.h>
 #include <cml/core/fixed_1D.h>
 #include <cml/core/fixed_2D.h>

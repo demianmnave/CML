@@ -5,21 +5,19 @@
  *  @brief
  */
 
+#include "cml_config.h"
 #include <iostream>
 #include <cml/fixed.h>          // For cml::fixed<>
 #include <cml/vector.h>
 
-/* For convenience: */
-using std::cerr;
-using std::endl;
+/* 3-space vector, fixed length, double coordinates: */
+typedef cml::vector< double, cml::fixed<3> > vector_d3;
 
-using cml::fixed;
-typedef cml::vector< double, fixed<4> > vector_d4;
-#define VECINIT(_v_) _v_
-
-#include "print_vector.cpp"
-#include "vector_algebra1.cpp"
-#include "vector_main1.cpp"
+int main()
+{
+    vector_d3 v;
+    return 0;
+}
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp

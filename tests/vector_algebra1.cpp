@@ -16,7 +16,7 @@ inline void timed1(
         )
 {
     for(int i = 0; i < n_iter; ++i) {
-        //v = v+v1;
+        //v += v1+v2;
         //v = v+v1+v2;
         //v = v+v1+v2+v3;
         //v = v+v1+v2+2.*v3;

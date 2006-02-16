@@ -9,7 +9,7 @@
 #define dynamic_h
 
 #include <memory>               // for std::allocator
-#include <cml/common.h>
+#include <cml/core/common.h>
 #include <cml/core/dynamic_1D.h>
 #include <cml/core/dynamic_2D.h>
 
