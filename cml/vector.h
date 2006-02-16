@@ -29,6 +29,13 @@ namespace cml {
  *
  * @sa cml::core::fixed
  * @sa cml::core::dynamic
+ *
+ * @internal This "rebind" method avoids a lot of duplication compared to
+ * the alternative of specializing vector<> for each storage type, since
+ * e.g. vector class ops are consolidated here.  However, the tradeoff is
+ * that vector<> must contain a compatible constructor for each type.  Also
+ * note that a templated constructor leads to ambiguities, so removing this
+ * constructor requirement doesn't seem to be straightforward.
  */
 template<typename Element, class ArrayType>
 class vector
@@ -163,7 +170,8 @@ class vector
      * @param _op_ the operator (e.g. *=)
      * @param _op_name_ the op functor (e.g. et::OpAssign)
      *
-     * @internal This shouldn't be used for non-algebraic ops, like +=.
+     * @internal This shouldn't be used for ops, like +=, which aren't
+     * defined in vector algebra.
      */
 #define CML_ASSIGN_FROM_SCALAR(_op_, _op_name_)                         \
     vector_type& operator _op_ (const value_type& s) {                  \

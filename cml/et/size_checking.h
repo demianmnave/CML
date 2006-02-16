@@ -14,6 +14,7 @@
 #ifndef size_checking_h
 #define size_checking_h
 
+#include <stdexcept>
 #include <cml/core/cml_assert.h>
 #include <cml/et/traits.h>
 

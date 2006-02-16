@@ -11,7 +11,9 @@
 #ifndef cml_assert_h
 #define cml_assert_h
 
-#include <stdexcept>
+#define CML_JOIN(X,Y) CML_DO_JOIN(X,Y)
+#define CML_DO_JOIN(X,Y) CML_DO_JOIN2(X,Y)
+#define CML_DO_JOIN2(X,Y) X##Y
 
 /** Type of a true statement. */
 struct true_type {};
@@ -22,15 +24,11 @@ struct false_type {};
 /** Default, undefined compile-time assertion struct. */
 template<bool T> struct STATIC_ASSERTION_FAILURE;
 
-/** Struct instantiated when a false assertion is made at compile-time. */
-template<> struct STATIC_ASSERTION_FAILURE<false> {
+/** Struct instantiated when a true assertion is made at compile-time. */
+template<> struct STATIC_ASSERTION_FAILURE<true> {
     typedef true_type result;
-    enum { value = false };
+    enum { value = true };
 };
-
-#define CML_JOIN(X,Y) CML_DO_JOIN(X,Y)
-#define CML_DO_JOIN(X,Y) CML_DO_JOIN2(X,Y)
-#define CML_DO_JOIN2(X,Y) X##Y
 
 /** Create a compile-time assertion.
  *
@@ -40,7 +38,7 @@ template<> struct STATIC_ASSERTION_FAILURE<false> {
  * run-time storage requirements.
  */
 #define CML_STATIC_REQUIRE(_E_) \
-    typedef typename STATIC_ASSERTION_FAILURE<!(_E_)>::result \
+    typedef typename STATIC_ASSERTION_FAILURE<(_E_)>::result \
         CML_JOIN(__cml_assert_test_typedef_, __LINE__)
 
 #endif

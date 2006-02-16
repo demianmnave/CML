@@ -30,7 +30,7 @@ namespace detail {
  * @bug Need to verify that OpT is actually an assignment operator.
  * @bug Need to verify that the vector sizes match.
  */
-template<class OpT, typename E, class AT,  class SrcT>
+template<class OpT, typename E, class AT, class SrcT>
 struct VectorAssignmentUnroller
 {
     /* Forward declare: */
@@ -47,16 +47,6 @@ struct VectorAssignmentUnroller
     typedef typename dest_traits::reference dest_reference;
     typedef typename src_traits::const_reference src_reference;
 
-    /** Evaluate the binary operator at element Last. */
-    template<int Last> struct Eval<Last,Last,true> {
-        void operator()(dest_reference dest, src_reference src) const {
-
-            /* Apply to last element: */
-            OpT().apply(dest[Last], src_traits().get(src,Last));
-            /* Note: we don't need get(), since we know dest is a vector. */
-        }
-    };
-
     /** Evaluate the binary operator for the first Max-1 elements. */
     template<int N, int Last> struct Eval<N,Last,true> {
         void operator()(dest_reference dest, src_reference src) const {
@@ -70,7 +60,21 @@ struct VectorAssignmentUnroller
         }
     };
 
-    /** Evaluate the binary operator using a loop. */
+    /** Evaluate the binary operator at element Last. */
+    template<int Last> struct Eval<Last,Last,true> {
+        void operator()(dest_reference dest, src_reference src) const {
+
+            /* Apply to last element: */
+            OpT().apply(dest[Last], src_traits().get(src,Last));
+            /* Note: we don't need get(), since we know dest is a vector. */
+        }
+    };
+
+    /** Evaluate the binary operator using a loop.
+     *
+     * This is used when the vector's length is longer than
+     * CML_VECTOR_UNROLL_LIMIT
+     */
     template<int N, int Last> struct Eval<N,Last,false> {
         void operator()(dest_reference dest, src_reference src) const {
             for(size_t i = 0; i <= Last; ++i) {

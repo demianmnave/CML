@@ -8,7 +8,6 @@
 #ifndef dynamic_h
 #define dynamic_h
 
-#include <cstddef>              // for size_t
 #include <memory>               // for std::allocator
 #include <cml/common.h>
 #include <cml/core/dynamic_1D.h>
@@ -18,10 +17,10 @@ namespace cml {
 
 /** Generate a dynamically-sized and allocated array (1D or 2D).
  *
- * This uses the STL's std::allocator<> if no allocator is provided.
+ * This uses the STL's default std::allocator<> if no allocator is
+ * provided.
  *
  * @sa cml::vector
- * @sa cml::matrix
  * @sa cml::fixed for more information on the rebinding mechanism.
  *
  * @internal The std::allocator<void*> default for Alloc is necessary to

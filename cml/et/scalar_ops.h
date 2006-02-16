@@ -20,6 +20,7 @@ template<typename ArgT> struct _op_name_ {                              \
     typedef ExprTraits<ArgT> arg_traits;                                \
     typedef typename arg_traits::const_reference arg_reference;         \
     typedef typename arg_traits::value_type value_type;                 \
+    typedef scalar_result_tag result_tag;                               \
     value_type apply(arg_reference arg) const { return _op_ arg; }      \
 };
 
@@ -33,6 +34,7 @@ template<typename LeftT, typename RightT> struct _op_name_ {             \
     typedef typename left_traits::value_type left_value;                 \
     typedef typename right_traits::value_type right_value;               \
     typedef typename ScalarPromote<left_value,right_value>::type value_type; \
+    typedef scalar_result_tag result_tag;                               \
     value_type apply(left_reference left, right_reference right) const { \
         return left _op_ right; }                                        \
 };
@@ -56,6 +58,7 @@ template<typename LeftT, typename RightT> struct _op_name_ {             \
     typedef typename left_traits::value_type left_value;                 \
     typedef typename right_traits::value_type right_value;               \
     typedef typename ScalarPromote<left_value,right_value>::type value_type; \
+    typedef scalar_result_tag result_tag;                               \
     value_type apply(left_reference left, right_reference right) const { \
         return left _op_ right; }                                        \
 };
@@ -71,10 +74,18 @@ CML_UNARY_SCALAR_OP(+, OpPos)
 CML_BINARY_SCALAR_OP(+, OpAdd)
 CML_BINARY_SCALAR_OP(-, OpSub)
 CML_BINARY_SCALAR_OP(*, OpMul)
+
+#if defined(CML_RECIPROCAL_OPTIMIZATION)
+/* XXX Yikes... this should really be written out in full. *= 1./ is the
+ * "_op_" parameter to the macro (see above):
+ */
+CML_BINARY_SCALAR_OP(* 1./, OpDiv)
+#else
 CML_BINARY_SCALAR_OP(/, OpDiv)
+#endif
 
 /* Binary scalar op-assigns: */
-CML_BINARY_SCALAR_OP_ASSIGN(=, OpAssign)
+CML_BINARY_SCALAR_OP_ASSIGN( =, OpAssign)
 CML_BINARY_SCALAR_OP_ASSIGN(+=, OpAddAssign)
 CML_BINARY_SCALAR_OP_ASSIGN(-=, OpSubAssign)
 CML_BINARY_SCALAR_OP_ASSIGN(*=, OpMulAssign)

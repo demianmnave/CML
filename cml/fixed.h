@@ -10,6 +10,7 @@
 
 #include <cstddef>              // for size_t
 #include <cml/common.h>
+#include <cml/core/cml_assert.h>
 #include <cml/core/fixed_1D.h>
 #include <cml/core/fixed_2D.h>
 
@@ -29,10 +30,12 @@ template<int Dim1, int Dim2 = 0> struct fixed;
  * selection of fixed or dynamic storage relatively straightforward.
  *
  * @sa cml::vector
- * @sa cml::matrix
  */
 template<int Size> struct fixed<Size,0>
 {
+    /* Need Size > 0: */
+    CML_STATIC_REQUIRE( (Size > 0) );
+
     /* Record array size for type deduction: */
     enum { array_size = Size };
 
@@ -56,10 +59,12 @@ template<int Size> struct fixed<Size,0>
  * selection of fixed or dynamic storage relatively straightforward.
  *
  * @sa cml::vector
- * @sa cml::matrix
  */
 template<int Rows, int Cols> struct fixed
 {
+    /* Need Rows,Cols > 0: */
+    CML_STATIC_REQUIRE(((Rows > 0) && (Cols > 0)));
+
     /* Record array size for type deduction: */
     enum { array_rows = Rows, array_cols = Cols };
 
