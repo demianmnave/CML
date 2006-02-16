@@ -14,6 +14,7 @@
 #include <cml/core/common.h>
 #include <cml/et/vector_unroller.h>
 #include <cml/vector_ops.h>
+#include <cml/vector_dot.h>
 
 namespace cml {
 
@@ -21,11 +22,14 @@ namespace cml {
  *
  * This class encapsulates the notion of a vector.  The ArrayType template
  * argument can be used to select the type of array to be used as internal
- * storage for a list of type Element.  The ArrayType is expected to
- * implement operator[]() to access Element's of the vector by index.
+ * storage for a list of type Element.  The vector orientation determines
+ * how vectors are used (mathematically) in expressions; i.e. a*b when a is
+ * a row vector and b is a column vector is the dot (inner) product, while
+ * a*b when a is a column vector and b is a row vector is the matrix
+ * (outer) product of a and b.
  *
- * @warning Vectors with different ArrayType's may not yet work as expected
- * in expressions, particularly those using dynamically-allocated memory.
+ * @warning Currently, vectors with different types (Element and/or
+ * ArrayType) can't be used in the same expression.
  *
  * @sa cml::core::fixed
  * @sa cml::core::dynamic
@@ -37,7 +41,7 @@ namespace cml {
  * note that a templated constructor leads to ambiguities, so removing this
  * constructor requirement doesn't seem to be straightforward.
  */
-template<typename Element, class ArrayType>
+template<typename Element, class ArrayType, class Orient>
 class vector
 
 /* Figure out (and inherit from) the selected base array type: */
@@ -52,10 +56,10 @@ class vector
     typedef typename ArrayType::template rebind<Element>::other array_type;
 
     /* Shorthand for the type of this vector: */
-    typedef vector<Element, ArrayType> vector_type;
+    typedef vector<Element, ArrayType, Orient> vector_type;
 
     /* For integration into the expression template code: */
-    typedef vector<Element, ArrayType> expr_type;
+    typedef vector_type expr_type;
 
     /* Standard: */
     typedef typename array_type::value_type value_type;
@@ -68,6 +72,12 @@ class vector
     /* For matching by storage type: */
     typedef typename array_type::memory_tag memory_tag;
 
+    /* For matching by orientation: */
+    typedef Orient orient_tag;
+    /* Note: orientation is propagated up an expression tree and enforced
+     * at compile time through the result_type expression trait.
+     */
+
     /* For matching by size type: */
     typedef typename array_type::size_tag size_tag;
 
@@ -77,13 +87,13 @@ class vector
 
   public:
 
-    /** Default constructor.
+    /** Default constructor for dynamic arrays.
      *
      * @throws same as the ArrayType constructor.
      */
     vector() : array_type() {}
 
-    /** Constructor for dynamically-sized arrays.
+    /** Constructor for dynamic arrays.
      *
      * @param size specify the size of the array.
      *
@@ -99,6 +109,9 @@ class vector
      * @throws same as the ArrayType constructor.
      */
     explicit vector(size_t size, value_type* ptr) : array_type(size,ptr) {}
+
+
+  public:
 
     /** Construct from a vector of the same type.
      *
@@ -117,6 +130,9 @@ class vector
      * against the size of the vector, especially for dynamic vectors.
      */
     template<class XprT> vector(const et::VectorXpr<XprT>& expr) {
+        /* Verify that a promotion exists at compile time: */
+        typedef typename et::VectorPromote<
+            vector_type, typename XprT::result_type>::type result_type;
         typedef typename XprT::value_type src_value_type;
         typedef et::OpAssign<Element,src_value_type> OpT;
         et::UnrollAssignment<OpT>(*this,expr);
@@ -125,7 +141,7 @@ class vector
 
   public:
 
-    /** Declare a function to assign this vector from another.
+    /** Assign this vector from another of the same type, with an operator.
      *
      * @param _op_ the operator (e.g. +=)
      * @param _op_name_ the op functor (e.g. et::OpAssign)
@@ -152,6 +168,9 @@ class vector
 #define CML_ASSIGN_FROM_VECXPR(_op_, _op_name_)                         \
     template<class XprT> vector_type&                                   \
     operator _op_ (const et::VectorXpr<XprT>& expr) {                   \
+        /* Verify that a promotion exists at compile time: */           \
+        typedef typename et::VectorPromote<                             \
+            vector_type, typename XprT::result_type>::type result_type; \
         typedef typename XprT::value_type src_value_type;               \
         typedef _op_name_ <Element,src_value_type> OpT;                 \
         et::UnrollAssignment<OpT>(*this,expr);                          \

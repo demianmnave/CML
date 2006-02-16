@@ -13,8 +13,7 @@
 using std::cerr;
 using std::endl;
 
-using cml::fixed;
-typedef cml::vector< double, fixed<4> > vector_d4;
+typedef cml::vector< double, cml::fixed<4>, cml::col_vector > vector_d4;
 #define VECINIT(_v_) _v_
 
 #include "print_vector.cpp"

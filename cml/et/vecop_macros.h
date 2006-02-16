@@ -38,15 +38,15 @@ namespace cml {
 
 /** Declare a unary operator taking a vector operand. */
 #define CML_VEC_UNIOP(_op_, _OpT_)                                       \
-template<typename E, class AT>                                           \
+template<typename E, class AT, class O>                                  \
 inline et::VectorXpr<                                                    \
-    et::UnaryVectorOp< vector<E,AT>, _OpT_ <E> >                         \
+    et::UnaryVectorOp< vector<E,AT,O>, _OpT_ <E> >                       \
 >                                                                        \
                                                                          \
-_op_ (const vector<E,AT>& arg)                                           \
+_op_ (const vector<E,AT,O>& arg)                                         \
 {                                                                        \
     typedef et::UnaryVectorOp<                                           \
-            vector<E,AT>, _OpT_ <E>                                      \
+            vector<E,AT,O>, _OpT_ <E>                                    \
         > ExprT;                                                         \
     return et::VectorXpr<ExprT>(ExprT(arg));                             \
 }
@@ -78,19 +78,19 @@ _op_ (const et::VectorXpr<XprT>& arg)                                    \
  * The vectors must have the same type (for now).
  */
 #define CML_VEC_VEC_BINOP(_op_, _OpT_)                                   \
-template<typename E, class AT>                                           \
+template<typename E, class AT, class O>                                  \
 inline et::VectorXpr<                                                    \
     et::BinaryVectorOp<                                                  \
-        vector<E,AT>, vector<E,AT>, _OpT_ <E,E>                          \
+        vector<E,AT,O>, vector<E,AT,O>, _OpT_ <E,E>                      \
     >                                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
-        const vector<E,AT>& left,                                        \
-        const vector<E,AT>& right)                                       \
+        const vector<E,AT,O>& left,                                      \
+        const vector<E,AT,O>& right)                                     \
 {                                                                        \
     typedef et::BinaryVectorOp<                                          \
-            vector<E,AT>, vector<E,AT>, _OpT_ <E,E>                      \
+            vector<E,AT,O>, vector<E,AT,O>, _OpT_ <E,E>                  \
         > ExprT;                                                         \
     return et::VectorXpr<ExprT>(ExprT(left,right));                      \
 }
@@ -103,19 +103,19 @@ _op_ (                                                                   \
  * subexpression into the right subexpression of the BinaryVectorOp.
  */
 #define CML_VEC_VECXPR_BINOP(_op_, _OpT_)                                \
-template<typename E, class AT, class XprT>                               \
+template<typename E, class AT, class O, class XprT>                      \
 inline et::VectorXpr<                                                    \
     et::BinaryVectorOp<                                                  \
-        vector<E,AT>, XprT, _OpT_ <E, typename XprT::value_type>         \
+        vector<E,AT,O>, XprT, _OpT_ <E, typename XprT::value_type>       \
     >                                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
-        const vector<E,AT>& left,                                        \
+        const vector<E,AT,O>& left,                                      \
         const et::VectorXpr<XprT>& right)                                \
 {                                                                        \
     typedef et::BinaryVectorOp<                                          \
-            vector<E,AT>, XprT,                                          \
+            vector<E,AT,O>, XprT,                                        \
             _OpT_ <E, typename XprT::value_type>                         \
         > ExprT;                                                         \
     return et::VectorXpr<ExprT>(ExprT(left,right.expression()));         \
@@ -129,19 +129,19 @@ _op_ (                                                                   \
  * subexpression into the left subexpression of the BinaryVectorOp.
  */
 #define CML_VECXPR_VEC_BINOP(_op_, _OpT_)                                \
-template<class XprT, typename E, class AT>                               \
+template<class XprT, typename E, class AT, class O>                      \
 inline et::VectorXpr<                                                    \
     et::BinaryVectorOp<                                                  \
-        XprT, vector<E,AT>, _OpT_ <typename XprT::value_type, E>         \
+        XprT, vector<E,AT,O>, _OpT_ <typename XprT::value_type, E>       \
     >                                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
         const et::VectorXpr<XprT>& left,                                 \
-        const vector<E,AT>& right)                                       \
+        const vector<E,AT,O>& right)                                     \
 {                                                                        \
     typedef et::BinaryVectorOp<                                          \
-            XprT, vector<E,AT>,                                          \
+            XprT, vector<E,AT,O>,                                        \
             _OpT_ <typename XprT::value_type, E>                         \
         > ExprT;                                                         \
     return et::VectorXpr<ExprT>(ExprT(left.expression(),right));         \
@@ -183,19 +183,19 @@ _op_ (                                                                   \
 
 /** Declare an operator taking a vector and a scalar. */
 #define CML_VEC_SCALAR_BINOP(_op_, _OpT_)                                \
-template<typename E, class AT, typename ScalarT>                         \
+template<typename E, class AT, class O, typename ScalarT>                \
 inline et::VectorXpr<                                                    \
     et::BinaryVectorOp<                                                  \
-        vector<E,AT>, ScalarT, _OpT_ <E,ScalarT>                         \
+        vector<E,AT,O>, ScalarT, _OpT_ <E,ScalarT>                       \
     >                                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
-        const vector<E,AT>& left,                                        \
+        const vector<E,AT,O>& left,                                      \
         const ScalarT& right)                                            \
 {                                                                        \
     typedef et::BinaryVectorOp<                                          \
-            vector<E,AT>, ScalarT, _OpT_ <E,ScalarT>                     \
+            vector<E,AT,O>, ScalarT, _OpT_ <E,ScalarT>                   \
         > ExprT;                                                         \
     return et::VectorXpr<ExprT>(ExprT(left,right));                      \
 }
@@ -203,19 +203,19 @@ _op_ (                                                                   \
 
 /** Declare an operator taking a scalar and a vector. */
 #define CML_SCALAR_VEC_BINOP(_op_, _OpT_)                                \
-template<typename ScalarT, typename E, class AT>                         \
+template<typename ScalarT, typename E, class AT, class O>                \
 inline et::VectorXpr<                                                    \
     et::BinaryVectorOp<                                                  \
-        ScalarT, vector<E,AT>, _OpT_ <ScalarT,E>                         \
+        ScalarT, vector<E,AT,O>, _OpT_ <ScalarT,E>                       \
     >                                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
         const ScalarT& left,                                             \
-        const vector<E,AT>& right)                                       \
+        const vector<E,AT,O>& right)                                     \
 {                                                                        \
     typedef et::BinaryVectorOp<                                          \
-            ScalarT, vector<E,AT>,                                       \
+            ScalarT, vector<E,AT,O>,                                     \
             _OpT_ <ScalarT,E>                                            \
         > ExprT;                                                         \
     return et::VectorXpr<ExprT>(ExprT(left,right));                      \

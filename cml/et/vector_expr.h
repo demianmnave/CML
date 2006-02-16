@@ -14,10 +14,6 @@
 #include <cml/et/size_checking.h>
 
 namespace cml {
-
-/* Forward declare for the unrollers below: */
-template<typename Element, class ArrayType> class vector;
-
 namespace et {
 
 /** A placeholder for a vector expression in an expression tree. */
@@ -43,7 +39,7 @@ class VectorXpr
 
     typedef typename ExprT::value_type value_type;
     typedef vector_result_tag result_tag;
-    typedef typename ExprT::size_tag size_tag;  // Just inherit size type.
+    typedef typename ExprT::size_tag size_tag;
 
     /* Store the expression traits: */
     typedef ExprTraits<ExprT> expr_traits;
@@ -139,7 +135,7 @@ class UnaryVectorOp
 
     typedef typename OpT::value_type value_type;
     typedef vector_result_tag result_tag;
-    typedef typename ArgT::size_tag size_tag;  // Just inherit size type.
+    typedef typename ArgT::size_tag size_tag;
 
     /* Store the expression traits for the subexpression: */
     typedef ExprTraits<ArgT> arg_traits;
@@ -250,7 +246,7 @@ class BinaryVectorOp
     /* A checker to verify the argument sizes at compile- or run-time. This
      * automatically checks fixed-size vectors at compile time:
      */
-    typedef CheckVectorSizes<LeftT,RightT> check_size;
+    typedef CheckExprSizes<LeftT,RightT> check_size;
 
     /* Figure out the result size and type based on the subexpressions: */
     typedef DeduceVectorExprSize<LeftT,RightT> deduce_size;
@@ -289,9 +285,13 @@ class BinaryVectorOp
 
   public:
 
-    /** Construct from the two subexpressions. */
+    /** Construct from the two subexpressions.
+     *
+     * @throws std::invalid_argument if the subexpression sizes don't
+     * match.
+     */
     BinaryVectorOp(const LeftT& left, const RightT& right)
-        : m_left(left), m_right(right) {}
+        : m_left(left), m_right(right) { check_size()(left,right); }
 
     /** Copy constructor. */
     BinaryVectorOp(const expr_type& e)

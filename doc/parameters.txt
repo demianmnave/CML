@@ -71,3 +71,7 @@ CML_USE_VEC_XPR_REF
 CML_RECIPROCAL_OPTIMIZATION
 - Use "*= 1./x" instead of "/= x" for per-element division.  This isn't
   currently tested for any configuration.
+
+CML_IGNORE_VECTOR_ORIENTATION
+- Don't enforce vector orientation compatibility in expressions; e.g. dot()
+  will work with two row-vectors or two col-vectors.

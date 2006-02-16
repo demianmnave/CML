@@ -17,7 +17,7 @@
 namespace cml {
 
 /* Forward declare for the vector expressions below: */
-template<typename Element, class ArrayType> class vector;
+template<typename E, class AT, class O> class vector;
 
 namespace et {
 
@@ -34,14 +34,14 @@ namespace detail {
  * @bug Need to verify that OpT is actually an assignment operator.
  * @bug Need to verify that the vector sizes match.
  */
-template<class OpT, typename E, class AT, class SrcT>
+template<class OpT, typename E, class AT, class O, class SrcT>
 struct VectorAssignmentUnroller
 {
     /* Forward declare: */
     template<int N, int Last, bool can_unroll> struct Eval;
 
     /* The vector type being assigned to: */
-    typedef cml::vector<E,AT> vector_type;
+    typedef cml::vector<E,AT,O> vector_type;
 
     /* Record traits for the arguments: */
     typedef ExprTraits<vector_type> dest_traits;
@@ -90,13 +90,13 @@ struct VectorAssignmentUnroller
 };
 
 /** Unroll assignment for a fixed-sized vector. */
-template<class OpT, typename E, class AT, class SrcT>
+template<class OpT, typename E, class AT, class O, class SrcT>
 void UnrollAssignment(
-    cml::vector<E,AT>& dest, const SrcT& src, cml::fixed_size_tag)
+    cml::vector<E,AT,O>& dest, const SrcT& src, cml::fixed_size_tag)
 {
-    typedef cml::vector<E,AT> vector_type;
+    typedef cml::vector<E,AT,O> vector_type;
     enum { Len = vector_type::array_size };
-    typedef typename VectorAssignmentUnroller<OpT,E,AT,SrcT>
+    typedef typename VectorAssignmentUnroller<OpT,E,AT,O,SrcT>
         ::template Eval<0, Len-1, (Len <= CML_VECTOR_UNROLL_LIMIT)> Unroller;
     /* Note: Max is the array size, so Len-1 is the last element. */
 
@@ -104,9 +104,9 @@ void UnrollAssignment(
 }
 
 /** Just use a loop for dynamic vector assignment. */
-template<class OpT, typename E, class AT, class SrcT>
+template<class OpT, typename E, class AT, class O, class SrcT>
 void UnrollAssignment(
-        cml::vector<E,AT>& dest, const SrcT& src, cml::dynamic_size_tag)
+        cml::vector<E,AT,O>& dest, const SrcT& src, cml::dynamic_size_tag)
 {
     typedef ExprTraits<SrcT> src_traits;
     for(size_t i = 0; i < dest.size(); ++i) {
@@ -120,17 +120,18 @@ void UnrollAssignment(
 /** This constructs an assignment unroller for fixed-size arrays.
  *
  * The operator must be an assignment op (otherwise, this doesn't make any
- * sense).  Also, DestT must a fixed array type.
+ * sense).  Also, automatic unrolling is only performed for fixed-size
+ * vectors; a loop is used for dynamic-sized vectors.
  *
  * @sa cml::vector
  * @sa cml::et::OpAssign
  *
  * @bug Need to verify that OpT is actually an assignment operator.
  */
-template<class OpT, class SrcT, typename E, class AT>
-void UnrollAssignment(cml::vector<E,AT>& dest, const SrcT& src)
+template<class OpT, class SrcT, typename E, class AT, class O>
+void UnrollAssignment(cml::vector<E,AT,O>& dest, const SrcT& src)
 {
-    typedef cml::vector<E,AT> vector_type;
+    typedef cml::vector<E,AT,O> vector_type;
 
     /* Record traits for the arguments: */
     typedef ExprTraits<vector_type> dest_traits;

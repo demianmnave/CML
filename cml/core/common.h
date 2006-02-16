@@ -10,32 +10,37 @@
 
 namespace cml {
 
-/** Empty class to demarcate statically-allocated memory. */
+/** Statically-allocated memory tag. */
 struct fixed_memory_tag {};
 
-/** Empty class to demarcate dynamically-allocated memory. */
+/** Dynamically-allocated memory tag. */
 struct dynamic_memory_tag {};
 
-/** Empty class to demarcate statically-sized arrays. */
+/** Statically-sized tag. */
 struct fixed_size_tag {};
 
-/** Empty class to demarcate dynamically-sized arrays. */
+/** Dynamically-sized tag. */
 struct dynamic_size_tag {};
 
-/** Empty class to demarcate unit-sized arguments. */
+/** Unit-sized tag. */
 struct unit_size_tag {};
 
-/** Empty class to demarcate a matrix having row-major storage. */
+/** Row-major storage tag. */
 struct row_major {};
 
-/** Empty class to demarcate a matrix having col-major storage. */
+/** Col-major storage tag. */
 struct col_major {};
 
-/** Marker for unary expression ops. */
-struct unary_expression {};
+/** Column vector tag. */
+struct col_vector {};
 
-/** Marker for biary expression ops. */
-struct binary_expression {};
+#if !defined(CML_IGNORE_VECTOR_ORIENTATION)
+/** Row vector tag. */
+struct row_vector {};
+#else
+/* Assume col_vector's always: */
+typedef col_vector row_vector;
+#endif
 
 } // namespace cml
 

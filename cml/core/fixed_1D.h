@@ -91,12 +91,6 @@ class fixed_1D
 
   protected:
 
-    /** This is a no-op, because the size is fixed. */
-    void resize(size_t) const {}
-
-
-  protected:
-
     array_impl                  m_data;
 };
 

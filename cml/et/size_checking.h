@@ -28,7 +28,7 @@ namespace et {
  * sizes of binary vector expressions at compile-time and run-time.
  */
 template<typename LeftT, typename RightT>
-struct CheckVectorSizes
+struct CheckExprSizes
 {
     /* Record argument traits: */
     typedef ExprTraits<LeftT> left_traits;
@@ -90,7 +90,8 @@ struct CheckVectorSizes
      */
     bool operator()(const left_t& left, const right_t& right) const {
         if(!check_size()(left, right)) {
-            throw std::invalid_argument("vectors have incompatible sizes.");
+            throw std::invalid_argument(
+                    "expressions have incompatible sizes.");
         }
         return true;
     }

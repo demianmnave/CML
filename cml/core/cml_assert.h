@@ -11,15 +11,11 @@
 #ifndef cml_assert_h
 #define cml_assert_h
 
+#include <cml/core/cml_meta.h>
+
 #define CML_JOIN(X,Y) CML_DO_JOIN(X,Y)
 #define CML_DO_JOIN(X,Y) CML_DO_JOIN2(X,Y)
 #define CML_DO_JOIN2(X,Y) X##Y
-
-/** Type of a true statement. */
-struct true_type {};
-
-/** Type of a false statement. */
-struct false_type {};
 
 /** Default, undefined compile-time assertion struct. */
 template<bool T> struct STATIC_ASSERTION_FAILURE;
@@ -36,6 +32,9 @@ template<> struct STATIC_ASSERTION_FAILURE<true> {
  * comile time.  This means that the expression must only rely on
  * constants, enums, and/or template parameters, not variables having
  * run-time storage requirements.
+ *
+ * @warning Enclose expressions that have commas with parens, otherwise the
+ * preprocessor will parse the commas as macro argument separators!
  */
 #define CML_STATIC_REQUIRE(_E_) \
     typedef typename STATIC_ASSERTION_FAILURE<(_E_)>::result \
