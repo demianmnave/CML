@@ -56,14 +56,14 @@ struct CheckExprSizes
 
     /** Compile-time check for unit-size scalars with anything else. */
     template<typename R, class D> struct impl<unit_size_tag,R,D> {
-        bool operator()(const left_t& left, const right_t& right) const {
+        bool operator()(const left_t&, const right_t&) const {
             return true;
         }
     };
 
     /** Compile-time check for unit-size scalars with anything else. */
     template<typename L, class D> struct impl<L,unit_size_tag,D> {
-        bool operator()(const left_t& left, const right_t& right) const {
+        bool operator()(const left_t&, const right_t&) const {
             return true;
         }
     };
@@ -75,7 +75,7 @@ struct CheckExprSizes
         CML_STATIC_REQUIRE(
                 (long)left_t::array_size == (long)right_t::array_size);
 
-        bool operator()(const left_t& left, const right_t& right) const {
+        bool operator()(const left_t&, const right_t&) const {
             return true;
         }
     };

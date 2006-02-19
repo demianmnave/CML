@@ -14,13 +14,19 @@
 using std::cout;
 using std::endl;
 
+using namespace cml;
+
+/* Define the vector orientation to assume: */
+typedef col_vector vector_orient;
+
 /* 3-space column vector, fixed length, double coordinates: */
-typedef cml::vector< double, cml::fixed<3>, cml::col_vector> vector_d3;
+typedef vector< double, fixed<3>, vector_orient> vector_d3;
 
 int main()
 {
-    vector_d3 u,v;
-    cout << "dot(u,v) = " << cml::dot(u,v) << endl;
+    vector_d3 u, v;
+    cout << "dot(u,v) = " << dot(T(u),v) << endl;
+    cout << "dot(u,u) = " << dot(T(u),u) << endl;
     return 0;
 }
 

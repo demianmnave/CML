@@ -12,8 +12,9 @@
 /* For convenience: */
 using std::cerr;
 using std::endl;
+using namespace cml;
 
-typedef cml::vector< double, cml::fixed<4>, cml::col_vector > vector_d4;
+typedef vector< double, fixed<4>, col_vector > vector_d4;
 #define VECINIT(_v_) _v_
 
 #include "print_vector.cpp"

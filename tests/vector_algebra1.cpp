@@ -5,7 +5,7 @@
  *  @brief
  */
 
-/* Algebraic test #1, called by vector_main1.cpp: */
+/* Algebraic test #1: */
 inline void timed1(
         vector_d4& v,
         const vector_d4& v1,
@@ -15,7 +15,7 @@ inline void timed1(
         size_t n_iter
         )
 {
-    for(int i = 0; i < n_iter; ++i) {
+    for(size_t i = 0; i < n_iter; ++i) {
         //v += v1+v2;
         //v = v+v1+v2;
         //v = v+v1+v2+v3;
@@ -25,6 +25,7 @@ inline void timed1(
         //v = v+v1+v2+v3+v4;
         //v += v1+v2+v3;
         //v += v3*dot(v2,(v1*dot(v1,v2)));
+        //v = v+v1*dot(T(v2),v3);
     }
 }
 

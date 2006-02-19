@@ -1,5 +1,5 @@
 CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
-	 -DCML_VECTOR_UNROLL_LIMIT=8
+	 -DCML_VECTOR_UNROLL_LIMIT=25
 
 
 #-- CXX=ppc64-redhat-linux-g++
@@ -17,15 +17,18 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 #-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 
-CXX=i386-redhat-linux-g++
+CXX=i386-redhat-linux-g++ #-Wall -W
 CPP=$(CXX) -M
 ##:: SEEMS TO BE BEST FOR GCC 4.0 Linux/x86
 ##:: Note--GCC4 Linux/x86 doesn't like hand-unrolled matrices
 CXXFLAGS=-ftemplate-depth-50 -march=pentium4 -mtune=pentium4 -O3 \
-	 -fomit-frame-pointer -funroll-loops -finline-functions \
+	 -fomit-frame-pointer -funroll-all-loops -finline-functions \
 	 -finline-limit=2000000000 \
 	 -DCML_NO_2D_UNROLLER
-CPPFLAGS=-I.. $(CML_OPTS)
+CPPFLAGS=-I.. $(CML_OPTS) \
+	-I$(HOME)/projects/external/build/exmat/include \
+	-I$(HOME)/projects/external/build/ltl-1.7.10
+
 exe=
 obj=.o
 rm=rm -f
@@ -95,7 +98,7 @@ LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 
 C_VEC_TEST_SRC		= vector_c1.cpp
-FIXED_VEC_TEST_SRC	= fixed_vec_et1.cpp
+FIXED_VEC_TEST_SRC	= fixed_vec_et1.cpp fixed_vec_exmat1.cpp fixed_vec_ltl1.cpp
 DYNAMIC_VEC_TEST_SRC	= dynamic_vec_et1.cpp
 C_MAT_TEST_SRC		= matrix_c1.cpp
 FIXED_MAT_TEST_SRC	= fixed_mat_et1.cpp
@@ -112,7 +115,7 @@ ALL_SRC=$(C_VEC_TEST_SRC) \
 	#\ promote1.cpp
 
 C_VEC_TESTS		= vector_c1$(exe)
-FIXED_VEC_TESTS		= fixed_vec_et1$(exe)
+FIXED_VEC_TESTS		= fixed_vec_et1$(exe) fixed_vec_exmat1$(exe) fixed_vec_ltl1$(exe)
 DYNAMIC_VEC_TESTS	= dynamic_vec_et1$(exe)
 C_MAT_TESTS		= matrix_c1$(exe)
 FIXED_MAT_TESTS		= fixed_mat_et1$(exe)
@@ -130,14 +133,6 @@ ALL=	$(C_VEC_TESTS) \
 	#\ promote1
 
 all: $(ALL)
-
-.PHONY: matrix_c1.s
-matrix_c1.s: matrix_c1.cpp
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -S $^
-
-.PHONY: matrix_et1.s
-matrix_et1.s: matrix_et1.cpp
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -S $^
 
 clean:
 	$(rm) $(ALL) *$(obj) .depend

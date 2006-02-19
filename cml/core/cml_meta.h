@@ -29,6 +29,23 @@ template<typename T> struct same_type<T,T> {
     enum { is_true = true };
 };
 
+/** Select argument type based upon truth value. */
+template<bool yn, typename TrueT, typename FalseT> struct select_if;
+
+/** Result is TrueT if true. */
+template<typename TrueT, typename FalseT>
+struct select_if<true,TrueT,FalseT> {
+    typedef TrueT result;
+    enum { is_true = true };
+};
+
+/** Result is FalseT if false. */
+template<typename TrueT, typename FalseT>
+struct select_if<false,TrueT,FalseT> {
+    typedef FalseT result;
+    enum { is_true = false };
+};
+
 #endif
 
 // -------------------------------------------------------------------------

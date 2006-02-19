@@ -23,9 +23,9 @@ namespace cml {
  * This class encapsulates the notion of a vector.  The ArrayType template
  * argument can be used to select the type of array to be used as internal
  * storage for a list of type Element.  The vector orientation determines
- * how vectors are used (mathematically) in expressions; i.e. a*b when a is
- * a row vector and b is a column vector is the dot (inner) product, while
- * a*b when a is a column vector and b is a row vector is the matrix
+ * how vectors are used arithmetically in expressions; i.e. a*b, when a is
+ * a row vector and b is a column vector, is the dot (inner) product, while
+ * a*b, when a is a column vector and b is a row vector, is the matrix
  * (outer) product of a and b.
  *
  * @warning Currently, vectors with different types (Element and/or
@@ -40,6 +40,11 @@ namespace cml {
  * that vector<> must contain a compatible constructor for each type.  Also
  * note that a templated constructor leads to ambiguities, so removing this
  * constructor requirement doesn't seem to be straightforward.
+ *
+ * @internal All assignments to the vector should go through
+ * et::UnrollAssignment, which verifies that the source expression and the
+ * destination vector have the same size.  This is particularly important
+ * for dynamically-sized vectors.
  */
 template<typename Element, class ArrayType, class Orient>
 class vector
@@ -77,6 +82,12 @@ class vector
     /* Note: orientation is propagated up an expression tree and enforced
      * at compile time through the result_type expression trait.
      */
+
+    /* To simplify transpose(): */
+    typedef typename select_if<
+        same_type<orient_tag,row_vector>::is_true,
+        col_vector, row_vector>::result transposed_tag;
+    typedef vector<Element,ArrayType,transposed_tag> transposed_type;
 
     /* For matching by size type: */
     typedef typename array_type::size_tag size_tag;

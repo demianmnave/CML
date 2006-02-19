@@ -14,14 +14,36 @@
 
 namespace cml {
 
+/** Vector dot (inner) product.
+ *
+ * This computes a dot b -> Scalar.
+ *
+ * @internal Because the return type is a scalar type (e.g. double), the
+ * compiler will automatically synthesize a temporary into the expression
+ * tree to hold the result.
+ *
+ * @todo This function may need to be explicitly unrolled to get max
+ * performance.
+ */
 template<typename LeftT, typename RightT>
-typename et::ScalarPromote<
+inline typename et::ScalarPromote<
     typename LeftT::value_type, typename RightT::value_type
 >::type
 dot(const LeftT& left, const RightT& right)
 {
     typedef et::ExprTraits<LeftT> left_traits;
     typedef et::ExprTraits<RightT> right_traits;
+
+    /* First, require vector expressions: */
+    typedef typename left_traits::result_tag left_result_tag;
+    typedef typename right_traits::result_tag right_result_tag;
+
+    /* Note: parens are required here so that the preprocessor ignores the
+     * commas:
+     */
+    CML_STATIC_REQUIRE(
+            (same_type<left_result_tag,et::vector_result_tag>::is_true
+             && same_type<right_result_tag,et::vector_result_tag>::is_true));
 
     /* dot() requires that the left argument is a row_vector, and the right
      * argument is a col_vector:
@@ -33,10 +55,10 @@ dot(const LeftT& left, const RightT& right)
      * commas:
      */
     CML_STATIC_REQUIRE(
-        (same_type<left_orient,row_vector>::is_true)
-            && (same_type<right_orient,col_vector>::is_true));
+            (same_type<left_orient,row_vector>::is_true
+             && same_type<right_orient,col_vector>::is_true));
 
-    /* The return type: */
+    /* Deduce the return type: */
     typedef typename et::ScalarPromote<
         typename left_traits::value_type, typename right_traits::value_type
     >::type sum_type;
@@ -57,7 +79,6 @@ dot(const LeftT& left, const RightT& right)
      */
     sum_type sum(left[0]*right[0]);
     for(size_t i = 1; i < left.size(); ++i) {
-        /* XXX This should probably be unrolled: */
         sum += left[i]*right[i];
     }
 

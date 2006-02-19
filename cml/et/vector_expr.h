@@ -289,6 +289,11 @@ class BinaryVectorOp
      *
      * @throws std::invalid_argument if the subexpression sizes don't
      * match.
+     *
+     * @bug The constructor ensures that left and right have the same
+     * size through CheckExprSizes.  For dynamically-allocated arrays this
+     * could become very costly, since the check happens at each call to the
+     * BinaryVectorOp constructor.
      */
     BinaryVectorOp(const LeftT& left, const RightT& right)
         : m_left(left), m_right(right) { check_size()(left,right); }

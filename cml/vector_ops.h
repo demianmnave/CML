@@ -9,6 +9,7 @@
 #define vector_ops_h
 
 #include <cml/et/vecop_macros.h>
+#include <cml/et/vector_transpose.h>
 
 namespace cml {
 

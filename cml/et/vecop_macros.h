@@ -54,8 +54,7 @@ _op_ (const vector<E,AT,O>& arg)                                         \
 
 /** Declare a unary operator taking a et::VectorXpr operand.
  *
- * The resulting VectorXpr has a UnaryVectorOp subexpression.  The
- * parse tree is automatically compressed by hoisting the VectorXpr's
+ * The parse tree is automatically compressed by hoisting the VectorXpr's
  * subexpression into the subexpression of the UnaryVectorOp.
  */
 #define CML_VECXPR_UNIOP(_op_, _OpT_)                                    \
@@ -273,7 +272,7 @@ _op_ (                                                                   \
 }
 
 
-} // cml
+} // namespace cml
 
 #endif
 
