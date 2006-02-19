@@ -4,8 +4,11 @@
 /** @file
  *  @brief
  *
- *  @warning The promotions aren't complete yet.
- *  @todo Add missing promotions.
+ * Defines promotions for vectors used in vector/vector or vector/scalar
+ * expressions.
+ *
+ * @sa UnaryVectorOp
+ * @sa BinaryVectorOp
  */
 
 #ifndef vector_promotions_h
@@ -27,7 +30,8 @@ template<typename LeftT, typename RightT> struct VectorPromote;
 
 /** Type promotion for two vector types.
  *
- * This requires that both vector types have the same orientation.
+ * This requires that both vector types have the same orientation, and
+ * ensures that orientation for the resulting type.
  */
 template<typename E1, class AT1, typename E2, class AT2, class O>
 struct VectorPromote< cml::vector<E1,AT1,O>, cml::vector<E2,AT2,O> >

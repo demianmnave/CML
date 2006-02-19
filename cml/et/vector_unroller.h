@@ -3,6 +3,11 @@
  *-----------------------------------------------------------------------*/
 /** @file
  *  @brief
+ *
+ * Defines vector unrollers.
+ *
+ * @todo Add unrolling for dynamic vectors, and for vectors longer than
+ * CML_VECTOR_UNROLL_LIMIT.
  */
 
 #ifndef vector_unroller_h
@@ -33,7 +38,6 @@ namespace detail {
  * @sa cml::et::OpAssign
  *
  * @bug Need to verify that OpT is actually an assignment operator.
- * @bug Need to verify that the vector sizes match.
  */
 template<class OpT, typename E, class AT, class O, class SrcT>
 struct VectorAssignmentUnroller

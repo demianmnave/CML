@@ -71,6 +71,7 @@ class vector
     typedef typename array_type::reference reference;
     typedef typename array_type::const_reference const_reference;
 
+    /* For integration into the expression templates code: */
     typedef vector_type& expr_reference;
     typedef const vector_type& expr_const_reference;
 
@@ -136,9 +137,6 @@ class vector
     /** Construct from a vector expression.
      *
      * @param expr the expression to copy from.
-     *
-     * @bug The number of elements in the expression needs to be checked
-     * against the size of the vector, especially for dynamic vectors.
      */
     template<class XprT> vector(const et::VectorXpr<XprT>& expr) {
         /* Verify that a promotion exists at compile time: */
@@ -152,7 +150,7 @@ class vector
 
   public:
 
-    /** Assign this vector from another of the same type, with an operator.
+    /** Assign this vector from another of the same type using an operator.
      *
      * @param _op_ the operator (e.g. +=)
      * @param _op_name_ the op functor (e.g. et::OpAssign)

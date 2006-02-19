@@ -22,7 +22,7 @@ namespace cml {
  * compiler will automatically synthesize a temporary into the expression
  * tree to hold the result.
  *
- * @todo This function may need to be explicitly unrolled to get max
+ * @todo The loop below may need to be explicitly unrolled to get the best
  * performance.
  */
 template<typename LeftT, typename RightT>
@@ -74,8 +74,8 @@ dot(const LeftT& left, const RightT& right)
         throw std::invalid_argument(
                 "dot() requires vectors having at least 1 element");
 
-    /* Initialize the sum (these must be vector expressions, so it's okay
-     * to use the array notation here):
+    /* Initialize the sum (left and right must be vector expressions, so
+     * it's okay to use the array notation here):
      */
     sum_type sum(left[0]*right[0]);
     for(size_t i = 1; i < left.size(); ++i) {
