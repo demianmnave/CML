@@ -24,8 +24,10 @@
  * VecXpr op Scalar -> VecXpr
  * Scalar op VecXpr -> VecXpr
  *
- * @todo Allow operators on vectors with different element types, and
- * eventually between vectors of different storage types also.
+ * All of the generator functions compress the expression tree by hoisting
+ * subexpressions into the containing expression.  This has the effect of
+ * forcing only the root node of the expression tree to be a VectorXpr.
+ * Every other node is a Unary or BinaryVectorOp.
  */
 
 #ifndef vecop_macros_h
@@ -33,8 +35,6 @@
 
 #include <cml/et/scalar_ops.h>
 #include <cml/et/vector_expr.h>
-
-namespace cml {
 
 /** Declare a unary operator taking a vector operand. */
 #define CML_VEC_UNIOP(_op_, _OpT_)                                       \
@@ -52,11 +52,7 @@ _op_ (const vector<E,AT,O>& arg)                                         \
 }
 
 
-/** Declare a unary operator taking a et::VectorXpr operand.
- *
- * The parse tree is automatically compressed by hoisting the VectorXpr's
- * subexpression into the subexpression of the UnaryVectorOp.
- */
+/** Declare a unary operator taking a et::VectorXpr operand. */
 #define CML_VECXPR_UNIOP(_op_, _OpT_)                                    \
 template<class XprT>                                                     \
 inline et::VectorXpr<                                                    \
@@ -72,35 +68,27 @@ _op_ (const et::VectorXpr<XprT>& arg)                                    \
 }
 
 
-/** Declare an operator taking two vector operands.
- *
- * The vectors must have the same type (for now).
- */
+/** Declare an operator taking two vector operands. */
 #define CML_VEC_VEC_BINOP(_op_, _OpT_)                                   \
-template<typename E, class AT, class O>                                  \
+template<typename E1, class AT1, typename E2, class AT2, class O>        \
 inline et::VectorXpr<                                                    \
     et::BinaryVectorOp<                                                  \
-        vector<E,AT,O>, vector<E,AT,O>, _OpT_ <E,E>                      \
+        vector<E1,AT1,O>, vector<E2,AT2,O>, _OpT_ <E1,E2>                \
     >                                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
-        const vector<E,AT,O>& left,                                      \
-        const vector<E,AT,O>& right)                                     \
+        const vector<E1,AT1,O>& left,                                    \
+        const vector<E2,AT2,O>& right)                                   \
 {                                                                        \
     typedef et::BinaryVectorOp<                                          \
-            vector<E,AT,O>, vector<E,AT,O>, _OpT_ <E,E>                  \
+            vector<E1,AT1,O>, vector<E2,AT2,O>, _OpT_ <E1,E2>            \
         > ExprT;                                                         \
     return et::VectorXpr<ExprT>(ExprT(left,right));                      \
 }
 
 
-/** Declare an operator taking a vector and a et::VectorXpr.
- *
- * The resulting VectorXpr has a BinaryVectorOp subexpression.  The
- * parse tree is automatically compressed by hoisting the VectorXpr's
- * subexpression into the right subexpression of the BinaryVectorOp.
- */
+/** Declare an operator taking a vector and a et::VectorXpr. */
 #define CML_VEC_VECXPR_BINOP(_op_, _OpT_)                                \
 template<typename E, class AT, class O, class XprT>                      \
 inline et::VectorXpr<                                                    \
@@ -121,12 +109,7 @@ _op_ (                                                                   \
 }
 
 
-/** Declare an operator taking a et::VectorXpr and a vector.
- *
- * The resulting VectorXpr has a BinaryVectorOp subexpression.  The
- * parse tree is automatically compressed by hoisting the VectorXpr's
- * subexpression into the left subexpression of the BinaryVectorOp.
- */
+/** Declare an operator taking an et::VectorXpr and a vector. */
 #define CML_VECXPR_VEC_BINOP(_op_, _OpT_)                                \
 template<class XprT, typename E, class AT, class O>                      \
 inline et::VectorXpr<                                                    \
@@ -147,12 +130,7 @@ _op_ (                                                                   \
 }
 
 
-/** Declare an operator taking two et::VectorXpr operands.
- *
- * The resulting VectorXpr has a BinaryVectorOp subexpression.  The
- * parse tree is automatically compressed by hoisting the VectorXpr's
- * subexpression into the subexpressions of the BinaryVectorOp.
- */
+/** Declare an operator taking two et::VectorXpr operands. */
 #define CML_VECXPR_VECXPR_BINOP(_op_, _OpT_)                             \
 template<class XprT1, class XprT2>                                       \
 inline et::VectorXpr<                                                    \
@@ -214,19 +192,13 @@ _op_ (                                                                   \
         const vector<E,AT,O>& right)                                     \
 {                                                                        \
     typedef et::BinaryVectorOp<                                          \
-            ScalarT, vector<E,AT,O>,                                     \
-            _OpT_ <ScalarT,E>                                            \
+            ScalarT, vector<E,AT,O>, _OpT_ <ScalarT,E>                   \
         > ExprT;                                                         \
     return et::VectorXpr<ExprT>(ExprT(left,right));                      \
 }
 
 
-/** Declare an operator taking a et::VectorXpr and a scalar.
- *
- * The resulting VectorXpr has a BinaryVectorOp subexpression. The
- * parse tree is automatically compressed by hoisting the VectorXpr's
- * subexpression into the left subexpression of the BinaryVectorOp.
- */
+/** Declare an operator taking a et::VectorXpr and a scalar. */
 #define CML_VECXPR_SCALAR_BINOP(_op_, _OpT_)                             \
 template<class XprT, typename ScalarT>                                   \
 inline et::VectorXpr<                                                    \
@@ -246,12 +218,7 @@ _op_ (                                                                   \
 }
 
 
-/** Declare an operator taking a scalar and a et::VectorXpr.
- *
- * The resulting VectorXpr has a BinaryVectorOp subexpression. The
- * parse tree is automatically compressed by hoisting the VectorXpr's
- * subexpression into the right subexpression of the BinaryVectorOp.
- */
+/** Declare an operator taking a scalar and a et::VectorXpr. */
 #define CML_SCALAR_VECXPR_BINOP(_op_, _OpT_)                             \
 template<typename ScalarT, class XprT>                                   \
 inline et::VectorXpr<                                                    \
@@ -270,9 +237,6 @@ _op_ (                                                                   \
         > ExprT;                                                         \
     return et::VectorXpr<ExprT>(ExprT(left,right.expression()));         \
 }
-
-
-} // namespace cml
 
 #endif
 

@@ -1,0 +1,50 @@
+/* -*- C++ -*- ------------------------------------------------------------
+ @@COPYRIGHT@@
+ *-----------------------------------------------------------------------*/
+/** @file
+ *  @brief
+ */
+
+#ifndef core_meta_common_h
+#define core_meta_common_h
+
+/** Type of a true statement. */
+struct true_type {};
+
+/** Type of a false statement. */
+struct false_type {};
+
+/** A "type pair". */
+template<typename T1, typename T2> struct type_pair {
+    typedef T1 first;
+    typedef T2 second;
+};
+
+/** A "type quadruple". */
+template<typename T1, typename T2, typename T3, typename T4>
+struct type_quad {
+    typedef T1 first;
+    typedef T2 second;
+    typedef T3 third;
+    typedef T3 fourth;
+};
+
+/** Determine if two types are the same.
+ *
+ * Defaults to false.
+ */
+template<typename T, typename U> struct same_type {
+    typedef false_type result;
+    enum { is_true = false };
+};
+
+/** Match the same type for both of same_type's template arguments. */
+template<typename T> struct same_type<T,T> {
+    typedef true_type result;
+    enum { is_true = true };
+};
+
+#endif
+
+// -------------------------------------------------------------------------
+// vim:ft=cpp

@@ -145,7 +145,7 @@ void UnrollAssignment(cml::vector<E,AT,O>& dest, const SrcT& src)
     /* A checker to verify the argument sizes at compile- or run-time. This
      * automatically checks fixed-size vectors at compile time:
      */
-    CheckExprSizes<vector_type,SrcT>()(dest,src);
+    CheckLinearExprSizes<vector_type,SrcT,vector_result_tag>()(dest,src);
 
     /* Do the unroll call: */
     detail::UnrollAssignment<OpT>(dest, src, typename vector_type::size_tag());

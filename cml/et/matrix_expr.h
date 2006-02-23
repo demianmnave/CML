@@ -5,14 +5,13 @@
  *  @brief
  */
 
-#if !defined(cml_matrix_h)
-#error "This should only be included from cml/matrix.h"
-#else
-
 #ifndef matrix_expr_h
 #define matrix_expr_h
 
+
+#include <cml/core/common.h>
 #include <cml/et/matrix_traits.h>
+#include <cml/et/matrix_promotions.h>
 #include <cml/et/size_checking.h>
 
 namespace cml {
@@ -56,6 +55,12 @@ class MatrixXpr
 
   public:
 
+    /** Record result size as an enum (if applicable). */
+    enum { array_rows = ExprT::array_rows, array_cols = ExprT::array_cols };
+
+
+  public:
+
     /** Return number of rows in the expression (same as subexpression). */
     size_t rows() const { return m_expr.rows(); }
 
@@ -65,21 +70,10 @@ class MatrixXpr
     /** Return reference to contained expression. */
     expr_reference expression() const { return m_expr; }
 
-    /** Compute value at index i of the result vector. */
-    value_type operator()(size_t i) const {
-        return expr_traits().get(m_expr,i);
-    }
-
     /** Compute value at index i,j of the result vector. */
     value_type operator()(size_t i, size_t j) const {
         return expr_traits().get(m_expr,i,j);
     }
-
-
-  public:
-
-    /** Record result size as an enum (if applicable). */
-    enum { array_rows = ExprT::array_rows, array_cols = ExprT::array_cols };
 
 
   public:
@@ -112,9 +106,6 @@ struct ExprTraits< MatrixXpr<ExprT> >
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::result_type result_type;
 
-    /** This is used primarily for linear unrolling. */
-    value_type get(const expr_type& e, size_t i) const { return e(i); }
-
     value_type get(const expr_type& e, size_t i, size_t j) const {
         return e(i,j);
     }
@@ -129,14 +120,17 @@ struct ExprTraits< MatrixXpr<ExprT> >
  * The operator must take exactly one argument.
  */
 template<class ArgT, class OpT>
-class LinearUnaryMatrixOp
+class UnaryMatrixOp
 {
   public:
 
-    typedef LinearUnaryMatrixOp<ArgT,OpT> expr_type;
+    typedef UnaryMatrixOp<ArgT,OpT> expr_type;
+
+    /* Record ary-ness of the expression: */
+    typedef unary_expression expr_ary;
 
 #if defined(CML_USE_MAT_UNIOP_REF)
-    /* Use a reference to the compiler's LinearUnaryMatrixOp temporary in
+    /* Use a reference to the compiler's UnaryMatrixOp temporary in
      * expressions:
      */
     typedef const expr_type& expr_const_reference;
@@ -147,7 +141,7 @@ class LinearUnaryMatrixOp
 
     typedef typename OpT::value_type value_type;
     typedef matrix_result_tag result_tag;
-    typedef typename ArgT::size_tag size_tag;  // Just inherit size type.
+    typedef typename ArgT::size_tag size_tag;
 
     /* Store the expression traits for the subexpression: */
     typedef ExprTraits<ArgT> arg_traits;
@@ -167,15 +161,6 @@ class LinearUnaryMatrixOp
     /** Return number of columns in the expression (same as argument). */
     size_t cols() const { return m_arg.cols(); }
 
-    /** Compute value at index i of the result vector. */
-    value_type operator()(size_t i) const {
-
-        /* This uses the expression traits to figure out how to access the
-         * i,j'th element of the subexpression:
-         */
-        return OpT().apply(arg_traits().get(m_arg,i));
-    }
-
     /** Compute value at index i,j of the result vector. */
     value_type operator()(size_t i, size_t j) const {
 
@@ -189,11 +174,11 @@ class LinearUnaryMatrixOp
   public:
 
     /** Construct from the subexpression. */
-    LinearUnaryMatrixOp(const ArgT& arg)
+    UnaryMatrixOp(const ArgT& arg)
         : m_arg(arg) {}
 
     /** Copy constructor. */
-    LinearUnaryMatrixOp(const expr_type& e)
+    UnaryMatrixOp(const expr_type& e)
         : m_arg(e.m_arg) {}
 
 
@@ -208,18 +193,15 @@ class LinearUnaryMatrixOp
     expr_type& operator=(const expr_type&);
 };
 
-/** Expression traits for LinearUnaryMatrixOp<>. */
+/** Expression traits for UnaryMatrixOp<>. */
 template<class ArgT, class OpT>
-struct ExprTraits< LinearUnaryMatrixOp<ArgT,OpT> >
+struct ExprTraits< UnaryMatrixOp<ArgT,OpT> >
 {
-    typedef LinearUnaryMatrixOp<ArgT,OpT> expr_type;
+    typedef UnaryMatrixOp<ArgT,OpT> expr_type;
     typedef typename expr_type::value_type value_type;
     typedef typename expr_type::expr_const_reference const_reference;
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::result_type result_type;
-
-    /** This is used primarily for linear unrolling. */
-    value_type get(const expr_type& e, size_t i) const { return e(i); }
 
     value_type get(const expr_type& e, size_t i, size_t j) const {
         return e(i,j);
@@ -232,19 +214,19 @@ struct ExprTraits< LinearUnaryMatrixOp<ArgT,OpT> >
 
 /** A binary matrix expression. */
 template<class LeftT, class RightT, class OpT>
-class LinearBinaryMatrixOp
+class BinaryMatrixOp
 {
   public:
 
-    typedef LinearBinaryMatrixOp<LeftT,RightT,OpT> expr_type;
+    typedef BinaryMatrixOp<LeftT,RightT,OpT> expr_type;
 
 #if defined(CML_USE_MAT_BINOP_REF)
-    /* Use a reference to the compiler's LinearBinaryMatrixOp temporary in
+    /* Use a reference to the compiler's BinaryMatrixOp temporary in
      * expressions:
      */
     typedef const expr_type& expr_const_reference;
 #else
-    /* Copy the LinearUnaryMatrixOp expression by value into parent
+    /* Copy the UnaryMatrixOp expression by value into parent
      * expression tree nodes:
      */
     typedef expr_type expr_const_reference;
@@ -262,27 +244,24 @@ class LinearBinaryMatrixOp
     typedef typename right_traits::const_reference right_reference;
 
     /* A checker to verify the argument sizes at compile- or run-time: */
-    typedef CheckLinearMatrixSizes<expr_type> check_size;
+    typedef CheckLinearExprSizes<LeftT,RightT,result_tag> check_size;
 
-    /* Figure out the result size and type based on the subexpressions: */
-    typedef DeduceMatrixResultSize<expr_type> deduce_size;
-    typedef typename deduce_size::tag size_tag;
-
-#if 0
-    /* Get the result type: */
-    typedef typename expr_traits::result_type result_type;
-#endif
+    /* Figure out the expression's resulting (vector) type: */
+    typedef typename left_traits::result_type left_result;
+    typedef typename right_traits::result_type right_result;
+    typedef typename MatrixPromote<left_result,right_result>::type result_type;
+    typedef typename result_type::size_tag size_tag;
 
 
   public:
 
     /** Record result size as an enum (if applicable).
      *
-     * MatrixSizeChecker<> ensures that this works as expected.
+     * CheckExprSizes<> ensures that this works as expected.
      */
     enum {
-        array_rows = deduce::result_rows,
-        array_cols = deduce::result_cols
+        array_rows = result_type::array_rows,
+        array_cols = result_type::array_cols
     };
 
 
@@ -290,23 +269,20 @@ class LinearBinaryMatrixOp
 
     /** Return number of rows in the result. */
     size_t rows() const {
-        return left_traits().rows(m_left);
+
+        /* The matrices must have the same dimensions, so just return the
+         * number of rows of the left-hand argument:
+         */
+        return m_left.rows();
     }
 
     /** Return number of cols in the result. */
     size_t cols() const {
-        return right_traits().cols(m_right);
-    }
 
-    /** Compute value at index i of the result vector. */
-    value_type operator()(size_t i) const {
-
-        /* This uses the expression traits to figure out how to access the
-         * i'th index of the two subexpressions:
+        /* The matrices must have the same dimensions, so just return the
+         * number of cols of the left-hand argument:
          */
-        return OpT().apply(
-                left_traits().get(m_left,i),
-                right_traits().get(m_right,i));
+        return m_left.cols();
     }
 
     /** Compute value at index i,j of the result vector. */
@@ -323,12 +299,21 @@ class LinearBinaryMatrixOp
 
   public:
 
-    /** Construct from the two subexpressions. */
-    LinearBinaryMatrixOp(const LeftT& left, const RightT& right)
-        : m_left(left), m_right(right) {}
+    /** Construct from the two subexpressions.
+     *
+     * @throws std::invalid_argument if the subexpression sizes don't
+     * match.
+     *
+     * @bug The constructor ensures that left and right have the same
+     * size through CheckExprSizes.  For dynamically-allocated arrays this
+     * could become very costly, since the check happens at each call to the
+     * BinaryVectorOp constructor.
+     */
+    BinaryMatrixOp(const LeftT& left, const RightT& right)
+        : m_left(left), m_right(right) { check_size()(left,right); }
 
     /** Copy constructor. */
-    LinearBinaryMatrixOp(const expr_type& e)
+    BinaryMatrixOp(const expr_type& e)
         : m_left(e.m_left), m_right(e.m_right) {}
 
 
@@ -344,14 +329,15 @@ class LinearBinaryMatrixOp
     expr_type& operator=(const expr_type&);
 };
 
-/** Expression traits for LinearBinaryMatrixOp<>. */
+/** Expression traits for BinaryMatrixOp<>. */
 template<class LeftT, class RightT, class OpT>
-struct ExprTraits< LinearBinaryMatrixOp<LeftT,RightT,OpT> >
+struct ExprTraits< BinaryMatrixOp<LeftT,RightT,OpT> >
 {
-    typedef LinearBinaryMatrixOp<LeftT,RightT,OpT> expr_type;
+    typedef BinaryMatrixOp<LeftT,RightT,OpT> expr_type;
     typedef typename expr_type::value_type value_type;
     typedef typename expr_type::expr_const_reference const_reference;
     typedef typename expr_type::result_tag result_tag;
+    typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
 
     /** This is used primarily for linear unrolling. */
@@ -370,7 +356,6 @@ struct ExprTraits< LinearBinaryMatrixOp<LeftT,RightT,OpT> >
 } // namespace cml
 
 #endif
-#endif // !defined(cml_vector_h)
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp

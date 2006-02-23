@@ -11,9 +11,9 @@
 #define matrix_h
 
 #include <cstddef>              // for size_t
-#include <cml/common.h>
-#include <cml/et/matrix_ops.h>
+#include <cml/core/common.h>
 #include <cml/et/matrix_unroller.h>
+#include <cml/matrix_ops.h>
 
 namespace cml {
 
@@ -32,23 +32,23 @@ namespace cml {
  * @sa cml::fixed
  * @sa cml::dynamic
  */
-template<typename Element, class ArrayType, typename Orient = row_major>
+template<typename Element, class ArrayType, typename Orient>
 class matrix
 
 /* Figure out (and inherit from) the selected base array type: */
-: public ArrayType::template rebind<Element,Orient>::other
+: public ArrayType::template rebind<twod_tag,Element>::other
 {
   public:
 
     /* Shorthand for the base array type: */
-    typedef typename ArrayType::template rebind<Element,Orient>::other
+    typedef typename ArrayType::template rebind<twod_tag,Element>::other
         array_type;
 
     /* Shorthand for the type of this matrix: */
     typedef matrix<Element,ArrayType,Orient> matrix_type;
 
     /* For integration into the expression template code: */
-    typedef matrix<Element,ArrayType,Orient> expr_type;
+    typedef matrix_type expr_type;
 
     /* Standard: */
     typedef typename array_type::value_type value_type;
@@ -59,13 +59,28 @@ class matrix
     typedef const matrix_type& expr_const_reference;
 
     /* For matching by memory layout: */
-    typedef typename array_type::orientation orientation;
+    typedef typename array_type::layout layout;
 
     /* For matching by storage type if necessary: */
     typedef typename array_type::memory_tag memory_tag;
 
+    /* For matching by orientation: */
+    typedef Orient orient_tag;
+    /* Note: orientation is propagated up an expression tree and enforced
+     * at compile time through the result_type expression trait.
+     */
+
+    /* To simplify transpose(): */
+    typedef typename select_if<
+        same_type<orient_tag,row_vector>::is_true,
+        col_vector, row_vector>::result transposed_tag;
+    typedef matrix<Element,ArrayType,transposed_tag> transposed_type;
+
     /* For matching by size type if necessary: */
     typedef typename array_type::size_tag size_tag;
+
+    /* For matching by result-type: */
+    typedef cml::et::matrix_result_tag result_tag;
 
 
   public:
@@ -194,7 +209,7 @@ class matrix
 #if defined(CML_ENABLE_MATRIX_BRACES)
   public:
 
-    /* These classes and methods should only be used for testing: */
+    /* These should probably only be used for testing: */
 
     /* Helper to use operator[] to access rows of the matrix: */
     template<class Matrix> struct row_ref {
@@ -204,10 +219,6 @@ class matrix
         size_t row;
     };
 
-    row_ref<matrix_type> operator[](size_t row) {
-        row_ref<matrix_type> ref = { *this, row }; return ref;
-    }
-
     /* Helper to use operator[] to access const rows of the matrix: */
     template<class Matrix> struct const_row_ref {
         typedef typename Matrix::const_reference const_reference;
@@ -215,6 +226,10 @@ class matrix
         const Matrix& m;
         size_t row;
     };
+
+    row_ref<matrix_type> operator[](size_t row) {
+        row_ref<matrix_type> ref = { *this, row }; return ref;
+    }
 
     const_row_ref<matrix_type> operator[](size_t row) const {
         const_row_ref<matrix_type> ref = { *this, row }; return ref;

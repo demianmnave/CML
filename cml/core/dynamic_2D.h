@@ -15,7 +15,7 @@ namespace cml {
 
 /** Dynamically-sized and allocated 2D array.
  *
- * @sa cml::core::dynamic
+ * @sa cml::dynamic
  *
  * @note The allocator should be an STL-compatible allocator.
  *
@@ -26,7 +26,7 @@ namespace cml {
  *
  * @internal This class does not need a destructor.
  */
-template<typename Element, typename Orient, class Alloc>
+template<typename Element, typename Layout, class Alloc>
 class dynamic_2D
 {
   public:
@@ -43,13 +43,16 @@ class dynamic_2D
     typedef typename array_impl::allocator_type allocator_type;
 
     /* For matching by memory layout: */
-    typedef Orient orientation;
+    typedef Layout layout;
 
     /* For matching by memory type: */
     typedef dynamic_memory_tag memory_tag;
 
     /* For matching by size type: */
     typedef dynamic_size_tag size_tag;
+
+    /* For matching by dimensions: */
+    typedef twod_tag dimension_tag;
 
 
   protected:
@@ -77,35 +80,14 @@ class dynamic_2D
 
   public:
 
-    /** Return the number of elements in the array. */
-    size_t size() const { return this->rows()*this->cols(); }
-
     /** Return the number of rows in the array. */
-    size_t rows() const { return this->m_rows; }
+    size_t rows() const { return m_rows; }
 
     /** Return the number of cols in the array. */
-    size_t cols() const { return this->m_cols; }
+    size_t cols() const { return m_cols; }
 
 
   public:
-
-    /** Linear access to the given element of the matrix.
-     *
-     * @param i position (in memory) of element to access.
-     * @returns mutable reference.
-     */
-    reference operator()(size_t i) {
-        return this->m_data[i];
-    }
-
-    /** Linear access to the given element of the matrix.
-     *
-     * @param i position (in memory) of element to access.
-     * @returns const reference.
-     */
-    const_reference operator()(size_t i) const {
-        return this->m_data[i];
-    }
 
     /** Access the given element of the matrix.
      *
@@ -114,7 +96,7 @@ class dynamic_2D
      * @returns mutable reference.
      */
     reference operator()(size_t row, size_t col) {
-        return access(row, col, orientation());
+        return get_element(row, col, layout());
     }
 
     /** Access the given element of the matrix.
@@ -124,47 +106,41 @@ class dynamic_2D
      * @returns const reference.
      */
     const_reference operator()(size_t row, size_t col) const {
-        return access(row, col, orientation());
+        return get_element(row, col, layout());
     }
-
-
-  protected:
 
     /** Resize the array.
      *
      * @warning This is not guaranteed to preserve the original data.
      */
     void resize(size_t rows, size_t cols) {
-        this->m_data.resize(rows*cols);
-        this->m_rows = rows;
-        this->m_cols = cols;
-    }
-
-    /** Access based on orientation. */
-    reference access(size_t row, size_t col, row_major) {
-        return this->m_data[row*m_cols + col];
-    }
-
-    /** Access based on orientation. */
-    reference access(size_t row, size_t col, col_major) {
-        return this->m_data[col*m_rows + row];
-    }
-
-    /** Access based on orientation. */
-    const_reference access(size_t row, size_t col, row_major) const {
-        return this->m_data[row*m_cols + col];
-    }
-
-    /** Access based on orientation. */
-    const_reference access(size_t row, size_t col, col_major) const {
-        return this->m_data[col*m_rows + row];
+        m_data.resize(rows*cols); m_rows = rows; m_cols = cols;
     }
 
 
   protected:
 
-    size_t              m_rows, m_cols;
-    array_impl          m_data;
+    reference get_element(size_t row, size_t col, row_major) {
+        return m_data[row*m_cols + col];
+    }
+
+    const_reference get_element(size_t row, size_t col, row_major) const {
+        return m_data[row*m_cols + col];
+    }
+
+    reference get_element(size_t row, size_t col, col_major) {
+        return m_data[col*m_rows + row];
+    }
+
+    const_reference get_element(size_t row, size_t col, col_major) const {
+        return m_data[col*m_rows + row];
+    }
+
+
+  protected:
+
+    size_t                      m_rows, m_cols;
+    array_impl                  m_data;
 };
 
 } // namespace cml

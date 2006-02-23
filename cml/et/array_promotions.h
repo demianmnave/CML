@@ -12,60 +12,112 @@
 #ifndef array_promotions_h
 #define array_promotions_h
 
+#include <cml/core/cml_meta.h>
 #include <cml/fixed.h>
 #include <cml/dynamic.h>
 
 namespace cml {
 namespace et {
 
-/** Class to promote array types. */
+#define VAL_MAX(_a_,_b_)        ( ((_a_)>(_b_))?(_a_):(_b_) )
+
+/** Class to promote array types.
+ *
+ * Both argument types must be arrays.
+ *
+ * @sa fixed_1D
+ * @sa fixed_2D
+ * @sa dynamic_1D
+ * @sa dynamic_2D
+ */
 template<class AT1, class AT2>
 struct ArrayPromote
 {
-    template<typename SizeT1, typename SizeT2, typename U=void> struct deduce;
-
-    /* Record array sizes for later: */
-    enum { L1 = AT1::array_size, L2 = AT2::array_size };
-
-    /* Record size tags for later: */
-    typedef typename AT1::size_tag left_tag;
-    typedef typename AT2::size_tag right_tag;
-
-
-    /** Promote fixed-size/fixed-size to fixed<>.
+    /* Deduce the proper type based upon the characteristics of AT1 and
+     * AT2.  This is the table of type conversions:
      *
-     * @internal This is needed to disambiguate fixed-size/any and
-     * any/fixed-size below.
-     */
-    template<typename U> struct deduce<fixed_size_tag,fixed_size_tag,U> {
-        typedef cml::fixed< ((L1>L2)?L1:L2) > type;
-    };
-
-    /** Promote fixed-size/any to fixed<>. */
-    template<typename ST, typename U> struct deduce<ST,fixed_size_tag,U> {
-        typedef cml::fixed< ((L1>L2)?L1:L2) > type;
-    };
-
-    /** Promote any/fixed-size to fixed<>. */
-    template<typename ST, typename U> struct deduce<fixed_size_tag,ST,U> {
-        typedef cml::fixed< ((L1>L2)?L1:L2) > type;
-    };
-
-    /** Promote dynamic-size/dynamic-size to dynamic<>.
+     *         AT1               AT2              Result
+     *   memory   size     memory   size      memory   size
      *
-     * @bug This always uses the allocator of the left-hand type.
+     *   fixed    fixed    fixed    fixed     fixed    fixed
+     *   fixed    fixed    dynamic  dynamic   dynamic  dynamic
+     *   fixed    fixed    external fixed     fixed    fixed
+     *
+     *   dynamic  dynamic  fixed    fixed     dynamic  dynamic
+     *   dynamic  dynamic  dynamic  dynamic   dynamic  dynamic
+     *   dynamic  dynamic  external fixed     dynamic  dynamic
+     *
+     *   external fixed    external fixed     fixed    fixed
+     *   external fixed    fixed    fixed     fixed    fixed
+     *   external fixed    dynamic  dynamic   dynamic  dynamic
+     *
+     *   Note: Fixed-size results take on the largest dimensions that will
+     *   accomodate both argument array types, since there is no way to
+     *   deduce the proper size without knowing the expression.  This means
+     *   that the array types must be provided to ArrayPromote such that
+     *   this behavior is correct.
+     *
+     *   Note: if one argument is a dynamic array, the result must also be
+     *   a dynamic array. The resulting layout and allocator will be taken
+     *   from the first dynamic array argument.
      */
-    template<typename U> struct deduce<dynamic_size_tag,dynamic_size_tag,U> {
-        typedef cml::dynamic<typename AT1::allocator_type> type;
-    };
 
-    /** Compute the type promotion. */
-    typedef typename deduce<left_tag, right_tag>::type type;
+    /* Get tags from the arguments into shorthand names: */
+    typedef type_pair<
+        typename AT1::memory_tag, typename AT1::size_tag> left_type;
+    typedef type_pair<
+        typename AT2::memory_tag, typename AT2::size_tag> right_type;
+
+    /* Shorthand for the combinations: */
+    typedef type_pair<fixed_memory_tag,fixed_size_tag> fixed_fixed;
+    typedef type_pair<dynamic_memory_tag,dynamic_size_tag> dynamic_dynamic;
+    typedef type_pair<external_memory_tag,fixed_size_tag> external_fixed;
+
+    /* Shorthand for the resulting fixed_fixed type, if matched: */
+    typedef cml::fixed<
+        VAL_MAX(AT1::array_rows, AT2::array_rows),
+        VAL_MAX(AT1::array_cols, AT2::array_cols),
+        typename AT1::layout> fixed_fixed_result;
+
+    typedef typename select_switch<
+        left_type,
+        fixed_fixed,       typename select_switch<
+                                right_type,
+                                fixed_fixed,       fixed_fixed_result,
+                                dynamic_dynamic,   AT2,
+                                external_fixed,    fixed_fixed_result,
+                                meta::Default,     void
+                           >::result,
+
+        dynamic_dynamic,   typename select_switch<
+                                right_type,
+                                fixed_fixed,       AT1,
+                                dynamic_dynamic,   AT1,
+                                external_fixed,    AT1,
+                                meta::Default,     void
+                           >::result,
+
+        external_fixed,    typename select_switch<
+                                right_type,
+                                fixed_fixed,       fixed_fixed_result,
+                                dynamic_dynamic,   AT2,
+                                external_fixed,    fixed_fixed_result,
+                                meta::Default,     void
+                           >::result,
+
+
+        /* Default is void (an error): */
+        meta::Default,     void
+
+    /* The resulting array type: */
+    >::result type;
 };
 
 } // namespace et
 } // namespace cml
 
+/* Cleanup internal macros: */
+#undef VAL_MAX
 #endif
 
 // -------------------------------------------------------------------------

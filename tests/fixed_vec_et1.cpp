@@ -12,9 +12,13 @@
 /* For convenience: */
 using std::cerr;
 using std::endl;
-using namespace cml;
+using cml::fixed;
+using namespace cml::vector_ops;
 
-typedef vector< double, fixed<4>, col_vector > vector_d4;
+/* Define the vector orientation to assume: */
+typedef cml::col_vector vector_orient;
+
+typedef cml::vector< double, fixed<4>, vector_orient> vector_d4;
 #define VECINIT(_v_) _v_
 
 #include "print_vector.cpp"

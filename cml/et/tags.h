@@ -5,8 +5,8 @@
  *  @brief
  */
 
-#ifndef tags_h
-#define tags_h
+#ifndef et_tags_h
+#define et_tags_h
 
 namespace cml {
 namespace et {

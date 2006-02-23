@@ -9,81 +9,19 @@
 #define fixed_2D_h
 
 #include <cml/core/common.h>
+#include <cml/core/cml_meta.h>
 
 namespace cml {
-namespace detail {
-
-/* Forward declare the fixed_array_impl signature: */
-template<typename E, int Rows, int Cols, typename O> struct fixed_array_impl;
-
-/** Row-major fixed array. */
-template<typename E, int Rows, int Cols>
-struct fixed_array_impl<E,Rows,Cols,row_major>
-{
-    /** Linear access to C array data. */
-    E& operator()(size_t i) {
-        return ((E*)m_data)[i];
-    }
-
-    /** Const linear access to C array data. */
-    const E& operator()(size_t i) const {
-        return ((E*)m_data)[i];
-    }
-
-    /** Access element at (i,j). */
-    E& operator()(size_t row, size_t col) {
-        return m_data[row][col];
-    }
-
-    /** Const access element at (i,j). */
-    const E& operator()(size_t row, size_t col) const {
-        return m_data[row][col];
-    }
-
-    /* XXX Can use a union here with Element m_linear[Rows*Cols] */
-    E m_data[Rows][Cols];
-};
-
-/** Col-major fixed array. */
-template<typename E, int Rows, int Cols>
-struct fixed_array_impl<E,Rows,Cols,col_major>
-{
-    /** Linear access to C array data. */
-    E& operator()(size_t i) {
-        return ((E*)m_data)[i];
-    }
-
-    /** Const linear access to C array data. */
-    const E& operator()(size_t i) const {
-        return ((E*)m_data)[i];
-    }
-
-    /** Access element at (i,j). */
-    E& operator()(size_t row, size_t col) {
-        return m_data[col][row];
-    }
-
-    /** Const access element at (i,j). */
-    const E& operator()(size_t row, size_t col) const {
-        return m_data[col][row];
-    }
-
-    /* XXX Can use a union here with E m_linear[Rows*Cols] */
-    E m_data[Cols][Rows];
-};
-
-} // namespace detail
-
 
 /** The internal statically-allocated 2D-array implementation class.
  *
  * This uses an internal class to setup the data matrix with the proper
- * orientation.  The alternative is to use a 1D array with size Rows*Cols and
- * a multiplication to dereference an element, but it seems that compilers
+ * layout.  The alternative is to use a 1D array with size Rows*Cols and a
+ * multiplication to dereference an element, but it seems that compilers
  * better optimize 2D array dereferences.  This is different from
  * dynamic_2D<>, which must use the 1D array method.
  *
- * @sa cml::core::fixed
+ * @sa cml::fixed
  *
  * @note This class is designed to have the same size as a C array with the
  * same dimensions.  It's therefore possible (but not recommended!) to coerce
@@ -107,27 +45,27 @@ struct fixed_array_impl<E,Rows,Cols,col_major>
  * least one compiler (Intel C++ 9.0) fails to optimize them away, and they
  * aren't needed anyway here.
  */
-template<typename Element, int Rows, int Cols, typename Orient>
+template<typename Element, int Rows, int Cols, typename Layout>
 class fixed_2D
 {
   public:
 
     /* Standard: */
-    typedef Element             value_type;
-    typedef Element&            reference;
-    typedef const Element&      const_reference;
-
-    /* Use fixed_array_impl to get the array type by orientation: */
-    typedef detail::fixed_array_impl<Element,Rows,Cols,Orient> array_impl;
+    typedef Element value_type;
+    typedef Element& reference;
+    typedef const Element& const_reference;
 
     /* For matching by memory layout: */
-    typedef Orient              orientation;
+    typedef Layout layout;
 
     /* For matching by memory type: */
-    typedef fixed_memory_tag    memory_tag;
+    typedef fixed_memory_tag memory_tag;
 
     /* For matching by size type: */
-    typedef fixed_size_tag      size_tag;
+    typedef fixed_size_tag size_tag;
+
+    /* For matching by dimensions: */
+    typedef twod_tag dimension_tag;
 
 
   public:
@@ -136,9 +74,6 @@ class fixed_2D
 
 
   public:
-
-    /** Return the total number of elements in the array. */
-    size_t size() const { return this->rows()*this->cols(); }
 
     /** Return the number of rows in the array. */
     size_t rows() const { return size_t(array_rows); }
@@ -149,30 +84,6 @@ class fixed_2D
 
   public:
 
-    /** Linear access to the given element of the matrix.
-     *
-     * @param i position (in memory) of element to access.
-     * @returns mutable reference.
-     *
-     * @warning This returns the i'th element from the start of the data,
-     * not the i'th logical element from M(0,0) (i.e. M(i/Rows,i%Rows)).
-     *
-     * @note This function does not range-check the argument.
-     */
-    reference operator()(size_t i) { return m_data(i); }
-
-    /** Linear access to the given element of the matrix.
-     *
-     * @param i position (in memory) of element to access.
-     * @returns const reference to element i of the matrix.
-     *
-     * @warning This returns the i'th element from the start of the data,
-     * not the i'th logical element from M(0,0) (i.e. M(i/Rows,i%Rows)).
-     *
-     * @note This function does not range-check the argument.
-     */
-    const_reference operator()(size_t i) const { return m_data(i); }
-
     /** Access element (row,col) of the matrix.
      *
      * @param row row of element.
@@ -182,7 +93,8 @@ class fixed_2D
      * @note This function does not range-check the arguments.
      */
     reference operator()(size_t row, size_t col) {
-        return m_data(row,col);
+        /* Dispatch to the right function based on layout: */
+        return get_element(row,col,layout());
     }
 
     /** Const access element (row,col) of the matrix.
@@ -194,22 +106,45 @@ class fixed_2D
      * @note This function does not range-check the arguments.
      */
     const_reference operator()(size_t row, size_t col) const {
-        return m_data(row,col);
+        /* Dispatch to the right function based on layout: */
+        return get_element(row,col,layout());
     }
 
 
   protected:
 
-    /** Resize the array.
-     *
-     * This is a no-op for fixed-size arrays.
-     */
-    void resize(size_t,size_t) const {}
+    reference get_element(size_t row, size_t col, row_major) {
+        return m_data[row][col];
+    }
+
+    const_reference get_element(size_t row, size_t col, row_major) const {
+        return m_data[row][col];
+    }
+
+    reference get_element(size_t row, size_t col, col_major) {
+        return m_data[col][row];
+    }
+
+    const_reference get_element(size_t row, size_t col, col_major) const {
+        return m_data[col][row];
+    }
 
 
   protected:
 
-    array_impl          m_data;
+    /* Typedef the possible layouts: */
+    typedef Element row_major_array[Rows][Cols];
+    typedef Element col_major_array[Cols][Rows];
+
+    /* Now, select the right layout for the current matrix: */
+    typedef typename select_switch<
+        Layout, row_major, row_major_array,     /* Case 1 */
+                col_major, col_major_array,     /* Case 2 */
+                invalid_layout                  /* Error case */
+        >::result array_data;
+
+    /* Declare the data array: */
+    array_data                  m_data;
 };
 
 } // namespace cml

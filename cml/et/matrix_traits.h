@@ -12,7 +12,7 @@
 
 namespace cml {
 
-/* Forward declare for type promotions: */
+/* Forward declare for traits class: */
 template<typename E, class AT, typename O> class matrix;
 
 /* Promotions belong in the et namespace: */
@@ -29,9 +29,6 @@ struct ExprTraits< cml::matrix<E,AT,O> >
     typedef typename expr_type::size_tag size_tag;
     typedef cml::matrix<E,AT,O> result_type;
 
-    value_type get(const expr_type& m, size_t i) const {
-        return m(i);
-    }
     value_type get(const expr_type& m, size_t i, size_t j) const {
         return m(i,j);
     }

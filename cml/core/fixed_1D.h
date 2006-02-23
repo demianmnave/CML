@@ -45,18 +45,21 @@ class fixed_1D
   public:
 
     /* Standard: */
-    typedef Element             value_type;
-    typedef Element&            reference;
-    typedef const Element&      const_reference;
+    typedef Element value_type;
+    typedef Element& reference;
+    typedef const Element& const_reference;
 
     /* Array implementation: */
-    typedef value_type          array_impl[Size];
+    typedef value_type array_impl[Size];
 
     /* For matching by memory type: */
-    typedef fixed_memory_tag    memory_tag;
+    typedef fixed_memory_tag memory_tag;
 
     /* For matching by size type: */
-    typedef fixed_size_tag      size_tag;
+    typedef fixed_size_tag size_tag;
+
+    /* For matching by dimensions: */
+    typedef oned_tag dimension_tag;
 
 
   public:
@@ -77,7 +80,7 @@ class fixed_1D
      *
      * @note This function does not range-check the argument.
      */
-    reference operator[](size_t i) { return this->m_data[i]; }
+    reference operator[](size_t i) { return m_data[i]; }
 
     /** Const access to the data as a C array.
      *
@@ -86,7 +89,7 @@ class fixed_1D
      *
      * @note This function does not range-check the argument.
      */
-    const_reference operator[](size_t i) const { return this->m_data[i]; }
+    const_reference operator[](size_t i) const { return m_data[i]; }
 
 
   protected:

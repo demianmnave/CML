@@ -46,22 +46,20 @@ namespace cml {
  * destination vector have the same size.  This is particularly important
  * for dynamically-sized vectors.
  */
-template<typename Element, class ArrayType, class Orient>
+template<typename Element, class ArrayType, typename Orient>
 class vector
 
 /* Figure out (and inherit from) the selected base array type: */
-: public ArrayType::template rebind<Element>::other
+: public ArrayType::template rebind<oned_tag,Element>::other
 {
   public:
 
-    /* Record incoming array type: */
-    typedef ArrayType base_array_type;
-
     /* Shorthand for the array type: */
-    typedef typename ArrayType::template rebind<Element>::other array_type;
+    typedef typename ArrayType::template rebind<oned_tag,Element>::other
+        array_type;
 
     /* Shorthand for the type of this vector: */
-    typedef vector<Element, ArrayType, Orient> vector_type;
+    typedef vector<Element,ArrayType,Orient> vector_type;
 
     /* For integration into the expression template code: */
     typedef vector_type expr_type;

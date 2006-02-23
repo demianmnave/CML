@@ -40,29 +40,24 @@ struct VectorPromote< cml::vector<E1,AT1,O>, cml::vector<E2,AT2,O> >
     typedef cml::vector<
         typename ScalarPromote<E1,E2>::type,
         typename ArrayPromote<AT1,AT2>::type,
-        O > type;
+        O
+    > type;
 };
 
 /** Type promotion for a vector and a scalar. */
 template<typename E, class AT, class O, typename S>
 struct VectorPromote<cml::vector<E,AT,O>, S>
 {
-    /* The deduced vector result type: */
-    typedef cml::vector<
-        typename ScalarPromote<E,S>::type,
-        typename ArrayPromote<AT,AT>::type,
-        O > type;
+    /* The deduced vector result type (the array type is the same): */
+    typedef cml::vector<typename ScalarPromote<E,S>::type, AT, O> type;
 };
 
 /** Type promotion for a scalar and a vector. */
 template<typename S, typename E, class AT, class O>
 struct VectorPromote<S, cml::vector<E,AT,O> >
 {
-    /* The deduced vector result type: */
-    typedef cml::vector<
-        typename ScalarPromote<S,E>::type,
-        typename ArrayPromote<AT,AT>::type,
-        O > type;
+    /* The deduced vector result type (the array type is the same): */
+    typedef cml::vector<typename ScalarPromote<S,E>::type, AT, O> type;
 };
 
 } // namespace et

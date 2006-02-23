@@ -2,7 +2,7 @@
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 /** @file
- *  @brief Vector expression classes.
+ *  @brief Vector linear expression classes.
  */
 
 #ifndef vector_expr_h
@@ -246,16 +246,13 @@ class BinaryVectorOp
     /* A checker to verify the argument sizes at compile- or run-time. This
      * automatically checks fixed-size vectors at compile time:
      */
-    typedef CheckExprSizes<LeftT,RightT> check_size;
-
-    /* Figure out the result size and type based on the subexpressions: */
-    typedef DeduceVectorExprSize<LeftT,RightT> deduce_size;
-    typedef typename deduce_size::tag size_tag;
+    typedef CheckLinearExprSizes<LeftT,RightT,result_tag> check_size;
 
     /* Figure out the expression's resulting (vector) type: */
     typedef typename left_traits::result_type left_result;
     typedef typename right_traits::result_type right_result;
     typedef typename VectorPromote<left_result,right_result>::type result_type;
+    typedef typename result_type::size_tag size_tag;
 
 
   public:
@@ -268,7 +265,11 @@ class BinaryVectorOp
 
     /** Return the size of the vector result. */
     size_t size() const {
-        return deduce_size()(m_left,m_right);
+
+        /* The vectors must have the same length, so just return the length
+         * of the left-hand argument:
+         */
+        return m_left.size();
     }
 
     /** Compute value at index i of the result vector. */
@@ -290,10 +291,10 @@ class BinaryVectorOp
      * @throws std::invalid_argument if the subexpression sizes don't
      * match.
      *
-     * @bug The constructor ensures that left and right have the same
-     * size through CheckExprSizes.  For dynamically-allocated arrays this
-     * could become very costly, since the check happens at each call to the
-     * BinaryVectorOp constructor.
+     * @bug The constructor ensures that left and right have the same size
+     * through CheckLinearExprSizes.  For dynamically-allocated arrays this
+     * could become very costly, since the check happens at each call to
+     * the BinaryVectorOp constructor.
      */
     BinaryVectorOp(const LeftT& left, const RightT& right)
         : m_left(left), m_right(right) { check_size()(left,right); }

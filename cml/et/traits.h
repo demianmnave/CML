@@ -38,6 +38,7 @@ template<typename T> struct ExprTraits
     typedef T& reference;
     typedef T const_reference;
     typedef scalar_result_tag result_tag;
+    typedef fixed_memory_tag memory_tag;
     typedef unit_size_tag size_tag;
 
     /** Vector-like access, just returns the value. */
@@ -64,6 +65,7 @@ template<> struct ExprTraits<double>
     typedef double& reference;
     typedef double const_reference;
     typedef scalar_result_tag result_tag;
+    typedef fixed_memory_tag memory_tag;
     typedef unit_size_tag size_tag;
     typedef double result_type;
 

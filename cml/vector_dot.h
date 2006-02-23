@@ -14,6 +14,9 @@
 
 namespace cml {
 
+/* Vector operators are in their own namespace: */
+namespace vector_ops {
+
 /** Vector dot (inner) product.
  *
  * This computes a dot b -> Scalar.
@@ -37,26 +40,24 @@ dot(const LeftT& left, const RightT& right)
     /* First, require vector expressions: */
     typedef typename left_traits::result_tag left_result_tag;
     typedef typename right_traits::result_tag right_result_tag;
-
-    /* Note: parens are required here so that the preprocessor ignores the
-     * commas:
-     */
     CML_STATIC_REQUIRE(
             (same_type<left_result_tag,et::vector_result_tag>::is_true
              && same_type<right_result_tag,et::vector_result_tag>::is_true));
+    /* Note: parens are required here so that the preprocessor ignores the
+     * commas:
+     */
 
     /* dot() requires that the left argument is a row_vector, and the right
      * argument is a col_vector:
      */
     typedef typename left_traits::result_type::orient_tag left_orient;
     typedef typename right_traits::result_type::orient_tag right_orient;
-
-    /* Note: parens are required here so that the preprocessor ignores the
-     * commas:
-     */
     CML_STATIC_REQUIRE(
             (same_type<left_orient,row_vector>::is_true
              && same_type<right_orient,col_vector>::is_true));
+    /* Note: parens are required here so that the preprocessor ignores the
+     * commas:
+     */
 
     /* Deduce the return type: */
     typedef typename et::ScalarPromote<
@@ -67,15 +68,16 @@ dot(const LeftT& left, const RightT& right)
      * automatically checks fixed-size vectors at compile time, and throws
      * at run-time if the sizes don't match:
      */
-    et::CheckExprSizes<LeftT,RightT>()(left,right);
+    et::CheckLinearExprSizes<LeftT,RightT,et::vector_result_tag>()(left,right);
 
     /* Require at least one element: */
-    if(left.size() < 1)
+    if(left.size() < 1) {
         throw std::invalid_argument(
                 "dot() requires vectors having at least 1 element");
+    }
 
-    /* Initialize the sum (left and right must be vector expressions, so
-     * it's okay to use the array notation here):
+    /* Initialize the sum.  Left and right must be vector expressions, so
+     * it's okay to use array notation here:
      */
     sum_type sum(left[0]*right[0]);
     for(size_t i = 1; i < left.size(); ++i) {
@@ -86,7 +88,8 @@ dot(const LeftT& left, const RightT& right)
     return sum;
 }
 
-}
+} // namespace vector_ops
+} // namespace cml
 
 #endif
 
