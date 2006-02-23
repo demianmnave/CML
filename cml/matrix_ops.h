@@ -8,6 +8,7 @@
 #define matrix_ops_h
 
 #include <cml/et/matop_macros.h>
+#include <cml/et/matrix_transpose.h>
 
 namespace cml {
 

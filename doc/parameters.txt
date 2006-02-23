@@ -20,14 +20,6 @@ CML_2D_UNROLLER
   matrices.
 
 
-CML_2D_TO_1D_UNROLLER
-- Unroll a matrix expression linearly, i.e. access elements of the matrix
-  using the operator() linear access function.  This is here for
-  completeness, as it generates terrible code on all of the supported
-  compilers.  Note that unrolling is available only for fixed-size
-  matrices.
-
-
 CML_MATRIX_UNROLL_LIMIT=<N>
 - <N> is the maximum number of matrix elements (#rows x #cols) that
   a matrix (expression) can have before being unrolled.  A 2D loop is used
@@ -72,6 +64,15 @@ CML_RECIPROCAL_OPTIMIZATION
 - Use "*= 1./x" instead of "/= x" for per-element division.  This isn't
   currently tested for any configuration.
 
+
 CML_IGNORE_VECTOR_ORIENTATION
 - Don't enforce vector orientation compatibility in expressions; e.g. dot()
   will work with two row-vectors or two col-vectors.
+
+
+CML_ENFORCE_VECTOR_ORIENTATION_ON_COPY
+- Enforce vector orientation compatibility in copy construction and assignment
+  (i.e. operator=() and the vector/matrix constructors).  This disables the
+  ability to create a transposed copy of a matrix or vector without specifying
+  the transpose operator.  This option has no effect if
+  CML_IGNORE_VECTOR_ORIENTATION is defined.

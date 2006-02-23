@@ -16,6 +16,15 @@
 #include <cml/vector_ops.h>
 #include <cml/vector_dot.h>
 
+/* This sets up the environment for oriented or unoriented vector copies: */
+#if defined(CML_ENFORCE_VECTOR_ORIENTATION_ON_COPY)
+  #define ORIENT_MACRO         orient_tag
+  #define COPY_TEMPLATE_PARAMS template<typename E, class AT>
+#else
+  #define ORIENT_MACRO         O
+  #define COPY_TEMPLATE_PARAMS template<typename E, class AT, typename O>
+#endif
+
 namespace cml {
 
 /** A configurable vector type.
@@ -123,20 +132,26 @@ class vector
 
   public:
 
-    /** Construct from a vector of the same type.
+    /** Construct from another vector.
      *
      * @param v the vector to copy from.
      */
-    vector(const vector_type& v) {
-        typedef et::OpAssign<Element,Element> OpT;
-        et::UnrollAssignment<OpT,expr_const_reference>(*this,v);
+    COPY_TEMPLATE_PARAMS
+    vector(const vector<E,AT,ORIENT_MACRO>& m) {
+        typedef et::OpAssign<Element,E> OpT;
+        this->reshape(m);
+        et::UnrollAssignment<OpT>(*this,m);
     }
 
     /** Construct from a vector expression.
      *
      * @param expr the expression to copy from.
+     *
+     * @internal This must be explicit to prevent conversions for arbitrary
+     * XprT's.
      */
-    template<class XprT> vector(const et::VectorXpr<XprT>& expr) {
+    template<class XprT>
+    vector(const et::VectorXpr<XprT>& expr) {
         /* Verify that a promotion exists at compile time: */
         typedef typename et::VectorPromote<
             vector_type, typename XprT::result_type>::type result_type;
@@ -148,22 +163,44 @@ class vector
 
   public:
 
-    /** Assign this vector from another of the same type using an operator.
+    /** Reshape the vector to match the argument.
+     *
+     * This only works for dynamic vectors; it's a no-op for fixed
+     * vectors.
+     *
+     * @param v the vector to copy from.
+     *
+     * @note The orientation of the vector is not changed, only the length.
+     */
+    template<typename E, class AT, typename O>
+    void reshape(const vector<E,AT,O>& v) {
+
+        /* Dispatch to the proper reshape function: */
+        this->reshape(v,size_tag());
+    }
+
+
+  public:
+
+    /** Assign this vector from another using the given elementwise op.
+     *
+     * This allows assignment from arbitrary vector types.
      *
      * @param _op_ the operator (e.g. +=)
      * @param _op_name_ the op functor (e.g. et::OpAssign)
      */
 #define CML_ASSIGN_FROM_VEC(_op_, _op_name_)                            \
-    vector_type& operator _op_ (const vector_type& v) {                 \
-        typedef _op_name_ <Element,Element> OpT;                        \
-        et::UnrollAssignment<OpT>(*this,v);                             \
+    COPY_TEMPLATE_PARAMS vector_type&                                   \
+    operator _op_ (const vector<E,AT,ORIENT_MACRO>& m) {                \
+        typedef _op_name_ <Element,E> OpT;                              \
+        this->reshape(m);                                               \
+        et::UnrollAssignment<OpT>(*this,m);                             \
         return *this;                                                   \
     }
 
     CML_ASSIGN_FROM_VEC(=, et::OpAssign)
     CML_ASSIGN_FROM_VEC(+=, et::OpAddAssign)
     CML_ASSIGN_FROM_VEC(-=, et::OpSubAssign)
-
 #undef CML_ASSIGN_FROM_VEC
 
 
@@ -210,9 +247,28 @@ class vector
     CML_ASSIGN_FROM_SCALAR(/=, et::OpDivAssign)
 
 #undef CML_ASSIGN_FROM_SCALAR
+
+
+  protected:
+
+    /** Reshape for fixed-size vectors. */
+    template<typename E, class AT, typename O>
+    void reshape(const vector<E,AT,O>&, fixed_size_tag) {
+        /* Do nothing. */
+    }
+
+    /** Reshape for dynamically-sized vectors. */
+    template<typename E, class AT, typename O>
+    void reshape(const vector<E,AT,O>& v, dynamic_size_tag) {
+        this->resize(v.size());
+    }
 };
 
 } // namespace cml
+
+/* Clean up: */
+#undef ORIENT_MACRO
+#undef COPY_TEMPLATE_PARAMS
 
 #endif
 

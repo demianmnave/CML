@@ -8,7 +8,6 @@
 #ifndef fixed_h
 #define fixed_h
 
-#include <cstddef>              // for size_t
 #include <cml/core/cml_assert.h>
 #include <cml/core/fixed_1D.h>
 #include <cml/core/fixed_2D.h>

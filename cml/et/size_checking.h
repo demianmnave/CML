@@ -79,8 +79,8 @@ struct CheckLinearExprSizes
 
         /** Statically compare the vector sizes. */
         CML_STATIC_REQUIRE(
-                ((left_t::array_rows == right_t::array_rows)
-                && (left_t::array_cols == right_t::array_cols)) );
+                (((long)left_t::array_rows == (long)right_t::array_rows)
+                && ((long)left_t::array_cols == (long)right_t::array_cols)) );
 
         bool operator()(const left_t&, const right_t&) const {
             return true;

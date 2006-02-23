@@ -15,6 +15,15 @@
 #include <cml/et/matrix_unroller.h>
 #include <cml/matrix_ops.h>
 
+/* This sets up the environment for oriented or unoriented vector copies: */
+#if defined(CML_ENFORCE_VECTOR_ORIENTATION_ON_COPY)
+  #define ORIENT_MACRO         orient_tag
+  #define COPY_TEMPLATE_PARAMS template<typename E, class AT>
+#else
+  #define ORIENT_MACRO         O
+  #define COPY_TEMPLATE_PARAMS template<typename E, class AT, typename O>
+#endif
+
 namespace cml {
 
 /** A configurable matrix.
@@ -118,11 +127,17 @@ class matrix
     explicit matrix(size_t rows, size_t cols, value_type* ptr)
         : array_type(rows,cols,ptr) {}
 
-    /** Construct from another matrix. */
-    matrix(const matrix_type& m) {
-        typedef et::OpAssign<Element,Element> OpT;
 
-        this->resize(m.rows(),m.cols());
+  public:
+
+    /** Construct from another matrix.
+     *
+     * @param m the matrix to copy from.
+     */
+    COPY_TEMPLATE_PARAMS
+    matrix(const matrix<E,AT,ORIENT_MACRO>& m) {
+        typedef et::OpAssign<Element,E> OpT;
+        this->reshape(m);
         et::UnrollAssignment<OpT>(*this,m);
     }
 
@@ -130,31 +145,53 @@ class matrix
      *
      * @param expr the expression to copy from.
      *
-     * @throws only if ArrayType::resize() throws.
-     *
-     * @bug The number of elements in the expression needs to be checked
-     * against the size of the matrix, especially for dynamic matrices.
+     * @internal This must be explicit to prevent conversions for arbitrary
+     * XprT's.
      */
     template<class XprT> matrix(const et::MatrixXpr<XprT>& expr) {
+        /* Verify that a promotion exists at compile time: */
+        typedef typename et::MatrixPromote<
+            matrix_type, typename XprT::result_type>::type result_type;
         typedef typename XprT::value_type src_value_type;
         typedef et::OpAssign<Element,src_value_type> OpT;
-
-        this->resize(expr.rows(),expr.cols());
-        et::UnrollAssignment<OpT>(*this,expr.expression());
+        et::UnrollAssignment<OpT>(*this,expr);
     }
 
 
   public:
 
-    /** Declare a function to assign this matrix from another.
+    /** Reshape the matrix to match the argument.
+     *
+     * This only works for dynamic matrices; it's a no-op for fixed
+     * matrices.
+     *
+     * @param m the matrix to copy from.
+     *
+     * @note The orientation of the matrix is not changed, only the number
+     * of rows and columns.
+     */
+    template<typename E, class AT, typename O>
+    void reshape(const matrix<E,AT,O>& m) {
+
+        /* Dispatch to the proper reshape function: */
+        this->reshape(m,size_tag());
+    }
+
+
+  public:
+
+    /** Assign this matrix from another using the given elementwise op.
+     *
+     * This allows assignment from arbitrary matrix types.
      *
      * @param _op_ the operator (e.g. +=)
      * @param _op_name_ the op functor (e.g. et::OpAssign)
      */
 #define CML_ASSIGN_FROM_MAT(_op_, _op_name_)                            \
-    matrix_type& operator _op_ (const matrix_type& m) {                 \
-        typedef _op_name_ <Element,Element> OpT;                        \
-        this->resize(m.rows(),m.cols());                                \
+    COPY_TEMPLATE_PARAMS matrix_type&                                   \
+    operator _op_ (const matrix<E,AT,ORIENT_MACRO>& m) {                \
+        typedef _op_name_ <Element,E> OpT;                              \
+        this->reshape(m);                                               \
         et::UnrollAssignment<OpT>(*this,m);                             \
         return *this;                                                   \
     }
@@ -162,7 +199,6 @@ class matrix
     CML_ASSIGN_FROM_MAT(=, et::OpAssign)
     CML_ASSIGN_FROM_MAT(+=, et::OpAddAssign)
     CML_ASSIGN_FROM_MAT(-=, et::OpSubAssign)
-
 #undef CML_ASSIGN_FROM_MAT
 
 
@@ -174,10 +210,12 @@ class matrix
 #define CML_ASSIGN_FROM_MATXPR(_op_, _op_name_)                         \
     template<class XprT> matrix_type&                                   \
     operator _op_ (const et::MatrixXpr<XprT>& expr) {                   \
+        /* Verify that a promotion exists at compile time: */           \
+        typedef typename et::MatrixPromote<                             \
+            matrix_type, typename XprT::result_type>::type result_type; \
         typedef typename XprT::value_type src_value_type;               \
         typedef _op_name_ <Element,src_value_type> OpT;                 \
-        this->resize(expr.rows(),expr.cols());                          \
-        et::UnrollAssignment<OpT>(*this,expr.expression());             \
+        et::UnrollAssignment<OpT>(*this,expr);                          \
         return *this;                                                   \
     }
 
@@ -192,6 +230,9 @@ class matrix
      *
      * @param _op_ the operator (e.g. +=)
      * @param _op_name_ the op functor (e.g. et::OpAssign)
+     *
+     * @internal This shouldn't be used for ops, like +=, which aren't
+     * defined in vector algebra.
      */
 #define CML_ASSIGN_FROM_SCALAR(_op_, _op_name_)                         \
     matrix_type& operator _op_ (const value_type& s) {                  \
@@ -204,6 +245,21 @@ class matrix
     CML_ASSIGN_FROM_SCALAR(/=, et::OpDivAssign)
 
 #undef CML_ASSIGN_FROM_SCALAR
+
+
+  protected:
+
+    /** Reshape for fixed-size matrices. */
+    template<typename E, class AT, typename O>
+        void reshape(const matrix<E,AT,O>&, fixed_size_tag) {
+            /* Do nothing. */
+        }
+
+    /** Reshape for dynamically-sized matrices. */
+    template<typename E, class AT, typename O>
+        void reshape(const matrix<E,AT,O>& m, dynamic_size_tag) {
+            this->resize(m.rows(),m.cols());
+        }
 
 
 #if defined(CML_ENABLE_MATRIX_BRACES)
@@ -239,6 +295,9 @@ class matrix
 
 } // namespace cml
 
+/* Clean up: */
+#undef ORIENT_MACRO
+#undef COPY_TEMPLATE_PARAMS
 
 #endif
 

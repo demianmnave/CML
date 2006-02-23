@@ -77,7 +77,7 @@ class VectorTransposeOp
   public:
 
     /** Construct from the subexpression to store. */
-    VectorTransposeOp(const ArgT& expr) : m_expr(expr) {}
+    explicit VectorTransposeOp(const ArgT& expr) : m_expr(expr) {}
 
     /** Copy constructor. */
     VectorTransposeOp(const expr_type& e) : m_expr(e.m_expr) {}
@@ -130,7 +130,7 @@ transpose(const vector<E,AT,O>& arg)
  */
 template<class XprT>
 inline et::VectorXpr< et::VectorTransposeOp<XprT> >
-transpose(const XprT& arg)
+transpose(const et::VectorXpr<XprT>& arg)
 {
     typedef et::VectorTransposeOp<XprT> ExprT;
     return et::VectorXpr<ExprT>(ExprT(arg.expression()));
@@ -154,7 +154,7 @@ T(const vector<E,AT,O>& arg)
  */
 template<class XprT>
 inline et::VectorXpr< et::VectorTransposeOp<XprT> >
-T(const XprT& arg)
+T(const et::VectorXpr<XprT>& arg)
 {
     return transpose(arg);
 }

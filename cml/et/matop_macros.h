@@ -29,8 +29,8 @@
  * forcing only the root node of the expression tree to be a MatrixXpr.
  * Every other node is a Unary or BinaryMatrixOp.
  */
-#ifndef matrix_ops_h
-#define matrix_ops_h
+#ifndef matop_macros_h
+#define matop_macros_h
 
 #include <cml/et/scalar_ops.h>
 #include <cml/et/matrix_expr.h>
@@ -39,10 +39,7 @@
 #define CML_MAT_UNIOP(_op_, _OpT_)                                       \
 template<typename E, class AT, typename O>                               \
 inline et::MatrixXpr<                                                    \
-    et::UnaryMatrixOp<                                                   \
-        matrix<E,AT,O>,                                                  \
-        _OpT_<typename et::ExprTraits<E>::value_type>                    \
-    >                                                                    \
+    et::UnaryMatrixOp< matrix<E,AT,O>, _OpT_ <E> >                       \
 >                                                                        \
                                                                          \
 _op_ (const matrix<E,AT,O>& arg)                                         \
@@ -57,7 +54,7 @@ _op_ (const matrix<E,AT,O>& arg)                                         \
 #define CML_MATXPR_UNIOP(_op_, _OpT_)                                    \
 template<class XprT>                                                     \
 inline et::MatrixXpr<                                                    \
-    et::UnaryMatrixOp< XprT, _OpT_<typename XprT::value_type> >          \
+    et::UnaryMatrixOp<XprT, _OpT_<typename XprT::value_type> >           \
 >                                                                        \
                                                                          \
 _op_ (const et::MatrixXpr<XprT>& arg)                                    \

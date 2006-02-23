@@ -76,7 +76,7 @@ class VectorXpr
   public:
 
     /** Construct from the subexpression to store. */
-    VectorXpr(const ExprT& expr) : m_expr(expr) {}
+    explicit VectorXpr(const ExprT& expr) : m_expr(expr) {}
 
     /** Copy constructor. */
     VectorXpr(const expr_type& e) : m_expr(e.m_expr) {}
@@ -173,12 +173,10 @@ class UnaryVectorOp
   public:
 
     /** Construct from the subexpression. */
-    UnaryVectorOp(const ArgT& arg)
-        : m_arg(arg) {}
+    explicit UnaryVectorOp(const ArgT& arg) : m_arg(arg) {}
 
     /** Copy constructor. */
-    UnaryVectorOp(const expr_type& e)
-        : m_arg(e.m_arg) {}
+    UnaryVectorOp(const expr_type& e) : m_arg(e.m_arg) {}
 
 
   protected:
@@ -296,7 +294,7 @@ class BinaryVectorOp
      * could become very costly, since the check happens at each call to
      * the BinaryVectorOp constructor.
      */
-    BinaryVectorOp(const LeftT& left, const RightT& right)
+    explicit BinaryVectorOp(const LeftT& left, const RightT& right)
         : m_left(left), m_right(right) { check_size()(left,right); }
 
     /** Copy constructor. */

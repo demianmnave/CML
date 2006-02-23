@@ -49,7 +49,7 @@ template<typename E, class AT, class O, typename S>
 struct MatrixPromote<cml::matrix<E,AT,O>, S>
 {
     /* The deduced matrix result type (the array type is the same): */
-    typedef cml::matrix<typename ScalarPromote<E,S>::type, AT O> type;
+    typedef cml::matrix<typename ScalarPromote<E,S>::type, AT, O> type;
 };
 
 /** Type promotion for a scalar and a matrix. */

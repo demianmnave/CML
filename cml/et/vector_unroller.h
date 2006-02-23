@@ -64,7 +64,7 @@ struct VectorAssignmentUnroller
             OpT().apply(dest[N], src_traits().get(src,N));
             /* Note: we don't need get(), since we know dest is a vector. */
 
-            /* Apply to next N: */
+            /* Apply to N+1: */
             Eval<N+1,Last,true>()(dest, src);
         }
     };

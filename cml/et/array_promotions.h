@@ -75,8 +75,8 @@ struct ArrayPromote
 
     /* Shorthand for the resulting fixed_fixed type, if matched: */
     typedef cml::fixed<
-        VAL_MAX(AT1::array_rows, AT2::array_rows),
-        VAL_MAX(AT1::array_cols, AT2::array_cols),
+        VAL_MAX((long)AT1::array_rows, (long)AT2::array_rows),
+        VAL_MAX((long)AT1::array_cols, (long)AT2::array_cols),
         typename AT1::layout> fixed_fixed_result;
 
     typedef typename select_switch<

@@ -17,7 +17,7 @@
 namespace cml {
 
 /* Forward declare for the matrix expressions below: */
-template<typename Element, class ArrayType, typename Orient> class matrix;
+template<typename E, class AT, typename O> class matrix;
 
 namespace et {
 
@@ -70,7 +70,7 @@ class MatrixXpr
     /** Return reference to contained expression. */
     expr_reference expression() const { return m_expr; }
 
-    /** Compute value at index i,j of the result vector. */
+    /** Compute value at index i,j of the result matrix. */
     value_type operator()(size_t i, size_t j) const {
         return expr_traits().get(m_expr,i,j);
     }
@@ -79,7 +79,7 @@ class MatrixXpr
   public:
 
     /** Construct from the subexpression to store. */
-    MatrixXpr(const ExprT& expr) : m_expr(expr) {}
+    explicit MatrixXpr(const ExprT& expr) : m_expr(expr) {}
 
     /** Copy constructor. */
     MatrixXpr(const expr_type& e) : m_expr(e.m_expr) {}
@@ -104,6 +104,7 @@ struct ExprTraits< MatrixXpr<ExprT> >
     typedef typename expr_type::value_type value_type;
     typedef typename expr_type::expr_const_reference const_reference;
     typedef typename expr_type::result_tag result_tag;
+    typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
 
     value_type get(const expr_type& e, size_t i, size_t j) const {
@@ -161,7 +162,7 @@ class UnaryMatrixOp
     /** Return number of columns in the expression (same as argument). */
     size_t cols() const { return m_arg.cols(); }
 
-    /** Compute value at index i,j of the result vector. */
+    /** Compute value at index i,j of the result matrix. */
     value_type operator()(size_t i, size_t j) const {
 
         /* This uses the expression traits to figure out how to access the
@@ -174,12 +175,10 @@ class UnaryMatrixOp
   public:
 
     /** Construct from the subexpression. */
-    UnaryMatrixOp(const ArgT& arg)
-        : m_arg(arg) {}
+    explicit UnaryMatrixOp(const ArgT& arg) : m_arg(arg) {}
 
     /** Copy constructor. */
-    UnaryMatrixOp(const expr_type& e)
-        : m_arg(e.m_arg) {}
+    UnaryMatrixOp(const expr_type& e) : m_arg(e.m_arg) {}
 
 
   protected:
@@ -201,6 +200,7 @@ struct ExprTraits< UnaryMatrixOp<ArgT,OpT> >
     typedef typename expr_type::value_type value_type;
     typedef typename expr_type::expr_const_reference const_reference;
     typedef typename expr_type::result_tag result_tag;
+    typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
 
     value_type get(const expr_type& e, size_t i, size_t j) const {
@@ -246,7 +246,7 @@ class BinaryMatrixOp
     /* A checker to verify the argument sizes at compile- or run-time: */
     typedef CheckLinearExprSizes<LeftT,RightT,result_tag> check_size;
 
-    /* Figure out the expression's resulting (vector) type: */
+    /* Figure out the expression's resulting (matrix) type: */
     typedef typename left_traits::result_type left_result;
     typedef typename right_traits::result_type right_result;
     typedef typename MatrixPromote<left_result,right_result>::type result_type;
@@ -285,7 +285,7 @@ class BinaryMatrixOp
         return m_left.cols();
     }
 
-    /** Compute value at index i,j of the result vector. */
+    /** Compute value at index i,j of the result matrix. */
     value_type operator()(size_t i, size_t j) const {
 
         /* This uses the expression traits to figure out how to access the
@@ -309,7 +309,7 @@ class BinaryMatrixOp
      * could become very costly, since the check happens at each call to the
      * BinaryVectorOp constructor.
      */
-    BinaryMatrixOp(const LeftT& left, const RightT& right)
+    explicit BinaryMatrixOp(const LeftT& left, const RightT& right)
         : m_left(left), m_right(right) { check_size()(left,right); }
 
     /** Copy constructor. */
@@ -340,9 +340,6 @@ struct ExprTraits< BinaryMatrixOp<LeftT,RightT,OpT> >
     typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
 
-    /** This is used primarily for linear unrolling. */
-    value_type get(const expr_type& e, size_t i) const { return e(i); }
-
     value_type get(const expr_type& e, size_t i, size_t j) const {
         return e(i,j);
     }
@@ -350,7 +347,6 @@ struct ExprTraits< BinaryMatrixOp<LeftT,RightT,OpT> >
     size_t rows(const expr_type& e) const { return e.rows(); }
     size_t cols(const expr_type& e) const { return e.cols(); }
 };
-
 
 } // namespace et
 } // namespace cml
