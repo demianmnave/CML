@@ -27,11 +27,43 @@ namespace cml {
  * @sa cml::vector
  * @sa cml::matrix
  */
-template<int Dim1 = -1, int Dim2 = -1, typename Layout = row_major>
+template<int Dim1 = -1, int Dim2 = -1,
+    typename Layout = CML_DEFAULT_ARRAY_LAYOUT> struct fixed;
+
+/** Specialization for vectors. */
+template<int Size>
+struct fixed<Size,-1,CML_DEFAULT_ARRAY_LAYOUT>
+{
+    /* Need Size > 0: */
+    CML_STATIC_REQUIRE(Size > 0);
+
+    /* Record array size for type deduction: */
+    enum { array_size = Size };
+
+    /* Record memory tag for type deduction: */
+    typedef fixed_memory_tag memory_tag;
+
+    /* Record size tag for type deduction: */
+    typedef fixed_size_tag size_tag;
+
+    /* Forward declare for specialization: */
+    template<typename Tag, typename Element> struct rebind;
+
+    /* Rebind the element type to a fixed 1D array; */
+    template<typename Element> struct rebind<oned_tag,Element> {
+	typedef fixed_1D<Element,Size> other;
+    };
+};
+
+/** Specializations for matrices. */
+template<int Rows, int Cols, typename Layout>
 struct fixed
 {
+    /* Need Rows,Cols > 0: */
+    CML_STATIC_REQUIRE(Rows > 0 && Cols > 0);
+
     /* Record array size for type deduction: */
-    enum { array_size = Dim1, array_rows = Dim1, array_cols = Dim2 };
+    enum { array_rows = Rows, array_cols = Cols };
 
     /* Record layout for type deduction: */
     typedef Layout layout;
@@ -42,26 +74,15 @@ struct fixed
     /* Record size tag for type deduction: */
     typedef fixed_size_tag size_tag;
 
+    /* To simplify the matrix transpose operator: */
+    typedef fixed<Cols,Rows,Layout> transposed_type;
+
+    /* Forward declare for specialization: */
     template<typename Tag, typename Element> struct rebind;
 
-    /* Rebind the element type; */
-    template<typename Element> struct rebind<oned_tag,Element>
-    {
-        /* Need Dim1 > 0: */
-        CML_STATIC_REQUIRE(Dim1 > 0);
-
-        /* Rebind to a fixed-size 1D array: */
-	typedef fixed_1D<Element,Dim1> other;
-    };
-
-    /* Rebind the element type; */
-    template<typename Element> struct rebind<twod_tag,Element>
-    {
-        /* Need Dim1,Dim2 > 0: */
-        CML_STATIC_REQUIRE(Dim1 > 0 && Dim2 > 0);
-
-        /* Rebind to a fixed-size 2D array: */
-	typedef fixed_2D<Element,Dim1,Dim2,Layout> other;
+    /* Rebind the element type to a fixed 2D array; */
+    template<typename Element> struct rebind<twod_tag,Element> {
+	typedef fixed_2D<Element,Rows,Cols,Layout> other;
     };
 };
 

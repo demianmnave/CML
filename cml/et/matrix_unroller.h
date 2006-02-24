@@ -23,7 +23,7 @@
 namespace cml {
 
 /* Forward declare for the matrix expressions below: */
-template<typename E, class AT, class O> class matrix;
+template<typename E, class AT> class matrix;
 
 namespace et {
 
@@ -41,11 +41,11 @@ namespace detail {
  * @bug The 2D unroller needs to be specified for efficient col-major
  * access.
  */
-template<class OpT, typename E, class AT, class O, class SrcT>
+template<class OpT, typename E, class AT, class SrcT>
 struct MatrixAssignmentUnroller
 {
     /* The matrix type being assigned to: */
-    typedef cml::matrix<E,AT,O> matrix_type;
+    typedef cml::matrix<E,AT> matrix_type;
 
     /* Record traits for the arguments: */
     typedef ExprTraits<matrix_type> dest_traits;
@@ -149,11 +149,11 @@ struct MatrixAssignmentUnroller
 };
 
 /** Unroll assignment for a fixed-sized matrix. */
-template<class OpT, typename E, class AT, typename O, class SrcT>
+template<class OpT, typename E, class AT, class SrcT>
 void UnrollAssignment(
-    cml::matrix<E,AT,O>& dest, const SrcT& src, cml::fixed_size_tag)
+    cml::matrix<E,AT>& dest, const SrcT& src, cml::fixed_size_tag)
 {
-    typedef cml::matrix<E,AT,O> matrix_type;
+    typedef cml::matrix<E,AT> matrix_type;
     enum {
         MaxRows = matrix_type::array_rows,
         MaxCols = matrix_type::array_cols,
@@ -161,14 +161,14 @@ void UnrollAssignment(
     };
 
 #if defined(CML_2D_UNROLLER)
-    typedef typename MatrixAssignmentUnroller<OpT,E,AT,O,SrcT>::template
+    typedef typename MatrixAssignmentUnroller<OpT,E,AT,SrcT>::template
         Eval<0, 0, MaxRows-1, MaxCols-1,
         (Max <= CML_MATRIX_UNROLL_LIMIT)> Unroller;
 #endif
 
 #if defined(CML_NO_2D_UNROLLER)
     /* Use a loop: */
-    typedef typename MatrixAssignmentUnroller<OpT,E,AT,O,SrcT>
+    typedef typename MatrixAssignmentUnroller<OpT,E,AT,SrcT>
         ::template Eval<0, 0, MaxRows-1, MaxCols-1> Unroller;
 #endif
 
@@ -182,9 +182,9 @@ void UnrollAssignment(
  * @todo This needs to be specialized for efficient row-major or col-major
  * layout access.
  */
-template<class OpT, typename E, class AT, typename O, class SrcT>
+template<class OpT, typename E, class AT, class SrcT>
 void UnrollAssignment(
-        cml::matrix<E,AT,O>& dest, const SrcT& src, cml::dynamic_size_tag)
+        cml::matrix<E,AT>& dest, const SrcT& src, cml::dynamic_size_tag)
 {
     typedef ExprTraits<SrcT> src_traits;
     for(size_t i = 0; i <= dest.rows(); ++i) {
@@ -208,9 +208,9 @@ void UnrollAssignment(
  *
  * @bug Need to verify that OpT is actually an assignment operator.
  */
-template<class OpT, class SrcT, typename E, class AT, class O>
-void UnrollAssignment(cml::matrix<E,AT,O>& dest, const SrcT& src) {
-    typedef cml::matrix<E,AT,O> matrix_type;
+template<class OpT, class SrcT, typename E, class AT>
+void UnrollAssignment(cml::matrix<E,AT>& dest, const SrcT& src) {
+    typedef cml::matrix<E,AT> matrix_type;
 
     /* Record traits for the arguments: */
     typedef ExprTraits<matrix_type> dest_traits;

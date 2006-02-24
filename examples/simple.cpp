@@ -24,6 +24,34 @@ using namespace cml::matrix_ops;
 /* Define the vector orientation to assume: */
 typedef cml::col_vector vector_orient;
 
+/* Note: this has to have the same template params as cml::vector<>: */
+template<typename E, class AT, class O> std::ostream&
+operator<<(std::ostream& os, const cml::vector<E,AT,O>& v)
+{
+    os << "[";
+    for(size_t i = 0; i < v.size(); ++i) {
+        os << " " << v[i];
+    }
+    os << " ]";
+    return os;
+}
+
+/* Note: this has to have the same template params as cml::matrix<>: */
+template<typename E, class AT> std::ostream&
+operator<<(std::ostream& os, const cml::matrix<E,AT>& m)
+{
+    os << "[" << endl;
+    for(size_t i = 0; i < m.rows(); ++i) {
+        os << "[";
+        for(size_t j = 0; j < m.cols(); ++j) {
+            os << " " << m(i,j);
+        }
+        os << "]" << endl;
+    }
+    os << "]";
+    return os;
+}
+
 void example1()
 {
     /* 3-space column vector, fixed length, double coordinates: */
@@ -61,12 +89,12 @@ void example2()
 
 void example3()
 {
-    /* 3-space column matrix, fixed length, double coordinates: */
-    typedef cml::matrix< double, fixed<3,3>, vector_orient> matrix_d3;
+    /* 3-space matrix, fixed length, double coordinates: */
+    typedef cml::matrix< double, fixed<3,3> > matrix_d3;
 
     matrix_d3 A, B, C;
 
-    A(0,0) = 1.0; A(0,1) = 0.0; A(0,2) = 0.0;
+    A(0,0) = 1.0; A(0,1) = 0.0; A(0,2) = 1.0;
     A(1,0) = 0.0; A(1,1) = 1.0; A(1,2) = 0.0;
     A(2,0) = 0.0; A(2,1) = 0.0; A(2,2) = 1.0;
 
@@ -76,21 +104,18 @@ void example3()
 
     cout << "Example3:" << endl;
 
-    C = A+B;
+    C = T(A)+B;
     cout << "  C(0,0) = " << C(0,0) << endl;
-
-    typedef matrix_d3::transposed_type matrix_d3t;
-    matrix_d3t Cp = T(A)+T(B);
-    cout << "  Cp(0,2) = " << Cp(0,2) << endl;
+    cout << "  C(2,0) = " << C(2,0) << endl;
 }
 
 void example4()
 {
-    /* 3-space column matrix, fixed size, double coordinates: */
-    typedef cml::matrix< double, fixed<3,3>, vector_orient> matrix_d3;
+    /* 3-space matrix, fixed size, double coordinates: */
+    typedef cml::matrix< double, fixed<3,3> > matrix_d3;
 
-    /* 3-space column matrix, dynamic size, double coordinates: */
-    typedef cml::matrix< double, dynamic<>, vector_orient> matrix_d;
+    /* 3-space matrix, dynamic size, double coordinates: */
+    typedef cml::matrix< double, dynamic<> > matrix_d;
 
     matrix_d3 A, C;
     matrix_d B(3,3);
@@ -107,19 +132,15 @@ void example4()
 
     C = A+B;
     cout << "  C(0,0) = " << C(0,0) << endl;
-
-    typedef matrix_d3::transposed_type matrix_d3t;
-    matrix_d3t Cp = T(A+B);
-    cout << "  Cp(0,2) = " << Cp(0,2) << endl;
 }
 
 void example5()
 {
-    /* 3-space column matrix, fixed size, double coordinates: */
-    typedef cml::matrix< double, fixed<3,3>, vector_orient> matrix_d3;
+    /* 3-space matrix, fixed size, double coordinates: */
+    typedef cml::matrix< double, fixed<3,3> > matrix_d3;
 
-    /* 3-space column matrix, dynamic size, double coordinates: */
-    typedef cml::matrix< double, dynamic<>, vector_orient> matrix_d;
+    /* 3-space matrix, dynamic size, double coordinates: */
+    typedef cml::matrix< double, dynamic<> > matrix_d;
 
     matrix_d3 A, B;
     matrix_d C(3,3);
@@ -136,10 +157,6 @@ void example5()
 
     C = A+B;
     cout << "  C(0,0) = " << C(0,0) << endl;
-
-    typedef matrix_d3::transposed_type matrix_d3t;
-    matrix_d3t Cp = T(A)+T(B);
-    cout << "  Cp(0,2) = " << Cp(0,2) << endl;
 }
 
 int main()

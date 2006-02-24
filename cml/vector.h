@@ -120,7 +120,15 @@ class vector
      */
     explicit vector(size_t size) : array_type(size) {}
 
-    /** Constructor for external arrays.
+    /** Constructor for fixed-size external arrays.
+     *
+     * @param ptr specify an external array pointer.
+     *
+     * @throws same as the ArrayType constructor.
+     */
+    explicit vector(value_type* ptr) : array_type(ptr) {}
+
+    /** Constructor for run-time sized external arrays.
      *
      * @param size specify the size of the array.
      * @param ptr specify an external array pointer.

@@ -37,15 +37,15 @@
 
 /** Declare a unary operator taking a matrix operand. */
 #define CML_MAT_UNIOP(_op_, _OpT_)                                       \
-template<typename E, class AT, typename O>                               \
+template<typename E, class AT>                                           \
 inline et::MatrixXpr<                                                    \
-    et::UnaryMatrixOp< matrix<E,AT,O>, _OpT_ <E> >                       \
+    et::UnaryMatrixOp< matrix<E,AT>, _OpT_ <E> >                         \
 >                                                                        \
                                                                          \
-_op_ (const matrix<E,AT,O>& arg)                                         \
+_op_ (const matrix<E,AT>& arg)                                           \
 {                                                                        \
     typedef et::UnaryMatrixOp<                                           \
-            matrix<E,AT,O>, _OpT_ <E>                                    \
+            matrix<E,AT>, _OpT_ <E>                                      \
         > ExprT;                                                         \
     return et::MatrixXpr<ExprT>(ExprT(arg));                             \
 }
@@ -67,37 +67,37 @@ _op_ (const et::MatrixXpr<XprT>& arg)                                    \
 
 /** Declare an operator taking two matrix operands. */
 #define CML_MAT_MAT_BINOP(_op_, _OpT_)                                   \
-template<typename E1, class AT1, typename E2, class AT2, typename O>     \
+template<typename E1, class AT1, typename E2, class AT2>                 \
 inline et::MatrixXpr<                                                    \
     et::BinaryMatrixOp<                                                  \
-        matrix<E1,AT1,O>, matrix<E2,AT2,O>, _OpT_<E1,E2> >               \
+        matrix<E1,AT1>, matrix<E2,AT2>, _OpT_<E1,E2> >                   \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
-        const matrix<E1,AT1,O>& left,                                    \
-        const matrix<E2,AT2,O>& right)                                   \
+        const matrix<E1,AT1>& left,                                      \
+        const matrix<E2,AT2>& right)                                     \
 {                                                                        \
     typedef et::BinaryMatrixOp<                                          \
-            matrix<E1,AT1,O>, matrix<E2,AT2,O>, _OpT_<E1,E2>             \
+            matrix<E1,AT1>, matrix<E2,AT2>, _OpT_<E1,E2>                 \
         > ExprT;                                                         \
     return et::MatrixXpr<ExprT>(ExprT(left,right));                      \
 }
 
 /** Declare an operator taking a matrix and a et::MatrixXpr. */
 #define CML_MAT_MATXPR_BINOP(_op_, _OpT_)                                \
-template<typename E, class AT, typename O, class XprT>                   \
+template<typename E, class AT, class XprT>                               \
 inline et::MatrixXpr<                                                    \
     et::BinaryMatrixOp<                                                  \
-        matrix<E,AT,O>, XprT, _OpT_ <E, typename XprT::value_type>       \
+        matrix<E,AT>, XprT, _OpT_ <E, typename XprT::value_type>         \
     >                                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
-        const matrix<E,AT,O>& left,                                      \
+        const matrix<E,AT>& left,                                        \
         const et::MatrixXpr<XprT>& right)                                \
 {                                                                        \
     typedef et::BinaryMatrixOp<                                          \
-            matrix<E,AT,O>, XprT,                                        \
+            matrix<E,AT>, XprT,                                          \
             _OpT_ <E, typename XprT::value_type>                         \
         > ExprT;                                                         \
     return et::MatrixXpr<ExprT>(ExprT(left,right.expression()));         \
@@ -105,19 +105,19 @@ _op_ (                                                                   \
 
 /** Declare an operator taking a et::MatrixXpr and a matrix. */
 #define CML_MATXPR_MAT_BINOP(_op_, _OpT_)                                \
-template<class XprT, typename E, class AT, typename O>                   \
+template<class XprT, typename E, class AT>                               \
 inline et::MatrixXpr<                                                    \
     et::BinaryMatrixOp<                                                  \
-        XprT, matrix<E,AT,O>, _OpT_ <typename XprT::value_type, E>       \
+        XprT, matrix<E,AT>, _OpT_ <typename XprT::value_type, E>         \
     >                                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
         const et::MatrixXpr<XprT>& left,                                 \
-        const matrix<E,AT,O>& right)                                     \
+        const matrix<E,AT>& right)                                       \
 {                                                                        \
     typedef et::BinaryMatrixOp<                                          \
-            XprT, matrix<E,AT,O>,                                        \
+            XprT, matrix<E,AT>,                                          \
             _OpT_ <typename XprT::value_type, E>                         \
         > ExprT;                                                         \
     return et::MatrixXpr<ExprT>(ExprT(left.expression(),right));         \
@@ -153,38 +153,38 @@ _op_ (                                                                   \
 
 /** Declare an operator taking a matrix and a scalar. */
 #define CML_MAT_SCALAR_BINOP(_op_, _OpT_)                                \
-template<typename E, class AT, typename O, typename ScalarT>             \
+template<typename E, class AT, typename ScalarT>                         \
 inline et::MatrixXpr<                                                    \
     et::BinaryMatrixOp<                                                  \
-        matrix<E,AT,O>, ScalarT, _OpT_ <E,ScalarT>                       \
+        matrix<E,AT>, ScalarT, _OpT_ <E,ScalarT>                         \
     >                                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
-        const matrix<E,AT,O>& left,                                      \
+        const matrix<E,AT>& left,                                        \
         const ScalarT& right)                                            \
 {                                                                        \
     typedef et::BinaryMatrixOp<                                          \
-            matrix<E,AT,O>, ScalarT, _OpT_ <E,ScalarT>                   \
+            matrix<E,AT>, ScalarT, _OpT_ <E,ScalarT  >                   \
         > ExprT;                                                         \
     return et::MatrixXpr<ExprT>(ExprT(left,right));                      \
 }
 
 /** Declare an operator taking a scalar and a matrix. */
 #define CML_SCALAR_MAT_BINOP(_op_, _OpT_)                                \
-template<typename ScalarT, typename E, class AT, typename O>             \
+template<typename ScalarT, typename E, class AT>                         \
 inline et::MatrixXpr<                                                    \
     et::BinaryMatrixOp<                                                  \
-        ScalarT, matrix<E,AT,O>, _OpT_ <ScalarT,E>                       \
+        ScalarT, matrix<E,AT>, _OpT_ <ScalarT,E>                         \
     >                                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
         const ScalarT& left,                                             \
-        const matrix<E,AT,O>& right)                                     \
+        const matrix<E,AT>& right)                                       \
 {                                                                        \
     typedef et::BinaryMatrixOp<                                          \
-            ScalarT, matrix<E,AT,O>, _OpT_<ScalarT,E>                    \
+            ScalarT, matrix<E,AT>, _OpT_<ScalarT,E>                      \
         > ExprT;                                                         \
     return et::MatrixXpr<ExprT>(ExprT(left,right));                      \
 }

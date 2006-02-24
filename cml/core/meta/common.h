@@ -35,13 +35,13 @@ struct type_quad {
  */
 template<typename T, typename U> struct same_type {
     typedef false_type result;
-    enum { is_true = false };
+    enum { is_true = false, is_false = true };
 };
 
 /** Match the same type for both of same_type's template arguments. */
 template<typename T> struct same_type<T,T> {
     typedef true_type result;
-    enum { is_true = true };
+    enum { is_true = true, is_false = false };
 };
 
 #endif

@@ -15,15 +15,6 @@
 #include <cml/et/matrix_unroller.h>
 #include <cml/matrix_ops.h>
 
-/* This sets up the environment for oriented or unoriented vector copies: */
-#if defined(CML_ENFORCE_VECTOR_ORIENTATION_ON_COPY)
-  #define ORIENT_MACRO         orient_tag
-  #define COPY_TEMPLATE_PARAMS template<typename E, class AT>
-#else
-  #define ORIENT_MACRO         O
-  #define COPY_TEMPLATE_PARAMS template<typename E, class AT, typename O>
-#endif
-
 namespace cml {
 
 /** A configurable matrix.
@@ -41,7 +32,7 @@ namespace cml {
  * @sa cml::fixed
  * @sa cml::dynamic
  */
-template<typename Element, class ArrayType, typename Orient>
+template<typename Element, class ArrayType>
 class matrix
 
 /* Figure out (and inherit from) the selected base array type: */
@@ -54,7 +45,7 @@ class matrix
         array_type;
 
     /* Shorthand for the type of this matrix: */
-    typedef matrix<Element,ArrayType,Orient> matrix_type;
+    typedef matrix<Element,ArrayType> matrix_type;
 
     /* For integration into the expression template code: */
     typedef matrix_type expr_type;
@@ -73,23 +64,15 @@ class matrix
     /* For matching by storage type if necessary: */
     typedef typename array_type::memory_tag memory_tag;
 
-    /* For matching by orientation: */
-    typedef Orient orient_tag;
-    /* Note: orientation is propagated up an expression tree and enforced
-     * at compile time through the result_type expression trait.
-     */
-
-    /* To simplify transpose(): */
-    typedef typename select_if<
-        same_type<orient_tag,row_vector>::is_true,
-        col_vector, row_vector>::result transposed_tag;
-    typedef matrix<Element,ArrayType,transposed_tag> transposed_type;
-
     /* For matching by size type if necessary: */
     typedef typename array_type::size_tag size_tag;
 
     /* For matching by result-type: */
     typedef cml::et::matrix_result_tag result_tag;
+
+    /* To simplify the matrix transpose operator: */
+    typedef matrix<Element, typename ArrayType::transposed_type>
+        transposed_type;
 
 
   public:
@@ -134,8 +117,7 @@ class matrix
      *
      * @param m the matrix to copy from.
      */
-    COPY_TEMPLATE_PARAMS
-    matrix(const matrix<E,AT,ORIENT_MACRO>& m) {
+    template<typename E, class AT> matrix(const matrix<E,AT>& m) {
         typedef et::OpAssign<Element,E> OpT;
         this->reshape(m);
         et::UnrollAssignment<OpT>(*this,m);
@@ -166,12 +148,9 @@ class matrix
      * matrices.
      *
      * @param m the matrix to copy from.
-     *
-     * @note The orientation of the matrix is not changed, only the number
-     * of rows and columns.
      */
-    template<typename E, class AT, typename O>
-    void reshape(const matrix<E,AT,O>& m) {
+    template<typename E, class AT>
+    void reshape(const matrix<E,AT>& m) {
 
         /* Dispatch to the proper reshape function: */
         this->reshape(m,size_tag());
@@ -188,8 +167,8 @@ class matrix
      * @param _op_name_ the op functor (e.g. et::OpAssign)
      */
 #define CML_ASSIGN_FROM_MAT(_op_, _op_name_)                            \
-    COPY_TEMPLATE_PARAMS matrix_type&                                   \
-    operator _op_ (const matrix<E,AT,ORIENT_MACRO>& m) {                \
+    template<typename E, class AT> matrix_type&                         \
+    operator _op_ (const matrix<E,AT>& m) {                             \
         typedef _op_name_ <Element,E> OpT;                              \
         this->reshape(m);                                               \
         et::UnrollAssignment<OpT>(*this,m);                             \
@@ -250,14 +229,14 @@ class matrix
   protected:
 
     /** Reshape for fixed-size matrices. */
-    template<typename E, class AT, typename O>
-        void reshape(const matrix<E,AT,O>&, fixed_size_tag) {
+    template<typename E, class AT>
+        void reshape(const matrix<E,AT>&, fixed_size_tag) {
             /* Do nothing. */
         }
 
     /** Reshape for dynamically-sized matrices. */
-    template<typename E, class AT, typename O>
-        void reshape(const matrix<E,AT,O>& m, dynamic_size_tag) {
+    template<typename E, class AT>
+        void reshape(const matrix<E,AT>& m, dynamic_size_tag) {
             this->resize(m.rows(),m.cols());
         }
 

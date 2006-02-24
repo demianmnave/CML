@@ -17,7 +17,7 @@
 namespace cml {
 
 /* Forward declare for the matrix expressions below: */
-template<typename E, class AT, typename O> class matrix;
+template<typename E, class AT> class matrix;
 
 namespace et {
 

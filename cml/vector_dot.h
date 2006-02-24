@@ -3,6 +3,11 @@
  *-----------------------------------------------------------------------*/
 /** @file
  *  @brief Defines the dot product of two vectors.
+ *
+ *  @internal This does not need to return an expression type, since the
+ *  temporary generation for the scalar result is handled automatically by
+ *  the compiler.  i.e. when used in a vector expression, the result is
+ *  automatically included in the expression tree as a temporary.
  */
 
 #ifndef vector_dot_h

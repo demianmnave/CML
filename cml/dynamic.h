@@ -110,6 +110,11 @@ struct dynamic
     /* Record size tag for type deduction: */
     typedef dynamic_size_tag size_tag;
 
+    /* To simplify the matrix transpose operator.  For dynamic matrices,
+     * the type doesn't change:
+     */
+    typedef dynamic<T1,T2> transposed_type;
+
     /* Forward declare the rebinder class to be specialized: */
     template<typename Tag, typename Element> struct rebind;
 

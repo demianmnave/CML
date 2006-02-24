@@ -73,34 +73,44 @@ struct ArrayPromote
     typedef type_pair<dynamic_memory_tag,dynamic_size_tag> dynamic_dynamic;
     typedef type_pair<external_memory_tag,fixed_size_tag> external_fixed;
 
+    /* Figure out the layout of the promoted array: */
+    typedef typename select_if<
+        same_type<typename AT1::layout, typename AT2::layout>::is_true,
+        typename AT1::layout,
+        CML_DEFAULT_ARRAY_LAYOUT>::result default_layout;
+
     /* Shorthand for the resulting fixed_fixed type, if matched: */
     typedef cml::fixed<
         VAL_MAX((long)AT1::array_rows, (long)AT2::array_rows),
         VAL_MAX((long)AT1::array_cols, (long)AT2::array_cols),
-        typename AT1::layout> fixed_fixed_result;
+        default_layout> fixed_fixed_result;
+
+    /* Shorthand for the resulting dynamic_dynamic type, if matched: */
+    typedef cml::dynamic<default_layout, typename AT1::allocator_type>
+        dynamic_dynamic_result;
 
     typedef typename select_switch<
         left_type,
         fixed_fixed,       typename select_switch<
                                 right_type,
                                 fixed_fixed,       fixed_fixed_result,
-                                dynamic_dynamic,   AT2,
+                                dynamic_dynamic,   dynamic_dynamic_result,
                                 external_fixed,    fixed_fixed_result,
                                 meta::Default,     void
                            >::result,
 
         dynamic_dynamic,   typename select_switch<
                                 right_type,
-                                fixed_fixed,       AT1,
-                                dynamic_dynamic,   AT1,
-                                external_fixed,    AT1,
+                                fixed_fixed,       dynamic_dynamic_result,
+                                dynamic_dynamic,   dynamic_dynamic_result,
+                                external_fixed,    dynamic_dynamic_result,
                                 meta::Default,     void
                            >::result,
 
         external_fixed,    typename select_switch<
                                 right_type,
                                 fixed_fixed,       fixed_fixed_result,
-                                dynamic_dynamic,   AT2,
+                                dynamic_dynamic,   dynamic_dynamic_result,
                                 external_fixed,    fixed_fixed_result,
                                 meta::Default,     void
                            >::result,
