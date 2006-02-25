@@ -2,12 +2,10 @@
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 /** @file
- *  @brief
- *
- * g++ -I.. -Wall -W -O3 -o simple simple.cpp
+ *  @brief A set of very simple examples of current CML functionality.
  */
 
-#include "cml_config.h"         // Must be first!
+#include "cml_config.h"         // Must be first (for now)!
 
 #include <iostream>
 #include <cmath>
@@ -16,6 +14,7 @@
 
 using std::cout;
 using std::endl;
+
 using cml::fixed;
 using cml::dynamic;
 using namespace cml::vector_ops;
