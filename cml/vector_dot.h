@@ -53,7 +53,7 @@ dot(const LeftT& left, const RightT& right)
     typedef et::ExprTraits<LeftT> left_traits;
     typedef et::ExprTraits<RightT> right_traits;
 
-    /* First, require vector expressions: */
+    /* dot() requires vector expressions: */
     typedef typename left_traits::result_tag left_result_tag;
     typedef typename right_traits::result_tag right_result_tag;
     CML_STATIC_REQUIRE_M(
@@ -64,6 +64,7 @@ dot(const LeftT& left, const RightT& right)
      * commas:
      */
 
+#if 0
     /* dot() requires that the left argument is a row_vector, and the right
      * argument is a col_vector:
      */
@@ -76,6 +77,7 @@ dot(const LeftT& left, const RightT& right)
     /* Note: parens are required here so that the preprocessor ignores the
      * commas:
      */
+#endif
 
     /* Deduce the return type: */
     typedef typename et::ScalarPromote<

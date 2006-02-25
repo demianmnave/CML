@@ -249,7 +249,7 @@ void example8()
     transpose(u);
     cout << "  u = " << u << endl;
     cout << "  v = " << v << endl;
-    cout << "  dot(u,v) = " << dot(T(u),v) << endl;
+    cout << "  dot(u,v) = " << dot(u,v) << endl;
     cout << "  dot(u,u) = " << dot(T(u),u) << endl;
     cout << "  dot(u+v,v) = " << dot(T(u+v),v) << endl;
     cout << "  cos(u,v) = " << dot(T(u),v)/sqrt(dot(T(u),u)*dot(T(v),v))

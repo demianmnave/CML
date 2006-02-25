@@ -85,10 +85,12 @@ CML_RECIPROCAL_OPTIMIZATION
 
 
 CML_IGNORE_VECTOR_ORIENTATION
-- Don't enforce vector orientation compatibility in expressions; e.g. dot()
-  will work with two row-vectors or two col-vectors.  Normally, orientation is
-  enforced so that e.g. dot() requires that the left argument is a row vector,
-  and the right argument is a column vector.
+- Don't enforce vector orientation compatibility in algebraic vector
+  expressions; e.g. x = u*v will work with two row-vectors or two col-vectors.
+  Without this option, orientation is enforced so that argument vectors have
+  the proper orientation for the operator.  This has no effect on named
+  functions (like dot()) in which the proper orientation is assumed and
+  implicit.
 
 
 CML_ENFORCE_VECTOR_ORIENTATION_ON_COPY
