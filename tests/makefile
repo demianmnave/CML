@@ -24,22 +24,35 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 #-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 
-CXX=i386-redhat-linux-g++ #-Wall -W
-CPP=$(CXX) -M
-##:: SEEMS TO BE BEST FOR GCC 4.0 Linux/x86
-CXXFLAGS=-ftemplate-depth-50 -march=pentium4 -mtune=pentium4 -O3 \
-	 -fomit-frame-pointer -funroll-loops -finline-functions \
-	 -finline-limit=2000000000 \
- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
-#	 -DCML_NO_2D_UNROLLER
-CPPFLAGS=-I.. $(CML_OPTS) \
-	-I$(HOME)/projects/external/build/exmat/include \
-	-I$(HOME)/projects/external/build/ltl-1.7.10
-
+CXX=powerpc-apple-darwin8-g++-4.0.0
+CPP=$(CXX) -MM
+CXXFLAGS=-ftemplate-depth-50 -O3 \
+	 -mpowerpc-gpopt -fomit-frame-pointer -funroll-loops \
+	 -finline-functions -finline-limit=2000000000 \
+	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
+CPPFLAGS=-I.. $(CML_OPTS)
 exe=
 obj=.o
 rm=rm -f
 LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+
+
+#-- CXX=i386-redhat-linux-g++ #-Wall -W
+#-- CPP=$(CXX) -M
+#-- ##:: SEEMS TO BE BEST FOR GCC 4.0 Linux/x86
+#-- CXXFLAGS=-ftemplate-depth-50 -march=pentium4 -mtune=pentium4 -O3 \
+#-- 	 -fomit-frame-pointer -funroll-loops -finline-functions \
+#-- 	 -finline-limit=2000000000 \
+#--  	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
+#-- #	 -DCML_NO_2D_UNROLLER
+#-- CPPFLAGS=-I.. $(CML_OPTS) \
+#-- 	-I$(HOME)/projects/external/build/exmat/include \
+#-- 	-I$(HOME)/projects/external/build/ltl-1.7.10
+#-- 
+#-- exe=
+#-- obj=.o
+#-- rm=rm -f
+#-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 
 #-- CXX=icpc -Wcheck -U__GXX_WEAK__
