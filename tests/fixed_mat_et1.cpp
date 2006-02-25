@@ -21,6 +21,9 @@ using cml::fixed;
 typedef cml::matrix< double, fixed<4,4> > matrix_d44;
 #define MATINIT(_m_) _m_
 
+/* Define the vector orientation to assume: */
+typedef cml::col_vector vector_orient;
+
 inline void mult(const matrix_d44& A, const matrix_d44& B, matrix_d44& res)
 {
     int row, col, k;

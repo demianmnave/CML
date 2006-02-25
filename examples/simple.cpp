@@ -24,13 +24,27 @@ using namespace cml::matrix_ops;
 /* Define the vector orientation to assume: */
 typedef cml::col_vector vector_orient;
 
+#if !defined(CML_IGNORE_VECTOR_ORIENTATION)
 /* Note: this has to have the same template params as cml::vector<>: */
-template<typename E, class AT, class O> std::ostream&
-operator<<(std::ostream& os, const cml::vector<E,AT,O>& v)
+template<typename E, class AT> std::ostream&
+operator<<(std::ostream& os, const cml::vector<E,AT,cml::row_vector>& v)
 {
     os << "[";
     for(size_t i = 0; i < v.size(); ++i) {
         os << " " << v[i];
+    }
+    os << " ]";
+    return os;
+}
+#endif
+
+/* Note: this has to have the same template params as cml::vector<>: */
+template<typename E, class AT> std::ostream&
+operator<<(std::ostream& os, const cml::vector<E,AT,cml::col_vector>& v)
+{
+    os << "[" << endl;
+    for(size_t i = 0; i < v.size(); ++i) {
+        os << " " << v[i] << endl;
     }
     os << " ]";
     return os;
@@ -157,6 +171,44 @@ void example5()
 
     C = A+B;
     cout << "  C(0,0) = " << C(0,0) << endl;
+    cout << C << endl;
+
+    C = A+T(B);
+    cout << C << endl;
+}
+
+void example6()
+{
+    /* 3-space matrix, fixed length, double coordinates: */
+    typedef cml::matrix< double, fixed<3,3> > matrix_d3;
+
+    /* Column vector of the matrix: */
+    typedef matrix_d3::col_vector_type cvector_d3;
+
+    matrix_d3 A, B, C;
+
+    A(0,0) = 1.0; A(0,1) = 0.0; A(0,2) = 1.0;
+    A(1,0) = 0.0; A(1,1) = 1.0; A(1,2) = 0.0;
+    A(2,0) = 0.0; A(2,1) = 0.0; A(2,2) = 1.0;
+
+    B(0,0) = 1.0; B(0,1) = 0.0; B(0,2) = 1.0;
+    B(1,0) = 0.0; B(1,1) = 1.0; B(1,2) = 0.0;
+    B(2,0) = 0.0; B(2,1) = 0.0; B(2,2) = 1.0;
+
+    cout << "Example6:" << endl;
+
+    C = T(A)+B;
+    cout << "  C = " << C << endl;
+
+    cvector_d3 v = col(C,0);
+    cout << "  C(0) = " << endl << v << endl;
+    v = col(C,1);
+    cout << "  C(1) = " << endl << v << endl;
+    v = col(C,2);
+    cout << "  C(2) = " << endl << v << endl;
+
+    v = col(T(A)+B,2);
+    cout << "  (T(A)+B)(2) = " << endl << v << endl;
 }
 
 int main()
@@ -166,6 +218,7 @@ int main()
     example3();
     example4();
     example5();
+    example6();
     return 0;
 }
 

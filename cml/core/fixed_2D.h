@@ -9,9 +9,12 @@
 #define fixed_2D_h
 
 #include <cml/core/common.h>
-#include <cml/core/cml_meta.h>
+#include <cml/core/fixed_1D.h>
 
 namespace cml {
+
+/* Forward declare to record the fixed_1D generator type: */
+template<int Dim1, int Dim2> struct fixed;
 
 /** The internal statically-allocated 2D-array implementation class.
  *
@@ -50,6 +53,9 @@ class fixed_2D
 {
   public:
 
+    /* Record the generator: */
+    typedef fixed<Rows,Cols> generator_type;
+
     /* Standard: */
     typedef Element value_type;
     typedef Element& reference;
@@ -66,6 +72,13 @@ class fixed_2D
 
     /* For matching by dimensions: */
     typedef twod_tag dimension_tag;
+
+    /* To simplify the matrix transpose operator: */
+    typedef fixed_2D<Element,Cols,Rows,Layout> transposed_type;
+
+    /* To simplify the matrix row and column operators: */
+    typedef fixed_1D<Element,Rows> row_array_type;
+    typedef fixed_1D<Element,Cols> col_array_type;
 
 
   public:

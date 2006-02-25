@@ -8,6 +8,8 @@
 #ifndef core_common_h
 #define core_common_h
 
+#include <cml/defaults.h>
+
 namespace cml {
 
 /** 1D tag (to select array shape). */
@@ -53,6 +55,11 @@ typedef col_vector row_vector;
 /** Row vector tag. */
 struct row_vector {};
 #endif
+
+/* This is the pair returned from the matrix size() method, as well as from
+ * the matrix expression size checking code:
+ */
+typedef std::pair<size_t,size_t> matrix_size;
 
 } // namespace cml
 

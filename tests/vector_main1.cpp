@@ -21,12 +21,12 @@ int main(int argc, char** argv)
     //size_t n_iter = 1000*1000*1000; //1 000 000 000
     //size_t n_iter = 100*1000*1000; //10 000 000
     size_t n_iter = 10*1000*1000; //10 000 000
+    //size_t n_iter = 100000;
+    //size_t n_iter = 1;
 
     if(argc == 2)
       n_iter = std::atol(argv[1]);
 
-    //size_t n_iter = 100000;
-    //size_t n_iter = 1;
     usec_t t_start = usec_time();
     timed1(v,v1,v2,v3,v4, n_iter);
     usec_t t_end = usec_time();

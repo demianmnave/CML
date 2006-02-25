@@ -15,6 +15,7 @@
 #include <cml/core/cml_meta.h>
 #include <cml/fixed.h>
 #include <cml/dynamic.h>
+#include <cml/et/scalar_promotions.h>
 
 namespace cml {
 namespace et {
@@ -23,16 +24,22 @@ namespace et {
 
 /** Class to promote array types.
  *
- * Both argument types must be arrays.
+ * Both arguments must be array types.
  *
  * @sa fixed_1D
  * @sa fixed_2D
  * @sa dynamic_1D
  * @sa dynamic_2D
  */
-template<class AT1, class AT2>
+template<class A1, class A2>
 struct ArrayPromote
 {
+    /* Shorthand: */
+    typedef typename A1::value_type left_scalar;
+    typedef typename A2::value_type right_scalar;
+    typedef typename A1::dimension_tag left_dtag;
+    typedef typename A2::dimension_tag right_dtag;
+
     /* Deduce the proper type based upon the characteristics of AT1 and
      * AT2.  This is the table of type conversions:
      *
@@ -42,92 +49,142 @@ struct ArrayPromote
      *   fixed    fixed    fixed    fixed     fixed    fixed
      *   fixed    fixed    dynamic  dynamic   dynamic  dynamic
      *   fixed    fixed    external fixed     fixed    fixed
+     *   fixed    fixed    external dynamic   dynamic  dynamic
      *
      *   dynamic  dynamic  fixed    fixed     dynamic  dynamic
      *   dynamic  dynamic  dynamic  dynamic   dynamic  dynamic
      *   dynamic  dynamic  external fixed     dynamic  dynamic
+     *   dynamic  dynamic  external dynamic   dynamic  dynamic
      *
      *   external fixed    external fixed     fixed    fixed
      *   external fixed    fixed    fixed     fixed    fixed
      *   external fixed    dynamic  dynamic   dynamic  dynamic
+     *   external fixed    external dynamic   dynamic  dynamic
      *
-     *   Note: Fixed-size results take on the largest dimensions that will
-     *   accomodate both argument array types, since there is no way to
-     *   deduce the proper size without knowing the expression.  This means
-     *   that the array types must be provided to ArrayPromote such that
-     *   this behavior is correct.
+     *   external dynamic  external fixed     dynamic  dynamic
+     *   external dynamic  fixed    fixed     dynamic  dynamic
+     *   external dynamic  dynamic  dynamic   dynamic  dynamic
+     *   external dynamic  external dynamic   dynamic  dynamic
      *
-     *   Note: if one argument is a dynamic array, the result must also be
-     *   a dynamic array. The resulting layout and allocator will be taken
-     *   from the first dynamic array argument.
+     * Note that if one argument is a dynamically-sized array, the result
+     * must be a dynamically allocated and sized array.  Likewise, if both
+     * arguments have fixed size, the result can be a fixed-sized array.
      */
 
-    /* Get tags from the arguments into shorthand names: */
-    typedef type_pair<
-        typename AT1::memory_tag, typename AT1::size_tag> left_type;
-    typedef type_pair<
-        typename AT2::memory_tag, typename AT2::size_tag> right_type;
-
-    /* Shorthand for the combinations: */
-    typedef type_pair<fixed_memory_tag,fixed_size_tag> fixed_fixed;
-    typedef type_pair<dynamic_memory_tag,dynamic_size_tag> dynamic_dynamic;
-    typedef type_pair<external_memory_tag,fixed_size_tag> external_fixed;
-
-    /* Figure out the layout of the promoted array: */
+    /* Check if both arguments are fixed-size arrays.  If so, the promoted
+     * array will be a fixed array, and if not, it will be a dynamic array:
+     */
     typedef typename select_if<
-        same_type<typename AT1::layout, typename AT2::layout>::is_true,
-        typename AT1::layout,
-        CML_DEFAULT_ARRAY_LAYOUT>::result default_layout;
+        (same_type<typename A1::size_tag, fixed_size_tag>::is_true
+         && same_type<typename A2::size_tag, fixed_size_tag>::is_true),
+        fixed_size_tag,         /* True */
+        dynamic_size_tag        /* False */
+    >::result promoted_size_tag;
 
-    /* Shorthand for the resulting fixed_fixed type, if matched: */
-    typedef cml::fixed<
-        VAL_MAX((long)AT1::array_rows, (long)AT2::array_rows),
-        VAL_MAX((long)AT1::array_cols, (long)AT2::array_cols),
-        default_layout> fixed_fixed_result;
+    /* This is specialized for 1D and 2D promotions: */
+    template<typename DTag1, typename DTag2, typename PromotedSizeTag,
+        class X = void> struct promote;
 
-    /* Shorthand for the resulting dynamic_dynamic type, if matched: */
-    typedef cml::dynamic<default_layout, typename AT1::allocator_type>
-        dynamic_dynamic_result;
+    /* Promote 1D fixed-size arrays to a 1D fixed-size array: */
+    template<class X> struct promote<oned_tag,oned_tag,fixed_size_tag,X>
+    {
+        /* First, promote the scalar type: */
+        typedef typename ScalarPromote<
+            left_scalar,right_scalar>::type promoted_scalar;
 
-    typedef typename select_switch<
-        left_type,
-        fixed_fixed,       typename select_switch<
-                                right_type,
-                                fixed_fixed,       fixed_fixed_result,
-                                dynamic_dynamic,   dynamic_dynamic_result,
-                                external_fixed,    fixed_fixed_result,
-                                meta::Default,     void
-                           >::result,
+        /* Next, deduce the array size: */
+        enum { Size = VAL_MAX((size_t)A1::array_size, (size_t)A2::array_size) };
 
-        dynamic_dynamic,   typename select_switch<
-                                right_type,
-                                fixed_fixed,       dynamic_dynamic_result,
-                                dynamic_dynamic,   dynamic_dynamic_result,
-                                external_fixed,    dynamic_dynamic_result,
-                                meta::Default,     void
-                           >::result,
+        /* Finally, generate the promoted array type: */
+        typedef fixed_1D<promoted_scalar,Size> type;
+    };
 
-        external_fixed,    typename select_switch<
-                                right_type,
-                                fixed_fixed,       fixed_fixed_result,
-                                dynamic_dynamic,   dynamic_dynamic_result,
-                                external_fixed,    fixed_fixed_result,
-                                meta::Default,     void
-                           >::result,
+    /* Promote 1D dynamic arrays to a 1D dynamic array: */
+    template<class X> struct promote<oned_tag,oned_tag,dynamic_size_tag,X>
+    {
+        /* First, promote the scalar type: */
+        typedef typename ScalarPromote<
+            left_scalar,right_scalar>::type promoted_scalar;
+
+        /* Next, rebind to get the proper allocator: */
+        typedef typename CML_DEFAULT_ARRAY_ALLOC
+            ::rebind<promoted_scalar>::other allocator;
+
+        /* Finally, generate the promoted array type: */
+        typedef dynamic_1D<promoted_scalar,allocator> type;
+    };
 
 
-        /* Default is void (an error): */
-        meta::Default,     void
+    /* This is a helper to deduce the result of a promoted 2D array: */
+    template<typename LeftL, typename RightL> struct deduce_layout {
+#if defined(CML_ALWAYS_PROMOTE_TO_DEFAULT_LAYOUT)
+        typedef CML_DEFAULT_ARRAY_LAYOUT promoted_layout;
+#else
+        typedef typename select_if<
+            same_type<LeftT,RightL>, LeftL,
+            CML_DEFAULT_ARRAY_LAYOUT>::result promoted_layout;
+#endif
+    };
 
-    /* The resulting array type: */
-    >::result type;
+    /* Promote 2D fixed-size arrays to a 2D fixed-size array.  The resulting
+     * matrix has the same number of rows as A1, and the same number of
+     * columns as A2.  The correctness of this must be enforced before using
+     * the promoted matrix.
+     */
+    template<class X> struct promote<twod_tag,twod_tag,fixed_size_tag,X>
+    {
+        /* First, promote the scalar type: */
+        typedef typename ScalarPromote<
+            left_scalar,right_scalar>::type promoted_scalar;
+
+        /* Next, deduce the array size: */
+        enum {
+            Rows = (size_t)A1::array_rows,
+            Cols = (size_t)A2::array_cols
+        };
+
+        /* Then deduce the array layout: */
+        typedef typename A1::layout left_layout;
+        typedef typename A2::layout right_layout;
+        typedef typename deduce_layout<left_layout,right_layout>
+            ::promoted_layout promoted_layout;
+
+        /* Finally, generate the promoted array type: */
+        typedef fixed_2D<promoted_scalar,Rows,Cols,promoted_layout> type;
+    };
+
+    /* Promote 2D dynamic arrays to a 2D dynamic array: */
+    template<class X> struct promote<twod_tag,twod_tag,dynamic_size_tag,X>
+    {
+        /* First, promote the scalar type: */
+        typedef typename ScalarPromote<
+            left_scalar,right_scalar>::type promoted_scalar;
+
+        /* Next, rebind to get the proper allocator: */
+        typedef typename CML_DEFAULT_ARRAY_ALLOC
+            ::rebind<promoted_scalar>::other allocator;
+
+        /* Then deduce the array layout: */
+        typedef typename A1::layout left_layout;
+        typedef typename A2::layout right_layout;
+        typedef typename deduce_layout<left_layout,right_layout>
+            ::promoted_layout promoted_layout;
+
+        /* Finally, generate the promoted array type: */
+        typedef dynamic_2D<promoted_scalar,promoted_layout,allocator> type;
+    };
+
+    /* Deduce the promoted type: */
+    typedef typename promote<
+        left_dtag, right_dtag, promoted_size_tag>::type type;
 };
+
+/* Cleanup internal macros: */
+#undef VAL_MAX
 
 } // namespace et
 } // namespace cml
 
-/* Cleanup internal macros: */
-#undef VAL_MAX
 #endif
 
 // -------------------------------------------------------------------------

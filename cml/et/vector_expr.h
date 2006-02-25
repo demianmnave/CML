@@ -98,11 +98,13 @@ template<class ExprT>
 struct ExprTraits< VectorXpr<ExprT> >
 {
     typedef VectorXpr<ExprT> expr_type;
+    typedef ExprT arg_type;
     typedef typename expr_type::value_type value_type;
     typedef typename expr_type::expr_const_reference const_reference;
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
+    typedef expr_node_tag node_tag;
 
     value_type get(const expr_type& v, size_t i) const { return v[i]; }
     size_t size(const expr_type& e) const { return e.size(); }
@@ -113,12 +115,12 @@ struct ExprTraits< VectorXpr<ExprT> >
  *
  * The operator's operator() method must take exactly one argument.
  */
-template<class ArgT, class OpT>
+template<class ExprT, class OpT>
 class UnaryVectorOp
 {
   public:
 
-    typedef UnaryVectorOp<ArgT,OpT> expr_type;
+    typedef UnaryVectorOp<ExprT,OpT> expr_type;
 
     /* Record ary-ness of the expression: */
     typedef unary_expression expr_ary;
@@ -135,30 +137,33 @@ class UnaryVectorOp
 
     typedef typename OpT::value_type value_type;
     typedef vector_result_tag result_tag;
-    typedef typename ArgT::size_tag size_tag;
+    typedef typename ExprT::size_tag size_tag;
 
     /* Store the expression traits for the subexpression: */
-    typedef ExprTraits<ArgT> arg_traits;
+    typedef ExprTraits<ExprT> expr_traits;
 
     /* Reference type for the subexpression: */
-    typedef typename arg_traits::const_reference arg_reference;
+    typedef typename expr_traits::const_reference expr_reference;
 
     /* Get the result type (same as for subexpression): */
-    typedef typename arg_traits::result_type result_type;
+    typedef typename expr_traits::result_type result_type;
 
 
   public:
 
     /** Record result size as an enum. */
-    enum { array_size = ArgT::array_size };
+    enum { array_size = ExprT::array_size };
 
 
   public:
 
-    /** Return size of this expression (same as argument's size). */
+    /** Return size of this expression (same as exprument's size). */
     size_t size() const {
-        return arg_traits().size(m_arg);
+        return expr_traits().size(m_expr);
     }
+
+    /** Return reference to contained expression. */
+    expr_reference expression() const { return m_expr; }
 
     /** Compute value at index i of the result vector. */
     value_type operator[](size_t i) const {
@@ -166,22 +171,22 @@ class UnaryVectorOp
         /* This uses the expression traits to figure out how to access the
          * i'th index of the subexpression:
          */
-        return OpT().apply(arg_traits().get(m_arg,i));
+        return OpT().apply(expr_traits().get(m_expr,i));
     }
 
 
   public:
 
     /** Construct from the subexpression. */
-    explicit UnaryVectorOp(const ArgT& arg) : m_arg(arg) {}
+    explicit UnaryVectorOp(const ExprT& expr) : m_expr(expr) {}
 
     /** Copy constructor. */
-    UnaryVectorOp(const expr_type& e) : m_arg(e.m_arg) {}
+    UnaryVectorOp(const expr_type& e) : m_expr(e.m_expr) {}
 
 
   protected:
 
-    arg_reference m_arg;
+    expr_reference m_expr;
 
 
   private:
@@ -191,15 +196,18 @@ class UnaryVectorOp
 };
 
 /** Expression traits class for UnaryVectorOp<>. */
-template<class ArgT, class OpT>
-struct ExprTraits< UnaryVectorOp<ArgT,OpT> >
+template<class ExprT, class OpT>
+struct ExprTraits< UnaryVectorOp<ExprT,OpT> >
 {
-    typedef UnaryVectorOp<ArgT,OpT> expr_type;
+    typedef UnaryVectorOp<ExprT,OpT> expr_type;
+    typedef ExprT arg_type;
+
     typedef typename expr_type::value_type value_type;
     typedef typename expr_type::expr_const_reference const_reference;
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
+    typedef expr_node_tag node_tag;
 
     value_type get(const expr_type& v, size_t i) const { return v[i]; }
     size_t size(const expr_type& e) const { return e.size(); }
@@ -241,16 +249,14 @@ class BinaryVectorOp
     typedef typename left_traits::const_reference left_reference;
     typedef typename right_traits::const_reference right_reference;
 
-    /* A checker to verify the argument sizes at compile- or run-time. This
-     * automatically checks fixed-size vectors at compile time:
-     */
-    typedef CheckLinearExprSizes<LeftT,RightT,result_tag> check_size;
-
     /* Figure out the expression's resulting (vector) type: */
     typedef typename left_traits::result_type left_result;
     typedef typename right_traits::result_type right_result;
     typedef typename VectorPromote<left_result,right_result>::type result_type;
     typedef typename result_type::size_tag size_tag;
+
+    /* Define a size checker: */
+    typedef GetCheckedSize<LeftT,RightT,result_tag> checked_size;
 
 
   public:
@@ -261,14 +267,24 @@ class BinaryVectorOp
 
   public:
 
-    /** Return the size of the vector result. */
+    /** Return the size of the vector result.
+     *
+     * @throws std::invalid_argument if the expressions do not have the same
+     * size.
+     */
     size_t size() const {
-
-        /* The vectors must have the same length, so just return the length
-         * of the left-hand argument:
-         */
-        return m_left.size();
+#if defined(CML_CHECK_VECTOR_EXPR_SIZES)
+        return checked_size()(m_left,m_right);
+#else
+        return left_traits().size(m_left);
+#endif
     }
+
+    /** Return reference to left expression. */
+    left_reference left_expression() const { return m_left; }
+
+    /** Return reference to right expression. */
+    right_reference right_expression() const { return m_right; }
 
     /** Compute value at index i of the result vector. */
     value_type operator[](size_t i) const {
@@ -295,7 +311,7 @@ class BinaryVectorOp
      * the BinaryVectorOp constructor.
      */
     explicit BinaryVectorOp(const LeftT& left, const RightT& right)
-        : m_left(left), m_right(right) { check_size()(left,right); }
+        : m_left(left), m_right(right) {}
 
     /** Copy constructor. */
     BinaryVectorOp(const expr_type& e)
@@ -310,6 +326,12 @@ class BinaryVectorOp
 
   private:
 
+    /* This ensures that a compile-time size check is executed: */
+    typename checked_size::compile_time_check _dummy;
+
+
+  private:
+
     /* Cannot be assigned to: */
     expr_type& operator=(const expr_type&);
 };
@@ -319,11 +341,15 @@ template<class LeftT, class RightT, class OpT>
 struct ExprTraits< BinaryVectorOp<LeftT,RightT,OpT> >
 {
     typedef BinaryVectorOp<LeftT,RightT,OpT> expr_type;
+    typedef LeftT left_type;
+    typedef RightT right_type;
+
     typedef typename expr_type::value_type value_type;
     typedef typename expr_type::expr_const_reference const_reference;
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
+    typedef expr_node_tag node_tag;
 
     value_type get(const expr_type& v, size_t i) const { return v[i]; }
     size_t size(const expr_type& e) const { return e.size(); }

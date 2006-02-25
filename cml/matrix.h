@@ -15,6 +15,13 @@
 #include <cml/et/matrix_unroller.h>
 #include <cml/matrix_ops.h>
 
+/* Use a macro to auto resize matrices if requested: */
+#if defined(CML_AUTOMATIC_MATRIX_RESIZE)
+  #define AUTO_RESIZE(_this_, _m_)      (_this_)->resize((_m_))
+#else
+  #define AUTO_RESIZE(_this_, _m_)
+#endif
+
 namespace cml {
 
 /** A configurable matrix.
@@ -71,8 +78,23 @@ class matrix
     typedef cml::et::matrix_result_tag result_tag;
 
     /* To simplify the matrix transpose operator: */
-    typedef matrix<Element, typename ArrayType::transposed_type>
-        transposed_type;
+    typedef matrix<
+        Element,
+        typename array_type::transposed_type::generator_type
+    > transposed_type;
+
+    /* To simplify the matrix row and column operators: */
+    typedef vector<
+        Element,
+        typename array_type::row_array_type::generator_type,
+        row_vector
+    > row_vector_type;
+
+    typedef vector<
+        Element,
+        typename array_type::col_array_type::generator_type,
+        col_vector
+    > col_vector_type;
 
 
   public:
@@ -113,13 +135,18 @@ class matrix
 
   public:
 
+    /** Return the matrix size as a pair. */
+    matrix_size size() const {
+        return matrix_size(this->rows(),this->cols());
+    }
+
     /** Construct from another matrix.
      *
      * @param m the matrix to copy from.
      */
     template<typename E, class AT> matrix(const matrix<E,AT>& m) {
         typedef et::OpAssign<Element,E> OpT;
-        this->reshape(m);
+        AUTO_RESIZE(this,m);
         et::UnrollAssignment<OpT>(*this,m);
     }
 
@@ -136,24 +163,8 @@ class matrix
             matrix_type, typename XprT::result_type>::type result_type;
         typedef typename XprT::value_type src_value_type;
         typedef et::OpAssign<Element,src_value_type> OpT;
+        AUTO_RESIZE(this,expr);
         et::UnrollAssignment<OpT>(*this,expr);
-    }
-
-
-  public:
-
-    /** Reshape the matrix to match the argument.
-     *
-     * This only works for dynamic matrices; it's a no-op for fixed
-     * matrices.
-     *
-     * @param m the matrix to copy from.
-     */
-    template<typename E, class AT>
-    void reshape(const matrix<E,AT>& m) {
-
-        /* Dispatch to the proper reshape function: */
-        this->reshape(m,size_tag());
     }
 
 
@@ -170,7 +181,7 @@ class matrix
     template<typename E, class AT> matrix_type&                         \
     operator _op_ (const matrix<E,AT>& m) {                             \
         typedef _op_name_ <Element,E> OpT;                              \
-        this->reshape(m);                                               \
+        AUTO_RESIZE(this,m);                                            \
         et::UnrollAssignment<OpT>(*this,m);                             \
         return *this;                                                   \
     }
@@ -194,6 +205,7 @@ class matrix
             matrix_type, typename XprT::result_type>::type result_type; \
         typedef typename XprT::value_type src_value_type;               \
         typedef _op_name_ <Element,src_value_type> OpT;                 \
+        AUTO_RESIZE(this,expr);                                         \
         et::UnrollAssignment<OpT>(*this,expr);                          \
         return *this;                                                   \
     }
@@ -228,17 +240,45 @@ class matrix
 
   protected:
 
-    /** Reshape for fixed-size matrices. */
+    /** Resize the matrix to match the argument.
+     *
+     * This only works for dynamic matrices; it's a no-op for fixed
+     * matrices.
+     *
+     * @param m the matrix to copy from.
+     */
     template<typename E, class AT>
-        void reshape(const matrix<E,AT>&, fixed_size_tag) {
-            /* Do nothing. */
-        }
+    void resize(const matrix<E,AT>& m) {
 
-    /** Reshape for dynamically-sized matrices. */
-    template<typename E, class AT>
-        void reshape(const matrix<E,AT>& m, dynamic_size_tag) {
-            this->resize(m.rows(),m.cols());
-        }
+        /* Dispatch to the proper resize function: */
+        this->resize(m,memory_tag());
+    }
+
+    /** Resize the matrix to match the argument.
+     *
+     * This only works for dynamic matrices; it's a no-op for fixed
+     * matrices.
+     *
+     * @param e the expression to copy the size from.
+     */
+    template<typename XprT>
+    void resize(const et::MatrixXpr<XprT>& e) {
+
+        /* Dispatch to the proper resize function: */
+        this->resize(e,memory_tag());
+    }
+
+    /** Resize for fixed-size matrices. */
+    template<typename From>
+    void resize(const From&, fixed_memory_tag) {
+        /* Do nothing. */
+    }
+
+    /** Resize for dynamically-allocated matrices. */
+    template<typename From>
+    void resize(const From& m, dynamic_memory_tag) {
+        this->array_type::resize(m.rows(),m.cols());
+    }
 
 
 #if defined(CML_ENABLE_MATRIX_BRACES)
@@ -275,8 +315,7 @@ class matrix
 } // namespace cml
 
 /* Clean up: */
-#undef ORIENT_MACRO
-#undef COPY_TEMPLATE_PARAMS
+#undef AUTO_RESIZE
 
 #endif
 

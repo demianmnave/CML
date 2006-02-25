@@ -10,8 +10,12 @@
 
 #include <vector>
 #include <cml/core/common.h>
+#include <cml/core/dynamic_1D.h>
 
 namespace cml {
+
+/* Forward declare to record the dynamic_2D generator type: */
+template<typename Alloc> struct dynamic;
 
 /** Dynamically-sized and allocated 2D array.
  *
@@ -30,6 +34,9 @@ template<typename Element, typename Layout, class Alloc>
 class dynamic_2D
 {
   public:
+
+    /* Record the generator: */
+    typedef dynamic<Alloc> generator_type;
 
     /* Array implementation: */
     typedef std::vector<Element,Alloc> array_impl;
@@ -53,6 +60,13 @@ class dynamic_2D
 
     /* For matching by dimensions: */
     typedef twod_tag dimension_tag;
+
+    /* To simplify the matrix transpose operator: */
+    typedef dynamic_2D<Element,Layout,Alloc> transposed_type;
+
+    /* To simplify the matrix row and column operators: */
+    typedef dynamic_1D<Element,Alloc> row_array_type;
+    typedef dynamic_1D<Element,Alloc> col_array_type;
 
 
   protected:

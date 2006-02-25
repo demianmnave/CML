@@ -12,6 +12,9 @@
 
 namespace cml {
 
+/* Forward declare to record the fixed_1D generator type: */
+template<int Dim1, int Dim2> struct fixed;
+
 /** Statically-allocated array.
  *
  * @note This class is designed to have the same size as a C array with the
@@ -43,6 +46,9 @@ template<typename Element, int Size>
 class fixed_1D
 {
   public:
+
+    /* Record the generator: */
+    typedef fixed<Size,-1> generator_type;
 
     /* Standard: */
     typedef Element value_type;

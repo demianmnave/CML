@@ -26,6 +26,12 @@ struct unary_expression {};
 /** Marker for biary expression ops. */
 struct binary_expression {};
 
+/** Marker for expression tree operator nodes. */
+struct expr_node_tag {};
+
+/** Marker for expression tree terminals (leaves). */
+struct expr_leaf_tag {};
+
 } // namespace et
 } // namespace cml
 

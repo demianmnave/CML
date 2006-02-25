@@ -27,7 +27,8 @@ struct ExprTraits< cml::vector<E,AT,O> >
     typedef typename expr_type::expr_const_reference const_reference;
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
-    typedef cml::vector<E,AT,O> result_type;
+    typedef expr_type result_type;
+    typedef expr_leaf_tag node_tag;
 
     value_type get(const expr_type& v, size_t i) const { return v[i]; }
     size_t size(const expr_type& v) const { return v.size(); }

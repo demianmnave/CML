@@ -105,6 +105,14 @@ void UnrollAssignment(
         ::template Eval<0, Len-1, (Len <= CML_VECTOR_UNROLL_LIMIT)> Unroller;
     /* Note: Max is the array size, so Len-1 is the last element. */
 
+    /* Check the expression size (the returned size isn't needed): */
+    CheckedSize(dest,src,vector_result_tag());
+    /* Note: for two fixed-size expressions, the if-statements and comparisons
+     * should be completely eliminated as dead code.  If src is a
+     * dynamic-sized expression, the check will still happen.
+     */
+
+    /* Now, call the unroller: */
     Unroller()(dest,src);
 }
 
@@ -113,8 +121,10 @@ template<class OpT, typename E, class AT, class O, class SrcT>
 void UnrollAssignment(
         cml::vector<E,AT,O>& dest, const SrcT& src, cml::dynamic_size_tag)
 {
+    /* Shorthand: */
     typedef ExprTraits<SrcT> src_traits;
-    for(size_t i = 0; i < dest.size(); ++i) {
+    size_t N = CheckedSize(dest,src,vector_result_tag());
+    for(size_t i = 0; i < N; ++i) {
         OpT().apply(dest[i], src_traits().get(src,i));
         /* Note: we don't need get(), since we know dest is a vector. */
     }
@@ -141,11 +151,6 @@ void UnrollAssignment(cml::vector<E,AT,O>& dest, const SrcT& src)
     /* Record traits for the arguments: */
     typedef ExprTraits<vector_type> dest_traits;
     typedef ExprTraits<SrcT> src_traits;
-
-    /* A checker to verify the argument sizes at compile- or run-time. This
-     * automatically checks fixed-size vectors at compile time:
-     */
-    CheckLinearExprSizes<vector_type,SrcT,vector_result_tag>()(dest,src);
 
     /* Do the unroll call: */
     detail::UnrollAssignment<OpT>(dest, src, typename vector_type::size_tag());

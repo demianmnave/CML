@@ -58,7 +58,7 @@ struct MatrixAssignmentUnroller
 #if defined(CML_2D_UNROLLER)
 
     /* Forward declare: */
-    template<int R, int C, int MaxRows, int MaxCols, bool can_unroll>
+    template<int R, int C, int LastRow, int LastCol, bool can_unroll>
         struct Eval;
 
     /* XXX This needs to be specified for efficient col-major access also! */
@@ -78,11 +78,11 @@ struct MatrixAssignmentUnroller
 
     /** Evaluate the binary operator at element R,LastCol. */
     template<int R, int LastRow, int LastCol>
-        struct Eval<R,MaxCols,LastRow,LastCol,true> {
+        struct Eval<R,LastCol,LastRow,LastCol,true> {
             void operator()(dest_reference dest, src_reference src) const {
 
                 /* Apply to R,LastCol: */
-                OpT().apply(dest(R,MaxCols), src_traits().get(src,R,LastCol));
+                OpT().apply(dest(R,LastCol), src_traits().get(src,R,LastCol));
 
                 /* Evaluate at R+1,0; i.e. move to next row and start the
                  * col iteration from 0:
@@ -97,16 +97,16 @@ struct MatrixAssignmentUnroller
             void operator()(dest_reference dest, src_reference src) const {
 
                 /* Apply to LastRow,C: */
-                OpT().apply(dest(MaxRows,C), src_traits().get(src,LastRow,C));
+                OpT().apply(dest(LastRow,C), src_traits().get(src,LastRow,C));
 
                 /* Evaluate at LastRow,C+1: */
                 Eval<LastRow,C+1,LastRow,LastCol,true>()(dest,src);
             }
         };
 
-    /** Evaluate the binary operator at element MaxRows-1,MaxCols-1. */
-    template<int MaxRows, int MaxCols>
-        struct Eval<MaxRows,MaxCols,MaxRows,MaxCols,true> {
+    /** Evaluate the binary operator at element LastRow,LastCol. */
+    template<int LastRow, int LastCol>
+        struct Eval<LastRow,LastCol,LastRow,LastCol,true> {
             void operator()(dest_reference dest, src_reference src) const {
 
                 /* Apply to LastRow,LastCol: */
@@ -155,22 +155,29 @@ void UnrollAssignment(
 {
     typedef cml::matrix<E,AT> matrix_type;
     enum {
-        MaxRows = matrix_type::array_rows,
-        MaxCols = matrix_type::array_cols,
-        Max = MaxRows*MaxCols
+        LastRow = matrix_type::array_rows-1,
+        LastCol = matrix_type::array_cols-1,
+        Max = (LastRow+1)*(LastCol+1)
     };
 
 #if defined(CML_2D_UNROLLER)
     typedef typename MatrixAssignmentUnroller<OpT,E,AT,SrcT>::template
-        Eval<0, 0, MaxRows-1, MaxCols-1,
+        Eval<0, 0, LastRow, LastCol,
         (Max <= CML_MATRIX_UNROLL_LIMIT)> Unroller;
 #endif
 
 #if defined(CML_NO_2D_UNROLLER)
     /* Use a loop: */
     typedef typename MatrixAssignmentUnroller<OpT,E,AT,SrcT>
-        ::template Eval<0, 0, MaxRows-1, MaxCols-1> Unroller;
+        ::template Eval<0, 0, LastRow, LastCol> Unroller;
 #endif
+
+    /* Check the expression size (the returned size isn't needed): */
+    CheckedSize(dest,src,matrix_result_tag());
+    /* Note: for two fixed-size expressions, the if-statements and comparisons
+     * should be completely eliminated as dead code.  If src is a
+     * dynamic-sized expression, the check will still happen.
+     */
 
     Unroller()(dest,src);
 }
@@ -187,8 +194,9 @@ void UnrollAssignment(
         cml::matrix<E,AT>& dest, const SrcT& src, cml::dynamic_size_tag)
 {
     typedef ExprTraits<SrcT> src_traits;
-    for(size_t i = 0; i <= dest.rows(); ++i) {
-        for(size_t j = 0; j <= dest.cols(); ++j) {
+    matrix_size N = CheckedSize(dest,src,matrix_result_tag());
+    for(size_t i = 0; i < N.first; ++i) {
+        for(size_t j = 0; j < N.second; ++j) {
             OpT().apply(dest(i,j), src_traits().get(src,i,j));
             /* Note: we don't need get(), since we know dest is a vector. */
         }
@@ -215,11 +223,6 @@ void UnrollAssignment(cml::matrix<E,AT>& dest, const SrcT& src) {
     /* Record traits for the arguments: */
     typedef ExprTraits<matrix_type> dest_traits;
     typedef ExprTraits<SrcT> src_traits;
-
-    /* A checker to verify the argument sizes at compile- or run-time. This
-     * automatically checks fixed-size vectors at compile time:
-     */
-    CheckLinearExprSizes<matrix_type,SrcT,matrix_result_tag>()(dest,src);
 
     /* Do the unroll call: */
     detail::UnrollAssignment<OpT>(dest, src, typename matrix_type::size_tag());

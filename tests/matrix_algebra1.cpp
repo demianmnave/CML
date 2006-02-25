@@ -22,7 +22,13 @@ inline void timed1(
         /* m = m1*m2*m3*m3 -> tmp = m1*m2, tmp2 = m3*m3, m = tmp*tmp2 */
         //mult(m1,m2,tmp); mult(m3,m3,tmp2); mult(tmp,tmp2,m);
 
-        m = m + m1 + m2 + m3 + m2;
+        /* XXX Slower with unroller using ICC 9 and GCC 4 on x86 */
+        //m = m + m1 + m2 + m3 + m2;
+
+        /* XXX Slower without unroller using ICC 9 and GCC 4 on x86 */
+        m += m1 + m2 + m3 + m2;
+
+        //m += m1;
     }
 }
 

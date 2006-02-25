@@ -10,6 +10,7 @@
 
 #include <cml/et/vecop_macros.h>
 #include <cml/et/vector_transpose.h>
+#include <cml/vector_dot.h>
 
 namespace cml {
 

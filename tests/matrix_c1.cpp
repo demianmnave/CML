@@ -68,13 +68,23 @@ inline void timed1(
         /* m = m1*m2*m3*m3 -> tmp = m1*m2, tmp2 = m3*m3, m = tmp*tmp2 */
         //mult(m1,m2,tmp); mult(m3,m3,tmp2); mult(tmp,tmp2,m);
 
-        //add(m,m1,m);
-        //add(m,m2,m);
+#if 0
+        add(m,m1,m);
+        add(m,m2,m);
+        add(m,m3,m);
+        add(m,m2,m);
+#endif
 
         for(int row = 0; row < 4; ++row) {
             for(int col = 0; col < 4; ++col) {
+#if 0
                 m[row][col] = m[row][col] + m1[row][col] + m2[row][col]
                     + m3[row][col] + m2[row][col];
+#endif
+#if 1
+                m[row][col] += m1[row][col] + m2[row][col]
+                    + m3[row][col] + m2[row][col];
+#endif
             }
         }
     }

@@ -9,6 +9,7 @@
 
 #include <cml/et/matop_macros.h>
 #include <cml/et/matrix_transpose.h>
+#include <cml/et/matrix_rowcol.h>
 
 namespace cml {
 

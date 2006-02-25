@@ -17,6 +17,16 @@
 #include <cml/et/size_checking.h>
 #include <cml/et/vector_promotions.h>
 
+/* This is used below to create a more meaningful compile-time error when
+ * dot is not provided with vector or VectorExpr arguments:
+ */
+struct dot_expects_vector_args_error;
+
+/* This is used below to create a more meaningful compile-time error when
+ * either argument has the wrong orientation.
+ */
+struct dot_expects_properly_oriented_args_error;
+
 namespace cml {
 
 /* Vector operators are in their own namespace: */
@@ -31,7 +41,7 @@ namespace vector_ops {
  * tree to hold the result.
  *
  * @todo The loop below may need to be explicitly unrolled to get the best
- * performance.
+ * performance for fixed-size vectors.
  */
 template<typename LeftT, typename RightT>
 inline typename et::ScalarPromote<
@@ -45,9 +55,11 @@ dot(const LeftT& left, const RightT& right)
     /* First, require vector expressions: */
     typedef typename left_traits::result_tag left_result_tag;
     typedef typename right_traits::result_tag right_result_tag;
-    CML_STATIC_REQUIRE(
+    CML_STATIC_REQUIRE_M(
             (same_type<left_result_tag,et::vector_result_tag>::is_true
-             && same_type<right_result_tag,et::vector_result_tag>::is_true));
+             && same_type<right_result_tag,et::vector_result_tag>::is_true),
+            dot_expects_vector_args_error
+            );
     /* Note: parens are required here so that the preprocessor ignores the
      * commas:
      */
@@ -57,9 +69,11 @@ dot(const LeftT& left, const RightT& right)
      */
     typedef typename left_traits::result_type::orient_tag left_orient;
     typedef typename right_traits::result_type::orient_tag right_orient;
-    CML_STATIC_REQUIRE(
+    CML_STATIC_REQUIRE_M(
             (same_type<left_orient,row_vector>::is_true
-             && same_type<right_orient,col_vector>::is_true));
+             && same_type<right_orient,col_vector>::is_true),
+            dot_expects_properly_oriented_args_error
+            );
     /* Note: parens are required here so that the preprocessor ignores the
      * commas:
      */
@@ -73,10 +87,10 @@ dot(const LeftT& left, const RightT& right)
      * automatically checks fixed-size vectors at compile time, and throws
      * at run-time if the sizes don't match:
      */
-    et::CheckLinearExprSizes<LeftT,RightT,et::vector_result_tag>()(left,right);
+    const size_t N = CheckedSize(left,right,et::vector_result_tag());
 
     /* Require at least one element: */
-    if(left.size() < 1) {
+    if(N < 1) {
         throw std::invalid_argument(
                 "dot() requires vectors having at least 1 element");
     }
@@ -85,7 +99,7 @@ dot(const LeftT& left, const RightT& right)
      * it's okay to use array notation here:
      */
     sum_type sum(left[0]*right[0]);
-    for(size_t i = 1; i < left.size(); ++i) {
+    for(size_t i = 1; i < N; ++i) {
         sum += left[i]*right[i];
     }
 

@@ -32,10 +32,15 @@ template<typename LeftT, typename RightT> struct MatrixPromote;
 template<typename E1, class AT1, typename E2, class AT2>
 struct MatrixPromote< cml::matrix<E1,AT1>, cml::matrix<E2,AT2> >
 {
+    typedef typename ArrayPromote<
+        typename cml::matrix<E1,AT1>::array_type,
+        typename cml::matrix<E2,AT2>::array_type
+    >::type promoted_array;
+
     /* The deduced matrix result type: */
     typedef cml::matrix<
-        typename ScalarPromote<E1,E2>::type,
-        typename ArrayPromote<AT1,AT2>::type
+        typename promoted_array::value_type,
+        typename promoted_array::generator_type
     > type;
 };
 

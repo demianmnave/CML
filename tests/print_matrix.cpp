@@ -6,8 +6,8 @@
  */
 
 /* Note: this has to have the same template params as cml::matrix<>: */
-template<typename Element, class ArrayType, typename Orient> std::ostream&
-operator<<(std::ostream& os, const cml::matrix<Element,ArrayType,Orient>& m)
+template<typename Element, class ArrayType> std::ostream&
+operator<<(std::ostream& os, const cml::matrix<Element,ArrayType>& m)
 {
     os << "[" << endl;
     for(size_t i = 0; i < m.rows(); ++i) {

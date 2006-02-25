@@ -14,7 +14,6 @@
 #include <cml/core/common.h>
 #include <cml/et/vector_unroller.h>
 #include <cml/vector_ops.h>
-#include <cml/vector_dot.h>
 
 /* This sets up the environment for oriented or unoriented vector copies: */
 #if defined(CML_ENFORCE_VECTOR_ORIENTATION_ON_COPY)
@@ -23,6 +22,13 @@
 #else
   #define ORIENT_MACRO         O
   #define COPY_TEMPLATE_PARAMS template<typename E, class AT, typename O>
+#endif
+
+/* Use a macro to auto resize vectors if requested: */
+#if defined(CML_AUTOMATIC_VECTOR_RESIZE)
+  #define AUTO_RESIZE(_this_, _m_)      (_this_)->resize((_m_))
+#else
+  #define AUTO_RESIZE(_this_, _m_)
 #endif
 
 namespace cml {
@@ -37,9 +43,6 @@ namespace cml {
  * a*b, when a is a column vector and b is a row vector, is the matrix
  * (outer) product of a and b.
  *
- * @warning Currently, vectors with different types (Element and/or
- * ArrayType) can't be used in the same expression.
- *
  * @sa cml::core::fixed
  * @sa cml::core::dynamic
  *
@@ -50,10 +53,10 @@ namespace cml {
  * note that a templated constructor leads to ambiguities, so removing this
  * constructor requirement doesn't seem to be straightforward.
  *
- * @internal All assignments to the vector should go through
- * et::UnrollAssignment, which verifies that the source expression and the
- * destination vector have the same size.  This is particularly important
- * for dynamically-sized vectors.
+ * @internal All assignments to the vector should go through UnrollAssignment,
+ * which ensures that the source expression and the destination vector have
+ * the same size.  This is particularly important for dynamically-sized
+ * vectors.
  */
 template<typename Element, class ArrayType, typename Orient>
 class vector
@@ -147,16 +150,13 @@ class vector
     COPY_TEMPLATE_PARAMS
     vector(const vector<E,AT,ORIENT_MACRO>& m) {
         typedef et::OpAssign<Element,E> OpT;
-        this->reshape(m);
+        AUTO_RESIZE(this,m);
         et::UnrollAssignment<OpT>(*this,m);
     }
 
     /** Construct from a vector expression.
      *
      * @param expr the expression to copy from.
-     *
-     * @internal This must be explicit to prevent conversions for arbitrary
-     * XprT's.
      */
     template<class XprT>
     vector(const et::VectorXpr<XprT>& expr) {
@@ -165,27 +165,10 @@ class vector
             vector_type, typename XprT::result_type>::type result_type;
         typedef typename XprT::value_type src_value_type;
         typedef et::OpAssign<Element,src_value_type> OpT;
+        AUTO_RESIZE(this,expr);
         et::UnrollAssignment<OpT>(*this,expr);
     }
 
-
-  public:
-
-    /** Reshape the vector to match the argument.
-     *
-     * This only works for dynamic vectors; it's a no-op for fixed
-     * vectors.
-     *
-     * @param v the vector to copy from.
-     *
-     * @note The orientation of the vector is not changed, only the length.
-     */
-    template<typename E, class AT, typename O>
-    void reshape(const vector<E,AT,O>& v) {
-
-        /* Dispatch to the proper reshape function: */
-        this->reshape(v,size_tag());
-    }
 
 
   public:
@@ -201,7 +184,7 @@ class vector
     COPY_TEMPLATE_PARAMS vector_type&                                   \
     operator _op_ (const vector<E,AT,ORIENT_MACRO>& m) {                \
         typedef _op_name_ <Element,E> OpT;                              \
-        this->reshape(m);                                               \
+        AUTO_RESIZE(this,m);                                            \
         et::UnrollAssignment<OpT>(*this,m);                             \
         return *this;                                                   \
     }
@@ -225,6 +208,7 @@ class vector
             vector_type, typename XprT::result_type>::type result_type; \
         typedef typename XprT::value_type src_value_type;               \
         typedef _op_name_ <Element,src_value_type> OpT;                 \
+        AUTO_RESIZE(this,expr);                                         \
         et::UnrollAssignment<OpT>(*this,expr);                          \
         return *this;                                                   \
     }
@@ -259,22 +243,55 @@ class vector
 
   protected:
 
-    /** Reshape for fixed-size vectors. */
+    /** Resize the vector to match the argument.
+     *
+     * This only works for dynamic vectors; it's a no-op for fixed
+     * vectors.
+     *
+     * @param v the vector to copy the size from.
+     *
+     * @note The orientation of the vector is not changed, only the length.
+     */
     template<typename E, class AT, typename O>
-    void reshape(const vector<E,AT,O>&, fixed_size_tag) {
+    void resize(const vector<E,AT,O>& v) {
+
+        /* Dispatch to the proper resize function: */
+        this->resize(v,memory_tag());
+    }
+
+    /** Resize the vector to match the argument.
+     *
+     * This only works for dynamic vectors; it's a no-op for fixed
+     * vectors.
+     *
+     * @param e the expression to copy the size from.
+     *
+     * @note The orientation of the vector is not changed, only the length.
+     */
+    template<typename XprT>
+    void resize(const et::VectorXpr<XprT>& e) {
+
+        /* Dispatch to the proper resize function: */
+        this->resize(e,memory_tag());
+    }
+
+    /** Resize for fixed-memory vectors is a no-op. */
+    template<typename From>
+    void resize(const From&, fixed_memory_tag) {
         /* Do nothing. */
     }
 
-    /** Reshape for dynamically-sized vectors. */
-    template<typename E, class AT, typename O>
-    void reshape(const vector<E,AT,O>& v, dynamic_size_tag) {
-        this->resize(v.size());
+    /** Resize for dynamically-allocated vectors. */
+    template<typename From>
+    void resize(const From& e, dynamic_memory_tag) {
+        this->array_type::resize(e.size());
     }
 };
 
 } // namespace cml
 
 /* Clean up: */
+#undef AUTO_RESIZE
 #undef ORIENT_MACRO
 #undef COPY_TEMPLATE_PARAMS
 
