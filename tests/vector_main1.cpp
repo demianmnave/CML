@@ -9,6 +9,10 @@
 
 int main(int argc, char** argv)
 {
+    /* For external_vec_et1.cpp and external_c1.cpp: */
+    double c_v[5][4];
+    int c_i = 0;
+
     vector_d4 VECINIT(v), VECINIT(v1), VECINIT(v2), VECINIT(v3), VECINIT(v4);
 
     v[0] = v[1] = v[2] = v[3] = 0.;

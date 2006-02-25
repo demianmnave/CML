@@ -17,6 +17,7 @@ using std::endl;
 
 using cml::fixed;
 using cml::dynamic;
+using cml::external;
 using namespace cml::vector_ops;
 using namespace cml::matrix_ops;
 
@@ -76,6 +77,8 @@ void example1()
 
     cout << "Example1:" << endl;
     transpose(u);
+    cout << "  u = " << u << endl;
+    cout << "  v = " << v << endl;
     cout << "  dot(u,v) = " << dot(T(u),v) << endl;
     cout << "  dot(u,u) = " << dot(T(u),u) << endl;
     cout << "  dot(u+v,v) = " << dot(T(u+v),v) << endl;
@@ -233,15 +236,38 @@ void example7()
     cout << "  A*B = " << C << endl;
 }
 
+void example8()
+{
+    /* 3-space column vector, fixed length, double coordinates: */
+    typedef cml::vector< double, external<3>, vector_orient> vector_d3;
+
+    double c_u[3] = {0.,0.,1.};
+    double c_v[3] = {1.,0.,0.};
+    vector_d3 u(c_u), v(c_v);
+
+    cout << "Example8:" << endl;
+    transpose(u);
+    cout << "  u = " << u << endl;
+    cout << "  v = " << v << endl;
+    cout << "  dot(u,v) = " << dot(T(u),v) << endl;
+    cout << "  dot(u,u) = " << dot(T(u),u) << endl;
+    cout << "  dot(u+v,v) = " << dot(T(u+v),v) << endl;
+    cout << "  cos(u,v) = " << dot(T(u),v)/sqrt(dot(T(u),u)*dot(T(v),v))
+        << endl;
+}
+
 int main()
 {
     example1();
+#if 0
     example2();
     example3();
     example4();
     example5();
     example6();
     example7();
+#endif
+    example8();
     return 0;
 }
 

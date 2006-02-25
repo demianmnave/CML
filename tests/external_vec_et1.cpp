@@ -6,26 +6,23 @@
  */
 
 #include <iostream>
+#include <cml/vector.h>
 
 /* For convenience: */
 using std::cerr;
 using std::endl;
+using cml::external;
+using namespace cml::vector_ops;
 
-typedef double vector_d4[4];
-#define VECINIT(_v_) _v_
+/* Define the vector orientation to assume: */
+typedef cml::col_vector vector_orient;
 
-std::ostream&
-operator<<(std::ostream& os, const vector_d4& v)
-{
-    os << "[";
-    for(size_t i = 0; i < 4; ++i) {
-        os << " " << v[i];
-    }
-    os << " ]";
-    return os;
-}
+typedef cml::vector< double, external<4>, vector_orient> vector_d4;
 
-#include "cvector_algebra1.cpp"
+#define VECINIT(_v_) _v_(c_v[c_i++])
+
+#include "print_vector.cpp"
+#include "vector_algebra1.cpp"
 #include "vector_main1.cpp"
 
 // -------------------------------------------------------------------------

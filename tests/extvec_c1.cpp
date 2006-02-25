@@ -11,8 +11,8 @@
 using std::cerr;
 using std::endl;
 
-typedef double vector_d4[4];
-#define VECINIT(_v_) _v_
+typedef double* vector_d4/*[4]*/;
+#define VECINIT(_v_) _v_ = &c_v[c_i++][0]
 
 std::ostream&
 operator<<(std::ostream& os, const vector_d4& v)
@@ -24,6 +24,7 @@ operator<<(std::ostream& os, const vector_d4& v)
     os << " ]";
     return os;
 }
+
 
 #include "cvector_algebra1.cpp"
 #include "vector_main1.cpp"

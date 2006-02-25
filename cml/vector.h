@@ -129,7 +129,7 @@ class vector
      *
      * @throws same as the ArrayType constructor.
      */
-    explicit vector(value_type* ptr) : array_type(ptr) {}
+    explicit vector(value_type* const ptr) : array_type(ptr) {}
 
     /** Constructor for run-time sized external arrays.
      *
@@ -285,6 +285,12 @@ class vector
     template<typename From>
     void resize(const From& e, dynamic_memory_tag) {
         this->array_type::resize(e.size());
+    }
+
+    /** Resize for external-memory vectors is a no-op. */
+    template<typename From>
+    void resize(const From&, external_memory_tag) {
+        /* Do nothing. */
     }
 };
 

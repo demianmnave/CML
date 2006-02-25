@@ -15,6 +15,8 @@
 #include <cml/core/cml_meta.h>
 #include <cml/fixed.h>
 #include <cml/dynamic.h>
+#include <cml/external.h>
+#include <cml/external.h>
 #include <cml/et/scalar_promotions.h>
 
 namespace cml {

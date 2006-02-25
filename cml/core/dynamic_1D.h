@@ -65,12 +65,10 @@ class dynamic_1D
   public:
 
     /** Construct a dynamic array with no size. */
-    dynamic_1D() {
-    }
+    dynamic_1D() {}
 
     /** Construct a dynamic array given the size. */
-    explicit dynamic_1D(size_t size) : m_data(size) {
-    }
+    explicit dynamic_1D(size_t size) : m_data(size) {}
 
 
   public:

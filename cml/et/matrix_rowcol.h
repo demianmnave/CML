@@ -84,7 +84,7 @@ class MatrixRowOp
   protected:
 
     expr_reference m_expr;
-    size_t m_row;
+    const size_t m_row;
 
 
   private:
@@ -181,7 +181,7 @@ class MatrixColOp
   protected:
 
     expr_reference m_expr;
-    size_t m_col;
+    const size_t m_col;
 
 
   private:
