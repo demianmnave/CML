@@ -128,8 +128,7 @@ struct ArrayPromote
 
     /* Promote 2D fixed-size arrays to a 2D fixed-size array.  The resulting
      * matrix has the same number of rows as A1, and the same number of
-     * columns as A2.  The correctness of this must be enforced before using
-     * the promoted matrix.
+     * columns as A2.
      */
     template<class X> struct promote<twod_tag,twod_tag,fixed_size_tag,X>
     {

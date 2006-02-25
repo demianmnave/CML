@@ -198,7 +198,7 @@ void example6()
     cout << "Example6:" << endl;
 
     C = T(A)+B;
-    cout << "  C = " << C << endl;
+    cout << "  T(A)+B = " << C << endl;
 
     cvector_d3 v = col(C,0);
     cout << "  C(0) = " << endl << v << endl;
@@ -211,6 +211,29 @@ void example6()
     cout << "  (T(A)+B)(2) = " << endl << v << endl;
 }
 
+void example7()
+{
+    /* 3-space matrix, fixed length, double coordinates: */
+    typedef cml::matrix< double, fixed<3,3> > matrix_d3;
+
+    matrix_d3 A, B, C;
+
+    A(0,0) = 1.0; A(0,1) = 0.0; A(0,2) = 1.0;
+    A(1,0) = 0.0; A(1,1) = 1.0; A(1,2) = 0.0;
+    A(2,0) = 0.0; A(2,1) = 0.0; A(2,2) = 1.0;
+
+    B(0,0) = 1.0; B(0,1) = 0.0; B(0,2) = 1.0;
+    B(1,0) = 0.0; B(1,1) = 1.0; B(1,2) = 0.0;
+    B(2,0) = 0.0; B(2,1) = 0.0; B(2,2) = 1.0;
+
+    cout << "Example7:" << endl;
+
+    C = mul(A,B);
+    cout << "  A = " << A << endl;
+    cout << "  B = " << B << endl;
+    cout << "  A*B = " << C << endl;
+}
+
 int main()
 {
     example1();
@@ -219,6 +242,7 @@ int main()
     example4();
     example5();
     example6();
+    example7();
     return 0;
 }
 

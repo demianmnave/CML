@@ -49,6 +49,7 @@ inline typename et::ScalarPromote<
 >::type
 dot(const LeftT& left, const RightT& right)
 {
+    /* Shorthand: */
     typedef et::ExprTraits<LeftT> left_traits;
     typedef et::ExprTraits<RightT> right_traits;
 
@@ -58,8 +59,7 @@ dot(const LeftT& left, const RightT& right)
     CML_STATIC_REQUIRE_M(
             (same_type<left_result_tag,et::vector_result_tag>::is_true
              && same_type<right_result_tag,et::vector_result_tag>::is_true),
-            dot_expects_vector_args_error
-            );
+            dot_expects_vector_args_error);
     /* Note: parens are required here so that the preprocessor ignores the
      * commas:
      */
@@ -72,8 +72,7 @@ dot(const LeftT& left, const RightT& right)
     CML_STATIC_REQUIRE_M(
             (same_type<left_orient,row_vector>::is_true
              && same_type<right_orient,col_vector>::is_true),
-            dot_expects_properly_oriented_args_error
-            );
+            dot_expects_properly_oriented_args_error);
     /* Note: parens are required here so that the preprocessor ignores the
      * commas:
      */

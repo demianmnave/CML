@@ -253,7 +253,7 @@ inline et::VectorXpr< et::MatrixColOp<XprT> >
 col(const et::MatrixXpr<XprT>& expr, size_t i)
 {
     typedef et::MatrixColOp<XprT> ExprT;
-    return et::MatrixXpr<ExprT>(ExprT(expr.expression(),i));
+    return et::VectorXpr<ExprT>(ExprT(expr.expression(),i));
 }
 
 } // namespace cml

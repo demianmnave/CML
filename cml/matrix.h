@@ -14,6 +14,7 @@
 #include <cml/core/common.h>
 #include <cml/et/matrix_unroller.h>
 #include <cml/matrix_ops.h>
+#include <cml/matrix_mul.h>
 
 /* Use a macro to auto resize matrices if requested: */
 #if defined(CML_AUTOMATIC_MATRIX_RESIZE)
