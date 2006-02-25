@@ -27,7 +27,7 @@ struct mul_expects_matrix_args_error;
 namespace cml {
 
 /* Matrix operators are in their own namespace: */
-namespace vector_ops {
+namespace matrix_ops {
 
 /** Matrix multiplication.
  *
