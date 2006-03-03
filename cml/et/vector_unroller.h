@@ -96,8 +96,7 @@ struct VectorAssignmentUnroller
 
 
     /** Unroll assignment for a fixed-sized vector. */
-    void operator()(
-        cml::vector<E,AT,O>& dest, const SrcT& src, cml::fixed_size_tag)
+    void operator()(vector_type& dest, const SrcT& src, cml::fixed_size_tag)
     {
         typedef cml::vector<E,AT,O> vector_type;
         enum { Len = vector_type::array_size };
@@ -117,8 +116,7 @@ struct VectorAssignmentUnroller
     }
 
     /** Just use a loop for dynamic vector assignment. */
-    void operator()(
-            cml::vector<E,AT,O>& dest, const SrcT& src, cml::dynamic_size_tag)
+    void operator()(vector_type& dest, const SrcT& src, cml::dynamic_size_tag)
     {
         /* Shorthand: */
         typedef ExprTraits<SrcT> src_traits;
@@ -216,15 +214,27 @@ struct VectorAccumulateUnroller
 template<class OpT, class SrcT, typename E, class AT, class O>
 void UnrollAssignment(cml::vector<E,AT,O>& dest, const SrcT& src)
 {
-    /* Record the destination vector type: */
+    /* Record the destination vector type, and the expression traits: */
     typedef cml::vector<E,AT,O> vector_type;
+    typedef ExprTraits<vector_type> dest_traits;
+    typedef ExprTraits<SrcT> src_traits;
 
     /* Record the type of the unroller: */
     typedef detail::VectorAssignmentUnroller<OpT,E,AT,O,SrcT> unroller;
 
+    /* Figure out the expression size type: */
+    typedef typename dest_traits::size_tag dest_size;
+    typedef typename src_traits::size_tag src_size;
+
+    // typedef dest_size size_tag;
+    typedef typename select_if<
+        same_type<src_size,fixed_size_tag>::is_true
+        || same_type<dest_size,fixed_size_tag>::is_true,
+        fixed_size_tag,dest_size>::result size_tag;
+
+
     /* Finally, do the unroll call: */
-    //unroller()(dest, src, typename vector_type::size_tag());
-    unroller()(dest, src, typename SrcT::size_tag());
+    unroller()(dest, src, size_tag());
 }
 
 } // namespace et

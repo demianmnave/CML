@@ -8,17 +8,16 @@
 #ifndef matrix_unroller_h
 #define matrix_unroller_h
 
+#include <cml/et/traits.h>
+#include <cml/et/size_checking.h>
+
 #if !defined(CML_2D_UNROLLER) && !defined(CML_NO_2D_UNROLLER)
-#error "The matrix unroller is not defined."
+#error "The matrix unroller has not been defined."
 #endif
 
 #if defined(CML_2D_UNROLLER) && !defined(CML_MATRIX_UNROLL_LIMIT)
 #error "CML_MATRIX_UNROLL_LIMIT is undefined."
 #endif
-
-
-#include <cml/et/traits.h>
-#include <cml/et/size_checking.h>
 
 namespace cml {
 

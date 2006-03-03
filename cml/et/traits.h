@@ -10,6 +10,11 @@
 
 #include <cml/et/tags.h>
 
+/* XXX This is here temporarily, should be rolled into the traits classes
+ * eventually:
+ */
+#define SCALAR_ARG_TYPE const ScalarT&
+
 namespace cml {
 namespace et {
 

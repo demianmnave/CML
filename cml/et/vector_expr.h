@@ -179,7 +179,7 @@ class UnaryVectorOp
   public:
 
     /** Construct from the subexpression. */
-    explicit UnaryVectorOp(const ExprT& expr) : m_expr(expr) {}
+    explicit UnaryVectorOp(expr_reference expr) : m_expr(expr) {}
 
     /** Copy constructor. */
     UnaryVectorOp(const expr_type& e) : m_expr(e.m_expr) {}
@@ -311,7 +311,7 @@ class BinaryVectorOp
      * could become very costly, since the check happens at each call to
      * the BinaryVectorOp constructor.
      */
-    explicit BinaryVectorOp(const LeftT& left, const RightT& right)
+    explicit BinaryVectorOp(left_reference left, right_reference right)
         : m_left(left), m_right(right) {}
 
     /** Copy constructor. */

@@ -162,7 +162,7 @@ inline et::MatrixXpr<                                                    \
                                                                          \
 _op_ (                                                                   \
         const matrix<E,AT>& left,                                        \
-        const ScalarT& right)                                            \
+        SCALAR_ARG_TYPE right)                                           \
 {                                                                        \
     typedef et::BinaryMatrixOp<                                          \
             matrix<E,AT>, ScalarT, _OpT_ <E,ScalarT  >                   \
@@ -180,7 +180,7 @@ inline et::MatrixXpr<                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
-        const ScalarT& left,                                             \
+        SCALAR_ARG_TYPE left,                                            \
         const matrix<E,AT>& right)                                       \
 {                                                                        \
     typedef et::BinaryMatrixOp<                                          \
@@ -200,7 +200,7 @@ inline et::MatrixXpr<                                                    \
                                                                          \
 _op_ (                                                                   \
         const et::MatrixXpr<XprT>& left,                                 \
-        const ScalarT& right)                                            \
+        SCALAR_ARG_TYPE right)                                           \
 {                                                                        \
     typedef et::BinaryMatrixOp<                                          \
             XprT, ScalarT, _OpT_ <typename XprT::value_type,ScalarT>     \
@@ -218,7 +218,7 @@ inline et::MatrixXpr<                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
-        const ScalarT& left,                                             \
+        SCALAR_ARG_TYPE left,                                            \
         const et::MatrixXpr<XprT>& right)                                \
 {                                                                        \
     typedef et::BinaryMatrixOp<                                          \

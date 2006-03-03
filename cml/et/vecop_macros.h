@@ -28,6 +28,8 @@
  * subexpressions into the containing expression.  This has the effect of
  * forcing only the root node of the expression tree to be a VectorXpr.
  * Every other node is a Unary or BinaryVectorOp.
+ *
+ * @todo Should ScalarT in expressions be passed by reference or by value?
  */
 
 #ifndef vecop_macros_h
@@ -169,7 +171,7 @@ inline et::VectorXpr<                                                    \
                                                                          \
 _op_ (                                                                   \
         const vector<E,AT,O>& left,                                      \
-        const ScalarT& right)                                            \
+        SCALAR_ARG_TYPE right)                                           \
 {                                                                        \
     typedef et::BinaryVectorOp<                                          \
             vector<E,AT,O>, ScalarT, _OpT_ <E,ScalarT>                   \
@@ -188,7 +190,7 @@ inline et::VectorXpr<                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
-        const ScalarT& left,                                             \
+        SCALAR_ARG_TYPE left,                                            \
         const vector<E,AT,O>& right)                                     \
 {                                                                        \
     typedef et::BinaryVectorOp<                                          \
@@ -209,7 +211,7 @@ inline et::VectorXpr<                                                    \
                                                                          \
 _op_ (                                                                   \
         const et::VectorXpr<XprT>& left,                                 \
-        const ScalarT& right)                                            \
+        SCALAR_ARG_TYPE right)                                           \
 {                                                                        \
     typedef et::BinaryVectorOp<                                          \
             XprT, ScalarT, _OpT_ <typename XprT::value_type,ScalarT>     \
@@ -228,7 +230,7 @@ inline et::VectorXpr<                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
-        const ScalarT& left,                                             \
+        SCALAR_ARG_TYPE left,                                            \
         const et::VectorXpr<XprT>& right)                                \
 {                                                                        \
     typedef et::BinaryVectorOp<                                          \

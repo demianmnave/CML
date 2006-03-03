@@ -41,14 +41,18 @@ namespace vector_ops {
 namespace detail {
 
 /* Helper struct to check orientation of the arguments: */
-template<typename LeftTraits, typename RightTraits>
+template<typename LeftT, typename RightT>
 struct ValidDotOrientation
 {
+    /* Shorthand: */
+    typedef et::ExprTraits<LeftT> left_traits;
+    typedef et::ExprTraits<RightT> right_traits;
+
     /* Require that the left argument is a row_vector, and the right
      * argument is a col_vector:
      */
-    typedef typename LeftTraits::result_type::orient_tag left_orient;
-    typedef typename RightTraits::result_type::orient_tag right_orient;
+    typedef typename left_traits::result_type::orient_tag left_orient;
+    typedef typename right_traits::result_type::orient_tag right_orient;
 #if defined(CML_IGNORE_VECTOR_ORIENTATION)
     enum { is_true = true };
 #else
@@ -140,9 +144,10 @@ UnrollDot(const LeftT& left, const RightT& right, dynamic_size_tag)
      */
     sum_type sum(op_mul().apply(left[0],right[0]));
     for(size_t i = 1; i < N; ++i) {
-        /* XXX This might not be optimized properly by some compilers,
+        /* XXX This might not be optimized properly by some compilers.
          * but to do anything else requires changing the requirements
-         * of a scalar operator.
+         * of a scalar operator, or requires defining a new class of scalar
+         * <op>= operators.
          */
         sum = op_add().apply(sum, op_mul().apply(left[i], right[i]));
         /* Note: we don't need get(), since both arguments are required to
@@ -166,6 +171,7 @@ template<typename LeftT, typename RightT>
 typename DotHelper<LeftT,RightT>::promoted_scalar
 product(const LeftT& left, const RightT& right)
 {
+    /* Shorthand: */
     typedef DotHelper<LeftT,RightT> dot_helper;
     typedef typename dot_helper::left_size left_size;
     typedef typename dot_helper::right_size right_size;
@@ -187,11 +193,7 @@ product(const LeftT& left, const RightT& right)
 /** Vector dot (inner) product.
  *
  * This computes a dot b -> Scalar without checking the vector orientation
- * (it's implied by the dot product).
- *
- * @internal Because the return type is a scalar type (e.g. double), the
- * compiler will automatically synthesize a temporary into the expression
- * tree to hold the result.
+ * (orientation is implied by the call to dot()).
  */
 template<typename LeftT, typename RightT>
 typename detail::DotHelper<LeftT,RightT>::promoted_scalar
@@ -202,8 +204,6 @@ dot(const LeftT& left, const RightT& right)
     typedef et::ExprTraits<RightT> right_traits;
 
     /* dot() requires vector expressions: */
-    typedef typename left_traits::result_tag left_result_tag;
-    typedef typename right_traits::result_tag right_result_tag;
     CML_STATIC_REQUIRE_M(
             (et::VectorExpressions<LeftT,RightT>::is_true),
             dot_expects_vector_args_error);
@@ -215,7 +215,12 @@ dot(const LeftT& left, const RightT& right)
     return detail::product(left,right);
 }
 
-/** Operator* for two vector types. */
+/** Operator* for two vector expression types.
+ *
+ * If CML_IGNORE_VECTOR_ORIENTATION is defined, the orientation of the
+ * arguments is ignored.  Otherwise, left must be a row_vector, and right
+ * must be a col_vector.
+ */
 template<
     typename E1, class AT1, typename O1,
     typename E2, class AT2, typename O2>
@@ -225,55 +230,54 @@ typename detail::DotHelper<
 operator*(const vector<E1,AT1,O1>& left,
           const vector<E2,AT2,O2>& right)
 {
-    /* Shorthand: */
-    typedef et::ExprTraits< vector<E1,AT1,O1> > left_traits;
-    typedef et::ExprTraits< vector<E2,AT2,O2> > right_traits;
-
     /* Require that the left argument is a row_vector, and the right
      * argument is a col_vector:
      */
     CML_STATIC_REQUIRE_M(
-            (detail::ValidDotOrientation<left_traits,right_traits>::is_true),
+            (detail::ValidDotOrientation<
+                 vector<E1,AT1,O1>, vector<E2,AT2,O2> >::is_true),
             dot_expects_properly_oriented_args_error);
 
     return dot(left,right);
 }
 
-/** Dispatch for a vector and a VectorXpr. */
+/** Dispatch for a vector and a VectorXpr.
+ *
+ * If CML_IGNORE_VECTOR_ORIENTATION is defined, the orientation of the
+ * arguments is ignored.  Otherwise, left must be a row_vector, and right
+ * must be a col_vector.
+ */
 template<typename E, class AT, typename O, typename XprT>
 typename detail::DotHelper< vector<E,AT,O>, XprT >::promoted_scalar
 operator*(const vector<E,AT,O>& left,
           const et::VectorXpr<XprT>& right)
 {
-    /* Shorthand: */
-    typedef et::ExprTraits< vector<E,AT,O> > left_traits;
-    typedef et::ExprTraits<XprT> right_traits;
-
     /* Require that the left argument is a row_vector, and the right
      * argument is a col_vector:
      */
     CML_STATIC_REQUIRE_M(
-            (detail::ValidDotOrientation<left_traits,right_traits>::is_true),
+            (detail::ValidDotOrientation<vector<E,AT,O>, XprT>::is_true),
             dot_expects_properly_oriented_args_error);
 
-    return detail::product(left,right);
+    return dot(left,right);
 }
 
-/** Dispatch for a VectorXpr and a vector. */
+/** Dispatch for a VectorXpr and a vector.
+ *
+ * If CML_IGNORE_VECTOR_ORIENTATION is defined, the orientation of the
+ * arguments is ignored.  Otherwise, left must be a row_vector, and right
+ * must be a col_vector.
+ */
 template<typename XprT, typename E, class AT, typename O>
 typename detail::DotHelper< XprT, vector<E,AT,O> >::promoted_scalar
 operator*(const et::VectorXpr<XprT>& left,
           const vector<E,AT,O>& right)
 {
-    /* Shorthand: */
-    typedef et::ExprTraits<XprT> left_traits;
-    typedef et::ExprTraits< vector<E,AT,O> > right_traits;
-
     /* Require that the left argument is a row_vector, and the right
      * argument is a col_vector:
      */
     CML_STATIC_REQUIRE_M(
-            (detail::ValidDotOrientation<left_traits,right_traits>::is_true),
+            (detail::ValidDotOrientation<XprT, vector<E,AT,O> >::is_true),
             dot_expects_properly_oriented_args_error);
 
     return dot(left,right);
@@ -293,7 +297,7 @@ operator*(const et::VectorXpr<XprT1>& left,
      * argument is a col_vector:
      */
     CML_STATIC_REQUIRE_M(
-            (detail::ValidDotOrientation<left_traits,right_traits>::is_true),
+            (detail::ValidDotOrientation<XprT1, XprT2>::is_true),
             dot_expects_properly_oriented_args_error);
 
     return dot(left,right);
