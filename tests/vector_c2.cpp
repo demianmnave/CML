@@ -11,12 +11,22 @@
 using std::cerr;
 using std::endl;
 
-typedef double matrix_d44[4][4];
-#define MATINIT(_m_) _m_
+typedef double vector_d4[4];
+#define VECINIT(_v_) _v_
 
-#include "print_cmatrix.cpp"
-#include "cmatrix_algebra1.cpp"
-#include "matrix_main1.cpp"
+std::ostream&
+operator<<(std::ostream& os, const vector_d4& v)
+{
+    os << "[";
+    for(size_t i = 0; i < 4; ++i) {
+        os << " " << v[i];
+    }
+    os << " ]";
+    return os;
+}
+
+#include "cvector_algebra2.cpp"
+#include "vector_main2.cpp"
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp

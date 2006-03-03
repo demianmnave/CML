@@ -16,6 +16,11 @@
 #include <cml/et/scalar_promotions.h>
 #include <cml/et/size_checking.h>
 #include <cml/et/vector_promotions.h>
+#include <cml/et/vector_unroller.h>
+
+#if !defined(CML_VECTOR_DOT_UNROLL_LIMIT)
+#error "CML_VECTOR_DOT_UNROLL_LIMIT is undefined."
+#endif
 
 /* This is used below to create a more meaningful compile-time error when
  * dot is not provided with vector or VectorExpr arguments:
@@ -32,21 +37,164 @@ namespace cml {
 /* Vector operators are in their own namespace: */
 namespace vector_ops {
 
+/* Wrap up specialized functions for dot(): */
+namespace detail {
+
+/* Helper struct to check orientation of the arguments: */
+template<typename LeftTraits, typename RightTraits>
+struct ValidDotOrientation
+{
+    /* Require that the left argument is a row_vector, and the right
+     * argument is a col_vector:
+     */
+    typedef typename LeftTraits::result_type::orient_tag left_orient;
+    typedef typename RightTraits::result_type::orient_tag right_orient;
+#if defined(CML_IGNORE_VECTOR_ORIENTATION)
+    enum { is_true = true };
+#else
+    enum { is_true = (same_type<left_orient,row_vector>::is_true
+            && same_type<right_orient,col_vector>::is_true) };
+#endif
+};
+
+/* Helper to simplify the unroller and the dot functions below: */
+template<typename LeftT, typename RightT>
+struct DotHelper
+{
+    /* Store the expression traits types for the arguments: */
+    typedef et::ExprTraits<LeftT> left_traits;
+    typedef et::ExprTraits<RightT> right_traits;
+
+    /* Record the size tags for the arguments: */
+    typedef typename left_traits::result_type::size_tag left_size;
+    typedef typename right_traits::result_type::size_tag right_size;
+
+    /* Store the value types of the vectors: */
+    typedef typename LeftT::value_type left_type;
+    typedef typename RightT::value_type right_type;
+    typedef et::OpMul<left_type, right_type> op_mul;
+    typedef typename et::OpAdd<
+        typename op_mul::value_type, typename op_mul::value_type> op_add;
+
+    /* The final promotion for the scalar result: */
+    typedef typename op_add::value_type promoted_scalar;
+
+    /* Compile-type vector size check and record: */
+    typedef typename et::GetCheckedSize<LeftT,RightT,et::vector_result_tag>
+        ::compile_time_check check_sizes;
+};
+
+/** Construct a dot unroller for fixed-size arrays.
+ *
+ * @note This should only be called for vectors.
+ *
+ * @sa cml::vector_ops::dot
+ */
+template<typename LeftT, typename RightT>
+typename DotHelper<LeftT,RightT>::promoted_scalar
+UnrollDot(const LeftT& left, const RightT& right, fixed_size_tag)
+{
+    /* Shorthand: */
+    typedef DotHelper<LeftT,RightT> dot_helper;
+
+    /* Get the fixed array size using the helper: */
+    enum { Len = dot_helper::check_sizes::array_size };
+
+    /* Record the unroller type: */
+    typedef typename dot_helper::op_mul op_mul;
+    typedef typename dot_helper::op_add op_add;
+    typedef typename et::detail::VectorAccumulateUnroller<
+        op_add,op_mul,LeftT,RightT>::template
+        Eval<0, Len-1, (Len <= CML_VECTOR_DOT_UNROLL_LIMIT)> Unroller;
+    /* Note: Len is the array size, so Len-1 is the last element. */
+
+    /* Now, call the unroller: */
+    return Unroller()(left,right);
+}
+
+/** Use a loop to compute the dot product for dynamic arrays.
+ *
+ * @note This should only be called for vectors.
+ *
+ * @sa cml::vector_ops::dot
+ */
+template<typename LeftT, typename RightT>
+typename DotHelper<LeftT,RightT>::promoted_scalar
+UnrollDot(const LeftT& left, const RightT& right, dynamic_size_tag)
+{
+    /* Shorthand: */
+    typedef DotHelper<LeftT,RightT> dot_helper;
+    typedef et::ExprTraits<LeftT> left_traits;
+    typedef et::ExprTraits<RightT> right_traits;
+    typedef typename dot_helper::op_mul op_mul;
+    typedef typename dot_helper::op_add op_add;
+
+    /* Record the return type: */
+    typedef typename dot_helper::promoted_scalar sum_type;
+
+    /* Verify expression sizes: */
+    const size_t N = CheckedSize(left,right,et::vector_result_tag());
+
+    /* Initialize the sum. Left and right must be vector expressions, so
+     * it's okay to use array notation here:
+     */
+    sum_type sum(op_mul().apply(left[0],right[0]));
+    for(size_t i = 1; i < N; ++i) {
+        /* XXX This might not be optimized properly by some compilers,
+         * but to do anything else requires changing the requirements
+         * of a scalar operator.
+         */
+        sum = op_add().apply(sum, op_mul().apply(left[i], right[i]));
+        /* Note: we don't need get(), since both arguments are required to
+         * be vector expressions.
+         */
+    }
+    return sum;
+}
+
+/** Vector dot implementation.
+ *
+ * This is the dispatch for each combination of vector ops.
+ *
+ * @todo The loop below needs to be explicitly unrolled to get the best
+ * performance for fixed-size vectors, at least for GCC4.
+ *
+ * @todo Figure out if the source or destination size type should trigger
+ * unrolling.  May need a per-compiler compile-time option for this.
+ */
+template<typename LeftT, typename RightT>
+typename DotHelper<LeftT,RightT>::promoted_scalar
+product(const LeftT& left, const RightT& right)
+{
+    typedef DotHelper<LeftT,RightT> dot_helper;
+    typedef typename dot_helper::left_size left_size;
+    typedef typename dot_helper::right_size right_size;
+
+    /* Figure out the unroller to use (fixed or dynamic): */
+    using namespace meta;
+    typedef typename select_switch<
+        type_pair<left_size,right_size>,
+        type_pair<fixed_size_tag,fixed_size_tag>, fixed_size_tag,
+        Default, dynamic_size_tag>::result size_tag;
+
+    /* Call unroller: */
+    return UnrollDot(left,right,size_tag());
+}
+
+} // namespace detail
+
+
 /** Vector dot (inner) product.
  *
- * This computes a dot b -> Scalar.
+ * This computes a dot b -> Scalar without checking the vector orientation
+ * (it's implied by the dot product).
  *
  * @internal Because the return type is a scalar type (e.g. double), the
  * compiler will automatically synthesize a temporary into the expression
  * tree to hold the result.
- *
- * @todo The loop below may need to be explicitly unrolled to get the best
- * performance for fixed-size vectors.
  */
 template<typename LeftT, typename RightT>
-inline typename et::ScalarPromote<
-    typename LeftT::value_type, typename RightT::value_type
->::type
+typename detail::DotHelper<LeftT,RightT>::promoted_scalar
 dot(const LeftT& left, const RightT& right)
 {
     /* Shorthand: */
@@ -57,55 +205,98 @@ dot(const LeftT& left, const RightT& right)
     typedef typename left_traits::result_tag left_result_tag;
     typedef typename right_traits::result_tag right_result_tag;
     CML_STATIC_REQUIRE_M(
-            (same_type<left_result_tag,et::vector_result_tag>::is_true
-             && same_type<right_result_tag,et::vector_result_tag>::is_true),
+            (et::VectorExpressions<LeftT,RightT>::is_true),
             dot_expects_vector_args_error);
     /* Note: parens are required here so that the preprocessor ignores the
      * commas:
      */
 
-#if 0
-    /* dot() requires that the left argument is a row_vector, and the right
+    /* Bypass the orientation check: */
+    return detail::product(left,right);
+}
+
+/** Operator* for two vector types. */
+template<
+    typename E1, class AT1, typename O1,
+    typename E2, class AT2, typename O2>
+typename detail::DotHelper<
+    vector<E1,AT1,O1>, vector<E2,AT2,O2>
+>::promoted_scalar
+operator*(const vector<E1,AT1,O1>& left,
+          const vector<E2,AT2,O2>& right)
+{
+    /* Shorthand: */
+    typedef et::ExprTraits< vector<E1,AT1,O1> > left_traits;
+    typedef et::ExprTraits< vector<E2,AT2,O2> > right_traits;
+
+    /* Require that the left argument is a row_vector, and the right
      * argument is a col_vector:
      */
-    typedef typename left_traits::result_type::orient_tag left_orient;
-    typedef typename right_traits::result_type::orient_tag right_orient;
     CML_STATIC_REQUIRE_M(
-            (same_type<left_orient,row_vector>::is_true
-             && same_type<right_orient,col_vector>::is_true),
+            (detail::ValidDotOrientation<left_traits,right_traits>::is_true),
             dot_expects_properly_oriented_args_error);
-    /* Note: parens are required here so that the preprocessor ignores the
-     * commas:
+
+    return dot(left,right);
+}
+
+/** Dispatch for a vector and a VectorXpr. */
+template<typename E, class AT, typename O, typename XprT>
+typename detail::DotHelper< vector<E,AT,O>, XprT >::promoted_scalar
+operator*(const vector<E,AT,O>& left,
+          const et::VectorXpr<XprT>& right)
+{
+    /* Shorthand: */
+    typedef et::ExprTraits< vector<E,AT,O> > left_traits;
+    typedef et::ExprTraits<XprT> right_traits;
+
+    /* Require that the left argument is a row_vector, and the right
+     * argument is a col_vector:
      */
-#endif
+    CML_STATIC_REQUIRE_M(
+            (detail::ValidDotOrientation<left_traits,right_traits>::is_true),
+            dot_expects_properly_oriented_args_error);
 
-    /* Deduce the return type: */
-    typedef typename et::ScalarPromote<
-        typename left_traits::value_type, typename right_traits::value_type
-    >::type sum_type;
+    return detail::product(left,right);
+}
 
-    /* A checker to verify the argument sizes at compile- or run-time. This
-     * automatically checks fixed-size vectors at compile time, and throws
-     * at run-time if the sizes don't match:
+/** Dispatch for a VectorXpr and a vector. */
+template<typename XprT, typename E, class AT, typename O>
+typename detail::DotHelper< XprT, vector<E,AT,O> >::promoted_scalar
+operator*(const et::VectorXpr<XprT>& left,
+          const vector<E,AT,O>& right)
+{
+    /* Shorthand: */
+    typedef et::ExprTraits<XprT> left_traits;
+    typedef et::ExprTraits< vector<E,AT,O> > right_traits;
+
+    /* Require that the left argument is a row_vector, and the right
+     * argument is a col_vector:
      */
-    const size_t N = CheckedSize(left,right,et::vector_result_tag());
+    CML_STATIC_REQUIRE_M(
+            (detail::ValidDotOrientation<left_traits,right_traits>::is_true),
+            dot_expects_properly_oriented_args_error);
 
-    /* Require at least one element: */
-    if(N < 1) {
-        throw std::invalid_argument(
-                "dot() requires vectors having at least 1 element");
-    }
+    return dot(left,right);
+}
 
-    /* Initialize the sum.  Left and right must be vector expressions, so
-     * it's okay to use array notation here:
+/** Dispatch for two VectorXpr's. */
+template<typename XprT1, typename XprT2>
+typename detail::DotHelper<XprT1,XprT2>::promoted_scalar
+operator*(const et::VectorXpr<XprT1>& left,
+          const et::VectorXpr<XprT2>& right)
+{
+    /* Shorthand: */
+    typedef et::ExprTraits<XprT1> left_traits;
+    typedef et::ExprTraits<XprT2> right_traits;
+
+    /* Require that the left argument is a row_vector, and the right
+     * argument is a col_vector:
      */
-    sum_type sum(left[0]*right[0]);
-    for(size_t i = 1; i < N; ++i) {
-        sum += left[i]*right[i];
-    }
+    CML_STATIC_REQUIRE_M(
+            (detail::ValidDotOrientation<left_traits,right_traits>::is_true),
+            dot_expects_properly_oriented_args_error);
 
-    /* Done: */
-    return sum;
+    return dot(left,right);
 }
 
 } // namespace vector_ops

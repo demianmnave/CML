@@ -10,6 +10,7 @@
 
 #include <cml/core/cml_meta.h>
 #include <cml/et/vector_expr.h>
+#include <cml/vector.h>
 
 namespace cml {
 namespace et {

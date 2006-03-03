@@ -9,6 +9,7 @@
 #define vector_expr_h
 
 #include <cml/core/common.h>
+#include <cml/core/cml_meta.h>
 #include <cml/et/vector_traits.h>
 #include <cml/et/vector_promotions.h>
 #include <cml/et/size_checking.h>
@@ -353,6 +354,17 @@ struct ExprTraits< BinaryVectorOp<LeftT,RightT,OpT> >
 
     value_type get(const expr_type& v, size_t i) const { return v[i]; }
     size_t size(const expr_type& e) const { return e.size(); }
+};
+
+/* Helper struct to verify that both arguments are vector expressions: */
+template<typename LeftTraits, typename RightTraits>
+struct VectorExpressions
+{
+    /* Require that both arguments are vector expressions: */
+    typedef typename LeftTraits::result_tag left_result;
+    typedef typename RightTraits::result_tag right_result;
+    enum { is_true = (same_type<left_result,et::vector_result_tag>::is_true
+            && same_type<right_result,et::vector_result_tag>::is_true) };
 };
 
 } // namespace et

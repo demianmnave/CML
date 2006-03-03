@@ -1,5 +1,6 @@
 CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 	 -DCML_VECTOR_UNROLL_LIMIT=25 \
+	 -DCML_VECTOR_DOT_UNROLL_LIMIT=25 \
 	 -DCML_DEFAULT_ARRAY_LAYOUT="cml::row_major" \
 	 -DCML_DEFAULT_ARRAY_ALLOC="std::allocator<void>" \
 	 -DCML_ALWAYS_PROMOTE_TO_DEFAULT_LAYOUT \
@@ -36,45 +37,45 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 #-- rm=rm -f
 #-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
-CXX=powerpc-apple-darwin8-g++-4.0.1
-CPP=$(CXX) -MM
-CXXFLAGS=-ftemplate-depth-50 -O3 -mcpu=G4 -mtune=G4 -mpowerpc \
-	 -mpowerpc-gpopt -fomit-frame-pointer -funroll-loops \
-	 -finline-functions -finline-limit=2000000000 \
-	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
-CPPFLAGS=-I.. $(CML_OPTS)
-exe=
-obj=.o
-rm=rm -f
-LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
-
-
-#-- CXX=i386-redhat-linux-g++ #-Wall -W
-#-- CPP=$(CXX) -M
-#-- ##:: SEEMS TO BE BEST FOR GCC 4.0 Linux/x86
-#-- CXXFLAGS=-ftemplate-depth-50 -march=pentium4 -mtune=pentium4 -O3 \
-#-- 	 -fomit-frame-pointer -funroll-loops -finline-functions \
-#-- 	 -finline-limit=2000000000 \
-#--  	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
-#-- #	 -DCML_NO_2D_UNROLLER
-#-- CPPFLAGS=-I.. $(CML_OPTS) \
-#-- 	-I$(HOME)/projects/external/build/exmat/include \
-#-- 	-I$(HOME)/projects/external/build/ltl-1.7.10
-#-- 
+#-- CXX=powerpc-apple-darwin8-g++-4.0.1
+#-- CPP=$(CXX) -MM
+#-- CXXFLAGS=-ftemplate-depth-50 -O3 -mcpu=G4 -mtune=G4 -mpowerpc \
+#-- 	 -mpowerpc-gpopt -fomit-frame-pointer -funroll-loops \
+#-- 	 -finline-functions -finline-limit=2000000000 \
+#-- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
+#-- CPPFLAGS=-I.. $(CML_OPTS)
 #-- exe=
 #-- obj=.o
 #-- rm=rm -f
 #-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 
+CXX=i386-redhat-linux-g++ #-Wall -W
+CPP=$(CXX) -M
+##:: SEEMS TO BE BEST FOR GCC 4.0 Linux/x86
+CXXFLAGS=-ftemplate-depth-1000 -march=pentium4 -mtune=pentium4 -O3 \
+	 -fomit-frame-pointer -funroll-loops -finline-functions \
+	 -finline-limit=2000000000 \
+ 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25 #\
+	 -DCML_NO_2D_UNROLLER #
+CPPFLAGS=-I.. $(CML_OPTS) \
+	-I$(HOME)/projects/external/build/exmat/include \
+	-I$(HOME)/projects/external/build/ltl-1.7.10
+
+exe=
+obj=.o
+rm=rm -f
+LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+
+
 #-- CXX=icpc -Wcheck -U__GXX_WEAK__
 #-- CPP=icpc -M
 #-- ##:: SEEMS TO BE BEST FOR Intel C++ V9.0 Linux/x86
-#-- CXXFLAGS=-ftemplate-depth-50 -xN -O3 -Ob2 -ipo \
+#-- CXXFLAGS=-ftemplate-depth-50 -static -xN -O3 -no-prec-div -ip -ipo \
 #-- 	 -finline-functions -fomit-frame-pointer -unroll \
 #-- 	 -DCML_USE_MAT_BINOP_REF \
-#-- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
-#-- 	 #-DCML_NO_2D_UNROLLER #\
+#-- 	 -DCML_NO_2D_UNROLLER #\
+#-- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25 #\
 #-- #CPPFLAGS=-I.. $(CML_OPTS)
 #-- CPPFLAGS=-I.. $(CML_OPTS) \
 #-- 	-I$(HOME)/projects/external/build/exmat/include \
@@ -132,13 +133,13 @@ LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 #-- 	$(CXX) $(CXXFLAGS) -o $@ $**
 
 
-C_VEC_TEST_SRC		= vector_c1.cpp extvec_c1.cpp
-FIXED_VEC_TEST_SRC	= fixed_vec_et1.cpp #fixed_vec_exmat1.cpp fixed_vec_ltl1.cpp
-DYNAMIC_VEC_TEST_SRC	= dynamic_vec_et1.cpp
+C_VEC_TEST_SRC		= vector_c1.cpp extvec_c1.cpp vector_c2.cpp
+FIXED_VEC_TEST_SRC	= fixed_vec_et1.cpp fixed_vec_et2.cpp #fixed_vec_exmat1.cpp fixed_vec_ltl1.cpp
+DYNAMIC_VEC_TEST_SRC	= dynamic_vec_et1.cpp dynamic_vec_et2.cpp
 EXTERNAL_VEC_TEST_SRC	= external_vec_et1.cpp
 
-C_MAT_TEST_SRC		= matrix_c1.cpp
-FIXED_MAT_TEST_SRC	= fixed_mat_et1.cpp
+C_MAT_TEST_SRC		= matrix_c1.cpp matrix_c2.cpp
+FIXED_MAT_TEST_SRC	= fixed_mat_et1.cpp fixed_mat_et2.cpp
 DYNAMIC_MAT_TEST_SRC	= dynamic_mat_et1.cpp
 
 ALL_SRC=$(C_VEC_TEST_SRC) \
@@ -150,11 +151,11 @@ ALL_SRC=$(C_VEC_TEST_SRC) \
 	$(DYNAMIC_MAT_TEST_SRC)
 
 C_VEC_TESTS		= vector_c1$(exe) extvec_c1$(exe)
-FIXED_VEC_TESTS		= fixed_vec_et1$(exe) #fixed_vec_exmat1$(exe) fixed_vec_ltl1$(exe)
-DYNAMIC_VEC_TESTS	= dynamic_vec_et1$(exe)
+FIXED_VEC_TESTS		= fixed_vec_et1$(exe) fixed_vec_et2$(exe) #fixed_vec_exmat1$(exe) fixed_vec_ltl1$(exe)
+DYNAMIC_VEC_TESTS	= dynamic_vec_et1$(exe) dynamic_vec_et2$(exe)
 EXTERNAL_VEC_TESTS	= external_vec_et1$(exe)
-C_MAT_TESTS		= matrix_c1$(exe)
-FIXED_MAT_TESTS		= fixed_mat_et1$(exe)
+C_MAT_TESTS		= matrix_c1$(exe) matrix_c2$(exe)
+FIXED_MAT_TESTS		= fixed_mat_et1$(exe) fixed_mat_et2$(exe)
 DYNAMIC_MAT_TESTS	= dynamic_mat_et1$(exe)
 
 ALL=	$(C_VEC_TESTS) \
@@ -166,6 +167,12 @@ ALL=	$(C_VEC_TESTS) \
 	$(DYNAMIC_MAT_TESTS)
 	
 all: $(ALL)
+
+fixed_mat_et2.s: fixed_mat_et2.cpp
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -S $^
+
+matrix_c2.s: matrix_c2.cpp
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -S $^
 
 clean:
 	$(rm) $(ALL) *$(obj) .depend

@@ -1,4 +1,11 @@
 
+CML_ENABLE_MATRIX_BRACES
+- Allow matrices to be accessed as A[row][col] in addition to A(row,col).
+  This is primarily for testing, and is not used anywhere in the library
+  proper since the proxy object mechanism that's used is not guaranteed to
+  produce optimal code.
+
+
 CML_NO_DEFAULT_EXPR_TRAITS
 - Don't use default expression traits for built-in types.  This is handy
   for debugging, since no classes or built-in types will have an expression
@@ -99,13 +106,6 @@ CML_ENFORCE_VECTOR_ORIENTATION_ON_COPY
   to create a transposed copy of a vector without specifying the transpose
   operator.  This option has no effect if CML_IGNORE_VECTOR_ORIENTATION is
   defined.
-
-
-CML_ENABLE_MATRIX_BRACES
-- Allow matrices to be accessed as A[row][col] in addition to A(row,col).
-  This is primarily for testing, and is not used anywhere in the library
-  proper since the proxy object mechanism that's used is not guaranteed to
-  produce optimal code.
 
 
 CML_AUTOMATIC_VECTOR_RESIZE

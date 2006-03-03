@@ -68,6 +68,7 @@ struct GetCheckedSize<LeftT,RightT,vector_result_tag>
         CML_STATIC_REQUIRE_M(
                 (size_t)LeftT::array_size == (size_t)RightT::array_size,
                 mismatched_fixed_vector_size_error);
+        enum { array_size = LeftT::array_size };
     };
 
 

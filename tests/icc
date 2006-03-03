@@ -187,8 +187,8 @@ Other Advanced Performance Options:
            fast       - allows value-unsafe optimizations
            precise    - allows value-safe optimizations
            source     - enables intermediates in source precision
-           strict     - enables /fp:precise /fp:except and disables floating
-                        point multiply add
+           strict     - enables -fp-model precise -fp-model except and disables
+                        floating point multiply add
 
 Output, Debug, PCH
 -------------
@@ -426,8 +426,9 @@ Miscellaneous
               320 - gcc 3.2 compatibility
               330 - gcc 3.3 compatibility
               340 - gcc 3.4 compatibility
+              400 - gcc 4.0 compatibility
 -B<prefix>    find libraries, headers and executables in <prefix>
-[no-]multibyte-chars
+-[no-]multibyte-chars
               provide support for multi-byte characters
 -fabi-version=<val>
               directs the compiler to select a specific ABI implementation

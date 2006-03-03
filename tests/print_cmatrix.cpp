@@ -5,17 +5,16 @@
  *  @brief
  */
 
-/* Note: this has to have the same template params as cml::matrix<>: */
-template<typename Element, class ArrayType> std::ostream&
-operator<<(std::ostream& os, const cml::matrix<Element,ArrayType>& m)
+std::ostream&
+operator<<(std::ostream& os, const matrix_d44& m)
 {
     os << "[" << endl;
-    for(size_t i = 0; i < m.rows(); ++i) {
+    for(size_t i = 0; i < 4; ++i) {
         os << "  [";
-        for(size_t j = 0; j < m.cols(); ++j) {
+        for(size_t j = 0; j < 4; ++j) {
             os << " " << m[i][j];
         }
-        os << "]" << endl;
+        os << " ]" << endl;
     }
     os << "]";
     return os;

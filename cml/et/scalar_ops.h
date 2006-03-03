@@ -79,7 +79,7 @@ CML_BINARY_SCALAR_OP(*, OpMul)
 /* XXX Yikes... this should really be written out in full. *= 1./ is the
  * "_op_" parameter to the macro (see above):
  */
-CML_BINARY_SCALAR_OP(* 1./, OpDiv)
+CML_BINARY_SCALAR_OP(* value_type(1)/, OpDiv)
 #else
 CML_BINARY_SCALAR_OP(/, OpDiv)
 #endif
@@ -94,7 +94,7 @@ CML_BINARY_SCALAR_OP_ASSIGN(*=, OpMulAssign)
 /* XXX Yikes... this should really be written out in full. *= 1./ is the
  * "_op_" parameter to the macro (see above):
  */
-CML_BINARY_SCALAR_OP_ASSIGN(*= 1./, OpDivAssign)
+CML_BINARY_SCALAR_OP_ASSIGN(*= value_type(1)/, OpDivAssign)
 #else
 CML_BINARY_SCALAR_OP_ASSIGN(/=, OpDivAssign)
 #endif

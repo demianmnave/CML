@@ -146,11 +146,19 @@ class matrix
      * @param m the matrix to copy from.
      */
     template<typename E, class AT> matrix(const matrix<E,AT>& m) {
+#if 0
         typedef et::OpAssign<Element,E> OpT;
         AUTO_RESIZE(this,m);
         et::UnrollAssignment<OpT>(*this,m);
+        std::cout << "copy cons!" << std::endl;
+#else
+        for(size_t i = 0; i < this->rows(); ++i)
+            for(size_t j = 0; j < this->cols(); ++j)
+                (*this)(i,j) = m(i,j);
+#endif
     }
 
+#if 0
     /** Construct from a matrix expression.
      *
      * @param expr the expression to copy from.
@@ -167,6 +175,7 @@ class matrix
         AUTO_RESIZE(this,expr);
         et::UnrollAssignment<OpT>(*this,expr);
     }
+#endif
 
 
   public:
@@ -187,7 +196,7 @@ class matrix
         return *this;                                                   \
     }
 
-    CML_ASSIGN_FROM_MAT(=, et::OpAssign)
+    //CML_ASSIGN_FROM_MAT(=, et::OpAssign)
     CML_ASSIGN_FROM_MAT(+=, et::OpAddAssign)
     CML_ASSIGN_FROM_MAT(-=, et::OpSubAssign)
 #undef CML_ASSIGN_FROM_MAT

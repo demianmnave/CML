@@ -79,10 +79,10 @@ void example1()
     transpose(u);
     cout << "  u = " << u << endl;
     cout << "  v = " << v << endl;
-    cout << "  dot(u,v) = " << dot(T(u),v) << endl;
-    cout << "  dot(u,u) = " << dot(T(u),u) << endl;
-    cout << "  dot(u+v,v) = " << dot(T(u+v),v) << endl;
-    cout << "  cos(u,v) = " << dot(T(u),v)/sqrt(dot(T(u),u)*dot(T(v),v))
+    cout << "  dot(u,v) = " << dot(u,v) << endl;
+    cout << "  dot(u,u) = " << dot(u,u) << endl;
+    cout << "  dot(u+v,v) = " << dot(u+v,v) << endl;
+    cout << "  cos(u,v) = " << dot(u,v)/sqrt(dot(u,u)*dot(v,v))
         << endl;
 }
 
@@ -96,10 +96,10 @@ void example2()
     v[0] = 1.; v[1] = 0.; v[2] = 0.;
 
     cout << "Example2:" << endl;
-    cout << "  dot(u,v) = " << dot(T(u),v) << endl;
-    cout << "  dot(u,u) = " << dot(T(u),u) << endl;
-    cout << "  dot(u+v,v) = " << dot(T(u+v),v) << endl;
-    cout << "  cos(u,v) = " << dot(T(u),v)/sqrt(dot(T(u),u)*dot(T(v),v))
+    cout << "  dot(u,v) = " << dot(u,v) << endl;
+    cout << "  dot(u,u) = " << dot(u,u) << endl;
+    cout << "  dot(u+v,v) = " << dot(u+v,v) << endl;
+    cout << "  cos(u,v) = " << dot(u,v)/sqrt(dot(u,u)*dot(v,v))
         << endl;
 }
 
@@ -250,24 +250,49 @@ void example8()
     cout << "  u = " << u << endl;
     cout << "  v = " << v << endl;
     cout << "  dot(u,v) = " << dot(u,v) << endl;
-    cout << "  dot(u,u) = " << dot(T(u),u) << endl;
-    cout << "  dot(u+v,v) = " << dot(T(u+v),v) << endl;
-    cout << "  cos(u,v) = " << dot(T(u),v)/sqrt(dot(T(u),u)*dot(T(v),v))
+    cout << "  dot(u,u) = " << dot(u,u) << endl;
+    cout << "  dot(u+v,v) = " << dot(u+v,v) << endl;
+    cout << "  cos(u,v) = " << dot(u,v)/sqrt(dot(u,u)*dot(v,v))
         << endl;
+}
+
+void example9()
+{
+    /* 3-space column vector, fixed length, double coordinates: */
+    typedef cml::vector< double, fixed<3>, vector_orient> vector_d3;
+
+    vector_d3 u, v;
+    u[0] = 0.; u[1] = 0.; u[2] = 1.;
+    v[0] = 1.; v[1] = 0.; v[2] = 0.;
+
+    cout << "Example10:" << endl;
+    transpose(u);
+    cout << "  u = " << u << endl;
+    cout << "  v = " << v << endl;
+#if defined(CML_IGNORE_VECTOR_ORIENTATION)
+    cout << "  dot(u,v) = " << u*v << endl;
+    cout << "  dot(u,u) = " << u*u << endl;
+    cout << "  dot(u+v,v) = " << (u+v)*v << endl;
+    cout << "  cos(u,v) = " << (u*v)/sqrt((u*u)*(v*v)) << endl;
+#else
+    cout << "  dot(u,v) = " << T(u)*v << endl;
+    cout << "  dot(u,u) = " << T(u)*u << endl;
+    cout << "  dot(u+v,v) = " << T(u+v)*v << endl;
+    cout << "  cos(u,v) = " << (T(u)*v)/sqrt((T(u)*u)*(T(v)*v)) << endl;
+#endif
 }
 
 int main()
 {
     example1();
-#if 0
     example2();
     example3();
     example4();
     example5();
     example6();
     example7();
-#endif
     example8();
+    example9();
     return 0;
 }
 
