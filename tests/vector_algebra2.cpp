@@ -16,7 +16,9 @@ inline void timed2(
         )
 {
     for(size_t i = 0; i < n_iter; ++i) {
-        v += v1*dot(v2,v3);
+        //v += v1*dot(v2,v3);
+        //v += v1*dot(v2,v3+v4+v2);
+        v *= dot(v2,v3+v4+v2)*dot(v2,v3+v4+v2);
     }
 }
 

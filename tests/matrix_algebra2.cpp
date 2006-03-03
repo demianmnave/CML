@@ -207,7 +207,7 @@ void timed2(
         )
 {
     matrix_d44 tmp; 
-    for(int i = 0; i < n_iter; ++i) {
+    for(size_t i = 0; i < n_iter; ++i) {
         /* m = m1*m2*m3 */
 #if 0
         tmp = mul(m1,m2);

@@ -50,7 +50,7 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 #-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 
-CXX=i386-redhat-linux-g++ #-Wall -W
+CXX=i386-redhat-linux-g++ -Wall -W
 CPP=$(CXX) -M
 ##:: SEEMS TO BE BEST FOR GCC 4.0 Linux/x86
 CXXFLAGS=-ftemplate-depth-1000 -march=pentium4 -mtune=pentium4 -O3 \
@@ -150,7 +150,7 @@ ALL_SRC=$(C_VEC_TEST_SRC) \
 	$(FIXED_MAT_TEST_SRC) \
 	$(DYNAMIC_MAT_TEST_SRC)
 
-C_VEC_TESTS		= vector_c1$(exe) extvec_c1$(exe)
+C_VEC_TESTS		= vector_c1$(exe) extvec_c1$(exe) vector_c2$(exe)
 FIXED_VEC_TESTS		= fixed_vec_et1$(exe) fixed_vec_et2$(exe) #fixed_vec_exmat1$(exe) fixed_vec_ltl1$(exe)
 DYNAMIC_VEC_TESTS	= dynamic_vec_et1$(exe) dynamic_vec_et2$(exe)
 EXTERNAL_VEC_TESTS	= external_vec_et1$(exe)
