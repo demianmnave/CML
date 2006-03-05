@@ -15,9 +15,10 @@
 #include <cml/et/matrix_unroller.h>
 #include <cml/matrix_ops.h>
 #include <cml/matrix_mul.h>
+#include <cml/matvec_mul.h>
 
 /* Use a macro to auto resize matrices if requested: */
-#if defined(CML_AUTOMATIC_MATRIX_RESIZE)
+#if defined(CML_AUTOMATIC_MATRIX_RESIZE_ON_ASSIGNMENT)
   #define AUTO_RESIZE(_this_, _m_)      (_this_)->resize((_m_))
 #else
   #define AUTO_RESIZE(_this_, _m_)
@@ -40,11 +41,12 @@ namespace cml {
  * @sa cml::fixed
  * @sa cml::dynamic
  */
-template<typename Element, class ArrayType>
+template<typename Element, class ArrayType,
+    typename Layout = CML_DEFAULT_LAYOUT>
 class matrix
 
 /* Figure out (and inherit from) the selected base array type: */
-: public ArrayType::template rebind<twod_tag,Element>::other
+: public ArrayType::template rebind<twod_tag,Element,Layout>::other
 {
   public:
 
@@ -141,30 +143,37 @@ class matrix
         return matrix_size(this->rows(),this->cols());
     }
 
+    /** Resize the matrix.
+     *
+     * This dispatches to array_type::resize().
+     */
+    void resize(size_t rows, size_t cols) {
+        this->array_type::resize(rows,cols);
+    }
+
+    /** Construct from a matrix of the same type.
+     *
+     * @param m the matrix to copy from.
+     */
+    matrix(matrix_type& m) {
+        typedef et::OpAssign<Element,Element> OpT;
+        AUTO_RESIZE(this,m);
+        et::UnrollAssignment<OpT>(*this,m);
+    }
+
     /** Construct from another matrix.
      *
      * @param m the matrix to copy from.
      */
     template<typename E, class AT> matrix(const matrix<E,AT>& m) {
-#if 0
         typedef et::OpAssign<Element,E> OpT;
         AUTO_RESIZE(this,m);
         et::UnrollAssignment<OpT>(*this,m);
-        std::cout << "copy cons!" << std::endl;
-#else
-        for(size_t i = 0; i < this->rows(); ++i)
-            for(size_t j = 0; j < this->cols(); ++j)
-                (*this)(i,j) = m(i,j);
-#endif
     }
 
-#if 0
     /** Construct from a matrix expression.
      *
      * @param expr the expression to copy from.
-     *
-     * @internal This must be explicit to prevent conversions for arbitrary
-     * XprT's.
      */
     template<class XprT> matrix(const et::MatrixXpr<XprT>& expr) {
         /* Verify that a promotion exists at compile time: */
@@ -175,7 +184,6 @@ class matrix
         AUTO_RESIZE(this,expr);
         et::UnrollAssignment<OpT>(*this,expr);
     }
-#endif
 
 
   public:
@@ -225,7 +233,6 @@ class matrix
     CML_ASSIGN_FROM_MATXPR(-=, et::OpSubAssign)
 
 #undef CML_ASSIGN_FROM_MATXPR
-
 
     /** Declare a function to assign this matrix from a scalar.
      *

@@ -36,7 +36,7 @@
 #define vecop_macros_h
 
 #include <cml/et/scalar_ops.h>
-#include <cml/et/vector_expr.h>
+#include <cml/vector/vector_expr.h>
 
 /** Declare a unary operator taking a vector operand. */
 #define CML_VEC_UNIOP(_op_, _OpT_)                                       \

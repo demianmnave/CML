@@ -3,12 +3,15 @@
  *-----------------------------------------------------------------------*/
 /** @file
  *  @brief
+ *
+ * @internal this should probably move to cml as an operator for now, until
+ * it becomes a real expression tree node.
  */
 
 #ifndef vector_transpose_h
 #define vector_transpose_h
 
-#include <cml/et/vector_expr.h>
+#include <cml/vector/vector_expr.h>
 
 namespace cml {
 namespace et {

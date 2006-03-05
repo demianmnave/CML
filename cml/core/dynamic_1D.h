@@ -32,19 +32,19 @@ class dynamic_1D
 {
   public:
 
+    /* Record the allocator type: */
+    typedef typename Alloc::template rebind<Element>::other allocator_type;
+
     /* Record the generator: */
     typedef dynamic<Alloc> generator_type;
 
     /* Array implementation: */
-    typedef std::vector<Element,Alloc> array_impl;
+    typedef std::vector<Element,allocator_type> array_impl;
 
     /* Standard: */
     typedef typename array_impl::value_type value_type;
     typedef typename array_impl::reference reference; 
     typedef typename array_impl::const_reference const_reference; 
-
-    /* Record the allocator type: */
-    typedef typename array_impl::allocator_type allocator_type;
 
     /* For matching by memory type: */
     typedef dynamic_memory_tag memory_tag;

@@ -108,7 +108,7 @@ CML_ENFORCE_VECTOR_ORIENTATION_ON_COPY
   defined.
 
 
-CML_AUTOMATIC_VECTOR_RESIZE
+CML_AUTOMATIC_VECTOR_RESIZE_ON_ASSIGNMENT
 - Enable automatic resizing of dynamic vectors on assignment and copy from
   other vectors and expressions.  This guarantees that vectors have the right
   size on assignment, but imposes a significant performance penalty when
@@ -128,7 +128,7 @@ CML_CHECK_VECTOR_EXPR_SIZES
   since the sizes are automatically checked at compile time.
 
 
-CML_AUTOMATIC_MATRIX_RESIZE
+CML_AUTOMATIC_MATRIX_RESIZE_ON_ASSIGNMENT
 CML_CHECK_MATRIX_EXPR_SIZES
 - Same as CML_AUTOMATIC_VECTOR_RESIZE and CML_CHECK_VECTOR_EXPR_SIZES, but for
   matrices.

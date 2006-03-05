@@ -43,16 +43,122 @@ cmul(const matrix_d44& A, const matrix_d44& B)
 matrix_d44
 cmul(const matrix_d44& A, const matrix_d44& B)
 {
-    matrix_d44 res(A);
+    matrix_d44 res;
+#if 0
     for(int row = 0; row < 4; ++row) {
 	for(int col = 0; col < 4; ++col) {
-	    double sum = A(row,0)*B(0,col);
-            sum += A(row,1)*B(1,col);
-            sum += A(row,2)*B(2,col);
-            sum += A(row,3)*B(3,col);
+            double sum = A(row,0)*B(0,col);
+            for(int k = 1; k < 4; ++ k) {
+                sum += A(row,k)*B(k,col);
+            }
             res(row,col) = sum;
 	}
     }
+#endif
+
+#if 0
+    for(int row = 0; row < 4; ++row) {
+        res(row,0)  = A(row,0)*B(0,0);
+        res(row,0) += A(row,1)*B(1,0);
+        res(row,0) += A(row,2)*B(2,0);
+        res(row,0) += A(row,3)*B(3,0);
+
+        res(row,1)  = A(row,0)*B(0,1);
+        res(row,1) += A(row,1)*B(1,1);
+        res(row,1) += A(row,2)*B(2,1);
+        res(row,1) += A(row,3)*B(3,1);
+
+        res(row,2)  = A(row,0)*B(0,2);
+        res(row,2) += A(row,1)*B(1,2);
+        res(row,2) += A(row,2)*B(2,2);
+        res(row,2) += A(row,3)*B(3,2);
+
+        res(row,3)  = A(row,0)*B(0,3);
+        res(row,3) += A(row,1)*B(1,3);
+        res(row,3) += A(row,2)*B(2,3);
+        res(row,3) += A(row,3)*B(3,3);
+    }
+#endif
+        res(0,0)  = A(0,0)*B(0,0);
+        res(0,0) += A(0,1)*B(1,0);
+        res(0,0) += A(0,2)*B(2,0);
+        res(0,0) += A(0,3)*B(3,0);
+
+        res(0,1)  = A(0,0)*B(0,1);
+        res(0,1) += A(0,1)*B(1,1);
+        res(0,1) += A(0,2)*B(2,1);
+        res(0,1) += A(0,3)*B(3,1);
+
+        res(0,2)  = A(0,0)*B(0,2);
+        res(0,2) += A(0,1)*B(1,2);
+        res(0,2) += A(0,2)*B(2,2);
+        res(0,2) += A(0,3)*B(3,2);
+
+        res(0,3)  = A(0,0)*B(0,3);
+        res(0,3) += A(0,1)*B(1,3);
+        res(0,3) += A(0,2)*B(2,3);
+        res(0,3) += A(0,3)*B(3,3);
+
+        res(1,0)  = A(1,0)*B(0,0);
+        res(1,0) += A(1,1)*B(1,0);
+        res(1,0) += A(1,2)*B(2,0);
+        res(1,0) += A(1,3)*B(3,0);
+
+        res(1,1)  = A(1,0)*B(0,1);
+        res(1,1) += A(1,1)*B(1,1);
+        res(1,1) += A(1,2)*B(2,1);
+        res(1,1) += A(1,3)*B(3,1);
+
+        res(1,2)  = A(1,0)*B(0,2);
+        res(1,2) += A(1,1)*B(1,2);
+        res(1,2) += A(1,2)*B(2,2);
+        res(1,2) += A(1,3)*B(3,2);
+
+        res(1,3)  = A(1,0)*B(0,3);
+        res(1,3) += A(1,1)*B(1,3);
+        res(1,3) += A(1,2)*B(2,3);
+        res(1,3) += A(1,3)*B(3,3);
+
+        res(2,0)  = A(2,0)*B(0,0);
+        res(2,0) += A(2,1)*B(1,0);
+        res(2,0) += A(2,2)*B(2,0);
+        res(2,0) += A(2,3)*B(3,0);
+
+        res(2,1)  = A(2,0)*B(0,1);
+        res(2,1) += A(2,1)*B(1,1);
+        res(2,1) += A(2,2)*B(2,1);
+        res(2,1) += A(2,3)*B(3,1);
+
+        res(2,2)  = A(2,0)*B(0,2);
+        res(2,2) += A(2,1)*B(1,2);
+        res(2,2) += A(2,2)*B(2,2);
+        res(2,2) += A(2,3)*B(3,2);
+
+        res(2,3)  = A(2,0)*B(0,3);
+        res(2,3) += A(2,1)*B(1,3);
+        res(2,3) += A(2,2)*B(2,3);
+        res(2,3) += A(2,3)*B(3,3);
+
+        res(3,0)  = A(3,0)*B(0,0);
+        res(3,0) += A(3,1)*B(1,0);
+        res(3,0) += A(3,2)*B(2,0);
+        res(3,0) += A(3,3)*B(3,0);
+
+        res(3,1)  = A(3,0)*B(0,1);
+        res(3,1) += A(3,1)*B(1,1);
+        res(3,1) += A(3,2)*B(2,1);
+        res(3,1) += A(3,3)*B(3,1);
+
+        res(3,2)  = A(3,0)*B(0,2);
+        res(3,2) += A(3,1)*B(1,2);
+        res(3,2) += A(3,2)*B(2,2);
+        res(3,2) += A(3,3)*B(3,2);
+
+        res(3,3)  = A(3,0)*B(0,3);
+        res(3,3) += A(3,1)*B(1,3);
+        res(3,3) += A(3,2)*B(2,3);
+        res(3,3) += A(3,3)*B(3,3);
+
     return res;
 }
 #endif
@@ -209,6 +315,10 @@ void timed2(
     matrix_d44 tmp; 
     for(size_t i = 0; i < n_iter; ++i) {
         /* m = m1*m2*m3 */
+        m = m1*m2;
+#if 0
+        m = m1*m2*m3;
+#endif
 #if 0
         tmp = mul(m1,m2);
         m = mul(tmp,m3);
@@ -216,13 +326,16 @@ void timed2(
 #if 0
         m = mul(m1,m2);
 #endif
-#if 1
-        m = mul(mul(m1,m2),m3);
+#if 0
+        m = mul(mul(m1,m2),T(m3));
         //mul(m,m1,m2);
         //cmul(m,m1,m2);
-        //m = cmul(m1,m2);
         //m = m1^m2;
         //m = cmul(m1,m2);
+#endif
+#if 0
+        m = cmul(m1,m2);
+        //cmul(m,m1,m2);
 #endif
     }
 }

@@ -22,234 +22,260 @@
 /* This is used below to create a more meaningful compile-time error when
  * fixed-size vector arguments don't match at compile time:
  */
-struct mismatched_fixed_vector_size_error;
-
-/* This is used below to create a more meaningful compile-time error when
- * fixed-size matrix arguments don't match at compile time:
- */
-struct mismatched_fixed_matrix_size_error;
-
+struct incompatible_expression_size_error;
 
 namespace cml {
 namespace et {
 
 /* Forward declare for specialization below: */
-template<typename LeftT, typename RightT, typename ResultTag>
+template<typename LeftT, typename RightT, typename SizeT>
     struct GetCheckedSize;
 
-/** A struct to check and return the size of vector expressions.
- *
- * This struct defines functions to check and return the resulting size of a
- * vector binary expression.  Use the generator CheckedSize() to simplify
- * access to this struct.
- *
- * @sa CheckedSize
- */
+/* Checking for fixed-size expression: */
 template<typename LeftT, typename RightT>
-struct GetCheckedSize<LeftT,RightT,vector_result_tag>
+struct GetCheckedSize<LeftT,RightT,fixed_size_tag>
 {
-    /* The type returned from the functions below: */
-    typedef size_t size_type;
-
     /* Record argument traits: */
     typedef ExprTraits<LeftT> left_traits;
     typedef ExprTraits<RightT> right_traits;
 
-    /* Record argument size tags: */
-    typedef typename left_traits::size_tag left_size_tag;
-    typedef typename right_traits::size_tag right_size_tag;
-
-    /* Define a fixed-size checker: */
-    template<typename LTag = left_size_tag, typename RTag = right_size_tag,
-        typename X = void> struct fixed_check {};
-
-    /* This just does a compile-time size check for fixed-size vectors: */
-    template<typename X> struct fixed_check<fixed_size_tag,fixed_size_tag,X> {
-        CML_STATIC_REQUIRE_M(
-                (size_t)LeftT::array_size == (size_t)RightT::array_size,
-                mismatched_fixed_vector_size_error);
-
-        /* Record the array size as a constant: */
-        enum { array_size = LeftT::array_size };
-    };
+    /* Result types: */
+    typedef typename left_traits::result_tag left_result;
+    typedef typename right_traits::result_tag right_result;
 
 
-  protected:
+    /* For specialization below: */
+    template<typename LR, typename RR, class X = void> struct impl;
 
-    /* This is called only when one argument is a dynamic vector: */
-    size_t equal_or_fail(size_t left, size_t right) const {
-        if(left != right)
-            throw std::invalid_argument(
-                "expressions have incompatible sizes.");
-        return left;
-    }
-
-    /* vector/scalar expression size: */
-    template<typename LTag> size_t checked_size(
-            const LeftT& left, const RightT&, LTag, unit_size_tag
-            ) const
-    {
-        return left_traits().size(left);
-    }
-
-    /* scalar/vector expression size: */
-    template<typename RTag> size_t checked_size(
-            const LeftT&, const RightT& right, unit_size_tag, RTag
-            ) const
-    {
-        return right_traits().size(right);
-    }
-
-    /* fixed vector expression size: */
-    size_t checked_size(
-            const LeftT&, const RightT&,
-            fixed_size_tag, fixed_size_tag
-            ) const
-    {
-        fixed_check<fixed_size_tag,fixed_size_tag>();
-        return (size_t)LeftT::array_size;
-    }
-
-    /* Size of vector expression having a dynamic vector: */
-    template<typename LTag, typename RTag>
-    size_t checked_size(
-            const LeftT& left, const RightT& right, LTag, RTag
-            ) const
-    {
-        return equal_or_fail(
-                left_traits().size(left),
-                right_traits().size(right));
-    }
-
-
-
-  public:
-
-    /* Define a fixed-size, compile-time checker: */
-    typedef fixed_check<left_size_tag,right_size_tag> compile_time_check;
-
-    /** Dispatch to the proper run-time implementation.
-     *
-     * @throws std::invalid_argument if arguments have different sizes.
-     */
-    size_t operator()(const LeftT& left, const RightT& right) const {
-        return checked_size(left, right, left_size_tag(), right_size_tag());
-    }
-};
-
-
-/** A struct to check and return the size of matrix expressions.
- *
- * This struct defines functions to check and return the resulting size of a
- * (linear) matrix binary expression.  Use the generator CheckedSize() to
- * simplify access to this struct.
- *
- * @sa CheckedSize
- */
-template<typename LeftT, typename RightT>
-struct GetCheckedSize<LeftT,RightT,matrix_result_tag>
-{
-    /* The type returned from the functions below: */
-    typedef matrix_size size_type;
-
-    /* Record argument traits: */
-    typedef ExprTraits<LeftT> left_traits;
-    typedef ExprTraits<RightT> right_traits;
-
-    /* Record argument size tags: */
-    typedef typename left_traits::size_tag left_size_tag;
-    typedef typename right_traits::size_tag right_size_tag;
-
-    /* Define a fixed-size checker: */
-    template<typename LTag = left_size_tag, typename RTag = right_size_tag,
-        typename X = void> struct fixed_check {};
-
-    /* This just does a compile-time size check for fixed-size vectors: */
-    template<typename X> struct fixed_check<fixed_size_tag,fixed_size_tag,X> {
+    /* Check for two matrices: */
+    template<class X> struct impl<matrix_result_tag,matrix_result_tag,X> {
+        typedef matrix_size size_type;
         CML_STATIC_REQUIRE_M(
                 (size_t)LeftT::array_rows == (size_t)RightT::array_rows
                 && (size_t)LeftT::array_cols == (size_t)RightT::array_cols,
-                mismatched_fixed_matrix_size_error);
+                incompatible_expression_size_error);
+
+        /* Record the array size as a constant: */
+        enum {
+            array_rows = LeftT::array_rows,
+            array_cols = LeftT::array_cols
+        };
+
+        /* Return the matrix size: */
+        size_type size() const { return size_type(array_rows,array_cols); }
     };
 
+    /* Check for a matrix and a vector: */
+    template<class X> struct impl<matrix_result_tag,vector_result_tag,X> {
+        typedef size_t size_type;
+        CML_STATIC_REQUIRE_M(
+                (size_t)LeftT::array_cols == (size_t)RightT::array_size,
+                incompatible_expression_size_error);
 
-  protected:
+        /* Record the array size as a constant: */
+        enum { array_size = RightT::array_size };
 
-    /* This is called only when one argument is a dynamic matrix: */
-    matrix_size equal_or_fail(const LeftT& left, const RightT& right) const {
-        size_t left_rows = left_traits().rows(left);
-        size_t right_cols = right_traits().cols(right);
-        if(left_rows != right_traits().rows(right)
-                || right_cols != left_traits().cols(left))
+        /* Return the vector size: */
+        size_type size() const { return size_type(array_size); }
+    };
+
+    /* Check for a vector and a matrix: */
+    template<class X> struct impl<vector_result_tag,matrix_result_tag,X> {
+        typedef size_t size_type;
+        CML_STATIC_REQUIRE_M(
+                (size_t)LeftT::array_size == (size_t)RightT::array_rows,
+                incompatible_expression_size_error);
+
+        /* Record the array size as a constant: */
+        enum { array_size = LeftT::array_size };
+
+        /* Return the vector size: */
+        size_type size() const { return size_type(array_size); }
+    };
+
+    /* Check for two vectors: */
+    template<class X> struct impl<vector_result_tag,vector_result_tag,X> {
+        typedef size_t size_type;
+        CML_STATIC_REQUIRE_M(
+                (size_t)LeftT::array_size == (size_t)RightT::array_size,
+                incompatible_expression_size_error);
+
+        /* Record the array size as a constant: */
+        enum { array_size = LeftT::array_size };
+
+        /* Return the vector size: */
+        size_type size() const { return size_type(array_size); }
+    };
+
+    /* Check for a vector and a scalar: */
+    template<class X> struct impl<vector_result_tag,scalar_result_tag,X> {
+        typedef size_t size_type;
+
+        /* Record the array size as a constant: */
+        enum { array_size = LeftT::array_size };
+
+        /* Return the vector size: */
+        size_type size() const { return size_type(array_size); }
+    };
+
+    /* Check for a scalar and a vector: */
+    template<class X> struct impl<scalar_result_tag,vector_result_tag,X> {
+        typedef size_t size_type;
+
+        /* Record the array size as a constant: */
+        enum { array_size = RightT::array_size };
+
+        /* Return the vector size: */
+        size_type size() const { return size_type(array_size); }
+    };
+
+    /* Record the type of the checker: */
+    typedef impl<left_result,right_result> check_type;
+    typedef typename check_type::size_type size_type;
+
+    /* The implementation: */
+    size_type operator()(const LeftT&, const RightT&) const {
+        return check_type().size();
+    }
+};
+
+/* Checking for resizeable expression: */
+template<typename LeftT, typename RightT>
+struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
+{
+    /* Type of the size checker (for calling equal_or_fail): */
+    typedef GetCheckedSize<LeftT,RightT,dynamic_size_tag> self;
+
+    /* Record argument traits: */
+    typedef ExprTraits<LeftT> left_traits;
+    typedef ExprTraits<RightT> right_traits;
+
+    /* Result types: */
+    typedef typename left_traits::result_tag left_result;
+    typedef typename right_traits::result_tag right_result;
+
+
+    /* For specialization below: */
+    template<typename LR, typename RR, class X = void> struct impl;
+
+    /* Return the size if the same, or fail if different: */
+#if defined(CML_CHECK_VECTOR_EXPR_SIZES)
+    template<typename V> V equal_or_fail(V left, V right) const {
+        if(left != right)
             throw std::invalid_argument(
-                "expressions have incompatible sizes.");
-        return matrix_size(left_rows,right_cols);
+                    "expressions have incompatible sizes.");
+        return left;
     }
-
-    /* matrix/scalar expression size: */
-    template<typename LTag> matrix_size checked_size(
-            const LeftT& left, const RightT&, LTag, unit_size_tag
-            ) const
-    {
-        return matrix_size(
-                left_traits().rows(left),
-                left_traits().cols(left));
+#else
+    template<typename V> V equal_or_fail(V left, V) const {
+        return left;
     }
+#endif
 
-    /* scalar/vector expression size: */
-    template<typename RTag> matrix_size checked_size(
-            const LeftT&, const RightT& right, unit_size_tag, RTag
-            ) const
-    {
-        return matrix_size(
-                right_traits().rows(right),
-                right_traits().cols(right));
-    }
+    /* Check for two matrices: */
+    template<class X> struct impl<matrix_result_tag,matrix_result_tag,X> {
+        typedef matrix_size size_type;
 
-    /* fixed vector expression size: */
-    matrix_size checked_size(
-            const LeftT&, const RightT&,
-            fixed_size_tag, fixed_size_tag
-            ) const
-    {
-        fixed_check<fixed_size_tag,fixed_size_tag>();
-        return matrix_size(LeftT::array_rows,RightT::array_cols);
-    }
+        /* Record the array size as a constant: */
+        enum {
+            array_rows = LeftT::array_rows,
+            array_cols = LeftT::array_cols
+        };
 
-    /* Size of vector expression having a dynamic vector: */
-    template<typename LTag, typename RTag>
-    matrix_size checked_size(
-            const LeftT& left, const RightT& right, LTag, RTag
-            ) const
-    {
-        return equal_or_fail(left,right);
-    }
+        /* Return the matrix size, or fail if incompatible: */
+        size_type size(const LeftT& left, const RightT& right) const {
+            return self().equal_or_fail(
+                    left_traits().size(left), right_traits().size(right));
+        }
+    };
 
+    /* Check for a matrix and a vector: */
+    template<class X> struct impl<matrix_result_tag,vector_result_tag,X> {
+        typedef size_t size_type;
 
+        /* Record the array size as a constant (it will be -1): */
+        enum { array_size = RightT::array_size };
 
-  public:
+        /* Return the vector size: */
+        size_type size(const LeftT& left, const RightT& right) const {
+            return self().equal_or_fail(
+                    left_traits().cols(left), right_traits().size(right));
+        }
+    };
 
-    /* Define a fixed-size, compile-time checker: */
-    typedef fixed_check<left_size_tag,right_size_tag> compile_time_check;
+    /* Check for a vector and a matrix: */
+    template<class X> struct impl<vector_result_tag,matrix_result_tag,X> {
+        typedef size_t size_type;
 
-    /** Dispatch to the proper run-time implementation.
-     *
-     * @throws std::invalid_argument if arguments have different sizes.
-     */
-    matrix_size operator()(const LeftT& left, const RightT& right) const {
-        return checked_size(left, right, left_size_tag(), right_size_tag());
+        /* Record the array size as a constant (it will be -1): */
+        enum { array_size = LeftT::array_size };
+
+        /* Return the vector size: */
+        size_type size(const LeftT& left, const RightT& right) const {
+            return self().equal_or_fail(
+                    left_traits().size(left), right_traits().rows(right));
+        }
+    };
+
+    /* Check for two vectors: */
+    template<class X> struct impl<vector_result_tag,vector_result_tag,X> {
+        typedef size_t size_type;
+
+        /* Record the array size as a constant (it will be -1): */
+        enum { array_size = LeftT::array_size };
+
+        /* Return the vector size: */
+        size_type size(const LeftT& left, const RightT& right) const {
+            return self().equal_or_fail(
+                    left_traits().size(left), right_traits().size(right));
+        }
+    };
+
+    /* Check for a vector and a scalar: */
+    template<class X> struct impl<vector_result_tag,scalar_result_tag,X> {
+        typedef size_t size_type;
+
+        /* Record the array size as a constant (it will be -1): */
+        enum { array_size = LeftT::array_size };
+
+        /* Return the vector size: */
+        size_type size(const LeftT& left, const RightT&) const {
+            return left_traits().size(left);
+        }
+    };
+
+    /* Check for a scalar and a vector: */
+    template<class X> struct impl<scalar_result_tag,vector_result_tag,X> {
+        typedef size_t size_type;
+
+        /* Record the array size as a constant (it will be -1): */
+        enum { array_size = RightT::array_size };
+
+        /* Return the vector size: */
+        size_type size(const LeftT&, const RightT& right) const {
+            return right_traits().size(right);
+        }
+    };
+
+    /* Record the type of the checker: */
+    typedef impl<left_result,right_result> check_type;
+    typedef typename check_type::size_type size_type;
+
+    /* The implementation: */
+    size_type operator()(const LeftT& left, const RightT& right) const {
+        return check_type().size(left,right);
     }
 };
 
 } // namespace et
 
 /** Generator for GetCheckedSize. */
-template<typename LeftT, typename RightT, typename ResultTag>
-typename et::GetCheckedSize<LeftT,RightT,ResultTag>::size_type
+template<typename LeftT, typename RightT, typename SizeTag>
+typename et::GetCheckedSize<LeftT,RightT,SizeTag>::size_type
 CheckedSize(
-        const LeftT& left, const RightT& right, ResultTag)
+        const LeftT& left, const RightT& right, SizeTag)
 {
-    return et::GetCheckedSize<LeftT,RightT,ResultTag>()(left,right);
+    return et::GetCheckedSize<LeftT,RightT,SizeTag>()(left,right);
 }
 
 } // namespace cml

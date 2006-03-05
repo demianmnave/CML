@@ -94,6 +94,12 @@ class fixed_2D
     /** Return the number of cols in the array. */
     size_t cols() const { return size_t(array_cols); }
 
+    /** Resize the array.
+     *
+     * This is a no-op for fixed arrays.
+     */
+    void resize(size_t,size_t) const {}
+
 
   public:
 

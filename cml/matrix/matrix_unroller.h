@@ -145,62 +145,61 @@ struct MatrixAssignmentUnroller
 
 #endif // CML_NO_2D_UNROLLER
 
-};
 
-/** Unroll assignment for a fixed-sized matrix. */
-template<class OpT, typename E, class AT, class SrcT>
-void UnrollAssignment(
-    cml::matrix<E,AT>& dest, const SrcT& src, cml::fixed_size_tag)
-{
-    typedef cml::matrix<E,AT> matrix_type;
-    enum {
-        LastRow = matrix_type::array_rows-1,
-        LastCol = matrix_type::array_cols-1,
-        Max = (LastRow+1)*(LastCol+1)
-    };
+    /** Unroll assignment for a fixed-sized matrix. */
+    void operator()(
+            cml::matrix<E,AT>& dest, const SrcT& src, cml::fixed_size_tag)
+    {
+        typedef cml::matrix<E,AT> matrix_type;
+        enum {
+            LastRow = matrix_type::array_rows-1,
+            LastCol = matrix_type::array_cols-1,
+            Max = (LastRow+1)*(LastCol+1)
+        };
 
 #if defined(CML_2D_UNROLLER)
-    typedef typename MatrixAssignmentUnroller<OpT,E,AT,SrcT>::template
-        Eval<0, 0, LastRow, LastCol,
-        (Max <= CML_MATRIX_UNROLL_LIMIT)> Unroller;
+        typedef typename MatrixAssignmentUnroller<OpT,E,AT,SrcT>::template
+            Eval<0, 0, LastRow, LastCol,
+            (Max <= CML_MATRIX_UNROLL_LIMIT)> Unroller;
 #endif
 
 #if defined(CML_NO_2D_UNROLLER)
-    /* Use a loop: */
-    typedef typename MatrixAssignmentUnroller<OpT,E,AT,SrcT>
-        ::template Eval<0, 0, LastRow, LastCol> Unroller;
+        /* Use a loop: */
+        typedef typename MatrixAssignmentUnroller<OpT,E,AT,SrcT>
+            ::template Eval<0, 0, LastRow, LastCol> Unroller;
 #endif
 
-    /* Check the expression size (the returned size isn't needed): */
-    CheckedSize(dest,src,matrix_result_tag());
-    /* Note: for two fixed-size expressions, the if-statements and comparisons
-     * should be completely eliminated as dead code.  If src is a
-     * dynamic-sized expression, the check will still happen.
+        /* Check the expression size (the returned size isn't needed): */
+        CheckedSize(dest,src,fixed_size_tag());
+        /* Note: for two fixed-size expressions, the if-statements and comparisons
+         * should be completely eliminated as dead code.  If src is a
+         * dynamic-sized expression, the check will still happen.
+         */
+
+        Unroller()(dest,src);
+    }
+
+    /** Use a loop for dynamic-sized matrix assignment.
+     *
+     * @note The target matrix must already have the correct size.
+     *
+     * @todo This needs to be specialized for efficient row-major or col-major
+     * layout access.
      */
-
-    Unroller()(dest,src);
-}
-
-/** Use a loop for dynamic-sized matrix assignment.
- *
- * @note The target matrix must already have the correct size.
- *
- * @todo This needs to be specialized for efficient row-major or col-major
- * layout access.
- */
-template<class OpT, typename E, class AT, class SrcT>
-void UnrollAssignment(
-        cml::matrix<E,AT>& dest, const SrcT& src, cml::dynamic_size_tag)
-{
-    typedef ExprTraits<SrcT> src_traits;
-    matrix_size N = CheckedSize(dest,src,matrix_result_tag());
-    for(size_t i = 0; i < N.first; ++i) {
-        for(size_t j = 0; j < N.second; ++j) {
-            OpT().apply(dest(i,j), src_traits().get(src,i,j));
-            /* Note: we don't need get(), since we know dest is a vector. */
+    void operator()(
+            cml::matrix<E,AT>& dest, const SrcT& src, cml::dynamic_size_tag)
+    {
+        typedef ExprTraits<SrcT> src_traits;
+        matrix_size N = CheckedSize(dest,src,dynamic_size_tag());
+        for(size_t i = 0; i < N.first; ++i) {
+            for(size_t j = 0; j < N.second; ++j) {
+                OpT().apply(dest(i,j), src_traits().get(src,i,j));
+                /* Note: we don't need get(), since we know dest is a vector. */
+            }
         }
     }
-}
+
+};
 
 }
 
@@ -216,15 +215,28 @@ void UnrollAssignment(
  * @bug Need to verify that OpT is actually an assignment operator.
  */
 template<class OpT, class SrcT, typename E, class AT>
-void UnrollAssignment(cml::matrix<E,AT>& dest, const SrcT& src) {
+void UnrollAssignment(cml::matrix<E,AT>& dest, const SrcT& src)
+{
+    /* Record the destination matrix type, and the expression traits: */
     typedef cml::matrix<E,AT> matrix_type;
-
-    /* Record traits for the arguments: */
     typedef ExprTraits<matrix_type> dest_traits;
     typedef ExprTraits<SrcT> src_traits;
 
-    /* Do the unroll call: */
-    detail::UnrollAssignment<OpT>(dest, src, typename matrix_type::size_tag());
+    /* Record the type of the unroller: */
+    typedef detail::MatrixAssignmentUnroller<OpT,E,AT,SrcT> unroller;
+
+    /* Figure out the expression size type: */
+    typedef typename dest_traits::size_tag dest_size;
+    typedef typename src_traits::size_tag src_size;
+
+    // typedef dest_size size_tag;
+    typedef typename select_if<
+        same_type<src_size,fixed_size_tag>::is_true
+        || same_type<dest_size,fixed_size_tag>::is_true,
+        fixed_size_tag,dest_size>::result size_tag;
+
+    /* Finally, do the unroll call: */
+    unroller()(dest, src, size_tag());
 }
 
 } // namespace et

@@ -13,13 +13,11 @@
 #define array_promotions_h
 
 #include <cml/core/cml_meta.h>
-#include <cml/fixed.h>
-#include <cml/dynamic.h>
-#include <cml/external.h>
-#include <cml/external.h>
+#include <cml/core/fwd.h>
 #include <cml/et/scalar_promotions.h>
 
 namespace cml {
+
 namespace et {
 
 #define VAL_MAX(_a_,_b_)        ( ((_a_)>(_b_))?(_a_):(_b_) )

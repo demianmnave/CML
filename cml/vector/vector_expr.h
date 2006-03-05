@@ -10,9 +10,9 @@
 
 #include <cml/core/common.h>
 #include <cml/core/cml_meta.h>
-#include <cml/et/vector_traits.h>
-#include <cml/et/vector_promotions.h>
 #include <cml/et/size_checking.h>
+#include <cml/vector/vector_traits.h>
+#include <cml/vector/vector_promotions.h>
 
 namespace cml {
 namespace et {
@@ -257,7 +257,7 @@ class BinaryVectorOp
     typedef typename result_type::size_tag size_tag;
 
     /* Define a size checker: */
-    typedef GetCheckedSize<LeftT,RightT,result_tag> checked_size;
+    typedef GetCheckedSize<LeftT,RightT,size_tag> checked_size;
 
 
   public:
@@ -274,11 +274,10 @@ class BinaryVectorOp
      * size.
      */
     size_t size() const {
-#if defined(CML_CHECK_VECTOR_EXPR_SIZES)
-        return checked_size()(m_left,m_right);
-#else
-        return left_traits().size(m_left);
-#endif
+        /* Note: This actually does a check only if
+         * CML_CHECK_VECTOR_EXPR_SIZES is set:
+         */
+        return CheckedSize(m_left,m_right,size_tag());
     }
 
     /** Return reference to left expression. */
@@ -301,16 +300,7 @@ class BinaryVectorOp
 
   public:
 
-    /** Construct from the two subexpressions.
-     *
-     * @throws std::invalid_argument if the subexpression sizes don't
-     * match.
-     *
-     * @bug The constructor ensures that left and right have the same size
-     * through CheckLinearExprSizes.  For dynamically-allocated arrays this
-     * could become very costly, since the check happens at each call to
-     * the BinaryVectorOp constructor.
-     */
+    /** Construct from the two subexpressions. */
     explicit BinaryVectorOp(left_reference left, right_reference right)
         : m_left(left), m_right(right) {}
 
@@ -328,7 +318,7 @@ class BinaryVectorOp
   private:
 
     /* This ensures that a compile-time size check is executed: */
-    typename checked_size::compile_time_check _dummy;
+    typename checked_size::check_type _dummy;
 
 
   private:

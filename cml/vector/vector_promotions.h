@@ -7,7 +7,6 @@
  * Defines promotions for vectors used in vector/vector or vector/scalar
  * expressions.
  *
- * @sa UnaryVectorOp
  * @sa BinaryVectorOp
  */
 

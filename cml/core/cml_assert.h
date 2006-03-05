@@ -13,9 +13,14 @@
 
 #include <cml/core/cml_meta.h>
 
+/* Join preprocessor macros into a new preprocessor macro: */
 #define CML_JOIN(X,Y) CML_DO_JOIN(X,Y)
 #define CML_DO_JOIN(X,Y) CML_DO_JOIN2(X,Y)
 #define CML_DO_JOIN2(X,Y) X##Y
+
+/* Change a macro value into a string: */
+#define TO_STRING(X) TO_STRING2(X)
+#define TO_STRING2(X) #X
 
 /** Default undefined compile-time assertion struct. */
 template<bool T> struct STATIC_ASSERTION_FAILURE;

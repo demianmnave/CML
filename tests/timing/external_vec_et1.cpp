@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <cml/vector.h>
+#include <cml/external.h>
 
 /* For convenience: */
 using std::cerr;

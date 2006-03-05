@@ -8,9 +8,7 @@
 #ifndef vector_ops_h
 #define vector_ops_h
 
-#include <cml/et/vecop_macros.h>
-#include <cml/et/vector_transpose.h>
-#include <cml/vector_dot.h>
+#include <cml/vector/vecop_macros.h>
 
 namespace cml {
 

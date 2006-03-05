@@ -15,7 +15,7 @@ inline void timed1(
         size_t n_iter
         )
 {
-    for(int i = 0; i < n_iter; ++i) {
+    for(size_t i = 0; i < n_iter; ++i) {
 #if defined(__ICC) && defined(__linux__) && (__ICC >= 900)
       /* Intel 9 Linux/x86 optimizes loops much better than blocks: */
       for(int k = 0; k < 4; ++k) {

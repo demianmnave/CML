@@ -15,8 +15,8 @@
 
 #include <cml/et/scalar_promotions.h>
 #include <cml/et/size_checking.h>
-#include <cml/et/vector_promotions.h>
-#include <cml/et/vector_unroller.h>
+#include <cml/vector/vector_promotions.h>
+#include <cml/vector/vector_unroller.h>
 
 #if !defined(CML_VECTOR_DOT_UNROLL_LIMIT)
 #error "CML_VECTOR_DOT_UNROLL_LIMIT is undefined."
@@ -40,7 +40,7 @@ namespace vector_ops {
 /* Wrap up specialized functions for dot(): */
 namespace detail {
 
-/* Helper struct to check orientation of the arguments: */
+/** Helper struct that checks orientation of the arguments. */
 template<typename LeftT, typename RightT>
 struct ValidDotOrientation
 {
@@ -61,7 +61,10 @@ struct ValidDotOrientation
 #endif
 };
 
-/* Helper to simplify the unroller and the dot functions below: */
+/** Helper to simplify the unroller and the dot functions below.
+ *
+ * @internal This seems a bit hackish... is there a better way?
+ */
 template<typename LeftT, typename RightT>
 struct DotHelper
 {
@@ -74,18 +77,14 @@ struct DotHelper
     typedef typename right_traits::result_type::size_tag right_size;
 
     /* Store the value types of the vectors: */
-    typedef typename LeftT::value_type left_type;
-    typedef typename RightT::value_type right_type;
-    typedef et::OpMul<left_type, right_type> op_mul;
+    typedef typename LeftT::value_type left_value;
+    typedef typename RightT::value_type right_value;
+    typedef et::OpMul<left_value, right_value> op_mul;
     typedef typename et::OpAdd<
         typename op_mul::value_type, typename op_mul::value_type> op_add;
 
     /* The final promotion for the scalar result: */
     typedef typename op_add::value_type promoted_scalar;
-
-    /* Compile-type vector size check and record: */
-    typedef typename et::GetCheckedSize<LeftT,RightT,et::vector_result_tag>
-        ::compile_time_check check_sizes;
 };
 
 /** Construct a dot unroller for fixed-size arrays.
@@ -101,8 +100,12 @@ UnrollDot(const LeftT& left, const RightT& right, fixed_size_tag)
     /* Shorthand: */
     typedef DotHelper<LeftT,RightT> dot_helper;
 
+    /* Compile-type vector size check: */
+    typedef typename et::GetCheckedSize<LeftT,RightT,fixed_size_tag>
+        ::check_type check_sizes;
+
     /* Get the fixed array size using the helper: */
-    enum { Len = dot_helper::check_sizes::array_size };
+    enum { Len = check_sizes::array_size };
 
     /* Record the unroller type: */
     typedef typename dot_helper::op_mul op_mul;
@@ -137,7 +140,7 @@ UnrollDot(const LeftT& left, const RightT& right, dynamic_size_tag)
     typedef typename dot_helper::promoted_scalar sum_type;
 
     /* Verify expression sizes: */
-    const size_t N = CheckedSize(left,right,et::vector_result_tag());
+    const size_t N = CheckedSize(left,right,dynamic_size_tag());
 
     /* Initialize the sum. Left and right must be vector expressions, so
      * it's okay to use array notation here:
@@ -157,51 +160,25 @@ UnrollDot(const LeftT& left, const RightT& right, dynamic_size_tag)
     return sum;
 }
 
-/** Vector dot implementation.
- *
- * This is the dispatch for each combination of vector ops.
- *
- * @todo The loop below needs to be explicitly unrolled to get the best
- * performance for fixed-size vectors, at least for GCC4.
- *
- * @todo Figure out if the source or destination size type should trigger
- * unrolling.  May need a per-compiler compile-time option for this.
- */
-template<typename LeftT, typename RightT>
-typename DotHelper<LeftT,RightT>::promoted_scalar
-product(const LeftT& left, const RightT& right)
-{
-    /* Shorthand: */
-    typedef DotHelper<LeftT,RightT> dot_helper;
-    typedef typename dot_helper::left_size left_size;
-    typedef typename dot_helper::right_size right_size;
-
-    /* Figure out the unroller to use (fixed or dynamic): */
-    using namespace meta;
-    typedef typename select_switch<
-        type_pair<left_size,right_size>,
-        type_pair<fixed_size_tag,fixed_size_tag>, fixed_size_tag,
-        Default, dynamic_size_tag>::result size_tag;
-
-    /* Call unroller: */
-    return UnrollDot(left,right,size_tag());
-}
-
 } // namespace detail
 
 
-/** Vector dot (inner) product.
+/** Vector dot (inner) product implementation.
  *
  * This computes a dot b -> Scalar without checking the vector orientation
  * (orientation is implied by the call to dot()).
+ *
+ * @todo Figure out if the source or destination size type should trigger
+ * unrolling.  May need a per-compiler compile-time option for this.
  */
 template<typename LeftT, typename RightT>
 typename detail::DotHelper<LeftT,RightT>::promoted_scalar
 dot(const LeftT& left, const RightT& right)
 {
     /* Shorthand: */
-    typedef et::ExprTraits<LeftT> left_traits;
-    typedef et::ExprTraits<RightT> right_traits;
+    typedef detail::DotHelper<LeftT,RightT> dot_helper;
+    typedef typename dot_helper::left_size left_size;
+    typedef typename dot_helper::right_size right_size;
 
     /* dot() requires vector expressions: */
     CML_STATIC_REQUIRE_M(
@@ -211,8 +188,16 @@ dot(const LeftT& left, const RightT& right)
      * commas:
      */
 
-    /* Bypass the orientation check: */
-    return detail::product(left,right);
+    /* Figure out the unroller to use (fixed or dynamic): */
+    using namespace meta;
+    typedef typename select_switch<
+        type_pair<left_size,right_size>,
+        type_pair<fixed_size_tag,fixed_size_tag>, fixed_size_tag,
+        Default,                                  dynamic_size_tag
+    >::result size_tag;
+
+    /* Call unroller: */
+    return detail::UnrollDot(left,right,size_tag());
 }
 
 /** Operator* for two vector expression types.

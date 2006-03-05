@@ -8,6 +8,9 @@
  *
  * @todo Add unrolling for dynamic vectors, and for vectors longer than
  * CML_VECTOR_UNROLL_LIMIT.
+ *
+ * @todo Does it make sense to unroll an assignment if either side of the
+ * assignment has a fixed size?  Or just when both have a fixed size?
  */
 
 #ifndef vector_unroller_h
@@ -94,8 +97,7 @@ struct VectorAssignmentUnroller
         }
     };
 
-
-    /** Unroll assignment for a fixed-sized vector. */
+    /** Unroll assignment to a fixed-sized vector. */
     void operator()(vector_type& dest, const SrcT& src, cml::fixed_size_tag)
     {
         typedef cml::vector<E,AT,O> vector_type;
@@ -104,8 +106,13 @@ struct VectorAssignmentUnroller
             Eval<0, Len-1, (Len <= CML_VECTOR_UNROLL_LIMIT)> Unroller;
         /* Note: Len is the array size, so Len-1 is the last element. */
 
+        /* Use a run-time check if src is a run-time sized expression: */
+        typedef typename select_if<
+            same_type<typename SrcT::size_tag,fixed_size_tag>::is_true,
+            fixed_size_tag, dynamic_size_tag>::result size_tag;
+
         /* Check the expression size (the returned size isn't needed): */
-        CheckedSize(dest,src,vector_result_tag());
+        CheckedSize(dest,src,size_tag());
         /* Note: for two fixed-size expressions, the if-statements and
          * comparisons should be completely eliminated as dead code.  If src
          * is a dynamic-sized expression, the check will still happen.
@@ -115,12 +122,22 @@ struct VectorAssignmentUnroller
         Unroller()(dest,src);
     }
 
-    /** Just use a loop for dynamic vector assignment. */
+    /** Just use a loop to assign to a run-time sized vector. */
     void operator()(vector_type& dest, const SrcT& src, cml::dynamic_size_tag)
     {
         /* Shorthand: */
         typedef ExprTraits<SrcT> src_traits;
-        size_t N = CheckedSize(dest,src,vector_result_tag());
+
+#if defined(CML_AUTOMATIC_VECTOR_RESIZE_ON_ASSIGNMENT)
+        /* Get the size of src.  This also causes src to check its size: */
+        size_t N = src_traits().size(src);
+
+        /* Set the destination vector's size: */
+        dest.resize(N);
+#else
+        size_t N = CheckedSize(dest,src,dynamic_size_tag());
+#endif
+
         for(size_t i = 0; i < N; ++i) {
             OpT().apply(dest[i], src_traits().get(src,i));
             /* Note: we don't need get(), since we know dest is a vector. */
@@ -129,7 +146,7 @@ struct VectorAssignmentUnroller
 
 };
 
-/** Unroll a vector accumulation (reduction) operator.
+/** Unroll a vector accumulation/reduction operator.
  *
  * This uses forward iteration to make efficient use of the cache.
  */
@@ -200,41 +217,24 @@ struct VectorAccumulateUnroller
 
 }
 
-/** Construct an assignment unroller for fixed-size arrays.
+/** Construct an assignment unroller.
  *
- * The operator must be an assignment op (otherwise, this doesn't make any
- * sense).  Also, automatic unrolling is only performed for fixed-size
- * vectors; a loop is used for dynamic-sized vectors.
+ * The operator must be an assignment op, otherwise, this doesn't make any
+ * sense.
  *
  * @bug Need to verify that OpT is actually an assignment operator.
- *
- * @todo Figure out if the source or destination size type should trigger
- * unrolling.  May need a per-compiler compile-time option for this.
  */
 template<class OpT, class SrcT, typename E, class AT, class O>
 void UnrollAssignment(cml::vector<E,AT,O>& dest, const SrcT& src)
 {
     /* Record the destination vector type, and the expression traits: */
     typedef cml::vector<E,AT,O> vector_type;
-    typedef ExprTraits<vector_type> dest_traits;
-    typedef ExprTraits<SrcT> src_traits;
 
     /* Record the type of the unroller: */
     typedef detail::VectorAssignmentUnroller<OpT,E,AT,O,SrcT> unroller;
 
-    /* Figure out the expression size type: */
-    typedef typename dest_traits::size_tag dest_size;
-    typedef typename src_traits::size_tag src_size;
-
-    // typedef dest_size size_tag;
-    typedef typename select_if<
-        same_type<src_size,fixed_size_tag>::is_true
-        || same_type<dest_size,fixed_size_tag>::is_true,
-        fixed_size_tag,dest_size>::result size_tag;
-
-
-    /* Finally, do the unroll call: */
-    unroller()(dest, src, size_tag());
+    /* Do the unroll call: */
+    unroller()(dest, src, typename vector_type::size_tag());
 }
 
 } // namespace et

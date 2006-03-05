@@ -3,12 +3,21 @@
  *-----------------------------------------------------------------------*/
 /** @file
  *  @brief
+ *
+ *  @todo Currently, the transpose() and T() functions copy the transposed
+ *  result into a temporary, and return it to avoid aliasing problems, e.g.
+ *  C = transpose(C).  By checking for C on the right-hand side, this can
+ *  be avoided, but experimentation is needed to determine the impact on
+ *  performance.  Another option is to use a function to explicitly specify
+ *  when a temporary is needed; e.g. C = transpose(temp(C)).
  */
 
 #ifndef matrix_transpose_h
 #define matrix_transpose_h
 
 #include <cml/et/matrix_expr.h>
+
+#define MATRIX_TRANSPOSE_RETURNS_TEMP
 
 namespace cml {
 namespace et {
@@ -129,6 +138,7 @@ struct ExprTraits< MatrixTransposeOp<ExprT> >
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
+    typedef expr_node_tag node_tag;
 
     value_type get(const expr_type& m, size_t i, size_t j) const {
         return m(i,j);
@@ -143,6 +153,72 @@ struct ExprTraits< MatrixTransposeOp<ExprT> >
 
 
 /* Define the transpose operators in the cml namespace: */
+#if defined(MATRIX_TRANSPOSE_RETURNS_TEMP)
+
+/** Matrix transpose operator taking a matrix operand. */
+template<typename E, class AT>
+inline typename et::MatrixTransposeOp< matrix<E,AT> >::result_type
+transpose(const matrix<E,AT>& expr)
+{
+    /* Record the type of the transpose op: */
+    typedef et::MatrixTransposeOp< matrix<E,AT> > Op;
+
+    /* Determine the returned matrix type: */
+    typedef typename Op::result_type tmp_type;
+
+    /* The expression to use to assign the temporary: */
+    typedef et::MatrixXpr<Op> ExprT;
+
+    /* Create the temporary and return it: */
+    return tmp_type(ExprT(Op(expr)));
+}
+
+/** Matrix transpose operator taking an et::MatrixXpr operand.
+ *
+ * The parse tree is automatically compressed by hoisting the MatrixXpr's
+ * subexpression into the subexpression of the MatrixTransposeOp.
+ */
+template<class XprT>
+inline typename et::MatrixTransposeOp<XprT>::result_type
+transpose(const et::MatrixXpr<XprT>& expr)
+{
+    /* Record the type of the transpose op: */
+    typedef et::MatrixTransposeOp<XprT> Op;
+
+    /* Determine the returned matrix type: */
+    typedef typename Op::result_type tmp_type;
+
+    /* The expression to use to assign the temporary: */
+    typedef et::MatrixXpr<Op> ExprT;
+
+    /* Create the temporary and return it: */
+    return tmp_type(ExprT(Op(expr.expression())));
+}
+
+
+/* For notational convenience: */
+
+/** Matrix transpose operator taking a matrix operand. */
+template<typename E, class AT>
+inline typename et::MatrixTransposeOp< matrix<E,AT> >::result_type
+T(const matrix<E,AT>& expr)
+{
+    return transpose(expr);
+}
+
+/** Matrix transpose operator taking an et::MatrixXpr operand.
+ *
+ * The parse tree is automatically compressed by hoisting the MatrixXpr's
+ * subexpression into the subexpression of the MatrixTransposeOp.
+ */
+template<class XprT>
+inline typename et::MatrixTransposeOp<XprT>::result_type
+T(const et::MatrixXpr<XprT>& expr)
+{
+    return transpose(expr);
+}
+
+#else
 
 /** Matrix transpose operator taking a matrix operand. */
 template<typename E, class AT>
@@ -188,6 +264,8 @@ T(const et::MatrixXpr<XprT>& expr)
 {
     return transpose(expr);
 }
+
+#endif
 
 } // namespace cml
 

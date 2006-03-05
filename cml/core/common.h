@@ -8,6 +8,8 @@
 #ifndef core_common_h
 #define core_common_h
 
+#include <cstddef>              // for size_t
+#include <utility>              // for std::pair<>
 #include <cml/defaults.h>
 
 namespace cml {

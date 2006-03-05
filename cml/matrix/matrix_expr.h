@@ -273,7 +273,7 @@ class BinaryMatrixOp
     typedef typename result_type::size_tag size_tag;
 
     /* Define a size checker: */
-    typedef GetCheckedSize<LeftT,RightT,result_tag> checked_size;
+    typedef GetCheckedSize<LeftT,RightT,size_tag> checked_size;
 
 
   public:
@@ -293,7 +293,7 @@ class BinaryMatrixOp
     /** Return the expression size as a pair. */
     matrix_size size() const {
 #if defined(CML_CHECK_MATRIX_EXPR_SIZES)
-        return checked_size()(m_left,m_right);
+        return CheckedSize(m_left,m_right,size_tag());
 #else
         return left_traits().size(m_left);
 #endif
@@ -360,7 +360,7 @@ class BinaryMatrixOp
   private:
 
     /* This ensures that a compile-time size check is executed: */
-    typename checked_size::compile_time_check _dummy;
+    typename checked_size::check_type _dummy;
 
 
   private:
