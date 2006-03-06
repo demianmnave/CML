@@ -9,12 +9,10 @@
 #define dynamic_1D_h
 
 #include <vector>
+#include <cml/core/fwd.h>
 #include <cml/core/common.h>
 
 namespace cml {
-
-/* Forward declare to record the dynamic_1D generator type: */
-template<typename Alloc> struct dynamic;
 
 /** Dynamically-sized and allocated 1D array.
  *

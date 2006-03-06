@@ -7,9 +7,9 @@
 #ifndef matrix_ops_h
 #define matrix_ops_h
 
-#include <cml/et/matop_macros.h>
-#include <cml/et/matrix_transpose.h>
-#include <cml/et/matrix_rowcol.h>
+#include <cml/matrix/matop_macros.h>
+#include <cml/matrix/matrix_transpose.h>
+#include <cml/matrix/matrix_rowcol.h>
 
 namespace cml {
 

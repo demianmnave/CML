@@ -8,13 +8,10 @@
 #ifndef external_1D_h
 #define external_1D_h
 
+#include <cml/core/fwd.h>
 #include <cml/core/common.h>
-#include <cml/fixed.h>
 
 namespace cml {
-
-/* Forward declare to record the external_1D generator type: */
-template<int Dim1, int Dim2> struct external;
 
 template<typename Element, int Size>
 class external_1D
@@ -27,6 +24,7 @@ class external_1D
     /* Standard: */
     typedef Element value_type;
     typedef Element& reference;
+
     typedef const Element& const_reference;
 
     /* Array implementation: */
@@ -83,7 +81,7 @@ class external_1D
     value_type* const           m_data;
 
 
-  protected:
+  private:
 
     /* Initialization without an argument isn't allowed: */
     external_1D();

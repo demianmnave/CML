@@ -15,7 +15,7 @@
 #ifndef matrix_transpose_h
 #define matrix_transpose_h
 
-#include <cml/et/matrix_expr.h>
+#include <cml/matrix/matrix_expr.h>
 
 #define MATRIX_TRANSPOSE_RETURNS_TEMP
 
@@ -156,12 +156,12 @@ struct ExprTraits< MatrixTransposeOp<ExprT> >
 #if defined(MATRIX_TRANSPOSE_RETURNS_TEMP)
 
 /** Matrix transpose operator taking a matrix operand. */
-template<typename E, class AT>
-inline typename et::MatrixTransposeOp< matrix<E,AT> >::result_type
-transpose(const matrix<E,AT>& expr)
+template<typename E, class AT, typename L>
+inline typename et::MatrixTransposeOp< matrix<E,AT,L> >::result_type
+transpose(const matrix<E,AT,L>& expr)
 {
     /* Record the type of the transpose op: */
-    typedef et::MatrixTransposeOp< matrix<E,AT> > Op;
+    typedef et::MatrixTransposeOp< matrix<E,AT,L> > Op;
 
     /* Determine the returned matrix type: */
     typedef typename Op::result_type tmp_type;
@@ -199,9 +199,9 @@ transpose(const et::MatrixXpr<XprT>& expr)
 /* For notational convenience: */
 
 /** Matrix transpose operator taking a matrix operand. */
-template<typename E, class AT>
-inline typename et::MatrixTransposeOp< matrix<E,AT> >::result_type
-T(const matrix<E,AT>& expr)
+template<typename E, class AT, typename L>
+inline typename et::MatrixTransposeOp< matrix<E,AT,L> >::result_type
+T(const matrix<E,AT,L>& expr)
 {
     return transpose(expr);
 }
@@ -221,11 +221,11 @@ T(const et::MatrixXpr<XprT>& expr)
 #else
 
 /** Matrix transpose operator taking a matrix operand. */
-template<typename E, class AT>
-inline et::MatrixXpr< et::MatrixTransposeOp< matrix<E,AT> > >
-transpose(const matrix<E,AT>& expr)
+template<typename E, class AT, typename L>
+inline et::MatrixXpr< et::MatrixTransposeOp< matrix<E,AT,L> > >
+transpose(const matrix<E,AT,L>& expr)
 {
-    typedef et::MatrixTransposeOp< matrix<E,AT> > ExprT;
+    typedef et::MatrixTransposeOp< matrix<E,AT,L> > ExprT;
     return et::MatrixXpr<ExprT>(ExprT(expr));
 }
 
@@ -246,9 +246,9 @@ transpose(const et::MatrixXpr<XprT>& expr)
 /* For notational convenience: */
 
 /** Matrix transpose operator taking a matrix operand. */
-template<typename E, class AT>
-inline et::MatrixXpr< et::MatrixTransposeOp< matrix<E,AT> > >
-T(const matrix<E,AT>& expr)
+template<typename E, class AT, typename L>
+inline et::MatrixXpr< et::MatrixTransposeOp< matrix<E,AT,L> > >
+T(const matrix<E,AT,L>& expr)
 {
     return transpose(expr);
 }

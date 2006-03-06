@@ -9,13 +9,11 @@
 #define dynamic_2D_h
 
 #include <vector>
+#include <cml/core/fwd.h>
 #include <cml/core/common.h>
 #include <cml/core/dynamic_1D.h>
 
 namespace cml {
-
-/* Forward declare to record the dynamic_2D generator type: */
-template<typename Alloc> struct dynamic;
 
 /** Dynamically-sized and allocated 2D array.
  *
@@ -35,19 +33,19 @@ class dynamic_2D
 {
   public:
 
+    /* Record the allocator type: */
+    typedef typename Alloc::template rebind<Element>::other allocator_type;
+
     /* Record the generator: */
     typedef dynamic<Alloc> generator_type;
 
     /* Array implementation: */
-    typedef std::vector<Element,Alloc> array_impl;
+    typedef std::vector<Element,allocator_type> array_impl;
 
     /* Standard: */
     typedef typename array_impl::value_type value_type;
     typedef typename array_impl::reference reference; 
     typedef typename array_impl::const_reference const_reference; 
-
-    /* Record the allocator type: */
-    typedef typename array_impl::allocator_type allocator_type;
 
     /* For matching by memory layout: */
     typedef Layout layout;

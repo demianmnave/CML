@@ -1,3 +1,4 @@
+CML_ROOT=../..
 CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 	 -DCML_VECTOR_UNROLL_LIMIT=25 \
 	 -DCML_VECTOR_DOT_UNROLL_LIMIT=25 \
@@ -18,7 +19,7 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 #-- 	 -mpowerpc-gpopt -fomit-frame-pointer -funroll-loops \
 #-- 	 -finline-functions -finline-limit=2000000000 \
 #-- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
-#-- CPPFLAGS=-I.. $(CML_OPTS)
+#-- CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS)
 #-- exe=
 #-- obj=.o
 #-- rm=rm -f
@@ -31,7 +32,7 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 #-- 	 -mpowerpc-gpopt -fomit-frame-pointer -funroll-loops \
 #-- 	 -finline-functions -finline-limit=2000000000 \
 #-- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
-#-- CPPFLAGS=-I.. $(CML_OPTS)
+#-- CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS)
 #-- exe=
 #-- obj=.o
 #-- rm=rm -f
@@ -43,7 +44,7 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 #-- 	 -mpowerpc-gpopt -fomit-frame-pointer -funroll-loops \
 #-- 	 -finline-functions -finline-limit=2000000000 \
 #-- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
-#-- CPPFLAGS=-I.. $(CML_OPTS)
+#-- CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS)
 #-- exe=
 #-- obj=.o
 #-- rm=rm -f
@@ -58,7 +59,7 @@ CXXFLAGS=-ftemplate-depth-100 -march=pentium4 -mtune=pentium4 -O3 \
 	 -finline-limit=2000000000 \
  	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100 #\
 	 -DCML_NO_2D_UNROLLER #
-CPPFLAGS=-I.. $(CML_OPTS) \
+CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS) \
 	-I$(HOME)/projects/external/build/exmat/include \
 	-I$(HOME)/projects/external/build/ltl-1.7.10
 
@@ -76,8 +77,8 @@ LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 #-- 	 -DCML_USE_MAT_BINOP_REF \
 #-- 	 -DCML_NO_2D_UNROLLER #\
 #-- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25 #\
-#-- #CPPFLAGS=-I.. $(CML_OPTS)
-#-- CPPFLAGS=-I.. $(CML_OPTS) \
+#-- #CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS)
+#-- CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS) \
 #-- 	-I$(HOME)/projects/external/build/exmat/include \
 #-- 	-I$(HOME)/projects/external/build/ltl-1.7.10
 #-- exe=
@@ -105,7 +106,7 @@ LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 #-- ##:: SEEMS TO BE BEST FOR GCC 3.4.2
 #-- CXXFLAGS=-ftemplate-depth-50 -march=pentium4 -mtune=pentium4 -O3 \
 #-- -funroll-loops -finline-functions -finline-limit=100000000
-#-- CPPFLAGS=-I.. $(CML_OPTS)
+#-- CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS)
 #-- exe=.exe
 #-- obj=.obj
 #-- rm=erase
@@ -141,6 +142,7 @@ EXTERNAL_VEC_TEST_SRC	= external_vec_et1.cpp
 C_MAT_TEST_SRC		= matrix_c1.cpp matrix_c2.cpp
 FIXED_MAT_TEST_SRC	= fixed_mat_et1.cpp fixed_mat_et2.cpp
 DYNAMIC_MAT_TEST_SRC	= dynamic_mat_et1.cpp
+EXTERNAL_MAT_TEST_SRC	= external_mat_et1.cpp
 
 ALL_SRC=$(C_VEC_TEST_SRC) \
 	$(FIXED_VEC_TEST_SRC) \
@@ -148,7 +150,8 @@ ALL_SRC=$(C_VEC_TEST_SRC) \
 	$(EXTERNAL_VEC_TEST_SRC) \
 	$(C_MAT_TEST_SRC) \
 	$(FIXED_MAT_TEST_SRC) \
-	$(DYNAMIC_MAT_TEST_SRC)
+	$(DYNAMIC_MAT_TEST_SRC) \
+	$(EXTERNAL_MAT_TEST_SRC)
 
 C_VEC_TESTS		= vector_c1$(exe) extvec_c1$(exe) vector_c2$(exe)
 FIXED_VEC_TESTS		= fixed_vec_et1$(exe) fixed_vec_et2$(exe) #fixed_vec_exmat1$(exe) fixed_vec_ltl1$(exe)
@@ -157,6 +160,7 @@ EXTERNAL_VEC_TESTS	= external_vec_et1$(exe)
 C_MAT_TESTS		= matrix_c1$(exe) matrix_c2$(exe)
 FIXED_MAT_TESTS		= fixed_mat_et1$(exe) fixed_mat_et2$(exe)
 DYNAMIC_MAT_TESTS	= dynamic_mat_et1$(exe)
+EXTERNAL_MAT_TESTS	= external_mat_et1$(exe)
 
 ALL=	$(C_VEC_TESTS) \
 	$(FIXED_VEC_TESTS) \
@@ -164,7 +168,8 @@ ALL=	$(C_VEC_TESTS) \
 	$(EXTERNAL_VEC_TESTS) \
 	$(C_MAT_TESTS) \
 	$(FIXED_MAT_TESTS) \
-	$(DYNAMIC_MAT_TESTS)
+	$(DYNAMIC_MAT_TESTS) \
+	$(EXTERNAL_MAT_TESTS) \
 	
 all: $(ALL)
 

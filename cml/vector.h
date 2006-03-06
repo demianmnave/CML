@@ -30,15 +30,10 @@ namespace cml {
  * a*b, when a is a column vector and b is a row vector, is the matrix
  * (outer) product of a and b.
  *
- * @sa cml::core::fixed
- * @sa cml::core::dynamic
- *
  * @internal Unlike the previous version, this uses specializations to
- * better enable varied array and vector types.  For example, with the
+ * better enable varied array and vector types. For example, with the
  * rebind method, it's difficult to support external<> vector types that
- * should not be assigned to.  Note that the class operators have been
- * moved into a base class to ensure minimal duplication between the
- * specialized classes.
+ * should not be assigned to.
  *
  * @internal All assignments to the vector should go through UnrollAssignment,
  * which ensures that the source expression and the destination vector have

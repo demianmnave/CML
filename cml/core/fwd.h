@@ -9,8 +9,8 @@
  * @sa cml/et/array_promotions.h
  */
 
-#ifndef fwd_h
-#define fwd_h
+#ifndef core_fwd_h
+#define core_fwd_h
 
 namespace cml {
 
@@ -26,7 +26,22 @@ template<typename E, class A> class dynamic_1D;
 /* cml/core/dynamic_2D.h */
 template<typename E, typename L, class A> class dynamic_2D;
 
-}
+/* cml/fixed.h */
+template<int Dim1, int Dim2> struct fixed;
+
+/* cml/dynamic.h */
+template<typename Alloc> struct dynamic;
+
+/* cml/external.h */
+template<int Dim1, int Dim2> struct external;
+
+/* cml/vector.h */
+template<typename E, class AT, typename O> class vector;
+
+/* cml/matrix.h */
+template<typename E, class AT, typename L> class matrix;
+
+} // namespace cml
 
 #endif
 

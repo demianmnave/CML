@@ -8,20 +8,16 @@
 #ifndef matrix_traits_h
 #define matrix_traits_h
 
+#include <cml/core/fwd.h>
 #include <cml/et/traits.h>
 
 namespace cml {
-
-/* Forward declare for traits class: */
-template<typename E, class AT> class matrix;
-
-/* Promotions belong in the et namespace: */
 namespace et {
 
-template<typename E, class AT>
-struct ExprTraits< cml::matrix<E,AT> >
+template<typename E, class AT, typename L>
+struct ExprTraits< cml::matrix<E,AT,L> >
 {
-    typedef typename cml::matrix<E,AT> expr_type;
+    typedef typename cml::matrix<E,AT,L> expr_type;
     typedef typename expr_type::value_type value_type;
     typedef typename expr_type::expr_reference reference;
     typedef typename expr_type::expr_const_reference const_reference;

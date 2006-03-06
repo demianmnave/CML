@@ -6,6 +6,11 @@
  */
 
 {
+    vector_type CONSTRUCT(w); assign(w, 1., 2., 3., 4.);
+    vector_type CONSTRUCT(x); assign(x, 3., 1., 2., 4.);
+    vector_type CONSTRUCT(y); assign(y, 1., 3., 2., 4.);
+    vector_type CONSTRUCT(z); assign(z, 1., 2., 4., 3.);
+
     /* Unary: */
     vector_type COPY_ASSIGN(a) = + w;
     vector_type CONSTRUCT(a1);
@@ -17,7 +22,7 @@
     assign(b1,-1.,-2.,-3.,-4.);
     equal_or_fail(a,a1, ERROR_MSG_TAG "- x");
 
-    /* Binary, 2 vectors: */
+    /* Binary: */
     vector_type COPY_ASSIGN(c) = x+y;
     vector_type CONSTRUCT(c1);
     assign(c1,4.,4.,4.,8.);
@@ -28,14 +33,12 @@
     assign(d1,2.,-2.,0.,0.);
     equal_or_fail(d,d1, ERROR_MSG_TAG "x-y");
 
-    /* Binary, vectors and vector expressions: */
-    vector_type CONSTRUCT(e);
+    vector_type COPY_CONSTRUCT(e,w);
     vector_type CONSTRUCT(e1);
-    e = x+y-z;
-    assign(e1,3.,2.,0.,5.);
+    e += x+y-z;
+    assign(e1,4.,4.,3.,9.);
     equal_or_fail(e,e1, ERROR_MSG_TAG "x+y-z");
 
-    /* Binary, vectors and scalars: */
     vector_type COPY_CONSTRUCT(f,2.*(x+y+z));
     vector_type CONSTRUCT(f1);
     assign(f1,10.,12.,16.,22.);
@@ -56,6 +59,12 @@
     vector_type CONSTRUCT(i1);
     i = (w+x)/2.;
     assign(i1,2.,1.5,2.5,4.);
+    equal_or_fail(i,i1, ERROR_MSG_TAG "(w+x)/2.");
+
+    vector_type COPY_CONSTRUCT(j,x);
+    vector_type CONSTRUCT(j1);
+    j *= 2.;
+    assign(j1,6.,2.,4.,8.);
     equal_or_fail(i,i1, ERROR_MSG_TAG "(w+x)/2.");
 
     /* Dot: */

@@ -203,18 +203,19 @@ mul(
 } // namespace matrix_ops
 
 /** Dispatch for two matrices. */
-template<typename E1, class AT1, typename E2, class AT2>
-typename et::MatrixPromote< matrix<E1,AT1>, matrix<E2,AT2> >::type
-operator*(const matrix<E1,AT1>& left,
-          const matrix<E2,AT2>& right)
+template<typename E1, class AT1, typename L1,
+         typename E2, class AT2, typename L2>
+typename et::MatrixPromote< matrix<E1,AT1,L1>, matrix<E2,AT2,L2> >::type
+operator*(const matrix<E1,AT1,L1>& left,
+          const matrix<E2,AT2,L2>& right)
 {
     return matrix_ops::mul(left,right);
 }
 
 /** Dispatch for a matrix and a MatrixXpr. */
-template<typename E, class AT, typename XprT>
-typename et::MatrixPromote< matrix<E,AT>, XprT >::type
-operator*(const matrix<E,AT>& left,
+template<typename E, class AT, typename L, typename XprT>
+typename et::MatrixPromote< matrix<E,AT,L>, XprT >::type
+operator*(const matrix<E,AT,L>& left,
           const et::MatrixXpr<XprT>& right)
 {
     return matrix_ops::mul(left,right);
@@ -226,10 +227,10 @@ operator*(const matrix<E,AT>& left,
  * arguments is ignored.  Otherwise, left must be a row_matrix, and right
  * must be a col_matrix.
  */
-template<typename XprT, typename E, class AT>
-typename et::MatrixPromote< XprT, matrix<E,AT> >::type
+template<typename XprT, typename E, class AT, typename L>
+typename et::MatrixPromote< XprT, matrix<E,AT,L> >::type
 operator*(const et::MatrixXpr<XprT>& left,
-          const matrix<E,AT>& right)
+          const matrix<E,AT,L>& right)
 {
     return matrix_ops::mul(left,right);
 }

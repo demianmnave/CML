@@ -4,7 +4,9 @@
 /** @file
  *  @brief Specialization for fixed-size, external-memory vectors.
  *
- *  @note External vectors cannot be copy-constructed.
+ *  @note External vectors currently cannot be copy-constructed.  Making
+ *  copy construction work properly requires a safe way to transfer
+ *  ownership of pointers.
  */
 
 #ifndef external_vector_h
@@ -15,31 +17,17 @@
 #include <cml/vector/class_ops.h>
 #include <cml/external.h>
 
-/* This sets up the environment for oriented or unoriented vector copies: */
-#if defined(CML_ENFORCE_VECTOR_ORIENTATION_ON_COPY)
-  #define ORIENT_MACRO         Orient
-  #define COPY_TEMPLATE_PARAMS template<typename E, class AT>
-#else
-  #define ORIENT_MACRO         O
-  #define COPY_TEMPLATE_PARAMS template<typename E, class AT, typename O>
-#endif
-
 namespace cml {
 
 /** Fixed-size, fixed-memory vector. */
 template<typename Element, int Size, typename Orient>
 class vector<Element, external<Size>, Orient>
 : public external_1D<Element,Size>
-, public detail::vector::class_ops<Element, external<Size>, Orient>
 {
   public:
 
     /* Shorthand for the generator: */
     typedef external<Size> generator_type;
-
-    /* Shorthand for the class_ops base: */
-    typedef detail::vector::class_ops<
-        Element, generator_type, Orient> ops_type;
 
     /* Shorthand for the array type: */
     typedef external_1D<Element,Size> array_type;
@@ -69,7 +57,10 @@ class vector<Element, external<Size>, Orient>
      */
 
     /* To simplify transpose(): */
-    typedef typename ops_type::transposed_type transposed_type;
+    typedef typename select_if<
+        same_type<Orient,row_vector>::is_true,
+        col_vector, row_vector>::result transposed_tag;
+    typedef cml::vector<Element,generator_type,transposed_tag> transposed_type;
 
     /* For matching by size type: */
     typedef typename array_type::size_tag size_tag;
@@ -83,21 +74,28 @@ class vector<Element, external<Size>, Orient>
     /** Construct from an array of values. */
     vector(Element* const array) : array_type(array) {}
 
-    /** Copy from a vector expression.
-     *
-     * @param expr the expression to copy from.
+
+  public:
+
+    /* Define class operators for external vectors. Note: external vectors
+     * cannot be copy-constructed, but they can be assigned to:
      */
-    template<class XprT> vector_type&
-    operator=(const et::VectorXpr<XprT>& expr) {
-        return ops_type::operator=(expr);
-    }
+    CML_VEC_ASSIGN_FROM_VECTYPE
+
+    /* Only assignment operators can be used to copy from other types: */
+    CML_VEC_ASSIGN_FROM_VEC(=, cml::et::OpAssign)
+    CML_VEC_ASSIGN_FROM_VEC(+=, cml::et::OpAddAssign)
+    CML_VEC_ASSIGN_FROM_VEC(-=, cml::et::OpSubAssign)
+
+    CML_VEC_ASSIGN_FROM_VECXPR(=, cml::et::OpAssign)
+    CML_VEC_ASSIGN_FROM_VECXPR(+=, cml::et::OpAddAssign)
+    CML_VEC_ASSIGN_FROM_VECXPR(-=, cml::et::OpSubAssign)
+
+    CML_VEC_ASSIGN_FROM_SCALAR(*=, cml::et::OpMulAssign)
+    CML_VEC_ASSIGN_FROM_SCALAR(/=, cml::et::OpDivAssign)
 };
 
 } // namespace cml
-
-/* Clean up: */
-#undef ORIENT_MACRO
-#undef COPY_TEMPLATE_PARAMS
 
 #endif
 

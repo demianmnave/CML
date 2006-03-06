@@ -10,12 +10,14 @@
  * CML_VECTOR_UNROLL_LIMIT.
  *
  * @todo Does it make sense to unroll an assignment if either side of the
- * assignment has a fixed size?  Or just when both have a fixed size?
+ * assignment has a fixed size, or just when the target vector is fixed
+ * size?
  */
 
 #ifndef vector_unroller_h
 #define vector_unroller_h
 
+#include <cml/core/fwd.h>
 #include <cml/et/traits.h>
 #include <cml/et/size_checking.h>
 #include <cml/et/scalar_promotions.h>
@@ -25,10 +27,6 @@
 #endif
 
 namespace cml {
-
-/* Forward declare for the vector expressions below: */
-template<typename E, class AT, class O> class vector;
-
 namespace et {
 
 /** Detail for the vector unroller code. */
@@ -44,8 +42,10 @@ namespace detail {
  * @bug Need to verify that OpT is actually an assignment operator.
  */
 template<class OpT, typename E, class AT, class O, class SrcT>
-struct VectorAssignmentUnroller
+class VectorAssignmentUnroller
 {
+  protected:
+
     /* Forward declare: */
     template<int N, int Last, bool can_unroll> struct Eval;
 
@@ -83,6 +83,7 @@ struct VectorAssignmentUnroller
         }
     };
 
+
     /** Evaluate the binary operator using a loop.
      *
      * This is used when the vector's length is longer than
@@ -97,6 +98,9 @@ struct VectorAssignmentUnroller
         }
     };
 
+
+  public:
+
     /** Unroll assignment to a fixed-sized vector. */
     void operator()(vector_type& dest, const SrcT& src, cml::fixed_size_tag)
     {
@@ -107,9 +111,10 @@ struct VectorAssignmentUnroller
         /* Note: Len is the array size, so Len-1 is the last element. */
 
         /* Use a run-time check if src is a run-time sized expression: */
+        typedef typename ExprTraits<SrcT>::size_tag src_size;
         typedef typename select_if<
-            same_type<typename SrcT::size_tag,fixed_size_tag>::is_true,
-            fixed_size_tag, dynamic_size_tag>::result size_tag;
+            same_type<src_size,dynamic_size_tag>::is_true,
+            dynamic_size_tag, fixed_size_tag>::result size_tag;
 
         /* Check the expression size (the returned size isn't needed): */
         CheckedSize(dest,src,size_tag());
@@ -235,6 +240,7 @@ void UnrollAssignment(cml::vector<E,AT,O>& dest, const SrcT& src)
 
     /* Do the unroll call: */
     unroller()(dest, src, typename vector_type::size_tag());
+    /* XXX It may make sense to unroll if either side is a fixed size. */
 }
 
 } // namespace et

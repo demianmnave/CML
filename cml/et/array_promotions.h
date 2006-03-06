@@ -7,6 +7,9 @@
  * Defines promotions between array types.
  *
  * @todo Not all type combinations are represented here.
+ *
+ * @todo Can/should an expression with a fixed-size argument promote to a
+ * fixed array instead of a dynamic array?
  */
 
 #ifndef array_promotions_h

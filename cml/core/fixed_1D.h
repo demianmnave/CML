@@ -8,12 +8,10 @@
 #ifndef fixed_1D_h
 #define fixed_1D_h
 
+#include <cml/core/fwd.h>
 #include <cml/core/common.h>
 
 namespace cml {
-
-/* Forward declare to record the fixed_1D generator type: */
-template<int Dim1, int Dim2> struct fixed;
 
 /** Statically-allocated array.
  *
@@ -46,6 +44,9 @@ template<typename Element, int Size>
 class fixed_1D
 {
   public:
+
+    /* Require Size > 0: */
+    CML_STATIC_REQUIRE(Size > 0);
 
     /* Record the generator: */
     typedef fixed<Size,-1> generator_type;

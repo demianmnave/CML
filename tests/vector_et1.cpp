@@ -103,10 +103,6 @@ equal_or_fail(
 void fixed_test()
 {
     typedef vector<double, fixed<4>, row_vector> vector_type;
-    vector_type w; assign(w, 1., 2., 3., 4.);
-    vector_type x; assign(x, 3., 1., 2., 4.);
-    vector_type y; assign(y, 1., 3., 2., 4.);
-    vector_type z; assign(z, 1., 2., 4., 3.);
 
 #define CONSTRUCT(_a_) _a_
 #define COPY_ASSIGN(_a_) _a_
@@ -125,10 +121,6 @@ void fixed_test()
 void dynamic_test()
 {
     typedef vector<double, dynamic<>, row_vector> vector_type;
-    vector_type w(4); assign(w, 1., 2., 3., 4.);
-    vector_type x(4); assign(x, 3., 1., 2., 4.);
-    vector_type y(4); assign(y, 1., 3., 2., 4.);
-    vector_type z(4); assign(z, 1., 2., 4., 3.);
 
 #define CONSTRUCT(_a_) _a_(4)
 #if defined(CML_AUTOMATIC_VECTOR_RESIZE_ON_ASSIGNMENT)
@@ -155,15 +147,16 @@ void external_test()
 
     /* Need the vectors to store to: */
     double _w[4], _x[4], _y[4], _z[4];
-    double _a[4], _b[4], _c[4], _d[4];
-    double _e[4], _f[4], _g[4], _h[4], _i[4];
-    double _a1[4], _b1[4], _c1[4], _d1[4];
-    double _e1[4], _f1[4], _g1[4], _h1[4], _i1[4];
 
-    vector_type w(_w); assign(w, 1., 2., 3., 4.);
-    vector_type x(_x); assign(x, 3., 1., 2., 4.);
-    vector_type y(_y); assign(y, 1., 3., 2., 4.);
-    vector_type z(_z); assign(z, 1., 2., 4., 3.);
+    /* These are used to initialize the tests: */
+    double _a[4], _b[4], _c[4], _d[4];
+    double _e[4], _f[4], _g[4], _h[4];
+    double _i[4], _j[4];
+
+    /* These are used to store the expected and test values: */
+    double _a1[4], _b1[4], _c1[4], _d1[4];
+    double _e1[4], _f1[4], _g1[4], _h1[4];
+    double _j1[4], _i1[4];
 
 #define CONSTRUCT(_a_) _a_(_##_a_)
 #define COPY_ASSIGN(_a_) _a_(_##_a_); _a_
@@ -214,7 +207,9 @@ void mixed_fixed_external_test()
 
     typedef vector<double, external<4>, row_vector> vector_type2;
 
-    /* Need the vectors to store to: */
+    /* Need the vectors to store to (these are the ony ones used in the
+     * tests):
+     */
     double _y[4], _z[4];
     double _d[4], _f[4], _h[4];
     double _c1[4], _e1[4], _g1[4], _i1[4];
@@ -243,7 +238,9 @@ void mixed_dynamic_external_test()
 
     typedef vector<double, external<4>, row_vector> vector_type2;
 
-    /* Need the vectors to store to: */
+    /* Need the vectors to store to (these are the ony ones used in the
+     * tests):
+     */
     double _y[4], _z[4];
     double _d[4], _f[4], _h[4];
     double _c1[4], _e1[4], _g1[4], _i1[4];

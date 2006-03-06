@@ -16,9 +16,10 @@ using namespace cml::matrix_ops;
 using std::cerr;
 using std::endl;
 
-using cml::fixed;
-typedef cml::matrix< double, fixed<4,4> > matrix_d44;
-#define MATINIT(_m_) _m_
+using cml::external;
+using cml::row_major;
+typedef cml::matrix< double, external<4,4>, row_major > matrix_d44;
+#define MATINIT(_m_) _m_(&c_m[c_i++][0][0])
 
 /* Define the vector orientation to assume: */
 typedef cml::col_vector vector_orient;
@@ -47,10 +48,6 @@ inline void mult(const matrix_d44& A, const matrix_d44& B, matrix_d44& res)
 	}
     }
 #endif
-}
-
-inline matrix_d44 operator*(const matrix_d44& A, const matrix_d44& B) {
-    matrix_d44 nrv; mult(A,B,nrv); return nrv;
 }
 
 #include "print_matrix.cpp"

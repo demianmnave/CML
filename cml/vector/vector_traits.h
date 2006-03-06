@@ -8,13 +8,10 @@
 #ifndef vector_traits_h
 #define vector_traits_h
 
+#include <cml/core/fwd.h>
 #include <cml/et/traits.h>
 
 namespace cml {
-
-/* Forward declare for traits class: */
-template<typename E, class AT, class O> class vector;
-
 namespace et {
 
 /** Expression traits for a vector<> type. */

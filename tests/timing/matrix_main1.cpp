@@ -10,6 +10,10 @@
 int main(int argc, char** argv)
 {
     using std::cin;
+    /* For external_vec_et1.cpp and external_c1.cpp: */
+    double c_m[5][4][4];
+    int c_i = 0;
+
     matrix_d44 MATINIT(m), MATINIT(m1), MATINIT(m2), MATINIT(m3);
 
     int i, j;

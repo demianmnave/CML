@@ -9,7 +9,7 @@
 #define matrix_rowcol_h
 
 #include <cml/core/cml_meta.h>
-#include <cml/et/vector_expr.h>
+#include <cml/vector/vector_expr.h>
 #include <cml/vector.h>
 
 namespace cml {
@@ -214,11 +214,11 @@ struct ExprTraits< MatrixColOp<ExprT> >
 /* Define the row and column operators in the cml namespace: */
 
 /** Matrix row operator taking a matrix operand. */
-template<typename E, class AT>
-inline et::VectorXpr< et::MatrixRowOp< matrix<E,AT> > >
-row(const matrix<E,AT>& expr, size_t i)
+template<typename E, class AT, typename L>
+inline et::VectorXpr< et::MatrixRowOp< matrix<E,AT,L> > >
+row(const matrix<E,AT,L>& expr, size_t i)
 {
-    typedef et::MatrixRowOp< matrix<E,AT> > ExprT;
+    typedef et::MatrixRowOp< matrix<E,AT,L> > ExprT;
     return et::VectorXpr<ExprT>(ExprT(expr,i));
 }
 
@@ -236,11 +236,11 @@ row(const et::MatrixXpr<XprT>& expr, size_t i)
 }
 
 /** Matrix col operator taking a matrix operand. */
-template<typename E, class AT>
-inline et::VectorXpr< et::MatrixColOp< matrix<E,AT> > >
-col(const matrix<E,AT>& expr, size_t i)
+template<typename E, class AT, typename L>
+inline et::VectorXpr< et::MatrixColOp< matrix<E,AT,L> > >
+col(const matrix<E,AT,L>& expr, size_t i)
 {
-    typedef et::MatrixColOp< matrix<E,AT> > ExprT;
+    typedef et::MatrixColOp< matrix<E,AT,L> > ExprT;
     return et::VectorXpr<ExprT>(ExprT(expr,i));
 }
 
