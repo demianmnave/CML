@@ -7,6 +7,7 @@
 CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 	 -DCML_VECTOR_UNROLL_LIMIT=25 \
 	 -DCML_VECTOR_DOT_UNROLL_LIMIT=25 \
+	 -DCML_ENFORCE_VECTOR_ORIENTATION_ON_COPY \
 	 -DCML_DEFAULT_ARRAY_LAYOUT="cml::row_major" \
 	 -DCML_DEFAULT_ARRAY_ALLOC="std::allocator<void>" \
 	 -DCML_ALWAYS_PROMOTE_TO_DEFAULT_LAYOUT \
@@ -31,7 +32,7 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 
 #-- CXX=powerpc-apple-darwin8-g++-4.0.0
 #-- CPP=$(CXX) -MM
-#-- CXXFLAGS=-ftemplate-depth-50 -O3 \
+#-- CXXFLAGS=-ftemplate-depth-1000 -O3 \
 #-- 	 -mpowerpc-gpopt -fomit-frame-pointer -funroll-loops \
 #-- 	 -finline-functions -finline-limit=2000000000 \
 #-- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
@@ -41,38 +42,38 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 #-- rm=rm -f
 #-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
-#-- CXX=powerpc-apple-darwin8-g++-4.0.1
-#-- CPP=$(CXX) -MM
-#-- CXXFLAGS=-ftemplate-depth-50 -O3 -mcpu=G4 -mtune=G4 -mpowerpc \
-#-- 	 -mpowerpc-gpopt -fomit-frame-pointer -funroll-loops \
-#-- 	 -finline-functions -finline-limit=2000000000 \
-#-- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
-#-- CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS)
-#-- exe=
-#-- obj=.o
-#-- rm=rm -f
-#-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
-
-
-CXX=i386-redhat-linux-g++ -Wall -W
-CPP=$(CXX) -M
-CXXFLAGS=-ftemplate-depth-1000 -march=pentium4 -mtune=pentium4 -O3 \
-	 -fomit-frame-pointer -funroll-all-loops -finline-functions \
-	 -finline-limit=1000000 \
- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100 #\
-	 -DCML_NO_2D_UNROLLER #\
-
-CXXFLAGS=-g -O \
- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
-
-CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS) \
-	-I$(HOME)/projects/external/build/exmat/include \
-	-I$(HOME)/projects/external/build/ltl-1.7.10
-
+CXX=powerpc-apple-darwin8-g++-4.0.1
+CPP=$(CXX) -MM
+CXXFLAGS=-ftemplate-depth-1000 -O3 -mcpu=G4 -mtune=G4 -mpowerpc \
+	 -mpowerpc-gpopt -fomit-frame-pointer -funroll-loops \
+	 -finline-functions -finline-limit=2000000000 \
+	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
+CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS)
 exe=
 obj=.o
 rm=rm -f
 LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+
+
+#-- CXX=i386-redhat-linux-g++ -Wall -W
+#-- CPP=$(CXX) -M
+#-- CXXFLAGS=-ftemplate-depth-1000 -march=pentium4 -mtune=pentium4 -O3 \
+#-- 	 -fomit-frame-pointer -funroll-all-loops -finline-functions \
+#-- 	 -finline-limit=1000000 \
+#--  	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100 #\
+#-- 	 -DCML_NO_2D_UNROLLER #\
+#-- 
+#-- CXXFLAGS=-g -O \
+#--  	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
+#-- 
+#-- CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS) \
+#-- 	-I$(HOME)/projects/external/build/exmat/include \
+#-- 	-I$(HOME)/projects/external/build/ltl-1.7.10
+#-- 
+#-- exe=
+#-- obj=.o
+#-- rm=rm -f
+#-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 #-- CXX=icpc -Wcheck -U__GXX_WEAK__
 #-- CPP=icpc -M
