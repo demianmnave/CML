@@ -58,7 +58,7 @@ namespace std {
 
 /* Prefix on error messages in single_- and mixed_vector_tests.ixx: */
 #define ERROR_MSG_TAG \
-    std::string(__FUNCTION__) + "@" + TO_STRING(__LINE__) + ":"
+    std::string(__FUNCTION__) + "@" + TO_STRING(__LINE__) + ": "
 
 using std::cout;
 using std::endl;
@@ -195,7 +195,7 @@ void mixed_fixed_dynamic_test()
 #undef CONSTRUCT_2
 #undef COPY_ASSIGN_2
 #undef COPY_CONSTRUCT_2
-};
+}
 
 void mixed_fixed_external_test()
 {
@@ -226,7 +226,7 @@ void mixed_fixed_external_test()
 #undef CONSTRUCT_2
 #undef COPY_ASSIGN_2
 #undef COPY_CONSTRUCT_2
-};
+}
 
 void mixed_dynamic_external_test()
 {
@@ -257,7 +257,7 @@ void mixed_dynamic_external_test()
 #undef CONSTRUCT_2
 #undef COPY_ASSIGN_2
 #undef COPY_CONSTRUCT_2
-};
+}
 
 int main()
 {

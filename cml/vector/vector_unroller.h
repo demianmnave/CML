@@ -127,7 +127,7 @@ class VectorAssignmentUnroller
         Unroller()(dest,src);
     }
 
-    /** Just use a loop to assign to a run-time sized vector. */
+    /** Just use a loop to assign to a resizable vector. */
     void operator()(vector_type& dest, const SrcT& src, cml::dynamic_size_tag)
     {
         /* Shorthand: */

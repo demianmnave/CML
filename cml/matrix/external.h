@@ -34,6 +34,12 @@ class matrix<Element,external<Rows,Cols>,Layout>
     /* For integration into the expression template code: */
     typedef matrix_type expr_type;
 
+    /* For integration into the expression template code: */
+    typedef matrix<Element,fixed<Rows,Cols>,Layout> temporary_type;
+    /* Note: this ensures that an external matrix is copied into the proper
+     * temporary; external<> temporaries are not allowed.
+     */
+
     /* Standard: */
     typedef typename array_type::value_type value_type;
     typedef typename array_type::reference reference;
@@ -77,11 +83,15 @@ class matrix<Element,external<Rows,Cols>,Layout>
 
     /** Constructor for fixed-size external matrices.
      *
+     * The array must be given as a pointer to Element*, not a
+     * multi-dimensional array.  The caller owns the pointer, and is
+     * responsible for doing any necessary memory management.
+     *
      * @param ptr specify the external pointer.
      *
      * @throws same as the ArrayType constructor.
      */
-    matrix(value_type* ptr) : array_type(ptr) {}
+    explicit matrix(value_type* ptr) : array_type(ptr) {}
 
 
   public:
@@ -94,7 +104,7 @@ class matrix<Element,external<Rows,Cols>,Layout>
 
   public:
 
-    /* Define class operators for external matrixs. Note: external matrices
+    /* Define class operators for external matrices. Note: external matrices
      * cannot be copy-constructed, but they can be assigned to:
      */
     CML_MAT_ASSIGN_FROM_MATTYPE
@@ -113,7 +123,7 @@ class matrix<Element,external<Rows,Cols>,Layout>
 
   public:
 
-    /* These should only be used for testing: */
+    /* Braces should only be used for testing: */
 #if defined(CML_ENABLE_MATRIX_BRACES)
     CML_MATRIX_BRACE_OPERATORS
 #endif

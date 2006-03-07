@@ -117,6 +117,64 @@ struct ArrayPromote
         typedef dynamic_1D<promoted_scalar,allocator> type;
     };
 
+    /* Promote fixed 2D+1D array expressions to a fixed 1D array: */
+    template<class X> struct promote<twod_tag,oned_tag,fixed_size_tag,X>
+    {
+        /* First, promote the scalar type: */
+        typedef typename ScalarPromote<
+            left_scalar,right_scalar>::type promoted_scalar;
+
+        /* Next, deduce the array size: */
+        enum { Size = (size_t)A1::array_rows };
+
+        /* Finally, generate the promoted array type: */
+        typedef fixed_1D<promoted_scalar,Size> type;
+    };
+
+    /* Promote fixed 1D+2D array expressions to a fixed 1D array: */
+    template<class X> struct promote<oned_tag,twod_tag,fixed_size_tag,X>
+    {
+        /* First, promote the scalar type: */
+        typedef typename ScalarPromote<
+            left_scalar,right_scalar>::type promoted_scalar;
+
+        /* Next, deduce the array size: */
+        enum { Size = (size_t)A2::array_cols };
+
+        /* Finally, generate the promoted array type: */
+        typedef fixed_1D<promoted_scalar,Size> type;
+    };
+
+    /* Promote dynamic 2D+1D array expression to a 1D dynamic array: */
+    template<class X> struct promote<twod_tag,oned_tag,dynamic_size_tag,X>
+    {
+        /* First, promote the scalar type: */
+        typedef typename ScalarPromote<
+            left_scalar,right_scalar>::type promoted_scalar;
+
+        /* Next, rebind to get the proper allocator: */
+        typedef typename CML_DEFAULT_ARRAY_ALLOC
+            ::rebind<promoted_scalar>::other allocator;
+
+        /* Finally, generate the promoted array type: */
+        typedef dynamic_1D<promoted_scalar,allocator> type;
+    };
+
+    /* Promote dynamic 1D+2D array expression to a 1D dynamic array: */
+    template<class X> struct promote<oned_tag,twod_tag,dynamic_size_tag,X>
+    {
+        /* First, promote the scalar type: */
+        typedef typename ScalarPromote<
+            left_scalar,right_scalar>::type promoted_scalar;
+
+        /* Next, rebind to get the proper allocator: */
+        typedef typename CML_DEFAULT_ARRAY_ALLOC
+            ::rebind<promoted_scalar>::other allocator;
+
+        /* Finally, generate the promoted array type: */
+        typedef dynamic_1D<promoted_scalar,allocator> type;
+    };
+
 
     /* This is a helper to deduce the result of a promoted 2D array: */
     template<typename LeftL, typename RightL> struct deduce_layout {

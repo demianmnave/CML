@@ -67,11 +67,11 @@ CML_USE_MAT_UNIOP_REF
 
 
 CML_USE_MAT_BINOP_REF
-- When a biary expression appears as a child node in an expression tree,
+- When a binary expression appears as a child node in an expression tree,
   use a reference to the compiler's temporary.  If this is not defined,
   then the whole expression is referred to by value.  Some compilers can
-  avoid the copy and inline the results directly, others can't.  This
-  appears to be the best option for Intel 9/Linux/x86.
+  avoid the copy and inline the results directly, others can't.  (Note: this
+  can cause liveness problems for temporaries, so it's not used by default.)
 
 
 CML_USE_MAT_XPR_REF
@@ -132,3 +132,8 @@ CML_AUTOMATIC_MATRIX_RESIZE_ON_ASSIGNMENT
 CML_CHECK_MATRIX_EXPR_SIZES
 - Same as CML_AUTOMATIC_VECTOR_RESIZE and CML_CHECK_VECTOR_EXPR_SIZES, but for
   matrices.
+
+
+CML_USE_GENERATED_MATRIX_ASSIGN_OP
+- Allow the compiler to generate its own matrix assignment code.  This yields
+  better performance at least on Intel C++ 9/x86 Linux.

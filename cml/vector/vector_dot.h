@@ -15,11 +15,6 @@
 
 #include <cml/et/scalar_promotions.h>
 #include <cml/et/size_checking.h>
-#if 0
-#include <cml/vector/vector_traits.h>
-#include <cml/vector/vector_promotions.h>
-#include <cml/vector/vector_unroller.h>
-#endif
 #include <cml/vector.h>
 
 #if !defined(CML_VECTOR_DOT_UNROLL_LIMIT)

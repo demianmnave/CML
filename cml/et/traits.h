@@ -13,7 +13,8 @@
 /* XXX This is here temporarily, should be rolled into the traits classes
  * eventually:
  */
-#define SCALAR_ARG_TYPE const ScalarT&
+//#define SCALAR_ARG_TYPE const ScalarT&
+#define SCALAR_ARG_TYPE const ScalarT
 
 namespace cml {
 namespace et {
@@ -56,8 +57,11 @@ template<typename T> struct ExprTraits
     /** Size is always 1. */
     size_t size(const_reference) const { return 1; }
 
-    /** This always returns true. */
-    bool check_sizes(const_reference) const { return true; }
+    /** Size is always 1. */
+    size_t rows(double) const { return 1; }
+
+    /** Size is always 1. */
+    size_t cols(double) const { return 1; }
 }
 #endif
 ;
@@ -85,8 +89,11 @@ template<> struct ExprTraits<double>
     /** Size is always 1. */
     size_t size(double) const { return 1; }
 
-    /** This always returns true. */
-    bool check_sizes(double) const { return true; }
+    /** Size is always 1. */
+    size_t rows(double) const { return 1; }
+
+    /** Size is always 1. */
+    size_t cols(double) const { return 1; }
 };
 #endif
 

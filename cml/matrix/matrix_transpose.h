@@ -60,6 +60,9 @@ class MatrixTransposeOp
     /* Swap the orientation: */
     typedef typename expr_traits::result_type::transposed_type result_type;
 
+    /* Get the temporary type: */
+    typedef typename result_type::temporary_type temporary_type;
+
 
   public:
 
@@ -157,20 +160,31 @@ struct ExprTraits< MatrixTransposeOp<ExprT> >
 
 /** Matrix transpose operator taking a matrix operand. */
 template<typename E, class AT, typename L>
-inline typename et::MatrixTransposeOp< matrix<E,AT,L> >::result_type
+typename et::MatrixTransposeOp<
+    matrix<E,AT,L>
+>::temporary_type
 transpose(const matrix<E,AT,L>& expr)
 {
+    /* Record the matrix type: */
+    typedef matrix<E,AT,L> matrix_type;
+
     /* Record the type of the transpose op: */
-    typedef et::MatrixTransposeOp< matrix<E,AT,L> > Op;
+    typedef et::MatrixTransposeOp<matrix_type> Op;
 
     /* Determine the returned matrix type: */
-    typedef typename Op::result_type tmp_type;
+    typedef typename et::MatrixTransposeOp<
+        matrix_type
+    >::temporary_type tmp_type;
 
     /* The expression to use to assign the temporary: */
     typedef et::MatrixXpr<Op> ExprT;
 
     /* Create the temporary and return it: */
-    return tmp_type(ExprT(Op(expr)));
+    tmp_type tmp;
+    cml::et::detail::Resize(tmp,expr.rows(),expr.cols(),
+            typename tmp_type::size_tag());
+    tmp = ExprT(Op(expr));
+    return tmp;
 }
 
 /** Matrix transpose operator taking an et::MatrixXpr operand.
@@ -179,20 +193,26 @@ transpose(const matrix<E,AT,L>& expr)
  * subexpression into the subexpression of the MatrixTransposeOp.
  */
 template<class XprT>
-inline typename et::MatrixTransposeOp<XprT>::result_type
+typename et::MatrixTransposeOp<
+    XprT
+>::temporary_type
 transpose(const et::MatrixXpr<XprT>& expr)
 {
     /* Record the type of the transpose op: */
     typedef et::MatrixTransposeOp<XprT> Op;
 
     /* Determine the returned matrix type: */
-    typedef typename Op::result_type tmp_type;
+    typedef typename et::MatrixTransposeOp<XprT>::temporary_type tmp_type;
 
     /* The expression to use to assign the temporary: */
     typedef et::MatrixXpr<Op> ExprT;
 
     /* Create the temporary and return it: */
-    return tmp_type(ExprT(Op(expr.expression())));
+    tmp_type tmp;
+    cml::et::detail::Resize(tmp,expr.rows(),expr.cols(),
+            typename tmp_type::size_tag());
+    tmp = ExprT(Op(expr));
+    return tmp;
 }
 
 
@@ -200,7 +220,9 @@ transpose(const et::MatrixXpr<XprT>& expr)
 
 /** Matrix transpose operator taking a matrix operand. */
 template<typename E, class AT, typename L>
-inline typename et::MatrixTransposeOp< matrix<E,AT,L> >::result_type
+typename et::MatrixTransposeOp<
+    matrix<E,AT,L>
+>::temporary_type
 T(const matrix<E,AT,L>& expr)
 {
     return transpose(expr);
@@ -212,7 +234,9 @@ T(const matrix<E,AT,L>& expr)
  * subexpression into the subexpression of the MatrixTransposeOp.
  */
 template<class XprT>
-inline typename et::MatrixTransposeOp<XprT>::result_type
+typename et::MatrixTransposeOp<
+    XprT
+>::temporary_type
 T(const et::MatrixXpr<XprT>& expr)
 {
     return transpose(expr);
@@ -222,7 +246,7 @@ T(const et::MatrixXpr<XprT>& expr)
 
 /** Matrix transpose operator taking a matrix operand. */
 template<typename E, class AT, typename L>
-inline et::MatrixXpr< et::MatrixTransposeOp< matrix<E,AT,L> > >
+et::MatrixXpr< et::MatrixTransposeOp< matrix<E,AT,L> > >
 transpose(const matrix<E,AT,L>& expr)
 {
     typedef et::MatrixTransposeOp< matrix<E,AT,L> > ExprT;
@@ -235,7 +259,7 @@ transpose(const matrix<E,AT,L>& expr)
  * subexpression into the subexpression of the MatrixTransposeOp.
  */
 template<class XprT>
-inline et::MatrixXpr< et::MatrixTransposeOp<XprT> >
+et::MatrixXpr< et::MatrixTransposeOp<XprT> >
 transpose(const et::MatrixXpr<XprT>& expr)
 {
     typedef et::MatrixTransposeOp<XprT> ExprT;
@@ -247,7 +271,7 @@ transpose(const et::MatrixXpr<XprT>& expr)
 
 /** Matrix transpose operator taking a matrix operand. */
 template<typename E, class AT, typename L>
-inline et::MatrixXpr< et::MatrixTransposeOp< matrix<E,AT,L> > >
+et::MatrixXpr< et::MatrixTransposeOp< matrix<E,AT,L> > >
 T(const matrix<E,AT,L>& expr)
 {
     return transpose(expr);
@@ -259,7 +283,7 @@ T(const matrix<E,AT,L>& expr)
  * subexpression into the subexpression of the MatrixTransposeOp.
  */
 template<class XprT>
-inline et::MatrixXpr< et::MatrixTransposeOp<XprT> >
+et::MatrixXpr< et::MatrixTransposeOp<XprT> >
 T(const et::MatrixXpr<XprT>& expr)
 {
     return transpose(expr);

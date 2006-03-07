@@ -13,40 +13,41 @@
 #ifndef vector_promotions_h
 #define vector_promotions_h
 
+#include <cml/core/fwd.h>
 #include <cml/et/scalar_promotions.h>
 #include <cml/et/array_promotions.h>
 
+/* This is used below to create a more meaningful compile-time error when the
+ * orientations of the arguments to VectorPromote are not the same:
+ */
+struct vector_promote_expects_vectors_with_same_orientation_error;
+
 namespace cml {
-
-/* Forward declare for type promotions: */
-template<typename E, class AT, class O> class vector;
-
-/* Promotions belong in the et namespace: */
 namespace et {
 
 /* Default vector type promotion template. */
 template<typename LeftT, typename RightT> struct VectorPromote;
 
-/** Type promotion for two vector types.
- *
- * This requires that both vector types have the same orientation, and
- * ensures that orientation for the resulting type.  For fixed-size vectors,
- * the resulting vector size is that of the longer vector.  That this is
- * correct must be verified elsewhere.
- */
-template<typename E1, class AT1, typename E2, class AT2, class O>
-struct VectorPromote< cml::vector<E1,AT1,O>, cml::vector<E2,AT2,O> >
+/** Type promotion for two vector types. */
+template<typename E1, class AT1, class O1,
+         typename E2, class AT2, class O2>
+struct VectorPromote< cml::vector<E1,AT1,O1>, cml::vector<E2,AT2,O2> >
 {
+    /* Require a row vector: */
+    CML_STATIC_REQUIRE_M(
+            (same_type<O1,O2>::is_true),
+            vector_promote_expects_vectors_with_same_orientation_error);
+
     typedef typename ArrayPromote<
-        typename cml::vector<E1,AT1,O>::array_type,
-        typename cml::vector<E2,AT2,O>::array_type
+        typename cml::vector<E1,AT1,O1>::array_type,
+        typename cml::vector<E2,AT2,O2>::array_type
     >::type promoted_array;
 
     /* The deduced vector result type: */
     typedef cml::vector<
         typename promoted_array::value_type,
         typename promoted_array::generator_type,
-        O
+        O1
     > type;
 };
 

@@ -34,6 +34,9 @@ class matrix<Element,fixed<Rows,Cols>,Layout>
     /* For integration into the expression template code: */
     typedef matrix_type expr_type;
 
+    /* For integration into the expression template code: */
+    typedef matrix_type temporary_type;
+
     /* Standard: */
     typedef typename array_type::value_type value_type;
     typedef typename array_type::reference reference;
@@ -95,10 +98,11 @@ class matrix<Element,fixed<Rows,Cols>,Layout>
   public:
 
     /* Define common class operators: */
-    CML_MAT_ASSIGN_FROM_MATTYPE
-
+    CML_MAT_COPY_FROM_MATTYPE
     CML_MAT_COPY_FROM_MAT
     CML_MAT_COPY_FROM_MATXPR
+
+    CML_MAT_ASSIGN_FROM_MATTYPE
 
     CML_MAT_ASSIGN_FROM_MAT(=, et::OpAssign)
     CML_MAT_ASSIGN_FROM_MAT(+=, et::OpAddAssign)
@@ -114,7 +118,7 @@ class matrix<Element,fixed<Rows,Cols>,Layout>
 
   public:
 
-    /* These should only be used for testing: */
+    /* Braces should only be used for testing: */
 #if defined(CML_ENABLE_MATRIX_BRACES)
     CML_MATRIX_BRACE_OPERATORS
 #endif

@@ -18,7 +18,7 @@ namespace et {
 template<typename E, class AT, class O>
 struct ExprTraits< cml::vector<E,AT,O> >
 {
-    typedef typename cml::vector<E,AT,O> expr_type;
+    typedef typename cml::vector<E,AT,O>::expr_type expr_type;
     typedef typename expr_type::value_type value_type;
     typedef typename expr_type::expr_reference reference;
     typedef typename expr_type::expr_const_reference const_reference;

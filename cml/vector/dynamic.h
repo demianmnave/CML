@@ -34,6 +34,9 @@ class vector<Element, dynamic<Alloc>, Orient>
     /* For integration into the expression template code: */
     typedef vector_type expr_type;
 
+    /* For integration into the expression template code: */
+    typedef vector_type temporary_type;
+
     /* Standard: */
     typedef typename array_type::value_type value_type;
     typedef typename array_type::reference reference;
@@ -67,14 +70,8 @@ class vector<Element, dynamic<Alloc>, Orient>
 
   public:
 
-#if defined(CML_AUTOMATIC_VECTOR_RESIZE_ON_ASSIGNMENT)
-    /** Default constructor.
-     *
-     * Only available if CML_AUTOMATIC_VECTOR_RESIZE_ON_ASSIGNMENT is
-     * defined.
-     */
+    /** Default constructor. */
     vector() : array_type() {}
-#endif
 
     /** Construct given array size. */
     vector(size_t N) : array_type(N) {}
@@ -83,10 +80,11 @@ class vector<Element, dynamic<Alloc>, Orient>
   public:
 
     /* Define common class operators: */
-    CML_VEC_ASSIGN_FROM_VECTYPE
-
+    CML_VEC_COPY_FROM_VECTYPE(: array_type())
     CML_VEC_COPY_FROM_VEC
     CML_VEC_COPY_FROM_VECXPR
+
+    CML_VEC_ASSIGN_FROM_VECTYPE
 
     CML_VEC_ASSIGN_FROM_VEC(=, cml::et::OpAssign)
     CML_VEC_ASSIGN_FROM_VEC(+=, cml::et::OpAddAssign)

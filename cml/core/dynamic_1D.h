@@ -9,7 +9,6 @@
 #define dynamic_1D_h
 
 #include <vector>
-#include <cml/core/fwd.h>
 #include <cml/core/common.h>
 
 namespace cml {

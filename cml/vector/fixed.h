@@ -34,6 +34,9 @@ class vector<Element, fixed<Size>, Orient>
     /* For integration into the expression template code: */
     typedef vector_type expr_type;
 
+    /* For integration into the expression template code: */
+    typedef vector_type temporary_type;
+
     /* Standard: */
     typedef typename array_type::value_type value_type;
     typedef typename array_type::reference reference;
@@ -55,7 +58,10 @@ class vector<Element, fixed<Size>, Orient>
     /* To simplify transpose(): */
     typedef typename select_if<
         same_type<Orient,row_vector>::is_true,
-        col_vector, row_vector>::result transposed_tag;
+        col_vector, row_vector
+    >::result transposed_tag;
+
+    /* The transposed type: */
     typedef cml::vector<Element,generator_type,transposed_tag> transposed_type;
 
     /* For matching by size type: */
@@ -73,10 +79,12 @@ class vector<Element, fixed<Size>, Orient>
   public:
 
     /* Define common class operators: */
-    CML_VEC_ASSIGN_FROM_VECTYPE
 
+    CML_VEC_COPY_FROM_VECTYPE(/**/)
     CML_VEC_COPY_FROM_VEC
     CML_VEC_COPY_FROM_VECXPR
+
+    CML_VEC_ASSIGN_FROM_VECTYPE
 
     CML_VEC_ASSIGN_FROM_VEC(=, cml::et::OpAssign)
     CML_VEC_ASSIGN_FROM_VEC(+=, cml::et::OpAddAssign)

@@ -38,7 +38,7 @@
 /** Declare a unary operator taking a matrix operand. */
 #define CML_MAT_UNIOP(_op_, _OpT_)                                       \
 template<typename E, class AT, typename L>                               \
-inline et::MatrixXpr<                                                    \
+et::MatrixXpr<                                                           \
     et::UnaryMatrixOp< matrix<E,AT,L>, _OpT_ <E> >                       \
 >                                                                        \
                                                                          \
@@ -53,11 +53,11 @@ _op_ (const matrix<E,AT,L>& arg)                                         \
 /** Declare a unary operator taking a et::MatrixXpr operand. */
 #define CML_MATXPR_UNIOP(_op_, _OpT_)                                    \
 template<class XprT>                                                     \
-inline et::MatrixXpr<                                                    \
+et::MatrixXpr<                                                           \
     et::UnaryMatrixOp<XprT, _OpT_<typename XprT::value_type> >           \
 >                                                                        \
                                                                          \
-_op_ (const et::MatrixXpr<XprT>& arg)                                    \
+_op_ (MATXPR_ARG_TYPE arg)                                               \
 {                                                                        \
     typedef et::UnaryMatrixOp<                                           \
         XprT, _OpT_<typename XprT::value_type>                           \
@@ -69,7 +69,7 @@ _op_ (const et::MatrixXpr<XprT>& arg)                                    \
 #define CML_MAT_MAT_BINOP(_op_, _OpT_)                                   \
 template<typename E1, class AT1, typename L1,                            \
          typename E2, class AT2, typename L2>                            \
-inline et::MatrixXpr<                                                    \
+et::MatrixXpr<                                                           \
     et::BinaryMatrixOp<                                                  \
         matrix<E1,AT1,L2>, matrix<E2,AT2,L2>, _OpT_<E1,E2> >             \
 >                                                                        \
@@ -87,7 +87,7 @@ _op_ (                                                                   \
 /** Declare an operator taking a matrix and a et::MatrixXpr. */
 #define CML_MAT_MATXPR_BINOP(_op_, _OpT_)                                \
 template<typename E, class AT, typename L, class XprT>                   \
-inline et::MatrixXpr<                                                    \
+et::MatrixXpr<                                                           \
     et::BinaryMatrixOp<                                                  \
         matrix<E,AT,L>, XprT, _OpT_ <E, typename XprT::value_type>       \
     >                                                                    \
@@ -95,7 +95,7 @@ inline et::MatrixXpr<                                                    \
                                                                          \
 _op_ (                                                                   \
         const matrix<E,AT,L>& left,                                      \
-        const et::MatrixXpr<XprT>& right)                                \
+        MATXPR_ARG_TYPE right)                                           \
 {                                                                        \
     typedef et::BinaryMatrixOp<                                          \
             matrix<E,AT,L>, XprT,                                        \
@@ -107,14 +107,14 @@ _op_ (                                                                   \
 /** Declare an operator taking a et::MatrixXpr and a matrix. */
 #define CML_MATXPR_MAT_BINOP(_op_, _OpT_)                                \
 template<class XprT, typename E, class AT, typename L>                   \
-inline et::MatrixXpr<                                                    \
+et::MatrixXpr<                                                           \
     et::BinaryMatrixOp<                                                  \
         XprT, matrix<E,AT,L>, _OpT_ <typename XprT::value_type, E>       \
     >                                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
-        const et::MatrixXpr<XprT>& left,                                 \
+        MATXPR_ARG_TYPE left,                                            \
         const matrix<E,AT,L>& right)                                     \
 {                                                                        \
     typedef et::BinaryMatrixOp<                                          \
@@ -127,7 +127,7 @@ _op_ (                                                                   \
 /** Declare an operator taking two et::MatrixXpr operands. */
 #define CML_MATXPR_MATXPR_BINOP(_op_, _OpT_)                             \
 template<class XprT1, class XprT2>                                       \
-inline et::MatrixXpr<                                                    \
+et::MatrixXpr<                                                           \
     et::BinaryMatrixOp<                                                  \
         XprT1, XprT2,                                                    \
         _OpT_ <                                                          \
@@ -138,8 +138,8 @@ inline et::MatrixXpr<                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
-        const et::MatrixXpr<XprT1>& left,                                \
-        const et::MatrixXpr<XprT2>& right)                               \
+        MATXPR_ARG_TYPE_N(1) left,                                       \
+        MATXPR_ARG_TYPE_N(2) right)                                      \
 {                                                                        \
     typedef et::BinaryMatrixOp<                                          \
             XprT1, XprT2,                                                \
@@ -155,7 +155,7 @@ _op_ (                                                                   \
 /** Declare an operator taking a matrix and a scalar. */
 #define CML_MAT_SCALAR_BINOP(_op_, _OpT_)                                \
 template<typename E, class AT, typename L, typename ScalarT>             \
-inline et::MatrixXpr<                                                    \
+et::MatrixXpr<                                                           \
     et::BinaryMatrixOp<                                                  \
         matrix<E,AT,L>, ScalarT, _OpT_ <E,ScalarT>                       \
     >                                                                    \
@@ -174,7 +174,7 @@ _op_ (                                                                   \
 /** Declare an operator taking a scalar and a matrix. */
 #define CML_SCALAR_MAT_BINOP(_op_, _OpT_)                                \
 template<typename ScalarT, typename E, class AT, typename L>             \
-inline et::MatrixXpr<                                                    \
+et::MatrixXpr<                                                           \
     et::BinaryMatrixOp<                                                  \
         ScalarT, matrix<E,AT,L>, _OpT_ <ScalarT,E>                       \
     >                                                                    \
@@ -193,14 +193,14 @@ _op_ (                                                                   \
 /** Declare an operator taking a et::MatrixXpr and a scalar. */
 #define CML_MATXPR_SCALAR_BINOP(_op_, _OpT_)                             \
 template<class XprT, typename ScalarT>                                   \
-inline et::MatrixXpr<                                                    \
+et::MatrixXpr<                                                           \
     et::BinaryMatrixOp<                                                  \
         XprT, ScalarT, _OpT_ <typename XprT::value_type, ScalarT>        \
     >                                                                    \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
-        const et::MatrixXpr<XprT>& left,                                 \
+        MATXPR_ARG_TYPE left,                                            \
         SCALAR_ARG_TYPE right)                                           \
 {                                                                        \
     typedef et::BinaryMatrixOp<                                          \
@@ -212,7 +212,7 @@ _op_ (                                                                   \
 /** Declare an operator taking a scalar and a et::MatrixXpr. */
 #define CML_SCALAR_MATXPR_BINOP(_op_, _OpT_)                             \
 template<typename ScalarT, class XprT>                                   \
-inline et::MatrixXpr<                                                    \
+et::MatrixXpr<                                                           \
     et::BinaryMatrixOp<                                                  \
         ScalarT, XprT, _OpT_ <ScalarT, typename XprT::value_type>        \
     >                                                                    \
@@ -220,7 +220,7 @@ inline et::MatrixXpr<                                                    \
                                                                          \
 _op_ (                                                                   \
         SCALAR_ARG_TYPE left,                                            \
-        const et::MatrixXpr<XprT>& right)                                \
+        MATXPR_ARG_TYPE right)                                           \
 {                                                                        \
     typedef et::BinaryMatrixOp<                                          \
             ScalarT, XprT, _OpT_ <ScalarT, typename XprT::value_type>    \

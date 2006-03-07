@@ -9,8 +9,6 @@
 #define external_h
 
 #include <cml/core/cml_assert.h>
-#include <cml/core/external_1D.h>
-#include <cml/core/external_2D.h>
 
 namespace cml {
 
@@ -31,6 +29,10 @@ namespace cml {
 template<int Dim1 = -1, int Dim2 = -1> struct external;
 
 } // namespace cml
+
+/* Include these here to pick up definition of external<>: */
+#include <cml/core/external_1D.h>
+#include <cml/core/external_2D.h>
 
 #endif
 

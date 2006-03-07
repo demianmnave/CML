@@ -15,7 +15,7 @@
 
 namespace cml {
 
-/** Fixed-size, fixed-memory vector. */
+/** Resizeable, dynamic-memory matrix. */
 template<typename Element, typename Alloc, typename Layout>
 class matrix<Element,dynamic<Alloc>,Layout>
 : public dynamic_2D<Element,Layout,Alloc>
@@ -33,6 +33,9 @@ class matrix<Element,dynamic<Alloc>,Layout>
 
     /* For integration into the expression template code: */
     typedef matrix_type expr_type;
+
+    /* For integration into the expression template code: */
+    typedef matrix_type temporary_type;
 
     /* Standard: */
     typedef typename array_type::value_type value_type;
@@ -108,10 +111,11 @@ class matrix<Element,dynamic<Alloc>,Layout>
   public:
 
     /* Define common class operators: */
-    CML_MAT_ASSIGN_FROM_MATTYPE
-
+    CML_MAT_COPY_FROM_MATTYPE
     CML_MAT_COPY_FROM_MAT
     CML_MAT_COPY_FROM_MATXPR
+
+    CML_MAT_ASSIGN_FROM_MATTYPE
 
     CML_MAT_ASSIGN_FROM_MAT(=, et::OpAssign)
     CML_MAT_ASSIGN_FROM_MAT(+=, et::OpAddAssign)
@@ -127,7 +131,7 @@ class matrix<Element,dynamic<Alloc>,Layout>
 
   public:
 
-    /* These should only be used for testing: */
+    /* Braces should only be used for testing: */
 #if defined(CML_ENABLE_MATRIX_BRACES)
     CML_MATRIX_BRACE_OPERATORS
 #endif

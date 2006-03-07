@@ -15,6 +15,7 @@
 #define size_checking_h
 
 #include <stdexcept>
+#include <cml/core/fwd.h>
 #include <cml/core/cml_assert.h>
 #include <cml/et/tags.h>
 #include <cml/et/traits.h>
@@ -91,6 +92,34 @@ struct GetCheckedSize<LeftT,RightT,fixed_size_tag>
 
         /* Return the vector size: */
         size_type size() const { return size_type(array_size); }
+    };
+
+    /* Check for a matrix and a scalar: */
+    template<class X> struct impl<matrix_result_tag,scalar_result_tag,X> {
+        typedef matrix_size size_type;
+
+        /* Record the array size as a constant: */
+        enum {
+            array_rows = LeftT::array_rows,
+            array_cols = LeftT::array_cols
+        };
+
+        /* Return the matrix size: */
+        size_type size() const { return size_type(array_rows,array_cols); }
+    };
+
+    /* Check for a scalar and a matrix: */
+    template<class X> struct impl<scalar_result_tag,matrix_result_tag,X> {
+        typedef matrix_size size_type;
+
+        /* Record the array size as a constant: */
+        enum {
+            array_rows = RightT::array_rows,
+            array_cols = RightT::array_cols
+        };
+
+        /* Return the matrix size: */
+        size_type size() const { return size_type(array_rows,array_cols); }
     };
 
     /* Check for two vectors: */
@@ -214,6 +243,38 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
         size_type size(const LeftT& left, const RightT& right) const {
             return self().equal_or_fail(
                     left_traits().size(left), right_traits().rows(right));
+        }
+    };
+
+    /* Check for a matrix and a scalar: */
+    template<class X> struct impl<matrix_result_tag,scalar_result_tag,X> {
+        typedef matrix_size size_type;
+
+        /* Record the array size as a constant: */
+        enum {
+            array_rows = LeftT::array_rows,
+            array_cols = LeftT::array_cols
+        };
+
+        /* Return the matrix size: */
+        size_type size(const LeftT& left, const RightT&) const {
+            return left_traits().size(left);
+        }
+    };
+
+    /* Check for a scalar and a matrix: */
+    template<class X> struct impl<scalar_result_tag,matrix_result_tag,X> {
+        typedef matrix_size size_type;
+
+        /* Record the array size as a constant: */
+        enum {
+            array_rows = RightT::array_rows,
+            array_cols = RightT::array_cols
+        };
+
+        /* Return the matrix size: */
+        size_type size(const LeftT&, const RightT& right) const {
+            return right_traits().size(right);
         }
     };
 

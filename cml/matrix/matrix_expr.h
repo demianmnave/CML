@@ -2,7 +2,10 @@
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 /** @file
- *  @brief
+ *  @brief Matrix linear expression classes.
+ *
+ * @todo Dynamic resizing needs to be integrated more naturally into
+ * matrix_ops::mul() and matrix transpose():
  */
 
 #ifndef matrix_expr_h
@@ -13,6 +16,16 @@
 #include <cml/et/size_checking.h>
 #include <cml/matrix/matrix_traits.h>
 #include <cml/matrix/matrix_promotions.h>
+
+/* XXX Don't know which it should be just yet, since RVO seems to obviate
+ * the need for a reference type:
+ */
+//#define MATXPR_ARG_TYPE               const et::MatrixXpr<XprT>&
+//#define MATXPR_ARG_TYPE_N(_N_)        const et::MatrixXpr<XprT##_N_>&
+
+#define MATXPR_ARG_TYPE               const et::MatrixXpr<XprT>
+#define MATXPR_ARG_TYPE_N(_N_)        const et::MatrixXpr<XprT##_N_>
+
 
 namespace cml {
 namespace et {
@@ -166,6 +179,12 @@ class UnaryMatrixOp
 
   public:
 
+    /** Record result size as an enum (if applicable). */
+    enum { array_rows = ExprT::array_rows, array_cols = ExprT::array_cols };
+
+
+  public:
+
     /** Return the expression size as a pair. */
     matrix_size size() const {
         return matrix_size(this->rows(),this->cols());
@@ -292,11 +311,7 @@ class BinaryMatrixOp
 
     /** Return the expression size as a pair. */
     matrix_size size() const {
-#if defined(CML_CHECK_MATRIX_EXPR_SIZES)
         return CheckedSize(m_left,m_right,size_tag());
-#else
-        return left_traits().size(m_left);
-#endif
     }
 
     /** Return number of rows in the result.
@@ -306,7 +321,11 @@ class BinaryMatrixOp
      * checking code to be executed twice.
      */
     size_t rows() const {
+#if defined(CML_CHECK_MATRIX_EXPR_SIZES)
         return this->size().first;
+#else
+        return left_traits().rows(m_left);
+#endif
     }
 
     /** Return number of cols in the result.
@@ -316,7 +335,11 @@ class BinaryMatrixOp
      * checking code to be executed twice.
      */
     size_t cols() const {
+#if defined(CML_CHECK_MATRIX_EXPR_SIZES)
         return this->size().second;
+#else
+        return right_traits().cols(m_right);
+#endif
     }
 
     /** Compute value at index i,j of the result matrix. */
@@ -392,6 +415,26 @@ struct ExprTraits< BinaryMatrixOp<LeftT,RightT,OpT> >
     size_t rows(const expr_type& e) const { return e.rows(); }
     size_t cols(const expr_type& e) const { return e.cols(); }
 };
+
+namespace detail {
+
+/* XXX These are temporary helpers until dynamic resizing is integrated
+ * more naturally into matrix_ops::mul() and matrix transpose():
+ */
+template<typename MatT>
+void Resize(MatT&, size_t, size_t, fixed_size_tag) {}
+
+template<typename MatT>
+void Resize(MatT& m, size_t R, size_t C, dynamic_size_tag) {
+    m.resize(R,C);
+}
+
+template<typename MatT>
+void Resize(MatT& m, size_t R, size_t C) {
+    Resize(m, R, C, typename MatT::size_tag());
+}
+
+} // namespace detail
 
 } // namespace et
 } // namespace cml

@@ -19,8 +19,6 @@
 #include <cml/et/array_promotions.h>
 
 namespace cml {
-
-/* Promotions belong in the et namespace: */
 namespace et {
 
 /* Default matrix type promotion template. */
@@ -31,6 +29,7 @@ template<typename E1, class AT1, typename L1,
          typename E2, class AT2, typename L2>
 struct MatrixPromote< cml::matrix<E1,AT1,L1>, cml::matrix<E2,AT2,L2> >
 {
+    /* Promote the arrays: */
     typedef typename ArrayPromote<
         typename cml::matrix<E1,AT1,L1>::array_type,
         typename cml::matrix<E2,AT2,L2>::array_type
@@ -42,6 +41,9 @@ struct MatrixPromote< cml::matrix<E1,AT1,L1>, cml::matrix<E2,AT2,L2> >
         typename promoted_array::generator_type,
         typename promoted_array::layout
     > type;
+
+    /* The deduced temporary type: */
+    typedef typename type::temporary_type temporary_type;
 };
 
 /** Type promotion for a matrix and a scalar. */
@@ -50,6 +52,9 @@ struct MatrixPromote<cml::matrix<E,AT,L>, S>
 {
     /* The deduced matrix result type (the array type is the same): */
     typedef cml::matrix<typename ScalarPromote<E,S>::type, AT, L> type;
+
+    /* The deduced temporary type: */
+    typedef typename type::temporary_type temporary_type;
 };
 
 /** Type promotion for a scalar and a matrix. */
@@ -58,6 +63,9 @@ struct MatrixPromote<S, cml::matrix<E,AT,L> >
 {
     /* The deduced matrix result type (the array type is the same): */
     typedef cml::matrix<typename ScalarPromote<S,E>::type, AT, L> type;
+
+    /* The deduced temporary type: */
+    typedef typename type::temporary_type temporary_type;
 };
 
 } // namespace et

@@ -3,6 +3,9 @@
  *-----------------------------------------------------------------------*/
 /** @file
  *  @brief
+ *
+ * @note GCC4 requires a copy constructor to elide---it won't elide a
+ * compiler-generated copy constructor!
  */
 
 #ifndef matrix_class_ops_h
@@ -10,6 +13,20 @@
 
 #include <cml/et/scalar_ops.h>
 #include <cml/matrix/matrix_expr.h>
+
+/** Copy this matrix from another using the given elementwise op.
+ *
+ * @note This is required for GCC4, otherwise it won't elide the copy
+ * constructor.
+ *
+ * @bug Make sure that either eliding the copy constructor for dynamic
+ * arrays is safe, or  the compiler doesn't elide the copy constructor.
+ */
+#define CML_MAT_COPY_FROM_MATTYPE                                   \
+matrix(const matrix_type& m) {                                      \
+    typedef et::OpAssign <Element,Element> OpT;                     \
+    et::UnrollAssignment<OpT>(*this,m);                             \
+}
 
 /** Copy this matrix from another using the given elementwise op.
  *
@@ -25,18 +42,27 @@ matrix(const matrix<E,AT,L>& m) {                                   \
 /** Declare a function to copy this matrix from a matrix expression. */
 #define CML_MAT_COPY_FROM_MATXPR                                    \
 template<class XprT>                                                \
-matrix(const et::MatrixXpr<XprT>& expr) {                           \
+matrix(MATXPR_ARG_TYPE e) {                                         \
     /* Verify that a promotion exists at compile time: */           \
     typedef typename et::MatrixPromote<                             \
         matrix_type, typename XprT::result_type>::type result_type; \
     typedef typename XprT::value_type src_value_type;               \
     typedef et::OpAssign <Element,src_value_type> OpT;              \
-    et::UnrollAssignment<OpT>(*this,expr);                          \
+    et::UnrollAssignment<OpT>(*this,e);                             \
 }
 
+#if defined(CML_USE_GENERATED_MATRIX_ASSIGN_OP)
+#define CML_MAT_ASSIGN_FROM_MATTYPE
+#else
 /** Assign from the same matrix type.
  *
  * @param m the matrix to copy from.
+ *
+ * @note This is required for GCC4, otherwise it generates a slow
+ * assignment operator using memcpy.
+ *
+ * @note ICC9/Linux-x86 seems to prefer its own assignment operator (need
+ * to figure out why).
  */
 #define CML_MAT_ASSIGN_FROM_MATTYPE                                 \
 matrix_type& operator=(const matrix_type& m) {                      \
@@ -44,6 +70,8 @@ matrix_type& operator=(const matrix_type& m) {                      \
     et::UnrollAssignment<OpT>(*this,m);                             \
     return *this;                                                   \
 }
+#endif
+
 
 /** Assign this matrix from another using the given elementwise op.
  *
@@ -67,13 +95,13 @@ operator _op_ (const matrix<E,AT,L>& m) {                           \
  */
 #define CML_MAT_ASSIGN_FROM_MATXPR(_op_, _op_name_)                 \
 template<class XprT> matrix_type&                                   \
-operator _op_ (const et::MatrixXpr<XprT>& expr) {                   \
+operator _op_ (MATXPR_ARG_TYPE e) {                                 \
     /* Verify that a promotion exists at compile time: */           \
     typedef typename et::MatrixPromote<                             \
         matrix_type, typename XprT::result_type>::type result_type; \
     typedef typename XprT::value_type src_value_type;               \
     typedef _op_name_ <Element,src_value_type> OpT;                 \
-    et::UnrollAssignment<OpT>(*this,expr);                          \
+    et::UnrollAssignment<OpT>(*this,e);                             \
     return *this;                                                   \
 }
 
@@ -86,7 +114,7 @@ operator _op_ (const et::MatrixXpr<XprT>& expr) {                   \
  * defined in vector algebra.
  */
 #define CML_MAT_ASSIGN_FROM_SCALAR(_op_, _op_name_)                 \
-matrix_type& operator _op_ (const value_type& s) {                  \
+matrix_type& operator _op_ (const value_type s) {                   \
     typedef _op_name_ <Element,value_type> OpT;                     \
     et::UnrollAssignment<OpT>(*this,s);                             \
     return *this;                                                   \

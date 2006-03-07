@@ -8,7 +8,6 @@
 #ifndef fixed_1D_h
 #define fixed_1D_h
 
-#include <cml/core/fwd.h>
 #include <cml/core/common.h>
 
 namespace cml {
@@ -31,10 +30,6 @@ namespace cml {
  * object.
  *
  * @sa cml::fixed
- *
- * @todo Implement external_fixed_1D<> to wrap up externally-defined
- * fixed-size arrays into a C++ object.  It should look alot like the
- * fixed-size version of dynamic_1D.
  *
  * @internal Do <em>not</em> add the empty constructor and destructor; at
  * least one compiler (Intel C++ 9.0) fails to optimize them away, and they

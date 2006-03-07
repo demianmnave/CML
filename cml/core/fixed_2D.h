@@ -8,7 +8,6 @@
 #ifndef fixed_2D_h
 #define fixed_2D_h
 
-#include <cml/core/fwd.h>
 #include <cml/core/common.h>
 #include <cml/core/fixed_1D.h>
 
@@ -94,12 +93,6 @@ class fixed_2D
 
     /** Return the number of cols in the array. */
     size_t cols() const { return size_t(array_cols); }
-
-    /** Resize the array.
-     *
-     * This is a no-op for fixed arrays.
-     */
-    void resize(size_t,size_t) const {}
 
 
   public:

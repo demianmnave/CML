@@ -3,6 +3,9 @@
  *-----------------------------------------------------------------------*/
 /** @file
  *  @brief
+ *
+ * @todo Add a C library to avoid having to calculate the vector tests by
+ * hand.
  */
 
 {
@@ -77,7 +80,7 @@
     double dc = dot(w+x,y+z), dc1 = 109.;
     equal_or_fail(dc,dc1, ERROR_MSG_TAG "dot(w+x,y-z)");
 
-    /* Transpose (via temporary): */
+    /* Transpose: */
     double dd = w*T(x), dd1 = 27.;
     equal_or_fail(dd,dd1, ERROR_MSG_TAG "w*T(x)");
 

@@ -17,6 +17,7 @@
 #include <cml/matrix/matrix_transpose.h>
 #include <cml/matrix/matrix_ops.h>
 #include <cml/matrix/matrix_mul.h>
+#include <cml/matvec/matvec_mul.h>
 
 namespace cml {
 

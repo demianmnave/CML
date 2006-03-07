@@ -3,6 +3,9 @@
  *-----------------------------------------------------------------------*/
 /** @file
  *  @brief Vector linear expression classes.
+ *
+ * @todo Dynamic resizing needs to be integrated more naturally into
+ * matvec_ops::mul() and vector transpose():
  */
 
 #ifndef vector_expr_h
@@ -13,6 +16,15 @@
 #include <cml/et/size_checking.h>
 #include <cml/vector/vector_traits.h>
 #include <cml/vector/vector_promotions.h>
+
+/* XXX Don't know which it should be just yet, since RVO seems to obviate
+ * the need for a reference type:
+ */
+//#define VECXPR_ARG_TYPE  const et::VectorXpr<XprT>&
+//#define VECXPR_ARG_TYPE_N(_N_)  const et::VectorXpr<XprT##_N_>&
+
+#define VECXPR_ARG_TYPE         const et::VectorXpr<XprT>
+#define VECXPR_ARG_TYPE_N(_N_)  const et::VectorXpr<XprT##_N_>
 
 namespace cml {
 namespace et {
@@ -46,10 +58,13 @@ class VectorXpr
     typedef ExprTraits<ExprT> expr_traits;
 
     /* Get the reference type: */
-    typedef typename expr_traits::const_reference expr_reference;
+    typedef typename expr_traits::const_reference arg_reference;
 
     /* Get the result type: */
     typedef typename expr_traits::result_type result_type;
+
+    /* Get the temporary type: */
+    typedef typename result_type::temporary_type temporary_type;
 
 
   public:
@@ -66,7 +81,7 @@ class VectorXpr
     }
 
     /** Return reference to contained expression. */
-    expr_reference expression() const { return m_expr; }
+    arg_reference expression() const { return m_expr; }
 
     /** Compute value at index i of the result vector. */
     value_type operator[](size_t i) const {
@@ -77,7 +92,7 @@ class VectorXpr
   public:
 
     /** Construct from the subexpression to store. */
-    explicit VectorXpr(const ExprT& expr) : m_expr(expr) {}
+    explicit VectorXpr(arg_reference expr) : m_expr(expr) {}
 
     /** Copy constructor. */
     VectorXpr(const expr_type& e) : m_expr(e.m_expr) {}
@@ -85,7 +100,7 @@ class VectorXpr
 
   protected:
 
-    expr_reference m_expr;
+    arg_reference m_expr;
 
 
   private:
@@ -144,10 +159,13 @@ class UnaryVectorOp
     typedef ExprTraits<ExprT> expr_traits;
 
     /* Reference type for the subexpression: */
-    typedef typename expr_traits::const_reference expr_reference;
+    typedef typename expr_traits::const_reference arg_reference;
 
     /* Get the result type (same as for subexpression): */
     typedef typename expr_traits::result_type result_type;
+
+    /* Get the temporary type: */
+    typedef typename result_type::temporary_type temporary_type;
 
 
   public:
@@ -164,7 +182,7 @@ class UnaryVectorOp
     }
 
     /** Return reference to contained expression. */
-    expr_reference expression() const { return m_expr; }
+    arg_reference expression() const { return m_expr; }
 
     /** Compute value at index i of the result vector. */
     value_type operator[](size_t i) const {
@@ -179,7 +197,7 @@ class UnaryVectorOp
   public:
 
     /** Construct from the subexpression. */
-    explicit UnaryVectorOp(expr_reference expr) : m_expr(expr) {}
+    explicit UnaryVectorOp(arg_reference expr) : m_expr(expr) {}
 
     /** Copy constructor. */
     UnaryVectorOp(const expr_type& e) : m_expr(e.m_expr) {}
@@ -187,7 +205,7 @@ class UnaryVectorOp
 
   protected:
 
-    expr_reference m_expr;
+    arg_reference m_expr;
 
 
   private:
@@ -255,6 +273,9 @@ class BinaryVectorOp
     typedef typename right_traits::result_type right_result;
     typedef typename VectorPromote<left_result,right_result>::type result_type;
     typedef typename result_type::size_tag size_tag;
+
+    /* Get the temporary type: */
+    typedef typename result_type::temporary_type temporary_type;
 
     /* Define a size checker: */
     typedef GetCheckedSize<LeftT,RightT,size_tag> checked_size;
@@ -356,6 +377,26 @@ struct VectorExpressions
     enum { is_true = (same_type<left_result,et::vector_result_tag>::is_true
             && same_type<right_result,et::vector_result_tag>::is_true) };
 };
+
+namespace detail {
+
+/* XXX These are temporary helpers until dynamic resizing is integrated more
+ * naturally into matvec_ops::mul() and vector transpose():
+ */
+template<typename VecT>
+void Resize(VecT&, size_t, fixed_size_tag) {}
+
+template<typename VecT>
+void Resize(VecT& v, size_t S, dynamic_size_tag) {
+    v.resize(S);
+}
+
+template<typename VecT>
+void Resize(VecT& v, size_t S) {
+    Resize(v, S, typename VecT::size_tag());
+}
+
+} // namespace detail
 
 } // namespace et
 } // namespace cml

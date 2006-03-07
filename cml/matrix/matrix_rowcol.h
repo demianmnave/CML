@@ -215,7 +215,7 @@ struct ExprTraits< MatrixColOp<ExprT> >
 
 /** Matrix row operator taking a matrix operand. */
 template<typename E, class AT, typename L>
-inline et::VectorXpr< et::MatrixRowOp< matrix<E,AT,L> > >
+et::VectorXpr< et::MatrixRowOp< matrix<E,AT,L> > >
 row(const matrix<E,AT,L>& expr, size_t i)
 {
     typedef et::MatrixRowOp< matrix<E,AT,L> > ExprT;
@@ -228,7 +228,7 @@ row(const matrix<E,AT,L>& expr, size_t i)
  * subexpression into the subexpression of the MatrixRowOp.
  */
 template<class XprT>
-inline et::VectorXpr< et::MatrixRowOp<XprT> >
+et::VectorXpr< et::MatrixRowOp<XprT> >
 row(const et::MatrixXpr<XprT>& expr, size_t i)
 {
     typedef et::MatrixRowOp<XprT> ExprT;
@@ -237,7 +237,7 @@ row(const et::MatrixXpr<XprT>& expr, size_t i)
 
 /** Matrix col operator taking a matrix operand. */
 template<typename E, class AT, typename L>
-inline et::VectorXpr< et::MatrixColOp< matrix<E,AT,L> > >
+et::VectorXpr< et::MatrixColOp< matrix<E,AT,L> > >
 col(const matrix<E,AT,L>& expr, size_t i)
 {
     typedef et::MatrixColOp< matrix<E,AT,L> > ExprT;
@@ -250,7 +250,7 @@ col(const matrix<E,AT,L>& expr, size_t i)
  * subexpression into the subexpression of the MatrixColOp.
  */
 template<class XprT>
-inline et::VectorXpr< et::MatrixColOp<XprT> >
+et::VectorXpr< et::MatrixColOp<XprT> >
 col(const et::MatrixXpr<XprT>& expr, size_t i)
 {
     typedef et::MatrixColOp<XprT> ExprT;

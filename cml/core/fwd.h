@@ -26,6 +26,12 @@ template<typename E, class A> class dynamic_1D;
 /* cml/core/dynamic_2D.h */
 template<typename E, typename L, class A> class dynamic_2D;
 
+/* cml/core/external_1D.h */
+template<typename E, int S> class external_1D;
+
+/* cml/core/external_2D.h */
+template<typename E, int R, int C, typename L> class external_2D;
+
 /* cml/fixed.h */
 template<int Dim1, int Dim2> struct fixed;
 

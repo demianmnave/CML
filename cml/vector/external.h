@@ -38,6 +38,12 @@ class vector<Element, external<Size>, Orient>
     /* For integration into the expression template code: */
     typedef vector_type expr_type;
 
+    /* For integration into the expression template code: */
+    typedef vector<Element,fixed<Size>,Orient> temporary_type;
+    /* Note: this ensures that an external vector is copied into the proper
+     * temporary; external<> temporaries are not allowed.
+     */
+
     /* Standard: */
     typedef typename array_type::value_type value_type;
     typedef typename array_type::reference reference;
@@ -73,6 +79,83 @@ class vector<Element, external<Size>, Orient>
 
     /** Construct from an array of values. */
     vector(Element* const array) : array_type(array) {}
+
+
+  public:
+
+    /* Define class operators for external vectors. Note: external vectors
+     * cannot be copy-constructed, but they can be assigned to:
+     */
+    CML_VEC_ASSIGN_FROM_VECTYPE
+
+    /* Only assignment operators can be used to copy from other types: */
+    CML_VEC_ASSIGN_FROM_VEC(=, cml::et::OpAssign)
+    CML_VEC_ASSIGN_FROM_VEC(+=, cml::et::OpAddAssign)
+    CML_VEC_ASSIGN_FROM_VEC(-=, cml::et::OpSubAssign)
+
+    CML_VEC_ASSIGN_FROM_VECXPR(=, cml::et::OpAssign)
+    CML_VEC_ASSIGN_FROM_VECXPR(+=, cml::et::OpAddAssign)
+    CML_VEC_ASSIGN_FROM_VECXPR(-=, cml::et::OpSubAssign)
+
+    CML_VEC_ASSIGN_FROM_SCALAR(*=, cml::et::OpMulAssign)
+    CML_VEC_ASSIGN_FROM_SCALAR(/=, cml::et::OpDivAssign)
+};
+
+/** Run-time sized vector. */
+template<typename Element, typename Orient>
+class vector<Element, external<>, Orient>
+: public external_1D<Element>
+{
+  public:
+
+    /* Shorthand for the generator: */
+    typedef external<> generator_type;
+
+    /* Shorthand for the array type: */
+    typedef external_1D<Element> array_type;
+
+    /* Shorthand for the type of this vector: */
+    typedef vector<Element,generator_type,Orient> vector_type;
+
+    /* For integration into the expression template code: */
+    typedef vector_type expr_type;
+
+    /* Standard: */
+    typedef typename array_type::value_type value_type;
+    typedef typename array_type::reference reference;
+    typedef typename array_type::const_reference const_reference;
+
+    /* For integration into the expression templates code: */
+    typedef vector_type& expr_reference;
+    typedef const vector_type& expr_const_reference;
+
+    /* For matching by storage type: */
+    typedef typename array_type::memory_tag memory_tag;
+
+    /* For matching by orientation: */
+    typedef Orient orient_tag;
+    /* Note: orientation is propagated up an expression tree and enforced
+     * at compile time through the result_type expression trait.
+     */
+
+    /* To simplify transpose(): */
+    typedef typename select_if<
+        same_type<Orient,row_vector>::is_true,
+        col_vector, row_vector>::result transposed_tag;
+    typedef cml::vector<Element,generator_type,transposed_tag> transposed_type;
+
+    /* For matching by size type: */
+    typedef typename array_type::size_tag size_tag;
+
+    /* For matching by result-type: */
+    typedef cml::et::vector_result_tag result_tag;
+
+
+  public:
+
+    /** Construct from an array of values and the size. */
+    vector(Element* const array, size_t size)
+        : array_type(array, size) {}
 
 
   public:

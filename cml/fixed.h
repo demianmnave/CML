@@ -9,8 +9,6 @@
 #define fixed_h
 
 #include <cml/core/cml_assert.h>
-#include <cml/core/fixed_1D.h>
-#include <cml/core/fixed_2D.h>
 
 namespace cml {
 
@@ -27,43 +25,13 @@ namespace cml {
  * @sa cml::vector
  * @sa cml::matrix
  */
-template<int Dim1 = -1, int Dim2 = -1>
-struct fixed
-{
-    /* Forward declare rebinder for specialization: */
-    template<typename DTag, typename Element,
-        typename Layout = CML_DEFAULT_ARRAY_LAYOUT> struct rebind;
-
-    /* Specialization for 1D arrays: */
-    template<typename E> struct rebind<oned_tag,E,CML_DEFAULT_ARRAY_LAYOUT>
-    {
-        /* Require Dim1 > 0, Dim2 = -1: */
-        CML_STATIC_REQUIRE((Dim1 > 0) && (Dim2 == -1));
-        typedef fixed_1D<E,Dim1> other;
-    };
-
-    /* Specialization for row_major 2D arrays: */
-    template<typename E> struct rebind<twod_tag,E,row_major>
-    {
-        /* Require Dim1,Dim2 > 0: */
-        CML_STATIC_REQUIRE((Dim1 > 0) && (Dim2 > 0));
-        typedef fixed_2D<E,Dim1,Dim2,row_major> other;
-    };
-
-    /* Specialization for col_major 2D arrays: */
-    template<typename E> struct rebind<twod_tag,E,col_major>
-    {
-        /* Require Dim1,Dim2 > 0: */
-        CML_STATIC_REQUIRE((Dim1 > 0) && (Dim2 > 0));
-        typedef fixed_2D<E,Dim1,Dim2,col_major> other;
-    };
-
-    /* All other combinations are undefined, and will produce compile-time
-     * errors.
-     */
-};
+template<int Dim1 = -1, int Dim2 = -1> struct fixed;
 
 } // namespace cml
+
+/* Include these here to pick up definition of fixed<>: */
+#include <cml/core/fixed_1D.h>
+#include <cml/core/fixed_2D.h>
 
 #endif
 
