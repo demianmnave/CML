@@ -8,6 +8,8 @@
 #ifndef vector_ops_h
 #define vector_ops_h
 
+#include <cml/et/scalar_ops.h>
+#include <cml/vector/vector_expr.h>
 #include <cml/vector/vecop_macros.h>
 
 namespace cml {

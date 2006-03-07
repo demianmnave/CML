@@ -9,22 +9,18 @@
 #define dynamic_2D_h
 
 #include <vector>
-#include <cml/core/fwd.h>
 #include <cml/core/common.h>
 #include <cml/core/dynamic_1D.h>
+#include <cml/dynamic.h>
 
 namespace cml {
 
 /** Dynamically-sized and allocated 2D array.
  *
- * @sa cml::dynamic
- *
  * @note The allocator should be an STL-compatible allocator.
  *
- * @todo This uses a std::vector<> to implement the dynamic array, which
- * really is overkill, but has the proper copy semantics (this is the only
- * reason it is used).  It is not too hard to implement a simpler dynamic
- * array to replace std::vector<>, and should be done.
+ * @internal The internal array type <em>must</em> have the proper copy
+ * semantics, otherwise copy construction will fail.
  *
  * @internal This class does not need a destructor.
  */

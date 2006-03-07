@@ -9,9 +9,13 @@
 #define fixed_vector_h
 
 #include <cml/core/common.h>
-#include <cml/vector/vector_unroller.h>
+#include <cml/core/fixed_1D.h>
+#include <cml/vector/vector_expr.h>
 #include <cml/vector/class_ops.h>
-#include <cml/fixed.h>
+#include <cml/vector/vector_unroller.h>
+#include <cml/vector/vector_transpose.h>
+#include <cml/vector/vector_ops.h>
+#include <cml/vector/vector_dot.h>
 
 namespace cml {
 

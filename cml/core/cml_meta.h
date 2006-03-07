@@ -12,6 +12,7 @@
 #include <cml/core/meta/common.h>
 #include <cml/core/meta/if.h>
 #include <cml/core/meta/switch.h>
+#include <cml/core/cml_assert.h>
 
 #endif
 

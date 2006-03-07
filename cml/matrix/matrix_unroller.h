@@ -14,10 +14,9 @@
 #ifndef matrix_unroller_h
 #define matrix_unroller_h
 
-#include <cml/core/fwd.h>
 #include <cml/et/traits.h>
 #include <cml/et/size_checking.h>
-#include <cml/et/scalar_promotions.h>
+#include <cml/et/scalar_ops.h>
 
 #if !defined(CML_2D_UNROLLER) && !defined(CML_NO_2D_UNROLLER)
 #error "The matrix unroller has not been defined."

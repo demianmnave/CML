@@ -15,7 +15,8 @@
 
 #include <cml/et/scalar_promotions.h>
 #include <cml/et/size_checking.h>
-#include <cml/vector.h>
+#include <cml/vector/vector_unroller.h>
+#include <cml/vector/vector_ops.h>
 
 #if !defined(CML_VECTOR_DOT_UNROLL_LIMIT)
 #error "CML_VECTOR_DOT_UNROLL_LIMIT is undefined."

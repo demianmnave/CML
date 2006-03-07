@@ -9,9 +9,14 @@
 #define external_matrix_h
 
 #include <cml/core/common.h>
-#include <cml/matrix/matrix_unroller.h>
+#include <cml/core/external_2D.h>
+#include <cml/matrix/matrix_expr.h>
 #include <cml/matrix/class_ops.h>
-#include <cml/external.h>
+#include <cml/matrix/matrix_unroller.h>
+#include <cml/matrix/matrix_transpose.h>
+#include <cml/matrix/matrix_ops.h>
+#include <cml/matrix/matrix_mul.h>
+#include <cml/matvec/matvec_mul.h>
 
 namespace cml {
 

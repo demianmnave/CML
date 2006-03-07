@@ -11,7 +11,7 @@
 #include <cml/et/tags.h>
 
 /* XXX This is here temporarily, should be rolled into the traits classes
- * eventually:
+ * once it's clear how to best specify scalar args
  */
 //#define SCALAR_ARG_TYPE const ScalarT&
 #define SCALAR_ARG_TYPE const ScalarT

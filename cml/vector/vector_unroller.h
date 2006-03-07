@@ -17,10 +17,9 @@
 #ifndef vector_unroller_h
 #define vector_unroller_h
 
-#include <cml/core/fwd.h>
 #include <cml/et/traits.h>
 #include <cml/et/size_checking.h>
-#include <cml/et/scalar_promotions.h>
+#include <cml/et/scalar_ops.h>
 
 #if !defined(CML_VECTOR_UNROLL_LIMIT)
 #error "CML_VECTOR_UNROLL_LIMIT is undefined."

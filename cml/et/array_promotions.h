@@ -6,8 +6,6 @@
  *
  * Defines promotions between array types.
  *
- * @todo Not all type combinations are represented here.
- *
  * @todo Can/should an expression with a fixed-size argument promote to a
  * fixed array instead of a dynamic array?
  */
@@ -20,7 +18,6 @@
 #include <cml/et/scalar_promotions.h>
 
 namespace cml {
-
 namespace et {
 
 #define VAL_MAX(_a_,_b_)        ( ((_a_)>(_b_))?(_a_):(_b_) )

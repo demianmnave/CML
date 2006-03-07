@@ -11,6 +11,11 @@
 #include <cml/core/common.h>
 #include <cml/core/fixed_1D.h>
 
+/* This is used below to create a more meaningful compile-time error when
+ * an unknown layout argument is given:
+ */
+struct invalid_layout_type_error;
+
 namespace cml {
 
 /** The internal statically-allocated 2D-array implementation class.
@@ -38,9 +43,6 @@ namespace cml {
  * implement a separate class to take a C array (or pointer) and turn it into
  * an array object.
  *
- * @todo Implement external_fixed_2D<> to wrap up externally-defined
- * fixed-size arrays into a C++ object.
- *
  * @internal Do <em>not</em> add the empty constructor and destructor; at
  * least one compiler (Intel C++ 9.0) fails to optimize them away, and they
  * aren't needed anyway here.
@@ -52,6 +54,13 @@ class fixed_2D
 
     /* Require Rows > 0, Cols > 0: */
     CML_STATIC_REQUIRE((Rows > 0) && (Cols > 0));
+
+    /* Require Layout to be row_major or col_major: */
+    CML_STATIC_REQUIRE_M(
+            (same_type<Layout,row_major>::is_true
+             || same_type<Layout,col_major>::is_true),
+            invalid_layout_type_error);
+
 
     /* Record the generator: */
     typedef fixed<Rows,Cols> generator_type;
@@ -152,8 +161,7 @@ class fixed_2D
     /* Now, select the right layout for the current matrix: */
     typedef typename select_switch<
         Layout, row_major, row_major_array,     /* Case 1 */
-                col_major, col_major_array,     /* Case 2 */
-                invalid_layout                  /* Error case */
+                col_major, col_major_array      /* Case 2 */
         >::result array_data;
 
     /* Declare the data array: */

@@ -15,6 +15,7 @@
 
 /* The default memory allocator is std::allocator<void>: */
 #if !defined(CML_DEFAULT_ARRAY_ALLOC)
+#include <memory>               // for std::allocator
 #define CML_DEFAULT_ARRAY_ALLOC std::allocator<void>
 #endif
 

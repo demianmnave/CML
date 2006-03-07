@@ -26,10 +26,9 @@
 #define	matvec_mul_h
 
 #include <cml/core/cml_meta.h>
-#include <cml/et/scalar_promotions.h>
-#include <cml/vector/vector_expr.h>     // for et::detail::Resize
-#include <cml/matvec/matvec_promotions.h>
+#include <cml/vector/vector_expr.h>
 #include <cml/matrix/matrix_expr.h>
+#include <cml/matvec/matvec_promotions.h>
 
 
 /* This is used below to create a more meaningful compile-time error when

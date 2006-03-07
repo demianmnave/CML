@@ -10,7 +10,7 @@
 
 #include <cml/core/cml_meta.h>
 #include <cml/vector/vector_expr.h>
-#include <cml/vector.h>
+#include <cml/matrix/matrix_expr.h>
 
 namespace cml {
 namespace et {
@@ -47,6 +47,10 @@ class MatrixRowOp
 
     /* Get the result vector type: */
     typedef typename expr_traits::result_type::row_vector_type result_type;
+
+    /* Get the temporary type: */
+    typedef typename result_type::temporary_type temporary_type;
+
 
 
   public:
@@ -144,6 +148,9 @@ class MatrixColOp
 
     /* Get the result vector type: */
     typedef typename expr_traits::result_type::col_vector_type result_type;
+
+    /* Get the temporary type: */
+    typedef typename result_type::temporary_type temporary_type;
 
 
   public:

@@ -11,9 +11,6 @@
 #ifndef matrix_class_ops_h
 #define matrix_class_ops_h
 
-#include <cml/et/scalar_ops.h>
-#include <cml/matrix/matrix_expr.h>
-
 /** Copy this matrix from another using the given elementwise op.
  *
  * @note This is required for GCC4, otherwise it won't elide the copy

@@ -44,9 +44,6 @@ struct row_major {};
 /** Col-major storage tag. */
 struct col_major {};
 
-/** Error tag (undefined struct) for bad layout. */
-struct invalid_layout;
-
 /** Column vector tag. */
 struct col_vector {};
 

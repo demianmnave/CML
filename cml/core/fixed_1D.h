@@ -9,6 +9,8 @@
 #define fixed_1D_h
 
 #include <cml/core/common.h>
+#include <cml/core/cml_meta.h>
+#include <cml/fixed.h>
 
 namespace cml {
 

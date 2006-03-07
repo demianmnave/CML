@@ -18,6 +18,7 @@
 #include <cml/core/fixed_2D.h>
 #include <cml/core/dynamic_1D.h>
 #include <cml/core/dynamic_2D.h>
+#include <cml/external.h>
 
 namespace cml {
 

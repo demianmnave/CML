@@ -17,8 +17,9 @@
 #define	matrix_mul_h
 
 #include <cml/et/scalar_promotions.h>
+#include <cml/et/size_checking.h>
 #include <cml/et/array_promotions.h>
-#include <cml/matrix/matrix_expr.h>     // for et::detail::Resize
+#include <cml/matrix/matrix_expr.h>
 
 
 /* This is used below to create a more meaningful compile-time error when

@@ -32,9 +32,6 @@
 #ifndef matop_macros_h
 #define matop_macros_h
 
-#include <cml/et/scalar_ops.h>
-#include <cml/matrix/matrix_expr.h>
-
 /** Declare a unary operator taking a matrix operand. */
 #define CML_MAT_UNIOP(_op_, _OpT_)                                       \
 template<typename E, class AT, typename L>                               \

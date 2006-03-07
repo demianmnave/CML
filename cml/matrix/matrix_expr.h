@@ -13,6 +13,7 @@
 
 
 #include <cml/core/common.h>
+#include <cml/core/cml_meta.h>
 #include <cml/et/size_checking.h>
 #include <cml/matrix/matrix_traits.h>
 #include <cml/matrix/matrix_promotions.h>

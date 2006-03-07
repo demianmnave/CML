@@ -15,6 +15,8 @@
 #ifndef matrix_transpose_h
 #define matrix_transpose_h
 
+#include <cml/et/size_checking.h>
+#include <cml/matrix/matrix_promotions.h>
 #include <cml/matrix/matrix_expr.h>
 
 #define MATRIX_TRANSPOSE_RETURNS_TEMP

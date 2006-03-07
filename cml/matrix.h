@@ -14,18 +14,13 @@
 #include <cml/matrix/dynamic.h>
 #include <cml/matrix/external.h>
 
-#include <cml/matrix/matrix_transpose.h>
-#include <cml/matrix/matrix_ops.h>
-#include <cml/matrix/matrix_mul.h>
-#include <cml/matvec/matvec_mul.h>
-
 namespace cml {
 
 /** A configurable matrix.
  *
  * This class encapsulates the notion of a matrix.  The ArrayType template
  * argument can be used to select the type of array to be used as internal
- * storage for a 2D arrayy of type Element.
+ * storage for a 2D array of type Element.
  *
  * @internal Unlike the previous version, this uses specializations to better
  * enable varied array and matrix types. For example, with the rebind method,

@@ -3,6 +3,8 @@
  *-----------------------------------------------------------------------*/
 /** @file
  *  @brief
+ *
+ * @todo need scalar promotions for other built-in types.
  */
 
 #ifndef scalar_promotions_h
@@ -14,7 +16,7 @@ namespace et {
 /* Forward declare template: */
 template<class E1, class E2> struct ScalarPromote;
 
-/** Disambiguate double/any and any/double below. */
+/* Disambiguate double/any and any/double below. */
 template<> struct ScalarPromote<double,double> {
     typedef double type;
 };

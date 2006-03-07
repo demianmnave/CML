@@ -14,6 +14,8 @@
 #define external_1D_h
 
 #include <cml/core/common.h>
+#include <cml/core/cml_meta.h>
+#include <cml/external.h>
 
 namespace cml {
 
@@ -26,6 +28,9 @@ template<typename Element, int Size = -1>
 class external_1D
 {
   public:
+
+    /* Require Size > 0: */
+    CML_STATIC_REQUIRE(Size > 0);
 
     /* Record the generator: */
     typedef external<Size,-1> generator_type;
@@ -98,13 +103,13 @@ class external_1D
 
 /** Run-time sized external 1D array.
  *
- * Both the memory and the size are fixed at run-time, but cannot be changed.
- * This is a specialization for the case that Rows and Cols are not specified
- * (i.e. given as the default of -1,-1).
+ * Both the memory and the size are fixed at run-time, and cannot be
+ * changed.  This is a specialization for the case that Rows and Cols are
+ * not specified (i.e. given as the default of -1,-1).
  *
- * @todo Should it be possible to rebind the array to another memory location?
- * This would seem to be like a handle to the memory, so this may be complex
- * to implement correctly.
+ * @todo Should it be possible to rebind the array to another memory
+ * location?  This would seem to be like a handle or "smart pointer" to the
+ * memory, so this may be complex to implement correctly.
  */
 template<typename Element>
 class external_1D<Element,-1>

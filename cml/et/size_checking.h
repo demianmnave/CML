@@ -5,18 +5,14 @@
  *  @brief
  *
  * Define matrix and vector linear expression size-checking classes.
- *
- * @todo Allow the size-checking code to be turned off.
- *
- * @internal This isn't the most elegant solution...
  */
 
 #ifndef size_checking_h
 #define size_checking_h
 
 #include <stdexcept>
+#include <cml/core/cml_meta.h>
 #include <cml/core/fwd.h>
-#include <cml/core/cml_assert.h>
 #include <cml/et/tags.h>
 #include <cml/et/traits.h>
 

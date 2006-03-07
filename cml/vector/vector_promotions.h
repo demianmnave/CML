@@ -13,7 +13,6 @@
 #ifndef vector_promotions_h
 #define vector_promotions_h
 
-#include <cml/core/fwd.h>
 #include <cml/et/scalar_promotions.h>
 #include <cml/et/array_promotions.h>
 

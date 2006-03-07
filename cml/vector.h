@@ -14,10 +14,6 @@
 #include <cml/vector/dynamic.h>
 #include <cml/vector/external.h>
 
-#include <cml/vector/vector_transpose.h>
-#include <cml/vector/vector_ops.h>
-#include <cml/vector/vector_dot.h>
-
 namespace cml {
 
 /** A configurable vector type.

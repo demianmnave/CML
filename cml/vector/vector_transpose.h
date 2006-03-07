@@ -8,6 +8,8 @@
 #ifndef vector_transpose_h
 #define vector_transpose_h
 
+#include <cml/et/size_checking.h>
+#include <cml/vector/vector_promotions.h>
 #include <cml/vector/vector_expr.h>
 
 #define VECTOR_TRANSPOSE_RETURNS_TEMP

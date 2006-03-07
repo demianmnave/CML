@@ -8,9 +8,6 @@
 #ifndef vector_class_ops_h
 #define vector_class_ops_h
 
-#include <cml/et/scalar_ops.h>
-#include <cml/vector/vector_expr.h>
-
 /* This sets up the environment for oriented or unoriented vector copies: */
 #if defined(CML_ENFORCE_VECTOR_ORIENTATION_ON_COPY)
   #define ORIENT_MACRO         Orient
