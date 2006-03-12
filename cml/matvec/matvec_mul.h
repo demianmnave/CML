@@ -13,13 +13,6 @@
  * temporary generation for the matrix result is handled automatically by the
  * compiler.  i.e. when used in an expression, the result is automatically
  * included in the expression tree as a temporary by the compiler.
- *
- * @internal The implementation here has a different form from the matrix
- * multiplication code since the order of the vector and matrix matter for the
- * purposes of determining the resulting vector type and size.  Having the
- * ability to treat vectors and matrices equivalently in the type system would
- * somewhat simplify things, e.g. by having an AsMatrix<> wrapper for vectors
- * that makes them behave as a matrix type.
  */
 
 #ifndef	matvec_mul_h
@@ -53,22 +46,13 @@ namespace detail {
 typedef true_type mul_Ax;
 typedef false_type mul_xA;
 
-/** Compute A*x, A is a matrix, x is a (column) vector. */
-template<typename ResultT, typename LeftT, typename RightT>
-ResultT mul(const LeftT& A, const RightT& x, mul_Ax)
+/* Compute y = A*x: */
+template<typename ResultT, typename LeftT, typename RightT> void
+mul(ResultT& y, const LeftT& A, const RightT& x)
 {
     /* Record summation type: */
     typedef typename ResultT::value_type sum_type;
-
-    /* Record size type: */
-    typedef typename ResultT::size_tag size_tag;
-
-    /* Check the size: */
-    size_t N = CheckedSize(A, x, size_tag());
-
-    ResultT y;
-    cml::et::detail::Resize(y, N);
-    for(size_t i = 0; i < A.rows(); ++i) {
+    for(size_t i = 0; i < y.size(); ++i) {
         /* XXX Should this be unrolled? */
         sum_type sum(A(i,0)*x[0]);
         for(size_t k = 1; k < x.size(); ++k) {
@@ -76,6 +60,20 @@ ResultT mul(const LeftT& A, const RightT& x, mul_Ax)
         }
         y[i] = sum;
     }
+}
+
+/** Compute A*x, A is a matrix, x is a (column) vector. */
+template<typename ResultT, typename LeftT, typename RightT>
+ResultT mul(const LeftT& A, const RightT& x, mul_Ax)
+{
+    /* Record size type: */
+    typedef typename ResultT::size_tag size_tag;
+
+    /* Check the size: */
+    size_t N = CheckedSize(A, x, size_tag());
+
+    ResultT y; cml::et::detail::Resize(y, N);
+    mul(y,A,x);
     return y;
 }
 
@@ -83,25 +81,14 @@ ResultT mul(const LeftT& A, const RightT& x, mul_Ax)
 template<typename ResultT, typename LeftT, typename RightT>
 ResultT mul(const LeftT& x, const RightT& A, mul_xA)
 {
-    /* Record summation type: */
-    typedef typename ResultT::value_type sum_type;
-
     /* Record size type: */
     typedef typename ResultT::size_tag size_tag;
 
     /* Check the size: */
     size_t N = CheckedSize(x, A, size_tag());
 
-    ResultT y;
-    cml::et::detail::Resize(y, N);
-    for(size_t i = 0; i < A.cols(); ++i) {
-        /* XXX Should this be unrolled? */
-        sum_type sum(x[0]*A(0,i));
-        for(size_t k = 1; k < A.rows(); ++k) {
-            sum += (x[k]*A(k,i));
-        }
-        y[i] = sum;
-    }
+    ResultT y; cml::et::detail::Resize(y, N);
+    mul(y,A,x);
     return y;
 }
 
@@ -163,8 +150,7 @@ mul(const et::MatrixXpr<XprT>& left,
 
     /* Generate a temporary, and compute the left-hand expression: */
     typedef typename et::MatrixXpr<XprT>::temporary_type expr_tmp;
-    expr_tmp tmp;
-    cml::et::detail::Resize(tmp,left.rows(),left.cols());
+    expr_tmp tmp; cml::et::detail::Resize(tmp,left.rows(),left.cols());
     tmp = left;
 
     /* Compute the answer: */
@@ -185,8 +171,7 @@ mul(const et::MatrixXpr<XprT1>& left,
 
     /* Generate temporaries and compute expressions: */
     typedef typename et::MatrixXpr<XprT1>::temporary_type left_tmp;
-    left_tmp ltmp;
-    cml::et::detail::Resize(ltmp,left.rows(),left.cols());
+    left_tmp ltmp; cml::et::detail::Resize(ltmp,left.rows(),left.cols());
     ltmp = left;
 
     typedef typename et::VectorXpr<XprT2>::temporary_type right_tmp;
@@ -244,8 +229,7 @@ mul(const vector<E,AT,O>& left,
 
     /* Generate a temporary, and compute the right-hand expression: */
     typedef typename et::MatrixXpr<XprT>::temporary_type expr_tmp;
-    expr_tmp tmp;
-    cml::et::detail::Resize(tmp,right.rows(),right.cols());
+    expr_tmp tmp; cml::et::detail::Resize(tmp,right.rows(),right.cols());
     tmp = right;
 
     /* Compute the answer: */
@@ -270,8 +254,7 @@ mul(const et::VectorXpr<XprT1>& left,
     ltmp = left;
 
     typedef typename et::MatrixXpr<XprT2>::temporary_type right_tmp;
-    right_tmp rtmp;
-    cml::et::detail::Resize(rtmp,right.rows(),right.cols());
+    right_tmp rtmp; cml::et::detail::Resize(rtmp,right.rows(),right.cols());
     rtmp = right;
 
     return detail::mul<result_type>(ltmp,rtmp,detail::mul_xA());

@@ -616,7 +616,13 @@ typename et::MatrixPromote<
 operator*(const matrix<E,AT,L>& left,
           const et::MatrixXpr<XprT>& right)
 {
-    return matrix_ops::mul(left,right);
+    /* Generate a temporary, and compute the right-hand expression: */
+    typedef typename et::MatrixXpr<XprT>::temporary_type expr_tmp;
+    expr_tmp tmp;
+    cml::et::detail::Resize(tmp,right.rows(),right.cols());
+    tmp = right;
+
+    return matrix_ops::mul(left,tmp);
 }
 
 /** Dispatch for a MatrixXpr and a matrix. */
@@ -627,7 +633,13 @@ typename et::MatrixPromote<
 operator*(const et::MatrixXpr<XprT>& left,
           const matrix<E,AT,L>& right)
 {
-    return matrix_ops::mul(left,right);
+    /* Generate a temporary, and compute the left-hand expression: */
+    typedef typename et::MatrixXpr<XprT>::temporary_type expr_tmp;
+    expr_tmp tmp;
+    cml::et::detail::Resize(tmp,left.rows(),left.cols());
+    tmp = left;
+
+    return matrix_ops::mul(tmp,right);
 }
 
 /** Dispatch for two MatrixXpr's. */
@@ -638,7 +650,18 @@ typename et::MatrixPromote<
 operator*(const et::MatrixXpr<XprT1>& left,
           const et::MatrixXpr<XprT2>& right)
 {
-    return matrix_ops::mul(left,right);
+    /* Generate temporaries and compute expressions: */
+    typedef typename et::MatrixXpr<XprT1>::temporary_type left_tmp;
+    left_tmp ltmp;
+    cml::et::detail::Resize(ltmp,left.rows(),left.cols());
+    ltmp = left;
+
+    typedef typename et::MatrixXpr<XprT2>::temporary_type right_tmp;
+    right_tmp rtmp;
+    cml::et::detail::Resize(rtmp,right.rows(),right.cols());
+    rtmp = right;
+
+    return matrix_ops::mul(ltmp,rtmp);
 }
 
 } // namespace cml
