@@ -10,10 +10,6 @@
 #ifndef cml_matrix_h
 #define cml_matrix_h
 
-#include <cml/matrix/fixed.h>
-#include <cml/matrix/dynamic.h>
-#include <cml/matrix/external.h>
-
 namespace cml {
 
 /** A configurable matrix.
@@ -36,6 +32,10 @@ template<typename Element, class ArrayType,
     typename Layout = CML_DEFAULT_ARRAY_LAYOUT> class matrix;
 
 } // namespace cml
+
+#include <cml/matrix/fixed.h>
+#include <cml/matrix/dynamic.h>
+#include <cml/matrix/external.h>
 
 #endif
 

@@ -198,7 +198,7 @@ template<class XprT>
 typename et::MatrixTransposeOp<
     XprT
 >::temporary_type
-transpose(const et::MatrixXpr<XprT>& expr)
+transpose(MATXPR_ARG_TYPE expr)
 {
     /* Record the type of the transpose op: */
     typedef et::MatrixTransposeOp<XprT> Op;
@@ -239,7 +239,7 @@ template<class XprT>
 typename et::MatrixTransposeOp<
     XprT
 >::temporary_type
-T(const et::MatrixXpr<XprT>& expr)
+T(MATXPR_ARG_TYPE expr)
 {
     return transpose(expr);
 }
@@ -262,7 +262,7 @@ transpose(const matrix<E,AT,L>& expr)
  */
 template<class XprT>
 et::MatrixXpr< et::MatrixTransposeOp<XprT> >
-transpose(const et::MatrixXpr<XprT>& expr)
+transpose(MATXPR_ARG_TYPE expr)
 {
     typedef et::MatrixTransposeOp<XprT> ExprT;
     return et::MatrixXpr<ExprT>(ExprT(expr.expression()));
@@ -286,7 +286,7 @@ T(const matrix<E,AT,L>& expr)
  */
 template<class XprT>
 et::MatrixXpr< et::MatrixTransposeOp<XprT> >
-T(const et::MatrixXpr<XprT>& expr)
+T(MATXPR_ARG_TYPE expr)
 {
     return transpose(expr);
 }

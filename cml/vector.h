@@ -10,10 +10,6 @@
 #ifndef cml_vector_h
 #define cml_vector_h
 
-#include <cml/vector/fixed.h>
-#include <cml/vector/dynamic.h>
-#include <cml/vector/external.h>
-
 namespace cml {
 
 /** A configurable vector type.
@@ -39,6 +35,10 @@ namespace cml {
 template<typename Element, class ArrayType, typename Orient> class vector;
 
 } // namespace cml
+
+#include <cml/vector/fixed.h>
+#include <cml/vector/dynamic.h>
+#include <cml/vector/external.h>
 
 #endif
 

@@ -15,7 +15,7 @@
 #include <cml/vector/vector_unroller.h>
 #include <cml/vector/vector_transpose.h>
 #include <cml/vector/vector_ops.h>
-#include <cml/vector/vector_dot.h>
+#include <cml/vector/vector_products.h>
 
 namespace cml {
 

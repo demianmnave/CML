@@ -32,8 +32,6 @@ using namespace cml::vector_ops;
 using namespace cml::matvec_ops;
 using namespace cml::matrix_ops;
 
-using cml::T;
-
 /* Define the vector orientation to assume: */
 typedef col_vector vector_orient;
 
@@ -262,11 +260,11 @@ void example8()
     double c_v[3] = {1.,0.,0.};
     vector_d3 u(c_u), v(c_v);
 
-    transpose(u);
     cout << "  u = " << u << endl;
     cout << "  v = " << v << endl;
     cout << "  dot(u,v) = " << dot(u,v) << endl;
     cout << "  dot(u,u) = " << dot(u,u) << endl;
+    cout << "  dot(v,v) = " << dot(v,v) << endl;
     cout << "  dot(u+v,v) = " << dot(u+v,v) << endl;
     cout << "  cos(u,v) = " << dot(u,v)/sqrt(dot(u,u)*dot(v,v))
         << endl;
@@ -283,9 +281,15 @@ void example9()
     u[0] = 0.; u[1] = 0.; u[2] = 1.;
     v[0] = 1.; v[1] = 0.; v[2] = 0.;
 
-    transpose(u);
     cout << "  u = " << u << endl;
     cout << "  v = " << v << endl;
+
+    vector_d3::transposed_type uT = T(u);
+    double z = uT*v;
+    cout << "  dot(u,v) = " << z << endl;
+    //cout << "  dot(u,v) = " << uT*v << endl;
+
+#if 0
 #if defined(CML_IGNORE_VECTOR_ORIENTATION)
     cout << "  dot(u,v) = " << u*v << endl;
     cout << "  dot(u,u) = " << u*u << endl;
@@ -296,6 +300,7 @@ void example9()
     cout << "  dot(u,u) = " << T(u)*u << endl;
     cout << "  dot(u+v,v) = " << T(u+v)*v << endl;
     cout << "  cos(u,v) = " << (T(u)*v)/sqrt((T(u)*u)*(T(v)*v)) << endl;
+#endif
 #endif
 }
 

@@ -18,7 +18,6 @@
 
 #include <cml/et/scalar_promotions.h>
 #include <cml/et/size_checking.h>
-#include <cml/et/array_promotions.h>
 #include <cml/matrix/matrix_expr.h>
 
 
