@@ -375,6 +375,9 @@ operator*(const et::VectorXpr<XprT1>& left,
 
 
 #if SAVE_THIS_FOR_LATER
+/* XXX This is the unrolling dispatch code for dot(), from the now defunct
+ * vector_dot.h header:
+ */
 
 /** Construct a dot unroller for fixed-size arrays.
  *
