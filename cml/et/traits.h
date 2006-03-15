@@ -46,6 +46,7 @@ template<typename T> struct ExprTraits
     typedef scalar_result_tag result_tag;
     typedef fixed_memory_tag memory_tag;
     typedef unit_size_tag size_tag;
+    typedef expr_type result_type;
     typedef expr_leaf_tag node_tag;
 
     /** Vector-like access, just returns the value. */

@@ -16,21 +16,11 @@ namespace std {
 #else
 #include <cmath>
 #endif
-#include <cml/vector.h>
-#include <cml/matrix.h>
+#include <cml/cml.h>
+using namespace cml;
 
 using std::cout;
 using std::endl;
-
-using cml::fixed;
-using cml::dynamic;
-using cml::external;
-using cml::row_vector;
-using cml::col_vector;
-using namespace cml;
-using namespace cml::vector_ops;
-using namespace cml::matvec_ops;
-using namespace cml::matrix_ops;
 
 /* Define the vector orientation to assume: */
 typedef col_vector vector_orient;

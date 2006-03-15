@@ -179,7 +179,7 @@ struct ArrayPromote
         typedef CML_DEFAULT_ARRAY_LAYOUT promoted_layout;
 #else
         typedef typename select_if<
-            same_type<LeftT,RightL>, LeftL,
+            same_type<LeftL,RightL>::is_true, LeftL,
             CML_DEFAULT_ARRAY_LAYOUT>::result promoted_layout;
 #endif
     };
