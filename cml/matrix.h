@@ -10,6 +10,8 @@
 #ifndef cml_matrix_h
 #define cml_matrix_h
 
+#include <cml/core/common.h>
+
 namespace cml {
 
 /** A configurable matrix.

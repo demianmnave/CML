@@ -10,6 +10,8 @@
 #ifndef cml_vector_h
 #define cml_vector_h
 
+#include <cml/core/common.h>
+
 namespace cml {
 
 /** A configurable vector type.
