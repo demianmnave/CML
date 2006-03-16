@@ -44,7 +44,7 @@ struct GetCheckedSize<LeftT,RightT,fixed_size_tag>
     /* For specialization below: */
     template<typename LR, typename RR, class X = void> struct impl;
 
-    /* Check for two matrices: */
+    /* Check for two matrices (linear operators only): */
     template<class X> struct impl<matrix_result_tag,matrix_result_tag,X> {
         typedef matrix_size size_type;
         CML_STATIC_REQUIRE_M(
@@ -70,7 +70,7 @@ struct GetCheckedSize<LeftT,RightT,fixed_size_tag>
                 incompatible_expression_size_error);
 
         /* Record the array size as a constant: */
-        enum { array_size = RightT::array_size };
+        enum { array_size = LeftT::array_rows };
 
         /* Return the vector size: */
         size_type size() const { return size_type(array_size); }
@@ -84,7 +84,7 @@ struct GetCheckedSize<LeftT,RightT,fixed_size_tag>
                 incompatible_expression_size_error);
 
         /* Record the array size as a constant: */
-        enum { array_size = LeftT::array_size };
+        enum { array_size = RightT::array_cols };
 
         /* Return the vector size: */
         size_type size() const { return size_type(array_size); }
@@ -197,20 +197,13 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
     }
 #endif
 
-    /* Check for two matrices: */
+    /* Check for two matrices (linear operators only): */
     template<class X> struct impl<matrix_result_tag,matrix_result_tag,X> {
         typedef matrix_size size_type;
 
-        /* Record the array size as a constant: */
-        enum {
-            array_rows = LeftT::array_rows,
-            array_cols = LeftT::array_cols
-        };
-
         /* Return the matrix size, or fail if incompatible: */
         size_type size(const LeftT& left, const RightT& right) const {
-            return self().equal_or_fail(
-                    left_traits().size(left), right_traits().size(right));
+            return self().equal_or_fail(left.size(), right.size());
         }
     };
 
@@ -218,13 +211,10 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
     template<class X> struct impl<matrix_result_tag,vector_result_tag,X> {
         typedef size_t size_type;
 
-        /* Record the array size as a constant (it will be -1): */
-        enum { array_size = RightT::array_size };
-
         /* Return the vector size: */
         size_type size(const LeftT& left, const RightT& right) const {
-            return self().equal_or_fail(
-                    left_traits().cols(left), right_traits().size(right));
+            self().equal_or_fail(left.cols(), right.size());
+            return left.rows();
         }
     };
 
@@ -232,13 +222,10 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
     template<class X> struct impl<vector_result_tag,matrix_result_tag,X> {
         typedef size_t size_type;
 
-        /* Record the array size as a constant (it will be -1): */
-        enum { array_size = LeftT::array_size };
-
         /* Return the vector size: */
         size_type size(const LeftT& left, const RightT& right) const {
-            return self().equal_or_fail(
-                    left_traits().size(left), right_traits().rows(right));
+            self().equal_or_fail(left.size(), right.rows());
+            return right.cols(right);
         }
     };
 
@@ -246,15 +233,9 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
     template<class X> struct impl<matrix_result_tag,scalar_result_tag,X> {
         typedef matrix_size size_type;
 
-        /* Record the array size as a constant: */
-        enum {
-            array_rows = LeftT::array_rows,
-            array_cols = LeftT::array_cols
-        };
-
         /* Return the matrix size: */
         size_type size(const LeftT& left, const RightT&) const {
-            return left_traits().size(left);
+            return left.size();
         }
     };
 
@@ -262,15 +243,9 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
     template<class X> struct impl<scalar_result_tag,matrix_result_tag,X> {
         typedef matrix_size size_type;
 
-        /* Record the array size as a constant: */
-        enum {
-            array_rows = RightT::array_rows,
-            array_cols = RightT::array_cols
-        };
-
         /* Return the matrix size: */
         size_type size(const LeftT&, const RightT& right) const {
-            return right_traits().size(right);
+            return right.size();
         }
     };
 
@@ -278,13 +253,9 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
     template<class X> struct impl<vector_result_tag,vector_result_tag,X> {
         typedef size_t size_type;
 
-        /* Record the array size as a constant (it will be -1): */
-        enum { array_size = LeftT::array_size };
-
         /* Return the vector size: */
         size_type size(const LeftT& left, const RightT& right) const {
-            return self().equal_or_fail(
-                    left_traits().size(left), right_traits().size(right));
+            return self().equal_or_fail(left.size(), right.size());
         }
     };
 
@@ -292,12 +263,9 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
     template<class X> struct impl<vector_result_tag,scalar_result_tag,X> {
         typedef size_t size_type;
 
-        /* Record the array size as a constant (it will be -1): */
-        enum { array_size = LeftT::array_size };
-
         /* Return the vector size: */
         size_type size(const LeftT& left, const RightT&) const {
-            return left_traits().size(left);
+            return left.size();
         }
     };
 
@@ -305,12 +273,9 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
     template<class X> struct impl<scalar_result_tag,vector_result_tag,X> {
         typedef size_t size_type;
 
-        /* Record the array size as a constant (it will be -1): */
-        enum { array_size = RightT::array_size };
-
         /* Return the vector size: */
         size_type size(const LeftT&, const RightT& right) const {
-            return right_traits().size(right);
+            return right.size();
         }
     };
 
@@ -324,17 +289,15 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
     }
 };
 
-} // namespace et
-
 /** Generator for GetCheckedSize. */
 template<typename LeftT, typename RightT, typename SizeTag>
 typename et::GetCheckedSize<LeftT,RightT,SizeTag>::size_type
-CheckedSize(
-        const LeftT& left, const RightT& right, SizeTag)
+CheckedSize(const LeftT& left, const RightT& right, SizeTag)
 {
     return et::GetCheckedSize<LeftT,RightT,SizeTag>()(left,right);
 }
 
+} // namespace et
 } // namespace cml
 
 #endif

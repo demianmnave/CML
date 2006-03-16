@@ -54,7 +54,7 @@ namespace std {
 #include <cmath>
 #endif
 
-#include <cml/matrix.h>
+#include <cml/cml.h>
 
 /* Prefix on error messages in single_- and mixed_vector_tests.ixx: */
 #define ERROR_MSG_TAG \
@@ -63,7 +63,6 @@ namespace std {
 using std::cout;
 using std::endl;
 using namespace cml;
-using namespace matrix_ops;
 
 template<typename E, class AT, class L> void
 assign(

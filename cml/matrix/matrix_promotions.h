@@ -75,17 +75,11 @@ struct MatrixPromote<S, cml::matrix<E,AT,L> >
 };
 
 /** Type promotion for outer product. */
-template<typename E1, class AT1, class O1, typename E2, class AT2, class O2>
-struct MatrixPromote< cml::vector<E1,AT1,O1>, cml::vector<E2,AT2,O2> >
+template<typename E1, class AT1, typename E2, class AT2>
+struct MatrixPromote< cml::vector<E1,AT1>, cml::vector<E2,AT2> >
 {
-    /* Require a left col-vector, and a right row-vector: */
-    CML_STATIC_REQUIRE_M(
-            (same_type<O1,col_vector>::is_true
-             && same_type<O2,row_vector>::is_true),
-            outer_promote_expects_properly_oriented_args_error);
-
-    typedef cml::vector<E2,AT2,O1> left_type;
-    typedef cml::vector<E2,AT2,O2> right_type;
+    typedef cml::vector<E1,AT1> left_type;
+    typedef cml::vector<E2,AT2> right_type;
 
     /* Get matrix size: */
     enum {
@@ -101,7 +95,7 @@ struct MatrixPromote< cml::vector<E1,AT1,O1>, cml::vector<E2,AT2,O2> >
     typedef cml::matrix<E1,left_storage,layout> left_matrix;
 
     typedef typename select_if<
-        array_cols == -1, dynamic<>, fixed<1,array_rows>
+        array_cols == -1, dynamic<>, fixed<1,array_cols>
     >::result right_storage;
     typedef cml::matrix<E2,right_storage,layout> right_matrix;
 

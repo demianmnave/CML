@@ -42,7 +42,7 @@ template<typename Alloc> struct dynamic;
 template<int Dim1, int Dim2> struct external;
 
 /* cml/vector.h */
-template<typename E, class AT, typename O> class vector;
+template<typename E, class AT> class vector;
 
 /* cml/matrix.h */
 template<typename E, class AT, typename L> class matrix;

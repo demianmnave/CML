@@ -40,7 +40,7 @@ namespace detail {
  *
  * @bug Need to verify that OpT is actually an assignment operator.
  */
-template<class OpT, typename E, class AT, class O, class SrcT>
+template<class OpT, typename E, class AT, class SrcT>
 class VectorAssignmentUnroller
 {
   protected:
@@ -49,7 +49,7 @@ class VectorAssignmentUnroller
     template<int N, int Last, bool can_unroll> struct Eval;
 
     /* The vector type being assigned to: */
-    typedef cml::vector<E,AT,O> vector_type;
+    typedef cml::vector<E,AT> vector_type;
 
     /* Record traits for the arguments: */
     typedef ExprTraits<vector_type> dest_traits;
@@ -103,9 +103,9 @@ class VectorAssignmentUnroller
     /** Unroll assignment to a fixed-sized vector. */
     void operator()(vector_type& dest, const SrcT& src, cml::fixed_size_tag)
     {
-        typedef cml::vector<E,AT,O> vector_type;
+        typedef cml::vector<E,AT> vector_type;
         enum { Len = vector_type::array_size };
-        typedef typename VectorAssignmentUnroller<OpT,E,AT,O,SrcT>::template
+        typedef typename VectorAssignmentUnroller<OpT,E,AT,SrcT>::template
             Eval<0, Len-1, (Len <= CML_VECTOR_UNROLL_LIMIT)> Unroller;
         /* Note: Len is the array size, so Len-1 is the last element. */
 
@@ -176,7 +176,6 @@ struct VectorAccumulateUnroller
         result_type operator()(
                 left_reference left, right_reference right) const
         {
-
             /* Apply to last value: */
             return AccumT().apply(
                     OpT().apply(left[N], right[N]),
@@ -228,14 +227,14 @@ struct VectorAccumulateUnroller
  *
  * @bug Need to verify that OpT is actually an assignment operator.
  */
-template<class OpT, class SrcT, typename E, class AT, class O>
-void UnrollAssignment(cml::vector<E,AT,O>& dest, const SrcT& src)
+template<class OpT, class SrcT, typename E, class AT>
+void UnrollAssignment(cml::vector<E,AT>& dest, const SrcT& src)
 {
     /* Record the destination vector type, and the expression traits: */
-    typedef cml::vector<E,AT,O> vector_type;
+    typedef cml::vector<E,AT> vector_type;
 
     /* Record the type of the unroller: */
-    typedef detail::VectorAssignmentUnroller<OpT,E,AT,O,SrcT> unroller;
+    typedef detail::VectorAssignmentUnroller<OpT,E,AT,SrcT> unroller;
 
     /* Do the unroll call: */
     unroller()(dest, src, typename vector_type::size_tag());

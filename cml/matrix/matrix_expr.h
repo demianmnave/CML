@@ -5,7 +5,7 @@
  *  @brief Matrix linear expression classes.
  *
  * @todo Dynamic resizing needs to be integrated more naturally into
- * matrix_ops::mul() and matrix transpose():
+ * mul() and matrix transpose():
  */
 
 #ifndef matrix_expr_h
@@ -419,8 +419,8 @@ struct ExprTraits< BinaryMatrixOp<LeftT,RightT,OpT> >
 
 namespace detail {
 
-/* XXX These are temporary helpers until dynamic resizing is integrated
- * more naturally into matrix_ops::mul() and matrix transpose():
+/* XXX These are temporary helpers until dynamic resizing is integrated more
+ * naturally into mul() and matrix transpose():
  */
 template<typename MatT>
 void Resize(MatT&, size_t, size_t, fixed_size_tag) {}

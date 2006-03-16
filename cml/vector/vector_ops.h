@@ -14,9 +14,6 @@
 
 namespace cml {
 
-/* Place vector operators into a separate namespace: */
-namespace vector_ops {
-
 CML_VEC_UNIOP(    operator+, et::OpPos)
 CML_VECXPR_UNIOP( operator+, et::OpPos)
 
@@ -41,7 +38,6 @@ CML_SCALAR_VECXPR_BINOP( operator*, et::OpMul)
 CML_VEC_SCALAR_BINOP(    operator/, et::OpDiv)
 CML_VECXPR_SCALAR_BINOP( operator/, et::OpDiv)
 
-} // namespace vector_ops
 } // namespace cml
 
 #endif

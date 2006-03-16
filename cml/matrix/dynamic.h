@@ -72,14 +72,12 @@ class matrix<Element,dynamic<Alloc>,Layout>
     /* To simplify the matrix row and column operators: */
     typedef vector<
         Element,
-        typename array_type::row_array_type::generator_type,
-        row_vector
+        typename array_type::row_array_type::generator_type
     > row_vector_type;
 
     typedef vector<
         Element,
-        typename array_type::col_array_type::generator_type,
-        col_vector
+        typename array_type::col_array_type::generator_type
     > col_vector_type;
 
 

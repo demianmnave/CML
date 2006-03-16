@@ -13,9 +13,6 @@
 
 namespace cml {
 
-/* Place matrix operators into a separate namespace: */
-namespace matrix_ops {
-
 CML_MAT_UNIOP(    operator+, et::OpPos)
 CML_MATXPR_UNIOP( operator+, et::OpPos)
 
@@ -40,7 +37,6 @@ CML_SCALAR_MATXPR_BINOP( operator*, et::OpMul)
 CML_MAT_SCALAR_BINOP(    operator/, et::OpDiv)
 CML_MATXPR_SCALAR_BINOP( operator/, et::OpDiv)
 
-} // namespace matrix_ops
 } // namespace cml
 
 #endif

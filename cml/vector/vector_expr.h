@@ -3,9 +3,6 @@
  *-----------------------------------------------------------------------*/
 /** @file
  *  @brief Vector linear expression classes.
- *
- * @todo Dynamic resizing needs to be integrated more naturally into
- * matvec_ops::mul() and vector transpose():
  */
 
 #ifndef vector_expr_h
@@ -380,9 +377,7 @@ struct VectorExpressions
 
 namespace detail {
 
-/* XXX These are temporary helpers until dynamic resizing is integrated more
- * naturally into matvec_ops::mul() and vector transpose():
- */
+/* Helpers for resizing vectors: */
 template<typename VecT>
 void Resize(VecT&, size_t, fixed_size_tag) {}
 

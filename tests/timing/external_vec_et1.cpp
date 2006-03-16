@@ -6,19 +6,14 @@
  */
 
 #include <iostream>
-#include <cml/vector.h>
-#include <cml/external.h>
+#include <cml/cml.h>
 
 /* For convenience: */
 using std::cerr;
 using std::endl;
-using cml::external;
-using namespace cml::vector_ops;
+using namespace cml;
 
-/* Define the vector orientation to assume: */
-typedef cml::col_vector vector_orient;
-
-typedef cml::vector< double, external<4>, vector_orient> vector_d4;
+typedef vector< double, external<4> > vector_d4;
 
 #define VECINIT(_v_) _v_(c_v[c_i++])
 

@@ -22,350 +22,177 @@
 struct dot_expects_vector_args_error;
 
 /* This is used below to create a more meaningful compile-time error when
- * either argument to dot() has the wrong orientation.
- */
-struct dot_expects_properly_oriented_args_error;
-
-/* This is used below to create a more meaningful compile-time error when
  * outer() is not provided with vector or VectorExpr arguments:
  */
 struct outer_expects_vector_args_error;
 
 namespace cml {
-namespace vector_ops {
-
 namespace detail {
 
-/* Compute the dot product: */
-template<class LeftT, class RightT>
-struct dot_impl
+template<typename LeftT, typename RightT>
+struct DotPromote
 {
     /* Shorthand: */
     typedef et::ExprTraits<LeftT> left_traits;
     typedef et::ExprTraits<RightT> right_traits;
-    typedef typename left_traits::result_type left_result;
-    typedef typename right_traits::result_type right_result;
     typedef typename left_traits::value_type left_value;
     typedef typename right_traits::value_type right_value;
 
+    /* Deduce the promoted scalar type: */
+    /* XXX This is primarily for the unrolling code, which hasn't
+     * been re-integrated yet.
+     */
     typedef et::OpMul<left_value, right_value> op_mul;
     typedef typename et::OpAdd<
         typename op_mul::value_type,
                  typename op_mul::value_type> op_add;
-    typedef typename op_add::value_type result_type;
-
-    /* XXX This can be unrolled, but use a loop for now: */
-    result_type operator()(const LeftT& left, const RightT& right) const
-    {
-        /* Deduce the size tag to use to check sizes: */
-        typedef typename left_result::size_tag left_size;
-        typedef typename right_result::size_tag right_size;
-
-        using namespace meta;
-        typedef typename select_switch<
-            type_pair<left_size,right_size>,
-            type_pair<fixed_size_tag,fixed_size_tag>, fixed_size_tag,
-            Default,                                  dynamic_size_tag
-        >::result size_tag;
-
-        size_t N = CheckedSize(left,right,size_tag());
-        result_type sum(left[0]*right[0]);
-        for(size_t i = 1; i < N; ++ i) {
-            sum += left[i]*right[i];
-        }
-        return sum;
-    }
+    typedef typename op_add::value_type promoted_scalar;
 };
 
-/* Compute the outer product: */
-template<class LeftT, class RightT>
-struct outer_impl
+template<typename LeftT, typename RightT>
+struct OuterPromote
 {
     /* Shorthand: */
     typedef et::ExprTraits<LeftT> left_traits;
     typedef et::ExprTraits<RightT> right_traits;
-    typedef typename left_traits::result_type left_result;
-    typedef typename right_traits::result_type right_result;
-    typedef typename left_traits::value_type left_value;
-    typedef typename right_traits::value_type right_value;
+    typedef typename left_traits::result_type left_type;
+    typedef typename right_traits::result_type right_type;
 
-    /* The matrix return type: */
+    /* Deduce the matrix result type: */
     typedef typename et::MatrixPromote<
-        left_result,right_result>::temporary_type result_type;
-
-    result_type operator()(const LeftT& left, const RightT& right) const
-    {
-        /* Create a matrix with the right size (resize() is a no-op for
-         * fixed-size matrices):
-         */
-        result_type C;
-        cml::et::detail::Resize(C, left.rows(), right.cols());
-
-        /* Now, compute the outer product: */
-        for(size_t i = 0; i < left.rows(); ++i) {
-            for(size_t j = 0; j < right.cols(); ++j) {
-                C(i,j) = left[i]*right[j];
-                /* Note: both arguments are vectors, so array notation
-                 * is okay here.
-                 */
-            }
-        }
-        return C;
-    }
-};
-
-/** Wrap up the dot and outer implementations.
- *
- * This allows the proper implementation to be selected based upon the
- * orientation of the arguments.
- */
-template<class LeftT, class RightT>
-struct VectorProduct
-{
-    /* Shorthand: */
-    typedef et::ExprTraits<LeftT> left_traits;
-    typedef et::ExprTraits<RightT> right_traits;
-    typedef typename left_traits::result_type left_result;
-    typedef typename right_traits::result_type right_result;
-    typedef typename left_traits::value_type left_value;
-    typedef typename right_traits::value_type right_value;
-
-#if !defined(CML_IGNORE_VECTOR_ORIENTATION)
-    /* This is specialized based upon orientation: */
-    template<class O1, class O2, typename X=void> struct impl;
-
-    /* Inner product as a specialization of impl: */
-    template<typename X> struct impl<row_vector,col_vector,X> {
-        typedef typename dot_impl<LeftT,RightT>::result_type result_type;
-        result_type operator()(const LeftT& left, const RightT& right) const
-        {
-            return dot_impl<LeftT,RightT>()(left,right);
-        }
-    };
-
-    /* Outer product as a specialization of impl: */
-    template<typename X> struct impl<col_vector,row_vector,X> {
-        typedef typename outer_impl<LeftT,RightT>::result_type result_type;
-        result_type operator()(const LeftT& left, const RightT& right) const
-        {
-            return outer_impl<LeftT,RightT>()(left,right);
-        }
-    };
-
-    /* Can use type deduction when orientation is enforced: */
-    typedef impl<
-        typename left_result::orient_tag,
-        typename right_result::orient_tag> product;
-
-    typedef typename product::result_type result_type;
-#endif
+        left_type,right_type>::temporary_type promoted_matrix;
 };
 
 } // namespace detail
 
 
-/* Define the orientation-independent dot() and outer() functions: */
+template<typename LeftT, typename RightT>
+typename detail::DotPromote<LeftT,RightT>::promoted_scalar
+dot(const LeftT& left, const RightT& right)
+{
+    /* Shorthand: */
+    typedef et::ExprTraits<LeftT> left_traits;
+    typedef et::ExprTraits<RightT> right_traits;
+    typedef typename left_traits::result_tag left_result;
+    typedef typename right_traits::result_tag right_result;
+    typedef typename detail::DotPromote<LeftT,RightT>
+        ::promoted_scalar result_type;
+
+    /* dot() requires vector expressions: */
+    CML_STATIC_REQUIRE_M(
+        (same_type<left_result, et::vector_result_tag>::is_true
+         && same_type<right_result, et::vector_result_tag>::is_true),
+        dot_expects_vector_args_error);
+    /* Note: parens are required here so that the preprocessor ignores the
+     * commas.
+     */
+
+    /* Deduce the size tag to use to check sizes: */
+    using namespace meta;
+    typedef typename left_traits::size_tag left_size;
+    typedef typename right_traits::size_tag right_size;
+    typedef typename select_switch<
+        type_pair<left_size,right_size>,
+        type_pair<fixed_size_tag,fixed_size_tag>, fixed_size_tag,
+        Default,                                  dynamic_size_tag
+    >::result size_tag;
+
+    /* Verify that the arguments have the same length, and store it: */
+    size_t N = et::CheckedSize(left,right,size_tag());
+
+    /* Compute the dot product: */
+    result_type sum(left[0]*right[0]);
+    for(size_t i = 1; i < N; ++ i) {
+        sum += left[i]*right[i];
+    }
+    return sum;
+}
+
+template<typename LeftT, typename RightT>
+typename detail::OuterPromote<LeftT,RightT>::promoted_matrix
+outer(const LeftT& left, const RightT& right)
+{
+    /* Shorthand: */
+    typedef et::ExprTraits<LeftT> left_traits;
+    typedef et::ExprTraits<RightT> right_traits;
+    typedef typename left_traits::result_tag left_result;
+    typedef typename right_traits::result_tag right_result;
+
+    /* outer() requires vector expressions: */
+    CML_STATIC_REQUIRE_M(
+        (same_type<left_result, et::vector_result_tag>::is_true
+         && same_type<right_result, et::vector_result_tag>::is_true),
+        dot_expects_vector_args_error);
+    /* Note: parens are required here so that the preprocessor ignores the
+     * commas.
+     */
+
+    /* Create a matrix with the right size (resize() is a no-op for
+     * fixed-size matrices):
+     */
+    typename detail::OuterPromote<LeftT,RightT>::promoted_matrix C;
+    cml::et::detail::Resize(C, left.size(), right.size());
+
+    /* Now, compute the outer product: */
+    for(size_t i = 0; i < left.size(); ++i) {
+        for(size_t j = 0; j < right.size(); ++j) {
+            C(i,j) = left[i]*right[j];
+            /* Note: both arguments are vectors, so array notation
+             * is okay here.
+             */
+        }
+    }
+
+    return C;
+}
+
+
+/** dot() via operator*() for two vectors. */
 template<
-    typename E1, class AT1, typename O1,
-    typename E2, class AT2, typename O2>
-typename detail::dot_impl<
-    vector<E1,AT1,O1>, vector<E2,AT2,O2>
->::result_type
-dot(const vector<E1,AT1,O1>& left,
-    const vector<E2,AT2,O2>& right)
+    typename E1, class AT1,
+    typename E2, class AT2>
+typename detail::DotPromote<
+    vector<E1,AT1>, vector<E2,AT2>
+>::promoted_scalar
+operator*(const vector<E1,AT1>& left,
+          const vector<E2,AT2>& right)
 {
-    typedef typename detail::dot_impl<
-        vector<E1,AT1,O1>, vector<E2,AT2,O2>
-    > product;
-    return product()(left,right);
+    return dot(left,right);
 }
 
-template<typename E, class AT, typename O, typename XprT>
-typename detail::dot_impl<
-    vector<E,AT,O>, typename XprT::result_type
->::result_type
-dot(const vector<E,AT,O>& left,
-    const et::VectorXpr<XprT>& right)
-{
-    typedef typename detail::dot_impl<
-        vector<E,AT,O>, typename XprT::result_type
-    > product;
-    return product()(left,right);
-}
-
-template<typename XprT, typename E, class AT, typename O>
-typename detail::dot_impl<
-    typename XprT::result_type,
-    vector<E,AT,O>
->::result_type
-dot(const et::VectorXpr<XprT>& left,
-    const vector<E,AT,O>& right)
-{
-    typedef typename detail::dot_impl<
-        typename XprT::result_type, vector<E,AT,O>
-    > product;
-    return product()(left,right);
-}
-
-template<typename XprT1, typename XprT2>
-typename detail::dot_impl<
-    typename XprT1::result_type,
-    typename XprT2::result_type
->::result_type
-dot(const et::VectorXpr<XprT1>& left,
-    const et::VectorXpr<XprT2>& right)
-{
-    typedef typename detail::dot_impl<
-        typename XprT1::result_type,
-        typename XprT2::result_type
-    > product;
-    return product()(left,right);
-}
-
-template<
-    typename E1, class AT1, typename O1,
-    typename E2, class AT2, typename O2>
-typename detail::outer_impl<
-    vector<E1,AT1,O1>, vector<E2,AT2,O2>
->::result_type
-outer(const vector<E1,AT1,O1>& left,
-    const vector<E2,AT2,O2>& right)
-{
-    typedef typename detail::outer_impl<
-        vector<E1,AT1,O1>, vector<E2,AT2,O2>
-    > product;
-    return product()(left,right);
-}
-
-template<typename E, class AT, typename O, typename XprT>
-typename detail::outer_impl<
-    vector<E,AT,O>, typename XprT::result_type
->::result_type
-outer(const vector<E,AT,O>& left,
+/** dot() via operator*() for a vector and a VectorXpr. */
+template<typename E, class AT, typename XprT>
+typename detail::DotPromote<
+    vector<E,AT>, typename XprT::result_type
+>::promoted_scalar
+operator*(const vector<E,AT>& left,
           const et::VectorXpr<XprT>& right)
 {
-    typedef typename detail::outer_impl<
-        vector<E,AT,O>, typename XprT::result_type
-    > product;
-    return product()(left,right);
+    return dot(left,right);
 }
 
-template<typename XprT, typename E, class AT, typename O>
-typename detail::outer_impl<
-    typename XprT::result_type,
-    vector<E,AT,O>
->::result_type
-outer(const et::VectorXpr<XprT>& left,
-      const vector<E,AT,O>& right)
-{
-    typedef typename detail::outer_impl<
-        typename XprT::result_type, vector<E,AT,O>
-    > product;
-    return product()(left,right);
-}
-
-template<typename XprT1, typename XprT2>
-typename detail::outer_impl<
-    typename XprT1::result_type,
-    typename XprT2::result_type
->::result_type
-outer(const et::VectorXpr<XprT1>& left,
-    const et::VectorXpr<XprT2>& right)
-{
-    typedef typename detail::outer_impl<
-        typename XprT1::result_type,
-        typename XprT2::result_type
-    > product;
-    return product()(left,right);
-}
-
-
-#if !defined(CML_IGNORE_VECTOR_ORIENTATION)
-
-/** Operator* for two vectors.
- *
- * If CML_IGNORE_VECTOR_ORIENTATION is defined, the orientation of the
- * arguments is ignored.  Otherwise, left must be a row_vector, and right
- * must be a col_vector.
- */
-template<
-    typename E1, class AT1, typename O1,
-    typename E2, class AT2, typename O2>
-typename detail::VectorProduct<
-    vector<E1,AT1,O1>, vector<E2,AT2,O2>
->::result_type
-operator*(const vector<E1,AT1,O1>& left,
-          const vector<E2,AT2,O2>& right)
-{
-    typedef typename detail::VectorProduct<
-        vector<E1,AT1,O1>, vector<E2,AT2,O2>
-    >::product product;
-    return product()(left,right);
-}
-
-/** Dispatch for a vector and a VectorXpr.
- *
- * If CML_IGNORE_VECTOR_ORIENTATION is defined, the orientation of the
- * arguments is ignored.  Otherwise, left must be a row_vector, and right
- * must be a col_vector.
- */
-template<typename E, class AT, typename O, typename XprT>
-typename detail::VectorProduct<
-    vector<E,AT,O>, typename XprT::result_type
->::product::result_type
-operator*(const vector<E,AT,O>& left,
-          const et::VectorXpr<XprT>& right)
-{
-    typedef typename detail::VectorProduct<
-        vector<E,AT,O>, typename XprT::result_type
-    >::product product;
-    return product()(left,right);
-}
-
-/** Dispatch for a VectorXpr and a vector.
- *
- * If CML_IGNORE_VECTOR_ORIENTATION is defined, the orientation of the
- * arguments is ignored.  Otherwise, left must be a row_vector, and right
- * must be a col_vector.
- */
-template<typename XprT, typename E, class AT, typename O>
-typename detail::VectorProduct<
-    typename XprT::result_type,
-    vector<E,AT,O>
->::product::result_type
+/** dot() via operator*() for a VectorXpr and a vector. */
+template<typename XprT, typename E, class AT>
+typename detail::DotPromote<
+    typename XprT::result_type, vector<E,AT>
+>::promoted_scalar
 operator*(const et::VectorXpr<XprT>& left,
-          const vector<E,AT,O>& right)
+          const vector<E,AT>& right)
 {
-    typedef typename detail::VectorProduct<
-        typename XprT::result_type, vector<E,AT,O>
-    >::product product;
-    return product()(left,right);
+    return dot(left,right);
 }
 
-/** Dispatch for two VectorXpr's.
- *
- * If CML_IGNORE_VECTOR_ORIENTATION is defined, the orientation of the
- * arguments is ignored.  Otherwise, left must be a row_vector, and right
- * must be a col_vector.
- */
+/** dot() via operator*() for two VectorXpr's. */
 template<typename XprT1, typename XprT2>
-typename detail::VectorProduct<
-    typename XprT1::result_type,
-    typename XprT2::result_type
->::product::result_type
+typename detail::DotPromote<
+    typename XprT1::result_type, typename XprT2::result_type
+>::promoted_scalar
 operator*(const et::VectorXpr<XprT1>& left,
           const et::VectorXpr<XprT2>& right)
 {
-    typedef typename detail::VectorProduct<
-        typename XprT1::result_type,
-        typename XprT2::result_type
-    >::product product;
-    return product()(left,right);
+    return dot(left,right);
 }
 
-#endif
-
-} // namespace vector_ops
 } // namespace cml
 
 #endif
@@ -383,7 +210,7 @@ operator*(const et::VectorXpr<XprT1>& left,
  *
  * @note This should only be called for vectors.
  *
- * @sa cml::vector_ops::dot
+ * @sa cml::dot
  */
 template<typename LeftT, typename RightT>
 typename DotHelper<LeftT,RightT>::promoted_scalar
@@ -415,7 +242,7 @@ UnrollDot(const LeftT& left, const RightT& right, fixed_size_tag)
  *
  * @note This should only be called for vectors.
  *
- * @sa cml::vector_ops::dot
+ * @sa cml::dot
  */
 template<typename LeftT, typename RightT>
 typename DotHelper<LeftT,RightT>::promoted_scalar
@@ -432,7 +259,7 @@ UnrollDot(const LeftT& left, const RightT& right, dynamic_size_tag)
     typedef typename dot_helper::promoted_scalar sum_type;
 
     /* Verify expression sizes: */
-    const size_t N = CheckedSize(left,right,dynamic_size_tag());
+    const size_t N = et::CheckedSize(left,right,dynamic_size_tag());
 
     /* Initialize the sum. Left and right must be vector expressions, so
      * it's okay to use array notation here:

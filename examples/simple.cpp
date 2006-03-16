@@ -22,30 +22,13 @@ using namespace cml;
 using std::cout;
 using std::endl;
 
-/* Define the vector orientation to assume: */
-typedef col_vector vector_orient;
-
-#if !defined(CML_IGNORE_VECTOR_ORIENTATION)
 /* Note: this has to have the same template params as cml::vector<>: */
 template<typename E, class AT> std::ostream&
-operator<<(std::ostream& os, const cml::vector<E,AT,cml::row_vector>& v)
+operator<<(std::ostream& os, const cml::vector<E,AT>& v)
 {
     os << "[";
     for(size_t i = 0; i < v.size(); ++i) {
         os << " " << v[i];
-    }
-    os << " ]";
-    return os;
-}
-#endif
-
-/* Note: this has to have the same template params as cml::vector<>: */
-template<typename E, class AT> std::ostream&
-operator<<(std::ostream& os, const cml::vector<E,AT,cml::col_vector>& v)
-{
-    os << "[" << endl;
-    for(size_t i = 0; i < v.size(); ++i) {
-        os << " " << v[i] << endl;
     }
     os << " ]";
     return os;
@@ -70,7 +53,7 @@ operator<<(std::ostream& os, const cml::matrix<E,AT,L>& m)
 void example1()
 {
     /* 3-space column vector, fixed length, double coordinates: */
-    typedef cml::vector< double, fixed<3>, vector_orient> vector_d3;
+    typedef cml::vector< double, fixed<3> > vector_d3;
 
     cout << "Example1:" << endl;
 
@@ -78,7 +61,6 @@ void example1()
     u[0] = 0.; u[1] = 0.; u[2] = 1.;
     v[0] = 1.; v[1] = 0.; v[2] = 0.;
 
-    transpose(u);
     cout << "  u = " << u << endl;
     cout << "  v = " << v << endl;
     cout << "  dot(u,v) = " << dot(u,v) << endl;
@@ -91,7 +73,7 @@ void example1()
 void example2()
 {
     /* 3-space column vector, dynamic length, double coordinates: */
-    typedef cml::vector< double, dynamic<>, vector_orient> vector_d;
+    typedef cml::vector< double, dynamic<> > vector_d;
 
     cout << "Example2:" << endl;
 
@@ -233,7 +215,7 @@ void example7()
     B(1,0) = 0.0; B(1,1) = 1.0; B(1,2) = 0.0;
     B(2,0) = 0.0; B(2,1) = 0.0; B(2,2) = 1.0;
 
-    C = mul(A,B);
+    C = A*B;
     cout << "  A = " << A << endl;
     cout << "  B = " << B << endl;
     cout << "  A*B = " << C << endl;
@@ -242,7 +224,7 @@ void example7()
 void example8()
 {
     /* 3-space column vector, fixed length, double coordinates: */
-    typedef cml::vector< double, external<3>, vector_orient> vector_d3;
+    typedef cml::vector< double, external<3> > vector_d3;
 
     cout << "Example8:" << endl;
 
@@ -263,7 +245,7 @@ void example8()
 void example9()
 {
     /* 3-space column vector, fixed length, double coordinates: */
-    typedef cml::vector< double, fixed<3>, vector_orient> vector_d3;
+    typedef cml::vector< double, fixed<3> > vector_d3;
 
     cout << "Example9:" << endl;
 
@@ -274,24 +256,10 @@ void example9()
     cout << "  u = " << u << endl;
     cout << "  v = " << v << endl;
 
-    vector_d3::transposed_type uT = T(u);
-    double z = uT*v;
-    cout << "  dot(u,v) = " << z << endl;
-    //cout << "  dot(u,v) = " << uT*v << endl;
-
-#if 0
-#if defined(CML_IGNORE_VECTOR_ORIENTATION)
     cout << "  dot(u,v) = " << u*v << endl;
     cout << "  dot(u,u) = " << u*u << endl;
     cout << "  dot(u+v,v) = " << (u+v)*v << endl;
     cout << "  cos(u,v) = " << (u*v)/sqrt((u*u)*(v*v)) << endl;
-#else
-    cout << "  dot(u,v) = " << T(u)*v << endl;
-    cout << "  dot(u,u) = " << T(u)*u << endl;
-    cout << "  dot(u+v,v) = " << T(u+v)*v << endl;
-    cout << "  cos(u,v) = " << (T(u)*v)/sqrt((T(u)*u)*(T(v)*v)) << endl;
-#endif
-#endif
 }
 
 void example10()
@@ -302,17 +270,11 @@ void example10()
     /* 3-space matrix, fixed length, double coordinates: */
     typedef cml::matrix< double, fixed<3,3>, cml::col_major > matrix_d33;
 
-    /* 3-space column vector, fixed length, double coordinates: */
-    typedef cml::vector< double, fixed<3>, col_vector> vector_cd3;
+    /* 3-space vector, fixed length, double coordinates: */
+    typedef cml::vector< double, fixed<3> > vector_d3;
 
-    /* 3-space row vector, fixed length, double coordinates: */
-    typedef cml::vector< double, fixed<3>, row_vector> vector_rd3;
-
-    /* 4-space column vector: */
-    typedef cml::vector< double, fixed<4>, col_vector> vector_cd4;
-
-    /* 4-space row vector: */
-    typedef cml::vector< double, fixed<4>, row_vector> vector_rd4;
+    /* 4-space vector, fixed length, double coordinates: */
+    typedef cml::vector< double, fixed<4> > vector_d4;
 
     cout << "Example10:" << endl;
 
@@ -323,24 +285,61 @@ void example10()
     A(2,0) = 0.0; A(2,1) = 0.0; A(2,2) = 1.0;
     A(3,0) = 0.0; A(3,1) = 0.0; A(3,2) = 1.0;
 
-    vector_cd3 x;
+    vector_d3 x;
 
     x[0] = 1.; x[1] = 0.; x[2] = 1.;
 
     cout << "A = " << A << endl;
     cout << "x = " << x << endl;
 
-    vector_cd4 y = A*x;
+    vector_d4 y = A*x;
     cout << "y = A*x = " << y << endl;
 
-    vector_rd3 yp = mul(y,A);
+    vector_d3 yp = y*A;
     cout << "yp = mul(y,A) = " << yp << endl;
 
-    vector_cd4 ypp = mul(A,yp);
+    vector_d4 ypp = A*yp;
     cout << "ypp = mul(A,yp) = " << ypp << endl;
 
     matrix_d43::transposed_type B = T(A);
     cout << "T(A) = " << B << endl;
+
+    vector_d4 z = yp*B;
+    cout << "z = yp*T(A) = " << z << endl;
+}
+
+
+void example11()
+{
+    /* 4x3 matrix, fixed length, double coordinates: */
+    typedef cml::matrix< double, fixed<4,3>, cml::col_major > matrix_d43;
+
+    /* 3-space vector, fixed length, double coordinates: */
+    typedef cml::vector< double, fixed<3> > vector_d3;
+
+    /* 4-space vector, fixed length, double coordinates: */
+    typedef cml::vector< double, fixed<4> > vector_d4;
+
+    cout << "Example11:" << endl;
+
+    matrix_d43 A;
+
+    A(0,0) = 1.0; A(0,1) = 1.0; A(0,2) = 1.0;
+    A(1,0) = 0.0; A(1,1) = 1.0; A(1,2) = 1.0;
+    A(2,0) = 0.0; A(2,1) = 0.0; A(2,2) = 1.0;
+    A(3,0) = 0.0; A(3,1) = 0.0; A(3,2) = 1.0;
+
+    vector_d3 x;
+    x[0] = 1.; x[1] = 0.; x[2] = 1.;
+
+    cout << "A = " << A << endl;
+    cout << "x = " << x << endl;
+
+    vector_d4 y = A*x;
+    cout << "y = A*x = " << y << endl;
+
+    matrix_d43 B = outer(y,x);
+    cout << "B = outer(y,x) = " << B << endl;
 }
 
 int main()
@@ -355,6 +354,7 @@ int main()
     example8();
     example9();
     example10();
+    example11();
     return 0;
 }
 

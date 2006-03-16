@@ -17,15 +17,14 @@
 #include <cml/vector/vector_expr.h>
 #include <cml/vector/class_ops.h>
 #include <cml/vector/vector_unroller.h>
-#include <cml/vector/vector_transpose.h>
 #include <cml/vector/vector_ops.h>
 #include <cml/vector/vector_products.h>
 
 namespace cml {
 
 /** Fixed-size, fixed-memory vector. */
-template<typename Element, int Size, typename Orient>
-class vector<Element, external<Size>, Orient>
+template<typename Element, int Size>
+class vector< Element, external<Size> >
 : public external_1D<Element,Size>
 {
   public:
@@ -37,13 +36,13 @@ class vector<Element, external<Size>, Orient>
     typedef external_1D<Element,Size> array_type;
 
     /* Shorthand for the type of this vector: */
-    typedef vector<Element,generator_type,Orient> vector_type;
+    typedef vector<Element,generator_type> vector_type;
 
     /* For integration into the expression template code: */
     typedef vector_type expr_type;
 
     /* For integration into the expression template code: */
-    typedef vector<Element,fixed<Size>,Orient> temporary_type;
+    typedef vector< Element,fixed<Size> > temporary_type;
     /* Note: this ensures that an external vector is copied into the proper
      * temporary; external<> temporaries are not allowed.
      */
@@ -59,18 +58,6 @@ class vector<Element, external<Size>, Orient>
 
     /* For matching by storage type: */
     typedef typename array_type::memory_tag memory_tag;
-
-    /* For matching by orientation: */
-    typedef Orient orient_tag;
-    /* Note: orientation is propagated up an expression tree and enforced
-     * at compile time through the result_type expression trait.
-     */
-
-    /* To simplify transpose(): */
-    typedef typename select_if<
-        same_type<Orient,row_vector>::is_true,
-        col_vector, row_vector>::result transposed_tag;
-    typedef cml::vector<Element,generator_type,transposed_tag> transposed_type;
 
     /* For matching by size type: */
     typedef typename array_type::size_tag size_tag;
@@ -106,8 +93,8 @@ class vector<Element, external<Size>, Orient>
 };
 
 /** Run-time sized vector. */
-template<typename Element, typename Orient>
-class vector<Element, external<>, Orient>
+template<typename Element>
+class vector< Element, external<> >
 : public external_1D<Element>
 {
   public:
@@ -119,7 +106,7 @@ class vector<Element, external<>, Orient>
     typedef external_1D<Element> array_type;
 
     /* Shorthand for the type of this vector: */
-    typedef vector<Element,generator_type,Orient> vector_type;
+    typedef vector<Element,generator_type> vector_type;
 
     /* For integration into the expression template code: */
     typedef vector_type expr_type;
@@ -135,18 +122,6 @@ class vector<Element, external<>, Orient>
 
     /* For matching by storage type: */
     typedef typename array_type::memory_tag memory_tag;
-
-    /* For matching by orientation: */
-    typedef Orient orient_tag;
-    /* Note: orientation is propagated up an expression tree and enforced
-     * at compile time through the result_type expression trait.
-     */
-
-    /* To simplify transpose(): */
-    typedef typename select_if<
-        same_type<Orient,row_vector>::is_true,
-        col_vector, row_vector>::result transposed_tag;
-    typedef cml::vector<Element,generator_type,transposed_tag> transposed_type;
 
     /* For matching by size type: */
     typedef typename array_type::size_tag size_tag;

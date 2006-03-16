@@ -81,14 +81,14 @@
     equal_or_fail(dc,dc1, ERROR_MSG_TAG "dot(w+x,y-z)");
 
     /* Transpose: */
-    double dd = w*T(x), dd1 = 27.;
-    equal_or_fail(dd,dd1, ERROR_MSG_TAG "w*T(x)");
+    double dd = w*x, dd1 = 27.;
+    equal_or_fail(dd,dd1, ERROR_MSG_TAG "w*x");
 
-    double de = w*T(x+y), de1 = 56.;
-    equal_or_fail(de,de1, ERROR_MSG_TAG "w*T(x+y)");
+    double de = w*(x+y), de1 = 56.;
+    equal_or_fail(de,de1, ERROR_MSG_TAG "w*(x+y)");
 
-    double df = (w+x)*T(y+z), df1 = 109.;
-    equal_or_fail(df,df1, ERROR_MSG_TAG "(w+x)*T(y+z)");
+    double df = (w+x)*(y+z), df1 = 109.;
+    equal_or_fail(df,df1, ERROR_MSG_TAG "(w+x)*(y+z)");
 }
 
 // -------------------------------------------------------------------------

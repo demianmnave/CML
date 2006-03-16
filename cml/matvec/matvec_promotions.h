@@ -18,19 +18,17 @@
 #include <cml/vector/vector_promotions.h>
 
 namespace cml {
-
-/* Promotions belong in the et namespace: */
 namespace et {
 
 /* Default mat/vec type promotion template. */
 template<typename LeftT, typename RightT> struct MatVecPromote;
 
 /** Type promotion for a matrix and a vector. */
-template<typename E1, class AT1, typename L, typename E2, class AT2, class O>
-struct MatVecPromote< cml::matrix<E1,AT1,L>, cml::vector<E2,AT2,O> >
+template<typename E1, class AT1, typename L, typename E2, class AT2>
+struct MatVecPromote< cml::matrix<E1,AT1,L>, cml::vector<E2,AT2> >
 {
     typedef cml::matrix<E1,AT1,L> matrix_type;
-    typedef cml::vector<E2,AT2,O> vector_type;
+    typedef cml::vector<E2,AT2> vector_type;
 
     /* Promote the arrays: */
     typedef typename ArrayPromote<
@@ -41,8 +39,7 @@ struct MatVecPromote< cml::matrix<E1,AT1,L>, cml::vector<E2,AT2,O> >
     /* The deduced vector result type: */
     typedef cml::vector<
         typename promoted_array::value_type,
-        typename promoted_array::generator_type,
-        col_vector
+        typename promoted_array::generator_type
     > type;
 
     /* The deduced temporary type: */
@@ -53,10 +50,10 @@ struct MatVecPromote< cml::matrix<E1,AT1,L>, cml::vector<E2,AT2,O> >
 };
 
 /** Type promotion for a vector and a matrix. */
-template<typename E1, class AT1, class O, typename E2, class AT2, typename L>
-struct MatVecPromote< cml::vector<E1,AT1,O>, cml::matrix<E2,AT2,L> >
+template<typename E1, class AT1, typename E2, class AT2, typename L>
+struct MatVecPromote< cml::vector<E1,AT1>, cml::matrix<E2,AT2,L> >
 {
-    typedef cml::vector<E1,AT1,O> vector_type;
+    typedef cml::vector<E1,AT1> vector_type;
     typedef cml::matrix<E2,AT2,L> matrix_type;
 
     /* Promote the arrays: */
@@ -68,8 +65,7 @@ struct MatVecPromote< cml::vector<E1,AT1,O>, cml::matrix<E2,AT2,L> >
     /* The deduced vector result type: */
     typedef cml::vector<
         typename promoted_array::value_type,
-        typename promoted_array::generator_type,
-        row_vector
+        typename promoted_array::generator_type
     > type;
 
     /* The deduced temporary type: */

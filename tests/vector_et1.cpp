@@ -32,14 +32,8 @@
  * Vector dot VecXpr -> Scalar
  * VecXpr dot VecXpr -> Scalar
  *
- * Transpose (via temporary):
- *
- * transpose Vector -> Vector
- * transpose VecXpr -> Vector
- *
  * @sa cml/vector_ops.h
  * @sa cml/vector_dot.h
- * @sa cml/et/vector_transpose.h
  */
 
 #include <iostream>
@@ -54,7 +48,7 @@ namespace std {
 #include <cmath>
 #endif
 
-#include <cml/vector.h>
+#include <cml/cml.h>
 
 /* Prefix on error messages in single_- and mixed_vector_tests.ixx: */
 #define ERROR_MSG_TAG \
@@ -63,20 +57,19 @@ namespace std {
 using std::cout;
 using std::endl;
 using namespace cml;
-using namespace vector_ops;
 
-template<typename E, class AT, class O> void
-assign(cml::vector<E,AT,O>& v, double a, double b, double c, double d) {
+template<typename E, class AT> void
+assign(cml::vector<E,AT>& v, double a, double b, double c, double d) {
     v[0] = a; v[1] = b; v[2] = c; v[3] = d;
 }
 
 template<
-    typename E1, class AT1, class O1,
-    typename E2, class AT2, class O2
+    typename E1, class AT1,
+    typename E2, class AT2
 > void
 equal_or_fail(
-        const cml::vector<E1,AT1,O1>& v1,
-        const cml::vector<E2,AT2,O2>& v2,
+        const cml::vector<E1,AT1>& v1,
+        const cml::vector<E2,AT2>& v2,
         std::string msg = "vector equality failed",
         double tol = 1e-8
         )
@@ -102,7 +95,7 @@ equal_or_fail(
 
 void fixed_test()
 {
-    typedef vector<double, fixed<4>, row_vector> vector_type;
+    typedef vector< double, fixed<4> > vector_type;
 
 #define CONSTRUCT(_a_) _a_
 #define COPY_ASSIGN(_a_) _a_
@@ -120,7 +113,7 @@ void fixed_test()
  */
 void dynamic_test()
 {
-    typedef vector<double, dynamic<>, row_vector> vector_type;
+    typedef vector< double, dynamic<> > vector_type;
 
 #define CONSTRUCT(_a_) _a_(4)
 #if defined(CML_AUTOMATIC_VECTOR_RESIZE_ON_ASSIGNMENT)
@@ -143,7 +136,7 @@ void dynamic_test()
  */
 void external_test()
 {
-    typedef vector<double, external<4>, row_vector> vector_type;
+    typedef vector< double, external<4> > vector_type;
 
     /* Need the vectors to store to: */
     double _w[4], _x[4], _y[4], _z[4];
@@ -171,13 +164,13 @@ void external_test()
 
 void mixed_fixed_dynamic_test()
 {
-    typedef vector<double, fixed<4>, row_vector> vector_type1;
+    typedef vector< double, fixed<4> > vector_type1;
 #define CONSTRUCT_1(_a_) _a_
 #define COPY_ASSIGN_1(_a_) _a_
 #define COPY_CONSTRUCT_1(_a_,_e_) _a_(_e_)
 
 
-    typedef vector<double, dynamic<>, row_vector> vector_type2;
+    typedef vector< double, dynamic<> > vector_type2;
 #define CONSTRUCT_2(_a_) _a_(4)
 #if defined(CML_AUTOMATIC_VECTOR_RESIZE_ON_ASSIGNMENT)
 #define COPY_ASSIGN_2(_a_) _a_
@@ -199,13 +192,13 @@ void mixed_fixed_dynamic_test()
 
 void mixed_fixed_external_test()
 {
-    typedef vector<double, fixed<4>, row_vector> vector_type1;
+    typedef vector< double, fixed<4> > vector_type1;
 #define CONSTRUCT_1(_a_) _a_
 #define COPY_ASSIGN_1(_a_) _a_
 #define COPY_CONSTRUCT_1(_a_,_e_) _a_(_e_)
 
 
-    typedef vector<double, external<4>, row_vector> vector_type2;
+    typedef vector< double, external<4> > vector_type2;
 
     /* Need the vectors to store to (these are the ony ones used in the
      * tests):
@@ -230,13 +223,13 @@ void mixed_fixed_external_test()
 
 void mixed_dynamic_external_test()
 {
-    typedef vector<double, fixed<4>, row_vector> vector_type1;
+    typedef vector< double, fixed<4> > vector_type1;
 #define CONSTRUCT_1(_a_) _a_
 #define COPY_ASSIGN_1(_a_) _a_
 #define COPY_CONSTRUCT_1(_a_,_e_) _a_(_e_)
 
 
-    typedef vector<double, external<4>, row_vector> vector_type2;
+    typedef vector< double, external<4> > vector_type2;
 
     /* Need the vectors to store to (these are the ony ones used in the
      * tests):

@@ -1,17 +1,14 @@
-
 CML_ENABLE_MATRIX_BRACES
 - Allow matrices to be accessed as A[row][col] in addition to A(row,col).
   This is primarily for testing, and is not used anywhere in the library
   proper since the proxy object mechanism that's used is not guaranteed to
   produce optimal code.
 
-
 CML_NO_DEFAULT_EXPR_TRAITS
 - Don't use default expression traits for built-in types.  This is handy
   for debugging, since no classes or built-in types will have an expression
   traits class by default (i.e. the expression traits class must be created
   explicitly).
-
 
 CML_DEFAULT_ARRAY_LAYOUT
 - Either cml::row_major or cml::col_major.  This determines the layout of the
@@ -20,17 +17,14 @@ CML_DEFAULT_ARRAY_LAYOUT
   unless CML_ALWAYS_PROMOTE_TO_DEFAULT_LAYOUT is defined.  This parameter also
   determines the default 2D array memory layout.
 
-
 CML_DEFAULT_ARRAY_ALLOC
 - Defines the default allocator for arrays generated at run-time by the type
   deduction system.  The default value is std::allocator<void>.
-
 
 CML_ALWAYS_PROMOTE_TO_DEFAULT_LAYOUT
 - If this is defined, 2D arrays will always be promoted to the default layout.
   This is useful if matrix expressions should always be handled in
   a particular orientation for efficiency.
-
 
 CML_VECTOR_UNROLL_LIMIT=<N>
 - <N> is the maximum vector length that should be automatically unrolled by
@@ -38,13 +32,11 @@ CML_VECTOR_UNROLL_LIMIT=<N>
   the normal for loop is used.  Note also that unrolling is available only
   for fixed-size vectors.
 
-
 CML_2D_UNROLLER
 - Use a 2D unroller for matrix expressions.  This causes very poor code for
   most of the supported compilers, but with GCC4/G5, it's required for
   optimal code.  Note that unrolling is available only for fixed-size
   matrices.
-
 
 CML_MATRIX_UNROLL_LIMIT=<N>
 - <N> is the maximum number of matrix elements (#rows x #cols) that
@@ -52,11 +44,9 @@ CML_MATRIX_UNROLL_LIMIT=<N>
   for matrices with more than <N> elements.  When either CML_2D_UNROLLER or
   CML_2D_TO_1D_UNROLLER is defined, this must also be defined.
 
-
 CML_NO_2D_UNROLLER
 - Don't unroll at all, just use a loop.  This seems to generate the best
   code on at least GCC4/x86 and Intel 9/Linux/x86.
-
 
 CML_USE_MAT_UNIOP_REF
 - When a unary expression appears as a child node in an expression tree,
@@ -65,7 +55,6 @@ CML_USE_MAT_UNIOP_REF
   avoid the copy and inline the results directly, others can't.  Note that
   this is not currently used by (or tested for) any compiler.
 
-
 CML_USE_MAT_BINOP_REF
 - When a binary expression appears as a child node in an expression tree,
   use a reference to the compiler's temporary.  If this is not defined,
@@ -73,11 +62,9 @@ CML_USE_MAT_BINOP_REF
   avoid the copy and inline the results directly, others can't.  (Note: this
   can cause liveness problems for temporaries, so it's not used by default.)
 
-
 CML_USE_MAT_XPR_REF
 - Use a reference to the compiler's temporary in the root MatrixXpr node for
   matrix expressions
-
 
 CML_USE_VEC_UNIOP_REF
 CML_USE_VEC_BINOP_REF
@@ -85,28 +72,9 @@ CML_USE_VEC_XPR_REF
 - Same as CML_USE_MAT_UNIOP_REF, CML_USE_VEC_BINOP_REF, and
   CML_USE_MAT_XPR_REF, but for vectors.
 
-
 CML_RECIPROCAL_OPTIMIZATION
 - Use "*= 1./x" instead of "/= x" for per-element division.  This may generate
   better code for certain systems, but isn't yet tested for any configuration.
-
-
-CML_IGNORE_VECTOR_ORIENTATION
-- Don't enforce vector orientation compatibility in algebraic vector
-  expressions; e.g. x = u*v will work with two row-vectors or two col-vectors.
-  Without this option, orientation is enforced so that argument vectors have
-  the proper orientation for the operator.  This has no effect on named
-  functions (like dot()) in which the proper orientation is assumed and
-  implicit.
-
-
-CML_ENFORCE_VECTOR_ORIENTATION_ON_COPY
-- Enforce vector orientation compatibility in copy construction and assignment
-  (i.e. operator=() and vector(const vector<>&)).  This disables the ability
-  to create a transposed copy of a vector without specifying the transpose
-  operator.  This option has no effect if CML_IGNORE_VECTOR_ORIENTATION is
-  defined.
-
 
 CML_AUTOMATIC_VECTOR_RESIZE_ON_ASSIGNMENT
 - Enable automatic resizing of dynamic vectors on assignment and copy from
@@ -127,12 +95,10 @@ CML_CHECK_VECTOR_EXPR_SIZES
   this has no effect for expressions composed of entirely fixed-size vectors,
   since the sizes are automatically checked at compile time.
 
-
 CML_AUTOMATIC_MATRIX_RESIZE_ON_ASSIGNMENT
 CML_CHECK_MATRIX_EXPR_SIZES
 - Same as CML_AUTOMATIC_VECTOR_RESIZE and CML_CHECK_VECTOR_EXPR_SIZES, but for
   matrices.
-
 
 CML_USE_GENERATED_MATRIX_ASSIGN_OP
 - Allow the compiler to generate its own matrix assignment code.  This yields

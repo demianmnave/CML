@@ -32,9 +32,6 @@ struct mul_expects_matrix_args_error;
 struct mul_expressions_have_wrong_size_error;
 
 namespace cml {
-namespace matrix_ops {
-
-/* Detail contains helpers for mul() below: */
 namespace detail {
 
 /** Verify the sizes of the argument matrices for matrix multiplication.
@@ -42,7 +39,7 @@ namespace detail {
  * @returns a matrix_size containing the size of the resulting matrix.
  */
 template<typename LeftT, typename RightT> matrix_size
-CheckedSize(const LeftT&, const RightT&, fixed_size_tag)
+MatMulCheckedSize(const LeftT&, const RightT&, fixed_size_tag)
 {
     CML_STATIC_REQUIRE_M(
             ((size_t)LeftT::array_cols == (size_t)RightT::array_rows),
@@ -55,7 +52,7 @@ CheckedSize(const LeftT&, const RightT&, fixed_size_tag)
  * @returns a matrix_size containing the size of the resulting matrix.
  */
 template<typename LeftT, typename RightT> matrix_size
-CheckedSize(const LeftT& left, const RightT& right, dynamic_size_tag)
+MatMulCheckedSize(const LeftT& left, const RightT& right, dynamic_size_tag)
 {
     matrix_size left_N = left.size(), right_N = right.size();
     et::GetCheckedSize<LeftT,RightT,dynamic_size_tag>()
@@ -63,7 +60,6 @@ CheckedSize(const LeftT& left, const RightT& right, dynamic_size_tag)
     return matrix_size(left_N.first, right_N.second); /* rows,cols */
 }
 
-} // namespace detail
 
 /** Matrix multiplication.
  *
@@ -105,10 +101,10 @@ mul(const LeftT& left, const RightT& right)
         fixed_size_tag,dynamic_size_tag>::result size_tag;
 
     /* Require that left has the same number of columns as right has rows.
-     * This automatically checks fixed-size vectors at compile time, and
+     * This automatically checks fixed-size matrices at compile time, and
      * throws at run-time if the sizes don't match:
      */
-    detail::CheckedSize(left, right, size_tag());
+    detail::MatMulCheckedSize(left, right, size_tag());
 
     /* Deduce resulting matrix and element type.  ArrayPromotion is
      * specially implemeted to that the resulting type of two fixed-size
@@ -339,263 +335,10 @@ mul(const LeftT& left, const RightT& right)
     return C;
 }
 
-
-/* This is for testing only: */
-template<class LeftT, class RightT> void
-mul(
-        typename et::MatrixPromote<
-            typename et::ExprTraits<LeftT>::result_type,
-            typename et::ExprTraits<RightT>::result_type
-        >::type& C,
-        const LeftT& left,
-        const RightT& right)
-{
-    /* Shorthand: */
-    typedef et::ExprTraits<LeftT> left_traits;
-    typedef et::ExprTraits<RightT> right_traits;
-    typedef typename left_traits::result_type left_result;
-    typedef typename right_traits::result_type right_result;
-
-    /* First, require matrix expressions: */
-    typedef typename left_traits::result_tag left_result_tag;
-    typedef typename right_traits::result_tag right_result_tag;
-    CML_STATIC_REQUIRE_M(
-            (same_type<left_result_tag,et::matrix_result_tag>::is_true
-             && same_type<right_result_tag,et::matrix_result_tag>::is_true),
-            mul_expects_matrix_args_error);
-    /* Note: parens are required here so that the preprocessor ignores the
-     * commas:
-     */
-
-    /* Deduce size type: */
-    typedef typename left_traits::size_tag left_size;
-    typedef typename right_traits::size_tag right_size;
-    // typedef left_size size_tag;
-    typedef typename select_if<
-        same_type<left_size,right_size>::is_true
-        && same_type<right_size,fixed_size_tag>::is_true,
-        fixed_size_tag,dynamic_size_tag>::result size_tag;
-
-    /* Require that left has the same number of columns as right has rows.
-     * This automatically checks fixed-size vectors at compile time, and
-     * throws at run-time if the sizes don't match:
-     */
-    detail::CheckedSize(left, right, size_tag());
-
-    /* Deduce resulting matrix and element type: */
-    typedef typename et::MatrixPromote<
-        left_result,right_result>::type result_type;
-    typedef typename result_type::value_type value_type;
-
-#if 1
-    for(size_t row = 0; row < left.rows(); ++row) {
-        for(size_t col = 0; col < right.cols(); ++col) {
-#if 1
-            value_type sum(left(row,0)*right(0,col));
-            for(size_t k = 1; k < right.rows(); ++k) {
-                sum += (left(row,k)*right(k,col));
-            }
-            C(row,col) = sum;
-#else
-            C(row,col) =
-                left(row,0)*right(0,col)
-                + left(row,1)*right(1,col)
-                + left(row,2)*right(2,col)
-                + left(row,3)*right(3,col);
-#endif
-        }
-    }
-#else
-#if 1
-    double sum;
-
-    sum  = left(0,0)*right(0,0)
-         + left(0,1)*right(1,0)
-         + left(0,2)*right(2,0)
-         + left(0,3)*right(3,0);
-    C(0,0) = sum;
-
-    sum  = left(0,0)*right(0,1)
-         + left(0,1)*right(1,1)
-         + left(0,2)*right(2,1)
-         + left(0,3)*right(3,1);
-    C(0,1) = sum;
-
-    sum  = left(0,0)*right(0,2)
-         + left(0,1)*right(1,2)
-         + left(0,2)*right(2,2)
-         + left(0,3)*right(3,2);
-    C(0,2) = sum;
-
-    sum  = left(0,0)*right(0,3)
-         + left(0,1)*right(1,3)
-         + left(0,2)*right(2,3)
-         + left(0,3)*right(3,3);
-    C(0,3) = sum;
+} // namespace detail
 
 
-    sum  = left(1,0)*right(0,0)
-         + left(1,1)*right(1,0)
-         + left(1,2)*right(2,0)
-         + left(1,3)*right(3,0);
-    C(1,0) = sum;
-
-    sum  = left(1,0)*right(0,1)
-         + left(1,1)*right(1,1)
-         + left(1,2)*right(2,1)
-         + left(1,3)*right(3,1);
-    C(1,1) = sum;
-
-    sum  = left(1,0)*right(0,2)
-         + left(1,1)*right(1,2)
-         + left(1,2)*right(2,2)
-         + left(1,3)*right(3,2);
-    C(1,2) = sum;
-
-    sum  = left(1,0)*right(0,3)
-         + left(1,1)*right(1,3)
-         + left(1,2)*right(2,3)
-         + left(1,3)*right(3,3);
-    C(1,3) = sum;
-
-
-    sum  = left(2,0)*right(0,0)
-         + left(2,1)*right(1,0)
-         + left(2,2)*right(2,0)
-         + left(2,3)*right(3,0);
-    C(2,0) = sum;
-
-    sum  = left(2,0)*right(0,1)
-         + left(2,1)*right(1,1)
-         + left(2,2)*right(2,1)
-         + left(2,3)*right(3,1);
-    C(2,1) = sum;
-
-    sum  = left(2,0)*right(0,2)
-         + left(2,1)*right(1,2)
-         + left(2,2)*right(2,2)
-         + left(2,3)*right(3,2);
-    C(2,2) = sum;
-
-    sum  = left(2,0)*right(0,3)
-         + left(2,1)*right(1,3)
-         + left(2,2)*right(2,3)
-         + left(2,3)*right(3,3);
-    C(2,3) = sum;
-
-
-    sum  = left(3,0)*right(0,0)
-         + left(3,1)*right(1,0)
-         + left(3,2)*right(2,0)
-         + left(3,3)*right(3,0);
-    C(3,0) = sum;
-
-    sum  = left(3,0)*right(0,1)
-         + left(3,1)*right(1,1)
-         + left(3,2)*right(2,1)
-         + left(3,3)*right(3,1);
-    C(3,1) = sum;
-
-    sum  = left(3,0)*right(0,2)
-         + left(3,1)*right(1,2)
-         + left(3,2)*right(2,2)
-         + left(3,3)*right(3,2);
-    C(3,2) = sum;
-
-    sum  = left(3,0)*right(0,3)
-         + left(3,1)*right(1,3)
-         + left(3,2)*right(2,3)
-         + left(3,3)*right(3,3);
-    C(3,3) = sum;
-#else
-    C(0,0)  = left(0,0)*right(0,0);
-    C(0,0) += left(0,1)*right(1,0);
-    C(0,0) += left(0,2)*right(2,0);
-    C(0,0) += left(0,3)*right(3,0);
-
-    C(0,1)  = left(0,0)*right(0,1);
-    C(0,1) += left(0,1)*right(1,1);
-    C(0,1) += left(0,2)*right(2,1);
-    C(0,1) += left(0,3)*right(3,1);
-
-    C(0,2)  = left(0,0)*right(0,2);
-    C(0,2) += left(0,1)*right(1,2);
-    C(0,2) += left(0,2)*right(2,2);
-    C(0,2) += left(0,3)*right(3,2);
-
-    C(0,3)  = left(0,0)*right(0,3);
-    C(0,3) += left(0,1)*right(1,3);
-    C(0,3) += left(0,2)*right(2,3);
-    C(0,3) += left(0,3)*right(3,3);
-
-    C(1,0)  = left(1,0)*right(0,0);
-    C(1,0) += left(1,1)*right(1,0);
-    C(1,0) += left(1,2)*right(2,0);
-    C(1,0) += left(1,3)*right(3,0);
-
-    C(1,1)  = left(1,0)*right(0,1);
-    C(1,1) += left(1,1)*right(1,1);
-    C(1,1) += left(1,2)*right(2,1);
-    C(1,1) += left(1,3)*right(3,1);
-
-    C(1,2)  = left(1,0)*right(0,2);
-    C(1,2) += left(1,1)*right(1,2);
-    C(1,2) += left(1,2)*right(2,2);
-    C(1,2) += left(1,3)*right(3,2);
-
-    C(1,3)  = left(1,0)*right(0,3);
-    C(1,3) += left(1,1)*right(1,3);
-    C(1,3) += left(1,2)*right(2,3);
-    C(1,3) += left(1,3)*right(3,3);
-
-    C(2,0)  = left(2,0)*right(0,0);
-    C(2,0) += left(2,1)*right(1,0);
-    C(2,0) += left(2,2)*right(2,0);
-    C(2,0) += left(2,3)*right(3,0);
-
-    C(2,1)  = left(2,0)*right(0,1);
-    C(2,1) += left(2,1)*right(1,1);
-    C(2,1) += left(2,2)*right(2,1);
-    C(2,1) += left(2,3)*right(3,1);
-
-    C(2,2)  = left(2,0)*right(0,2);
-    C(2,2) += left(2,1)*right(1,2);
-    C(2,2) += left(2,2)*right(2,2);
-    C(2,2) += left(2,3)*right(3,2);
-
-    C(2,3)  = left(2,0)*right(0,3);
-    C(2,3) += left(2,1)*right(1,3);
-    C(2,3) += left(2,2)*right(2,3);
-    C(2,3) += left(2,3)*right(3,3);
-
-    C(3,0)  = left(3,0)*right(0,0);
-    C(3,0) += left(3,1)*right(1,0);
-    C(3,0) += left(3,2)*right(2,0);
-    C(3,0) += left(3,3)*right(3,0);
-
-    C(3,1)  = left(3,0)*right(0,1);
-    C(3,1) += left(3,1)*right(1,1);
-    C(3,1) += left(3,2)*right(2,1);
-    C(3,1) += left(3,3)*right(3,1);
-
-    C(3,2)  = left(3,0)*right(0,2);
-    C(3,2) += left(3,1)*right(1,2);
-    C(3,2) += left(3,2)*right(2,2);
-    C(3,2) += left(3,3)*right(3,2);
-
-    C(3,3)  = left(3,0)*right(0,3);
-    C(3,3) += left(3,1)*right(1,3);
-    C(3,3) += left(3,2)*right(2,3);
-    C(3,3) += left(3,3)*right(3,3);
-#endif
-#endif
-}
-
-} // namespace matrix_ops
-
-/* Global operators: */
-
-/** Dispatch for two matrices. */
+/** operator*() for two matrices. */
 template<typename E1, class AT1, typename L1,
          typename E2, class AT2, typename L2>
 typename et::MatrixPromote<
@@ -604,10 +347,10 @@ typename et::MatrixPromote<
 operator*(const matrix<E1,AT1,L1>& left,
           const matrix<E2,AT2,L2>& right)
 {
-    return matrix_ops::mul(left,right);
+    return detail::mul(left,right);
 }
 
-/** Dispatch for a matrix and a MatrixXpr. */
+/** operator*() for a matrix and a MatrixXpr. */
 template<typename E, class AT, typename L, typename XprT>
 typename et::MatrixPromote<
     matrix<E,AT,L>, XprT
@@ -621,10 +364,10 @@ operator*(const matrix<E,AT,L>& left,
     cml::et::detail::Resize(tmp,right.rows(),right.cols());
     tmp = right;
 
-    return matrix_ops::mul(left,tmp);
+    return detail::mul(left,tmp);
 }
 
-/** Dispatch for a MatrixXpr and a matrix. */
+/** operator*() for a MatrixXpr and a matrix. */
 template<typename XprT, typename E, class AT, typename L>
 typename et::MatrixPromote<
     XprT, matrix<E,AT,L>
@@ -638,10 +381,10 @@ operator*(const et::MatrixXpr<XprT>& left,
     cml::et::detail::Resize(tmp,left.rows(),left.cols());
     tmp = left;
 
-    return matrix_ops::mul(tmp,right);
+    return detail::mul(tmp,right);
 }
 
-/** Dispatch for two MatrixXpr's. */
+/** operator*() for two MatrixXpr's. */
 template<typename XprT1, typename XprT2>
 typename et::MatrixPromote<
     XprT1, XprT2
@@ -660,7 +403,7 @@ operator*(const et::MatrixXpr<XprT1>& left,
     cml::et::detail::Resize(rtmp,right.rows(),right.cols());
     rtmp = right;
 
-    return matrix_ops::mul(ltmp,rtmp);
+    return detail::mul(ltmp,rtmp);
 }
 
 } // namespace cml

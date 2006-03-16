@@ -34,7 +34,7 @@ namespace cml {
  * the same size.  This is particularly important for dynamically-sized
  * vectors.
  */
-template<typename Element, class ArrayType, typename Orient> class vector;
+template<typename Element, class ArrayType> class vector;
 
 } // namespace cml
 

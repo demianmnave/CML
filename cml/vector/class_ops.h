@@ -8,15 +8,6 @@
 #ifndef vector_class_ops_h
 #define vector_class_ops_h
 
-/* This sets up the environment for oriented or unoriented vector copies: */
-#if defined(CML_ENFORCE_VECTOR_ORIENTATION_ON_COPY)
-  #define ORIENT_MACRO         Orient
-  #define COPY_TEMPLATE_PARAMS template<typename E, class AT>
-#else
-  #define ORIENT_MACRO         O
-  #define COPY_TEMPLATE_PARAMS template<typename E, class AT, typename O>
-#endif
-
 /** Copy-construct a vector.
  *
  * @note This is required for GCC4, otherwise it won't elide the copy
@@ -25,21 +16,21 @@
  * @bug Make sure that either eliding the copy constructor for dynamic
  * arrays is safe, or  the compiler doesn't elide the copy constructor.
  */
-#define CML_VEC_COPY_FROM_VECTYPE(_add_)                             \
-vector(const vector_type& v) _add_ {                                 \
-    typedef et::OpAssign<Element,Element> OpT;                       \
-    et::UnrollAssignment<OpT>(*this,v);                              \
+#define CML_VEC_COPY_FROM_VECTYPE(_add_)                            \
+vector(const vector_type& v) _add_ {                                \
+    typedef et::OpAssign<Element,Element> OpT;                      \
+    et::UnrollAssignment<OpT>(*this,v);                             \
 }
 
 /** Construct from an arbitrary vector.
  *
  * @param v the vector to copy from.
  */
-#define CML_VEC_COPY_FROM_VEC                                        \
-COPY_TEMPLATE_PARAMS                                                 \
-vector(const vector<E,AT,ORIENT_MACRO>& m) {                         \
-    typedef et::OpAssign<Element,E> OpT;                             \
-    et::UnrollAssignment<OpT>(*this,m);                              \
+#define CML_VEC_COPY_FROM_VEC                                       \
+template<typename E, class AT>                                      \
+vector(const vector<E,AT>& m) {                                     \
+    typedef et::OpAssign<Element,E> OpT;                            \
+    et::UnrollAssignment<OpT>(*this,m);                             \
 }
 
 /** Construct from a vector expression.
@@ -76,8 +67,8 @@ vector_type& operator=(const vector_type& v) {                      \
  * @param _op_name_ the op functor (e.g. et::OpAssign)
  */
 #define CML_VEC_ASSIGN_FROM_VEC(_op_, _op_name_)                    \
-COPY_TEMPLATE_PARAMS vector_type&                                   \
-operator _op_ (const cml::vector<E,AT,ORIENT_MACRO>& m) {           \
+template<typename E, class AT> vector_type&                         \
+operator _op_ (const cml::vector<E,AT>& m) {                        \
     typedef _op_name_ <Element,E> OpT;                              \
     cml::et::UnrollAssignment<OpT>(*this,m);                        \
     return *this;                                                   \

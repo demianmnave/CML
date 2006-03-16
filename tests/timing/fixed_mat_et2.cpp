@@ -9,23 +9,15 @@
 #define CML_ENABLE_MATRIX_BRACES // for operator[][] to load/print a matrix
 
 #include <iostream>
-#include <cml/fixed.h>
-#include <cml/vector.h>
-#include <cml/matrix.h>
-
-using namespace cml::vector_ops;
-using namespace cml::matrix_ops;
+#include <cml/cml.h>
+using namespace cml;
 
 /* For convenience: */
 using std::cerr;
 using std::endl;
 
-using cml::fixed;
-typedef cml::matrix< double, fixed<4,4> > matrix_d44;
+typedef matrix< double, fixed<4,4> > matrix_d44;
 #define MATINIT(_m_) _m_
-
-/* Define the vector orientation to assume: */
-typedef cml::col_vector vector_orient;
 
 #include "print_matrix.cpp"
 #endif

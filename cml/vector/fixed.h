@@ -13,15 +13,14 @@
 #include <cml/vector/vector_expr.h>
 #include <cml/vector/class_ops.h>
 #include <cml/vector/vector_unroller.h>
-#include <cml/vector/vector_transpose.h>
 #include <cml/vector/vector_ops.h>
 #include <cml/vector/vector_products.h>
 
 namespace cml {
 
 /** Fixed-size, fixed-memory vector. */
-template<typename Element, int Size, typename Orient>
-class vector<Element, fixed<Size>, Orient>
+template<typename Element, int Size>
+class vector< Element, fixed<Size> >
 : public fixed_1D<Element,Size>
 {
   public:
@@ -33,7 +32,7 @@ class vector<Element, fixed<Size>, Orient>
     typedef fixed_1D<Element,Size> array_type;
 
     /* Shorthand for the type of this vector: */
-    typedef vector<Element,generator_type,Orient> vector_type;
+    typedef vector<Element,generator_type> vector_type;
 
     /* For integration into the expression template code: */
     typedef vector_type expr_type;
@@ -52,21 +51,6 @@ class vector<Element, fixed<Size>, Orient>
 
     /* For matching by storage type: */
     typedef typename array_type::memory_tag memory_tag;
-
-    /* For matching by orientation: */
-    typedef Orient orient_tag;
-    /* Note: orientation is propagated up an expression tree and enforced
-     * at compile time through the result_type expression trait.
-     */
-
-    /* To simplify transpose(): */
-    typedef typename select_if<
-        same_type<Orient,row_vector>::is_true,
-        col_vector, row_vector
-    >::result transposed_tag;
-
-    /* The transposed type: */
-    typedef cml::vector<Element,generator_type,transposed_tag> transposed_type;
 
     /* For matching by size type: */
     typedef typename array_type::size_tag size_tag;

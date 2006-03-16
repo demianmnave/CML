@@ -44,17 +44,6 @@ struct row_major {};
 /** Col-major storage tag. */
 struct col_major {};
 
-/** Column vector tag. */
-struct col_vector {};
-
-#if defined(CML_IGNORE_VECTOR_ORIENTATION)
-/* Assume col_vector always: */
-typedef col_vector row_vector;
-#else
-/** Row vector tag. */
-struct row_vector {};
-#endif
-
 /* This is the pair returned from the matrix size() method, as well as from
  * the matrix expression size checking code:
  */
