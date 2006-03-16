@@ -242,6 +242,7 @@ void example8()
         << endl;
 }
 
+#if defined(CML_ENABLE_DOT_OPERATOR)
 void example9()
 {
     /* 3-space column vector, fixed length, double coordinates: */
@@ -261,6 +262,7 @@ void example9()
     cout << "  dot(u+v,v) = " << (u+v)*v << endl;
     cout << "  cos(u,v) = " << (u*v)/sqrt((u*u)*(v*v)) << endl;
 }
+#endif
 
 void example10()
 {
@@ -352,7 +354,9 @@ int main()
     example6();
     example7();
     example8();
+#if defined(CML_ENABLE_DOT_OPERATOR)
     example9();
+#endif
     example10();
     example11();
     return 0;

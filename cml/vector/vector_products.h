@@ -146,6 +146,7 @@ outer(const LeftT& left, const RightT& right)
     return C;
 }
 
+#if defined(CML_ENABLE_DOT_OPERATOR)
 
 /** dot() via operator*() for two vectors. */
 template<
@@ -192,6 +193,8 @@ operator*(const et::VectorXpr<XprT1>& left,
 {
     return dot(left,right);
 }
+
+#endif
 
 } // namespace cml
 
