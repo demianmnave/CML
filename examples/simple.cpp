@@ -269,9 +269,6 @@ void example10()
     /* 4x3 matrix, fixed length, double coordinates: */
     typedef cml::matrix< double, fixed<4,3>, cml::col_major > matrix_d43;
 
-    /* 3-space matrix, fixed length, double coordinates: */
-    typedef cml::matrix< double, fixed<3,3>, cml::col_major > matrix_d33;
-
     /* 3-space vector, fixed length, double coordinates: */
     typedef cml::vector< double, fixed<3> > vector_d3;
 
@@ -310,7 +307,6 @@ void example10()
     cout << "z = yp*T(A) = " << z << endl;
 }
 
-
 void example11()
 {
     /* 4x3 matrix, fixed length, double coordinates: */
@@ -344,6 +340,35 @@ void example11()
     cout << "B = outer(y,x) = " << B << endl;
 }
 
+void example12()
+{
+    /* 4x3 matrix, fixed length, double coordinates: */
+    typedef cml::matrix< double, fixed<4,3>, cml::col_major > matrix_d43;
+
+    /* 3-space matrix, fixed length, float coordinates: */
+    typedef cml::matrix< float, fixed<3,3>, cml::col_major > matrix_f33;
+
+    /* 3-space vector, fixed length, double coordinates: */
+    typedef cml::vector< double, fixed<3> > vector_d3;
+
+    /* 4-space vector, fixed length, double coordinates: */
+    typedef cml::vector< float, fixed<4> > vector_d4;
+
+    cout << "Example10:" << endl;
+
+    matrix_d43 A;
+
+    A(0,0) = 1.0; A(0,1) = 1.0; A(0,2) = 1.0;
+    A(1,0) = 0.0; A(1,1) = 1.0; A(1,2) = 1.0;
+    A(2,0) = 0.0; A(2,1) = 0.0; A(2,2) = 1.0;
+    A(3,0) = 0.0; A(3,1) = 0.0; A(3,2) = 1.0;
+
+    matrix_f33 B = T(A)*A;
+
+    cout << "A = " << A << endl;
+    cout << "B[f33] = T(A)*A = " << B << endl;
+}
+
 int main()
 {
     example1();
@@ -359,6 +384,7 @@ int main()
 #endif
     example10();
     example11();
+    example12();
     return 0;
 }
 

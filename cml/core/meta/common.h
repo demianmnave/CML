@@ -14,6 +14,14 @@ struct true_type {};
 /** Type of a false statement. */
 struct false_type {};
 
+template<bool B> struct is_true {
+    typedef false_type result;
+};
+
+template<> struct is_true<true> {
+    typedef true_type result;
+};
+
 /** A "type pair". */
 template<typename T1, typename T2> struct type_pair {
     typedef T1 first;
@@ -29,6 +37,9 @@ struct type_quad {
     typedef T3 fourth;
 };
 
+/** Match any type (for use with same_type<> and select_switch<>). */
+typedef struct any_type {};
+
 /** Determine if two types are the same.
  *
  * Defaults to false.
@@ -40,6 +51,24 @@ template<typename T, typename U> struct same_type {
 
 /** Match the same type for both of same_type's template arguments. */
 template<typename T> struct same_type<T,T> {
+    typedef true_type result;
+    enum { is_true = true, is_false = false };
+};
+
+/** Match a type and any_type. */
+template<typename T> struct same_type<T,any_type> {
+    typedef true_type result;
+    enum { is_true = true, is_false = false };
+};
+
+/** Match a type and any_type. */
+template<typename T> struct same_type<any_type,T> {
+    typedef true_type result;
+    enum { is_true = true, is_false = false };
+};
+
+/** Disambiguate pair of any_type's. */
+template<> struct same_type<any_type,any_type> {
     typedef true_type result;
     enum { is_true = true, is_false = false };
 };

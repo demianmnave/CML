@@ -62,6 +62,18 @@
 
     double dc = dot(w+x,y+z), dc1 = 109.;
     equal_or_fail(dc,dc1, ERROR_MSG_TAG "dot(w+x,y-z)");
+
+#if defined(CML_ENABLE_DOT_OPERATOR)
+    /* Dot: */
+    double da = w*x, da1 = 27.;
+    equal_or_fail(da,da1, ERROR_MSG_TAG "w*x");
+
+    double db = w*(x+y), db1 = 56.;
+    equal_or_fail(db,db1, ERROR_MSG_TAG "w*(x+y)");
+
+    double dc = (w+x)*(y+z), dc1 = 109.;
+    equal_or_fail(dc,dc1, ERROR_MSG_TAG "(w+x)*(y-z)");
+#endif
 }
 
 // -------------------------------------------------------------------------

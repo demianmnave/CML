@@ -96,6 +96,35 @@ template<> struct ExprTraits<double>
     /** Size is always 1. */
     size_t cols(double) const { return 1; }
 };
+
+template<> struct ExprTraits<float>
+{
+    /* Standard: */
+    typedef float expr_type;
+    typedef float value_type;
+    typedef float& reference;
+    typedef float const_reference;
+    typedef scalar_result_tag result_tag;
+    typedef fixed_memory_tag memory_tag;
+    typedef unit_size_tag size_tag;
+    typedef float result_type;
+    typedef expr_leaf_tag node_tag;
+
+    /** Vector-like access, just returns the value. */
+    value_type get(float v, size_t) const { return v; }
+
+    /** Matrix-like access, just returns the value. */
+    value_type get(float v, size_t, size_t) const { return v; }
+
+    /** Size is always 1. */
+    size_t size(float) const { return 1; }
+
+    /** Size is always 1. */
+    size_t rows(float) const { return 1; }
+
+    /** Size is always 1. */
+    size_t cols(float) const { return 1; }
+};
 #endif
 
 } // namespace et

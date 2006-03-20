@@ -34,6 +34,8 @@
  *
  * @sa cml/vector_ops.h
  * @sa cml/vector_dot.h
+ *
+ * @todo Add tests for outer().
  */
 
 #include <iostream>

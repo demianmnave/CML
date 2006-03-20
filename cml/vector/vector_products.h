@@ -88,7 +88,6 @@ dot(const LeftT& left, const RightT& right)
      */
 
     /* Deduce the size tag to use to check sizes: */
-    using namespace meta;
     typedef typename left_traits::size_tag left_size;
     typedef typename right_traits::size_tag right_size;
     typedef typename select_switch<
@@ -308,7 +307,6 @@ dot(const LeftT& left, const RightT& right)
      */
 
     /* Figure out the unroller to use (fixed or dynamic): */
-    using namespace meta;
     typedef typename select_switch<
         type_pair<left_size,right_size>,
         type_pair<fixed_size_tag,fixed_size_tag>, fixed_size_tag,
