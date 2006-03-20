@@ -149,10 +149,6 @@ class external_2D
  * Both the memory and the size are fixed at run-time, but cannot be changed.
  * This is a specialization for the case that Rows and Cols are not specified
  * (i.e. given as the default of -1,-1).
- *
- * @todo Should it be possible to rebind the array to another memory location?
- * This would seem to be like a handle to the memory, so this may be complex
- * to implement correctly.
  */
 template<typename Element, typename Layout>
 class external_2D<Element,-1,-1,Layout>

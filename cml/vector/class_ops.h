@@ -12,9 +12,6 @@
  *
  * @note This is required for GCC4, otherwise it won't elide the copy
  * constructor.
- *
- * @bug Make sure that either eliding the copy constructor for dynamic
- * arrays is safe, or  the compiler doesn't elide the copy constructor.
  */
 #define CML_VEC_COPY_FROM_VECTYPE(_add_)                            \
 vector(const vector_type& v) _add_ {                                \

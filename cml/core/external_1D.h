@@ -6,8 +6,8 @@
  *
  * Defines the fixed-size and runtime-sized external 1D arrays.
  *
- * @todo Need a better way ("concept") to designate non-resizable, run-time
- * sized arrays.
+ * @todo Need a better way to designate non-resizable, run-time sized
+ * arrays (e.g. by a resizeable tag).
  */
 
 #ifndef external_1D_h
@@ -106,10 +106,6 @@ class external_1D
  * Both the memory and the size are fixed at run-time, and cannot be
  * changed.  This is a specialization for the case that Rows and Cols are
  * not specified (i.e. given as the default of -1,-1).
- *
- * @todo Should it be possible to rebind the array to another memory
- * location?  This would seem to be like a handle or "smart pointer" to the
- * memory, so this may be complex to implement correctly.
  */
 template<typename Element>
 class external_1D<Element,-1>

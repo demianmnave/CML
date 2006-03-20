@@ -27,8 +27,6 @@
 
 namespace cml {
 namespace et {
-
-/** Detail for the vector unroller code. */
 namespace detail {
 
 /** Unroll a binary assignment operator on a fixed-size vector.

@@ -28,8 +28,6 @@
 
 namespace cml {
 namespace et {
-
-/** Detail for the matrix unroller code. */
 namespace detail {
 
 /** Unroll a binary assignment operator on a fixed-size matrix.

@@ -44,10 +44,6 @@ template<typename LeftT, typename RightT> struct _op_name_ {             \
  * @note The ExprTraits for both argument types must be defined, LeftT must
  * have an assignment operator, and ExprTraits<LeftT>::reference must specify
  * a type that allows assignment.
- *
- * @bug This still needs a proper type promotion to specify value_type as the
- * proper resulting type of applying _op_ to the two argument.  e.g.  int +=
- * double should yield double, but the result is int (LefT) right now.
  */
 #define CML_BINARY_SCALAR_OP_ASSIGN(_op_, _op_name_)                     \
 template<typename LeftT, typename RightT> struct _op_name_ {             \
