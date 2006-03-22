@@ -104,12 +104,41 @@ CML_USE_GENERATED_MATRIX_ASSIGN_OP
 - Allow the compiler to generate its own matrix assignment code.  This yields
   better performance at least on Intel C++ 9/x86 Linux.
 
+
 CML_VECTOR_UNROLLER_REQUIRES_INLINE
 - Some compilers will not automatically inline non-class functions without the
-  'inline' keyword (e.g. GCC < 4.0).  Define this to explicitly specify the
+  'inline' keyword (e.g. GCC 3.4).  Define this to explicitly specify the
   inline keyword for the vector unrollers.
 
 CML_VECTOR_OPERATORS_REQUIRE_INLINE
 - Some compilers will not automatically inline non-class functions without the
-  'inline' keyword (e.g. GCC < 4.0).  Define this to explicitly specify the
+  'inline' keyword (e.g. GCC 3.4).  Define this to explicitly specify the
   inline keyword for the global vector operators.
+
+CML_VECTOR_PRODUCTS_REQUIRE_INLINE
+- Some compilers will not automatically inline non-class functions without the
+  'inline' keyword (e.g. GCC 3.4).  Define this to explicitly specify the
+  inline keyword for the global vector product functions (dot and outer).
+
+CML_MATRIX_UNROLLER_REQUIRES_INLINE
+- Some compilers will not automatically inline non-class functions without the
+  'inline' keyword (e.g. GCC 3.4).  Define this to explicitly specify the
+  inline keyword for the matrix unrollers.
+
+CML_MATRIX_OPERATORS_REQUIRE_INLINE
+- Some compilers will not automatically inline non-class functions without the
+  'inline' keyword (e.g. GCC 3.4).  Define this to explicitly specify the
+  inline keyword for the global matrix operators.
+
+CML_MATRIX_MUL_REQUIRES_INLINE
+- Some compilers will not automatically inline non-class functions without the
+  'inline' keyword (e.g. GCC 3.4).  Define this to explicitly specify the
+  inline keyword for the global vector product functions (dot and outer).
+
+CML_INLINE_GLOBAL_FUNCTIONS
+- Some compilers will not automatically inline non-class functions without the
+  'inline' keyword (e.g. GCC 3.4).  Define this to explicitly specify the
+  inline keyword for global functions.
+
+CML_ENABLE_ALL_INLINES
+- Turn on all of the INLINE options above.

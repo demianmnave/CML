@@ -289,13 +289,22 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
     }
 };
 
+#if defined(CML_INLINE_GLOBAL_FUNCTIONS)
+#define inline_         inline
+#else
+#define inline_
+#endif
+
 /** Generator for GetCheckedSize. */
 template<typename LeftT, typename RightT, typename SizeTag>
-inline typename et::GetCheckedSize<LeftT,RightT,SizeTag>::size_type
+inline_ typename et::GetCheckedSize<LeftT,RightT,SizeTag>::size_type
 CheckedSize(const LeftT& left, const RightT& right, SizeTag)
 {
     return et::GetCheckedSize<LeftT,RightT,SizeTag>()(left,right);
 }
+
+/* Cleanup: */
+#undef inline_
 
 } // namespace et
 } // namespace cml

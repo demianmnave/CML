@@ -35,12 +35,6 @@
 #ifndef vecop_macros_h
 #define vecop_macros_h
 
-#if defined(CML_VECTOR_OPERATORS_REQUIRE_INLINE)
-#define inline_         inline
-#else
-#define inline_
-#endif
-
 /** Declare a unary operator taking a vector operand. */
 #define CML_VEC_UNIOP(_op_, _OpT_)                                       \
 template<typename E, class AT>                                           \

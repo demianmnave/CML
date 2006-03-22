@@ -20,6 +20,11 @@
 #include <cml/et/size_checking.h>
 #include <cml/matrix/matrix_expr.h>
 
+#if defined(CML_MATRIX_MUL_REQUIRES_INLINE)
+#define inline_         inline
+#else
+#define inline_
+#endif
 
 /* This is used below to create a more meaningful compile-time error when
  * mul is not provided with matrix or MatrixExpr arguments:
@@ -38,7 +43,7 @@ namespace detail {
  *
  * @returns a matrix_size containing the size of the resulting matrix.
  */
-template<typename LeftT, typename RightT> matrix_size
+template<typename LeftT, typename RightT> inline_ matrix_size
 MatMulCheckedSize(const LeftT&, const RightT&, fixed_size_tag)
 {
     CML_STATIC_REQUIRE_M(
@@ -51,7 +56,7 @@ MatMulCheckedSize(const LeftT&, const RightT&, fixed_size_tag)
  *
  * @returns a matrix_size containing the size of the resulting matrix.
  */
-template<typename LeftT, typename RightT> matrix_size
+template<typename LeftT, typename RightT> inline_ matrix_size
 MatMulCheckedSize(const LeftT& left, const RightT& right, dynamic_size_tag)
 {
     matrix_size left_N = left.size(), right_N = right.size();
@@ -63,10 +68,10 @@ MatMulCheckedSize(const LeftT& left, const RightT& right, dynamic_size_tag)
 
 /** Matrix multiplication.
  *
- * Computes C = A x B using the slow O(n^3) algorithm.
+ * Computes C = A x B (O(N^3), non-blocked algorithm).
  */
 template<class LeftT, class RightT>
-typename et::MatrixPromote<
+inline_ typename et::MatrixPromote<
     typename et::ExprTraits<LeftT>::result_type,
     typename et::ExprTraits<RightT>::result_type
 >::temporary_type
@@ -94,7 +99,6 @@ mul(const LeftT& left, const RightT& right)
      */
     typedef typename left_traits::size_tag left_size;
     typedef typename right_traits::size_tag right_size;
-    // typedef left_size size_tag;
     typedef typename select_if<
         same_type<left_size,right_size>::is_true
         && same_type<right_size,fixed_size_tag>::is_true,
@@ -104,7 +108,7 @@ mul(const LeftT& left, const RightT& right)
      * This automatically checks fixed-size matrices at compile time, and
      * throws at run-time if the sizes don't match:
      */
-    detail::MatMulCheckedSize(left, right, size_tag());
+    matrix_size N = detail::MatMulCheckedSize(left, right, size_tag());
 
     /* Deduce resulting matrix and element type.  ArrayPromotion is
      * specially implemeted to that the resulting type of two fixed-size
@@ -119,11 +123,12 @@ mul(const LeftT& left, const RightT& right)
      * fixed-size matrices):
      */
     result_type C;
-    cml::et::detail::Resize(C, left.rows(), right.cols());
+    cml::et::detail::Resize(C, N.first, N.second);
 
 #if 1
-    for(size_t i = 0; i < left.rows(); ++i) {
-        for(size_t j = 0; j < right.cols(); ++j) {
+    /* XXX Specialize this for fixed-size matrices: */
+    for(size_t i = 0; i < left.rows(); ++i) {               /* rows */
+        for(size_t j = 0; j < right.cols(); ++j) {          /* cols */
             value_type sum(left(i,0)*right(0,j));
             for(size_t k = 1; k < right.rows(); ++k) {
                 sum += (left(i,k)*right(k,j));
@@ -131,205 +136,6 @@ mul(const LeftT& left, const RightT& right)
             C(i,j) = sum;
         }
     }
-#endif
-
-#if 0
-    for(size_t i = 0; i < 4; ++i) {
-        for(size_t j = 0; j < 4; ++j) {
-            value_type sum(left(i,0)*right(0,j));
-            for(size_t k = 1; k < 4; ++k) {
-                sum += (left(i,k)*right(k,j));
-            }
-            C(i,j) = sum;
-        }
-    }
-#endif
-
-#if 0
-#if 1
-    /* XXX ICC9/x86 Linux likes the unrolled version: */
-    double sum;
-
-    sum  = left(0,0)*right(0,0)
-         + left(0,1)*right(1,0)
-         + left(0,2)*right(2,0)
-         + left(0,3)*right(3,0);
-    C(0,0) = sum;
-
-    sum  = left(0,0)*right(0,1)
-         + left(0,1)*right(1,1)
-         + left(0,2)*right(2,1)
-         + left(0,3)*right(3,1);
-    C(0,1) = sum;
-
-    sum  = left(0,0)*right(0,2)
-         + left(0,1)*right(1,2)
-         + left(0,2)*right(2,2)
-         + left(0,3)*right(3,2);
-    C(0,2) = sum;
-
-    sum  = left(0,0)*right(0,3)
-         + left(0,1)*right(1,3)
-         + left(0,2)*right(2,3)
-         + left(0,3)*right(3,3);
-    C(0,3) = sum;
-
-
-    sum  = left(1,0)*right(0,0)
-         + left(1,1)*right(1,0)
-         + left(1,2)*right(2,0)
-         + left(1,3)*right(3,0);
-    C(1,0) = sum;
-
-    sum  = left(1,0)*right(0,1)
-         + left(1,1)*right(1,1)
-         + left(1,2)*right(2,1)
-         + left(1,3)*right(3,1);
-    C(1,1) = sum;
-
-    sum  = left(1,0)*right(0,2)
-         + left(1,1)*right(1,2)
-         + left(1,2)*right(2,2)
-         + left(1,3)*right(3,2);
-    C(1,2) = sum;
-
-    sum  = left(1,0)*right(0,3)
-         + left(1,1)*right(1,3)
-         + left(1,2)*right(2,3)
-         + left(1,3)*right(3,3);
-    C(1,3) = sum;
-
-
-    sum  = left(2,0)*right(0,0)
-         + left(2,1)*right(1,0)
-         + left(2,2)*right(2,0)
-         + left(2,3)*right(3,0);
-    C(2,0) = sum;
-
-    sum  = left(2,0)*right(0,1)
-         + left(2,1)*right(1,1)
-         + left(2,2)*right(2,1)
-         + left(2,3)*right(3,1);
-    C(2,1) = sum;
-
-    sum  = left(2,0)*right(0,2)
-         + left(2,1)*right(1,2)
-         + left(2,2)*right(2,2)
-         + left(2,3)*right(3,2);
-    C(2,2) = sum;
-
-    sum  = left(2,0)*right(0,3)
-         + left(2,1)*right(1,3)
-         + left(2,2)*right(2,3)
-         + left(2,3)*right(3,3);
-    C(2,3) = sum;
-
-
-    sum  = left(3,0)*right(0,0)
-         + left(3,1)*right(1,0)
-         + left(3,2)*right(2,0)
-         + left(3,3)*right(3,0);
-    C(3,0) = sum;
-
-    sum  = left(3,0)*right(0,1)
-         + left(3,1)*right(1,1)
-         + left(3,2)*right(2,1)
-         + left(3,3)*right(3,1);
-    C(3,1) = sum;
-
-    sum  = left(3,0)*right(0,2)
-         + left(3,1)*right(1,2)
-         + left(3,2)*right(2,2)
-         + left(3,3)*right(3,2);
-    C(3,2) = sum;
-
-    sum  = left(3,0)*right(0,3)
-         + left(3,1)*right(1,3)
-         + left(3,2)*right(2,3)
-         + left(3,3)*right(3,3);
-    C(3,3) = sum;
-
-#else
-    C(0,0)  = left(0,0)*right(0,0);
-    C(0,0) += left(0,1)*right(1,0);
-    C(0,0) += left(0,2)*right(2,0);
-    C(0,0) += left(0,3)*right(3,0);
-
-    C(0,1)  = left(0,0)*right(0,1);
-    C(0,1) += left(0,1)*right(1,1);
-    C(0,1) += left(0,2)*right(2,1);
-    C(0,1) += left(0,3)*right(3,1);
-
-    C(0,2)  = left(0,0)*right(0,2);
-    C(0,2) += left(0,1)*right(1,2);
-    C(0,2) += left(0,2)*right(2,2);
-    C(0,2) += left(0,3)*right(3,2);
-
-    C(0,3)  = left(0,0)*right(0,3);
-    C(0,3) += left(0,1)*right(1,3);
-    C(0,3) += left(0,2)*right(2,3);
-    C(0,3) += left(0,3)*right(3,3);
-
-    C(1,0)  = left(1,0)*right(0,0);
-    C(1,0) += left(1,1)*right(1,0);
-    C(1,0) += left(1,2)*right(2,0);
-    C(1,0) += left(1,3)*right(3,0);
-
-    C(1,1)  = left(1,0)*right(0,1);
-    C(1,1) += left(1,1)*right(1,1);
-    C(1,1) += left(1,2)*right(2,1);
-    C(1,1) += left(1,3)*right(3,1);
-
-    C(1,2)  = left(1,0)*right(0,2);
-    C(1,2) += left(1,1)*right(1,2);
-    C(1,2) += left(1,2)*right(2,2);
-    C(1,2) += left(1,3)*right(3,2);
-
-    C(1,3)  = left(1,0)*right(0,3);
-    C(1,3) += left(1,1)*right(1,3);
-    C(1,3) += left(1,2)*right(2,3);
-    C(1,3) += left(1,3)*right(3,3);
-
-    C(2,0)  = left(2,0)*right(0,0);
-    C(2,0) += left(2,1)*right(1,0);
-    C(2,0) += left(2,2)*right(2,0);
-    C(2,0) += left(2,3)*right(3,0);
-
-    C(2,1)  = left(2,0)*right(0,1);
-    C(2,1) += left(2,1)*right(1,1);
-    C(2,1) += left(2,2)*right(2,1);
-    C(2,1) += left(2,3)*right(3,1);
-
-    C(2,2)  = left(2,0)*right(0,2);
-    C(2,2) += left(2,1)*right(1,2);
-    C(2,2) += left(2,2)*right(2,2);
-    C(2,2) += left(2,3)*right(3,2);
-
-    C(2,3)  = left(2,0)*right(0,3);
-    C(2,3) += left(2,1)*right(1,3);
-    C(2,3) += left(2,2)*right(2,3);
-    C(2,3) += left(2,3)*right(3,3);
-
-    C(3,0)  = left(3,0)*right(0,0);
-    C(3,0) += left(3,1)*right(1,0);
-    C(3,0) += left(3,2)*right(2,0);
-    C(3,0) += left(3,3)*right(3,0);
-
-    C(3,1)  = left(3,0)*right(0,1);
-    C(3,1) += left(3,1)*right(1,1);
-    C(3,1) += left(3,2)*right(2,1);
-    C(3,1) += left(3,3)*right(3,1);
-
-    C(3,2)  = left(3,0)*right(0,2);
-    C(3,2) += left(3,1)*right(1,2);
-    C(3,2) += left(3,2)*right(2,2);
-    C(3,2) += left(3,3)*right(3,2);
-
-    C(3,3)  = left(3,0)*right(0,3);
-    C(3,3) += left(3,1)*right(1,3);
-    C(3,3) += left(3,2)*right(2,3);
-    C(3,3) += left(3,3)*right(3,3);
-#endif
 #endif
 
     return C;
@@ -341,7 +147,7 @@ mul(const LeftT& left, const RightT& right)
 /** operator*() for two matrices. */
 template<typename E1, class AT1, typename L1,
          typename E2, class AT2, typename L2>
-typename et::MatrixPromote<
+inline_ typename et::MatrixPromote<
     matrix<E1,AT1,L1>, matrix<E2,AT2,L2>
 >::temporary_type
 operator*(const matrix<E1,AT1,L1>& left,
@@ -352,7 +158,7 @@ operator*(const matrix<E1,AT1,L1>& left,
 
 /** operator*() for a matrix and a MatrixXpr. */
 template<typename E, class AT, typename L, typename XprT>
-typename et::MatrixPromote<
+inline_ typename et::MatrixPromote<
     matrix<E,AT,L>, XprT
 >::temporary_type
 operator*(const matrix<E,AT,L>& left,
@@ -369,7 +175,7 @@ operator*(const matrix<E,AT,L>& left,
 
 /** operator*() for a MatrixXpr and a matrix. */
 template<typename XprT, typename E, class AT, typename L>
-typename et::MatrixPromote<
+inline_ typename et::MatrixPromote<
     XprT, matrix<E,AT,L>
 >::temporary_type
 operator*(const et::MatrixXpr<XprT>& left,
@@ -386,7 +192,7 @@ operator*(const et::MatrixXpr<XprT>& left,
 
 /** operator*() for two MatrixXpr's. */
 template<typename XprT1, typename XprT2>
-typename et::MatrixPromote<
+inline_ typename et::MatrixPromote<
     XprT1, XprT2
 >::temporary_type
 operator*(const et::MatrixXpr<XprT1>& left,
@@ -405,6 +211,9 @@ operator*(const et::MatrixXpr<XprT1>& left,
 
     return detail::mul(ltmp,rtmp);
 }
+
+/* Cleanup: */
+#undef inline_
 
 } // namespace cml
 

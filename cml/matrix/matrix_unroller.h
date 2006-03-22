@@ -26,6 +26,12 @@
 #error "CML_MATRIX_UNROLL_LIMIT is undefined."
 #endif
 
+#if defined(CML_MATRIX_UNROLLER_REQUIRES_INLINE)
+#define inline_         inline
+#else
+#define inline_
+#endif
+
 namespace cml {
 namespace et {
 namespace detail {
@@ -53,10 +59,6 @@ class MatrixAssignmentUnroller
     typedef ExprTraits<matrix_type> dest_traits;
     typedef ExprTraits<SrcT> src_traits;
 
-    /* Get argument reference types: */
-    typedef typename dest_traits::reference dest_reference;
-    typedef typename src_traits::const_reference src_reference;
-
 #if defined(CML_2D_UNROLLER)
 
     /* Forward declare: */
@@ -68,7 +70,7 @@ class MatrixAssignmentUnroller
     /** Evaluate the binary operator at element R,C. */
     template<int R, int C, int LastRow, int LastCol>
         struct Eval<R,C,LastRow,LastCol,true> {
-            void operator()(dest_reference dest, src_reference src) const {
+            void operator()(matrix_type& dest, const SrcT& src) const {
 
                 /* Apply to current R,C: */
                 OpT().apply(dest(R,C), src_traits().get(src,R,C));
@@ -81,7 +83,7 @@ class MatrixAssignmentUnroller
     /** Evaluate the binary operator at element R,LastCol. */
     template<int R, int LastRow, int LastCol>
         struct Eval<R,LastCol,LastRow,LastCol,true> {
-            void operator()(dest_reference dest, src_reference src) const {
+            void operator()(matrix_type& dest, const SrcT& src) const {
 
                 /* Apply to R,LastCol: */
                 OpT().apply(dest(R,LastCol), src_traits().get(src,R,LastCol));
@@ -96,7 +98,7 @@ class MatrixAssignmentUnroller
     /** Evaluate the binary operator at element LastRow,C. */
     template<int C, int LastRow, int LastCol>
         struct Eval<LastRow,C,LastRow,LastCol,true> {
-            void operator()(dest_reference dest, src_reference src) const {
+            void operator()(matrix_type& dest, const SrcT& src) const {
 
                 /* Apply to LastRow,C: */
                 OpT().apply(dest(LastRow,C), src_traits().get(src,LastRow,C));
@@ -109,7 +111,7 @@ class MatrixAssignmentUnroller
     /** Evaluate the binary operator at element LastRow,LastCol. */
     template<int LastRow, int LastCol>
         struct Eval<LastRow,LastCol,LastRow,LastCol,true> {
-            void operator()(dest_reference dest, src_reference src) const {
+            void operator()(matrix_type& dest, const SrcT& src) const {
 
                 /* Apply to LastRow,LastCol: */
                 OpT().apply(
@@ -122,7 +124,7 @@ class MatrixAssignmentUnroller
     /** Evaluate operators on large matrices using a loop. */
     template<int R, int C, int LastRow, int LastCol>
         struct Eval<R,C,LastRow,LastCol,false> {
-            void operator()(dest_reference dest, src_reference src) const {
+            void operator()(matrix_type& dest, const SrcT& src) const {
                 for(size_t i = 0; i <= LastRow; ++i) {
                     for(size_t j = 0; j <= LastCol; ++j) {
                         OpT().apply(dest(i,j), src_traits().get(src,i,j));
@@ -137,7 +139,7 @@ class MatrixAssignmentUnroller
 
     /** Evaluate the binary operator using a loop. */
     template<int R, int C, int LastRow, int LastCol> struct Eval {
-        void operator()(dest_reference dest, src_reference src) const {
+        void operator()(matrix_type& dest, const SrcT& src) const {
             for(size_t i = 0; i <= LastRow; ++i) {
                 for(size_t j = 0; j <= LastCol; ++j) {
                     OpT().apply(dest(i,j), src_traits().get(src,i,j));
@@ -202,7 +204,7 @@ class MatrixAssignmentUnroller
     {
         typedef ExprTraits<SrcT> src_traits;
 
-#if defined(CML_AUTOMATIC_VECTOR_RESIZE_ON_ASSIGNMENT)
+#if defined(CML_AUTOMATIC_MATRIX_RESIZE_ON_ASSIGNMENT)
         /* Get the size of src.  This also causes src to check its size: */
         matrix_size N = src_traits().size(src);
 
@@ -215,7 +217,7 @@ class MatrixAssignmentUnroller
         for(size_t i = 0; i < N.first; ++i) {
             for(size_t j = 0; j < N.second; ++j) {
                 OpT().apply(dest(i,j), src_traits().get(src,i,j));
-                /* Note: we don't need get(), since we know dest is a vector. */
+                /* Note: we don't need get(), since dest is a matrix. */
             }
         }
     }
@@ -234,7 +236,7 @@ class MatrixAssignmentUnroller
  *
  * @bug Need to verify that OpT is actually an assignment operator.
  */
-template<class OpT, class SrcT, typename E, class AT, typename L>
+template<class OpT, class SrcT, typename E, class AT, typename L> inline_
 void UnrollAssignment(cml::matrix<E,AT,L>& dest, const SrcT& src)
 {
     /* Record the destination matrix type, and the expression traits: */
@@ -250,6 +252,9 @@ void UnrollAssignment(cml::matrix<E,AT,L>& dest, const SrcT& src)
 
 } // namespace et
 } // namespace cml
+
+/* Cleanup: */
+#undef inline_
 
 #endif
 

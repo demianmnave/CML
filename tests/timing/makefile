@@ -47,5 +47,11 @@ ALL=	$(C_VEC_TESTS) \
 	
 include $(CML_TEST_ROOT)/makepost
 
+fixed_mat_et1.s: fixed_mat_et1.cpp
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -S $^
+
+matrix_c1.s: matrix_c1.cpp
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -S $^
+
 # --------------------------------------------------------------------------
 # vim:ft=make

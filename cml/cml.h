@@ -4,6 +4,16 @@
 /** @file
  *  @brief Bring CML public namespaces into namespace CML.
  *
+ * @todo Finish tests for mat-vec multiply, and enable inlining as
+ * necessary.
+ *
+ * @todo Differentiate between references used for function arguments, and
+ * those used for variable types.  In particular, GCC 3.4 requires const T &
+ * function arguments to ensure complete unrolling/inlining of expressions.
+ *
+ * @todo Specialize matrix multiplication based upon the size type (fixed or
+ * dynamic).  This makes a difference for at least GCC 3.4.
+ *
  * @todo operator*=() for matrices (right-hand side needs to be expression
  * with same size as target matrix).
  *
@@ -24,9 +34,6 @@
  *
  * @todo change use of typename, class to be like Alexandrescu book
  *
- * @todo may need to explicitly mark some functions inline for the best
- * performance.
- *
  * @todo figure out if it makes sense to unroll assignment if either the
  * source expression or the target vector/matrix has a fixed size (right
  * now, unrolling happens only if the target has a fixed size)
@@ -38,9 +45,6 @@
  *
  * @todo how should derivation from vector<> and matrix<> be supported?  or
  * can it be supported at all in the current design?
- *
- * @todo does it make sense to support vector outer (matrix) product via
- * operator*?
  */
 
 #ifndef cml_h

@@ -18,14 +18,16 @@
 #include <cml/matrix/matrix_traits.h>
 #include <cml/matrix/matrix_promotions.h>
 
-/* XXX Don't know which it should be just yet, since RVO seems to obviate
- * the need for a reference type:
+/* XXX Don't know which it should be just yet, since RVO seems to obviate the
+ * need for a reference type.  However, copy by value copies the *entire
+ * expression tree rooted at the MatrixXpr<>, so this choice is bound to affect
+ * performance for some compiler or another:
  */
-//#define MATXPR_ARG_TYPE               const et::MatrixXpr<XprT>&
-//#define MATXPR_ARG_TYPE_N(_N_)        const et::MatrixXpr<XprT##_N_>&
+#define MATXPR_ARG_TYPE               const et::MatrixXpr<XprT>&
+#define MATXPR_ARG_TYPE_N(_N_)        const et::MatrixXpr<XprT##_N_>&
 
-#define MATXPR_ARG_TYPE               const et::MatrixXpr<XprT>
-#define MATXPR_ARG_TYPE_N(_N_)        const et::MatrixXpr<XprT##_N_>
+//#define MATXPR_ARG_TYPE               const et::MatrixXpr<XprT>
+//#define MATXPR_ARG_TYPE_N(_N_)        const et::MatrixXpr<XprT##_N_>
 
 
 namespace cml {
@@ -98,7 +100,7 @@ class MatrixXpr
   public:
 
     /** Construct from the subexpression to store. */
-    explicit MatrixXpr(const ExprT& expr) : m_expr(expr) {}
+    explicit MatrixXpr(expr_reference expr) : m_expr(expr) {}
 
     /** Copy constructor. */
     MatrixXpr(const expr_type& e) : m_expr(e.m_expr) {}
@@ -214,7 +216,7 @@ class UnaryMatrixOp
   public:
 
     /** Construct from the subexpression. */
-    explicit UnaryMatrixOp(const ExprT& expr) : m_expr(expr) {}
+    explicit UnaryMatrixOp(expr_reference expr) : m_expr(expr) {}
 
     /** Copy constructor. */
     UnaryMatrixOp(const expr_type& e) : m_expr(e.m_expr) {}
@@ -362,7 +364,7 @@ class BinaryMatrixOp
      * @throws std::invalid_argument if the subexpression sizes don't
      * match.
      */
-    explicit BinaryMatrixOp(const LeftT& left, const RightT& right)
+    explicit BinaryMatrixOp(left_reference left, right_reference right)
         : m_left(left), m_right(right) {}
 
     /** Copy constructor. */
@@ -414,21 +416,30 @@ struct ExprTraits< BinaryMatrixOp<LeftT,RightT,OpT> >
 
 namespace detail {
 
+#if defined(CML_INLINE_GLOBAL_FUNCTIONS)
+#define inline_         inline
+#else
+#define inline_
+#endif
+
 /* XXX These are temporary helpers until dynamic resizing is integrated more
  * naturally into mul() and matrix transpose():
  */
-template<typename MatT>
+template<typename MatT> inline_
 void Resize(MatT&, size_t, size_t, fixed_size_tag) {}
 
-template<typename MatT>
+template<typename MatT> inline_
 void Resize(MatT& m, size_t R, size_t C, dynamic_size_tag) {
     m.resize(R,C);
 }
 
-template<typename MatT>
+template<typename MatT> inline_
 void Resize(MatT& m, size_t R, size_t C) {
     Resize(m, R, C, typename MatT::size_tag());
 }
+
+/* Cleanup: */
+#undef inline_
 
 } // namespace detail
 

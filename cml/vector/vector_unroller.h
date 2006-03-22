@@ -59,17 +59,13 @@ class VectorAssignmentUnroller
     typedef ExprTraits<vector_type> dest_traits;
     typedef ExprTraits<SrcT> src_traits;
 
-    /* Get argument reference types: */
-    typedef typename dest_traits::reference dest_reference;
-    typedef typename src_traits::const_reference src_reference;
-
     /** Evaluate the binary operator for the first Len-1 elements. */
     template<int N, int Last> struct Eval<N,Last,true> {
-        void operator()(dest_reference dest, src_reference src) const {
+        void operator()(vector_type& dest, const SrcT& src) const {
 
             /* Apply to current N: */
             OpT().apply(dest[N], src_traits().get(src,N));
-            /* Note: we don't need get(), since we know dest is a vector. */
+            /* Note: we don't need get(), since dest is a vector. */
 
             /* Apply to N+1: */
             Eval<N+1,Last,true>()(dest, src);
@@ -78,11 +74,11 @@ class VectorAssignmentUnroller
 
     /** Evaluate the binary operator at element Last. */
     template<int Last> struct Eval<Last,Last,true> {
-        void operator()(dest_reference dest, src_reference src) const {
+        void operator()(vector_type& dest, const SrcT& src) const {
 
             /* Apply to last element: */
             OpT().apply(dest[Last], src_traits().get(src,Last));
-            /* Note: we don't need get(), since we know dest is a vector. */
+            /* Note: we don't need get(), since dest is a vector. */
         }
     };
 
@@ -93,10 +89,10 @@ class VectorAssignmentUnroller
      * CML_VECTOR_UNROLL_LIMIT
      */
     template<int N, int Last> struct Eval<N,Last,false> {
-        void operator()(dest_reference dest, src_reference src) const {
+        void operator()(vector_type& dest, const SrcT& src) const {
             for(size_t i = 0; i <= Last; ++i) {
                 OpT().apply(dest[i], src_traits().get(src,i));
-                /* Note: we don't need get(), since we know dest is a vector. */
+                /* Note: we don't need get(), since dest is a vector. */
             }
         }
     };
@@ -148,7 +144,7 @@ class VectorAssignmentUnroller
 
         for(size_t i = 0; i < N; ++i) {
             OpT().apply(dest[i], src_traits().get(src,i));
-            /* Note: we don't need get(), since we know dest is a vector. */
+            /* Note: we don't need get(), since dest is a vector. */
         }
     }
 
@@ -168,44 +164,36 @@ struct VectorAccumulateUnroller
     typedef ExprTraits<LeftT> left_traits;
     typedef ExprTraits<RightT> right_traits;
 
-    /* Get argument reference types: */
-    typedef typename left_traits::const_reference left_reference;
-    typedef typename right_traits::const_reference right_reference;
-
     /* Figure out the return type: */
     typedef typename AccumT::value_type result_type; 
 
     /** Evaluate for the first Len-1 elements. */
     template<int N, int Last> struct Eval<N,Last,true> {
         result_type operator()(
-                left_reference left, right_reference right) const
+                const LeftT& left, const RightT& right) const
         {
             /* Apply to last value: */
             return AccumT().apply(
-                    OpT().apply(left[N], right[N]),
+                    OpT().apply(left[N], right_traits().get(right,N)),
                     Eval<N+1,Last,true>()(left, right));
-            /* Note: we don't need get(), since both arguments are required to
-             * be vector expressions.
-             */
+            /* Note: we don't need get(), since dest is a vector. */
         }
     };
 
     /** Evaluate the binary operator at element Last. */
     template<int Last> struct Eval<Last,Last,true> {
         result_type operator()(
-                left_reference left, right_reference right) const
+                const LeftT& left, const RightT& right) const
         {
-            return OpT().apply(left[Last],right[Last]);
-            /* Note: we don't need get(), since both arguments are required to
-             * be vector expressions.
-             */
+            return OpT().apply(left[Last],right_traits().get(right,Last));
+            /* Note: we don't need get(), since dest is a vector. */
         }
     };
 
     /** Evaluate using a loop. */
     template<int N, int Last> struct Eval<N,Last,false> {
         result_type operator()(
-                left_reference left, right_reference right) const
+                const LeftT& left, const RightT& right) const
         {
             result_type accum = OpT().apply(left[0],right[0]);
             for(size_t i = 1; i <= Last; ++i) {
@@ -213,10 +201,9 @@ struct VectorAccumulateUnroller
                  * but to do anything else requires changing the requirements
                  * of a scalar operator.
                  */
-                accum = AccumT().apply(accum, OpT().apply(left[i],right[i]));
-                /* Note: we don't need get(), since both arguments are
-                 * required to be vector expressions.
-                 */
+                accum = AccumT().apply(accum, OpT().apply(
+                            left[i],right_traits().get(right,i)));
+                /* Note: we don't need get(), since dest is a vector. */
             }
         }
     };

@@ -51,19 +51,21 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 #-- rm=rm -f
 #-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
+
+#-- Note: this is for gcc 3.4, which requires explicit inlining:
 CXX=x86_64-redhat-linux-g++ -Wall -W
 CPP=$(CXX) -M
 CXXFLAGS=-ftemplate-depth-1000 -mtune=opteron -march=opteron -O3 \
 	 -fomit-frame-pointer -funroll-loops -finline-functions \
-	 -finline-limit=2000000000 \
-	 -DCML_VECTOR_UNROLLER_REQUIRES_INLINE \
-	 -DCML_VECTOR_OPERATORS_REQUIRE_INLINE \
-	 -DCML_NO_2D_UNROLLER #\
+	 -finline-limit=2000000000 -DCML_ENABLE_ALL_INLINES \
  	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100 #\
-CXXFLAGS += \
+	 -DCML_NO_2D_UNROLLER #\
+
+CXXFLAGS += #\
 	 -DCML_USE_VEC_XPR_REF \
 	 -DCML_USE_VEC_UNIOP_REF \
 	 -DCML_USE_VEC_BINOP_REF
+
 #CXXFLAGS=-g -O \
  	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
 
