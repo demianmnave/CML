@@ -103,3 +103,13 @@ CML_CHECK_MATRIX_EXPR_SIZES
 CML_USE_GENERATED_MATRIX_ASSIGN_OP
 - Allow the compiler to generate its own matrix assignment code.  This yields
   better performance at least on Intel C++ 9/x86 Linux.
+
+CML_VECTOR_UNROLLER_REQUIRES_INLINE
+- Some compilers will not automatically inline non-class functions without the
+  'inline' keyword (e.g. GCC < 4.0).  Define this to explicitly specify the
+  inline keyword for the vector unrollers.
+
+CML_VECTOR_OPERATORS_REQUIRE_INLINE
+- Some compilers will not automatically inline non-class functions without the
+  'inline' keyword (e.g. GCC < 4.0).  Define this to explicitly specify the
+  inline keyword for the global vector operators.

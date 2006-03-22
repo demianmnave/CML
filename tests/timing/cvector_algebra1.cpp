@@ -22,7 +22,7 @@ inline void timed1(
         v[k] = v[k]+v1[k]+v2[k]+v3[k];
       }
 #else
-#if 0
+#if 1
       v[0] += v1[0]+v2[0]+v3[0];
       v[1] += v1[1]+v2[1]+v3[1];
       v[2] += v1[2]+v2[2]+v3[2];

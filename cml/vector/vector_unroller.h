@@ -25,6 +25,12 @@
 #error "CML_VECTOR_UNROLL_LIMIT is undefined."
 #endif
 
+#if defined(CML_VECTOR_UNROLLER_REQUIRES_INLINE)
+#define inline_         inline
+#else
+#define inline_
+#endif
+
 namespace cml {
 namespace et {
 namespace detail {
@@ -225,7 +231,7 @@ struct VectorAccumulateUnroller
  *
  * @bug Need to verify that OpT is actually an assignment operator.
  */
-template<class OpT, class SrcT, typename E, class AT>
+template<class OpT, class SrcT, typename E, class AT> inline_
 void UnrollAssignment(cml::vector<E,AT>& dest, const SrcT& src)
 {
     /* Record the destination vector type, and the expression traits: */
@@ -241,6 +247,9 @@ void UnrollAssignment(cml::vector<E,AT>& dest, const SrcT& src)
 
 } // namespace et
 } // namespace cml
+
+/* Cleanup: */
+#undef inline_
 
 #endif
 

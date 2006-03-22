@@ -17,11 +17,11 @@
 /* XXX Don't know which it should be just yet, since RVO seems to obviate
  * the need for a reference type:
  */
-//#define VECXPR_ARG_TYPE  const et::VectorXpr<XprT>&
-//#define VECXPR_ARG_TYPE_N(_N_)  const et::VectorXpr<XprT##_N_>&
+#define VECXPR_ARG_TYPE  const et::VectorXpr<XprT>&
+#define VECXPR_ARG_TYPE_N(_N_)  const et::VectorXpr<XprT##_N_>&
 
-#define VECXPR_ARG_TYPE         const et::VectorXpr<XprT>
-#define VECXPR_ARG_TYPE_N(_N_)  const et::VectorXpr<XprT##_N_>
+//#define VECXPR_ARG_TYPE         const et::VectorXpr<XprT>
+//#define VECXPR_ARG_TYPE_N(_N_)  const et::VectorXpr<XprT##_N_>
 
 namespace cml {
 namespace et {
@@ -73,15 +73,15 @@ class VectorXpr
   public:
 
     /** Return size of this expression (same as subexpression's size). */
-    size_t size() const {
+    inline size_t size() const {
         return expr_traits().size(m_expr);
     }
 
     /** Return reference to contained expression. */
-    arg_reference expression() const { return m_expr; }
+    inline arg_reference expression() const { return m_expr; }
 
     /** Compute value at index i of the result vector. */
-    value_type operator[](size_t i) const {
+    inline value_type operator[](size_t i) const {
         return expr_traits().get(m_expr,i);
     }
 
@@ -89,10 +89,10 @@ class VectorXpr
   public:
 
     /** Construct from the subexpression to store. */
-    explicit VectorXpr(arg_reference expr) : m_expr(expr) {}
+    inline explicit VectorXpr(arg_reference expr) : m_expr(expr) {}
 
     /** Copy constructor. */
-    VectorXpr(const expr_type& e) : m_expr(e.m_expr) {}
+    inline VectorXpr(const expr_type& e) : m_expr(e.m_expr) {}
 
 
   protected:
@@ -119,8 +119,8 @@ struct ExprTraits< VectorXpr<ExprT> >
     typedef typename expr_type::result_type result_type;
     typedef expr_node_tag node_tag;
 
-    value_type get(const expr_type& v, size_t i) const { return v[i]; }
-    size_t size(const expr_type& e) const { return e.size(); }
+    inline value_type get(const expr_type& v, size_t i) const { return v[i]; }
+    inline size_t size(const expr_type& e) const { return e.size(); }
 };
 
 
@@ -174,15 +174,15 @@ class UnaryVectorOp
   public:
 
     /** Return size of this expression (same as exprument's size). */
-    size_t size() const {
+    inline size_t size() const {
         return expr_traits().size(m_expr);
     }
 
     /** Return reference to contained expression. */
-    arg_reference expression() const { return m_expr; }
+    inline arg_reference expression() const { return m_expr; }
 
     /** Compute value at index i of the result vector. */
-    value_type operator[](size_t i) const {
+    inline value_type operator[](size_t i) const {
 
         /* This uses the expression traits to figure out how to access the
          * i'th index of the subexpression:
@@ -194,10 +194,10 @@ class UnaryVectorOp
   public:
 
     /** Construct from the subexpression. */
-    explicit UnaryVectorOp(arg_reference expr) : m_expr(expr) {}
+    inline explicit UnaryVectorOp(arg_reference expr) : m_expr(expr) {}
 
     /** Copy constructor. */
-    UnaryVectorOp(const expr_type& e) : m_expr(e.m_expr) {}
+    inline UnaryVectorOp(const expr_type& e) : m_expr(e.m_expr) {}
 
 
   protected:
@@ -225,8 +225,8 @@ struct ExprTraits< UnaryVectorOp<ExprT,OpT> >
     typedef typename expr_type::result_type result_type;
     typedef expr_node_tag node_tag;
 
-    value_type get(const expr_type& v, size_t i) const { return v[i]; }
-    size_t size(const expr_type& e) const { return e.size(); }
+    inline value_type get(const expr_type& v, size_t i) const { return v[i]; }
+    inline size_t size(const expr_type& e) const { return e.size(); }
 };
 
 
@@ -291,7 +291,7 @@ class BinaryVectorOp
      * @throws std::invalid_argument if the expressions do not have the same
      * size.
      */
-    size_t size() const {
+    inline size_t size() const {
         /* Note: This actually does a check only if
          * CML_CHECK_VECTOR_EXPR_SIZES is set:
          */
@@ -299,13 +299,13 @@ class BinaryVectorOp
     }
 
     /** Return reference to left expression. */
-    left_reference left_expression() const { return m_left; }
+    inline left_reference left_expression() const { return m_left; }
 
     /** Return reference to right expression. */
-    right_reference right_expression() const { return m_right; }
+    inline right_reference right_expression() const { return m_right; }
 
     /** Compute value at index i of the result vector. */
-    value_type operator[](size_t i) const {
+    inline value_type operator[](size_t i) const {
 
         /* This uses the expression traits to figure out how to access the
          * i'th index of the two subexpressions:
@@ -319,11 +319,11 @@ class BinaryVectorOp
   public:
 
     /** Construct from the two subexpressions. */
-    explicit BinaryVectorOp(left_reference left, right_reference right)
+    inline explicit BinaryVectorOp(left_reference left, right_reference right)
         : m_left(left), m_right(right) {}
 
     /** Copy constructor. */
-    BinaryVectorOp(const expr_type& e)
+    inline BinaryVectorOp(const expr_type& e)
         : m_left(e.m_left), m_right(e.m_right) {}
 
 
@@ -360,8 +360,8 @@ struct ExprTraits< BinaryVectorOp<LeftT,RightT,OpT> >
     typedef typename expr_type::result_type result_type;
     typedef expr_node_tag node_tag;
 
-    value_type get(const expr_type& v, size_t i) const { return v[i]; }
-    size_t size(const expr_type& e) const { return e.size(); }
+    inline value_type get(const expr_type& v, size_t i) const { return v[i]; }
+    inline size_t size(const expr_type& e) const { return e.size(); }
 };
 
 /* Helper struct to verify that both arguments are vector expressions: */

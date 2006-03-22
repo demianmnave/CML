@@ -35,10 +35,16 @@
 #ifndef vecop_macros_h
 #define vecop_macros_h
 
+#if defined(CML_VECTOR_OPERATORS_REQUIRE_INLINE)
+#define inline_         inline
+#else
+#define inline_
+#endif
+
 /** Declare a unary operator taking a vector operand. */
 #define CML_VEC_UNIOP(_op_, _OpT_)                                       \
 template<typename E, class AT>                                           \
-et::VectorXpr<                                                           \
+inline_ et::VectorXpr<                                                   \
     et::UnaryVectorOp< vector<E,AT>, _OpT_ <E> >                         \
 >                                                                        \
                                                                          \
@@ -54,7 +60,7 @@ _op_ (const vector<E,AT>& arg)                                           \
 /** Declare a unary operator taking a et::VectorXpr operand. */
 #define CML_VECXPR_UNIOP(_op_, _OpT_)                                    \
 template<class XprT>                                                     \
-et::VectorXpr<                                                           \
+inline_ et::VectorXpr<                                                   \
     et::UnaryVectorOp< XprT, _OpT_ <typename XprT::value_type> >         \
 >                                                                        \
                                                                          \
@@ -70,7 +76,7 @@ _op_ (VECXPR_ARG_TYPE arg)                                               \
 /** Declare an operator taking two vector operands. */
 #define CML_VEC_VEC_BINOP(_op_, _OpT_)                                   \
 template<typename E1, class AT1, typename E2, class AT2>                 \
-et::VectorXpr<                                                           \
+inline_ et::VectorXpr<                                                   \
     et::BinaryVectorOp<                                                  \
         vector<E1,AT1>, vector<E2,AT2>, _OpT_ <E1,E2>                    \
     >                                                                    \
@@ -90,7 +96,7 @@ _op_ (                                                                   \
 /** Declare an operator taking a vector and a et::VectorXpr. */
 #define CML_VEC_VECXPR_BINOP(_op_, _OpT_)                                \
 template<typename E, class AT, class XprT>                               \
-et::VectorXpr<                                                           \
+inline_ et::VectorXpr<                                                   \
     et::BinaryVectorOp<                                                  \
         vector<E,AT>, XprT, _OpT_ <E, typename XprT::value_type>         \
     >                                                                    \
@@ -111,7 +117,7 @@ _op_ (                                                                   \
 /** Declare an operator taking an et::VectorXpr and a vector. */
 #define CML_VECXPR_VEC_BINOP(_op_, _OpT_)                                \
 template<class XprT, typename E, class AT>                               \
-et::VectorXpr<                                                           \
+inline_ et::VectorXpr<                                                   \
     et::BinaryVectorOp<                                                  \
         XprT, vector<E,AT>, _OpT_ <typename XprT::value_type, E>         \
     >                                                                    \
@@ -132,7 +138,7 @@ _op_ (                                                                   \
 /** Declare an operator taking two et::VectorXpr operands. */
 #define CML_VECXPR_VECXPR_BINOP(_op_, _OpT_)                             \
 template<class XprT1, class XprT2>                                       \
-et::VectorXpr<                                                           \
+inline_ et::VectorXpr<                                                   \
     et::BinaryVectorOp<                                                  \
         XprT1, XprT2,                                                    \
         _OpT_ <                                                          \
@@ -160,7 +166,7 @@ _op_ (                                                                   \
 /** Declare an operator taking a vector and a scalar. */
 #define CML_VEC_SCALAR_BINOP(_op_, _OpT_)                                \
 template<typename E, class AT, typename ScalarT>                         \
-et::VectorXpr<                                                           \
+inline_ et::VectorXpr<                                                   \
     et::BinaryVectorOp<                                                  \
         vector<E,AT>, ScalarT, _OpT_ <E,ScalarT>                         \
     >                                                                    \
@@ -180,7 +186,7 @@ _op_ (                                                                   \
 /** Declare an operator taking a scalar and a vector. */
 #define CML_SCALAR_VEC_BINOP(_op_, _OpT_)                                \
 template<typename ScalarT, typename E, class AT>                         \
-et::VectorXpr<                                                           \
+inline_ et::VectorXpr<                                                   \
     et::BinaryVectorOp<                                                  \
         ScalarT, vector<E,AT>, _OpT_ <ScalarT,E>                         \
     >                                                                    \
@@ -200,7 +206,7 @@ _op_ (                                                                   \
 /** Declare an operator taking a et::VectorXpr and a scalar. */
 #define CML_VECXPR_SCALAR_BINOP(_op_, _OpT_)                             \
 template<class XprT, typename ScalarT>                                   \
-et::VectorXpr<                                                           \
+inline_ et::VectorXpr<                                                   \
     et::BinaryVectorOp<                                                  \
         XprT, ScalarT, _OpT_ <typename XprT::value_type,ScalarT>         \
     >                                                                    \
@@ -220,7 +226,7 @@ _op_ (                                                                   \
 /** Declare an operator taking a scalar and a et::VectorXpr. */
 #define CML_SCALAR_VECXPR_BINOP(_op_, _OpT_)                             \
 template<typename ScalarT, class XprT>                                   \
-et::VectorXpr<                                                           \
+inline_ et::VectorXpr<                                                   \
     et::BinaryVectorOp<                                                  \
         ScalarT, XprT, _OpT_ <ScalarT, typename XprT::value_type>        \
     >                                                                    \

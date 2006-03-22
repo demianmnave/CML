@@ -7,7 +7,6 @@
 CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 	 -DCML_VECTOR_UNROLL_LIMIT=25 \
 	 -DCML_VECTOR_DOT_UNROLL_LIMIT=25 \
-	 -DCML_ENFORCE_VECTOR_ORIENTATION_ON_COPY \
 	 -DCML_ALWAYS_PROMOTE_TO_DEFAULT_LAYOUT \
 	 -UCML_AUTOMATIC_VECTOR_RESIZE_ON_ASSIGNMENT \
 	 -UCML_CHECK_VECTOR_EXPR_SIZES \
@@ -52,15 +51,19 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 #-- rm=rm -f
 #-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
-
-CXX=i386-redhat-linux-g++ -Wall -W
+CXX=x86_64-redhat-linux-g++ -Wall -W
 CPP=$(CXX) -M
-CXXFLAGS=-ftemplate-depth-1000 -march=pentium4 -mtune=pentium4 -O3 \
-	 -fomit-frame-pointer -funroll-all-loops -finline-functions \
-	 -finline-limit=1000000 \
- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100 #\
+CXXFLAGS=-ftemplate-depth-1000 -mtune=opteron -march=opteron -O3 \
+	 -fomit-frame-pointer -funroll-loops -finline-functions \
+	 -finline-limit=2000000000 \
+	 -DCML_VECTOR_UNROLLER_REQUIRES_INLINE \
+	 -DCML_VECTOR_OPERATORS_REQUIRE_INLINE \
 	 -DCML_NO_2D_UNROLLER #\
-
+ 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100 #\
+CXXFLAGS += \
+	 -DCML_USE_VEC_XPR_REF \
+	 -DCML_USE_VEC_UNIOP_REF \
+	 -DCML_USE_VEC_BINOP_REF
 #CXXFLAGS=-g -O \
  	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
 
@@ -72,6 +75,27 @@ exe=
 obj=.o
 rm=rm -f
 LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+
+
+#-- CXX=i386-redhat-linux-g++ -Wall -W
+#-- CPP=$(CXX) -M
+#-- CXXFLAGS=-ftemplate-depth-1000 -march=pentium4 -mtune=pentium4 -O3 \
+#-- 	 -fomit-frame-pointer -funroll-all-loops -finline-functions \
+#-- 	 -finline-limit=1000000 \
+#--  	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100 #\
+#-- 	 -DCML_NO_2D_UNROLLER #\
+#-- 
+#-- #CXXFLAGS=-g -O \
+#--  	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
+#-- 
+#-- CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS) \
+#-- 	-I$(HOME)/projects/external/build/exmat/include \
+#-- 	-I$(HOME)/projects/external/build/ltl-1.7.10
+#-- 
+#-- exe=
+#-- obj=.o
+#-- rm=rm -f
+#-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 #-- CXX=icpc -Wcheck -U__GXX_WEAK__
 #-- CPP=icpc -M

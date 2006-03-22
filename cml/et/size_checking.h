@@ -291,7 +291,7 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
 
 /** Generator for GetCheckedSize. */
 template<typename LeftT, typename RightT, typename SizeTag>
-typename et::GetCheckedSize<LeftT,RightT,SizeTag>::size_type
+inline typename et::GetCheckedSize<LeftT,RightT,SizeTag>::size_type
 CheckedSize(const LeftT& left, const RightT& right, SizeTag)
 {
     return et::GetCheckedSize<LeftT,RightT,SizeTag>()(left,right);
