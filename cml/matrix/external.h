@@ -8,15 +8,10 @@
 #ifndef external_matrix_h
 #define external_matrix_h
 
-#include <cml/core/common.h>
 #include <cml/core/external_2D.h>
 #include <cml/matrix/matrix_expr.h>
 #include <cml/matrix/class_ops.h>
 #include <cml/matrix/matrix_unroller.h>
-#include <cml/matrix/matrix_transpose.h>
-#include <cml/matrix/matrix_ops.h>
-#include <cml/matrix/matrix_mul.h>
-#include <cml/matvec/matvec_mul.h>
 
 namespace cml {
 
@@ -64,6 +59,9 @@ class matrix<Element,external<Rows,Cols>,Layout>
 
     /* For matching by result-type: */
     typedef cml::et::matrix_result_tag result_tag;
+
+    /* For matching by assignability: */
+    typedef cml::et::not_assignable_tag assignable_tag;
 
     /* To simplify the matrix transpose operator: */
     typedef matrix<

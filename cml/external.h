@@ -8,8 +8,6 @@
 #ifndef external_h
 #define external_h
 
-#include <cml/defaults.h>
-
 namespace cml {
 
 /** This is a selector for external 1D and 2D arrays.

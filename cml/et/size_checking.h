@@ -12,8 +12,8 @@
 
 #include <stdexcept>
 #include <cml/core/cml_meta.h>
+#include <cml/core/cml_assert.h>
 #include <cml/core/fwd.h>
-#include <cml/et/tags.h>
 #include <cml/et/traits.h>
 
 /* This is used below to create a more meaningful compile-time error when
@@ -289,22 +289,13 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
     }
 };
 
-#if defined(CML_INLINE_GLOBAL_FUNCTIONS)
-#define inline_         inline
-#else
-#define inline_
-#endif
-
 /** Generator for GetCheckedSize. */
 template<typename LeftT, typename RightT, typename SizeTag>
-inline_ typename et::GetCheckedSize<LeftT,RightT,SizeTag>::size_type
+inline typename et::GetCheckedSize<LeftT,RightT,SizeTag>::size_type
 CheckedSize(const LeftT& left, const RightT& right, SizeTag)
 {
     return et::GetCheckedSize<LeftT,RightT,SizeTag>()(left,right);
 }
-
-/* Cleanup: */
-#undef inline_
 
 } // namespace et
 } // namespace cml

@@ -35,9 +35,22 @@ template<typename Element, class ArrayType,
 
 } // namespace cml
 
+
+
+#include <cml/core/common.h>
+
 #include <cml/matrix/fixed.h>
 #include <cml/matrix/dynamic.h>
 #include <cml/matrix/external.h>
+
+#include <cml/matrix/matrix_ops.h>
+#include <cml/matrix/matrix_transpose.h>
+#include <cml/matrix/matrix_rowcol.h>
+#include <cml/matrix/matrix_mul.h>
+#include <cml/matvec/matvec_mul.h>
+#include <cml/matrix/lu.h>
+#include <cml/matrix/inverse.h>
+#include <cml/matrix/determinant.h>
 
 #endif
 

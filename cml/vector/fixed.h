@@ -8,13 +8,10 @@
 #ifndef fixed_vector_h
 #define fixed_vector_h
 
-#include <cml/core/common.h>
 #include <cml/core/fixed_1D.h>
 #include <cml/vector/vector_expr.h>
 #include <cml/vector/class_ops.h>
 #include <cml/vector/vector_unroller.h>
-#include <cml/vector/vector_ops.h>
-#include <cml/vector/vector_products.h>
 
 namespace cml {
 
@@ -57,6 +54,9 @@ class vector< Element, fixed<Size> >
 
     /* For matching by result-type: */
     typedef cml::et::vector_result_tag result_tag;
+
+    /* For matching by assignability: */
+    typedef cml::et::assignable_tag assignable_tag;
 
 
   public:

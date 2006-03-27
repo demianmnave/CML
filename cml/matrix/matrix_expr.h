@@ -12,8 +12,6 @@
 #define matrix_expr_h
 
 
-#include <cml/core/common.h>
-#include <cml/core/cml_meta.h>
 #include <cml/et/size_checking.h>
 #include <cml/matrix/matrix_traits.h>
 #include <cml/matrix/matrix_promotions.h>
@@ -29,7 +27,6 @@
 //#define MATXPR_ARG_TYPE               const et::MatrixXpr<XprT>
 //#define MATXPR_ARG_TYPE_N(_N_)        const et::MatrixXpr<XprT##_N_>
 
-
 namespace cml {
 namespace et {
 
@@ -41,15 +38,8 @@ class MatrixXpr
 
     typedef MatrixXpr<ExprT> expr_type;
 
-#if defined(CML_USE_MAT_XPR_REF)
-    /* Use a reference to the compiler's MatrixXpr<> temporary in
-     * expressions:
-     */
-    typedef const expr_type& expr_const_reference;
-#else
     /* Copy the expression by value into higher-up expressions: */
     typedef expr_type expr_const_reference;
-#endif // CML_USE_MAT_XPR_REF
 
     typedef typename ExprT::value_type value_type;
     typedef matrix_result_tag result_tag;
@@ -63,6 +53,12 @@ class MatrixXpr
 
     /* Get the result type: */
     typedef typename expr_traits::result_type result_type;
+
+    /* Get the temporary type: */
+    typedef typename result_type::temporary_type temporary_type;
+
+    /* For matching by assignability: */
+    typedef cml::et::not_assignable_tag assignable_tag;
 
 
   public:
@@ -129,6 +125,7 @@ struct ExprTraits< MatrixXpr<ExprT> >
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
+    typedef typename expr_type::assignable_tag assignable_tag;
     typedef expr_node_tag node_tag;
 
     value_type get(const expr_type& e, size_t i, size_t j) const {
@@ -156,15 +153,8 @@ class UnaryMatrixOp
     /* Record ary-ness of the expression: */
     typedef unary_expression expr_ary;
 
-#if defined(CML_USE_MAT_UNIOP_REF)
-    /* Use a reference to the compiler's UnaryMatrixOp temporary in
-     * expressions:
-     */
-    typedef const expr_type& expr_const_reference;
-#else
     /* Copy the expression by value into higher-up expressions: */
     typedef expr_type expr_const_reference;
-#endif // CML_USE_MAT_UNIOP_REF
 
     typedef typename OpT::value_type value_type;
     typedef matrix_result_tag result_tag;
@@ -178,6 +168,12 @@ class UnaryMatrixOp
 
     /* Get the result type: */
     typedef typename expr_traits::result_type result_type;
+
+    /* Get the temporary type: */
+    typedef typename result_type::temporary_type temporary_type;
+
+    /* For matching by assignability: */
+    typedef cml::et::not_assignable_tag assignable_tag;
 
 
   public:
@@ -245,6 +241,7 @@ struct ExprTraits< UnaryMatrixOp<ExprT,OpT> >
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
+    typedef typename expr_type::assignable_tag assignable_tag;
     typedef expr_node_tag node_tag;
 
     value_type get(const expr_type& e, size_t i, size_t j) const {
@@ -265,20 +262,16 @@ class BinaryMatrixOp
 
     typedef BinaryMatrixOp<LeftT,RightT,OpT> expr_type;
 
-#if defined(CML_USE_MAT_BINOP_REF)
-    /* Use a reference to the compiler's BinaryMatrixOp temporary in
-     * expressions:
-     */
-    typedef const expr_type& expr_const_reference;
-#else
     /* Copy the UnaryMatrixOp expression by value into parent
      * expression tree nodes:
      */
     typedef expr_type expr_const_reference;
-#endif // CML_USE_MAT_BINOP_REF
 
     typedef typename OpT::value_type value_type;
     typedef matrix_result_tag result_tag;
+
+    /* For matching by assignability: */
+    typedef cml::et::not_assignable_tag assignable_tag;
 
     /* Record the expression traits for the two subexpressions: */
     typedef ExprTraits<LeftT> left_traits;
@@ -293,6 +286,9 @@ class BinaryMatrixOp
     typedef typename right_traits::result_type right_result;
     typedef typename MatrixPromote<left_result,right_result>::type result_type;
     typedef typename result_type::size_tag size_tag;
+
+    /* Get the temporary type: */
+    typedef typename result_type::temporary_type temporary_type;
 
     /* Define a size checker: */
     typedef GetCheckedSize<LeftT,RightT,size_tag> checked_size;
@@ -403,6 +399,7 @@ struct ExprTraits< BinaryMatrixOp<LeftT,RightT,OpT> >
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
+    typedef typename expr_type::assignable_tag assignable_tag;
     typedef expr_node_tag node_tag;
 
     value_type get(const expr_type& e, size_t i, size_t j) const {
@@ -416,30 +413,23 @@ struct ExprTraits< BinaryMatrixOp<LeftT,RightT,OpT> >
 
 namespace detail {
 
-#if defined(CML_INLINE_GLOBAL_FUNCTIONS)
-#define inline_         inline
-#else
-#define inline_
-#endif
-
 /* XXX These are temporary helpers until dynamic resizing is integrated more
  * naturally into mul() and matrix transpose():
  */
-template<typename MatT> inline_
-void Resize(MatT&, size_t, size_t, fixed_size_tag) {}
+template<typename MatT, typename MT> inline
+void Resize(MatT&, size_t, size_t, fixed_size_tag, MT) {}
 
-template<typename MatT> inline_
-void Resize(MatT& m, size_t R, size_t C, dynamic_size_tag) {
+template<typename MatT> inline
+void Resize(MatT& m,
+        size_t R, size_t C, dynamic_size_tag, dynamic_memory_tag)
+{
     m.resize(R,C);
 }
 
-template<typename MatT> inline_
+template<typename MatT> inline
 void Resize(MatT& m, size_t R, size_t C) {
-    Resize(m, R, C, typename MatT::size_tag());
+    Resize(m, R, C, typename MatT::size_tag(), typename MatT::memory_tag());
 }
-
-/* Cleanup: */
-#undef inline_
 
 } // namespace detail
 

@@ -354,7 +354,7 @@ void example12()
     /* 4-space vector, fixed length, double coordinates: */
     typedef cml::vector< float, fixed<4> > vector_d4;
 
-    cout << "Example10:" << endl;
+    cout << "Example12:" << endl;
 
     matrix_d43 A;
 
@@ -367,6 +367,69 @@ void example12()
 
     cout << "A = " << A << endl;
     cout << "B[f33] = T(A)*A = " << B << endl;
+}
+
+void example13()
+{
+    /* 4x4 matrix, fixed length, double coordinates: */
+    typedef cml::matrix< double, fixed<4,4>, cml::col_major > matrix_d44;
+
+    matrix_d44 M,A;
+    M(0,0) = 1.0; M(0,1) = 1.0; M(0,2) = 1.0; M(0,3) = 1.0;
+    M(1,0) = 0.0; M(1,1) = 1.0; M(1,2) = 1.0; M(1,3) = 1.0;
+    M(2,0) = 0.0; M(2,1) = 0.0; M(2,2) = 1.0; M(2,3) = 1.0;
+    M(3,0) = 0.0; M(3,1) = 0.0; M(3,2) = 0.0; M(3,3) = 1.0;
+
+    cout << "Example13:" << endl;
+
+    cout << "M = " << M << endl;
+    cout << "M = LU = " << cml::lu(M) << endl;
+    cout << "det(M) = " << determinant(M) << endl;
+
+    A(0,0) = 1.0; A(0,1) = 0.0; A(0,2) = 0.0; A(0,3) = 0.0;
+    A(1,0) = 0.0; A(1,1) = 1.0; A(1,2) = 0.0; A(1,3) = 0.0;
+    A(2,0) = 0.0; A(2,1) = 0.0; A(2,2) = 1.0; A(2,3) = 0.0;
+    A(3,0) = 0.0; A(3,1) = 0.0; A(3,2) = 0.0; A(3,3) = 1.0;
+
+    matrix_d44 D = M+A;
+    cout << "M+A = " << D << endl;
+    cout << "M+A = LU = " << cml::lu(M+A) << endl;
+    cout << "det(M+A) = " << determinant(M+A) << endl;
+}
+
+void example14()
+{
+    /* 4x4 matrix, fixed length, double coordinates: */
+    typedef cml::matrix< double, fixed<4,4>, cml::col_major > matrix_d44;
+    typedef matrix_d44::col_vector_type vector_d4;
+
+    matrix_d44 M;
+    M(0,0) = 1.0; M(0,1) = 1.0; M(0,2) = 1.0; M(0,3) = 1.0;
+    M(1,0) = 0.0; M(1,1) = 1.0; M(1,2) = 1.0; M(1,3) = 1.0;
+    M(2,0) = 0.0; M(2,1) = 0.0; M(2,2) = 1.0; M(2,3) = 1.0;
+    M(3,0) = 0.0; M(3,1) = 0.0; M(3,2) = 0.0; M(3,3) = 1.0;
+
+    cout << "Example14:" << endl;
+
+    matrix_d44 LU = cml::lu(M);
+    cout << "M = " << M << endl;
+    cout << "M = LU = " << LU << endl;
+
+    vector_d4 y, x;
+    y[0] = 1.; y[1] = 0.; y[2] = 0.; y[3] = 0;
+    cout << "y = " << y << endl;
+
+    x = cml::lu_solve(LU,y);
+    cout << "x = lu_solve(M,y) = " << x << endl;
+
+    y = M*x;
+    cout << "y = M*x = " << y << endl;
+
+    matrix_d44 Minv = inverse(M);
+    cout << "Minv = " << Minv << endl;
+
+    vector_d4 xinv = Minv*y;
+    cout << "xinv = Minv*y = " << xinv << endl;
 }
 
 int main()
@@ -385,6 +448,8 @@ int main()
     example10();
     example11();
     example12();
+    example13();
+    example14();
     return 0;
 }
 

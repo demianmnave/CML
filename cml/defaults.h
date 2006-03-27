@@ -34,38 +34,6 @@
 #define CML_DEFAULT_ARRAY_ALLOC std::allocator<void>
 #endif
 
-
-/* Enable all inlines if requested (handy for GCC 3.4): */
-#if defined(CML_ENABLE_ALL_INLINES)
-#if !defined(CML_VECTOR_UNROLLER_REQUIRES_INLINE)
-#define CML_VECTOR_UNROLLER_REQUIRES_INLINE
-#endif
-
-#if !defined(CML_VECTOR_OPERATORS_REQUIRE_INLINE)
-#define CML_VECTOR_OPERATORS_REQUIRE_INLINE
-#endif
-
-#if !defined(CML_VECTOR_PRODUCTS_REQUIRE_INLINE)
-#define CML_VECTOR_PRODUCTS_REQUIRE_INLINE
-#endif
-
-#if !defined(CML_MATRIX_UNROLLER_REQUIRES_INLINE)
-#define CML_MATRIX_UNROLLER_REQUIRES_INLINE
-#endif
-
-#if !defined(CML_MATRIX_OPERATORS_REQUIRE_INLINE)
-#define CML_MATRIX_OPERATORS_REQUIRE_INLINE
-#endif
-
-#if !defined(CML_MATRIX_MUL_REQUIRES_INLINE)
-#define CML_MATRIX_MUL_REQUIRES_INLINE
-#endif
-
-#if !defined(CML_INLINE_GLOBAL_FUNCTIONS)
-#define CML_INLINE_GLOBAL_FUNCTIONS
-#endif
-#endif
-
 #endif
 
 // -------------------------------------------------------------------------

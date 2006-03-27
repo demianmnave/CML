@@ -32,6 +32,12 @@ struct expr_node_tag {};
 /** Marker for expression tree terminals (leaves). */
 struct expr_leaf_tag {};
 
+/** Marker for assignable types. */
+struct assignable_tag {};
+
+/** Marker for assignable types. */
+struct not_assignable_tag {};
+
 } // namespace et
 } // namespace cml
 

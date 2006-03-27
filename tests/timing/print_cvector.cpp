@@ -2,18 +2,19 @@
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 /** @file
- *  @brief A few simple metaprogramming tools.
+ *  @brief
  */
 
-#ifndef cml_meta_h
-#define cml_meta_h
-
-/* Include all of the template metaprogramming tools: */
-#include <cml/core/meta/common.h>
-#include <cml/core/meta/if.h>
-#include <cml/core/meta/switch.h>
-
-#endif
+std::ostream&
+operator<<(std::ostream& os, const vector_d4& v)
+{
+    os << "[";
+    for(size_t i = 0; i < 4; ++i) {
+        os << " " << v[i];
+    }
+    os << " ]";
+    return os;
+}
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp

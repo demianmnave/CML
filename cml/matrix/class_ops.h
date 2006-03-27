@@ -13,8 +13,8 @@
 
 /** Copy this matrix from another using the given elementwise op.
  *
- * @note This is required for GCC4, otherwise it won't elide the copy
- * constructor.
+ * @internal This is required for GCC4, since it won't elide the default
+ * copy constructor.
  */
 #define CML_MAT_COPY_FROM_MATTYPE                                   \
 matrix(const matrix_type& m) {                                      \

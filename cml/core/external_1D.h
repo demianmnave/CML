@@ -15,6 +15,7 @@
 
 #include <cml/core/common.h>
 #include <cml/core/cml_meta.h>
+#include <cml/core/cml_assert.h>
 #include <cml/external.h>
 
 namespace cml {

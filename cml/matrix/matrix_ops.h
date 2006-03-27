@@ -11,12 +11,6 @@
 #include <cml/matrix/matrix_expr.h>
 #include <cml/matrix/matop_macros.h>
 
-#if defined(CML_MATRIX_OPERATORS_REQUIRE_INLINE)
-#define inline_         inline
-#else
-#define inline_
-#endif
-
 namespace cml {
 
 CML_MAT_UNIOP(    operator+, et::OpPos)
@@ -44,9 +38,6 @@ CML_MAT_SCALAR_BINOP(    operator/, et::OpDiv)
 CML_MATXPR_SCALAR_BINOP( operator/, et::OpDiv)
 
 } // namespace cml
-
-/* Cleanup: */
-#undef inline_
 
 #endif
 

@@ -22,6 +22,7 @@ struct ExprTraits< cml::matrix<E,AT,L> >
     typedef typename expr_type::expr_const_reference const_reference;
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
+    typedef typename expr_type::assignable_tag assignable_tag;
     typedef expr_type result_type;
     typedef expr_leaf_tag node_tag;
 

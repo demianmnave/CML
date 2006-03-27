@@ -8,7 +8,6 @@
 #ifndef matrix_rowcol_h
 #define matrix_rowcol_h
 
-#include <cml/core/cml_meta.h>
 #include <cml/vector/vector_expr.h>
 #include <cml/matrix/matrix_expr.h>
 
@@ -25,15 +24,8 @@ class MatrixRowOp
     /* Record ary-ness of the expression: */
     typedef unary_expression expr_ary;
 
-#if defined(CML_USE_MAT_XPR_REF)
-    /* Use a reference to the compiler's MatrixRowOp<> temporary in
-     * expressions:
-     */
-    typedef const expr_type& expr_const_reference;
-#else
     /* Copy the expression by value into higher-up expressions: */
     typedef expr_type expr_const_reference;
-#endif // CML_USE_VEC_XPR_REF
 
     typedef typename ExprT::value_type value_type;
     typedef vector_result_tag result_tag;
@@ -126,15 +118,8 @@ class MatrixColOp
     /* Record ary-ness of the expression: */
     typedef unary_expression expr_ary;
 
-#if defined(CML_USE_MAT_XPR_REF)
-    /* Use a reference to the compiler's MatrixRowOp<> temporary in
-     * expressions:
-     */
-    typedef const expr_type& expr_const_reference;
-#else
     /* Copy the expression by value into higher-up expressions: */
     typedef expr_type expr_const_reference;
-#endif // CML_USE_VEC_XPR_REF
 
     typedef typename ExprT::value_type value_type;
     typedef vector_result_tag result_tag;

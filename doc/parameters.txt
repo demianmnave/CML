@@ -48,30 +48,6 @@ CML_NO_2D_UNROLLER
 - Don't unroll at all, just use a loop.  This seems to generate the best
   code on at least GCC4/x86 and Intel 9/Linux/x86.
 
-CML_USE_MAT_UNIOP_REF
-- When a unary expression appears as a child node in an expression tree,
-  use a reference to the compiler's temporary.  If this is not defined,
-  then the whole expression is referred to by value.  Some compilers can
-  avoid the copy and inline the results directly, others can't.  Note that
-  this is not currently used by (or tested for) any compiler.
-
-CML_USE_MAT_BINOP_REF
-- When a binary expression appears as a child node in an expression tree,
-  use a reference to the compiler's temporary.  If this is not defined,
-  then the whole expression is referred to by value.  Some compilers can
-  avoid the copy and inline the results directly, others can't.  (Note: this
-  can cause liveness problems for temporaries, so it's not used by default.)
-
-CML_USE_MAT_XPR_REF
-- Use a reference to the compiler's temporary in the root MatrixXpr node for
-  matrix expressions
-
-CML_USE_VEC_UNIOP_REF
-CML_USE_VEC_BINOP_REF
-CML_USE_VEC_XPR_REF
-- Same as CML_USE_MAT_UNIOP_REF, CML_USE_VEC_BINOP_REF, and
-  CML_USE_MAT_XPR_REF, but for vectors.
-
 CML_RECIPROCAL_OPTIMIZATION
 - Use "*= 1./x" instead of "/= x" for per-element division.  This may generate
   better code for certain systems, but isn't yet tested for any configuration.
@@ -103,42 +79,3 @@ CML_CHECK_MATRIX_EXPR_SIZES
 CML_USE_GENERATED_MATRIX_ASSIGN_OP
 - Allow the compiler to generate its own matrix assignment code.  This yields
   better performance at least on Intel C++ 9/x86 Linux.
-
-
-CML_VECTOR_UNROLLER_REQUIRES_INLINE
-- Some compilers will not automatically inline non-class functions without the
-  'inline' keyword (e.g. GCC 3.4).  Define this to explicitly specify the
-  inline keyword for the vector unrollers.
-
-CML_VECTOR_OPERATORS_REQUIRE_INLINE
-- Some compilers will not automatically inline non-class functions without the
-  'inline' keyword (e.g. GCC 3.4).  Define this to explicitly specify the
-  inline keyword for the global vector operators.
-
-CML_VECTOR_PRODUCTS_REQUIRE_INLINE
-- Some compilers will not automatically inline non-class functions without the
-  'inline' keyword (e.g. GCC 3.4).  Define this to explicitly specify the
-  inline keyword for the global vector product functions (dot and outer).
-
-CML_MATRIX_UNROLLER_REQUIRES_INLINE
-- Some compilers will not automatically inline non-class functions without the
-  'inline' keyword (e.g. GCC 3.4).  Define this to explicitly specify the
-  inline keyword for the matrix unrollers.
-
-CML_MATRIX_OPERATORS_REQUIRE_INLINE
-- Some compilers will not automatically inline non-class functions without the
-  'inline' keyword (e.g. GCC 3.4).  Define this to explicitly specify the
-  inline keyword for the global matrix operators.
-
-CML_MATRIX_MUL_REQUIRES_INLINE
-- Some compilers will not automatically inline non-class functions without the
-  'inline' keyword (e.g. GCC 3.4).  Define this to explicitly specify the
-  inline keyword for the global vector product functions (dot and outer).
-
-CML_INLINE_GLOBAL_FUNCTIONS
-- Some compilers will not automatically inline non-class functions without the
-  'inline' keyword (e.g. GCC 3.4).  Define this to explicitly specify the
-  inline keyword for global functions.
-
-CML_ENABLE_ALL_INLINES
-- Turn on all of the INLINE options above.

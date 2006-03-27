@@ -8,8 +8,6 @@
 #ifndef vector_expr_h
 #define vector_expr_h
 
-#include <cml/core/common.h>
-#include <cml/core/cml_meta.h>
 #include <cml/et/size_checking.h>
 #include <cml/vector/vector_traits.h>
 #include <cml/vector/vector_promotions.h>
@@ -39,15 +37,8 @@ class VectorXpr
     /* Record ary-ness of the expression: */
     typedef typename ExprT::expr_ary expr_ary;
 
-#if defined(CML_USE_VEC_XPR_REF)
-    /* Use a reference to the compiler's VectorXpr<> temporary in
-     * expressions:
-     */
-    typedef const expr_type& expr_const_reference;
-#else
     /* Copy the expression by value into higher-up expressions: */
     typedef expr_type expr_const_reference;
-#endif // CML_USE_VEC_XPR_REF
 
     typedef typename ExprT::value_type value_type;
     typedef vector_result_tag result_tag;
@@ -61,6 +52,9 @@ class VectorXpr
 
     /* Get the result type: */
     typedef typename expr_traits::result_type result_type;
+
+    /* For matching by assignability: */
+    typedef cml::et::not_assignable_tag assignable_tag;
 
     /* Get the temporary type: */
     typedef typename result_type::temporary_type temporary_type;
@@ -76,7 +70,7 @@ class VectorXpr
 
     /** Return size of this expression (same as subexpression's size). */
     size_t size() const {
-        return expr_traits().size(m_expr);
+        return m_expr.size();
     }
 
     /** Return reference to contained expression. */
@@ -84,7 +78,7 @@ class VectorXpr
 
     /** Compute value at index i of the result vector. */
     value_type operator[](size_t i) const {
-        return expr_traits().get(m_expr,i);
+        return m_expr[i];
     }
 
 
@@ -119,6 +113,7 @@ struct ExprTraits< VectorXpr<ExprT> >
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
+    typedef typename expr_type::assignable_tag assignable_tag;
     typedef expr_node_tag node_tag;
 
     value_type get(const expr_type& v, size_t i) const { return v[i]; }
@@ -140,15 +135,8 @@ class UnaryVectorOp
     /* Record ary-ness of the expression: */
     typedef unary_expression expr_ary;
 
-#if defined(CML_USE_VEC_UNIOP_REF)
-    /* Use a reference to the compiler's UnaryVectorOp temporary in
-     * expressions:
-     */
-    typedef const expr_type& expr_const_reference;
-#else
     /* Copy the expression by value into higher-up expressions: */
     typedef expr_type expr_const_reference;
-#endif // CML_USE_VEC_UNIOP_REF
 
     typedef typename OpT::value_type value_type;
     typedef vector_result_tag result_tag;
@@ -163,6 +151,9 @@ class UnaryVectorOp
     /* Get the result type (same as for subexpression): */
     typedef typename expr_traits::result_type result_type;
 
+    /* For matching by assignability: */
+    typedef cml::et::not_assignable_tag assignable_tag;
+
     /* Get the temporary type: */
     typedef typename result_type::temporary_type temporary_type;
 
@@ -175,9 +166,9 @@ class UnaryVectorOp
 
   public:
 
-    /** Return size of this expression (same as exprument's size). */
+    /** Return size of this expression (same as argument's size). */
     size_t size() const {
-        return expr_traits().size(m_expr);
+        return m_expr.size();
     }
 
     /** Return reference to contained expression. */
@@ -225,6 +216,7 @@ struct ExprTraits< UnaryVectorOp<ExprT,OpT> >
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
+    typedef typename expr_type::assignable_tag assignable_tag;
     typedef expr_node_tag node_tag;
 
     value_type get(const expr_type& v, size_t i) const { return v[i]; }
@@ -246,15 +238,8 @@ class BinaryVectorOp
     /* Record ary-ness of the expression: */
     typedef binary_expression expr_ary;
 
-#if defined(CML_USE_VEC_BINOP_REF)
-    /* Use a reference to the compiler's BinaryVectorOp temporary in
-     * expressions:
-     */
-    typedef const expr_type& expr_const_reference;
-#else
     /* Copy the expression by value into higher-up expressions: */
     typedef expr_type expr_const_reference;
-#endif // CML_USE_VEC_BINOP_REF
 
     typedef typename OpT::value_type value_type;
     typedef vector_result_tag result_tag;
@@ -272,6 +257,9 @@ class BinaryVectorOp
     typedef typename right_traits::result_type right_result;
     typedef typename VectorPromote<left_result,right_result>::type result_type;
     typedef typename result_type::size_tag size_tag;
+
+    /* For matching by assignability: */
+    typedef cml::et::not_assignable_tag assignable_tag;
 
     /* Get the temporary type: */
     typedef typename result_type::temporary_type temporary_type;
@@ -360,6 +348,7 @@ struct ExprTraits< BinaryVectorOp<LeftT,RightT,OpT> >
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
+    typedef typename expr_type::assignable_tag assignable_tag;
     typedef expr_node_tag node_tag;
 
     value_type get(const expr_type& v, size_t i) const { return v[i]; }
@@ -379,28 +368,19 @@ struct VectorExpressions
 
 namespace detail {
 
-#if defined(CML_INLINE_GLOBAL_FUNCTIONS)
-#define inline_         inline
-#else
-#define inline_
-#endif
-
 /* Helpers for resizing vectors: */
-template<typename VecT> inline_
-void Resize(VecT&, size_t, fixed_size_tag) {}
+template<typename VecT, typename MT> inline
+void Resize(VecT&, size_t, fixed_size_tag, MT) {}
 
-template<typename VecT> inline_
-void Resize(VecT& v, size_t S, dynamic_size_tag) {
+template<typename VecT> inline
+void Resize(VecT& v, size_t S, dynamic_size_tag, dynamic_memory_tag) {
     v.resize(S);
 }
 
-template<typename VecT> inline_
+template<typename VecT> inline
 void Resize(VecT& v, size_t S) {
-    Resize(v, S, typename VecT::size_tag());
+    Resize(v, S, typename VecT::size_tag(), typename VecT::memory_tag());
 }
-
-/* Cleanup: */
-#undef inline_
 
 } // namespace detail
 

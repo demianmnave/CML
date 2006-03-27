@@ -16,15 +16,8 @@
 #ifndef	matrix_mul_h
 #define	matrix_mul_h
 
-#include <cml/et/scalar_promotions.h>
 #include <cml/et/size_checking.h>
 #include <cml/matrix/matrix_expr.h>
-
-#if defined(CML_MATRIX_MUL_REQUIRES_INLINE)
-#define inline_         inline
-#else
-#define inline_
-#endif
 
 /* This is used below to create a more meaningful compile-time error when
  * mul is not provided with matrix or MatrixExpr arguments:
@@ -43,7 +36,7 @@ namespace detail {
  *
  * @returns a matrix_size containing the size of the resulting matrix.
  */
-template<typename LeftT, typename RightT> inline_ matrix_size
+template<typename LeftT, typename RightT> inline matrix_size
 MatMulCheckedSize(const LeftT&, const RightT&, fixed_size_tag)
 {
     CML_STATIC_REQUIRE_M(
@@ -56,7 +49,7 @@ MatMulCheckedSize(const LeftT&, const RightT&, fixed_size_tag)
  *
  * @returns a matrix_size containing the size of the resulting matrix.
  */
-template<typename LeftT, typename RightT> inline_ matrix_size
+template<typename LeftT, typename RightT> inline matrix_size
 MatMulCheckedSize(const LeftT& left, const RightT& right, dynamic_size_tag)
 {
     matrix_size left_N = left.size(), right_N = right.size();
@@ -71,7 +64,7 @@ MatMulCheckedSize(const LeftT& left, const RightT& right, dynamic_size_tag)
  * Computes C = A x B (O(N^3), non-blocked algorithm).
  */
 template<class LeftT, class RightT>
-inline_ typename et::MatrixPromote<
+inline typename et::MatrixPromote<
     typename et::ExprTraits<LeftT>::result_type,
     typename et::ExprTraits<RightT>::result_type
 >::temporary_type
@@ -147,7 +140,7 @@ mul(const LeftT& left, const RightT& right)
 /** operator*() for two matrices. */
 template<typename E1, class AT1, typename L1,
          typename E2, class AT2, typename L2>
-inline_ typename et::MatrixPromote<
+inline typename et::MatrixPromote<
     matrix<E1,AT1,L1>, matrix<E2,AT2,L2>
 >::temporary_type
 operator*(const matrix<E1,AT1,L1>& left,
@@ -158,8 +151,8 @@ operator*(const matrix<E1,AT1,L1>& left,
 
 /** operator*() for a matrix and a MatrixXpr. */
 template<typename E, class AT, typename L, typename XprT>
-inline_ typename et::MatrixPromote<
-    matrix<E,AT,L>, XprT
+inline typename et::MatrixPromote<
+    matrix<E,AT,L>, typename XprT::result_type
 >::temporary_type
 operator*(const matrix<E,AT,L>& left,
           const et::MatrixXpr<XprT>& right)
@@ -175,8 +168,8 @@ operator*(const matrix<E,AT,L>& left,
 
 /** operator*() for a MatrixXpr and a matrix. */
 template<typename XprT, typename E, class AT, typename L>
-inline_ typename et::MatrixPromote<
-    XprT, matrix<E,AT,L>
+inline typename et::MatrixPromote<
+    typename XprT::result_type , matrix<E,AT,L>
 >::temporary_type
 operator*(const et::MatrixXpr<XprT>& left,
           const matrix<E,AT,L>& right)
@@ -192,8 +185,8 @@ operator*(const et::MatrixXpr<XprT>& left,
 
 /** operator*() for two MatrixXpr's. */
 template<typename XprT1, typename XprT2>
-inline_ typename et::MatrixPromote<
-    XprT1, XprT2
+inline typename et::MatrixPromote<
+    typename XprT1::result_type, typename XprT2::result_type
 >::temporary_type
 operator*(const et::MatrixXpr<XprT1>& left,
           const et::MatrixXpr<XprT2>& right)
@@ -211,9 +204,6 @@ operator*(const et::MatrixXpr<XprT1>& left,
 
     return detail::mul(ltmp,rtmp);
 }
-
-/* Cleanup: */
-#undef inline_
 
 } // namespace cml
 

@@ -15,8 +15,6 @@
 #ifndef matrix_transpose_h
 #define matrix_transpose_h
 
-#include <cml/et/size_checking.h>
-#include <cml/matrix/matrix_promotions.h>
 #include <cml/matrix/matrix_expr.h>
 
 #define MATRIX_TRANSPOSE_RETURNS_TEMP
@@ -39,15 +37,8 @@ class MatrixTransposeOp
     /* Record ary-ness of the expression: */
     typedef unary_expression expr_ary;
 
-#if defined(CML_USE_MAT_XPR_REF)
-    /* Use a reference to the compiler's MatrixTransposeOp<> temporary in
-     * expressions:
-     */
-    typedef const expr_type& expr_const_reference;
-#else
     /* Copy the expression by value into higher-up expressions: */
     typedef expr_type expr_const_reference;
-#endif // CML_USE_VEC_XPR_REF
 
     typedef typename ExprT::value_type value_type;
     typedef matrix_result_tag result_tag;
@@ -64,6 +55,9 @@ class MatrixTransposeOp
 
     /* Get the temporary type: */
     typedef typename result_type::temporary_type temporary_type;
+
+    /* For matching by assignability: */
+    typedef cml::et::not_assignable_tag assignable_tag;
 
 
   public:
@@ -143,6 +137,7 @@ struct ExprTraits< MatrixTransposeOp<ExprT> >
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
+    typedef typename expr_type::assignable_tag assignable_tag;
     typedef expr_node_tag node_tag;
 
     value_type get(const expr_type& m, size_t i, size_t j) const {
@@ -183,8 +178,7 @@ transpose(const matrix<E,AT,L>& expr)
 
     /* Create the temporary and return it: */
     tmp_type tmp;
-    cml::et::detail::Resize(tmp,expr.rows(),expr.cols(),
-            typename tmp_type::size_tag());
+    cml::et::detail::Resize(tmp,expr.rows(),expr.cols());
     tmp = ExprT(Op(expr));
     return tmp;
 }
@@ -211,8 +205,7 @@ transpose(MATXPR_ARG_TYPE expr)
 
     /* Create the temporary and return it: */
     tmp_type tmp;
-    cml::et::detail::Resize(tmp,expr.rows(),expr.cols(),
-            typename tmp_type::size_tag());
+    cml::et::detail::Resize(tmp,expr.rows(),expr.cols());
     tmp = ExprT(Op(expr));
     return tmp;
 }

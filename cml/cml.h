@@ -4,8 +4,14 @@
 /** @file
  *  @brief Bring CML public namespaces into namespace CML.
  *
- * @todo Finish tests for mat-vec multiply, and enable inlining as
- * necessary.
+ * @todo switch to ssize_t instead of size_t to avoid having to explicitly
+ * deal with wrap-arounds to 2^32-1 when a size_t is subtracted from.
+ *
+ * @todo Make MatrixXpr<> and VectorXpr<> convertible to temporaries when a
+ * value is required, but no left-hand matrix is provided; e.g. in 
+ * cout << A+B << endl.
+ *
+ * @todo Finish tests for mat-vec multiply.
  *
  * @todo Differentiate between references used for function arguments, and
  * those used for variable types.  In particular, GCC 3.4 requires const T &
@@ -27,11 +33,6 @@
  * @todo figure out if scalars should be passed by value or reference, or
  * if it should be determined by traits
  *
- * @todo does it make sense to allow vector<> to look like matrix<> in
- * expressions?  e.g. by assigning array_rows and array_cols based upon
- * orientation, and by putting rows() and cols() methods into vector<> and
- * ExprTraits< vector<> >?
- *
  * @todo change use of typename, class to be like Alexandrescu book
  *
  * @todo figure out if it makes sense to unroll assignment if either the
@@ -41,10 +42,27 @@
  * @todo need intutive identity() function that doesn't cause already
  * allocated dynamic vectors to be resized.
  *
- * @todo fix/streamline header inclusion
+ * @todo
+ * assigning matrices and vectors [still not sure of good way]
+ * identity()
+ * general cross() for an (N-1)xN matrix
+ * general cross() for (N-1) N-length vectors
+ * vector<>::normalize()
+ * vector<>::unit()
+ * vector<>::magnitude2()  [or squared_length(), or whatever]
+ * vector<>::magitude() [or length(), or whatever]
+ * vector<>:: and matrix<>::fill()
  *
- * @todo how should derivation from vector<> and matrix<> be supported?  or
- * can it be supported at all in the current design?
+ * @todo Reduce the number of ExprTraits<> instances.  Most have the same
+ * base types and methods.
+ *
+ * @todo Allow addition of new types, a la glommable ETs (but simpler).
+ * Can use ideas from "SCOOP" method: Nicolas Burrus, Alexandre Duret-Lutz,
+ * Thierry Géraud, David Lesage and Raphaël Poss. A Static C++
+ * Object-Oriented Programming (SCOOP) Paradigm Mixing Benefits of
+ * Traditional OOP and Generic Programming. In the Proceedings of the
+ * Workshop on Multiple Paradigm with OO Languages (MPOOL'03) Anaheim, CA,
+ * USA Oct. 2003
  */
 
 #ifndef cml_h

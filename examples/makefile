@@ -1,5 +1,5 @@
 # Simple makefile for the "simple" example.
-CXX=g++
+CXX=g++ -Wall
 CXXFLAGS= -O3
 CPPFLAGS=-I..
 LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)

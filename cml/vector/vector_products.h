@@ -4,23 +4,19 @@
 /** @file
  *  @brief Defines vector dot and outer products.
  *
- * @todo Use VectorAccumulateUnroller to unroll the dot product.
+ * @todo Figure out if the source or destination size type should trigger
+ * unrolling.  May need a per-compiler compile-time option for this.
  */
 
 #ifndef vector_products_h
 #define vector_products_h
 
+#include <cml/core/cml_assert.h>
 #include <cml/et/scalar_promotions.h>
 #include <cml/et/size_checking.h>
 #include <cml/vector/vector_unroller.h>
 #include <cml/vector/vector_expr.h>
 #include <cml/matrix/matrix_expr.h>
-
-#if defined(CML_VECTOR_PRODUCTS_REQUIRE_INLINE)
-#define inline_         inline
-#else
-#define inline_
-#endif
 
 /* This is used below to create a more meaningful compile-time error when
  * dot is not provided with vector or VectorExpr arguments:
@@ -73,7 +69,7 @@ struct OuterPromote
  * @sa cml::dot
  */
 template<typename LeftT, typename RightT>
-inline_ typename DotPromote<LeftT,RightT>::promoted_scalar
+inline typename DotPromote<LeftT,RightT>::promoted_scalar
 UnrollDot(const LeftT& left, const RightT& right, fixed_size_tag)
 {
     /* Shorthand: */
@@ -105,7 +101,7 @@ UnrollDot(const LeftT& left, const RightT& right, fixed_size_tag)
  * @sa cml::dot
  */
 template<typename LeftT, typename RightT>
-inline_ typename DotPromote<LeftT,RightT>::promoted_scalar
+inline typename DotPromote<LeftT,RightT>::promoted_scalar
 UnrollDot(const LeftT& left, const RightT& right, dynamic_size_tag)
 {
     /* Shorthand: */
@@ -143,12 +139,9 @@ UnrollDot(const LeftT& left, const RightT& right, dynamic_size_tag)
 
 
 /** Vector dot (inner) product implementation.
- *
- * @todo Figure out if the source or destination size type should trigger
- * unrolling.  May need a per-compiler compile-time option for this.
  */
 template<typename LeftT, typename RightT>
-inline_ typename detail::DotPromote<LeftT,RightT>::promoted_scalar
+inline typename detail::DotPromote<LeftT,RightT>::promoted_scalar
 dot(const LeftT& left, const RightT& right)
 {
     /* Shorthand: */
@@ -178,7 +171,7 @@ dot(const LeftT& left, const RightT& right)
 }
 
 template<typename LeftT, typename RightT>
-inline_ typename detail::OuterPromote<LeftT,RightT>::promoted_matrix
+inline typename detail::OuterPromote<LeftT,RightT>::promoted_matrix
 outer(const LeftT& left, const RightT& right)
 {
     /* Shorthand: */
@@ -221,7 +214,7 @@ outer(const LeftT& left, const RightT& right)
 template<
     typename E1, class AT1,
     typename E2, class AT2>
-inline_ typename detail::DotPromote<
+inline typename detail::DotPromote<
     vector<E1,AT1>, vector<E2,AT2>
 >::promoted_scalar
 operator*(const vector<E1,AT1>& left,
@@ -232,7 +225,7 @@ operator*(const vector<E1,AT1>& left,
 
 /** dot() via operator*() for a vector and a VectorXpr. */
 template<typename E, class AT, typename XprT>
-inline_ typename detail::DotPromote<
+inline typename detail::DotPromote<
     vector<E,AT>, typename XprT::result_type
 >::promoted_scalar
 operator*(const vector<E,AT>& left,
@@ -243,7 +236,7 @@ operator*(const vector<E,AT>& left,
 
 /** dot() via operator*() for a VectorXpr and a vector. */
 template<typename XprT, typename E, class AT>
-inline_ typename detail::DotPromote<
+inline typename detail::DotPromote<
     typename XprT::result_type, vector<E,AT>
 >::promoted_scalar
 operator*(const et::VectorXpr<XprT>& left,
@@ -254,7 +247,7 @@ operator*(const et::VectorXpr<XprT>& left,
 
 /** dot() via operator*() for two VectorXpr's. */
 template<typename XprT1, typename XprT2>
-inline_ typename detail::DotPromote<
+inline typename detail::DotPromote<
     typename XprT1::result_type, typename XprT2::result_type
 >::promoted_scalar
 operator*(const et::VectorXpr<XprT1>& left,
@@ -266,9 +259,6 @@ operator*(const et::VectorXpr<XprT1>& left,
 #endif
 
 } // namespace cml
-
-/* Cleanup: */
-#undef inline_
 
 #endif
 

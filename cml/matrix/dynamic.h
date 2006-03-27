@@ -8,16 +8,10 @@
 #ifndef dynamic_matrix_h
 #define dynamic_matrix_h
 
-#include <cml/core/common.h>
 #include <cml/core/dynamic_2D.h>
 #include <cml/matrix/matrix_expr.h>
 #include <cml/matrix/class_ops.h>
 #include <cml/matrix/matrix_unroller.h>
-#include <cml/matrix/matrix_transpose.h>
-#include <cml/matrix/matrix_ops.h>
-#include <cml/matrix/matrix_mul.h>
-#include <cml/matvec/matvec_mul.h>
-#include <cml/dynamic.h>
 
 namespace cml {
 
@@ -61,8 +55,11 @@ class matrix<Element,dynamic<Alloc>,Layout>
     /* For matching by size type if necessary: */
     typedef typename array_type::size_tag size_tag;
 
-    /* For matching by result-type: */
+    /* For matching by result type: */
     typedef cml::et::matrix_result_tag result_tag;
+
+    /* For matching by assignability: */
+    typedef cml::et::assignable_tag assignable_tag;
 
     /* To simplify the matrix transpose operator: */
     typedef matrix<

@@ -17,6 +17,7 @@
 #include <cml/core/cml_meta.h>
 #include <cml/et/scalar_promotions.h>
 #include <cml/et/array_promotions.h>
+#include <cml/fixed.h>
 #include <cml/dynamic.h>
 
 /* This is used below to create a more meaningful compile-time error when

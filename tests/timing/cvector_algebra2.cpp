@@ -46,8 +46,8 @@ inline void timed2(
         size_t n_iter
         )
 {
+  vector_d4 VECINIT(tmp1), VECINIT(tmp2);
     for(size_t i = 0; i < n_iter; ++i) {
-        vector_d4 VECINIT(tmp1), VECINIT(tmp2);
         add(tmp1,v3,v4);
         add(tmp2,tmp1,v2);
         double dp = dot(v2,tmp2);
