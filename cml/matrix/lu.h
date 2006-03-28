@@ -90,34 +90,14 @@ void lu_inplace(MatT& A)
     /* Verify that the matrix is square, and get the size: */
     ssize_t N = (ssize_t) detail::LUCheckedSize(A, size_tag());
 
-    /* Compute the LU factorizaion in-place (the first row is the same
-     * as the first row of A):
-     */
-    /* Note: need ssize_t here so that i-1 is actually negative when i = 0: */
-    for(ssize_t i = 1; i < N; ++i) {
-        /* Compute the factorization for row i such that it only depends upon
-         * row i-1:
-         */
 
-        value_type L;
-        for(ssize_t j = 0; j <= i-1; ++j) {
-            L = A(i,j);
-            for(ssize_t k = 0; k < j-1; ++k) {
-                L -= A(i,k)*A(k,j);
+    for(ssize_t k = 0; k < N-1; ++k) {
+        /* XXX Should check if A(k,k) = 0! */
+        for(ssize_t i = k+1; i < N; ++i) {
+            value_type n = (A(i,k)/=A(k,k));
+            for(ssize_t j = k+1; j < N; ++ j) {
+                A(i,j) -= n*A(k,j);
             }
-            
-            /* XXX Need to check that A(j,j) != 0. here!!! */
-            A(i,j) = L/A(j,j);
-        }
-
-        /* Now compute U(i,i..N): */
-        value_type U;
-        for(ssize_t j = i; j < N; ++j) {
-            U = A(i,j);
-            for(ssize_t k = 0; k < i-1; ++k) {
-                U -= A(i,k)*A(k,j);
-            }
-            A(i,j) = U;
         }
     }
 }
@@ -172,7 +152,7 @@ lu(const et::MatrixXpr<XprT>& e)
  */
 template<typename MatT, typename VecT> inline
 typename et::MatVecPromote<MatT,VecT>::temporary_type
-lu_solve(const MatT& LU, const VecT& y)
+lu_solve(const MatT& LU, const VecT& b)
 {
     /* Shorthand. */
     typedef et::ExprTraits<MatT> lu_traits;
@@ -184,43 +164,30 @@ lu_solve(const MatT& LU, const VecT& y)
             LU, typename lu_traits::size_tag());
 
     /* Verify that the matrix and vector have compatible sizes: */
-    et::CheckedSize(LU, y, typename vector_type::size_tag());
+    et::CheckedSize(LU, b, typename vector_type::size_tag());
 
-    /* Solve Lb = y for b by forward substitution.  The entries below the
+    /* Solve Ly = b for y by forward substitution.  The entries below the
      * diagonal of LU correspond to L, understood to be below a diagonal of
      * 1's:
      */
-    vector_type b; cml::et::detail::Resize(b,N);
-    b[0] = y[0];
-    for(ssize_t i = 1; i < N; ++i) {
-
-        /* Compute left-hand sum of L(i,k)*b[i] up to k = i-1 (L(i,i)=1): */
-        value_type lhs = b[0]*LU(i,0) ;
-        for(ssize_t k = 1; k < i-1; ++k) {
-            lhs += b[k]*LU(i,k);
+    vector_type y; cml::et::detail::Resize(y,N);
+    for(ssize_t i = 0; i < N; ++i) {
+        y[i] = b[i];
+        for(ssize_t j = 0; j < i; ++j) {
+            y[i] -= LU(i,j)*y[j];
         }
-
-        /* L(i,i)*b[i] = b[i], so b[i] = y[i] - lhs: */
-        b[i] = y[i] - lhs;
     }
 
-    /* Solve Ux = b for x by backward substitution.  The entries at and above
+    /* Solve Ux = y for x by backward substitution.  The entries at and above
      * the diagonal of LU correspond to U:
      */
     vector_type x; cml::et::detail::Resize(x,N);
-    x[N-1] = b[N-1]/LU(N-1,N-1);
-    for(ssize_t i = 2; i <= N; ++i) {
-
-        /* Compute left-hand sum of U(N-i,k)*x[N-i+1] from k = N-i+1 to k =
-         * N-1:
-         */
-        value_type lhs = LU(N-i,N-i+1)*x[N-i+1];
-        for(ssize_t k = N-i+2; k < N; ++k) {
-            lhs += LU(N-i,k)*x[k];
+    for(ssize_t i = N-1; i >= 0; --i) {
+        x[i] = y[i];
+        for(ssize_t j = i+1; j < N; ++j) {
+            x[i] -= LU(i,j)*x[j];
         }
-
-        /* U(N-i,N-i) != 1, so x[N-i] = (b[N-i] - lhs)/U(N-i,N-i): */
-        x[N-i] = (b[N-i] - lhs)/LU(N-i,N-i);
+        x[i] /= LU(i,i);
     }
 
     /* Return x: */

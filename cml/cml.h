@@ -4,6 +4,12 @@
 /** @file
  *  @brief Bring CML public namespaces into namespace CML.
  *
+ * @todo Add is_square<>, is_rectangular<>, etc. to make it easier to
+ * detect specific matrix types.
+ *
+ * @todo Implement automatic temporary generation, along with expression
+ * node return types for mat-vec and mat-mat operators.
+ *
  * @todo switch to ssize_t instead of size_t to avoid having to explicitly
  * deal with wrap-arounds to 2^32-1 when a size_t is subtracted from.
  *
@@ -52,9 +58,6 @@
  * vector<>::magnitude2()  [or squared_length(), or whatever]
  * vector<>::magitude() [or length(), or whatever]
  * vector<>:: and matrix<>::fill()
- *
- * @todo Reduce the number of ExprTraits<> instances.  Most have the same
- * base types and methods.
  *
  * @todo Allow addition of new types, a la glommable ETs (but simpler).
  * Can use ideas from "SCOOP" method: Nicolas Burrus, Alexandre Duret-Lutz,

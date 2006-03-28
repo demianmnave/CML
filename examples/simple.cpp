@@ -55,7 +55,7 @@ void example1()
     /* 3-space column vector, fixed length, double coordinates: */
     typedef cml::vector< double, fixed<3> > vector_d3;
 
-    cout << "Example1:" << endl;
+    cout << std::endl << "Example1:" << endl;
 
     vector_d3 u, v;
     u[0] = 0.; u[1] = 0.; u[2] = 1.;
@@ -75,7 +75,7 @@ void example2()
     /* 3-space column vector, dynamic length, double coordinates: */
     typedef cml::vector< double, dynamic<> > vector_d;
 
-    cout << "Example2:" << endl;
+    cout << std::endl << "Example2:" << endl;
 
     vector_d u(3), v(3);
     u[0] = 0.; u[1] = 0.; u[2] = 1.;
@@ -93,7 +93,7 @@ void example3()
     /* 3-space matrix, fixed length, double coordinates: */
     typedef cml::matrix< double, fixed<3,3> > matrix_d3;
 
-    cout << "Example3:" << endl;
+    cout << std::endl << "Example3:" << endl;
 
     matrix_d3 A, B, C;
 
@@ -118,7 +118,7 @@ void example4()
     /* 3-space matrix, dynamic size, double coordinates: */
     typedef cml::matrix< double, dynamic<> > matrix_d;
 
-    cout << "Example4:" << endl;
+    cout << std::endl << "Example4:" << endl;
 
     matrix_d3 A, C;
     matrix_d B(3,3);
@@ -143,7 +143,7 @@ void example5()
     /* 3-space matrix, dynamic size, double coordinates: */
     typedef cml::matrix< double, dynamic<> > matrix_d;
 
-    cout << "Example4:" << endl;
+    cout << std::endl << "Example4:" << endl;
 
     matrix_d3 A, B;
     matrix_d C(3,3);
@@ -172,7 +172,7 @@ void example6()
     /* Column vector of the matrix: */
     typedef matrix_d3::col_vector_type cvector_d3;
 
-    cout << "Example6:" << endl;
+    cout << std::endl << "Example6:" << endl;
 
     matrix_d3 A, B, C;
 
@@ -203,7 +203,7 @@ void example7()
     /* 3-space matrix, fixed length, double coordinates: */
     typedef cml::matrix< double, fixed<3,3> > matrix_d3;
 
-    cout << "Example7:" << endl;
+    cout << std::endl << "Example7:" << endl;
 
     matrix_d3 A, B, C;
 
@@ -226,7 +226,7 @@ void example8()
     /* 3-space column vector, fixed length, double coordinates: */
     typedef cml::vector< double, external<3> > vector_d3;
 
-    cout << "Example8:" << endl;
+    cout << std::endl << "Example8:" << endl;
 
     double c_u[3] = {0.,0.,1.};
     double c_v[3] = {1.,0.,0.};
@@ -248,7 +248,7 @@ void example9()
     /* 3-space column vector, fixed length, double coordinates: */
     typedef cml::vector< double, fixed<3> > vector_d3;
 
-    cout << "Example9:" << endl;
+    cout << std::endl << "Example9:" << endl;
 
     vector_d3 u, v;
     u[0] = 0.; u[1] = 0.; u[2] = 1.;
@@ -275,7 +275,7 @@ void example10()
     /* 4-space vector, fixed length, double coordinates: */
     typedef cml::vector< double, fixed<4> > vector_d4;
 
-    cout << "Example10:" << endl;
+    cout << std::endl << "Example10:" << endl;
 
     matrix_d43 A;
 
@@ -318,7 +318,7 @@ void example11()
     /* 4-space vector, fixed length, double coordinates: */
     typedef cml::vector< double, fixed<4> > vector_d4;
 
-    cout << "Example11:" << endl;
+    cout << std::endl << "Example11:" << endl;
 
     matrix_d43 A;
 
@@ -354,7 +354,7 @@ void example12()
     /* 4-space vector, fixed length, double coordinates: */
     typedef cml::vector< float, fixed<4> > vector_d4;
 
-    cout << "Example12:" << endl;
+    cout << std::endl << "Example12:" << endl;
 
     matrix_d43 A;
 
@@ -380,7 +380,7 @@ void example13()
     M(2,0) = 0.0; M(2,1) = 0.0; M(2,2) = 1.0; M(2,3) = 1.0;
     M(3,0) = 0.0; M(3,1) = 0.0; M(3,2) = 0.0; M(3,3) = 1.0;
 
-    cout << "Example13:" << endl;
+    cout << std::endl << "Example13:" << endl;
 
     cout << "M = " << M << endl;
     cout << "M = LU = " << cml::lu(M) << endl;
@@ -400,23 +400,24 @@ void example13()
 void example14()
 {
     /* 4x4 matrix, fixed length, double coordinates: */
-    typedef cml::matrix< double, fixed<4,4>, cml::col_major > matrix_d44;
+    typedef cml::matrix< double, dynamic<>, cml::col_major > matrix_d44;
     typedef matrix_d44::col_vector_type vector_d4;
 
-    matrix_d44 M;
-    M(0,0) = 1.0; M(0,1) = 1.0; M(0,2) = 1.0; M(0,3) = 1.0;
-    M(1,0) = 0.0; M(1,1) = 1.0; M(1,2) = 1.0; M(1,3) = 1.0;
-    M(2,0) = 0.0; M(2,1) = 0.0; M(2,2) = 1.0; M(2,3) = 1.0;
-    M(3,0) = 0.0; M(3,1) = 0.0; M(3,2) = 0.0; M(3,3) = 1.0;
+    matrix_d44 M(4,4);
 
-    cout << "Example14:" << endl;
+    M(0,0) = 1.0;  M(0,1) = 8.0;  M(0,2) = 3.0; M(0,3) = 11.0;
+    M(1,0) = 9.0;  M(1,1) = 5.0;  M(1,2) = 2.0; M(1,3) = 17.0;
+    M(2,0) = 12.0; M(2,1) = 12.0; M(2,2) = 7.0; M(2,3) = 2.0;
+    M(3,0) = 15.0; M(3,1) = 17.0; M(3,2) = 9.0; M(3,3) = 16.0;
 
-    matrix_d44 LU = cml::lu(M);
+    cout << std::endl << "Example14:" << endl;
+
+    matrix_d44 LU(4,4); LU = cml::lu(M);
     cout << "M = " << M << endl;
-    cout << "M = LU = " << LU << endl;
+    cout << "LU(M) = " << LU << endl;
 
-    vector_d4 y, x;
-    y[0] = 1.; y[1] = 0.; y[2] = 0.; y[3] = 0;
+    vector_d4 y(4), x(4);
+    y[0] = 1.; y[1] = 7.; y[2] = 13.; y[3] = 6.;
     cout << "y = " << y << endl;
 
     x = cml::lu_solve(LU,y);
@@ -424,12 +425,71 @@ void example14()
 
     y = M*x;
     cout << "y = M*x = " << y << endl;
+}
+
+void example15()
+{
+    /* 4x4 matrix, fixed length, double coordinates: */
+    typedef cml::matrix< double, fixed<4,4>, cml::col_major > matrix_d44;
+    typedef matrix_d44::col_vector_type vector_d4;
+
+    matrix_d44 M;
+    M(0,0) = 1.0;  M(0,1) = 8.0;  M(0,2) = 3.0; M(0,3) = 11.0;
+    M(1,0) = 9.0;  M(1,1) = 5.0;  M(1,2) = 2.0; M(1,3) = 17.0;
+    M(2,0) = 12.0; M(2,1) = 12.0; M(2,2) = 7.0; M(2,3) = 2.0;
+    M(3,0) = 15.0; M(3,1) = 17.0; M(3,2) = 9.0; M(3,3) = 16.0;
+
+    cout << std::endl << "Example15:" << endl;
+
+    matrix_d44 LU = cml::lu(M);
+    cout << "M = " << M << endl;
+    cout << "M = LU = " << LU << endl;
+
+    vector_d4 x, y;
+    y[0] = 1.; y[1] = 7.; y[2] = 13.; y[3] = 6.;
+    cout << "y = " << y << endl;
 
     matrix_d44 Minv = inverse(M);
     cout << "Minv = " << Minv << endl;
 
-    vector_d4 xinv = Minv*y;
-    cout << "xinv = Minv*y = " << xinv << endl;
+    x = Minv*y;
+    y = M*x;
+    cout << "x = Minv*y = " << x << endl;
+    cout << "y = M*x = " << y << endl;
+
+    double D = determinant(M);
+    cout << "det(M) = " << D << endl;
+    cout << "det(M)[lu] = "
+        << cml::detail::determinant_f<matrix_d44,0>()(M) << endl;
+}
+
+void example16()
+{
+    /* 4x4 matrix, dynamic length, double coordinates: */
+    typedef cml::matrix< double, dynamic<>, cml::col_major > matrix_d44;
+    typedef matrix_d44::col_vector_type vector_d4;
+
+    matrix_d44 M(4,4);
+    M(0,0) = 1.0;  M(0,1) = 8.0;  M(0,2) = 3.0; M(0,3) = 11.0;
+    M(1,0) = 9.0;  M(1,1) = 5.0;  M(1,2) = 2.0; M(1,3) = 17.0;
+    M(2,0) = 12.0; M(2,1) = 12.0; M(2,2) = 7.0; M(2,3) = 2.0;
+    M(3,0) = 15.0; M(3,1) = 17.0; M(3,2) = 9.0; M(3,3) = 16.0;
+
+    cout << std::endl << "Example16:" << endl;
+
+    matrix_d44 Minv(4,4); Minv = inverse(M);
+    cout << "M^-1 = " << Minv << endl;
+    cout << "M^-1[lu] = "
+        << cml::detail::inverse_f<matrix_d44,0>()(M) << endl;
+
+    vector_d4 x(4), y(4);
+    y[0] = 1.; y[1] = 7.; y[2] = 13.; y[3] = 6.;
+    cout << "y = " << y << endl;
+
+    x = Minv*y;
+    y = M*x;
+    cout << "x = Minv*y = " << x << endl;
+    cout << "y = M*x = " << y << endl;
 }
 
 int main()
@@ -450,6 +510,8 @@ int main()
     example12();
     example13();
     example14();
+    example15();
+    example16();
     return 0;
 }
 
