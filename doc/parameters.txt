@@ -79,3 +79,7 @@ CML_CHECK_MATRIX_EXPR_SIZES
 CML_USE_GENERATED_MATRIX_ASSIGN_OP
 - Allow the compiler to generate its own matrix assignment code.  This yields
   better performance at least on Intel C++ 9/x86 Linux.
+
+CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST
+- This changes the definition of a quaternion from q = ai+bj+ck+d to
+  q = a+bi+cj+dk.  This affects how matrices are constructed from quaternions.

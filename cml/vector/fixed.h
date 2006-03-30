@@ -12,6 +12,7 @@
 #include <cml/vector/vector_expr.h>
 #include <cml/vector/class_ops.h>
 #include <cml/vector/vector_unroller.h>
+#include <cml/vector/external.h>
 
 namespace cml {
 
@@ -68,6 +69,7 @@ class vector< Element, fixed<Size> >
 
     /* Define common class operators: */
 
+    CML_VEC_COPY_FROM_FIXED_ARRAY(array_type::array_size,/**/)
     CML_VEC_COPY_FROM_VECTYPE(/**/)
     CML_VEC_COPY_FROM_VEC
     CML_VEC_COPY_FROM_VECXPR

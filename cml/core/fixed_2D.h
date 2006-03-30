@@ -16,6 +16,11 @@
  */
 struct invalid_layout_type_error;
 
+/* This is used below to create a more meaningful compile-time error when
+ * a negative size is given.
+ */
+struct negative_array_size_error;
+
 namespace cml {
 
 /** The internal statically-allocated 2D-array implementation class.
@@ -53,7 +58,9 @@ class fixed_2D
   public:
 
     /* Require Rows > 0, Cols > 0: */
-    CML_STATIC_REQUIRE((Rows > 0) && (Cols > 0));
+    CML_STATIC_REQUIRE_M(
+            (Rows > 0) && (Cols > 0),
+            negative_array_size_error);
 
     /* Require Layout to be row_major or col_major: */
     CML_STATIC_REQUIRE_M(

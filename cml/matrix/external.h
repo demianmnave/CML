@@ -15,7 +15,7 @@
 
 namespace cml {
 
-/** Fixed-size, external-memory vector. */
+/** Fixed-size, external-memory matrix. */
 template<typename Element, int Rows, int Cols, typename Layout>
 class matrix<Element,external<Rows,Cols>,Layout>
 : public external_2D<Element,Rows,Cols,Layout>
@@ -61,7 +61,7 @@ class matrix<Element,external<Rows,Cols>,Layout>
     typedef cml::et::matrix_result_tag result_tag;
 
     /* For matching by assignability: */
-    typedef cml::et::not_assignable_tag assignable_tag;
+    typedef cml::et::assignable_tag assignable_tag;
 
     /* To simplify the matrix transpose operator: */
     typedef matrix<

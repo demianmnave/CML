@@ -12,6 +12,7 @@
 #include <cml/vector/vector_expr.h>
 #include <cml/vector/class_ops.h>
 #include <cml/vector/vector_unroller.h>
+#include <cml/vector/external.h>
 
 namespace cml {
 
@@ -71,6 +72,7 @@ class vector< Element, dynamic<Alloc> >
   public:
 
     /* Define common class operators: */
+    CML_VEC_COPY_FROM_ARRAY(: array_type())
     CML_VEC_COPY_FROM_VECTYPE(: array_type())
     CML_VEC_COPY_FROM_VEC
     CML_VEC_COPY_FROM_VECXPR

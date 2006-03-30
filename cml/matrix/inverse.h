@@ -10,8 +10,8 @@
  * @internal inverse() should be specialized for small matrices.
  */
 
-#ifndef inverse_h
-#define inverse_h
+#ifndef matrix_inverse_h
+#define matrix_inverse_h
 
 #include <cml/matrix/lu.h>
 

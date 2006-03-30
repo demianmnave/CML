@@ -99,6 +99,10 @@ class matrix<Element,fixed<Rows,Cols>,Layout>
   public:
 
     /* Define common class operators: */
+
+    CML_MAT_COPY_FROM_FIXED_ARRAY(
+            array_type::array_rows, array_type::array_cols)
+
     CML_MAT_COPY_FROM_MATTYPE
     CML_MAT_COPY_FROM_MAT
     CML_MAT_COPY_FROM_MATXPR

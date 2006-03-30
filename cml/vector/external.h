@@ -63,7 +63,7 @@ class vector< Element, external<Size> >
     typedef cml::et::vector_result_tag result_tag;
 
     /* For matching by assignability: */
-    typedef cml::et::not_assignable_tag assignable_tag;
+    typedef cml::et::assignable_tag assignable_tag;
 
 
   public:

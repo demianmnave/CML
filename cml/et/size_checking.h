@@ -118,6 +118,7 @@ struct GetCheckedSize<LeftT,RightT,fixed_size_tag>
         size_type size() const { return size_type(array_rows,array_cols); }
     };
 
+
     /* Check for two vectors: */
     template<class X> struct impl<vector_result_tag,vector_result_tag,X> {
         typedef size_t size_type;
@@ -151,6 +152,69 @@ struct GetCheckedSize<LeftT,RightT,fixed_size_tag>
         enum { array_size = RightT::array_size };
 
         /* Return the vector size: */
+        size_type size() const { return size_type(array_size); }
+    };
+
+
+    /* Check for two quaternions: */
+    template<class X>
+    struct impl<quaternion_result_tag,quaternion_result_tag,X> {
+        typedef size_t size_type;
+
+        /* Record the quaternion size as a constant: */
+        enum { array_size = 4 };
+
+        /* Return the quaternion size: */
+        size_type size() const { return size_type(array_size); }
+    };
+
+    /* Check for a quaternion and a vector: */
+    template<class X> struct impl<quaternion_result_tag,vector_result_tag,X> {
+        typedef size_t size_type;
+        CML_STATIC_REQUIRE_M(
+                RightT::array_size == 4,
+                incompatible_expression_size_error);
+
+        /* Record the quaternion size as a constant: */
+        enum { array_size = 4 };
+
+        /* Return the quaternion size: */
+        size_type size() const { return size_type(array_size); }
+    };
+
+    /* Check for a vector and a quaternion: */
+    template<class X> struct impl<vector_result_tag,quaternion_result_tag,X> {
+        typedef size_t size_type;
+        CML_STATIC_REQUIRE_M(
+                LeftT::array_size == 4,
+                incompatible_expression_size_error);
+
+        /* Record the quaternion size as a constant: */
+        enum { array_size = 4 };
+
+        /* Return the quaternion size: */
+        size_type size() const { return size_type(array_size); }
+    };
+
+    /* Check for a quaternion and a scalar: */
+    template<class X> struct impl<quaternion_result_tag,scalar_result_tag,X> {
+        typedef size_t size_type;
+
+        /* Record the quaternion size as a constant: */
+        enum { array_size = 4 };
+
+        /* Return the quaternion size: */
+        size_type size() const { return size_type(array_size); }
+    };
+
+    /* Check for a scalar and a quaternion: */
+    template<class X> struct impl<scalar_result_tag,quaternion_result_tag,X> {
+        typedef size_t size_type;
+
+        /* Record the array size as a constant: */
+        enum { array_size = 4 };
+
+        /* Return the quaternion size: */
         size_type size() const { return size_type(array_size); }
     };
 

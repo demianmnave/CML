@@ -8,19 +8,13 @@
 #include "cml_config.h"         // Must be first (for now)!
 
 #include <iostream>
-#if defined(__ICC) && defined(__linux__) && (__ICC >= 900)
-#include <math.h>
-namespace std {
-    using ::sqrt;
-}
-#else
 #include <cmath>
-#endif
 #include <cml/cml.h>
 using namespace cml;
 
 using std::cout;
 using std::endl;
+using std::sqrt;
 
 /* Note: this has to have the same template params as cml::vector<>: */
 template<typename E, class AT> std::ostream&
@@ -50,12 +44,34 @@ operator<<(std::ostream& os, const cml::matrix<E,AT,L>& m)
     return os;
 }
 
+#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
+template<typename VecT> std::ostream&
+operator<<(std::ostream& os, const cml::quaternion<VecT>& q)
+{
+    os << ((q[0] < 0)?" - ":"") << std::fabs(q[0]);
+    os << ((q[1] < 0)?" - ":" + ") << std::fabs(q[1]) << "i";
+    os << ((q[2] < 0)?" - ":" + ") << std::fabs(q[2]) << "j";
+    os << ((q[3] < 0)?" - ":" + ") << std::fabs(q[3]) << "k";
+    return os;
+}
+#else
+template<typename VecT> std::ostream&
+operator<<(std::ostream& os, const cml::quaternion<VecT>& q)
+{
+    os << ((q[0] < 0)?" - ":"") << std::fabs(q[0]) << "i";
+    os << ((q[1] < 0)?" - ":" + ") << std::fabs(q[1]) << "j";
+    os << ((q[2] < 0)?" - ":" + ") << std::fabs(q[2]) << "k";
+    os << ((q[3] < 0)?" - ":" + ") << std::fabs(q[3]);
+    return os;
+}
+#endif
+
 void example1()
 {
+    cout << std::endl << "Example1:" << endl;
+
     /* 3-space column vector, fixed length, double coordinates: */
     typedef cml::vector< double, fixed<3> > vector_d3;
-
-    cout << std::endl << "Example1:" << endl;
 
     vector_d3 u, v;
     u[0] = 0.; u[1] = 0.; u[2] = 1.;
@@ -72,10 +88,10 @@ void example1()
 
 void example2()
 {
+    cout << std::endl << "Example2:" << endl;
+
     /* 3-space column vector, dynamic length, double coordinates: */
     typedef cml::vector< double, dynamic<> > vector_d;
-
-    cout << std::endl << "Example2:" << endl;
 
     vector_d u(3), v(3);
     u[0] = 0.; u[1] = 0.; u[2] = 1.;
@@ -90,10 +106,10 @@ void example2()
 
 void example3()
 {
+    cout << std::endl << "Example3:" << endl;
+
     /* 3-space matrix, fixed length, double coordinates: */
     typedef cml::matrix< double, fixed<3,3> > matrix_d3;
-
-    cout << std::endl << "Example3:" << endl;
 
     matrix_d3 A, B, C;
 
@@ -112,13 +128,13 @@ void example3()
 
 void example4()
 {
+    cout << std::endl << "Example4:" << endl;
+
     /* 3-space matrix, fixed size, double coordinates: */
     typedef cml::matrix< double, fixed<3,3> > matrix_d3;
 
     /* 3-space matrix, dynamic size, double coordinates: */
     typedef cml::matrix< double, dynamic<> > matrix_d;
-
-    cout << std::endl << "Example4:" << endl;
 
     matrix_d3 A, C;
     matrix_d B(3,3);
@@ -137,13 +153,13 @@ void example4()
 
 void example5()
 {
+    cout << std::endl << "Example4:" << endl;
+
     /* 3-space matrix, fixed size, double coordinates: */
     typedef cml::matrix< double, fixed<3,3> > matrix_d3;
 
     /* 3-space matrix, dynamic size, double coordinates: */
     typedef cml::matrix< double, dynamic<> > matrix_d;
-
-    cout << std::endl << "Example4:" << endl;
 
     matrix_d3 A, B;
     matrix_d C(3,3);
@@ -166,13 +182,13 @@ void example5()
 
 void example6()
 {
+    cout << std::endl << "Example6:" << endl;
+
     /* 3-space matrix, fixed length, double coordinates: */
     typedef cml::matrix< double, fixed<3,3> > matrix_d3;
 
     /* Column vector of the matrix: */
     typedef matrix_d3::col_vector_type cvector_d3;
-
-    cout << std::endl << "Example6:" << endl;
 
     matrix_d3 A, B, C;
 
@@ -200,10 +216,10 @@ void example6()
 
 void example7()
 {
+    cout << std::endl << "Example7:" << endl;
+
     /* 3-space matrix, fixed length, double coordinates: */
     typedef cml::matrix< double, fixed<3,3> > matrix_d3;
-
-    cout << std::endl << "Example7:" << endl;
 
     matrix_d3 A, B, C;
 
@@ -223,10 +239,10 @@ void example7()
 
 void example8()
 {
+    cout << std::endl << "Example8:" << endl;
+
     /* 3-space column vector, fixed length, double coordinates: */
     typedef cml::vector< double, external<3> > vector_d3;
-
-    cout << std::endl << "Example8:" << endl;
 
     double c_u[3] = {0.,0.,1.};
     double c_v[3] = {1.,0.,0.};
@@ -245,10 +261,10 @@ void example8()
 #if defined(CML_ENABLE_DOT_OPERATOR)
 void example9()
 {
+    cout << std::endl << "Example9:" << endl;
+
     /* 3-space column vector, fixed length, double coordinates: */
     typedef cml::vector< double, fixed<3> > vector_d3;
-
-    cout << std::endl << "Example9:" << endl;
 
     vector_d3 u, v;
     u[0] = 0.; u[1] = 0.; u[2] = 1.;
@@ -266,6 +282,8 @@ void example9()
 
 void example10()
 {
+    cout << std::endl << "Example10:" << endl;
+
     /* 4x3 matrix, fixed length, double coordinates: */
     typedef cml::matrix< double, fixed<4,3>, cml::col_major > matrix_d43;
 
@@ -274,8 +292,6 @@ void example10()
 
     /* 4-space vector, fixed length, double coordinates: */
     typedef cml::vector< double, fixed<4> > vector_d4;
-
-    cout << std::endl << "Example10:" << endl;
 
     matrix_d43 A;
 
@@ -309,6 +325,8 @@ void example10()
 
 void example11()
 {
+    cout << std::endl << "Example11:" << endl;
+
     /* 4x3 matrix, fixed length, double coordinates: */
     typedef cml::matrix< double, fixed<4,3>, cml::col_major > matrix_d43;
 
@@ -317,8 +335,6 @@ void example11()
 
     /* 4-space vector, fixed length, double coordinates: */
     typedef cml::vector< double, fixed<4> > vector_d4;
-
-    cout << std::endl << "Example11:" << endl;
 
     matrix_d43 A;
 
@@ -371,6 +387,8 @@ void example12()
 
 void example13()
 {
+    cout << std::endl << "Example13:" << endl;
+
     /* 4x4 matrix, fixed length, double coordinates: */
     typedef cml::matrix< double, fixed<4,4>, cml::col_major > matrix_d44;
 
@@ -379,8 +397,6 @@ void example13()
     M(1,0) = 0.0; M(1,1) = 1.0; M(1,2) = 1.0; M(1,3) = 1.0;
     M(2,0) = 0.0; M(2,1) = 0.0; M(2,2) = 1.0; M(2,3) = 1.0;
     M(3,0) = 0.0; M(3,1) = 0.0; M(3,2) = 0.0; M(3,3) = 1.0;
-
-    cout << std::endl << "Example13:" << endl;
 
     cout << "M = " << M << endl;
     cout << "M = LU = " << cml::lu(M) << endl;
@@ -399,6 +415,8 @@ void example13()
 
 void example14()
 {
+    cout << std::endl << "Example14:" << endl;
+
     /* 4x4 matrix, fixed length, double coordinates: */
     typedef cml::matrix< double, dynamic<>, cml::col_major > matrix_d44;
     typedef matrix_d44::col_vector_type vector_d4;
@@ -409,8 +427,6 @@ void example14()
     M(1,0) = 9.0;  M(1,1) = 5.0;  M(1,2) = 2.0; M(1,3) = 17.0;
     M(2,0) = 12.0; M(2,1) = 12.0; M(2,2) = 7.0; M(2,3) = 2.0;
     M(3,0) = 15.0; M(3,1) = 17.0; M(3,2) = 9.0; M(3,3) = 16.0;
-
-    cout << std::endl << "Example14:" << endl;
 
     matrix_d44 LU(4,4); LU = cml::lu(M);
     cout << "M = " << M << endl;
@@ -429,6 +445,8 @@ void example14()
 
 void example15()
 {
+    cout << std::endl << "Example15:" << endl;
+
     /* 4x4 matrix, fixed length, double coordinates: */
     typedef cml::matrix< double, fixed<4,4>, cml::col_major > matrix_d44;
     typedef matrix_d44::col_vector_type vector_d4;
@@ -438,8 +456,6 @@ void example15()
     M(1,0) = 9.0;  M(1,1) = 5.0;  M(1,2) = 2.0; M(1,3) = 17.0;
     M(2,0) = 12.0; M(2,1) = 12.0; M(2,2) = 7.0; M(2,3) = 2.0;
     M(3,0) = 15.0; M(3,1) = 17.0; M(3,2) = 9.0; M(3,3) = 16.0;
-
-    cout << std::endl << "Example15:" << endl;
 
     matrix_d44 LU = cml::lu(M);
     cout << "M = " << M << endl;
@@ -465,6 +481,8 @@ void example15()
 
 void example16()
 {
+    cout << std::endl << "Example16:" << endl;
+
     /* 4x4 matrix, dynamic length, double coordinates: */
     typedef cml::matrix< double, dynamic<>, cml::col_major > matrix_d44;
     typedef matrix_d44::col_vector_type vector_d4;
@@ -474,8 +492,6 @@ void example16()
     M(1,0) = 9.0;  M(1,1) = 5.0;  M(1,2) = 2.0; M(1,3) = 17.0;
     M(2,0) = 12.0; M(2,1) = 12.0; M(2,2) = 7.0; M(2,3) = 2.0;
     M(3,0) = 15.0; M(3,1) = 17.0; M(3,2) = 9.0; M(3,3) = 16.0;
-
-    cout << std::endl << "Example16:" << endl;
 
     matrix_d44 Minv(4,4); Minv = inverse(M);
     cout << "M^-1 = " << Minv << endl;
@@ -492,8 +508,103 @@ void example16()
     cout << "y = M*x = " << y << endl;
 }
 
+void example17()
+{
+    cout << std::endl << "Example17:" << endl;
+
+    /* 4x4 matrix, dynamic length, double coordinates: */
+    typedef cml::matrix< double, fixed<4,4>, cml::col_major > matrix_d44;
+    typedef cml::vector< double, fixed<4> > vector_d4;
+
+    /* XXX This currently doesn't work for dynamic-size matrices: */
+    double _M[4][4] = {
+        { 1.0,  8.0,  3.0, 11.0 },
+        { 9.0,  5.0,  2.0, 17.0 },
+        { 12.0, 12.0, 7.0, 2.0  },
+        { 15.0, 17.0, 9.0, 16.0 }
+    };
+    matrix_d44 M(_M);
+
+    matrix_d44 Minv = inverse(M);
+    cout << "M^-1 = " << Minv << endl;
+    cout << "M^-1[lu] = "
+        << cml::detail::inverse_f<matrix_d44,0>()(M) << endl;
+
+    double _y[] = {1.,7.,13.,6.};
+    vector_d4 x, y(_y);
+    cout << "y = " << y << endl;
+
+    x = Minv*y;
+    y = M*x;
+    cout << "x = Minv*y = " << x << endl;
+    cout << "y = M*x = " << y << endl;
+}
+
+void example18()
+{
+    cout << std::endl << "Example18:" << endl;
+
+    typedef vector< double, fixed<3> > vector_type;
+    typedef quaternion<vector_type> quaternion_type;
+
+#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
+    quaternion_type p(1.,1.,0.,0.), q(1.,0.,1.,0.), r, s;
+#else
+    quaternion_type p(1.,0.,0.,1.), q(0.,1.,0.,1.), r, s;
+#endif
+    cout << "p = " << p << endl;
+    cout << "q = " << q << endl;
+    
+    r = ~p;
+    cout << "r = ~p = " << r << endl;
+
+    r = ~q;
+    cout << "r = ~q = " << r << endl;
+
+    r = p + q;
+    cout << "r = p+q = " << r << endl;
+
+    r = p + ~q;
+    cout << "r = p+~q = " << r << endl;
+
+    /* Note: parens are required here! */
+    r = p + ~(2.*q);
+    cout << "r = p+~(2*q) = " << r << endl;
+
+    r = p + ~q*2.;
+    cout << "r = p+~q*2 = " << r << endl;
+
+    r = p*q;
+    cout << "r = p*q = " << r << endl;
+
+    r = p*p;
+    cout << "r = p*p = " << r << endl;
+
+    r = p*conj(p);
+    cout << "r = p*~p = " << r << endl;
+
+    r = (~p)/real(p*~p);
+    cout << "r = ~p/real(p*~p) = " << r << endl;
+
+    s = r*p;
+    cout << "s = r*p = " << s << endl;
+
+    r = ~p/norm(p);
+    cout << "r = ~p/norm(p) = " << r << endl;
+
+    s = r*p;
+    cout << "s = r*p = " << s << endl;
+
+    r = inverse(p);
+    cout << "r = inverse(p) = " << r << endl;
+
+    s = r*p;
+    cout << "s = r*p = " << s << endl;
+}
+
 int main()
 {
+#if 0
     example1();
     example2();
     example3();
@@ -512,6 +623,9 @@ int main()
     example14();
     example15();
     example16();
+    example17();
+#endif
+    example18();
     return 0;
 }
 

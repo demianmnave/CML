@@ -20,6 +20,9 @@ struct vector_result_tag {};
 /** Tag an expression as returning a matrix. */
 struct matrix_result_tag {};
 
+/** Tag an expression as returning a quaternion. */
+struct quaternion_result_tag {};
+
 /** Marker for unary expression ops. */
 struct unary_expression {};
 

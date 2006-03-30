@@ -8,6 +8,22 @@
 #ifndef vector_class_ops_h
 #define vector_class_ops_h
 
+/** Copy-construct a vector from a fixed-size array of values. */
+#define CML_VEC_COPY_FROM_FIXED_ARRAY(_N_,_add_)                    \
+vector(value_type v[_N_]) _add_ {                                   \
+    typedef et::OpAssign<Element,Element> OpT;                      \
+    cml::vector< value_type, external<_N_> > src(v);                \
+    et::UnrollAssignment<OpT>(*this,src);                           \
+}
+
+/** Copy-construct a vector from a runtime-sized array of values. */
+#define CML_VEC_COPY_FROM_ARRAY(_add_)                              \
+vector(value_type const* v, size_t N) _add_ {                       \
+    typedef et::OpAssign<Element,Element> OpT;                      \
+    cml::vector< value_type, external<> > src(v,N);                 \
+    et::UnrollAssignment<OpT>(*this,src);                           \
+}
+
 /** Copy-construct a vector.
  *
  * @internal This is required for GCC4, since it won't elide the default

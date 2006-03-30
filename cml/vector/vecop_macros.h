@@ -10,7 +10,7 @@
  * Unary expressions:
  *
  * op Vector -> Vector
- * op VecXpr -> Vector
+ * op VecXpr -> VecXpr
  *
  * Binary expressions:
  *

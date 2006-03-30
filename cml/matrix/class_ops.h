@@ -11,6 +11,14 @@
 #ifndef matrix_class_ops_h
 #define matrix_class_ops_h
 
+/** Copy-construct a matrix from a fixed-size array of values. */
+#define CML_MAT_COPY_FROM_FIXED_ARRAY(_R_,_C_)                      \
+matrix(value_type m[_R_][_C_]) {                                    \
+    typedef et::OpAssign<Element,Element> OpT;                      \
+    cml::matrix< value_type, external<_R_,_C_> > src(&m[0][0]);     \
+    et::UnrollAssignment<OpT>(*this,src);                           \
+}
+
 /** Copy this matrix from another using the given elementwise op.
  *
  * @internal This is required for GCC4, since it won't elide the default
