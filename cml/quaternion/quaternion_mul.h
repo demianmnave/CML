@@ -58,6 +58,15 @@ class QuaternionMulOp
     /* Get the temporary type: */
     typedef typename result_type::temporary_type temporary_type;
 
+    /* Get the vector type: */
+    typedef typename result_type::vector_type vector_type;
+
+    /* Get the imaginary part type: */
+    typedef typename vector_type::subvector_type imaginary_type;
+
+    /* Record the order type: */
+    typedef typename result_type::order_type order_type;
+
     /* Define a size checker: */
     typedef GetCheckedSize<LeftT,RightT,size_tag> checked_size;
 
@@ -66,6 +75,14 @@ class QuaternionMulOp
 
     /** Record result size as an enum. */
     enum { array_size = 4 };
+
+    /** Localize the ordering as an enum. */
+    enum {
+        W = order_type::W,
+        X = order_type::X,
+        Y = order_type::Y,
+        Z = order_type::Z
+    };
 
 
   public:
@@ -98,87 +115,50 @@ class QuaternionMulOp
      * on quaternions use constant integers explicitly (like assignment), so
      * no jumps are executed.
      */
-#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
     value_type operator[](size_t i) const {
 
-        /* Both expressions must be quaternions (or 4-vectors), so it's okay
-         * to use operator[]:
+        /* Get scale for cross-product from the order (changes from v1^v2
+         * to v2^v1):
+         */
+        enum { scale = order_type::scale };
+
+        /* Both expressions must be quaternions, so it's okay to use
+         * operator[]:
          */
         switch(i) {
-            case 0:
-                /* s1*s2-dot(v1,v2): */
-                return m_left[0]*m_right[0] - m_left[1]*m_right[1]
-                     - m_left[2]*m_right[2] - m_left[3]*m_right[3];
 
-            case 1:
-                /* (s1*v2 + s2*v1 + v1^v2) i: */
-                return m_left[0]*m_right[1] + m_left[1]*m_right[0]
-                     + m_left[2]*m_right[3] - m_left[3]*m_right[2];
+            /* s1*s2-dot(v1,v2): */
+            case 0: return m_left[W]*m_right[W] - m_left[X]*m_right[X]
+                    - m_left[Y]*m_right[Y] - m_left[Z]*m_right[Z];
+
+            /* (s1*v2 + s2*v1 + v1^v2) i: */
+            case 1: return m_left[W]*m_right[X] + m_right[W]*m_left[X]
+                    + scale*(m_left[Y]*m_right[Z] - m_left[Z]*m_right[Y]);
 
             case 2:
                 /* (s1*v2 + s2*v1 + v1^v2) j: */
-                return m_left[0]*m_right[2] - m_left[1]*m_right[3]
-                     + m_left[2]*m_right[0] + m_left[3]*m_right[1];
+                return m_left[W]*m_right[Y] + m_right[W]*m_left[Y]
+                    + scale*(m_left[Z]*m_right[X] - m_left[X]*m_right[Z]);
 
             case 3:
                 /* (s1*v2 + s2*v1 + v1^v2) k: */
-                return m_left[0]*m_right[3] + m_left[1]*m_right[2]
-                     - m_left[2]*m_right[1] + m_left[3]*m_right[0];
+                return m_left[W]*m_right[Z] + m_right[W]*m_left[Z]
+                    + scale*(m_left[X]*m_right[Y] - m_left[Y]*m_right[X]);
         }
         throw std::runtime_error(
                 "invalid index in QuaternionMulOp::operator[]");
         return 0.;
     }
-#else
-    value_type operator[](size_t i) const {
-
-        /* Both expressions must be quaternions (or 4-vectors), so it's okay
-         * to use operator[]:
-         */
-        switch(i) {
-            case 0:
-                /* (s1*v2 + s2*v1 + v1^v2) i: */
-                return m_left[3]*m_right[0] + m_left[0]*m_right[3]
-                     + m_left[1]*m_right[2] - m_left[2]*m_right[1];
-
-            case 1:
-                /* (s1*v2 + s2*v1 + v1^v2) j: */
-                return m_left[3]*m_right[1] - m_left[0]*m_right[2]
-                     + m_left[1]*m_right[3] + m_left[2]*m_right[0];
-
-            case 2:
-                /* (s1*v2 + s2*v1 + v1^v2) k: */
-                return m_left[3]*m_right[2] + m_left[0]*m_right[1]
-                     - m_left[1]*m_right[0] + m_left[2]*m_right[3];
-
-            case 3:
-                /* s1*s2-dot(v1,v2): */
-                return m_left[3]*m_right[3] - m_left[0]*m_right[0]
-                     - m_left[1]*m_right[1] - m_left[2]*m_right[2];
-        }
-        throw std::runtime_error(
-                "invalid index in QuaternionMulOp::operator[]");
-        return 0.;
-    }
-#endif
 
     /** Return the real part of the expression. */
     value_type real() const {
-#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
-        return (*this)[0];
-#else
-        return (*this)[3];
-#endif
+        return (*this)[W];
     }
 
     /** Return the vector part of the expression. */
-    result_type imaginary() const {
-        result_type v;
-#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
-        v[0] = (*this)[1]; v[1] = (*this)[2]; v[2] = (*this)[3];
-#else
-        v[0] = (*this)[0]; v[1] = (*this)[1]; v[2] = (*this)[2];
-#endif
+    imaginary_type imaginary() const {
+        imaginary_type v;
+        v[0] = (*this)[X]; v[1] = (*this)[Y]; v[2] = (*this)[Z];
         return v;
     }
 
@@ -235,48 +215,48 @@ struct ExprTraits< QuaternionMulOp<LeftT,RightT> >
 } // namespace et
 
 /** Declare mul taking two quaternion operands. */
-template<typename VecT1, typename VecT2>
-inline et::QuaternionXpr<
-    et::QuaternionMulOp< quaternion<VecT1>, quaternion<VecT2> >
+template<typename VecT1, typename VecT2, typename OrderT> inline
+et::QuaternionXpr<
+    et::QuaternionMulOp< quaternion<VecT1,OrderT>, quaternion<VecT2,OrderT> >
 >
 operator* (
-        const quaternion<VecT1>& left,
-        const quaternion<VecT2>& right)
+        const quaternion<VecT1,OrderT>& left,
+        const quaternion<VecT2,OrderT>& right)
 {
     typedef et::QuaternionMulOp<
-            quaternion<VecT1>, quaternion<VecT2>
+            quaternion<VecT1,OrderT>, quaternion<VecT2,OrderT>
         > ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(left,right));
 }
 
 
 /** Declare mul taking a quaternion and a et::QuaternionXpr. */
-template<typename VecT, class XprT>
-inline et::QuaternionXpr< et::QuaternionMulOp<quaternion<VecT>, XprT> >
+template<typename VecT, typename OrderT, class XprT> inline
+et::QuaternionXpr< et::QuaternionMulOp<quaternion<VecT,OrderT>, XprT> >
 operator* (
-        const quaternion<VecT>& left,
+        const quaternion<VecT,OrderT>& left,
         QUATXPR_ARG_TYPE right)
 {
-    typedef et::QuaternionMulOp<quaternion<VecT>, XprT> ExprT;
+    typedef et::QuaternionMulOp<quaternion<VecT,OrderT>, XprT> ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(left,right.expression()));
 }
 
 
 /** Declare mul taking an et::QuaternionXpr and a quaternion. */
-template<class XprT, typename VecT>
-inline et::QuaternionXpr< et::QuaternionMulOp< XprT, quaternion<VecT> > >
+template<class XprT, typename VecT, typename OrderT> inline
+et::QuaternionXpr< et::QuaternionMulOp< XprT, quaternion<VecT,OrderT> > >
 operator* (
         QUATXPR_ARG_TYPE left,
-        const quaternion<VecT>& right)
+        const quaternion<VecT,OrderT>& right)
 {
-    typedef et::QuaternionMulOp< XprT, quaternion<VecT> > ExprT;
+    typedef et::QuaternionMulOp< XprT, quaternion<VecT,OrderT> > ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(left.expression(),right));
 }
 
 
 /** Declare mul taking two et::QuaternionXpr operands. */
-template<class XprT1, class XprT2>
-inline et::QuaternionXpr< et::QuaternionMulOp<XprT1, XprT2> >
+template<class XprT1, class XprT2> inline
+et::QuaternionXpr< et::QuaternionMulOp<XprT1, XprT2> >
 operator* (
         QUATXPR_ARG_TYPE_N(1) left,
         QUATXPR_ARG_TYPE_N(2) right)

@@ -44,9 +44,10 @@ operator<<(std::ostream& os, const cml::matrix<E,AT,L>& m)
     return os;
 }
 
-#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
-template<typename VecT> std::ostream&
-operator<<(std::ostream& os, const cml::quaternion<VecT>& q)
+template<typename VecT, typename CrossT> std::ostream&
+quat_print(
+        std::ostream& os, const cml::quaternion<VecT,scalar_first<CrossT> >& q
+        )
 {
     os << ((q[0] < 0)?" - ":"") << std::fabs(q[0]);
     os << ((q[1] < 0)?" - ":" + ") << std::fabs(q[1]) << "i";
@@ -54,9 +55,11 @@ operator<<(std::ostream& os, const cml::quaternion<VecT>& q)
     os << ((q[3] < 0)?" - ":" + ") << std::fabs(q[3]) << "k";
     return os;
 }
-#else
-template<typename VecT> std::ostream&
-operator<<(std::ostream& os, const cml::quaternion<VecT>& q)
+
+template<typename VecT, typename CrossT> std::ostream&
+quat_print(
+        std::ostream& os, const cml::quaternion<VecT,vector_first<CrossT> >& q
+        )
 {
     os << ((q[0] < 0)?" - ":"") << std::fabs(q[0]) << "i";
     os << ((q[1] < 0)?" - ":" + ") << std::fabs(q[1]) << "j";
@@ -64,7 +67,12 @@ operator<<(std::ostream& os, const cml::quaternion<VecT>& q)
     os << ((q[3] < 0)?" - ":" + ") << std::fabs(q[3]);
     return os;
 }
-#endif
+
+template<typename VecT, typename OrderT> std::ostream&
+operator<<(std::ostream& os, const cml::quaternion<VecT,OrderT>& q)
+{
+    return quat_print(os,q);
+}
 
 void example1()
 {
@@ -544,35 +552,31 @@ void example18()
 {
     cout << std::endl << "Example18:" << endl;
 
-    typedef vector< double, fixed<3> > vector_type;
+    typedef vector< double, fixed<4> > vector_type;
     typedef quaternion<vector_type> quaternion_type;
 
-#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
-    quaternion_type p(1.,1.,0.,0.), q(1.,0.,1.,0.), r, s;
-#else
-    quaternion_type p(1.,0.,0.,1.), q(0.,1.,0.,1.), r, s;
-#endif
+    double v1[] = {1.,0.,0.}, v2[] = {1.,0.,1.};
+    quaternion_type p(1.,v1), q(0.,v2), r, s;
     cout << "p = " << p << endl;
     cout << "q = " << q << endl;
     
-    r = ~p;
-    cout << "r = ~p = " << r << endl;
+    r = conj(p);
+    cout << "r = conj(p) = " << r << endl;
 
-    r = ~q;
-    cout << "r = ~q = " << r << endl;
+    r = conj(q);
+    cout << "r = conj(q) = " << r << endl;
 
     r = p + q;
     cout << "r = p+q = " << r << endl;
 
-    r = p + ~q;
-    cout << "r = p+~q = " << r << endl;
+    r = p + conj(q);
+    cout << "r = p + conj(q) = " << r << endl;
 
-    /* Note: parens are required here! */
-    r = p + ~(2.*q);
-    cout << "r = p+~(2*q) = " << r << endl;
+    r = p + conj(2.*q);
+    cout << "r = p + conj(2*q) = " << r << endl;
 
-    r = p + ~q*2.;
-    cout << "r = p+~q*2 = " << r << endl;
+    r = p + conj(q)*2.;
+    cout << "r = p+ conj(q)*2 = " << r << endl;
 
     r = p*q;
     cout << "r = p*q = " << r << endl;
@@ -583,14 +587,14 @@ void example18()
     r = p*conj(p);
     cout << "r = p*~p = " << r << endl;
 
-    r = (~p)/real(p*~p);
-    cout << "r = ~p/real(p*~p) = " << r << endl;
+    r = (conj(p))/real(p*conj(p));
+    cout << "r = conj(p)/real(p*conj(p)) = " << r << endl;
 
     s = r*p;
     cout << "s = r*p = " << s << endl;
 
-    r = ~p/norm(p);
-    cout << "r = ~p/norm(p) = " << r << endl;
+    r = conj(p)/norm(p);
+    cout << "r = conj(p)/norm(p) = " << r << endl;
 
     s = r*p;
     cout << "s = r*p = " << s << endl;
@@ -602,9 +606,43 @@ void example18()
     cout << "s = r*p = " << s << endl;
 }
 
+void example19()
+{
+    cout << std::endl << "Example19:" << endl;
+
+    typedef vector< double, fixed<4> > vector_type;
+    typedef negative_cross cross_type;
+    typedef quaternion<vector_type, scalar_first<cross_type> > quaternion_type;
+
+    double v1[] = {1.,0.,0.}, v2[] = {0.,1.,0.};
+    quaternion_type p(0.,v1), q(0.,v2), r, s;
+    cout << "p = " << p << endl;
+    cout << "q = " << q << endl;
+    
+    r = p*p;
+    cout << "r = p*p = " << r << endl;
+
+    r = q*q;
+    cout << "r = q*q = " << r << endl;
+
+    r = p*conj(p);
+    cout << "r = p*~p = " << r << endl;
+
+    r = (conj(p))/real(p*conj(p));
+    cout << "r = conj(p)/real(p*conj(p)) = " << r << endl;
+
+    s = r*p;
+    cout << "s = r*p = " << s << endl;
+
+    r = p*q;
+    cout << "r = p*q = p_v ^ q_v = " << r << endl;
+
+    r = q*p;
+    cout << "r = p*q = q_v ^ p_v = " << r << endl;
+}
+
 int main()
 {
-#if 0
     example1();
     example2();
     example3();
@@ -624,8 +662,8 @@ int main()
     example15();
     example16();
     example17();
-#endif
     example18();
+    example19();
     return 0;
 }
 

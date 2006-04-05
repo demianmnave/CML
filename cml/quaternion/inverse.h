@@ -57,11 +57,28 @@ class QuaternionInverseOp
     /* Get the temporary type: */
     typedef typename result_type::temporary_type temporary_type;
 
+    /* Get the vector type: */
+    typedef typename result_type::vector_type vector_type;
+
+    /* Get the imaginary part type: */
+    typedef typename vector_type::subvector_type imaginary_type;
+
+    /* Record the order type: */
+    typedef typename result_type::order_type order_type;
+
 
   public:
 
     /** Record result size as an enum. */
     enum { array_size = ExprT::array_size };
+
+    /** Localize the ordering as an enum. */
+    enum {
+        W = order_type::W,
+        X = order_type::X,
+        Y = order_type::Y,
+        Z = order_type::Z
+    };
 
 
   public:
@@ -91,7 +108,7 @@ class QuaternionInverseOp
      *
      * @todo This could be returned as a VectorXpr also.
      */
-    result_type imaginary() const {
+    imaginary_type imaginary() const {
         return m_expr.imaginary()/m_norm;
     }
 
@@ -141,17 +158,17 @@ struct ExprTraits< QuaternionInverseOp<ExprT> >
 } // namespace et
 
 /** Inverse of a quaternion. */
-template<typename VecT>
-inline et::QuaternionXpr< et::QuaternionInverseOp< quaternion<VecT> > >
-inverse(const quaternion<VecT>& arg)
+template<typename VecT, typename OrderT> inline
+et::QuaternionXpr< et::QuaternionInverseOp< quaternion<VecT,OrderT> > >
+inverse(const quaternion<VecT,OrderT>& arg)
 {
-    typedef et::QuaternionInverseOp< quaternion<VecT> > ExprT;
+    typedef et::QuaternionInverseOp< quaternion<VecT,OrderT> > ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(arg));
 }
 
 /** Inverse of a QuaternionXpr. */
-template<typename XprT>
-inline et::QuaternionXpr< et::QuaternionInverseOp<XprT> >
+template<typename XprT> inline
+et::QuaternionXpr< et::QuaternionInverseOp<XprT> >
 inverse(QUATXPR_ARG_TYPE arg)
 {
     typedef et::QuaternionInverseOp<XprT> ExprT;

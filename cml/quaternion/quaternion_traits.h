@@ -14,10 +14,10 @@ namespace cml {
 namespace et {
 
 /** Expression traits for a quaternion<> type. */
-template<typename VecT>
-struct ExprTraits< cml::quaternion<VecT> >
+template<typename VecT, typename OrderT>
+struct ExprTraits< cml::quaternion<VecT,OrderT> >
 {
-    typedef typename cml::quaternion<VecT>::expr_type expr_type;
+    typedef typename cml::quaternion<VecT,OrderT>::expr_type expr_type;
     typedef typename expr_type::value_type value_type;
     typedef typename expr_type::expr_reference reference;
     typedef typename expr_type::expr_const_reference const_reference;

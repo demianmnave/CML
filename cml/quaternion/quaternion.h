@@ -3,6 +3,13 @@
  *-----------------------------------------------------------------------*/
 /** @file
  *  @brief
+ *
+ *  @todo Return a VectorXpr adaptor from the imaginary() method of
+ *  quaternion and the expression node types.
+ *
+ *  @todo swap multiplication order based upon template param
+ *
+ *  @todo change element order based upon template param
  */
 
 #ifndef quaternion_h
@@ -11,34 +18,64 @@
 #include <cml/quaternion/quaternion_expr.h>
 
 /* This is used below to create a more meaningful compile-time error when
- * the quaternion class is not created with a fixed-size 3-vector:
+ * the quaternion class is not created with a fixed-size 4-vector:
  */
-struct quaternion_requires_fixed_size_3_vector_error;
+struct quaternion_requires_fixed_size_4_vector_error;
 
 namespace cml {
 
+/** Helper to specify v1^v2 multiplication order. */
+struct positive_cross {
+    enum { scale = 1 };
+};
+
+/** Helper to specify v2^v1 multiplication order. */
+struct negative_cross {
+    enum { scale = -1 };
+};
+
+/** Helper to specify scalar-first quaternion ordering. */
+template<typename CrossT = positive_cross>
+struct scalar_first {
+    enum { W, X, Y, Z };
+    enum { scale = CrossT::scale };
+};
+
+/** Helper to specify vector-first quaternion ordering. */
+template<typename CrossT = positive_cross>
+struct vector_first {
+    enum { X, Y, Z, W };
+    enum { scale = CrossT::scale };
+};
+
 /** A configurable quaternion type.
+ *
+ * @note Quaternions with two different orders cannot be used in the same
+ * expression.
  *
  * @note The vector currently cannot have an external<> storage type.
  *
  * @internal The quaternion class would have to be specialized to allow an
  * external<> storage type.
  */
-template<typename VecT>
+template<typename VecT, typename OrderT = scalar_first<positive_cross> >
 class quaternion
 {
     /* The argument must be a fixed-size 3-vector without external<>
      * storage:
      */
     CML_STATIC_REQUIRE_M(
-            ((VecT::array_size == 3)
+            ((VecT::array_size == 4)
             && same_type<typename VecT::size_tag, fixed_size_tag>::is_true),
-            quaternion_requires_fixed_size_3_vector_error);
+            quaternion_requires_fixed_size_4_vector_error);
 
   public:
 
-    /* Vector representing the imaginary part: */
+    /* Vector representing the quaternion: */
     typedef VecT vector_type;
+
+    /* Quaternion order: */
+    typedef OrderT order_type;
 
     /* Scalar type representing the scalar part: */
     typedef typename vector_type::value_type value_type;
@@ -47,13 +84,14 @@ class quaternion
     /* XXX Need to verify that this is a true scalar type. */
 
     /* The quaternion type: */
-    typedef quaternion<vector_type> quaternion_type;
+    typedef quaternion<vector_type,order_type> quaternion_type;
 
     /* For integration into the expression template code: */
     typedef quaternion_type expr_type;
 
     /* For integration into the expression template code: */
-    typedef quaternion<typename vector_type::temporary_type> temporary_type;
+    typedef quaternion<typename vector_type::temporary_type, order_type>
+        temporary_type;
 
     /* For integration into the expression templates code: */
     typedef quaternion_type& expr_reference;
@@ -64,6 +102,9 @@ class quaternion
 
     /* For matching by size type: */
     typedef typename vector_type::size_tag size_tag;
+
+    /* Get the imaginary part type: */
+    typedef typename vector_type::subvector_type imaginary_type;
 
     /* For matching by result-type: */
     typedef cml::et::quaternion_result_tag result_tag;
@@ -77,6 +118,14 @@ class quaternion
     /** Record result size as an enum. */
     enum { array_size = 4 };
 
+    /** Localize the ordering as an enum. */
+    enum {
+        W = order_type::W,
+        X = order_type::X,
+        Y = order_type::Y,
+        Z = order_type::Z
+    };
+
 
   public:
 
@@ -84,109 +133,82 @@ class quaternion
     quaternion() {}
 
     /** Copy construct from the same type of quaternion. */
-    quaternion(const quaternion_type& q)
-        : m_imag(q.imaginary()), m_real(q.real()) {}
+    quaternion(const quaternion_type& q) : m_q(q.m_q) {}
 
     /** Construct from a quaternion having a different vector type. */
-    template<typename V> quaternion(const quaternion<V>& q)
-        : m_imag(q.imaginary()), m_real(q.real()) {}
+    template<typename V> quaternion(const quaternion<V,order_type>& q)
+        : m_q(q.m_q) {}
 
     /** Copy construct from a QuaternionXpr. */
     template<typename XprT> quaternion(QUATXPR_ARG_TYPE e) {
-        quaternion_type& q = *this;
-        q[0] = e[0]; q[1] = e[1]; q[2] = e[2]; q[3] = e[3];
+        typedef typename XprT::order_type arg_order;
+        m_q[W] = e[arg_order::W];
+        m_q[X] = e[arg_order::X];
+        m_q[Y] = e[arg_order::Y];
+        m_q[Z] = e[arg_order::Z];
     }
 
 
 
+    /** Initialize from a 4-vector.
+     *
+     * If OrderT is scalar_first<>, then v[0] is the real part.  Otherwise,
+     * v[3] is the real part.
+     */
+    quaternion(const vector_type& v) : m_q(v) {}
+
+    /** Initialize from an array of scalars.
+     *
+     * If OrderT is scalar_first<>, then v[0] is the real part.  Otherwise,
+     * v[3] is the real part.
+     *
+     * @note The target vector must have CML_VEC_COPY_FROM_ARRAY
+     * implemented.
+     */
+    quaternion(const value_type v[4]) : m_q(v) {}
+
+#if 0
+    /* XXX This needs a function specialized on the order type to properly
+     * interpret a as W or X and d as Z or W.
+     */
+
     /** Initialize from 4 scalars.
      *
-     * If CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST is defined, then a is
-     * the real part, and (b,c,d) is the imaginary part.  Otherwise,
-     * (a,b,c) is the imaginary part, and d is the real part.
+     * If then a is the real part, and (b,c,d) is the imaginary part.
+     * Otherwise, (a,b,c) is the imaginary part, and d is the real part.
      */
     quaternion(
             const value_type& a, const value_type& b,
             const value_type& c, const value_type& d)
     {
-#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
-        m_real = a; m_imag[0] = b; m_imag[1] = c; m_imag[2] = d;
-#else
-        m_imag[0] = a; m_imag[1] = b; m_imag[2] = c; m_real = d;
-#endif
+        m_q[0] = a; m_q[1] = b; m_q[2] = c; m_q[3] = d;
     }
+#endif
 
 
-
-    /** Initialize the imaginary part from an array of scalars.
-     *
-     * The imaginary part is given by an array of scalars.  The real part
-     * is set to 0.
-     *
-     * @internal This requires that the vector type implements
-     * CML_VEC_COPY_FROM_FIXED_ARRAY
-     */
-    quaternion(const value_type v[3]) : m_imag(v), m_real(0) {}
 
     /** Initialize both the real and imaginary parts.
      *
      * The imaginary part is given by an array of scalars.
-     *
-     * @internal This requires that the vector type implements
-     * CML_VEC_COPY_FROM_FIXED_ARRAY
      */
-#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
-    quaternion(const value_type v[3], const value_type& s)
-        : m_imag(v), m_real(s) {}
-#else
-    quaternion(const value_type v[3], const value_type& s)
-        : m_imag(v), m_real(s) {}
-#endif
+    quaternion(const value_type& s, const value_type v[3]) {
+        m_q[W] = s; m_q[X] = v[0]; m_q[Y] = v[1]; m_q[Z] = v[2];
+    }
 
 
 
-    /** Initialize the imaginary part.
-     *
-     * The real part is set to 0.
-     */
-    quaternion(const vector_type& v)
-        : m_imag(v), m_real(0) {}
-
-    /** Initialize both the real and imaginary parts.
-     *
-     * The imaginary part is initialized with a vector having the same type
-     * as the quaternion's vector type.
-     */
-#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
-    quaternion(const value_type& s, const vector_type& v)
-        : m_imag(v), m_real(s) {}
-#else
-    quaternion(const vector_type& v, const value_type& s)
-        : m_imag(v), m_real(s) {}
-#endif
-
-
-
-    /** Initialize the imaginary part from a VectorXpr.
-     *
-     * The real part is set to 0.
-     */
+    /** Initialize from a VectorXpr. */
     template<typename XprT>
-        quaternion(VECXPR_ARG_TYPE e) : m_imag(e), m_real(0) {}
+        quaternion(VECXPR_ARG_TYPE e) : m_q(e) {}
 
     /** Initialize both the real and imaginary parts.
      *
      * The imaginary part is initialized with a VectorXpr.
      */
-#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
     template<typename XprT>
-        quaternion(const value_type& s, VECXPR_ARG_TYPE e)
-            : m_imag(e), m_real(s) {}
-#else
-    template<typename XprT>
-        quaternion(VECXPR_ARG_TYPE e, const value_type& s)
-            : m_imag(e), m_real(s) {}
-#endif
+        quaternion(const value_type& s, VECXPR_ARG_TYPE e) {
+            m_q[W] = s; m_q[X] = e[0]; m_q[Y] = e[1]; m_q[Z] = e[2];
+        }
 
 
 
@@ -197,8 +219,11 @@ class quaternion
      */
 #define CML_QUAT_ASSIGN_FROM_QUAT(_op_)                           \
     template<typename V> const quaternion_type&                   \
-    operator _op_ (const quaternion<V>& q) {                      \
-        m_imag _op_ q.imaginary(); m_real _op_ q.real();          \
+    operator _op_ (const quaternion<V,order_type>& q) {           \
+        m_q[W] _op_ q[W];                                         \
+        m_q[X] _op_ q[X];                                         \
+        m_q[Y] _op_ q[Y];                                         \
+        m_q[Z] _op_ q[Z];                                         \
         return *this;                                             \
     }
 
@@ -209,9 +234,11 @@ class quaternion
 #define CML_QUAT_ASSIGN_FROM_QUATXPR(_op_)                        \
     template<typename XprT> const quaternion_type&                \
     operator _op_ (QUATXPR_ARG_TYPE e) {                          \
-        quaternion_type& q = *this;                               \
-        q[0] _op_ e[0]; q[1] _op_ e[1];                           \
-        q[2] _op_ e[2]; q[3] _op_ e[3];                           \
+        typedef typename XprT::order_type arg_order;              \
+        m_q[W] _op_ e[arg_order::W];                              \
+        m_q[X] _op_ e[arg_order::X];                              \
+        m_q[Y] _op_ e[arg_order::Y];                              \
+        m_q[Z] _op_ e[arg_order::Z];                              \
         return *this;                                             \
     }
 
@@ -222,9 +249,10 @@ class quaternion
 #define CML_QUAT_ASSIGN_FROM_SCALAR(_op_,_op_name_)               \
     const quaternion_type& operator _op_ (const value_type& s) {  \
         typedef _op_name_ <value_type,value_type> OpT;            \
-        quaternion_type& q = *this;                               \
-        OpT().apply(q[0],s); OpT().apply(q[1],s);                 \
-        OpT().apply(q[2],s); OpT().apply(q[3],s);                 \
+        OpT().apply(m_q[W],s);                                    \
+        OpT().apply(m_q[X],s);                                    \
+        OpT().apply(m_q[Y],s);                                    \
+        OpT().apply(m_q[Z],s);                                    \
         return *this;                                             \
     }
 
@@ -245,37 +273,28 @@ class quaternion
   public:
 
     /** Return the imaginary vector. */
-    const vector_type& imaginary() const { return m_imag; }
+    imaginary_type imaginary() const {
+        imaginary_type v;
+        v[0] = m_q[X]; v[1] = m_q[Y]; v[2] = m_q[Z];
+        return v;
+    }
 
     /** Return the scalar part. */
-    value_type real() const { return m_real; }
+    value_type real() const { return m_q[W]; }
 
     /** Access the quaternion like a vector. */
-    const_reference operator[](size_t i) const {
-#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
-        return (i==0)?m_real:m_imag[i-1];
-#else
-        return (i==3)?m_real:m_imag[i];
-#endif
-    }
+    const_reference operator[](size_t i) const { return m_q[i]; }
 
 
   protected:
 
     /** Access the quaternion like a vector. */
-    reference operator[](size_t i) {
-#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
-        return (i==0)?m_real:m_imag[i-1];
-#else
-        return (i==3)?m_real:m_imag[i];
-#endif
-    }
+    reference operator[](size_t i) { return m_q[i]; }
 
 
   protected:
 
-    vector_type                 m_imag;
-    value_type                  m_real;
+    vector_type                 m_q;
 };
 
 } // namespace cml

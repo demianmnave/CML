@@ -45,11 +45,20 @@ class QuaternionXpr
     /* Get the result type: */
     typedef typename expr_traits::result_type result_type;
 
+    /* Get the vector type: */
+    typedef typename result_type::vector_type vector_type;
+
+    /* Get the imaginary part type: */
+    typedef typename vector_type::subvector_type imaginary_type;
+
     /* For matching by assignability: */
     typedef cml::et::not_assignable_tag assignable_tag;
 
     /* Get the temporary type: */
     typedef typename result_type::temporary_type temporary_type;
+
+    /* Record the order type: */
+    typedef typename result_type::order_type order_type;
 
 
   public:
@@ -79,7 +88,7 @@ class QuaternionXpr
     }
 
     /** Return the vector part of the expression. */
-    result_type imaginary() const {
+    imaginary_type imaginary() const {
         return m_expr.imaginary();
     }
 
@@ -159,11 +168,28 @@ class UnaryQuaternionOp
     /* Get the temporary type: */
     typedef typename result_type::temporary_type temporary_type;
 
+    /* Get the vector type: */
+    typedef typename result_type::vector_type vector_type;
+
+    /* Get the imaginary part type: */
+    typedef typename vector_type::subvector_type imaginary_type;
+
+    /* Record the order type: */
+    typedef typename result_type::order_type order_type;
+
 
   public:
 
     /** Record result size as an enum. */
     enum { array_size = ExprT::array_size };
+
+    /** Localize the ordering as an enum. */
+    enum {
+        W = order_type::W,
+        X = order_type::X,
+        Y = order_type::Y,
+        Z = order_type::Z
+    };
 
 
   public:
@@ -187,21 +213,13 @@ class UnaryQuaternionOp
 
     /** Return the real part of the expression. */
     value_type real() const {
-#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
-        return (*this)[0];
-#else
-        return (*this)[3];
-#endif
+        return (*this)[W];
     }
 
     /** Return the vector part of the expression. */
-    result_type imaginary() const {
-        result_type v;
-#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
-        v[0] = (*this)[1]; v[1] = (*this)[2]; v[2] = (*this)[3];
-#else
-        v[0] = (*this)[0]; v[1] = (*this)[1]; v[2] = (*this)[2];
-#endif
+    imaginary_type imaginary() const {
+        imaginary_type v;
+        v[0] = (*this)[X]; v[1] = (*this)[Y]; v[2] = (*this)[Z];
         return v;
     }
 
@@ -287,6 +305,15 @@ class BinaryQuaternionOp
     /* Get the temporary type: */
     typedef typename result_type::temporary_type temporary_type;
 
+    /* Get the vector type: */
+    typedef typename result_type::vector_type vector_type;
+
+    /* Get the imaginary part type: */
+    typedef typename vector_type::subvector_type imaginary_type;
+
+    /* Record the order type: */
+    typedef typename result_type::order_type order_type;
+
     /* Define a size checker: */
     typedef GetCheckedSize<LeftT,RightT,size_tag> checked_size;
 
@@ -295,6 +322,14 @@ class BinaryQuaternionOp
 
     /** Record result size as an enum. */
     enum { array_size = 4 };
+
+    /** Localize the ordering as an enum. */
+    enum {
+        W = order_type::W,
+        X = order_type::X,
+        Y = order_type::Y,
+        Z = order_type::Z
+    };
 
 
   public:
@@ -333,21 +368,13 @@ class BinaryQuaternionOp
 
     /** Return the real part of the expression. */
     value_type real() const {
-#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
-        return (*this)[0];
-#else
-        return (*this)[3];
-#endif
+        return (*this)[W];
     }
 
     /** Return the vector part of the expression. */
-    result_type imaginary() const {
-        result_type v;
-#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
-        v[0] = (*this)[1]; v[1] = (*this)[2]; v[2] = (*this)[3];
-#else
-        v[0] = (*this)[0]; v[1] = (*this)[1]; v[2] = (*this)[2];
-#endif
+    imaginary_type imaginary() const {
+        imaginary_type v;
+        v[0] = (*this)[X]; v[1] = (*this)[Y]; v[2] = (*this)[Z];
         return v;
     }
 

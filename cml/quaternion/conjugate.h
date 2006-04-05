@@ -46,11 +46,28 @@ class ConjugateOp
     /* Get the temporary type: */
     typedef typename result_type::temporary_type temporary_type;
 
+    /* Get the vector type: */
+    typedef typename result_type::vector_type vector_type;
+
+    /* Get the imaginary part type: */
+    typedef typename vector_type::subvector_type imaginary_type;
+
+    /* Record the order type: */
+    typedef typename result_type::order_type order_type;
+
 
   public:
 
     /** Record result size as an enum. */
     enum { array_size = ExprT::array_size };
+
+    /** Localize the ordering as an enum. */
+    enum {
+        W = order_type::W,
+        X = order_type::X,
+        Y = order_type::Y,
+        Z = order_type::Z
+    };
 
 
   public:
@@ -68,11 +85,7 @@ class ConjugateOp
      * The conjugate of quaternion s + v is s - v.
      */
     value_type operator[](size_t i) const {
-#if defined(CML_ASSUME_QUATERNION_REAL_PART_IS_FIRST)
-        return (i == 0) ? m_expr[0] : - m_expr[i] ;
-#else
-        return (i == 3) ? m_expr[3] : - m_expr[i] ;
-#endif
+        return (i == W) ? m_expr[W] : - m_expr[i] ;
     }
 
     /** Return the real part of the expression. */
@@ -81,7 +94,7 @@ class ConjugateOp
     }
 
     /** Return the vector part of the expression. */
-    result_type imaginary() const {
+    imaginary_type imaginary() const {
         return -m_expr.imaginary();
     }
 
@@ -128,36 +141,18 @@ struct ExprTraits< ConjugateOp<ExprT> >
 } // namespace et
 
 /** Conjugation of a quaternion. */
-template<typename VecT>
-inline et::QuaternionXpr< et::ConjugateOp< quaternion<VecT> > >
-conj(const quaternion<VecT>& arg)
+template<typename VecT, typename OrderT> inline
+et::QuaternionXpr< et::ConjugateOp< quaternion<VecT,OrderT> > >
+conj(const quaternion<VecT,OrderT>& arg)
 {
-    typedef et::ConjugateOp< quaternion<VecT> > ExprT;
+    typedef et::ConjugateOp< quaternion<VecT,OrderT> > ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(arg));
 }
 
 /** Conjugation of a QuaternionXpr. */
-template<typename XprT>
-inline et::QuaternionXpr< et::ConjugateOp<XprT> >
+template<typename XprT> inline
+et::QuaternionXpr< et::ConjugateOp<XprT> >
 conj(QUATXPR_ARG_TYPE arg)
-{
-    typedef et::ConjugateOp<XprT> ExprT;
-    return et::QuaternionXpr<ExprT>(ExprT(arg.expression()));
-}
-
-/** Conjugation of a quaternion using algebraic notation. */
-template<typename VecT>
-inline et::QuaternionXpr< et::ConjugateOp< quaternion<VecT> > >
-operator~(const quaternion<VecT>& arg)
-{
-    typedef et::ConjugateOp< quaternion<VecT> > ExprT;
-    return et::QuaternionXpr<ExprT>(ExprT(arg));
-}
-
-/** Conjugation of a QuaternionXpr using algebraic notation. */
-template<typename XprT>
-inline et::QuaternionXpr< et::ConjugateOp<XprT> >
-operator~(QUATXPR_ARG_TYPE arg)
 {
     typedef et::ConjugateOp<XprT> ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(arg.expression()));
