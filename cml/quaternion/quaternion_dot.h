@@ -23,29 +23,30 @@ quaternion_dot(const LeftT& p, const RightT& q)
 
 } // namespace detail
 
-template<typename VecT1, typename VecT2, typename OrderT> inline
-typename detail::DotPromote<
-    quaternion<VecT1,OrderT>, quaternion<VecT2,OrderT>
+template<typename VecT1, typename VecT2, typename OrderT, typename CrossT>
+inline typename detail::DotPromote<
+    quaternion<VecT1,OrderT,CrossT>, quaternion<VecT2,OrderT,CrossT>
 >::promoted_scalar
-dot(const quaternion<VecT1,OrderT>& p, const quaternion<VecT2,OrderT>& q)
+dot(const quaternion<VecT1,OrderT,CrossT>& p,
+    const quaternion<VecT2,OrderT,CrossT>& q)
 {
     return detail::quaternion_dot(p,q);
 }
 
-template<typename VecT, typename OrderT, typename XprT> inline
-typename detail::DotPromote<
-    quaternion<VecT,OrderT>, et::QuaternionXpr<XprT>
+template<typename VecT, typename OrderT, typename CrossT, typename XprT>
+inline typename detail::DotPromote<
+    quaternion<VecT,OrderT,CrossT>, et::QuaternionXpr<XprT>
 >::promoted_scalar
-dot(const quaternion<VecT,OrderT>& p, QUATXPR_ARG_TYPE q)
+dot(const quaternion<VecT,OrderT,CrossT>& p, QUATXPR_ARG_TYPE q)
 {
     return detail::quaternion_dot(p,q);
 }
 
-template<typename XprT, typename VecT, typename OrderT> inline
-typename detail::DotPromote<
-    et::QuaternionXpr<XprT>, quaternion<VecT,OrderT>
+template<typename XprT, typename VecT, typename OrderT, typename CrossT>
+inline typename detail::DotPromote<
+    et::QuaternionXpr<XprT>, quaternion<VecT,OrderT,CrossT>
 >::promoted_scalar
-dot(QUATXPR_ARG_TYPE p, const quaternion<VecT,OrderT>& q)
+dot(QUATXPR_ARG_TYPE p, const quaternion<VecT,OrderT,CrossT>& q)
 {
     return detail::quaternion_dot(p,q);
 }

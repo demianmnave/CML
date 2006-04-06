@@ -66,6 +66,7 @@ class QuaternionMulOp
 
     /* Record the order type: */
     typedef typename result_type::order_type order_type;
+    typedef typename result_type::cross_type cross_type;
 
     /* Define a size checker: */
     typedef GetCheckedSize<LeftT,RightT,size_tag> checked_size;
@@ -120,7 +121,7 @@ class QuaternionMulOp
         /* Get scale for cross-product from the order (changes from v1^v2
          * to v2^v1):
          */
-        enum { scale = order_type::scale };
+        enum { scale = cross_type::scale };
 
         /* Both expressions must be quaternions, so it's okay to use
          * operator[]:
@@ -128,19 +129,19 @@ class QuaternionMulOp
         switch(i) {
 
             /* s1*s2-dot(v1,v2): */
-            case 0: return m_left[W]*m_right[W] - m_left[X]*m_right[X]
+            case W: return m_left[W]*m_right[W] - m_left[X]*m_right[X]
                     - m_left[Y]*m_right[Y] - m_left[Z]*m_right[Z];
 
             /* (s1*v2 + s2*v1 + v1^v2) i: */
-            case 1: return m_left[W]*m_right[X] + m_right[W]*m_left[X]
+            case X: return m_left[W]*m_right[X] + m_right[W]*m_left[X]
                     + scale*(m_left[Y]*m_right[Z] - m_left[Z]*m_right[Y]);
 
-            case 2:
+            case Y:
                 /* (s1*v2 + s2*v1 + v1^v2) j: */
                 return m_left[W]*m_right[Y] + m_right[W]*m_left[Y]
                     + scale*(m_left[Z]*m_right[X] - m_left[X]*m_right[Z]);
 
-            case 3:
+            case Z:
                 /* (s1*v2 + s2*v1 + v1^v2) k: */
                 return m_left[W]*m_right[Z] + m_right[W]*m_left[Z]
                     + scale*(m_left[X]*m_right[Y] - m_left[Y]*m_right[X]);
@@ -215,41 +216,48 @@ struct ExprTraits< QuaternionMulOp<LeftT,RightT> >
 } // namespace et
 
 /** Declare mul taking two quaternion operands. */
-template<typename VecT1, typename VecT2, typename OrderT> inline
-et::QuaternionXpr<
-    et::QuaternionMulOp< quaternion<VecT1,OrderT>, quaternion<VecT2,OrderT> >
+template<typename VecT1, typename VecT2, typename OrderT, typename CrossT>
+inline et::QuaternionXpr<
+    et::QuaternionMulOp<
+        quaternion<VecT1,OrderT,CrossT>, quaternion<VecT2,OrderT,CrossT>
+    >
 >
 operator* (
-        const quaternion<VecT1,OrderT>& left,
-        const quaternion<VecT2,OrderT>& right)
+        const quaternion<VecT1,OrderT,CrossT>& left,
+        const quaternion<VecT2,OrderT,CrossT>& right)
 {
     typedef et::QuaternionMulOp<
-            quaternion<VecT1,OrderT>, quaternion<VecT2,OrderT>
+            quaternion<VecT1,OrderT,CrossT>,
+            quaternion<VecT2,OrderT,CrossT>
         > ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(left,right));
 }
 
 
 /** Declare mul taking a quaternion and a et::QuaternionXpr. */
-template<typename VecT, typename OrderT, class XprT> inline
-et::QuaternionXpr< et::QuaternionMulOp<quaternion<VecT,OrderT>, XprT> >
+template<typename VecT, typename OrderT, typename CrossT, class XprT>
+inline et::QuaternionXpr<
+    et::QuaternionMulOp<quaternion<VecT,OrderT,CrossT>, XprT>
+>
 operator* (
-        const quaternion<VecT,OrderT>& left,
+        const quaternion<VecT,OrderT,CrossT>& left,
         QUATXPR_ARG_TYPE right)
 {
-    typedef et::QuaternionMulOp<quaternion<VecT,OrderT>, XprT> ExprT;
+    typedef et::QuaternionMulOp<quaternion<VecT,OrderT,CrossT>, XprT> ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(left,right.expression()));
 }
 
 
 /** Declare mul taking an et::QuaternionXpr and a quaternion. */
-template<class XprT, typename VecT, typename OrderT> inline
-et::QuaternionXpr< et::QuaternionMulOp< XprT, quaternion<VecT,OrderT> > >
+template<class XprT, typename VecT, typename OrderT, typename CrossT>
+inline et::QuaternionXpr<
+    et::QuaternionMulOp< XprT, quaternion<VecT,OrderT,CrossT> >
+>
 operator* (
         QUATXPR_ARG_TYPE left,
-        const quaternion<VecT,OrderT>& right)
+        const quaternion<VecT,OrderT,CrossT>& right)
 {
-    typedef et::QuaternionMulOp< XprT, quaternion<VecT,OrderT> > ExprT;
+    typedef et::QuaternionMulOp< XprT, quaternion<VecT,OrderT,CrossT> > ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(left.expression(),right));
 }
 

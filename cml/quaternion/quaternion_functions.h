@@ -13,12 +13,14 @@
 namespace cml {
 
 /** Returns the real part of the quaternion. */
-template<typename VecT, typename OrderT> inline typename VecT::value_type
-real(const quaternion<VecT,OrderT>& q) { return q.real(); }
+template<typename VecT, typename OrderT, typename CrossT>
+inline typename VecT::value_type
+real(const quaternion<VecT,OrderT,CrossT>& q) { return q.real(); }
 
 /** Returns the imaginary (vector) part of the quaternion. */
-template<typename VecT, typename OrderT> inline const VecT&
-imaginary(const quaternion<VecT,OrderT>& q) { return q.imaginary(); }
+template<typename VecT, typename OrderT, typename CrossT>
+inline const VecT&
+imaginary(const quaternion<VecT,OrderT,CrossT>& q) { return q.imaginary(); }
 
 /** Returns the real (scalar) part of the QuaternionXpr. */
 template<typename XprT> inline typename et::QuaternionXpr<XprT>::value_type
@@ -29,9 +31,9 @@ template<typename XprT> inline typename et::QuaternionXpr<XprT>::result_type
 imaginary(const et::QuaternionXpr<XprT>& e) { return e.imaginary(); }
 
 /** Cayley norm of a quaternion. */
-template<typename VecT, typename OrderT>
+template<typename VecT, typename OrderT, typename CrossT>
 inline typename VecT::value_type
-norm(const quaternion<VecT,OrderT>& arg)
+norm(const quaternion<VecT,OrderT,CrossT>& arg)
 {
     return dot(arg,arg);
 }

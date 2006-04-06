@@ -48,7 +48,7 @@ template<typename E, class AT> class vector;
 template<typename E, class AT, typename L> class matrix;
 
 /* cml/quaternion.h */
-template<typename VecT, typename OrderT> class quaternion;
+template<typename VecT, typename OrderT, typename CrossT> class quaternion;
 
 } // namespace cml
 

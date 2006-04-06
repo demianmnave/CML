@@ -158,11 +158,11 @@ struct ExprTraits< QuaternionInverseOp<ExprT> >
 } // namespace et
 
 /** Inverse of a quaternion. */
-template<typename VecT, typename OrderT> inline
-et::QuaternionXpr< et::QuaternionInverseOp< quaternion<VecT,OrderT> > >
-inverse(const quaternion<VecT,OrderT>& arg)
+template<typename VecT, typename OrderT, typename CrossT> inline
+et::QuaternionXpr< et::QuaternionInverseOp< quaternion<VecT,OrderT,CrossT> > >
+inverse(const quaternion<VecT,OrderT,CrossT>& arg)
 {
-    typedef et::QuaternionInverseOp< quaternion<VecT,OrderT> > ExprT;
+    typedef et::QuaternionInverseOp< quaternion<VecT,OrderT,CrossT> > ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(arg));
 }
 

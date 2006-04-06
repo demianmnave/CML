@@ -35,17 +35,13 @@ struct negative_cross {
 };
 
 /** Helper to specify scalar-first quaternion ordering. */
-template<typename CrossT = positive_cross>
 struct scalar_first {
     enum { W, X, Y, Z };
-    enum { scale = CrossT::scale };
 };
 
 /** Helper to specify vector-first quaternion ordering. */
-template<typename CrossT = positive_cross>
 struct vector_first {
     enum { X, Y, Z, W };
-    enum { scale = CrossT::scale };
 };
 
 /** A configurable quaternion type.
@@ -58,7 +54,11 @@ struct vector_first {
  * @internal The quaternion class would have to be specialized to allow an
  * external<> storage type.
  */
-template<typename VecT, typename OrderT = scalar_first<positive_cross> >
+template<
+    typename VecT,
+    typename OrderT = scalar_first,
+    typename CrossT = positive_cross
+>
 class quaternion
 {
     /* The argument must be a fixed-size 3-vector without external<>
@@ -77,6 +77,9 @@ class quaternion
     /* Quaternion order: */
     typedef OrderT order_type;
 
+    /* Quaternion multiplication order: */
+    typedef CrossT cross_type;
+
     /* Scalar type representing the scalar part: */
     typedef typename vector_type::value_type value_type;
     typedef typename vector_type::reference reference;
@@ -84,14 +87,14 @@ class quaternion
     /* XXX Need to verify that this is a true scalar type. */
 
     /* The quaternion type: */
-    typedef quaternion<vector_type,order_type> quaternion_type;
+    typedef quaternion<vector_type,order_type,cross_type> quaternion_type;
 
     /* For integration into the expression template code: */
     typedef quaternion_type expr_type;
 
     /* For integration into the expression template code: */
-    typedef quaternion<typename vector_type::temporary_type, order_type>
-        temporary_type;
+    typedef quaternion<typename vector_type::temporary_type,
+            order_type, cross_type> temporary_type;
 
     /* For integration into the expression templates code: */
     typedef quaternion_type& expr_reference;
@@ -136,8 +139,8 @@ class quaternion
     quaternion(const quaternion_type& q) : m_q(q.m_q) {}
 
     /** Construct from a quaternion having a different vector type. */
-    template<typename V> quaternion(const quaternion<V,order_type>& q)
-        : m_q(q.m_q) {}
+    template<typename V> quaternion(
+            const quaternion<V,order_type,cross_type>& q) : m_q(q.m_q) {}
 
     /** Copy construct from a QuaternionXpr. */
     template<typename XprT> quaternion(QUATXPR_ARG_TYPE e) {
@@ -152,14 +155,14 @@ class quaternion
 
     /** Initialize from a 4-vector.
      *
-     * If OrderT is scalar_first<>, then v[0] is the real part.  Otherwise,
+     * If OrderT is scalar_first, then v[0] is the real part.  Otherwise,
      * v[3] is the real part.
      */
     quaternion(const vector_type& v) : m_q(v) {}
 
     /** Initialize from an array of scalars.
      *
-     * If OrderT is scalar_first<>, then v[0] is the real part.  Otherwise,
+     * If OrderT is scalar_first, then v[0] is the real part.  Otherwise,
      * v[3] is the real part.
      *
      * @note The target vector must have CML_VEC_COPY_FROM_ARRAY
@@ -219,7 +222,7 @@ class quaternion
      */
 #define CML_QUAT_ASSIGN_FROM_QUAT(_op_)                           \
     template<typename V> const quaternion_type&                   \
-    operator _op_ (const quaternion<V,order_type>& q) {           \
+    operator _op_ (const quaternion<V,order_type,cross_type>& q) {\
         m_q[W] _op_ q[W];                                         \
         m_q[X] _op_ q[X];                                         \
         m_q[Y] _op_ q[Y];                                         \
@@ -282,13 +285,10 @@ class quaternion
     /** Return the scalar part. */
     value_type real() const { return m_q[W]; }
 
-    /** Access the quaternion like a vector. */
+    /** Const access to the quaternion as a vector. */
     const_reference operator[](size_t i) const { return m_q[i]; }
 
-
-  protected:
-
-    /** Access the quaternion like a vector. */
+    /** Mutable access to the quaternion as a vector. */
     reference operator[](size_t i) { return m_q[i]; }
 
 

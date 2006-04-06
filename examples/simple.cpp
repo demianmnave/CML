@@ -46,7 +46,7 @@ operator<<(std::ostream& os, const cml::matrix<E,AT,L>& m)
 
 template<typename VecT, typename CrossT> std::ostream&
 quat_print(
-        std::ostream& os, const cml::quaternion<VecT,scalar_first<CrossT> >& q
+        std::ostream& os, const cml::quaternion<VecT,scalar_first,CrossT>& q
         )
 {
     os << ((q[0] < 0)?" - ":"") << std::fabs(q[0]);
@@ -58,7 +58,7 @@ quat_print(
 
 template<typename VecT, typename CrossT> std::ostream&
 quat_print(
-        std::ostream& os, const cml::quaternion<VecT,vector_first<CrossT> >& q
+        std::ostream& os, const cml::quaternion<VecT,vector_first,CrossT>& q
         )
 {
     os << ((q[0] < 0)?" - ":"") << std::fabs(q[0]) << "i";
@@ -68,8 +68,8 @@ quat_print(
     return os;
 }
 
-template<typename VecT, typename OrderT> std::ostream&
-operator<<(std::ostream& os, const cml::quaternion<VecT,OrderT>& q)
+template<typename VecT, typename OrderT, typename CrossT> std::ostream&
+operator<<(std::ostream& os, const cml::quaternion<VecT,OrderT,CrossT>& q)
 {
     return quat_print(os,q);
 }
@@ -612,7 +612,7 @@ void example19()
 
     typedef vector< double, fixed<4> > vector_type;
     typedef negative_cross cross_type;
-    typedef quaternion<vector_type, scalar_first<cross_type> > quaternion_type;
+    typedef quaternion<vector_type, scalar_first, cross_type> quaternion_type;
 
     double v1[] = {1.,0.,0.}, v2[] = {0.,1.,0.};
     quaternion_type p(0.,v1), q(0.,v2), r, s;

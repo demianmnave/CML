@@ -141,11 +141,11 @@ struct ExprTraits< ConjugateOp<ExprT> >
 } // namespace et
 
 /** Conjugation of a quaternion. */
-template<typename VecT, typename OrderT> inline
-et::QuaternionXpr< et::ConjugateOp< quaternion<VecT,OrderT> > >
-conj(const quaternion<VecT,OrderT>& arg)
+template<typename VecT, typename OrderT, typename CrossT> inline
+et::QuaternionXpr< et::ConjugateOp< quaternion<VecT,OrderT,CrossT> > >
+conj(const quaternion<VecT,OrderT,CrossT>& arg)
 {
-    typedef et::ConjugateOp< quaternion<VecT,OrderT> > ExprT;
+    typedef et::ConjugateOp< quaternion<VecT,OrderT,CrossT> > ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(arg));
 }
 

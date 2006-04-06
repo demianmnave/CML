@@ -18,23 +18,25 @@ namespace et {
 template<typename LeftT, typename RightT> struct QuaternionPromote;
 
 /** Type promotion for two quaternion types. */
-template<typename VecT1, typename VecT2, typename OrderT>
+template<typename VecT1, typename VecT2, typename OrderT, typename CrossT>
 struct QuaternionPromote<
-    cml::quaternion<VecT1,OrderT>,
-    cml::quaternion<VecT2,OrderT>
+    cml::quaternion<VecT1,OrderT,CrossT>,
+    cml::quaternion<VecT2,OrderT,CrossT>
 >
 {
     /* The deduced vector type: */
     typedef typename VectorPromote<VecT1, VecT2>::type promoted_vector;
 
     /* The deduced quaternion result type: */
-    typedef cml::quaternion<promoted_vector,OrderT> type;
+    typedef cml::quaternion<promoted_vector,OrderT,CrossT> type;
 };
 
 /** Type promotion for a quaternion and a vector. */
-template<typename VecT, typename OrderT, typename E, class AT>
+template<
+    typename VecT, typename OrderT, typename CrossT,
+    typename E, class AT>
 struct QuaternionPromote<
-    cml::quaternion<VecT,OrderT>,
+    cml::quaternion<VecT,OrderT,CrossT>,
     cml::vector<E,AT>
 >
 {
@@ -44,14 +46,16 @@ struct QuaternionPromote<
     >::type promoted_vector;
 
     /* The deduced quaternion result type: */
-    typedef cml::quaternion<promoted_vector,OrderT> type;
+    typedef cml::quaternion<promoted_vector,OrderT,CrossT> type;
 };
 
 /** Type promotion for a quaternion and a vector. */
-template<typename E, class AT, typename VecT, typename OrderT>
+template<
+    typename E, class AT,
+    typename VecT, typename OrderT, typename CrossT>
 struct QuaternionPromote<
     cml::vector<E,AT>,
-    cml::quaternion<VecT,OrderT>
+    cml::quaternion<VecT,OrderT,CrossT>
 >
 {
     /* The deduced vector type: */
@@ -60,29 +64,29 @@ struct QuaternionPromote<
     >::type promoted_vector;
 
     /* The deduced quaternion result type: */
-    typedef cml::quaternion<promoted_vector,OrderT> type;
+    typedef cml::quaternion<promoted_vector,OrderT,CrossT> type;
 };
 
 /** Type promotion for a quaternion and a scalar. */
-template<typename VecT, typename OrderT, typename S>
-struct QuaternionPromote<cml::quaternion<VecT,OrderT>, S>
+template<typename VecT, typename OrderT, typename CrossT, typename S>
+struct QuaternionPromote<cml::quaternion<VecT,OrderT,CrossT>, S>
 {
     /* The deduced vector type: */
     typedef typename VectorPromote<VecT,S>::type promoted_vector;
 
     /* The deduced quaternion result type: */
-    typedef cml::quaternion<promoted_vector,OrderT> type;
+    typedef cml::quaternion<promoted_vector,OrderT,CrossT> type;
 };
 
 /** Type promotion for a scalar and a quaternion. */
-template<typename S, typename VecT, typename OrderT>
-struct QuaternionPromote<S, cml::quaternion<VecT,OrderT> >
+template<typename S, typename VecT, typename OrderT, typename CrossT>
+struct QuaternionPromote<S, cml::quaternion<VecT,OrderT,CrossT> >
 {
     /* The deduced vector type: */
     typedef typename VectorPromote<S,VecT>::type promoted_vector;
 
     /* The deduced quaternion result type: */
-    typedef cml::quaternion<promoted_vector,OrderT> type;
+    typedef cml::quaternion<promoted_vector,OrderT,CrossT> type;
 };
 
 } // namespace et
