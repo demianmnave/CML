@@ -87,11 +87,19 @@ void example1()
 
     cout << "  u = " << u << endl;
     cout << "  v = " << v << endl;
+    cout << "  length(u) = " << length(u) << endl;
+    cout << "  normalize(v) = " << normalize(v) << endl;
+
     cout << "  dot(u,v) = " << dot(u,v) << endl;
     cout << "  dot(u,u) = " << dot(u,u) << endl;
     cout << "  dot(u+v,v) = " << dot(u+v,v) << endl;
     cout << "  cos(u,v) = " << dot(u,v)/sqrt(dot(u,u)*dot(v,v))
         << endl;
+
+    cout << "  (u+v).normalize() = " << (u+v).normalize() << endl;
+    cout << "  normalize(u+v) = " << normalize(u+v) << endl;
+    cout << "  (-u).normalize() = " << (-u).normalize() << endl;
+    cout << "  (-(u+v)).normalize() = " << (-(u+v)).normalize() << endl;
 }
 
 void example2()
@@ -132,6 +140,9 @@ void example3()
     C = T(A)+B;
     cout << "  C(0,0) = " << C(0,0) << endl;
     cout << "  C(2,0) = " << C(2,0) << endl;
+
+    A = identity(C);
+    cout << "  identity(C) = " << A << endl;
 }
 
 void example4()
@@ -157,6 +168,9 @@ void example4()
 
     C = A+B;
     cout << "  C(0,0) = " << C(0,0) << endl;
+
+    A = identity(C);
+    cout << "  identity(C) = " << A << endl;
 }
 
 void example5()
@@ -560,23 +574,23 @@ void example18()
     cout << "p = " << p << endl;
     cout << "q = " << q << endl;
     
-    r = conj(p);
-    cout << "r = conj(p) = " << r << endl;
+    r = conjugate(p);
+    cout << "r = conjugate(p) = " << r << endl;
 
-    r = conj(q);
-    cout << "r = conj(q) = " << r << endl;
+    r = conjugate(q);
+    cout << "r = conjugate(q) = " << r << endl;
 
     r = p + q;
     cout << "r = p+q = " << r << endl;
 
-    r = p + conj(q);
-    cout << "r = p + conj(q) = " << r << endl;
+    r = p + conjugate(q);
+    cout << "r = p + conjugate(q) = " << r << endl;
 
-    r = p + conj(2.*q);
-    cout << "r = p + conj(2*q) = " << r << endl;
+    r = p + conjugate(2.*q);
+    cout << "r = p + conjugate(2*q) = " << r << endl;
 
-    r = p + conj(q)*2.;
-    cout << "r = p+ conj(q)*2 = " << r << endl;
+    r = p + conjugate(q)*2.;
+    cout << "r = p+ conjugate(q)*2 = " << r << endl;
 
     r = p*q;
     cout << "r = p*q = " << r << endl;
@@ -584,17 +598,17 @@ void example18()
     r = p*p;
     cout << "r = p*p = " << r << endl;
 
-    r = p*conj(p);
+    r = p*conjugate(p);
     cout << "r = p*~p = " << r << endl;
 
-    r = (conj(p))/real(p*conj(p));
-    cout << "r = conj(p)/real(p*conj(p)) = " << r << endl;
+    r = (conjugate(p))/real(p*conjugate(p));
+    cout << "r = conjugate(p)/real(p*conjugate(p)) = " << r << endl;
 
     s = r*p;
     cout << "s = r*p = " << s << endl;
 
-    r = conj(p)/norm(p);
-    cout << "r = conj(p)/norm(p) = " << r << endl;
+    r = conjugate(p)/norm(p);
+    cout << "r = conjugate(p)/norm(p) = " << r << endl;
 
     s = r*p;
     cout << "s = r*p = " << s << endl;
@@ -625,11 +639,14 @@ void example19()
     r = q*q;
     cout << "r = q*q = " << r << endl;
 
-    r = p*conj(p);
+    r = p*conjugate(p);
     cout << "r = p*~p = " << r << endl;
 
-    r = (conj(p))/real(p*conj(p));
-    cout << "r = conj(p)/real(p*conj(p)) = " << r << endl;
+    r = (conjugate(p))/real(p*conjugate(p));
+    cout << "r = conjugate(p)/real(p*conjugate(p)) = " << r << endl;
+    
+    r = inverse(p);
+    cout << "r = inverse(p) = " << r << endl;
 
     s = r*p;
     cout << "s = r*p = " << s << endl;
@@ -639,6 +656,60 @@ void example19()
 
     r = q*p;
     cout << "r = p*q = q_v ^ p_v = " << r << endl;
+}
+
+void example20()
+{
+    cout << std::endl << "Example20:" << endl;
+
+    typedef vector< double, fixed<4> > vector_type;
+    typedef positive_cross cross_type;
+    typedef quaternion<vector_type, scalar_first, cross_type> quaternion_type;
+
+    double v1[] = {3.,4.,0.}, v2[] = {11.,60.,0.};
+    quaternion_type p(0.,v1), q(0.,v2), r, s;
+    cout << "p = " << p << endl;
+    cout << "length(p) = " << length(p) << endl;
+    cout << "q = " << q << endl;
+    cout << "length(q) = " << length(q) << endl;
+    
+    r = p / length(p);
+    cout << "r = p / length(p) = " << r << endl;
+
+    s = p;
+    p.normalize();
+    cout << "p.normalize() = " << r << endl;
+    p = s;
+
+    cout << "(-p) = " << quaternion_type(-p) << endl;
+    cout << "(-p).length() = " << (-p).length() << endl;
+    cout << "length(-p) = " << length(-p) << endl;
+
+    cout << "conjugate(p) = " << quaternion_type(conjugate(p)) << endl;
+    cout << "conjugate(p).length() = " << conjugate(p).length() << endl;
+    cout << "length(conjugate(p)) = " << length(conjugate(p)) << endl;
+
+    cout << "inverse(p) = " << quaternion_type(inverse(p)) << endl;
+    cout << "inverse(p).length() = " << inverse(p).length() << endl;
+    cout << "length(inverse(p)) = " << length(inverse(p)) << endl;
+
+    s = p+q;
+    cout << "s = p+q = " << s << endl;
+    cout << "length(s) = " << length(s) << endl;
+    cout << "normalize(s) = " << normalize(s) << endl;
+
+    r = normalize(p+q);
+    cout << "length(p+q) = " << length(p+q) << endl;
+    cout << "r = normalize(p+q) = " << r << endl;
+
+    cout << "length(p*q) = " << length(p*q) << endl;
+    cout << "(p*q).length() = " << (p*q).length() << endl;
+
+    identity(r);
+    cout << "identity(r) = " << r << endl;
+
+    s = r*p;
+    cout << "s = r*p = " << s << endl;
 }
 
 int main()
@@ -664,6 +735,7 @@ int main()
     example17();
     example18();
     example19();
+    example20();
     return 0;
 }
 

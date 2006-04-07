@@ -68,6 +68,24 @@ class vector< Element, external<Size> >
 
   public:
 
+    /** Return square of the length. */
+    value_type length_squared() const {
+        return dot(*this,*this);
+    }
+
+    /** Return the length. */
+    value_type length() const {
+        return std::sqrt(length_squared());
+    }
+
+    /** Normalize the vector. */
+    vector_type& normalize() {
+        return (*this /= length());
+    }
+
+
+  public:
+
     /** Construct from an array of values. */
     vector(Element* const array) : array_type(array) {}
 

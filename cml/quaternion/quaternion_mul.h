@@ -88,27 +88,40 @@ class QuaternionMulOp
 
   public:
 
-    /** Return the size of the quaternion result.
-     *
-     * @throws std::invalid_argument if the expressions do not have the same
-     * size.
-     */
-    size_t size() const {
-
-        /* Note: This actually does a check only if
-         * CML_CHECK_VECTOR_EXPR_SIZES is set:
-         */
-        CheckedSize(m_left,m_right,size_tag());
-
-        /* The size is always 4: */
-        return 4;
+    /** Return the real part of the expression. */
+    value_type real() const {
+        return (*this)[W];
     }
 
-    /** Return reference to left expression. */
-    left_reference left_expression() const { return m_left; }
+    /** Return the vector part of the expression. */
+    imaginary_type imaginary() const {
+        imaginary_type v;
+        v[0] = (*this)[X]; v[1] = (*this)[Y]; v[2] = (*this)[Z];
+        return v;
+    }
 
-    /** Return reference to right expression. */
-    right_reference right_expression() const { return m_right; }
+    /** Return the Cayley norm of the expression. */
+    value_type norm() const {
+        return length_squared();
+    }
+
+    /** Return square of the quaternion length. */
+    value_type length_squared() const {
+        return dot(
+                QuaternionXpr<expr_type>(*this),
+                QuaternionXpr<expr_type>(*this));
+    }
+
+    /** Return the quaternion length. */
+    value_type length() const {
+        return std::sqrt(length_squared());
+    }
+
+    /** Return the result as a normalized quaternion. */
+    result_type normalize() const {
+        result_type q(QuaternionXpr<expr_type>(*this));
+        return q.normalize();
+    }
 
     /** Compute value of the product at index i.
      *
@@ -151,17 +164,30 @@ class QuaternionMulOp
         return 0.;
     }
 
-    /** Return the real part of the expression. */
-    value_type real() const {
-        return (*this)[W];
+
+  public:
+
+    /** Return the size of the quaternion result.
+     *
+     * @throws std::invalid_argument if the expressions do not have the same
+     * size.
+     */
+    size_t size() const {
+
+        /* Note: This actually does a check only if
+         * CML_CHECK_VECTOR_EXPR_SIZES is set:
+         */
+        CheckedSize(m_left,m_right,size_tag());
+
+        /* The size is always 4: */
+        return 4;
     }
 
-    /** Return the vector part of the expression. */
-    imaginary_type imaginary() const {
-        imaginary_type v;
-        v[0] = (*this)[X]; v[1] = (*this)[Y]; v[2] = (*this)[Z];
-        return v;
-    }
+    /** Return reference to left expression. */
+    left_reference left_expression() const { return m_left; }
+
+    /** Return reference to right expression. */
+    right_reference right_expression() const { return m_right; }
 
 
   public:

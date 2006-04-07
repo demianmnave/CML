@@ -80,6 +80,23 @@ class matrix<Element,dynamic<Alloc>,Layout>
 
   public:
 
+    /** Set this matrix to the identity.
+     *
+     * This only makes sense for a square matrix, but no error will be
+     * signaled if the matrix is not square.
+     */
+    matrix_type& identity() {
+        for(size_t i = 0; i < this->rows(); ++ i) {
+            for(size_t j = 0; j < this->cols(); ++ j) {
+                (*this)(i,j) = value_type((i == j)?1:0);
+            }
+        }
+        return *this;
+    }
+
+
+  public:
+
     /** Default constructor.
      *
      * @throws same as the ArrayType constructor.

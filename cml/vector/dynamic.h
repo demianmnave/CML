@@ -62,6 +62,24 @@ class vector< Element, dynamic<Alloc> >
 
   public:
 
+    /** Return square of the length. */
+    value_type length_squared() const {
+        return dot(*this,*this);
+    }
+
+    /** Return the length. */
+    value_type length() const {
+        return std::sqrt(length_squared());
+    }
+
+    /** Normalize the vector. */
+    vector_type& normalize() {
+        return (*this /= length());
+    }
+
+
+  public:
+
     /** Default constructor. */
     vector() : array_type() {}
 

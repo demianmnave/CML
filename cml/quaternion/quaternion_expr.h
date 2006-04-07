@@ -69,19 +69,6 @@ class QuaternionXpr
 
   public:
 
-    /** Return size of this expression (same as subexpression's size). */
-    size_t size() const {
-        return m_expr.size();
-    }
-
-    /** Return reference to contained expression. */
-    expr_reference expression() const { return m_expr; }
-
-    /** Compute value at index i of the result quaternion. */
-    value_type operator[](size_t i) const {
-        return m_expr[i];
-    }
-
     /** Return the real part of the expression. */
     value_type real() const {
         return m_expr.real();
@@ -91,6 +78,42 @@ class QuaternionXpr
     imaginary_type imaginary() const {
         return m_expr.imaginary();
     }
+
+    /** Return the Cayley norm of the expression. */
+    value_type norm() const {
+        return m_expr.length_squared();
+    }
+
+    /** Return square of the quaternion length. */
+    value_type length_squared() const {
+        return m_expr.length_squared();
+    }
+
+    /** Return the quaternion length. */
+    value_type length() const {
+        return m_expr.length();
+    }
+
+    /** Return the result as a normalized quaternion. */
+    result_type normalize() const {
+        return m_expr.normalize();
+    }
+
+    /** Compute value at index i of the result quaternion. */
+    value_type operator[](size_t i) const {
+        return m_expr[i];
+    }
+
+
+  public:
+
+    /** Return size of this expression (same as subexpression's size). */
+    size_t size() const {
+        return m_expr.size();
+    }
+
+    /** Return reference to contained expression. */
+    expr_reference expression() const { return m_expr; }
 
 
   public:
@@ -124,7 +147,7 @@ struct ExprTraits< QuaternionXpr<ExprT> >
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
-    typedef typename expr_type::assignable_tag assignable_tag;
+    typedef typename expr_type::assignable_tag not_assignable_tag;
     typedef expr_node_tag node_tag;
 
     value_type get(const expr_type& v, size_t i) const { return v[i]; }
@@ -194,23 +217,6 @@ class UnaryQuaternionOp
 
   public:
 
-    /** Return size of this expression (same as argument's size). */
-    size_t size() const {
-        return m_expr.size();
-    }
-
-    /** Return reference to contained expression. */
-    expr_reference expression() const { return m_expr; }
-
-    /** Compute value at index i of the result quaternion. */
-    value_type operator[](size_t i) const {
-
-        /* This uses the expression traits to figure out how to access the
-         * i'th index of the subexpression:
-         */
-        return OpT().apply(expr_traits().get(m_expr,i));
-    }
-
     /** Return the real part of the expression. */
     value_type real() const {
         return (*this)[W];
@@ -222,6 +228,49 @@ class UnaryQuaternionOp
         v[0] = (*this)[X]; v[1] = (*this)[Y]; v[2] = (*this)[Z];
         return v;
     }
+
+    /** Return the Cayley norm of the expression. */
+    value_type norm() const {
+        return length_squared();
+    }
+
+    /** Return square of the quaternion length. */
+    value_type length_squared() const {
+        return dot(
+                QuaternionXpr<expr_type>(*this),
+                QuaternionXpr<expr_type>(*this));
+    }
+
+    /** Return the quaternion length. */
+    value_type length() const {
+        return std::sqrt(length_squared());
+    }
+
+    /** Return the result as a normalized quaternion. */
+    result_type normalize() const {
+        result_type q(QuaternionXpr<expr_type>(*this));
+        return q.normalize();
+    }
+
+    /** Compute value at index i of the result quaternion. */
+    value_type operator[](size_t i) const {
+
+        /* This uses the expression traits to figure out how to access the
+         * i'th index of the subexpression:
+         */
+        return OpT().apply(expr_traits().get(m_expr,i));
+    }
+
+
+  public:
+
+    /** Return size of this expression (same as argument's size). */
+    size_t size() const {
+        return m_expr.size();
+    }
+
+    /** Return reference to contained expression. */
+    expr_reference expression() const { return m_expr; }
 
 
   public:
@@ -256,7 +305,7 @@ struct ExprTraits< UnaryQuaternionOp<ExprT,OpT> >
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
-    typedef typename expr_type::assignable_tag assignable_tag;
+    typedef typename expr_type::assignable_tag not_assignable_tag;
     typedef expr_node_tag node_tag;
 
     value_type get(const expr_type& v, size_t i) const { return v[i]; }
@@ -334,6 +383,55 @@ class BinaryQuaternionOp
 
   public:
 
+    /** Return the real part of the expression. */
+    value_type real() const {
+        return (*this)[W];
+    }
+
+    /** Return the vector part of the expression. */
+    imaginary_type imaginary() const {
+        imaginary_type v;
+        v[0] = (*this)[X]; v[1] = (*this)[Y]; v[2] = (*this)[Z];
+        return v;
+    }
+
+    /** Return the Cayley norm of the expression. */
+    value_type norm() const {
+        return length_squared();
+    }
+
+    /** Return square of the quaternion length. */
+    value_type length_squared() const {
+        return dot(
+                QuaternionXpr<expr_type>(*this),
+                QuaternionXpr<expr_type>(*this));
+    }
+
+    /** Return the quaternion length. */
+    value_type length() const {
+        return std::sqrt(length_squared());
+    }
+
+    /** Return the result as a normalized quaternion. */
+    result_type normalize() const {
+        result_type q(QuaternionXpr<expr_type>(*this));
+        return q.normalize();
+    }
+
+    /** Compute value at index i of the result quaternion. */
+    value_type operator[](size_t i) const {
+
+        /* This uses the expression traits to figure out how to access the
+         * i'th index of the two subexpressions:
+         */
+        return OpT().apply(
+                left_traits().get(m_left,i),
+                right_traits().get(m_right,i));
+    }
+
+
+  public:
+
     /** Return the size of the quaternion result.
      *
      * @throws std::invalid_argument if the expressions do not have the same
@@ -354,29 +452,6 @@ class BinaryQuaternionOp
 
     /** Return reference to right expression. */
     right_reference right_expression() const { return m_right; }
-
-    /** Compute value at index i of the result quaternion. */
-    value_type operator[](size_t i) const {
-
-        /* This uses the expression traits to figure out how to access the
-         * i'th index of the two subexpressions:
-         */
-        return OpT().apply(
-                left_traits().get(m_left,i),
-                right_traits().get(m_right,i));
-    }
-
-    /** Return the real part of the expression. */
-    value_type real() const {
-        return (*this)[W];
-    }
-
-    /** Return the vector part of the expression. */
-    imaginary_type imaginary() const {
-        imaginary_type v;
-        v[0] = (*this)[X]; v[1] = (*this)[Y]; v[2] = (*this)[Z];
-        return v;
-    }
 
 
   public:
@@ -421,12 +496,14 @@ struct ExprTraits< BinaryQuaternionOp<LeftT,RightT,OpT> >
     typedef typename expr_type::result_tag result_tag;
     typedef typename expr_type::size_tag size_tag;
     typedef typename expr_type::result_type result_type;
-    typedef typename expr_type::assignable_tag assignable_tag;
+    typedef typename expr_type::imaginary_type imaginary_type;
+    typedef typename expr_type::assignable_tag not_assignable_tag;
     typedef expr_node_tag node_tag;
 
     value_type get(const expr_type& v, size_t i) const { return v[i]; }
     size_t size(const expr_type& e) const { return e.size(); }
 };
+
 
 /* Helper struct to verify that both arguments are quaternion expressions: */
 template<typename LeftTraits, typename RightTraits>

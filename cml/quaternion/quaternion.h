@@ -16,6 +16,7 @@
 #define quaternion_h
 
 #include <cml/quaternion/quaternion_expr.h>
+#include <cml/quaternion/quaternion_dot.h>
 
 /* This is used below to create a more meaningful compile-time error when
  * the quaternion class is not created with a fixed-size 4-vector:
@@ -132,6 +133,58 @@ class quaternion
 
   public:
 
+    /** Return the scalar part. */
+    value_type real() const { return m_q[W]; }
+
+    /** Return the imaginary vector. */
+    imaginary_type imaginary() const {
+        imaginary_type v;
+        v[0] = m_q[X]; v[1] = m_q[Y]; v[2] = m_q[Z];
+        return v;
+    }
+
+    /** Return the Cayley norm of the quaternion. */
+    value_type norm() const {
+        return length_squared();
+    }
+
+    /** Return square of the quaternion length. */
+    value_type length_squared() const {
+        return dot(*this,*this);
+    }
+
+    /** Return the quaternion length. */
+    value_type length() const {
+        return std::sqrt(length_squared());
+    }
+
+    /** Normalize this vector (divide by its length).
+     *
+     * @todo Make this return a QuaternionXpr.
+     */
+    quaternion_type& normalize() {
+        return (*this /= length());
+    }
+
+    /** Set this quaternion to the multiplicative identity. */
+    quaternion_type& identity() {
+        (*this)[W] = value_type(1);
+        (*this)[X] = value_type(0);
+        (*this)[Y] = value_type(0);
+        (*this)[Z] = value_type(0);
+        return *this;
+    }
+
+
+    /** Const access to the quaternion as a vector. */
+    const_reference operator[](size_t i) const { return m_q[i]; }
+
+    /** Mutable access to the quaternion as a vector. */
+    reference operator[](size_t i) { return m_q[i]; }
+
+
+  public:
+
     /** Default initializer. */
     quaternion() {}
 
@@ -235,7 +288,7 @@ class quaternion
      * This assumes that _op_ is defined for the quaternion's scalar type.
      */
 #define CML_QUAT_ASSIGN_FROM_QUATXPR(_op_)                        \
-    template<typename XprT> const quaternion_type&                \
+    template<typename XprT> quaternion_type&                      \
     operator _op_ (QUATXPR_ARG_TYPE e) {                          \
         typedef typename XprT::order_type arg_order;              \
         m_q[W] _op_ e[arg_order::W];                              \
@@ -250,7 +303,7 @@ class quaternion
      * This assumes that _op_ is defined for the quaternion's scalar type.
      */
 #define CML_QUAT_ASSIGN_FROM_SCALAR(_op_,_op_name_)               \
-    const quaternion_type& operator _op_ (const value_type& s) {  \
+    quaternion_type& operator _op_ (const value_type& s) {        \
         typedef _op_name_ <value_type,value_type> OpT;            \
         OpT().apply(m_q[W],s);                                    \
         OpT().apply(m_q[X],s);                                    \
@@ -272,24 +325,6 @@ class quaternion
 
 #undef CML_QUAT_ASSIGN_FROM_QUAT
 #undef CML_QUAT_ASSIGN_FROM_QUATXPR
-
-  public:
-
-    /** Return the imaginary vector. */
-    imaginary_type imaginary() const {
-        imaginary_type v;
-        v[0] = m_q[X]; v[1] = m_q[Y]; v[2] = m_q[Z];
-        return v;
-    }
-
-    /** Return the scalar part. */
-    value_type real() const { return m_q[W]; }
-
-    /** Const access to the quaternion as a vector. */
-    const_reference operator[](size_t i) const { return m_q[i]; }
-
-    /** Mutable access to the quaternion as a vector. */
-    reference operator[](size_t i) { return m_q[i]; }
 
 
   protected:

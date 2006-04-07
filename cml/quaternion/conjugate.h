@@ -72,22 +72,6 @@ class ConjugateOp
 
   public:
 
-    /** Return size of this expression (same as argument's size). */
-    size_t size() const {
-        return m_expr.size();
-    }
-
-    /** Return reference to contained expression. */
-    expr_reference expression() const { return m_expr; }
-
-    /** Compute conjugated result at index i.
-     *
-     * The conjugate of quaternion s + v is s - v.
-     */
-    value_type operator[](size_t i) const {
-        return (i == W) ? m_expr[W] : - m_expr[i] ;
-    }
-
     /** Return the real part of the expression. */
     value_type real() const {
         return m_expr.real();
@@ -97,6 +81,48 @@ class ConjugateOp
     imaginary_type imaginary() const {
         return -m_expr.imaginary();
     }
+
+    /** Return the Cayley norm of the expression. */
+    value_type norm() const {
+        return length_squared();
+    }
+
+    /** Return square of the quaternion length. */
+    value_type length_squared() const {
+        return dot(
+                QuaternionXpr<expr_type>(*this),
+                QuaternionXpr<expr_type>(*this));
+    }
+
+    /** Return the quaternion length. */
+    value_type length() const {
+        return std::sqrt(length_squared());
+    }
+
+    /** Return the result as a normalized quaternion. */
+    result_type normalize() const {
+        result_type q(QuaternionXpr<expr_type>(*this));
+        return q.normalize();
+    }
+
+    /** Compute conjugated result at index i.
+     *
+     * The conjugate of quaternion s + v is s - v.
+     */
+    value_type operator[](size_t i) const {
+        return (i == W) ? m_expr[W] : - m_expr[i] ;
+    }
+
+
+  public:
+
+    /** Return size of this expression (same as argument's size). */
+    size_t size() const {
+        return m_expr.size();
+    }
+
+    /** Return reference to contained expression. */
+    expr_reference expression() const { return m_expr; }
 
 
   public:
@@ -143,7 +169,7 @@ struct ExprTraits< ConjugateOp<ExprT> >
 /** Conjugation of a quaternion. */
 template<typename VecT, typename OrderT, typename CrossT> inline
 et::QuaternionXpr< et::ConjugateOp< quaternion<VecT,OrderT,CrossT> > >
-conj(const quaternion<VecT,OrderT,CrossT>& arg)
+conjugate(const quaternion<VecT,OrderT,CrossT>& arg)
 {
     typedef et::ConjugateOp< quaternion<VecT,OrderT,CrossT> > ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(arg));
@@ -152,7 +178,7 @@ conj(const quaternion<VecT,OrderT,CrossT>& arg)
 /** Conjugation of a QuaternionXpr. */
 template<typename XprT> inline
 et::QuaternionXpr< et::ConjugateOp<XprT> >
-conj(QUATXPR_ARG_TYPE arg)
+conjugate(QUATXPR_ARG_TYPE arg)
 {
     typedef et::ConjugateOp<XprT> ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(arg.expression()));

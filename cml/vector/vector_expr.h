@@ -68,6 +68,29 @@ class VectorXpr
 
   public:
 
+    /** Return square of the length. */
+    value_type length_squared() const {
+        return m_expr.length_squared();
+    }
+
+    /** Return the length. */
+    value_type length() const {
+        return m_expr.length();
+    }
+
+    /** Return the result as a normalized vector. */
+    result_type normalize() const {
+        return m_expr.normalize();
+    }
+
+    /** Compute value at index i of the result vector. */
+    value_type operator[](size_t i) const {
+        return m_expr[i];
+    }
+
+
+  public:
+
     /** Return size of this expression (same as subexpression's size). */
     size_t size() const {
         return m_expr.size();
@@ -75,11 +98,6 @@ class VectorXpr
 
     /** Return reference to contained expression. */
     expr_reference expression() const { return m_expr; }
-
-    /** Compute value at index i of the result vector. */
-    value_type operator[](size_t i) const {
-        return m_expr[i];
-    }
 
 
   public:
@@ -166,13 +184,23 @@ class UnaryVectorOp
 
   public:
 
-    /** Return size of this expression (same as argument's size). */
-    size_t size() const {
-        return m_expr.size();
+    /** Return square of the length. */
+    value_type length_squared() const {
+        return dot(
+                VectorXpr<expr_type>(*this),
+                VectorXpr<expr_type>(*this));
     }
 
-    /** Return reference to contained expression. */
-    expr_reference expression() const { return m_expr; }
+    /** Return the length. */
+    value_type length() const {
+        return std::sqrt(length_squared());
+    }
+
+    /** Return the result as a normalized vector. */
+    result_type normalize() const {
+        result_type v(VectorXpr<expr_type>(*this));
+        return v.normalize();
+    }
 
     /** Compute value at index i of the result vector. */
     value_type operator[](size_t i) const {
@@ -182,6 +210,17 @@ class UnaryVectorOp
          */
         return OpT().apply(expr_traits().get(m_expr,i));
     }
+
+
+  public:
+
+    /** Return size of this expression (same as argument's size). */
+    size_t size() const {
+        return m_expr.size();
+    }
+
+    /** Return reference to contained expression. */
+    expr_reference expression() const { return m_expr; }
 
 
   public:
@@ -276,6 +315,38 @@ class BinaryVectorOp
 
   public:
 
+    /** Return square of the length. */
+    value_type length_squared() const {
+        return dot(
+                VectorXpr<expr_type>(*this),
+                VectorXpr<expr_type>(*this));
+    }
+
+    /** Return the length. */
+    value_type length() const {
+        return std::sqrt(length_squared());
+    }
+
+    /** Return the result as a normalized vector. */
+    result_type normalize() const {
+        result_type v(VectorXpr<expr_type>(*this));
+        return v.normalize();
+    }
+
+    /** Compute value at index i of the result vector. */
+    value_type operator[](size_t i) const {
+
+        /* This uses the expression traits to figure out how to access the
+         * i'th index of the two subexpressions:
+         */
+        return OpT().apply(
+                left_traits().get(m_left,i),
+                right_traits().get(m_right,i));
+    }
+
+
+  public:
+
     /** Return the size of the vector result.
      *
      * @throws std::invalid_argument if the expressions do not have the same
@@ -293,17 +364,6 @@ class BinaryVectorOp
 
     /** Return reference to right expression. */
     right_reference right_expression() const { return m_right; }
-
-    /** Compute value at index i of the result vector. */
-    value_type operator[](size_t i) const {
-
-        /* This uses the expression traits to figure out how to access the
-         * i'th index of the two subexpressions:
-         */
-        return OpT().apply(
-                left_traits().get(m_left,i),
-                right_traits().get(m_right,i));
-    }
 
 
   public:

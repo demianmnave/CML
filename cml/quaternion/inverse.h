@@ -83,22 +83,6 @@ class QuaternionInverseOp
 
   public:
 
-    /** Return size of this expression (same as argument's size). */
-    size_t size() const {
-        return m_expr.size();
-    }
-
-    /** Return reference to contained expression. */
-    expr_reference expression() const { return m_expr; }
-
-    /** Compute inverse result at index i.
-     *
-     * The inverse of a quaternion p is ~p/norm(p).
-     */
-    value_type operator[](size_t i) const {
-        return m_expr[i]/m_norm;
-    }
-
     /** Return the real part of the expression. */
     value_type real() const {
         return m_expr.real()/m_norm;
@@ -112,12 +96,54 @@ class QuaternionInverseOp
         return m_expr.imaginary()/m_norm;
     }
 
+    /** Return the Cayley norm of the expression. */
+    value_type norm() const {
+        return length_squared();
+    }
+
+    /** Return square of the quaternion length. */
+    value_type length_squared() const {
+        return dot(
+                QuaternionXpr<expr_type>(*this),
+                QuaternionXpr<expr_type>(*this));
+    }
+
+    /** Return the quaternion length. */
+    value_type length() const {
+        return std::sqrt(length_squared());
+    }
+
+    /** Return the result as a normalized quaternion. */
+    result_type normalize() const {
+        result_type q(QuaternionXpr<expr_type>(*this));
+        return q.normalize();
+    }
+
+    /** Compute inverse result at index i.
+     *
+     * The inverse of a quaternion p is ~p/norm(p).
+     */
+    value_type operator[](size_t i) const {
+        return m_expr[i]/m_norm;
+    }
+
+
+  public:
+
+    /** Return size of this expression (same as argument's size). */
+    size_t size() const {
+        return m_expr.size();
+    }
+
+    /** Return reference to contained expression. */
+    expr_reference expression() const { return m_expr; }
+
 
   public:
 
     /** Construct from an input expression. */
     explicit QuaternionInverseOp(arg_reference arg)
-        : m_expr(arg), m_norm(norm(arg)) {}
+        : m_expr(arg), m_norm(cml::norm(arg)) {}
 
     /** Copy constructor. */
     QuaternionInverseOp(const expr_type& e)
