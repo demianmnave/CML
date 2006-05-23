@@ -44,6 +44,12 @@ struct row_major {};
 /** Col-major storage tag. */
 struct col_major {};
 
+/** Row-vector matrix basis tag. */
+struct row_basis {};
+
+/** Column-vector matrix basis tag. */
+struct col_basis {};
+
 /* This is the pair returned from the matrix size() method, as well as from
  * the matrix expression size checking code:
  */

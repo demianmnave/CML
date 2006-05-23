@@ -18,7 +18,7 @@ using std::endl;
 typedef vector< double, fixed<4> > vector_d4;
 #define VECINIT(_v_) _v_
 
-typedef matrix< double, fixed<4,4> > matrix_d44;
+typedef matrix<double, fixed<4,4>, cml::col_basis> matrix_d44;
 #define MATINIT(_m_) _m_
 
 #include "print_vector.cpp"

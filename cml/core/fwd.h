@@ -45,7 +45,7 @@ template<int Dim1, int Dim2> struct external;
 template<typename E, class AT> class vector;
 
 /* cml/matrix.h */
-template<typename E, class AT, typename L> class matrix;
+template<typename E, class AT, typename BO, typename L> class matrix;
 
 /* cml/quaternion.h */
 template<typename VecT, typename OrderT, typename CrossT> class quaternion;

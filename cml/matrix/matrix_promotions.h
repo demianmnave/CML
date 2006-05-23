@@ -33,19 +33,20 @@ template<typename LeftT, typename RightT> struct MatrixPromote;
 
 /** Type promotion for two matrix types. */
 template<typename E1, class AT1, typename L1,
-         typename E2, class AT2, typename L2>
-struct MatrixPromote< cml::matrix<E1,AT1,L1>, cml::matrix<E2,AT2,L2> >
+         typename E2, class AT2, typename L2, typename BO>
+struct MatrixPromote< cml::matrix<E1,AT1,BO,L1>, cml::matrix<E2,AT2,BO,L2> >
 {
     /* Promote the arrays: */
     typedef typename ArrayPromote<
-        typename cml::matrix<E1,AT1,L1>::array_type,
-        typename cml::matrix<E2,AT2,L2>::array_type
+        typename cml::matrix<E1,AT1,BO,L1>::array_type,
+        typename cml::matrix<E2,AT2,BO,L2>::array_type
     >::type promoted_array;
 
     /* The deduced matrix result type: */
     typedef cml::matrix<
         typename promoted_array::value_type,
         typename promoted_array::generator_type,
+        BO,
         typename promoted_array::layout
     > type;
 
@@ -54,22 +55,22 @@ struct MatrixPromote< cml::matrix<E1,AT1,L1>, cml::matrix<E2,AT2,L2> >
 };
 
 /** Type promotion for a matrix and a scalar. */
-template<typename E, class AT, typename L, typename S>
-struct MatrixPromote<cml::matrix<E,AT,L>, S>
+template<typename E, class AT, typename BO, typename L, typename S>
+struct MatrixPromote<cml::matrix<E,AT,BO,L>, S>
 {
     /* The deduced matrix result type (the array type is the same): */
-    typedef cml::matrix<typename ScalarPromote<E,S>::type, AT, L> type;
+    typedef cml::matrix<typename ScalarPromote<E,S>::type, AT, BO, L> type;
 
     /* The deduced temporary type: */
     typedef typename type::temporary_type temporary_type;
 };
 
 /** Type promotion for a scalar and a matrix. */
-template<typename S, typename E, class AT, typename L>
-struct MatrixPromote<S, cml::matrix<E,AT,L> >
+template<typename S, typename E, class AT, typename BO, typename L>
+struct MatrixPromote<S, cml::matrix<E,AT,BO,L> >
 {
     /* The deduced matrix result type (the array type is the same): */
-    typedef cml::matrix<typename ScalarPromote<S,E>::type, AT, L> type;
+    typedef cml::matrix<typename ScalarPromote<S,E>::type, AT, BO, L> type;
 
     /* The deduced temporary type: */
     typedef typename type::temporary_type temporary_type;
@@ -81,6 +82,7 @@ struct MatrixPromote< cml::vector<E1,AT1>, cml::vector<E2,AT2> >
 {
     typedef cml::vector<E1,AT1> left_type;
     typedef cml::vector<E2,AT2> right_type;
+    typedef CML_DEFAULT_BASIS_ORIENTATION basis_orient;
 
     /* Get matrix size: */
     enum {
@@ -93,12 +95,12 @@ struct MatrixPromote< cml::vector<E1,AT1>, cml::vector<E2,AT2> >
     typedef typename select_if<
         array_rows == -1, dynamic<>, fixed<array_rows,1>
     >::result left_storage;
-    typedef cml::matrix<E1,left_storage,layout> left_matrix;
+    typedef cml::matrix<E1,left_storage,basis_orient,layout> left_matrix;
 
     typedef typename select_if<
         array_cols == -1, dynamic<>, fixed<1,array_cols>
     >::result right_storage;
-    typedef cml::matrix<E2,right_storage,layout> right_matrix;
+    typedef cml::matrix<E2,right_storage,basis_orient,layout> right_matrix;
 
     /* Finally, promote the matrix types to get the result: */
     typedef typename et::MatrixPromote<left_matrix,right_matrix>::type type;

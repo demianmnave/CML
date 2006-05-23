@@ -23,6 +23,11 @@
 #define CML_DEFAULT_ARRAY_LAYOUT cml::row_major
 #endif
 
+/* The default basis orientation: */
+#if !defined(CML_DEFAULT_BASIS_ORIENTATION)
+#define CML_DEFAULT_BASIS_ORIENTATION cml::col_basis
+#endif
+
 /* Always use the default layout in promotions, by default: */
 #if !defined(CML_ALWAYS_PROMOTE_TO_DEFAULT_LAYOUT)
 #define CML_ALWAYS_PROMOTE_TO_DEFAULT_LAYOUT

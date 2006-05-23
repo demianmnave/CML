@@ -156,14 +156,14 @@ struct ExprTraits< MatrixTransposeOp<ExprT> >
 #if defined(MATRIX_TRANSPOSE_RETURNS_TEMP)
 
 /** Matrix transpose operator taking a matrix operand. */
-template<typename E, class AT, typename L>
+template<typename E, class AT, typename BO, typename L>
 typename et::MatrixTransposeOp<
-    matrix<E,AT,L>
+    matrix<E,AT,BO,L>
 >::temporary_type
-transpose(const matrix<E,AT,L>& expr)
+transpose(const matrix<E,AT,BO,L>& expr)
 {
     /* Record the matrix type: */
-    typedef matrix<E,AT,L> matrix_type;
+    typedef matrix<E,AT,BO,L> matrix_type;
 
     /* Record the type of the transpose op: */
     typedef et::MatrixTransposeOp<matrix_type> Op;
@@ -214,11 +214,11 @@ transpose(MATXPR_ARG_TYPE expr)
 /* For notational convenience: */
 
 /** Matrix transpose operator taking a matrix operand. */
-template<typename E, class AT, typename L>
+template<typename E, class AT, typename BO, typename L>
 typename et::MatrixTransposeOp<
-    matrix<E,AT,L>
+    matrix<E,AT,BO,L>
 >::temporary_type
-T(const matrix<E,AT,L>& expr)
+T(const matrix<E,AT,BO,L>& expr)
 {
     return transpose(expr);
 }
@@ -239,12 +239,18 @@ T(MATXPR_ARG_TYPE expr)
 
 #else
 
+/* XXX For this to work correctly, matrix assignment and copy have to be
+ * changed to either use a temporary all the time, or to create a temporary
+ * when the same matrix appears on both sides of an assignment, and a
+ * temporary was not already created on the RHS by the ET code.
+ */
+
 /** Matrix transpose operator taking a matrix operand. */
-template<typename E, class AT, typename L>
-et::MatrixXpr< et::MatrixTransposeOp< matrix<E,AT,L> > >
-transpose(const matrix<E,AT,L>& expr)
+template<typename E, class AT, typename BO, typename L>
+et::MatrixXpr< et::MatrixTransposeOp< matrix<E,AT,BO,L> > >
+transpose(const matrix<E,AT,BO,L>& expr)
 {
-    typedef et::MatrixTransposeOp< matrix<E,AT,L> > ExprT;
+    typedef et::MatrixTransposeOp< matrix<E,AT,BO,L> > ExprT;
     return et::MatrixXpr<ExprT>(ExprT(expr));
 }
 
@@ -265,9 +271,9 @@ transpose(MATXPR_ARG_TYPE expr)
 /* For notational convenience: */
 
 /** Matrix transpose operator taking a matrix operand. */
-template<typename E, class AT, typename L>
-et::MatrixXpr< et::MatrixTransposeOp< matrix<E,AT,L> > >
-T(const matrix<E,AT,L>& expr)
+template<typename E, class AT, typename BO, typename L>
+et::MatrixXpr< et::MatrixTransposeOp< matrix<E,AT,BO,L> > >
+T(const matrix<E,AT,BO,L>& expr)
 {
     return transpose(expr);
 }

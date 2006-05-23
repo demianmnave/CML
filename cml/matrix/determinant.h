@@ -164,10 +164,10 @@ determinant(const MatT& M, dynamic_size_tag)
 } // namespace detail
 
 /** Determinant of a matrix. */
-template<typename E, class AT, class L> inline E
-determinant(const matrix<E,AT,L>& M)
+template<typename E, class AT, class BO, class L> inline E
+determinant(const matrix<E,AT,BO,L>& M)
 {
-    typedef typename matrix<E,AT,L>::size_tag size_tag;
+    typedef typename matrix<E,AT,BO,L>::size_tag size_tag;
     return detail::determinant(M,size_tag());
 }
 

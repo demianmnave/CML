@@ -15,7 +15,7 @@ using namespace cml;
 using std::cerr;
 using std::endl;
 
-typedef matrix< double, fixed<4,4> > matrix_d44;
+typedef matrix< double, fixed<4,4>, cml::col_basis > matrix_d44;
 #define MATINIT(_m_) _m_
 
 inline void mult(const matrix_d44& A, const matrix_d44& B, matrix_d44& res)

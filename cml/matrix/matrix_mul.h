@@ -139,22 +139,23 @@ mul(const LeftT& left, const RightT& right)
 
 /** operator*() for two matrices. */
 template<typename E1, class AT1, typename L1,
-         typename E2, class AT2, typename L2>
+         typename E2, class AT2, typename L2,
+         typename BO>
 inline typename et::MatrixPromote<
-    matrix<E1,AT1,L1>, matrix<E2,AT2,L2>
+    matrix<E1,AT1,BO,L1>, matrix<E2,AT2,BO,L2>
 >::temporary_type
-operator*(const matrix<E1,AT1,L1>& left,
-          const matrix<E2,AT2,L2>& right)
+operator*(const matrix<E1,AT1,BO,L1>& left,
+          const matrix<E2,AT2,BO,L2>& right)
 {
     return detail::mul(left,right);
 }
 
 /** operator*() for a matrix and a MatrixXpr. */
-template<typename E, class AT, typename L, typename XprT>
+template<typename E, class AT, typename BO, typename L, typename XprT>
 inline typename et::MatrixPromote<
-    matrix<E,AT,L>, typename XprT::result_type
+    matrix<E,AT,BO,L>, typename XprT::result_type
 >::temporary_type
-operator*(const matrix<E,AT,L>& left,
+operator*(const matrix<E,AT,BO,L>& left,
           const et::MatrixXpr<XprT>& right)
 {
     /* Generate a temporary, and compute the right-hand expression: */
@@ -167,12 +168,12 @@ operator*(const matrix<E,AT,L>& left,
 }
 
 /** operator*() for a MatrixXpr and a matrix. */
-template<typename XprT, typename E, class AT, typename L>
+template<typename XprT, typename E, class AT, typename BO, typename L>
 inline typename et::MatrixPromote<
-    typename XprT::result_type , matrix<E,AT,L>
+    typename XprT::result_type , matrix<E,AT,BO,L>
 >::temporary_type
 operator*(const et::MatrixXpr<XprT>& left,
-          const matrix<E,AT,L>& right)
+          const matrix<E,AT,BO,L>& right)
 {
     /* Generate a temporary, and compute the left-hand expression: */
     typedef typename et::MatrixXpr<XprT>::temporary_type expr_tmp;

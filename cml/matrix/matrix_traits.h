@@ -13,10 +13,10 @@
 namespace cml {
 namespace et {
 
-template<typename E, class AT, typename L>
-struct ExprTraits< cml::matrix<E,AT,L> >
+template<typename E, class AT, typename BO, typename L>
+struct ExprTraits< cml::matrix<E,AT,BO,L> >
 {
-    typedef typename cml::matrix<E,AT,L> expr_type;
+    typedef typename cml::matrix<E,AT,BO,L> expr_type;
     typedef typename expr_type::value_type value_type;
     typedef typename expr_type::expr_reference reference;
     typedef typename expr_type::expr_const_reference const_reference;

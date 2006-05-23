@@ -16,8 +16,9 @@
 namespace cml {
 
 /** Fixed-size, fixed-memory vector. */
-template<typename Element, int Rows, int Cols, typename Layout>
-class matrix<Element,fixed<Rows,Cols>,Layout>
+template<typename Element, int Rows, int Cols,
+    typename BasisOrient, typename Layout>
+class matrix<Element,fixed<Rows,Cols>,BasisOrient,Layout>
 : public fixed_2D<Element,Rows,Cols,Layout>
 {
   public:
@@ -29,7 +30,7 @@ class matrix<Element,fixed<Rows,Cols>,Layout>
     typedef fixed_2D<Element,Rows,Cols,Layout> array_type;
 
     /* Shorthand for the type of this matrix: */
-    typedef matrix<Element,generator_type,Layout> matrix_type;
+    typedef matrix<Element,generator_type,BasisOrient,Layout> matrix_type;
 
     /* For integration into the expression template code: */
     typedef matrix_type expr_type;
@@ -44,6 +45,9 @@ class matrix<Element,fixed<Rows,Cols>,Layout>
 
     typedef matrix_type& expr_reference;
     typedef const matrix_type& expr_const_reference;
+
+    /* For matching by basis: */
+    typedef BasisOrient basis_orient;
 
     /* For matching by memory layout: */
     typedef typename array_type::layout layout;
@@ -62,7 +66,10 @@ class matrix<Element,fixed<Rows,Cols>,Layout>
 
     /* To simplify the matrix transpose operator: */
     typedef matrix<
-        Element, typename array_type::transposed_type::generator_type, Layout
+        Element,
+        typename array_type::transposed_type::generator_type,
+        BasisOrient,
+        Layout
     > transposed_type;
 
     /* To simplify the matrix row and column operators: */
@@ -93,6 +100,66 @@ class matrix<Element,fixed<Rows,Cols>,Layout>
         return *this;
     }
 
+    /** Set this matrix to its transpose.
+     *
+     * This only makes sense for a square matrix, but no error will be
+     * signaled if the matrix is not square.
+     */
+    matrix_type& transpose() {
+        /* transpose() returns a temporary: */
+        *this = transpose(*this);
+        return *this;
+    }
+
+    /** Set this matrix to its inverse.
+     *
+     * This only makes sense for a square matrix, but no error will be
+     * signaled if the matrix is not square.
+     */
+    matrix_type& inverse() {
+        /* inverse() returns a temporary: */
+        *this = inverse(*this);
+        return *this;
+    }
+
+    /** Accumulated matrix multiplication.
+     *
+     * This only makes sense for a square matrix, but no error will be
+     * signaled if the matrix is not square.
+     */
+    matrix_type& operator*=(const matrix_type& m) {
+        /* Matrix multiplication returns a temporary: */
+        *this = (*this)*m;
+        return *this;
+    }
+
+    /** Accumulated matrix multiplication.
+     *
+     * This only makes sense for a square matrix, but no error will be
+     * signaled if the matrix is not square.
+     */
+    template<typename E, class AT, typename BO, typename L> matrix_type&
+    operator*=(const matrix<E,AT,BO,L>& m) {
+        /* Matrix multiplication returns a temporary: */
+        *this = (*this)*m;
+        return *this;
+    }
+
+    /** Accumulated matrix multiplication.
+     *
+     * This only makes sense for a square matrix, but no error will be
+     * signaled if the matrix is not square.
+     */
+    template<class XprT> matrix_type&
+    operator*=(MATXPR_ARG_TYPE e) {
+        /* Verify that a promotion exists at compile time: */
+        typedef typename et::MatrixPromote<
+            matrix_type, typename XprT::result_type>::type result_type;
+        /* Matrix multiplication returns a temporary: */
+        *this = (*this)*e;
+        return *this;
+    }
+
 
   public:
 
@@ -110,6 +177,11 @@ class matrix<Element,fixed<Rows,Cols>,Layout>
     /** Return the matrix size as a pair. */
     matrix_size size() const {
         return matrix_size(this->rows(),this->cols());
+    }
+
+    /** Return element j of basis vector i. */
+    value_type basis_element(size_t i, size_t j) const {
+        return basis_element(i,j,basis_orient());
     }
 
 
@@ -136,6 +208,17 @@ class matrix<Element,fixed<Rows,Cols>,Layout>
 
     CML_MAT_ASSIGN_FROM_SCALAR(*=, et::OpMulAssign)
     CML_MAT_ASSIGN_FROM_SCALAR(/=, et::OpDivAssign)
+
+
+  protected:
+
+    value_type basis_element(size_t i, size_t j, row_basis) const {
+        return (*this)(i,j);
+    }
+
+    value_type basis_element(size_t i, size_t j, col_basis) const {
+        return (*this)(j,i);
+    }
 
 
   public:

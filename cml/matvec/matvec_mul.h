@@ -144,23 +144,23 @@ mul(const LeftT& x, const RightT& A, mul_xA)
 
 
 /** operator*() for a matrix and a vector. */
-template<typename E1, class AT1, class L,
+template<typename E1, class AT1, typename BO, class L,
          typename E2, class AT2>
 inline typename et::MatVecPromote<
-    matrix<E1,AT1,L>, vector<E2,AT2>
+    matrix<E1,AT1,BO,L>, vector<E2,AT2>
 >::temporary_type
-operator*(const matrix<E1,AT1,L>& left,
+operator*(const matrix<E1,AT1,BO,L>& left,
           const vector<E2,AT2>& right)
 {
     return detail::mul(left,right,detail::mul_Ax());
 }
 
 /** operator*() for a matrix and a VectorXpr. */
-template<typename E, class AT, class L, typename XprT>
+template<typename E, class AT, class L, typename BO, typename XprT>
 inline typename et::MatVecPromote<
-    matrix<E,AT,L>, typename XprT::result_type
+    matrix<E,AT,BO,L>, typename XprT::result_type
 >::temporary_type
-operator*(const matrix<E,AT,L>& left,
+operator*(const matrix<E,AT,BO,L>& left,
           const et::VectorXpr<XprT>& right)
 {
     /* Generate a temporary, and compute the right-hand expression: */
@@ -209,12 +209,12 @@ operator*(const et::MatrixXpr<XprT1>& left,
 }
 
 /** operator*() for a vector and a matrix. */
-template<typename E1, class AT1, typename E2, class AT2, class L>
+template<typename E1, class AT1, typename E2, class AT2, typename BO, class L>
 inline typename et::MatVecPromote<
-    vector<E1,AT1>, matrix<E2,AT2,L>
+    vector<E1,AT1>, matrix<E2,AT2,BO,L>
 >::temporary_type
 operator*(const vector<E1,AT1>& left,
-          const matrix<E2,AT2,L>& right)
+          const matrix<E2,AT2,BO,L>& right)
 {
     return detail::mul(left,right,detail::mul_xA());
 }
@@ -236,12 +236,12 @@ operator*(const vector<E,AT>& left,
 }
 
 /** operator*() for a VectorXpr and a matrix. */
-template<typename XprT, typename E, class AT, class L>
+template<typename XprT, typename E, class AT, typename BO, class L>
 inline typename et::MatVecPromote<
-    typename XprT::result_type, matrix<E,AT,L>
+    typename XprT::result_type, matrix<E,AT,BO,L>
 >::temporary_type
 operator*(const et::VectorXpr<XprT>& left,
-          const matrix<E,AT,L>& right)
+          const matrix<E,AT,BO,L>& right)
 {
     /* Generate a temporary, and compute the left-hand expression: */
     typename et::VectorXpr<XprT>::temporary_type left_tmp;

@@ -16,7 +16,7 @@ using namespace cml;
 using std::cerr;
 using std::endl;
 
-typedef matrix< double, dynamic<> > matrix_d44;
+typedef matrix<double, dynamic<>, cml::col_basis> matrix_d44;
 #define MATINIT(_m_) _m_(4,4)
 
 #include "print_matrix.cpp"

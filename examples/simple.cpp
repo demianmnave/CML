@@ -29,8 +29,8 @@ operator<<(std::ostream& os, const cml::vector<E,AT>& v)
 }
 
 /* Note: this has to have the same template params as cml::matrix<>: */
-template<typename E, class AT, class L> std::ostream&
-operator<<(std::ostream& os, const cml::matrix<E,AT,L>& m)
+template<typename E, class AT, typename BO, class L> std::ostream&
+operator<<(std::ostream& os, const cml::matrix<E,AT,BO,L>& m)
 {
     os << "[" << endl;
     for(size_t i = 0; i < m.rows(); ++i) {
@@ -125,7 +125,7 @@ void example3()
     cout << std::endl << "Example3:" << endl;
 
     /* 3-space matrix, fixed length, double coordinates: */
-    typedef cml::matrix< double, fixed<3,3> > matrix_d3;
+    typedef cml::matrix<double, fixed<3,3>, col_basis> matrix_d3;
 
     matrix_d3 A, B, C;
 
@@ -150,10 +150,10 @@ void example4()
     cout << std::endl << "Example4:" << endl;
 
     /* 3-space matrix, fixed size, double coordinates: */
-    typedef cml::matrix< double, fixed<3,3> > matrix_d3;
+    typedef cml::matrix<double, fixed<3,3>, col_basis> matrix_d3;
 
     /* 3-space matrix, dynamic size, double coordinates: */
-    typedef cml::matrix< double, dynamic<> > matrix_d;
+    typedef cml::matrix<double, dynamic<>, col_basis> matrix_d;
 
     matrix_d3 A, C;
     matrix_d B(3,3);
@@ -178,10 +178,10 @@ void example5()
     cout << std::endl << "Example4:" << endl;
 
     /* 3-space matrix, fixed size, double coordinates: */
-    typedef cml::matrix< double, fixed<3,3> > matrix_d3;
+    typedef cml::matrix<double, fixed<3,3>, col_basis> matrix_d3;
 
     /* 3-space matrix, dynamic size, double coordinates: */
-    typedef cml::matrix< double, dynamic<> > matrix_d;
+    typedef cml::matrix<double, dynamic<>, col_basis> matrix_d;
 
     matrix_d3 A, B;
     matrix_d C(3,3);
@@ -207,7 +207,7 @@ void example6()
     cout << std::endl << "Example6:" << endl;
 
     /* 3-space matrix, fixed length, double coordinates: */
-    typedef cml::matrix< double, fixed<3,3> > matrix_d3;
+    typedef cml::matrix<double, fixed<3,3>, col_basis> matrix_d3;
 
     /* Column vector of the matrix: */
     typedef matrix_d3::col_vector_type cvector_d3;
@@ -241,7 +241,7 @@ void example7()
     cout << std::endl << "Example7:" << endl;
 
     /* 3-space matrix, fixed length, double coordinates: */
-    typedef cml::matrix< double, fixed<3,3> > matrix_d3;
+    typedef cml::matrix<double, fixed<3,3>, col_basis> matrix_d3;
 
     matrix_d3 A, B, C;
 
@@ -307,7 +307,7 @@ void example10()
     cout << std::endl << "Example10:" << endl;
 
     /* 4x3 matrix, fixed length, double coordinates: */
-    typedef cml::matrix< double, fixed<4,3>, cml::col_major > matrix_d43;
+    typedef cml::matrix<double, fixed<4,3>, col_basis, col_major> matrix_d43;
 
     /* 3-space vector, fixed length, double coordinates: */
     typedef cml::vector< double, fixed<3> > vector_d3;
@@ -350,7 +350,7 @@ void example11()
     cout << std::endl << "Example11:" << endl;
 
     /* 4x3 matrix, fixed length, double coordinates: */
-    typedef cml::matrix< double, fixed<4,3>, cml::col_major > matrix_d43;
+    typedef cml::matrix<double, fixed<4,3>, col_basis, col_major> matrix_d43;
 
     /* 3-space vector, fixed length, double coordinates: */
     typedef cml::vector< double, fixed<3> > vector_d3;
@@ -381,10 +381,10 @@ void example11()
 void example12()
 {
     /* 4x3 matrix, fixed length, double coordinates: */
-    typedef cml::matrix< double, fixed<4,3>, cml::col_major > matrix_d43;
+    typedef cml::matrix<double, fixed<4,3>, col_basis, col_major> matrix_d43;
 
     /* 3-space matrix, fixed length, float coordinates: */
-    typedef cml::matrix< float, fixed<3,3>, cml::col_major > matrix_f33;
+    typedef cml::matrix<float, fixed<3,3>, col_basis, col_major> matrix_f33;
 
     /* 3-space vector, fixed length, double coordinates: */
     typedef cml::vector< double, fixed<3> > vector_d3;
@@ -412,7 +412,7 @@ void example13()
     cout << std::endl << "Example13:" << endl;
 
     /* 4x4 matrix, fixed length, double coordinates: */
-    typedef cml::matrix< double, fixed<4,4>, cml::col_major > matrix_d44;
+    typedef cml::matrix<double, fixed<4,4>, col_basis, col_major> matrix_d44;
 
     matrix_d44 M,A;
     M(0,0) = 1.0; M(0,1) = 1.0; M(0,2) = 1.0; M(0,3) = 1.0;
@@ -440,7 +440,7 @@ void example14()
     cout << std::endl << "Example14:" << endl;
 
     /* 4x4 matrix, fixed length, double coordinates: */
-    typedef cml::matrix< double, dynamic<>, cml::col_major > matrix_d44;
+    typedef cml::matrix<double, dynamic<>, col_basis, col_major> matrix_d44;
     typedef matrix_d44::col_vector_type vector_d4;
 
     matrix_d44 M(4,4);
@@ -470,7 +470,7 @@ void example15()
     cout << std::endl << "Example15:" << endl;
 
     /* 4x4 matrix, fixed length, double coordinates: */
-    typedef cml::matrix< double, fixed<4,4>, cml::col_major > matrix_d44;
+    typedef cml::matrix<double, fixed<4,4>, col_basis, col_major> matrix_d44;
     typedef matrix_d44::col_vector_type vector_d4;
 
     matrix_d44 M;
@@ -506,7 +506,7 @@ void example16()
     cout << std::endl << "Example16:" << endl;
 
     /* 4x4 matrix, dynamic length, double coordinates: */
-    typedef cml::matrix< double, dynamic<>, cml::col_major > matrix_d44;
+    typedef cml::matrix<double, dynamic<>, col_basis, col_major> matrix_d44;
     typedef matrix_d44::col_vector_type vector_d4;
 
     matrix_d44 M(4,4);
@@ -535,7 +535,7 @@ void example17()
     cout << std::endl << "Example17:" << endl;
 
     /* 4x4 matrix, dynamic length, double coordinates: */
-    typedef cml::matrix< double, fixed<4,4>, cml::col_major > matrix_d44;
+    typedef cml::matrix<double, fixed<4,4>, col_basis, col_major> matrix_d44;
     typedef cml::vector< double, fixed<4> > vector_d4;
 
     /* XXX This currently doesn't work for dynamic-size matrices: */
@@ -712,6 +712,38 @@ void example20()
     cout << "s = r*p = " << s << endl;
 }
 
+void example21()
+{
+    cout << std::endl << "Example21:" << endl;
+
+    /* 3-space matrix, fixed length, double coordinates: */
+    typedef cml::matrix<double, fixed<3,3>, col_basis> matrix_d3;
+
+    matrix_d3 A, B, C, D;
+
+    A(0,0) = 1.0; A(0,1) = 0.0; A(0,2) = 1.0;
+    A(1,0) = 0.0; A(1,1) = 1.0; A(1,2) = 0.0;
+    A(2,0) = 0.0; A(2,1) = 0.0; A(2,2) = 1.0;
+
+    B(0,0) = 1.0; B(0,1) = 0.0; B(0,2) = 1.0;
+    B(1,0) = 0.0; B(1,1) = 1.0; B(1,2) = 0.0;
+    B(2,0) = 0.0; B(2,1) = 0.0; B(2,2) = 1.0;
+
+    C = A*B;
+    cout << "  A = " << A << endl;
+    cout << "  B = " << B << endl;
+    cout << "  C = A*B = " << C << endl;
+
+    D = C*A;
+    cout << "  C*A = " << D << endl;
+
+    C *= A;
+    cout << "  C*=A = " << C << endl;
+
+    C *= A;
+    cout << "  C = C*A = " << C << endl;
+}
+
 int main()
 {
     example1();
@@ -736,6 +768,7 @@ int main()
     example18();
     example19();
     example20();
+    example21();
     return 0;
 }
 

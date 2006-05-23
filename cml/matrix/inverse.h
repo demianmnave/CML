@@ -3,11 +3,6 @@
  *-----------------------------------------------------------------------*/
 /** @file
  *  @brief Compute the inverse of a matrix by LU factorization.
- *
- * @internal This can probably be sped up a lot by using a dedicated function,
- * rather than lu_solve(), to compute the inverse.
- *
- * @internal inverse() should be specialized for small matrices.
  */
 
 #ifndef matrix_inverse_h
@@ -267,11 +262,11 @@ inverse(const MatT& M, dynamic_size_tag)
 } // namespace detail
 
 /** Inverse of a matrix. */
-template<typename E, class AT, class L> inline
-typename matrix<E,AT,L>::temporary_type
-inverse(const matrix<E,AT,L>& M)
+template<typename E, class AT, typename BO, typename L> inline
+typename matrix<E,AT,BO,L>::temporary_type
+inverse(const matrix<E,AT,BO,L>& M)
 {
-    typedef typename matrix<E,AT,L>::size_tag size_tag;
+    typedef typename matrix<E,AT,BO,L>::size_tag size_tag;
     return detail::inverse(M,size_tag());
 }
 

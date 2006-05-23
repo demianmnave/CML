@@ -44,7 +44,6 @@ class MatrixRowOp
     typedef typename result_type::temporary_type temporary_type;
 
 
-
   public:
 
     /** Record result size as an enum. */

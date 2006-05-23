@@ -10,6 +10,11 @@ CML_NO_DEFAULT_EXPR_TRAITS
   traits class by default (i.e. the expression traits class must be created
   explicitly).
 
+CML_DEFAULT_BASIS_ORIENTATION
+- Either cml::row_basis or cml::col_basis.  This determines the basis
+  vector orientation for the matrix result of a vector outer product.  The
+  default is cml::col_basis.
+
 CML_DEFAULT_ARRAY_LAYOUT
 - Either cml::row_major or cml::col_major.  This determines the layout of the
   resulting matrix when promoting matrices with different layouts.  If the

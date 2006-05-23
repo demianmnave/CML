@@ -2,10 +2,20 @@
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 /** @file
- *  @brief Bring CML public namespaces into namespace CML.
+ *  @brief Main CML header to include all CML functionality.
+ *
+ * @todo Move common vector and matrix class ops to a base class (requires
+ * SCOOP-like programming, see below).
+ *
+ * @todo Implement matrix<>::transpose() and matrix<>::orthogonalize().
+ *
+ * @todo assigning matrices and vectors [still not sure of good way]
  *
  * @todo Add is_square<>, is_rectangular<>, etc. to make it easier to
  * detect specific matrix types.
+ *
+ * @todo Implement dedicated square matrix classes to get rid of duplicated
+ * code in the specialized matrix classes.
  *
  * @todo Implement automatic temporary generation, along with expression
  * node return types for mat-vec and mat-mat operators.
@@ -24,10 +34,7 @@
  * function arguments to ensure complete unrolling/inlining of expressions.
  *
  * @todo Specialize matrix multiplication based upon the size type (fixed or
- * dynamic).  This makes a difference for at least GCC 3.4.
- *
- * @todo operator*=() for matrices (right-hand side needs to be expression
- * with same size as target matrix).
+ * dynamic). This makes a difference for at least GCC 3.4.
  *
  * @todo verify on Windows
  *
@@ -44,20 +51,6 @@
  * @todo figure out if it makes sense to unroll assignment if either the
  * source expression or the target vector/matrix has a fixed size (right
  * now, unrolling happens only if the target has a fixed size)
- *
- * @todo need intutive identity() function that doesn't cause already
- * allocated dynamic vectors to be resized.
- *
- * @todo
- * assigning matrices and vectors [still not sure of good way]
- * identity()
- * general cross() for an (N-1)xN matrix
- * general cross() for (N-1) N-length vectors
- * vector<>::normalize()
- * vector<>::unit()
- * vector<>::magnitude2()  [or squared_length(), or whatever]
- * vector<>::magitude() [or length(), or whatever]
- * vector<>:: and matrix<>::fill()
  *
  * @todo Allow addition of new types, a la glommable ETs (but simpler).
  * Can use ideas from "SCOOP" method: Nicolas Burrus, Alexandre Duret-Lutz,

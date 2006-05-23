@@ -16,8 +16,9 @@
 namespace cml {
 
 /** Resizeable, dynamic-memory matrix. */
-template<typename Element, typename Alloc, typename Layout>
-class matrix<Element,dynamic<Alloc>,Layout>
+template<typename Element, typename Alloc,
+    typename BasisOrient, typename Layout>
+class matrix<Element,dynamic<Alloc>,BasisOrient,Layout>
 : public dynamic_2D<Element,Layout,Alloc>
 {
   public:
@@ -29,7 +30,7 @@ class matrix<Element,dynamic<Alloc>,Layout>
     typedef dynamic_2D<Element,Layout,Alloc> array_type;
 
     /* Shorthand for the type of this matrix: */
-    typedef matrix<Element,generator_type,Layout> matrix_type;
+    typedef matrix<Element,generator_type,BasisOrient,Layout> matrix_type;
 
     /* For integration into the expression template code: */
     typedef matrix_type expr_type;
@@ -45,6 +46,9 @@ class matrix<Element,dynamic<Alloc>,Layout>
     /* For integration into the expression templates code: */
     typedef matrix_type& expr_reference;
     typedef const matrix_type& expr_const_reference;
+
+    /* For matching by basis: */
+    typedef BasisOrient basis_orient;
 
     /* For matching by memory layout: */
     typedef typename array_type::layout layout;
@@ -63,7 +67,10 @@ class matrix<Element,dynamic<Alloc>,Layout>
 
     /* To simplify the matrix transpose operator: */
     typedef matrix<
-        Element, typename array_type::transposed_type::generator_type, Layout
+        Element,
+        typename array_type::transposed_type::generator_type,
+        BasisOrient,
+        Layout
     > transposed_type;
 
     /* To simplify the matrix row and column operators: */
@@ -94,25 +101,38 @@ class matrix<Element,dynamic<Alloc>,Layout>
         return *this;
     }
 
+    /** Set this matrix to its transpose.
+     *
+     * This only makes sense for a square matrix, but no error will be
+     * signaled if the matrix is not square.
+     */
+    matrix_type& transpose() {
+        /* transpose() returns a temporary: */
+        *this = transpose(*this);
+        return *this;
+    }
+
+    /** Set this matrix to its inverse.
+     *
+     * This only makes sense for a square matrix, but no error will be
+     * signaled if the matrix is not square.
+     */
+    matrix_type& inverse() {
+        /* inverse() returns a temporary: */
+        *this = inverse(*this);
+        return *this;
+    }
+
 
   public:
 
-    /** Default constructor.
-     *
-     * @throws same as the ArrayType constructor.
-     * @sa cml::fixed
-     * @sa cml::dynamic
-     */
+    /** Default constructor. */
     matrix() {}
 
     /** Constructor for dynamically-sized arrays.
      *
      * @param rows specify the number of rows.
      * @param cols specify the number of cols.
-     *
-     * @throws same as the ArrayType constructor.
-     * @sa cml::fixed
-     * @sa cml::dynamic
      */
     explicit matrix(size_t rows, size_t cols)
         : array_type(rows,cols) {}
@@ -123,6 +143,11 @@ class matrix<Element,dynamic<Alloc>,Layout>
     /** Return the matrix size as a pair. */
     matrix_size size() const {
         return matrix_size(this->rows(),this->cols());
+    }
+
+    /** Return element j of basis vector i. */
+    value_type basis_element(size_t i, size_t j) const {
+        return basis_element(i,j,basis_orient());
     }
 
 
@@ -145,6 +170,55 @@ class matrix<Element,dynamic<Alloc>,Layout>
 
     CML_MAT_ASSIGN_FROM_SCALAR(*=, et::OpMulAssign)
     CML_MAT_ASSIGN_FROM_SCALAR(/=, et::OpDivAssign)
+
+    /** Accumulated matrix multiplication.
+     *
+     * This only makes sense for a square matrix, but no error will be
+     * signaled if the matrix is not square.
+     */
+    matrix_type& operator*=(const matrix_type& m) {
+        /* Matrix multiplication returns a temporary: */
+        *this = (*this)*m;
+        return *this;
+    }
+
+    /** Accumulated matrix multiplication.
+     *
+     * This only makes sense for a square matrix, but no error will be
+     * signaled if the matrix is not square.
+     */
+    template<typename E, class AT, typename BO, typename L> matrix_type&
+    operator*=(const matrix<E,AT,BO,L>& m) {
+        /* Matrix multiplication returns a temporary: */
+        *this = (*this)*m;
+        return *this;
+    }
+
+    /** Accumulated matrix multiplication.
+     *
+     * This only makes sense for a square matrix, but no error will be
+     * signaled if the matrix is not square.
+     */
+    template<class XprT> matrix_type&
+    operator*=(MATXPR_ARG_TYPE e) {
+        /* Verify that a promotion exists at compile time: */
+        typedef typename et::MatrixPromote<
+            matrix_type, typename XprT::result_type>::type result_type;
+        /* Matrix multiplication returns a temporary: */
+        *this = (*this)*e;
+        return *this;
+    }
+
+
+  protected:
+
+    value_type basis_element(size_t i, size_t j, row_basis) const {
+        return (*this)(i,j);
+    }
+
+    value_type basis_element(size_t i, size_t j, col_basis) const {
+        return (*this)(j,i);
+    }
 
 
   public:

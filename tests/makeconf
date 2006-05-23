@@ -39,6 +39,7 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 #-- rm=rm -f
 #-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
+
 #-- CXX=powerpc-apple-darwin8-g++-4.0.1
 #-- CPP=$(CXX) -MM
 #-- CXXFLAGS=-ftemplate-depth-1000 -O3 -mcpu=G4 -mtune=G4 -mpowerpc \
@@ -50,6 +51,18 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 #-- obj=.o
 #-- rm=rm -f
 #-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+
+ CXX=i686-apple-darwin8-g++-4.0.1
+ CPP=$(CXX) -MM
+ CXXFLAGS=-ftemplate-depth-1000 -O3 \
+ 	 -fomit-frame-pointer -funroll-loops \
+ 	 -finline-functions -finline-limit=2000000000 \
+ 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100
+ CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS)
+ exe=
+ obj=.o
+ rm=rm -f
+ LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 
 #-- Note: this is for gcc 3.4, which requires explicit inlining:
@@ -79,25 +92,26 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 #-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 
-CXX=i386-redhat-linux-g++ -Wall -W
-CPP=$(CXX) -M
-CXXFLAGS=-ftemplate-depth-1000 -march=pentium4 -mtune=pentium4 -O3 \
- 	 -finline-limit=10000000 \
-	 -fomit-frame-pointer -funroll-all-loops -finline-functions \
- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100 #\
-	 -DCML_NO_2D_UNROLLER #\
+#-- CXX=i386-redhat-linux-g++ -Wall -W
+#-- CPP=$(CXX) -M
+#-- CXXFLAGS=-ftemplate-depth-1000 -march=pentium4 -mtune=pentium4 -O3 \
+#--  	 -finline-limit=10000000 \
+#-- 	 -fomit-frame-pointer -funroll-all-loops -finline-functions \
+#--  	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100 #\
+#-- 	 -DCML_NO_2D_UNROLLER #\
+#-- 
+#-- #CXXFLAGS=-g -O \
+#--  	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
+#-- 
+#-- CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS) \
+#-- 	-I$(HOME)/projects/external/build/exmat/include \
+#-- 	-I$(HOME)/projects/external/build/ltl-1.7.10
+#-- 
+#-- exe=
+#-- obj=.o
+#-- rm=rm -f
+#-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
-#CXXFLAGS=-g -O \
- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
-
-CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS) \
-	-I$(HOME)/projects/external/build/exmat/include \
-	-I$(HOME)/projects/external/build/ltl-1.7.10
-
-exe=
-obj=.o
-rm=rm -f
-LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 #-- CXX=icpc -Wcheck -U__GXX_WEAK__
 #-- CPP=icpc -M

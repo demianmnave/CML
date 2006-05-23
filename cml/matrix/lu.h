@@ -130,9 +130,9 @@ lu_copy(const MatT& M)
 } // namespace detail
 
 /** LU factorization for a matrix. */
-template<typename E, class AT, class L>
-inline typename matrix<E,AT,L>::temporary_type
-lu(const matrix<E,AT,L>& m)
+template<typename E, class AT, typename BO, class L>
+inline typename matrix<E,AT,BO,L>::temporary_type
+lu(const matrix<E,AT,BO,L>& m)
 {
     return detail::lu_copy(m);
 }

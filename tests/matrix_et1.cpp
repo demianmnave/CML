@@ -64,9 +64,9 @@ using std::cout;
 using std::endl;
 using namespace cml;
 
-template<typename E, class AT, class L> void
+template<typename E, class AT, typename BO, class L> void
 assign(
-        cml::matrix<E,AT,L>& m,
+        cml::matrix<E,AT,BO,L>& m,
         double m00, double m01, double m02,
         double m10, double m11, double m12,
         double m20, double m21, double m22
@@ -79,11 +79,12 @@ assign(
 
 template<
     typename E1, class AT1, class L1,
-    typename E2, class AT2, class L2
+    typename E2, class AT2, class L2,
+    typename BO
 > void
 equal_or_fail(
-        const cml::matrix<E1,AT1,L1>& m1,
-        const cml::matrix<E2,AT2,L2>& m2,
+        const cml::matrix<E1,AT1,BO,L1>& m1,
+        const cml::matrix<E2,AT2,BO,L2>& m2,
         std::string msg = "matrix equality failed",
         double tol = 1e-8
         )
@@ -110,7 +111,7 @@ equal_or_fail(
 
 void fixed_test()
 {
-    typedef matrix<double, fixed<3,3>, row_major> matrix_type;
+    typedef matrix<double, fixed<3,3>, col_basis, row_major> matrix_type;
 
 #define CONSTRUCT(_a_) _a_
 #define COPY_ASSIGN(_a_) _a_
@@ -128,7 +129,7 @@ void fixed_test()
  */
 void dynamic_test()
 {
-    typedef matrix<double, dynamic<>, row_major> matrix_type;
+    typedef matrix<double, dynamic<>, col_basis, row_major> matrix_type;
 
 #define CONSTRUCT(_a_) _a_(3,3)
 #if defined(CML_AUTOMATIC_MATRIX_RESIZE_ON_ASSIGNMENT)
@@ -151,7 +152,7 @@ void dynamic_test()
  */
 void external_test()
 {
-    typedef matrix<double, external<3,3>, row_major> matrix_type;
+    typedef matrix<double, external<3,3>, col_basis, row_major> matrix_type;
 
     /* Need the matrices to store to: */
     double _w[3][3], _x[3][3], _y[3][3], _z[3][3];
@@ -180,13 +181,13 @@ void external_test()
 #if 0
 void mixed_fixed_dynamic_test()
 {
-    typedef matrix<double, fixed<3,3>, row_major> matrix_type1;
+    typedef matrix<double, fixed<3,3>, col_basis, row_major> matrix_type1;
 #define CONSTRUCT_1(_a_) _a_
 #define COPY_ASSIGN_1(_a_) _a_
 #define COPY_CONSTRUCT_1(_a_,_e_) _a_(_e_)
 
 
-    typedef matrix<double, dynamic<>, row_major> matrix_type2;
+    typedef matrix<double, dynamic<>, col_basis, row_major> matrix_type2;
 #define CONSTRUCT_2(_a_) _a_(3,3)
 #if defined(CML_AUTOMATIC_MATRIX_RESIZE_ON_ASSIGNMENT)
 #define COPY_ASSIGN_2(_a_) _a_
@@ -204,17 +205,17 @@ void mixed_fixed_dynamic_test()
 #undef CONSTRUCT_2
 #undef COPY_ASSIGN_2
 #undef COPY_CONSTRUCT_2
-};
+}
 
 void mixed_fixed_external_test()
 {
-    typedef matrix<double, fixed<3,3>, row_major> matrix_type1;
+    typedef matrix<double, fixed<3,3>, col_basis, row_major> matrix_type1;
 #define CONSTRUCT_1(_a_) _a_
 #define COPY_ASSIGN_1(_a_) _a_
 #define COPY_CONSTRUCT_1(_a_,_e_) _a_(_e_)
 
 
-    typedef matrix<double, external<3,3>, row_major> matrix_type2;
+    typedef matrix<double, external<3,3>, col_basis, row_major> matrix_type2;
 
     /* Need the matrices to store to (these are the ony ones used in the
      * tests):
@@ -235,17 +236,17 @@ void mixed_fixed_external_test()
 #undef CONSTRUCT_2
 #undef COPY_ASSIGN_2
 #undef COPY_CONSTRUCT_2
-};
+}
 
 void mixed_dynamic_external_test()
 {
-    typedef matrix<double, fixed<3,3>, row_major> matrix_type1;
+    typedef matrix<double, fixed<3,3>, col_basis, row_major> matrix_type1;
 #define CONSTRUCT_1(_a_) _a_
 #define COPY_ASSIGN_1(_a_) _a_
 #define COPY_CONSTRUCT_1(_a_,_e_) _a_(_e_)
 
 
-    typedef matrix<double, external<3,3>, row_major> matrix_type2;
+    typedef matrix<double, external<3,3>, col_basis, row_major> matrix_type2;
 
     /* Need the matrices to store to (these are the ony ones used in the
      * tests):
@@ -266,7 +267,7 @@ void mixed_dynamic_external_test()
 #undef CONSTRUCT_2
 #undef COPY_ASSIGN_2
 #undef COPY_CONSTRUCT_2
-};
+}
 #endif
 
 int main()

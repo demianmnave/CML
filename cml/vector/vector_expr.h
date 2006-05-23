@@ -8,6 +8,7 @@
 #ifndef vector_expr_h
 #define vector_expr_h
 
+#include <cmath>
 #include <cml/et/size_checking.h>
 #include <cml/vector/vector_traits.h>
 #include <cml/vector/vector_promotions.h>
