@@ -154,6 +154,11 @@ class matrix<Element,dynamic<Alloc>,BasisOrient,Layout>
   public:
 
     /* Define common class operators: */
+
+    CML_CONSTRUCT_MAT_22
+    CML_CONSTRUCT_MAT_33
+    CML_CONSTRUCT_MAT_44
+
     CML_MAT_COPY_FROM_MATTYPE
     CML_MAT_COPY_FROM_MAT
     CML_MAT_COPY_FROM_MATXPR

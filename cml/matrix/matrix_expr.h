@@ -431,6 +431,12 @@ void Resize(MatT& m, size_t R, size_t C) {
     Resize(m, R, C, typename MatT::size_tag(), typename MatT::memory_tag());
 }
 
+template<typename MatT> inline
+void Resize(MatT& m, matrix_size N) {
+    Resize(m, N.first, N.second,
+            typename MatT::size_tag(), typename MatT::memory_tag());
+}
+
 } // namespace detail
 
 } // namespace et

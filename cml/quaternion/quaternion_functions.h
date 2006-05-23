@@ -94,12 +94,17 @@ length(QUATXPR_ARG_TYPE arg)
     return arg.length();
 }
 
-/** Normalize a quaternion. */
+/** Normalize a quaternion.
+ *
+ * The input quaternion is not changed.
+ */
 template<typename VecT, typename OrderT, typename CrossT>
-inline quaternion<VecT,OrderT,CrossT>&
-normalize(quaternion<VecT,OrderT,CrossT>& arg)
+inline quaternion<VecT,OrderT,CrossT>
+normalize(const quaternion<VecT,OrderT,CrossT>& arg)
 {
-    return arg.normalize();
+    quaternion<VecT,OrderT,CrossT> result(arg);
+    result.normalize();
+    return result;
 }
 
 /** Normalize a quaternion expr. */
@@ -110,14 +115,18 @@ normalize(QUATXPR_ARG_TYPE arg)
     return arg.normalize();
 }
 
-/** Set a quaternion to the multiplicative identity. */
+/** Set a quaternion to the multiplicative identity.
+ *
+ * The input quaternion is not changed.
+ */
 template<typename VecT, typename OrderT, typename CrossT>
-inline quaternion<VecT,OrderT,CrossT>&
-identity(quaternion<VecT,OrderT,CrossT>& arg)
+inline quaternion<VecT,OrderT,CrossT>
+identity(const quaternion<VecT,OrderT,CrossT>& arg)
 {
-    return arg.identity();
+    quaternion<VecT,OrderT,CrossT> result(arg);
+    result.identity();
+    return result;
 }
-
 
 } // namespace cml
 

@@ -189,6 +189,10 @@ class matrix<Element,fixed<Rows,Cols>,BasisOrient,Layout>
 
     /* Define common class operators: */
 
+    CML_CONSTRUCT_MAT_22
+    CML_CONSTRUCT_MAT_33
+    CML_CONSTRUCT_MAT_44
+
     CML_MAT_COPY_FROM_FIXED_ARRAY(
             array_type::array_rows, array_type::array_cols)
 

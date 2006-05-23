@@ -7,9 +7,7 @@
  * @todo Move common vector and matrix class ops to a base class (requires
  * SCOOP-like programming, see below).
  *
- * @todo Implement matrix<>::transpose() and matrix<>::orthogonalize().
- *
- * @todo assigning matrices and vectors [still not sure of good way]
+ * @todo Implement matrix<>::orthogonalize().
  *
  * @todo Add is_square<>, is_rectangular<>, etc. to make it easier to
  * detect specific matrix types.
@@ -22,10 +20,6 @@
  *
  * @todo switch to ssize_t instead of size_t to avoid having to explicitly
  * deal with wrap-arounds to 2^32-1 when a size_t is subtracted from.
- *
- * @todo Make MatrixXpr<> and VectorXpr<> convertible to temporaries when a
- * value is required, but no left-hand matrix is provided; e.g. in 
- * cout << A+B << endl.
  *
  * @todo Finish tests for mat-vec multiply.
  *

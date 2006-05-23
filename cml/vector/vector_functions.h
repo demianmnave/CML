@@ -44,10 +44,12 @@ length(VECXPR_ARG_TYPE arg)
 
 /** Normalize a vector. */
 template<typename E, class AT>
-inline vector<E, AT>&
-normalize(vector<E,AT>& arg)
+inline vector<E, AT>
+normalize(const vector<E,AT>& arg)
 {
-    return arg.normalize();
+    vector<E, AT> result(arg);
+    result.normalize();
+    return result;
 }
 
 /** Normalize a vector expr. */

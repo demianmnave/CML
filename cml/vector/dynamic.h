@@ -90,6 +90,11 @@ class vector< Element, dynamic<Alloc> >
   public:
 
     /* Define common class operators: */
+
+    CML_CONSTRUCT_VEC_2(: array_type())
+    CML_CONSTRUCT_VEC_3(: array_type())
+    CML_CONSTRUCT_VEC_4(: array_type())
+
     CML_VEC_COPY_FROM_ARRAY(: array_type())
     CML_VEC_COPY_FROM_VECTYPE(: array_type())
     CML_VEC_COPY_FROM_VEC

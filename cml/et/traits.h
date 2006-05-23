@@ -14,7 +14,9 @@
  * once it's clear how to best specify scalar args
  */
 //#define SCALAR_ARG_TYPE const ScalarT&
-#define SCALAR_ARG_TYPE const ScalarT
+//#define ELEMENT_ARG_TYPE const Element&
+#define SCALAR_ARG_TYPE ScalarT
+#define ELEMENT_ARG_TYPE Element
 
 namespace cml {
 namespace et {

@@ -116,7 +116,7 @@ mul(const LeftT& left, const RightT& right)
      * fixed-size matrices):
      */
     result_type C;
-    cml::et::detail::Resize(C, N.first, N.second);
+    cml::et::detail::Resize(C, N);
 
 #if 1
     /* XXX Specialize this for fixed-size matrices: */

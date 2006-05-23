@@ -39,7 +39,6 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 #-- rm=rm -f
 #-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
-
 CXX=powerpc-apple-darwin8-g++-4.0.1
 CPP=$(CXX) -MM
 CXXFLAGS=-ftemplate-depth-1000 -O3 -mcpu=G4 -mtune=G4 -mpowerpc \

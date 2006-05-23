@@ -18,11 +18,16 @@ namespace cml {
  * @todo This should return a MatrixXpr to allow loop unrolling, as should
  * the class method.
  */
-template<typename E, class AT, typename L>
-inline matrix<E,AT,L>&
-identity(matrix<E,AT,L>& m)
+template<typename E, class AT, typename BO, typename L>
+inline matrix<E,AT,BO,L>
+identity(const matrix<E,AT,BO,L>& m)
 {
-    return m.identity();
+    typename matrix<E,AT,BO,L>::temporary_type result;
+
+    /* This is a no-op for fixed-size matrices: */
+    cml::et::detail::Resize(result, m.size());
+    result.identity();
+    return result;
 }
 
 } // namespace cml

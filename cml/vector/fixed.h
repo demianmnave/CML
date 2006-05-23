@@ -88,6 +88,10 @@ class vector< Element, fixed<Size> >
 
     /* Define common class operators: */
 
+    CML_CONSTRUCT_VEC_2(/**/)
+    CML_CONSTRUCT_VEC_3(/**/)
+    CML_CONSTRUCT_VEC_4(/**/)
+
     CML_VEC_COPY_FROM_FIXED_ARRAY(array_type::array_size,/**/)
     CML_VEC_COPY_FROM_VECTYPE(/**/)
     CML_VEC_COPY_FROM_VEC
