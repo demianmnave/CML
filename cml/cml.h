@@ -60,8 +60,8 @@
 
 #include <cml/vector.h>
 #include <cml/matrix.h>
-#include <cml/constants.h>
 #include <cml/quaternion.h>
+#include <cml/util.h>
 
 #endif
 

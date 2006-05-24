@@ -759,6 +759,19 @@ void example22()
     cout << "  e = " << e << endl;
 }
 
+void example23()
+{
+    using cml::lerp;
+
+    cout << std::endl << "Example23:" << endl;
+
+    double f0 = 0., f1 = 1., u = .3;
+    double fu = lerp(f0,f1,u);
+    cout << "  f(0) = " << f0 << "  f(1) = " << f1 << ":" << endl;
+    cout << "    f(.3) ~= lerp(" << f0 << "," << f1 << "," << u << ") = "
+        << fu << endl;
+}
+
 int main()
 {
     example1();
@@ -785,6 +798,7 @@ int main()
     example20();
     example21();
     example22();
+    example23();
     return 0;
 }
 
