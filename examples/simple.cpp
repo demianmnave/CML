@@ -8,6 +8,7 @@
 #include "cml_config.h"         // Must be first (for now)!
 
 #include <iostream>
+#include <iomanip>
 #include <cmath>
 #include <cml/cml.h>
 using namespace cml;
@@ -747,6 +748,17 @@ void example21()
     cout << "  C = C*A = " << C << endl;
 }
 
+void example22()
+{
+    using namespace cml::constants;
+    cout << std::endl << "Example22:" << endl;
+    cout << std::setprecision(16) << endl;
+    cout << "  pi = " << pi << endl;
+    cout << "  two_pi = " << two_pi << endl;
+    cout << "  sqrt(3) = " << sqrt_3 << endl;
+    cout << "  e = " << e << endl;
+}
+
 int main()
 {
     example1();
@@ -772,6 +784,7 @@ int main()
     example19();
     example20();
     example21();
+    example22();
     return 0;
 }
 

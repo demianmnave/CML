@@ -83,6 +83,20 @@ class vector< Element, external<Size> >
         return (*this /= length());
     }
 
+    /** Set this vector to [0]. */
+    vector_type& zero() {
+        typedef cml::et::OpAssign<Element,Element> OpT;
+        cml::et::UnrollAssignment<OpT>(*this,Element(0));
+        return *this;
+    }
+
+    /** Set this vector to a cardinal vector. */
+    vector_type& cardinal(size_t i) {
+        zero();
+        (*this)[i] = Element(1);
+        return *this;
+    }
+
 
   public:
 

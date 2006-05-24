@@ -87,6 +87,13 @@ class matrix<Element,dynamic<Alloc>,BasisOrient,Layout>
 
   public:
 
+    /** Set this matrix to zero. */
+    matrix_type& zero() {
+        typedef cml::et::OpAssign<Element,Element> OpT;
+        cml::et::UnrollAssignment<OpT>(*this,Element(0));
+        return *this;
+    }
+
     /** Set this matrix to the identity.
      *
      * This only makes sense for a square matrix, but no error will be
@@ -148,6 +155,11 @@ class matrix<Element,dynamic<Alloc>,BasisOrient,Layout>
     /** Return element j of basis vector i. */
     value_type basis_element(size_t i, size_t j) const {
         return basis_element(i,j,basis_orient());
+    }
+
+    /** Set the given basis element. */
+    void set_basis_element(size_t i, size_t j, ELEMENT_ARG_TYPE s) {
+        set_basis_element(i,j,s,basis_orient());
     }
 
 
@@ -223,6 +235,14 @@ class matrix<Element,dynamic<Alloc>,BasisOrient,Layout>
 
     value_type basis_element(size_t i, size_t j, col_basis) const {
         return (*this)(j,i);
+    }
+
+    void set_basis_element(size_t i, size_t j, ELEMENT_ARG_TYPE s, row_basis) {
+        (*this)(i,j) = s;
+    }
+
+    void set_basis_element(size_t i, size_t j, ELEMENT_ARG_TYPE s, col_basis) {
+        (*this)(j,i) = s;
     }
 
 
