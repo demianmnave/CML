@@ -239,7 +239,7 @@ template<typename MatT> typename MatT::temporary_type
 inverse(const MatT& M, fixed_size_tag)
 {
     /* Require a square matrix: */
-    detail::LUCheckedSize(M, fixed_size_tag());
+    cml::et::CheckedSquare(M, fixed_size_tag());
     return inverse_f<MatT,MatT::array_rows>()(M);
 }
 
@@ -248,7 +248,7 @@ template<typename MatT> typename MatT::temporary_type
 inverse(const MatT& M, dynamic_size_tag)
 {
     /* Require a square matrix: */
-    detail::LUCheckedSize(M, dynamic_size_tag());
+    cml::et::CheckedSquare(M, dynamic_size_tag());
 
     /* Dispatch based upon the matrix dimension: */
     switch(M.rows()) {

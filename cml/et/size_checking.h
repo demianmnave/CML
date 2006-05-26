@@ -21,6 +21,11 @@
  */
 struct incompatible_expression_size_error;
 
+/* This is used below to create a more meaningful compile-time error when a
+ * function is not provided with a square matrix or MatrixExpr argument:
+ */
+struct square_matrix_arg_expected_error;
+
 namespace cml {
 namespace et {
 
@@ -365,6 +370,32 @@ inline typename et::GetCheckedSize<LeftT,RightT,SizeTag>::size_type
 CheckedSize(const LeftT& left, const RightT& right, SizeTag)
 {
     return et::GetCheckedSize<LeftT,RightT,SizeTag>()(left,right);
+}
+
+/** Verify the sizes of the argument matrices for matrix multiplication.
+ *
+ * @returns a the size of the resulting matrix.
+ */
+template<typename MatT> inline size_t
+CheckedSquare(const MatT&, fixed_size_tag)
+{
+    CML_STATIC_REQUIRE_M(
+            ((size_t)MatT::array_rows == (size_t)MatT::array_cols),
+            square_matrix_arg_expected_error);
+    return (size_t)MatT::array_rows;
+}
+
+/** Verify the sizes of the argument matrices for matrix multiplication.
+ *
+ * @returns the size of the resulting matrix.
+ */
+template<typename MatT> inline size_t
+CheckedSquare(const MatT& m, dynamic_size_tag)
+{
+    matrix_size N = m.size();
+    et::GetCheckedSize<MatT,MatT,dynamic_size_tag>()
+        .equal_or_fail(N.first, N.second);
+    return N.first;
 }
 
 } // namespace et

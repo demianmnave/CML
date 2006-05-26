@@ -11,6 +11,11 @@
 #ifndef matrix_class_ops_h
 #define matrix_class_ops_h
 
+/* This is to circumvent the problem of commas in a macro argument.  It's
+ * used to instantiate CML_ACCUMULATED_MATRIX_MULT:
+ */
+#define TEMPLATED_MATRIX_MACRO matrix<E,AT,BO,L>
+
 /** Create a matrix from 2x2 values.
  *
  * The layout assumed for the values is that of the matrix being assigned.
@@ -187,11 +192,25 @@ operator _op_ (MATXPR_ARG_TYPE e) {                                     \
  * defined in vector algebra.
  */
 #define CML_MAT_ASSIGN_FROM_SCALAR(_op_, _op_name_)                     \
-matrix_type& operator _op_ (ELEMENT_ARG_TYPE s) {                        \
+matrix_type& operator _op_ (ELEMENT_ARG_TYPE s) {                       \
     typedef _op_name_ <Element,value_type> OpT;                         \
     et::UnrollAssignment<OpT>(*this,s);                                 \
     return *this;                                                       \
 }
+
+
+/** Accumulated matrix multiplication.
+ *
+ * @throws std::invalid_argument if the matrices are not square.
+ */
+#define CML_ACCUMULATED_MATRIX_MULT(_arg_type_)                         \
+matrix_type& operator*=(_arg_type_ m) {                                 \
+    typedef typename et::MatrixPromote<                                 \
+        matrix_type, _arg_type_>::type result_type;                     \
+    cml::et::CheckedSquare(*this, typename result_type::size_tag());    \
+    return (*this = (*this)*m);                                         \
+}
+
 
 /* These should only be used for testing: */
 #define CML_MATRIX_BRACE_OPERATORS                                      \

@@ -29,43 +29,12 @@
 struct lu_expects_a_matrix_arg_error;
 
 /* This is used below to create a more meaningful compile-time error when
- * lu is not provided with a square matrix or MatrixExpr argument:
- */
-struct lu_expects_a_square_matrix_arg_error;
-
-/* This is used below to create a more meaningful compile-time error when
  * lu_inplace is not provided with an assignable matrix argument:
  */
 struct lu_inplace_expects_an_assignable_matrix_arg_error;
 
 namespace cml {
 namespace detail {
-
-/** Verify the sizes of the argument matrices for matrix multiplication.
- *
- * @returns a matrix_size containing the size of the resulting matrix.
- */
-template<typename MatT> inline size_t
-LUCheckedSize(const MatT&, fixed_size_tag)
-{
-    CML_STATIC_REQUIRE_M(
-            ((size_t)MatT::array_rows == (size_t)MatT::array_cols),
-            lu_expects_a_square_matrix_arg_error);
-    return (size_t)MatT::array_rows;
-}
-
-/** Verify the sizes of the argument matrices for matrix multiplication.
- *
- * @returns a matrix_size containing the size of the resulting matrix.
- */
-template<typename MatT> inline size_t
-LUCheckedSize(const MatT& m, dynamic_size_tag)
-{
-    matrix_size N = m.size();
-    et::GetCheckedSize<MatT,MatT,dynamic_size_tag>()
-        .equal_or_fail(N.first, N.second);
-    return N.first;
-}
 
 /* Compute the LU decomposition in-place: */
 template<class MatT> inline
@@ -88,13 +57,13 @@ void lu_inplace(MatT& A)
      */
 
     /* Verify that the matrix is square, and get the size: */
-    ssize_t N = (ssize_t) detail::LUCheckedSize(A, size_tag());
+    ssize_t N = (ssize_t) cml::et::CheckedSquare(A, size_tag());
 
 
     for(ssize_t k = 0; k < N-1; ++k) {
         /* XXX Should check if A(k,k) = 0! */
         for(ssize_t i = k+1; i < N; ++i) {
-            value_type n = (A(i,k)/=A(k,k));
+            value_type n = (A(i,k) /= A(k,k));
             for(ssize_t j = k+1; j < N; ++ j) {
                 A(i,j) -= n*A(k,j);
             }
@@ -160,7 +129,7 @@ lu_solve(const MatT& LU, const VecT& b)
     typedef typename vector_type::value_type value_type;
 
     /* Verify that the matrix is square, and get the size: */
-    ssize_t N = (ssize_t) detail::LUCheckedSize(
+    ssize_t N = (ssize_t) cml::et::CheckedSquare(
             LU, typename lu_traits::size_tag());
 
     /* Verify that the matrix and vector have compatible sizes: */

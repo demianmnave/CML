@@ -184,43 +184,13 @@ class matrix<Element,external<Rows,Cols>,BasisOrient,Layout>
     CML_MAT_ASSIGN_FROM_SCALAR(*=, et::OpMulAssign)
     CML_MAT_ASSIGN_FROM_SCALAR(/=, et::OpDivAssign)
 
-    /** Accumulated matrix multiplication.
-     *
-     * This only makes sense for a square matrix, but no error will be
-     * signaled if the matrix is not square.
-     */
-    matrix_type& operator*=(const matrix_type& m) {
-        /* Matrix multiplication returns a temporary: */
-        *this = (*this)*m;
-        return *this;
-    }
+    CML_ACCUMULATED_MATRIX_MULT(const matrix_type&)
 
-    /** Accumulated matrix multiplication.
-     *
-     * This only makes sense for a square matrix, but no error will be
-     * signaled if the matrix is not square.
-     */
-    template<typename E, class AT, typename BO, typename L> matrix_type&
-    operator*=(const matrix<E,AT,BO,L>& m) {
-        /* Matrix multiplication returns a temporary: */
-        *this = (*this)*m;
-        return *this;
-    }
+    template<typename E, class AT, typename BO, typename L>
+        CML_ACCUMULATED_MATRIX_MULT(const TEMPLATED_MATRIX_MACRO&)
 
-    /** Accumulated matrix multiplication.
-     *
-     * This only makes sense for a square matrix, but no error will be
-     * signaled if the matrix is not square.
-     */
-    template<class XprT> matrix_type&
-    operator*=(MATXPR_ARG_TYPE e) {
-        /* Verify that a promotion exists at compile time: */
-        typedef typename et::MatrixPromote<
-            matrix_type, typename XprT::result_type>::type result_type;
-        /* Matrix multiplication returns a temporary: */
-        *this = (*this)*e;
-        return *this;
-    }
+    template<class XprT>
+        CML_ACCUMULATED_MATRIX_MULT(MATXPR_ARG_TYPE)
 
 
   protected:
