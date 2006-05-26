@@ -248,18 +248,12 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
     template<typename LR, typename RR, class X = void> struct impl;
 
     /* Return the size if the same, or fail if different: */
-#if defined(CML_CHECK_VECTOR_EXPR_SIZES)
     template<typename V> V equal_or_fail(V left, V right) const {
         if(left != right)
             throw std::invalid_argument(
                     "expressions have incompatible sizes.");
         return left;
     }
-#else
-    template<typename V> V equal_or_fail(V left, V) const {
-        return left;
-    }
-#endif
 
     /* Check for two matrices (linear operators only): */
     template<class X> struct impl<matrix_result_tag,matrix_result_tag,X> {
@@ -267,7 +261,11 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
 
         /* Return the matrix size, or fail if incompatible: */
         size_type size(const LeftT& left, const RightT& right) const {
+#if defined(CML_CHECK_MATRIX_EXPR_SIZES)
             return self().equal_or_fail(left.size(), right.size());
+#else
+            return left.size();
+#endif
         }
     };
 
@@ -277,7 +275,9 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
 
         /* Return the vector size: */
         size_type size(const LeftT& left, const RightT& right) const {
+#if defined(CML_CHECK_MATVEC_EXPR_SIZES)
             self().equal_or_fail(left.cols(), right.size());
+#endif
             return left.rows();
         }
     };
@@ -288,7 +288,9 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
 
         /* Return the vector size: */
         size_type size(const LeftT& left, const RightT& right) const {
+#if defined(CML_CHECK_MATVEC_EXPR_SIZES)
             self().equal_or_fail(left.size(), right.rows());
+#endif
             return right.cols(right);
         }
     };
@@ -319,7 +321,11 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
 
         /* Return the vector size: */
         size_type size(const LeftT& left, const RightT& right) const {
+#if defined(CML_CHECK_VECTOR_EXPR_SIZES)
             return self().equal_or_fail(left.size(), right.size());
+#else
+            return left.size();
+#endif
         }
     };
 
