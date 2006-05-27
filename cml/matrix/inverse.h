@@ -204,15 +204,18 @@ struct inverse_f
         typedef typename MatT::value_type value_type;
 
         /* Compute LU factorization: */
-        typename MatT::temporary_type LU = lu(M);
+        size_t N = M.rows();
+        typename MatT::temporary_type LU;
+        cml::et::detail::Resize(LU,N,N);
+        LU = lu(M);
 
         /* Matrix containing the inverse: */
-        size_t N = LU.rows();
         typename MatT::temporary_type Z;
         cml::et::detail::Resize(Z,N,N);
 
         typename MatT::col_vector_type v, x;
         cml::et::detail::Resize(v,N);
+        cml::et::detail::Resize(x,N);
         for(size_t i = 0; i < N; ++i)
             v[i] = value_type(0);
         /* XXX Need a fill() function here. */

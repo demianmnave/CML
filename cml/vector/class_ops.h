@@ -8,14 +8,70 @@
 #ifndef vector_class_ops_h
 #define vector_class_ops_h
 
-/** Create a vector from 2 values. */
-#define CML_CONSTRUCT_VEC_2(_add_)                                      \
-vector(ELEMENT_ARG_TYPE e0, ELEMENT_ARG_TYPE e1) _add_ {                \
+/* XXX HACK!!! This is a hack to resize in the assign() functions only when
+ * auto resizing is turned off.
+ */
+#if !defined(CML_VECTOR_RESIZE_ON_ASSIGNMENT)
+#define _DO_VECTOR_SET_RESIZE(_N_)  cml::et::detail::Resize(*this,_N_)
+#else
+#define _DO_VECTOR_SET_RESIZE(_N_)
+#endif
+
+/** Set a vector from 2 values. */
+#define CML_ASSIGN_VEC_2                                                \
+vector_type&                                                            \
+assign(ELEMENT_ARG_TYPE e0, ELEMENT_ARG_TYPE e1) {                      \
+    _DO_VECTOR_SET_RESIZE(2);                                           \
     /* This is overkill, but simplifies size checking: */               \
     value_type v[] = {e0,e1};                                           \
     typedef et::OpAssign<Element,Element> OpT;                          \
     cml::vector< const value_type, external<2> > src(v);                \
     et::UnrollAssignment<OpT>(*this,src);                               \
+    return *this;                                                       \
+}
+
+/** Set a vector from 3 values. */
+#define CML_ASSIGN_VEC_3                                                \
+vector_type&                                                            \
+assign(                                                                 \
+        ELEMENT_ARG_TYPE e0,                                            \
+        ELEMENT_ARG_TYPE e1,                                            \
+        ELEMENT_ARG_TYPE e2                                             \
+        )                                                               \
+{                                                                       \
+    _DO_VECTOR_SET_RESIZE(3);                                           \
+    /* This is overkill, but simplifies size checking: */               \
+    value_type v[] = {e0,e1,e2};                                        \
+    typedef et::OpAssign<Element,Element> OpT;                          \
+    cml::vector< const value_type, external<3> > src(v);                \
+    et::UnrollAssignment<OpT>(*this,src);                               \
+    return *this;                                                       \
+}
+
+/** Create a vector from 4 values. */
+#define CML_ASSIGN_VEC_4                                                \
+vector_type&                                                            \
+assign(                                                                 \
+        ELEMENT_ARG_TYPE e0,                                            \
+        ELEMENT_ARG_TYPE e1,                                            \
+        ELEMENT_ARG_TYPE e2,                                            \
+        ELEMENT_ARG_TYPE e3                                             \
+        )                                                               \
+{                                                                       \
+    _DO_VECTOR_SET_RESIZE(4);                                           \
+    /* This is overkill, but simplifies size checking: */               \
+    value_type v[] = {e0,e1,e2,e3};                                     \
+    typedef et::OpAssign<Element,Element> OpT;                          \
+    cml::vector< const value_type, external<4> > src(v);                \
+    et::UnrollAssignment<OpT>(*this,src);                               \
+    return *this;                                                       \
+}
+
+
+/** Create a vector from 2 values. */
+#define CML_CONSTRUCT_VEC_2(_add_)                                      \
+vector(ELEMENT_ARG_TYPE e0, ELEMENT_ARG_TYPE e1) _add_ {                \
+    assign(e0,e1);                                                      \
 }
 
 /** Create a vector from 3 values. */
@@ -26,11 +82,7 @@ vector(                                                                 \
         ELEMENT_ARG_TYPE e2                                             \
         ) _add_                                                         \
 {                                                                       \
-    /* This is overkill, but simplifies size checking: */               \
-    value_type v[] = {e0,e1,e2};                                        \
-    typedef et::OpAssign<Element,Element> OpT;                          \
-    cml::vector< const value_type, external<3> > src(v);                \
-    et::UnrollAssignment<OpT>(*this,src);                               \
+    assign(e0,e1,e2);                                                   \
 }
 
 /** Create a vector from 4 values. */
@@ -42,11 +94,7 @@ vector(                                                                 \
         ELEMENT_ARG_TYPE e3                                             \
         ) _add_                                                         \
 {                                                                       \
-    /* This is overkill, but simplifies size checking: */               \
-    value_type v[] = {e0,e1,e2,e3};                                     \
-    typedef et::OpAssign<Element,Element> OpT;                          \
-    cml::vector< const value_type, external<4> > src(v);                \
-    et::UnrollAssignment<OpT>(*this,src);                               \
+    assign(e0,e1,e2,e3);                                                \
 }
 
 /** Copy-construct a vector from a fixed-size array of values. */

@@ -111,6 +111,10 @@ class vector< Element, fixed<Size> >
     CML_VEC_COPY_FROM_VEC
     CML_VEC_COPY_FROM_VECXPR
 
+    CML_ASSIGN_VEC_2
+    CML_ASSIGN_VEC_3
+    CML_ASSIGN_VEC_4
+
     CML_VEC_ASSIGN_FROM_VECTYPE
 
     CML_VEC_ASSIGN_FROM_VEC(=, cml::et::OpAssign)

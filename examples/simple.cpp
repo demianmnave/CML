@@ -109,7 +109,10 @@ void example2()
     /* 3-space column vector, dynamic length, double coordinates: */
     typedef cml::vector< double, dynamic<> > vector_d;
 
-    vector_d u(0.,0.,1.), v(3);
+    vector_d u(0.,0.,1.);
+#if 0
+    vector_d v(3);
+
     v[0] = 1.; v[1] = 0.; v[2] = 0.;
 
     cout << "  dot(u,v) = " << dot(u,v) << endl;
@@ -117,6 +120,7 @@ void example2()
     cout << "  dot(u+v,v) = " << dot(u+v,v) << endl;
     cout << "  cos(u,v) = " << dot(u,v)/sqrt(dot(u,u)*dot(v,v))
         << endl;
+#endif
 }
 
 void example3()
@@ -521,6 +525,7 @@ void example16()
 
     matrix_d44 Minv(4,4); Minv = inverse(M);
     cout << "M^-1 = " << Minv << endl;
+
     cout << "M^-1[lu] = "
         << cml::detail::inverse_f<matrix_d44,0>()(M) << endl;
 
@@ -529,8 +534,9 @@ void example16()
     cout << "y = " << y << endl;
 
     x = Minv*y;
-    y = M*x;
     cout << "x = Minv*y = " << x << endl;
+
+    y = M*x;
     cout << "y = M*x = " << y << endl;
 }
 

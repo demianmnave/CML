@@ -16,6 +16,94 @@
  */
 #define TEMPLATED_MATRIX_MACRO matrix<E,AT,BO,L>
 
+/* XXX HACK!!! This is a hack to resize in the assign() functions only when
+ * auto resizing is turned off.
+ */
+#if !defined(CML_MATRIX_RESIZE_ON_ASSIGNMENT)
+#define _DO_MATRIX_SET_RESIZE(_R_,_C_) cml::et::detail::Resize(*this,_R_,_C_)
+#else
+#define _DO_MATRIX_SET_RESIZE(_R_,_C_)
+#endif
+
+/** Set a matrix from 2x2 values.
+ *
+ * The layout assumed for the values is that of the matrix being assigned.
+ */
+#define CML_ASSIGN_MAT_22                                               \
+matrix_type&                                                            \
+assign(                                                                 \
+    ELEMENT_ARG_TYPE e00, ELEMENT_ARG_TYPE e01,                         \
+    ELEMENT_ARG_TYPE e10, ELEMENT_ARG_TYPE e11                          \
+    )                                                                   \
+{                                                                       \
+    _DO_MATRIX_SET_RESIZE(2,2);                                         \
+    /* This is overkill, but simplifies size checking: */               \
+    value_type v[2][2] = {{e00,e01},{e10,e11}};                         \
+    typedef et::OpAssign<Element,Element> OpT;                          \
+    cml::matrix<const value_type, external<2,2>, basis_orient, layout>  \
+        src(&v[0][0]);                                                  \
+    et::UnrollAssignment<OpT>(*this,src);                               \
+    return *this;                                                       \
+}
+
+/** Create a matrix from 3x3 values.
+ *
+ * The layout assumed for the values is that of the matrix being assigned.
+ */
+#define CML_ASSIGN_MAT_33                                               \
+matrix_type&                                                            \
+assign(                                                                 \
+    ELEMENT_ARG_TYPE e00, ELEMENT_ARG_TYPE e01, ELEMENT_ARG_TYPE e02,   \
+    ELEMENT_ARG_TYPE e10, ELEMENT_ARG_TYPE e11, ELEMENT_ARG_TYPE e12,   \
+    ELEMENT_ARG_TYPE e20, ELEMENT_ARG_TYPE e21, ELEMENT_ARG_TYPE e22    \
+    )                                                                   \
+{                                                                       \
+    _DO_MATRIX_SET_RESIZE(3,3);                                         \
+    /* This is overkill, but simplifies size checking: */               \
+    value_type v[3][3] = {                                              \
+        {e00,e01,e02},                                                  \
+        {e10,e11,e12},                                                  \
+        {e20,e21,e22}                                                   \
+    };                                                                  \
+    typedef et::OpAssign<Element,Element> OpT;                          \
+    cml::matrix<const value_type, external<3,3>, basis_orient, layout>  \
+        src(&v[0][0]);                                                  \
+    et::UnrollAssignment<OpT>(*this,src);                               \
+    return *this;                                                       \
+}
+
+/** Create a matrix from 4x4 values.
+ *
+ * The layout assumed for the values is that of the matrix being assigned.
+ */
+#define CML_ASSIGN_MAT_44                                               \
+matrix_type&                                                            \
+assign(                                                                 \
+    ELEMENT_ARG_TYPE e00, ELEMENT_ARG_TYPE e01,                         \
+        ELEMENT_ARG_TYPE e02, ELEMENT_ARG_TYPE e03,                     \
+    ELEMENT_ARG_TYPE e10, ELEMENT_ARG_TYPE e11,                         \
+        ELEMENT_ARG_TYPE e12, ELEMENT_ARG_TYPE e13,                     \
+    ELEMENT_ARG_TYPE e20, ELEMENT_ARG_TYPE e21,                         \
+        ELEMENT_ARG_TYPE e22, ELEMENT_ARG_TYPE e23,                     \
+    ELEMENT_ARG_TYPE e30, ELEMENT_ARG_TYPE e31,                         \
+        ELEMENT_ARG_TYPE e32, ELEMENT_ARG_TYPE e33                      \
+    )                                                                   \
+{                                                                       \
+    _DO_MATRIX_SET_RESIZE(4,4);                                         \
+    /* This is overkill, but simplifies size checking: */               \
+    value_type v[4][4] = {                                              \
+        {e00,e01,e02,e03},                                              \
+        {e10,e11,e12,e13},                                              \
+        {e20,e21,e22,e23},                                              \
+        {e30,e31,e32,e33}                                               \
+    };                                                                  \
+    typedef et::OpAssign<Element,Element> OpT;                          \
+    cml::matrix<const value_type, external<4,4>, basis_orient, layout>  \
+        src(&v[0][0]);                                                  \
+    et::UnrollAssignment<OpT>(*this,src);                               \
+    return *this;                                                       \
+}
+
 /** Create a matrix from 2x2 values.
  *
  * The layout assumed for the values is that of the matrix being assigned.
@@ -26,12 +114,10 @@ matrix(                                                                 \
     ELEMENT_ARG_TYPE e10, ELEMENT_ARG_TYPE e11                          \
     )                                                                   \
 {                                                                       \
-    /* This is overkill, but simplifies size checking: */               \
-    value_type v[2][2] = {{e00,e01},{e10,e11}};                         \
-    typedef et::OpAssign<Element,Element> OpT;                          \
-    cml::matrix<const value_type, external<2,2>, basis_orient, layout>  \
-        src(&v[0][0]);                                                  \
-    et::UnrollAssignment<OpT>(*this,src);                               \
+    assign(                                                             \
+         e00,e01,                                                       \
+         e10,e11                                                        \
+    );                                                                  \
 }
 
 /** Create a matrix from 3x3 values.
@@ -45,16 +131,11 @@ matrix(                                                                 \
     ELEMENT_ARG_TYPE e20, ELEMENT_ARG_TYPE e21, ELEMENT_ARG_TYPE e22    \
     )                                                                   \
 {                                                                       \
-    /* This is overkill, but simplifies size checking: */               \
-    value_type v[3][3] = {                                              \
-        {e00,e01,e02},                                                  \
-        {e10,e11,e12},                                                  \
-        {e20,e21,e22}                                                   \
-    };                                                                  \
-    typedef et::OpAssign<Element,Element> OpT;                          \
-    cml::matrix<const value_type, external<3,3>, basis_orient, layout>  \
-        src(&v[0][0]);                                                  \
-    et::UnrollAssignment<OpT>(*this,src);                               \
+    assign(                                                             \
+         e00,e01,e02,                                                   \
+         e10,e11,e12,                                                   \
+         e20,e21,e22                                                    \
+    );                                                                  \
 }
 
 /** Create a matrix from 4x4 values.
@@ -73,17 +154,12 @@ matrix(                                                                 \
         ELEMENT_ARG_TYPE e32, ELEMENT_ARG_TYPE e33                      \
     )                                                                   \
 {                                                                       \
-    /* This is overkill, but simplifies size checking: */               \
-    value_type v[3][3] = {                                              \
-        {e00,e01,e02,e03},                                              \
-        {e10,e11,e12,e13},                                              \
-        {e20,e21,e22,e23},                                              \
-        {e30,e31,e32,e33}                                               \
-    };                                                                  \
-    typedef et::OpAssign<Element,Element> OpT;                          \
-    cml::matrix<const value_type, external<4,4>, basis_orient, layout>  \
-        src(&v[0][0]);                                                  \
-    et::UnrollAssignment<OpT>(*this,src);                               \
+    assign(                                                             \
+         e00,e01,e02,e03,                                               \
+         e10,e11,e12,e13,                                               \
+         e20,e21,e22,e23,                                               \
+         e30,e31,e32,e33                                                \
+    );                                                                  \
 }
 
 /** Copy-construct a matrix from a fixed-size array of values. */
@@ -112,7 +188,7 @@ matrix(const matrix_type& m) {                                          \
  */
 #define CML_MAT_COPY_FROM_MAT                                           \
 template<typename E, class AT, typename BO, typename L>                 \
-matrix(const matrix<E,AT,BO,L>& m) {                                    \
+matrix(const TEMPLATED_MATRIX_MACRO& m) {                               \
     typedef et::OpAssign <Element,E> OpT;                               \
     et::UnrollAssignment<OpT>(*this,m);                                 \
 }
@@ -160,7 +236,7 @@ matrix_type& operator=(const matrix_type& m) {                          \
  */
 #define CML_MAT_ASSIGN_FROM_MAT(_op_, _op_name_)                        \
 template<typename E, class AT, typename BO, typename L> matrix_type&    \
-operator _op_ (const matrix<E,AT,BO,L>& m) {                            \
+operator _op_ (const TEMPLATED_MATRIX_MACRO& m) {                       \
     typedef _op_name_ <Element,E> OpT;                                  \
     et::UnrollAssignment<OpT>(*this,m);                                 \
     return *this;                                                       \

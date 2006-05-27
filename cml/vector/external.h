@@ -106,6 +106,10 @@ class vector< Element, external<Size> >
 
   public:
 
+    CML_ASSIGN_VEC_2
+    CML_ASSIGN_VEC_3
+    CML_ASSIGN_VEC_4
+
     /* Define class operators for external vectors. Note: external vectors
      * cannot be copy-constructed, but they can be assigned to:
      */

@@ -174,6 +174,10 @@ class matrix<Element,fixed<Rows,Cols>,BasisOrient,Layout>
     CML_MAT_COPY_FROM_MAT
     CML_MAT_COPY_FROM_MATXPR
 
+    CML_ASSIGN_MAT_22
+    CML_ASSIGN_MAT_33
+    CML_ASSIGN_MAT_44
+
     CML_MAT_ASSIGN_FROM_MATTYPE
 
     CML_MAT_ASSIGN_FROM_MAT(=, et::OpAssign)

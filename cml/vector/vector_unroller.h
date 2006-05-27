@@ -131,7 +131,7 @@ class VectorAssignmentUnroller
         size_t N = src_traits().size(src);
 
         /* Set the destination vector's size: */
-        dest.resize(N);
+        cml::et::detail::Resize(dest,N);
 #else
         size_t N = CheckedSize(dest,src,dynamic_size_tag());
 #endif

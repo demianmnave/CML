@@ -168,6 +168,10 @@ class matrix<Element,external<Rows,Cols>,BasisOrient,Layout>
 
   public:
 
+    CML_ASSIGN_MAT_22
+    CML_ASSIGN_MAT_33
+    CML_ASSIGN_MAT_44
+
     /* Define class operators for external matrices. Note: external matrices
      * cannot be copy-constructed, but they can be assigned to:
      */
