@@ -92,6 +92,10 @@ class vector< Element, fixed<Size> >
         return *this;
     }
 
+    /** Pairwise minimum of this vector with another. */
+    void minimize(const vector_type& v) {
+    }
+
 
   public:
 

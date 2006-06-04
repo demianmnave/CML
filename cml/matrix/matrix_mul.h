@@ -77,25 +77,21 @@ mul(const LeftT& left, const RightT& right)
     typedef typename right_traits::result_type right_result;
 
     /* First, require matrix expressions: */
-    typedef typename left_traits::result_tag left_result_tag;
-    typedef typename right_traits::result_tag right_result_tag;
     CML_STATIC_REQUIRE_M(
-            (same_type<left_result_tag,et::matrix_result_tag>::is_true
-             && same_type<right_result_tag,et::matrix_result_tag>::is_true),
+            (et::MatrixExpressions<LeftT,RightT>::is_true),
             mul_expects_matrix_args_error);
     /* Note: parens are required here so that the preprocessor ignores the
-     * commas:
+     * commas.
      */
 
     /* Deduce size type to ensure that a run-time check is performed if
      * necessary:
      */
-    typedef typename left_traits::size_tag left_size;
-    typedef typename right_traits::size_tag right_size;
-    typedef typename select_if<
-        same_type<left_size,right_size>::is_true
-        && same_type<right_size,fixed_size_tag>::is_true,
-        fixed_size_tag,dynamic_size_tag>::result size_tag;
+    typedef typename et::MatrixPromote<
+        typename left_traits::result_type,
+        typename right_traits::result_type
+    >::type result_type;
+    typedef typename result_type::size_tag size_tag;
 
     /* Require that left has the same number of columns as right has rows.
      * This automatically checks fixed-size matrices at compile time, and
@@ -103,23 +99,14 @@ mul(const LeftT& left, const RightT& right)
      */
     matrix_size N = detail::MatMulCheckedSize(left, right, size_tag());
 
-    /* Deduce resulting matrix and element type.  ArrayPromotion is
-     * specially implemeted to that the resulting type of two fixed-size
-     * matrices has the same number of rows as left, and the same number of
-     * cols as right.
-     */
-    typedef typename et::MatrixPromote<
-        left_result,right_result>::temporary_type result_type;
-    typedef typename result_type::value_type value_type;
-
     /* Create an array with the right size (resize() is a no-op for
      * fixed-size matrices):
      */
     result_type C;
     cml::et::detail::Resize(C, N);
 
-#if 1
     /* XXX Specialize this for fixed-size matrices: */
+    typedef typename result_type::value_type value_type;
     for(size_t i = 0; i < left.rows(); ++i) {               /* rows */
         for(size_t j = 0; j < right.cols(); ++j) {          /* cols */
             value_type sum(left(i,0)*right(0,j));
@@ -129,7 +116,6 @@ mul(const LeftT& left, const RightT& right)
             C(i,j) = sum;
         }
     }
-#endif
 
     return C;
 }

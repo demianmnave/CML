@@ -411,6 +411,17 @@ struct ExprTraits< BinaryMatrixOp<LeftT,RightT,OpT> >
     size_t cols(const expr_type& e) const { return e.cols(); }
 };
 
+/* Helper struct to verify that both arguments are matrix expressions: */
+template<typename LeftTraits, typename RightTraits>
+struct MatrixExpressions
+{
+    /* Require that both arguments are matrix expressions: */
+    typedef typename LeftTraits::result_tag left_result;
+    typedef typename RightTraits::result_tag right_result;
+    enum { is_true = (same_type<left_result,et::matrix_result_tag>::is_true
+            && same_type<right_result,et::matrix_result_tag>::is_true) };
+};
+
 namespace detail {
 
 /* XXX These are temporary helpers until dynamic resizing is integrated more

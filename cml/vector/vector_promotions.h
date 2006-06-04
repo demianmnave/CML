@@ -37,6 +37,9 @@ struct VectorPromote< cml::vector<E1,AT1>, cml::vector<E2,AT2> >
         typename promoted_array::value_type,
         typename promoted_array::generator_type
     > type;
+
+    /* The deduced temporary type: */
+    typedef typename type::temporary_type temporary_type;
 };
 
 /** Type promotion for a vector and a scalar. */
@@ -45,6 +48,9 @@ struct VectorPromote<cml::vector<E,AT>, S>
 {
     /* The deduced vector result type (the array type is the same): */
     typedef cml::vector<typename ScalarPromote<E,S>::type, AT> type;
+
+    /* The deduced temporary type: */
+    typedef typename type::temporary_type temporary_type;
 };
 
 /** Type promotion for a scalar and a vector. */
@@ -53,6 +59,9 @@ struct VectorPromote<S, cml::vector<E,AT> >
 {
     /* The deduced vector result type (the array type is the same): */
     typedef cml::vector<typename ScalarPromote<S,E>::type, AT> type;
+
+    /* The deduced temporary type: */
+    typedef typename type::temporary_type temporary_type;
 };
 
 } // namespace et

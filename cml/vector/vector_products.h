@@ -28,6 +28,13 @@ struct dot_expects_vector_args_error;
  */
 struct outer_expects_vector_args_error;
 
+/* This is used below to create a more meaningful compile-time error when
+ * cross() is not provided with 3D vector or VectorExpr arguments:
+ */
+struct cross_expects_vector_args_error;
+struct cross_expects_3D_vector_args_error;
+
+
 namespace cml {
 namespace detail {
 
@@ -46,6 +53,20 @@ struct DotPromote
         typename op_mul::value_type,
                  typename op_mul::value_type> op_add;
     typedef typename op_add::value_type promoted_scalar;
+};
+
+template<typename LeftT, typename RightT>
+struct CrossPromote
+{
+    /* Shorthand: */
+    typedef et::ExprTraits<LeftT> left_traits;
+    typedef et::ExprTraits<RightT> right_traits;
+    typedef typename left_traits::result_type left_type;
+    typedef typename right_traits::result_type right_type;
+
+    /* Deduce the matrix result type: */
+    typedef typename et::VectorPromote<
+        left_type,right_type>::temporary_type promoted_vector;
 };
 
 template<typename LeftT, typename RightT>
@@ -135,6 +156,21 @@ UnrollDot(const LeftT& left, const RightT& right, dynamic_size_tag)
     return sum;
 }
 
+/** For cross(): compile-time check for a 3D vector. */
+template<typename VecT> inline void
+Require3D(const VecT& v, fixed_size_tag) {
+    CML_STATIC_REQUIRE_M(
+            ((size_t)VecT::array_size == 3),
+            cross_expects_3D_vector_args_error);
+}
+
+/** For cross(): run-time check for a 3D vector. */
+template<typename VecT, size_t N> inline void
+Require3D(const VecT& v, dynamic_size_tag) {
+    et::GetCheckedSize<VecT,VecT,dynamic_size_tag>()
+        .equal_or_fail(v.size(),size_t(3));
+}
+
 } // namespace detail
 
 
@@ -160,14 +196,50 @@ dot(const LeftT& left, const RightT& right)
      */
 
     /* Figure out the unroller to use (fixed or dynamic): */
-    typedef typename select_switch<
-        type_pair<left_size,right_size>,
-        type_pair<fixed_size_tag,fixed_size_tag>, fixed_size_tag,
-        Default,                                  dynamic_size_tag
-    >::result size_tag;
+    typedef typename et::VectorPromote<
+        LeftT,RightT>::temporary_type promoted_vector;
+    typedef typename promoted_vector::size_tag size_tag;
 
     /* Call unroller: */
     return detail::UnrollDot(left,right,size_tag());
+}
+
+template<typename LeftT, typename RightT>
+inline typename detail::CrossPromote<LeftT,RightT>::promoted_vector
+cross(const LeftT& left, const RightT& right)
+{
+    /* Shorthand: */
+    typedef et::ExprTraits<LeftT> left_traits;
+    typedef et::ExprTraits<RightT> right_traits;
+    typedef typename left_traits::result_tag left_result;
+    typedef typename right_traits::result_tag right_result;
+
+    /* outer() requires vector expressions: */
+    CML_STATIC_REQUIRE_M(
+        (same_type<left_result, et::vector_result_tag>::is_true
+         && same_type<right_result, et::vector_result_tag>::is_true),
+        cross_expects_vector_args_error);
+    /* Note: parens are required here so that the preprocessor ignores the
+     * commas.
+     */
+
+    /* Make sure arguments are 3D vectors: */
+    detail::Require3D(left, typename left_traits::size_tag());
+    detail::Require3D(right, typename right_traits::size_tag());
+
+    /* Verify expression sizes: */
+    typedef typename detail::CrossPromote<
+        LeftT,RightT>::promoted_vector result_type;
+    const size_t N = et::CheckedSize(left, right,
+            typename result_type::size_tag());
+
+    /* Now, compute and return the cross product: */
+    result_type V(
+            left[1]*right[2] - left[2]*right[1],
+            left[2]*right[0] - right[2]*left[0],
+            left[0]*right[1] - right[0]*left[1]
+            );
+    return V;
 }
 
 template<typename LeftT, typename RightT>
@@ -207,56 +279,6 @@ outer(const LeftT& left, const RightT& right)
 
     return C;
 }
-
-#if defined(CML_ENABLE_DOT_OPERATOR)
-
-/** dot() via operator*() for two vectors. */
-template<
-    typename E1, class AT1,
-    typename E2, class AT2>
-inline typename detail::DotPromote<
-    vector<E1,AT1>, vector<E2,AT2>
->::promoted_scalar
-operator*(const vector<E1,AT1>& left,
-          const vector<E2,AT2>& right)
-{
-    return dot(left,right);
-}
-
-/** dot() via operator*() for a vector and a VectorXpr. */
-template<typename E, class AT, typename XprT>
-inline typename detail::DotPromote<
-    vector<E,AT>, typename XprT::result_type
->::promoted_scalar
-operator*(const vector<E,AT>& left,
-          const et::VectorXpr<XprT>& right)
-{
-    return dot(left,right);
-}
-
-/** dot() via operator*() for a VectorXpr and a vector. */
-template<typename XprT, typename E, class AT>
-inline typename detail::DotPromote<
-    typename XprT::result_type, vector<E,AT>
->::promoted_scalar
-operator*(const et::VectorXpr<XprT>& left,
-          const vector<E,AT>& right)
-{
-    return dot(left,right);
-}
-
-/** dot() via operator*() for two VectorXpr's. */
-template<typename XprT1, typename XprT2>
-inline typename detail::DotPromote<
-    typename XprT1::result_type, typename XprT2::result_type
->::promoted_scalar
-operator*(const et::VectorXpr<XprT1>& left,
-          const et::VectorXpr<XprT2>& right)
-{
-    return dot(left,right);
-}
-
-#endif
 
 } // namespace cml
 

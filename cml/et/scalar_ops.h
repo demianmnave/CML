@@ -11,9 +11,6 @@
 #include <cml/et/traits.h>
 #include <cml/et/scalar_promotions.h>
 
-namespace cml {
-namespace et {
-
 /** Declare a unary scalar operator, like negation. */
 #define CML_UNARY_SCALAR_OP(_op_, _op_name_)                            \
 template<typename ArgT> struct _op_name_ {                              \
@@ -59,6 +56,25 @@ template<typename LeftT, typename RightT> struct _op_name_ {             \
         return left _op_ right; }                                        \
 };
 
+/** Declare a binary boolean operator, like less-than, s1 < s2.
+ *
+ * The operator should return the appropriate truth value for the operator.
+ *
+ * @note Both scalar types must have operator<() defined.
+ */
+#define CML_BOOLEAN_SCALAR_OP(_op_, _op_name_)                           \
+template<typename LeftT, typename RightT> struct _op_name_ {             \
+    typedef ExprTraits<LeftT> left_traits;                               \
+    typedef ExprTraits<RightT> right_traits;                             \
+    typedef typename left_traits::const_reference left_reference;        \
+    typedef typename right_traits::const_reference right_reference;      \
+    typedef scalar_result_tag result_tag;                                \
+    bool apply(left_reference left, right_reference right) const {       \
+        return left _op_ right; }                                        \
+};
+
+namespace cml {
+namespace et {
 
 /* Define the operators: */
 
@@ -95,9 +111,17 @@ CML_BINARY_SCALAR_OP_ASSIGN(*= value_type(1)/, OpDivAssign)
 CML_BINARY_SCALAR_OP_ASSIGN(/=, OpDivAssign)
 #endif
 
+/* Boolean operators for scalars: */
+CML_BOOLEAN_SCALAR_OP(==, OpEquals)
+CML_BOOLEAN_SCALAR_OP( <, OpLess)
+CML_BOOLEAN_SCALAR_OP( >, OpGreater)
+CML_BOOLEAN_SCALAR_OP(<=, OpLessEqual)
+CML_BOOLEAN_SCALAR_OP(>=, OpGreaterEqual)
+
 #undef CML_UNARY_SCALAR_OP
 #undef CML_BINARY_SCALAR_OP
 #undef CML_BINARY_SCALAR_OP_ASSIGN
+#undef CML_BOOLEAN_SCALAR_OP
 
 } // namespace et
 } // namespace cml
