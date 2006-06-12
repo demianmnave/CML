@@ -51,8 +51,10 @@ class fixed_1D
 
     /* Standard: */
     typedef Element value_type;
+    typedef Element* pointer;
     typedef Element& reference;
     typedef const Element& const_reference;
+    typedef const Element* const_pointer;
 
     /* Array implementation: */
     typedef value_type array_impl[Size];
@@ -95,6 +97,12 @@ class fixed_1D
      * @note This function does not range-check the argument.
      */
     const_reference operator[](size_t i) const { return m_data[i]; }
+
+    /** Return access to the data as a raw pointer. */
+    pointer data() { return &m_data[0]; }
+
+    /** Return access to the data as a raw pointer. */
+    const_pointer data() const { return &m_data[0]; }
 
 
   protected:

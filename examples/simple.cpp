@@ -17,6 +17,8 @@ using std::cout;
 using std::endl;
 using std::sqrt;
 
+#if 0
+
 /* Note: this has to have the same template params as cml::vector<>: */
 template<typename E, class AT> std::ostream&
 operator<<(std::ostream& os, const cml::vector<E,AT>& v)
@@ -50,11 +52,6 @@ quat_print(
         std::ostream& os, const cml::quaternion<VecT,scalar_first,CrossT>& q
         )
 {
-    os << ((q[0] < 0)?" - ":"") << std::fabs(q[0]);
-    os << ((q[1] < 0)?" - ":" + ") << std::fabs(q[1]) << "i";
-    os << ((q[2] < 0)?" - ":" + ") << std::fabs(q[2]) << "j";
-    os << ((q[3] < 0)?" - ":" + ") << std::fabs(q[3]) << "k";
-    return os;
 }
 
 template<typename VecT, typename CrossT> std::ostream&
@@ -74,6 +71,7 @@ operator<<(std::ostream& os, const cml::quaternion<VecT,OrderT,CrossT>& q)
 {
     return quat_print(os,q);
 }
+#endif
 
 void example1()
 {

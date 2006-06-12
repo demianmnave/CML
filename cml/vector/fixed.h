@@ -13,6 +13,7 @@
 #include <cml/vector/class_ops.h>
 #include <cml/vector/vector_unroller.h>
 #include <cml/vector/external.h>
+#include <cml/util.h>
 
 namespace cml {
 
@@ -93,7 +94,28 @@ class vector< Element, fixed<Size> >
     }
 
     /** Pairwise minimum of this vector with another. */
-    void minimize(const vector_type& v) {
+    template<typename E, class AT>
+    void minimize(const vector<E,AT>& v) {
+      /* XXX This should probably use ScalarPromote: */
+      for (size_t i = 0; i < this->size(); ++i) {
+        (*this)[i] = std::min((*this)[i],v[i]);
+      }
+    }
+
+    /** Pairwise maximum of this vector with another. */
+    template<typename E, class AT>
+    void maximize(const vector<E,AT>& v) {
+      /* XXX This should probably use ScalarPromote: */
+      for (size_t i = 0; i < this->size(); ++i) {
+        (*this)[i] = std::max((*this)[i],v[i]);
+      }
+    }
+
+    /** Fill vector with random elements. */
+    void random(value_type min, value_type max) {
+        for (size_t i = 0; i < this->size(); ++i) {
+            (*this)[i] = random_real(min,max);
+        }
     }
 
 

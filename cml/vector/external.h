@@ -16,6 +16,7 @@
 #include <cml/vector/vector_expr.h>
 #include <cml/vector/class_ops.h>
 #include <cml/vector/vector_unroller.h>
+#include <cml/vector/dynamic.h>
 
 namespace cml {
 
@@ -97,6 +98,31 @@ class vector< Element, external<Size> >
         return *this;
     }
 
+    /** Pairwise minimum of this vector with another. */
+    template<typename E, class AT>
+    void minimize(const vector<E,AT>& v) {
+      /* XXX This should probably use ScalarPromote: */
+      for (size_t i = 0; i < this->size(); ++i) {
+        (*this)[i] = std::min((*this)[i],v[i]);
+      }
+    }
+
+    /** Pairwise maximum of this vector with another. */
+    template<typename E, class AT>
+    void maximize(const vector<E,AT>& v) {
+      /* XXX This should probably use ScalarPromote: */
+      for (size_t i = 0; i < this->size(); ++i) {
+        (*this)[i] = std::max((*this)[i],v[i]);
+      }
+    }
+
+    /** Fill vector with random elements. */
+    void random(value_type min, value_type max) {
+        for (size_t i = 0; i < this->size(); ++i) {
+            (*this)[i] = random_real(min,max);
+        }
+    }
+
 
   public:
 
@@ -106,13 +132,13 @@ class vector< Element, external<Size> >
 
   public:
 
+    /* Define class operators for external vectors. Note: external vectors
+     * cannot be copy-constructed, but they can be assigned to:
+     */
     CML_ASSIGN_VEC_2
     CML_ASSIGN_VEC_3
     CML_ASSIGN_VEC_4
 
-    /* Define class operators for external vectors. Note: external vectors
-     * cannot be copy-constructed, but they can be assigned to:
-     */
     CML_VEC_ASSIGN_FROM_VECTYPE
 
     /* Only assignment operators can be used to copy from other types: */
@@ -147,6 +173,12 @@ class vector< Element, external<> >
     /* For integration into the expression template code: */
     typedef vector_type expr_type;
 
+    /* For integration into the expression template code: */
+    typedef vector< Element, dynamic<> > temporary_type;
+    /* Note: this ensures that an external vector is copied into the proper
+     * temporary; external<> temporaries are not allowed.
+     */
+
     /* Standard: */
     typedef typename array_type::value_type value_type;
     typedef typename array_type::reference reference;
@@ -168,6 +200,63 @@ class vector< Element, external<> >
 
   public:
 
+    /** Return square of the length. */
+    value_type length_squared() const {
+        return dot(*this,*this);
+    }
+
+    /** Return the length. */
+    value_type length() const {
+        return std::sqrt(length_squared());
+    }
+
+    /** Normalize the vector. */
+    vector_type& normalize() {
+        return (*this /= length());
+    }
+
+    /** Set this vector to [0]. */
+    vector_type& zero() {
+        typedef cml::et::OpAssign<Element,Element> OpT;
+        cml::et::UnrollAssignment<OpT>(*this,Element(0));
+        return *this;
+    }
+
+    /** Set this vector to a cardinal vector. */
+    vector_type& cardinal(size_t i) {
+        zero();
+        (*this)[i] = Element(1);
+        return *this;
+    }
+
+    /** Pairwise minimum of this vector with another. */
+    template<typename E, class AT>
+    void minimize(const vector<E,AT>& v) {
+      /* XXX This should probably use ScalarPromote: */
+      for (size_t i = 0; i < this->size(); ++i) {
+        (*this)[i] = std::min((*this)[i],v[i]);
+      }
+    }
+
+    /** Pairwise maximum of this vector with another. */
+    template<typename E, class AT>
+    void maximize(const vector<E,AT>& v) {
+      /* XXX This should probably use ScalarPromote: */
+      for (size_t i = 0; i < this->size(); ++i) {
+        (*this)[i] = std::max((*this)[i],v[i]);
+      }
+    }
+
+    /** Fill vector with random elements. */
+    void random(value_type min, value_type max) {
+        for (size_t i = 0; i < this->size(); ++i) {
+            (*this)[i] = random_real(min,max);
+        }
+    }
+
+
+  public:
+
     /** Construct from an array of values and the size. */
     vector(Element* const array, size_t size)
         : array_type(array, size) {}
@@ -178,6 +267,10 @@ class vector< Element, external<> >
     /* Define class operators for external vectors. Note: external vectors
      * cannot be copy-constructed, but they can be assigned to:
      */
+    CML_ASSIGN_VEC_2
+    CML_ASSIGN_VEC_3
+    CML_ASSIGN_VEC_4
+
     CML_VEC_ASSIGN_FROM_VECTYPE
 
     /* Only assignment operators can be used to copy from other types: */

@@ -48,6 +48,7 @@ template<typename Element, class ArrayType> class vector;
 #include <cml/vector/vector_products.h>
 #include <cml/vector/vector_functions.h>
 #include <cml/vector/vector_comparison.h>
+#include <cml/vector/vector_print.h>
 
 #endif
 

@@ -40,8 +40,10 @@ class external_2D
 
     /* Standard: */
     typedef Element value_type;
+    typedef Element* pointer;
     typedef Element& reference;
     typedef const Element& const_reference;
+    typedef const Element* const_pointer;
 
     /* For matching by memory layout: */
     typedef Layout layout;
@@ -77,7 +79,7 @@ class external_2D
   public:
 
     /** Construct an external array with no size. */
-    external_2D(value_type* ptr) : m_data(ptr) {}
+    external_2D(pointer const ptr) : m_data(ptr) {}
 
 
   public:
@@ -117,6 +119,12 @@ class external_2D
         return get_element(row,col,layout());
     }
 
+    /** Return access to the data as a raw pointer. */
+    pointer data() { return m_data; }
+
+    /** Return access to the data as a raw pointer. */
+    const_pointer data() const { return m_data; }
+
 
   protected:
 
@@ -141,7 +149,7 @@ class external_2D
   protected:
 
     /* Declare the data array: */
-    value_type* const           m_data;
+    pointer const               m_data;
 };
 
 /** Run-time sized external 2D array.
@@ -163,8 +171,10 @@ class external_2D<Element,-1,-1,Layout>
 
     /* Standard: */
     typedef Element value_type;
+    typedef Element* pointer;
     typedef Element& reference;
     typedef const Element& const_reference;
+    typedef const Element* const_pointer;
 
     /* For matching by memory layout: */
     typedef Layout layout;
@@ -195,7 +205,7 @@ class external_2D<Element,-1,-1,Layout>
   public:
 
     /** Construct an external array with no size. */
-    external_2D(value_type* ptr, size_t rows, size_t cols)
+    external_2D(pointer const ptr, size_t rows, size_t cols)
         : m_data(ptr), m_rows(rows), m_cols(cols) {}
 
 
@@ -235,6 +245,12 @@ class external_2D<Element,-1,-1,Layout>
         /* Dispatch to the right function based on layout: */
         return get_element(row,col,layout());
     }
+
+    /** Return access to the data as a raw pointer. */
+    pointer data() { return m_data; }
+
+    /** Return access to the data as a raw pointer. */
+    const_pointer data() const { return m_data; }
 
 
   protected:

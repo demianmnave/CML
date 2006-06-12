@@ -12,7 +12,6 @@
 #include <cml/vector/vector_expr.h>
 #include <cml/vector/class_ops.h>
 #include <cml/vector/vector_unroller.h>
-#include <cml/vector/external.h>
 
 namespace cml {
 
@@ -89,6 +88,31 @@ class vector< Element, dynamic<Alloc> >
         zero();
         (*this)[i] = Element(1);
         return *this;
+    }
+
+    /** Pairwise minimum of this vector with another. */
+    template<typename E, class AT>
+    void minimize(const vector<E,AT>& v) {
+      /* XXX This should probably use ScalarPromote: */
+      for (size_t i = 0; i < this->size(); ++i) {
+        (*this)[i] = std::min((*this)[i],v[i]);
+      }
+    }
+
+    /** Pairwise maximum of this vector with another. */
+    template<typename E, class AT>
+    void maximize(const vector<E,AT>& v) {
+      /* XXX This should probably use ScalarPromote: */
+      for (size_t i = 0; i < this->size(); ++i) {
+        (*this)[i] = std::max((*this)[i],v[i]);
+      }
+    }
+
+    /** Fill vector with random elements. */
+    void random(value_type min, value_type max) {
+        for (size_t i = 0; i < this->size(); ++i) {
+            (*this)[i] = random_real(min,max);
+        }
     }
 
 

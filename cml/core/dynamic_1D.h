@@ -37,8 +37,10 @@ class dynamic_1D
 
     /* Standard: */
     typedef typename array_impl::value_type value_type;
+    typedef typename array_impl::pointer pointer; 
     typedef typename array_impl::reference reference; 
     typedef typename array_impl::const_reference const_reference; 
+    typedef typename array_impl::const_pointer const_pointer; 
 
     /* For matching by memory type: */
     typedef dynamic_memory_tag memory_tag;
@@ -87,6 +89,12 @@ class dynamic_1D
      * @note This function does not range-check the argument.
      */
     const_reference operator[](size_t i) const { return this->m_data[i]; }
+
+    /** Return access to the data as a raw pointer. */
+    pointer data() { return &m_data[0]; }
+
+    /** Return access to the data as a raw pointer. */
+    const_pointer data() const { return &m_data[0]; }
 
 
   public:

@@ -8,6 +8,7 @@
 #ifndef cml_util_h
 #define cml_util_h
 
+#include <stdlib.h>     // For random().
 #include <cml/constants.h>
 
 namespace cml {
@@ -181,6 +182,111 @@ T trilerp(const T& f000, const T& f100,
                                             (vw - uvw) * f011 +
                                                    uvw * f111
     );
+}
+
+/** Random binary (0,1) value. */
+inline size_t random_binary() {
+    return ::random() % 2;
+}
+
+/** Random real in [0,1]. */
+inline double random_unit() {
+    return double(::random()) / double(RAND_MAX);
+}
+
+/* Random integer in the range [min, max] */
+inline size_t random_integer(size_t min, size_t max) {
+    return min + ::random() % (max - min + 1);
+}
+
+/* Random real number in the range [min, max] */
+template < typename T >
+T random_real(T min, T max) {
+    return min + random_unit() * (max - min);
+}
+
+/** Squared length in R2. */
+template < typename T >
+T length_squared(T x, T y) {
+    return x * x + y * y;
+}
+
+/** Squared length in R3. */
+template < typename T >
+T length_squared(T x, T y, T z) {
+    return x * x + y * y + z * z;
+}
+
+/** Length in R2. */
+template < typename T >
+T length(T x, T y) {
+    return std::sqrt(length_squared(x,y));
+}
+
+/** Length in R3. */
+template < typename T >
+T length(T x, T y, T z) {
+    return std::sqrt(length_squared(x,y,z));
+}
+
+/** Index of maximum of 3 values. */
+template < typename T >
+size_t index_of_max(T a, T b, T c) {
+    return a > b ? (c > a ? 2 : 0) : (b > c ? 1 : 2);
+}
+
+/** Index of maximum of 3 values by magnitude. */
+template < typename T >
+size_t index_of_max_abs(T a, T b, T c) {
+    return index_of_max(std::fabs(a),std::fabs(b),std::fabs(c));
+}
+
+/** Index of minimum of 3 values. */
+template < typename T >
+size_t index_of_min(T a, T b, T c) {
+    return a < b ? (c < a ? 2 : 0) : (b < c ? 1 : 2);
+}
+
+/** Index of minimum of 3 values by magnitude. */
+template < typename T >
+size_t index_of_min_abs(T a, T b, T c) {
+    return index_of_min(std::fabs(a),std::fabs(b),std::fabs(c));
+}
+
+/** Convert horizontal field of view to vertical field of view. */
+template < typename T >
+T xfov_to_yfov(T xfov, T aspect) {
+    return T(2.0 * std::atan(std::tan(xfov * T(.5)) / double(aspect)));
+}
+
+/** Convert vertical field of view to horizontal field of view. */
+template < typename T >
+T yfov_to_xfov(T yfov, T aspect) {
+    return T(2.0 * std::atan(std::tan(yfov * T(.5)) * double(aspect)));
+}
+
+/** Convert horizontal zoom to vertical zoom. */
+template < typename T >
+T xzoom_to_yzoom(T xzoom, T aspect) {
+    return xzoom * aspect;
+}
+
+/** Convert vertical zoom to horizontal zoom. */
+template < typename T >
+T yzoom_to_xzoom(T yzoom, T aspect) {
+    return yzoom / aspect;
+}
+
+/** Convert zoom factor to field of view. */
+template < typename T >
+T zoom_to_fov(T zoom) {
+    return T(2) * T(std::atan(T(1) / zoom));
+}
+
+/** Convert field of view to zoom factor. */
+template < typename T >
+T fov_to_zoom(T fov) {
+    return T(1) / T(std::tan(fov * T(.5)));
 }
 
 } // namespace cml

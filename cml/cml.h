@@ -4,6 +4,8 @@
 /** @file
  *  @brief Main CML header to include all CML functionality.
  *
+ * @todo load vectors, matrices, and quaternions from a stream.
+ *
  * @todo Move common vector and matrix class ops to a base class (requires
  * SCOOP-like programming, see below).
  *
@@ -40,7 +42,7 @@
  * @todo figure out if scalars should be passed by value or reference, or
  * if it should be determined by traits
  *
- * @todo change use of typename, class to be like Alexandrescu book
+ * @todo change use of typename and class to be like Alexandrescu book
  *
  * @todo figure out if it makes sense to unroll assignment if either the
  * source expression or the target vector/matrix has a fixed size (right

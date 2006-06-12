@@ -53,6 +53,7 @@ template<typename Element, class ArrayType, typename BasisOrient,
 #include <cml/matrix/inverse.h>
 #include <cml/matrix/determinant.h>
 #include <cml/matrix/matrix_comparison.h>
+#include <cml/matrix/matrix_print.h>
 
 #endif
 

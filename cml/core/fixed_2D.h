@@ -74,8 +74,10 @@ class fixed_2D
 
     /* Standard: */
     typedef Element value_type;
+    typedef Element* pointer;
     typedef Element& reference;
     typedef const Element& const_reference;
+    typedef const Element* const_pointer;
 
     /* For matching by memory layout: */
     typedef Layout layout;
@@ -138,6 +140,12 @@ class fixed_2D
         /* Dispatch to the right function based on layout: */
         return get_element(row,col,layout());
     }
+
+    /** Return access to the data as a raw pointer. */
+    pointer data() { return &m_data[0][0]; }
+
+    /** Return access to the data as a raw pointer. */
+    const_pointer data() const { return &m_data[0][0]; }
 
 
   protected:

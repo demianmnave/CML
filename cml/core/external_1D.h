@@ -38,9 +38,10 @@ class external_1D
 
     /* Standard: */
     typedef Element value_type;
+    typedef Element* pointer;
     typedef Element& reference;
-
     typedef const Element& const_reference;
+    typedef const Element* const_pointer;
 
     /* Array implementation: */
     typedef value_type array_impl[Size];
@@ -63,7 +64,7 @@ class external_1D
 
   public:
 
-    external_1D(value_type* const ptr)
+    external_1D(pointer const ptr)
         : m_data(ptr) {}
 
 
@@ -90,10 +91,16 @@ class external_1D
      */
     const_reference operator[](size_t i) const { return m_data[i]; }
 
+    /** Return access to the data as a raw pointer. */
+    pointer data() { return m_data; }
+
+    /** Return access to the data as a raw pointer. */
+    const_pointer data() const { return m_data; }
+
 
   protected:
 
-    value_type* const           m_data;
+    pointer const               m_data;
 
 
   private:
@@ -121,9 +128,10 @@ class external_1D<Element,-1>
 
     /* Standard: */
     typedef Element value_type;
+    typedef Element* pointer;
     typedef Element& reference;
-
     typedef const Element& const_reference;
+    typedef const Element* const_pointer;
 
     /* For matching by memory type: */
     typedef external_memory_tag memory_tag;
@@ -143,7 +151,7 @@ class external_1D<Element,-1>
 
   public:
 
-    external_1D(value_type* const ptr, size_t size)
+    external_1D(pointer const ptr, size_t size)
         : m_data(ptr), m_size(size) {}
 
 
@@ -170,10 +178,16 @@ class external_1D<Element,-1>
      */
     const_reference operator[](size_t i) const { return m_data[i]; }
 
+    /** Return access to the data as a raw pointer. */
+    pointer data() { return m_data; }
+
+    /** Return access to the data as a raw pointer. */
+    const_pointer data() const { return m_data; }
+
 
   protected:
 
-    value_type* const           m_data;
+    pointer const               m_data;
     const size_t                m_size;
 
 

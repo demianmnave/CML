@@ -182,6 +182,34 @@ class quaternion
     /** Mutable access to the quaternion as a vector. */
     reference operator[](size_t i) { return m_q[i]; }
 
+    /** Pairwise minimum of this quaternion with another. */
+    template<typename VT, typename OT, typename CT>
+    void minimize(const quaternion<VT,OT,CT>& q) {
+      /* XXX This should probably use ScalarPromote: */
+      for (size_t i = 0; i < 4; ++i) {
+        (*this)[i] = std::min((*this)[i],q[i]);
+      }
+    }
+
+    /** Pairwise maximum of this quaternion with another. */
+    template<typename VT, typename OT, typename CT>
+    void maximize(const quaternion<VT,OT,CT>& q) {
+      /* XXX This should probably use ScalarPromote: */
+      for (size_t i = 0; i < 4; ++i) {
+        (*this)[i] = std::max((*this)[i],q[i]);
+      }
+    }
+
+    /** Fill quaternion with random elements.
+     *
+     * @warning This does not generate uniformly random rotations.
+     */
+    void random(value_type min, value_type max) {
+        for (size_t i = 0; i < 4; ++i) {
+            (*this)[i] = random_real(min,max);
+        }
+    }
+
 
   public:
 
