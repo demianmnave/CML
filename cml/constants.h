@@ -23,162 +23,60 @@
 #endif
 
 namespace cml {
-namespace constants {
 
-    const double pi = M_PI;
-    const double two_pi = 2.*M_PI;
-    const double inv_pi = 1./M_PI;                      /* 1/pi */
-    const double inv_two_pi = 1./(2.*M_PI);             /* 1/(2*pi) */
-    const double pi_over_2 = M_PI/2.;                   /* pi/2 */
-    const double pi_over_4 = M_PI/4.;                   /* pi/4 */
-    const double deg_per_rad = 180./M_PI;
-    const double rad_per_deg = M_PI/180.;
-    const double sqrt_2 = M_SQRT2;
-    const double sqrt_3 = 1.73205080756887729352744634150587237;
-    const double sqrt_5 = 2.23606797749978969640917366873127624;
-    const double sqrt_6 = 2.44948974278317809819728407470589139;
-    const double e = M_E;
-   
-} // namespace constants
-} // namespace cml
+#if 1
 
-
-
-#if 0
-// Demian:
-
-// These are constants that I would like to make available. I considered a
-// few different ways we might do so, such as:
-
-// float theta = cml::pi(); // always return double
-// float theta = cml::pi<float>(); // template function
-// float theta = cml::constants<float>::pi(); // 'constants' struct
-
-// I imagine there are other, fancier template-based solutions as well that
-// would deal with the scalar type in a more sophisticated way. I've
-// implemented the struct version here, but you're welcome to change it to
-// whatever you like. Also, I'll be happy to make any necessary changes myself
-// if it's something I can do.
-
-// The version I chose is the most verbose, but typedef'ing it:
-
-// float theta = constants_t::pi();
-
-// Makes it more manageable.
-
-namespace cml {
-
-template < typename Real >
-struct constants
-{
-    typedef Real value_type;
-    
-private:
-
-    /** For convenience */
-    typedef value_type T;
-
-public:
-
-private:
-
-    /** For convenience */
-    typedef vector< T, fixed<2> > vector2_t;
-    typedef vector< T, fixed<3> > vector3_t;
-    
-public:
-
-    // In my library I've found it useful to make various vector constants
-    // (the zero vector and cardinal basis vectors) available. This isn't
-    // strictly necessary, but can often reduce 2 or 3 lines of code to 1,
-    // which is nice.
-    
-    // They probably don't belong in this struct, but I've just put them here
-    // for the time being. Another possible home for them would be the vector
-    // class.
-
-    // Note: If and when we have vector constructors of the form:
-    
-    // vector3_t v(0.0, 0.0, 0.0);
-    
-    // The arrays won't be necessary. Also, the arrays are non-const because
-    // there's currently no vector constructor which takes a constant array as
-    // an argument.
-
-    /** zero vector in 2D */
-    static vector2_t zero_2D() {
-        /*const*/ T zero[] = { T(0.0), T(0.0) };
-        const vector2_t value(zero);
-        return value;
-    }
-
-    /** zero vector in 3D */
-    static vector3_t zero_3D() {
-        /*const*/ T zero[] = { T(0.0), T(0.0), T(0.0) };
-        const vector3_t value(zero);
-        return value;
-    }
-    
-    /** cardinal x axis in 2D */
-    static vector3_t x_axis_2D() {
-        return axis_2D(0);
-    }
-    
-    /** cardinal y axis in 2D */
-    static vector3_t y_axis_2D() {
-        return axis_2D(1);
-    }
-    
-    /** cardinal x axis in 3D */
-    static vector3_t x_axis_3D() {
-        return axis_3D(0);
-    }
-    
-    /** cardinal y axis in 3D */
-    static vector3_t y_axis_3D() {
-        return axis_3D(1);
-    }
-    
-    /** cardinal z axis in 3D */
-    static vector3_t z_axis_3D() {
-        return axis_3D(2);
-    }
-
-    // Again, these functions probably shouldn't be in this struct, as we
-    // probably shouldn't be dealing with arguments and range-checking here
-    // (the % is just a placeholder for proper error-checking on the
-    // argument). These functions also aren't strictly necessary, but I have
-    // them in my library because I sometimes find it handy to be able to
-    // access the cardinal axes by index.
-    
-    /** cardinal axis by index in 2D */
-    static vector2_t axis_2D(size_t i) {
-        /*const*/ T x_axis[] = { T(1.0), T(0.0) };
-        /*const*/ T y_axis[] = { T(0.0), T(1.0) };
-        const vector2_t axes[] = {
-            vector2_t(x_axis),
-            vector2_t(y_axis)
-        };
-        
-        return axes[i % 2];
-    }
-    
-    /** cardinal axis by index in 3D */
-    static vector3_t axis_3D(size_t i) {
-        /*const*/ T x_axis[] = { T(1.0), T(0.0), T(0.0) };
-        /*const*/ T y_axis[] = { T(0.0), T(1.0), T(0.0) };
-        /*const*/ T z_axis[] = { T(0.0), T(0.0), T(1.0) };
-        const vector3_t axes[] = {
-            vector3_t(x_axis),
-            vector3_t(y_axis),
-            vector3_t(z_axis)
-        };
-        
-        return axes[i % 3];
-    }
+/** Templated constants struct.
+ *
+ * Either float or double can be used.
+ */
+template<typename Float>
+struct constants {
+    static Float pi()           { return M_PI;                             }
+    static Float two_pi()       { return 2.*M_PI;                          }
+    static Float inv_pi()       { return 1./M_PI;                          }
+    static Float inv_two_pi()   { return 1./(2.*M_PI);                     }
+    static Float pi_over_2()    { return M_PI/2.;                          }
+    static Float pi_over_4()    { return M_PI/4.;                          }
+    static Float deg_per_rad()  { return 180./M_PI;                        }
+    static Float rad_per_deg()  { return M_PI/180.;                        }
+    static Float sqrt_2()       { return M_SQRT2;                          }
+    static Float sqrt_3()       { return 1.732050807568877293527446341505; }
+    static Float sqrt_5()       { return 2.236067977499789696409173668731; }
+    static Float sqrt_6()       { return 2.449489742783178098197284074705; }
+    static Float e()            { return M_E;                              }
 };
 
-} // namespace cml
+#else
+
+/* XXX This version requires an explicit instantiation of *every* constant
+ * below, e.g.:
+ *
+ * template<typename F> const F cml::constants<F>::pi;
+ */
+/** Templated constants struct.
+ *
+ * Either float or double can be used.
+ */
+template<typename Float>
+struct constants {
+    static const Float pi = M_PI;
+    static const Float two_pi = 2.*M_PI;
+    static const Float inv_pi = 1./M_PI;                /* 1/pi */
+    static const Float inv_two_pi = 1./(2.*M_PI);       /* 1/(2*pi) */
+    static const Float pi_over_2 = M_PI/2.;             /* pi/2 */
+    static const Float pi_over_4 = M_PI/4.;             /* pi/4 */
+    static const Float deg_per_rad = 180./M_PI;
+    static const Float rad_per_deg = M_PI/180.;
+    static const Float sqrt_2 = M_SQRT2;
+    static const Float sqrt_3 = 1.73205080756887729352744634150587237;
+    static const Float sqrt_5 = 2.23606797749978969640917366873127624;
+    static const Float sqrt_6 = 2.44948974278317809819728407470589139;
+    static const Float e = M_E;
+};
+
 #endif
+
+} // namespace cml
 
 #endif

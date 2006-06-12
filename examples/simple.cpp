@@ -754,13 +754,14 @@ void example21()
 
 void example22()
 {
-    using namespace cml::constants;
+    typedef constants<double> constants_t;
+
     cout << std::endl << "Example22:" << endl;
     cout << std::setprecision(16) << endl;
-    cout << "  pi = " << pi << endl;
-    cout << "  two_pi = " << two_pi << endl;
-    cout << "  sqrt(3) = " << sqrt_3 << endl;
-    cout << "  e = " << e << endl;
+    cout << "  pi = " << constants_t::pi() << endl;
+    cout << "  two_pi = " << constants_t::two_pi() << endl;
+    cout << "  sqrt(3) = " << constants_t::sqrt_3() << endl;
+    cout << "  e = " << constants_t::e() << endl;
 }
 
 void example23()

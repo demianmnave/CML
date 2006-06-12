@@ -116,13 +116,13 @@ inline void cyclic_permutation(
 /** Convert radians to degrees. */
 template < typename T >
 T deg(T theta) {
-    return theta * constants::deg_per_rad;
+    return theta * constants<T>::deg_per_rad();
 }
 
 /** Convert degrees to radians. */
 template < typename T >
 T rad(T theta) {
-    return theta * constants::rad_per_deg;
+    return theta * constants<T>::rad_per_deg();
 }
 
 
