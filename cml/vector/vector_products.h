@@ -227,11 +227,9 @@ cross(const LeftT& left, const RightT& right)
     detail::Require3D(left, typename left_traits::size_tag());
     detail::Require3D(right, typename right_traits::size_tag());
 
-    /* Verify expression sizes: */
+    /* Get result type: */
     typedef typename detail::CrossPromote<
         LeftT,RightT>::promoted_vector result_type;
-    const size_t N = et::CheckedSize(left, right,
-            typename result_type::size_tag());
 
     /* Now, compute and return the cross product: */
     result_type V(
