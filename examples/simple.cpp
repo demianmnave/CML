@@ -17,62 +17,6 @@ using std::cout;
 using std::endl;
 using std::sqrt;
 
-#if 0
-
-/* Note: this has to have the same template params as cml::vector<>: */
-template<typename E, class AT> std::ostream&
-operator<<(std::ostream& os, const cml::vector<E,AT>& v)
-{
-    os << "[";
-    for(size_t i = 0; i < v.size(); ++i) {
-        os << " " << v[i];
-    }
-    os << " ]";
-    return os;
-}
-
-/* Note: this has to have the same template params as cml::matrix<>: */
-template<typename E, class AT, typename BO, class L> std::ostream&
-operator<<(std::ostream& os, const cml::matrix<E,AT,BO,L>& m)
-{
-    os << "[" << endl;
-    for(size_t i = 0; i < m.rows(); ++i) {
-        os << "[";
-        for(size_t j = 0; j < m.cols(); ++j) {
-            os << " " << m(i,j);
-        }
-        os << "]" << endl;
-    }
-    os << "]";
-    return os;
-}
-
-template<typename VecT, typename CrossT> std::ostream&
-quat_print(
-        std::ostream& os, const cml::quaternion<VecT,scalar_first,CrossT>& q
-        )
-{
-}
-
-template<typename VecT, typename CrossT> std::ostream&
-quat_print(
-        std::ostream& os, const cml::quaternion<VecT,vector_first,CrossT>& q
-        )
-{
-    os << ((q[0] < 0)?" - ":"") << std::fabs(q[0]) << "i";
-    os << ((q[1] < 0)?" - ":" + ") << std::fabs(q[1]) << "j";
-    os << ((q[2] < 0)?" - ":" + ") << std::fabs(q[2]) << "k";
-    os << ((q[3] < 0)?" - ":" + ") << std::fabs(q[3]);
-    return os;
-}
-
-template<typename VecT, typename OrderT, typename CrossT> std::ostream&
-operator<<(std::ostream& os, const cml::quaternion<VecT,OrderT,CrossT>& q)
-{
-    return quat_print(os,q);
-}
-#endif
-
 void example1()
 {
     cout << std::endl << "Example1:" << endl;
@@ -777,6 +721,20 @@ void example23()
         << fu << endl;
 }
 
+
+typedef vector< double, fixed<3> > g_vector_t;
+void example24_part1(const g_vector_t& v)
+{
+    cout << "I got " << v << endl;
+}
+
+void example24()
+{
+    cout << std::endl << "Example24:" << endl;
+    g_vector_t u(1., 1., 0.), v(1., 0., 0.);
+    example24_part1(u+2.*v);
+}
+
 int main()
 {
     example1();
@@ -804,6 +762,7 @@ int main()
     example21();
     example22();
     example23();
+    example24();
     return 0;
 }
 

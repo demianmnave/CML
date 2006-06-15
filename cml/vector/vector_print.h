@@ -8,7 +8,7 @@
 #ifndef vector_print_h
 #define vector_print_h
 
-#include <iosfwd>
+#include <iostream>
 
 namespace cml {
 

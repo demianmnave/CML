@@ -8,7 +8,7 @@
 #ifndef quaternion_print_h
 #define quaternion_print_h
 
-#include <iosfwd>
+#include <iostream>
 
 namespace cml {
 namespace detail {

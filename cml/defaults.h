@@ -8,7 +8,7 @@
 #ifndef defaults_h
 #define defaults_h
 
-/* The default unroll limit: */
+/* The default vector unroll limit: */
 #if !defined(CML_VECTOR_UNROLL_LIMIT)
 #define CML_VECTOR_UNROLL_LIMIT 8
 #endif
@@ -16,6 +16,11 @@
 /* Don't unroll matrix operations by default: */
 #if !defined(CML_2D_UNROLLER) && !defined(CML_NO_2D_UNROLLER)
 #define CML_NO_2D_UNROLLER
+#endif
+
+/* The default vector dot() unroll limit: */
+#if !defined(CML_VECTOR_DOT_UNROLL_LIMIT)
+#define CML_VECTOR_DOT_UNROLL_LIMIT CML_VECTOR_UNROLL_LIMIT
 #endif
 
 /* The default array layout is the C/C++ row-major array layout: */

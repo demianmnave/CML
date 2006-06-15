@@ -8,7 +8,7 @@
 #ifndef matrix_print_h
 #define matrix_print_h
 
-#include <iosfwd>
+#include <iostream>
 
 namespace cml {
 
