@@ -15,78 +15,61 @@ namespace cml {
 namespace et {
 
 /* Default quaternion type promotion template. */
-template<typename LeftT, typename RightT> struct QuaternionPromote;
+template<class LeftT, class RightT> struct QuaternionPromote;
 
 /** Type promotion for two quaternion types. */
-template<typename VecT1, typename VecT2, typename OrderT, typename CrossT>
+template<typename E1, class AT1, typename E2, class AT2, class OT, class CT>
 struct QuaternionPromote<
-    cml::quaternion<VecT1,OrderT,CrossT>,
-    cml::quaternion<VecT2,OrderT,CrossT>
->
-{
-    /* The deduced vector type: */
-    typedef typename VectorPromote<VecT1, VecT2>::type promoted_vector;
-
-    /* The deduced quaternion result type: */
-    typedef cml::quaternion<promoted_vector,OrderT,CrossT> type;
-};
-
-/** Type promotion for a quaternion and a vector. */
-template<
-    typename VecT, typename OrderT, typename CrossT,
-    typename E, class AT>
-struct QuaternionPromote<
-    cml::quaternion<VecT,OrderT,CrossT>,
-    cml::vector<E,AT>
+    cml::quaternion<E1,AT1,OT,CT>,
+    cml::quaternion<E2,AT2,OT,CT>
 >
 {
     /* The deduced vector type: */
     typedef typename VectorPromote<
-        VecT, cml::vector<E,AT>
-    >::type promoted_vector;
+        typename cml::quaternion<E1,AT1,OT,CT>::vector_type,
+        typename cml::quaternion<E2,AT2,OT,CT>::vector_type
+        >::type promoted_vector;
+
+    /* The deduced element and storage types: */
+    typedef typename promoted_vector::value_type value_type;
+    typedef typename promoted_vector::storage_type storage_type;
 
     /* The deduced quaternion result type: */
-    typedef cml::quaternion<promoted_vector,OrderT,CrossT> type;
-};
-
-/** Type promotion for a quaternion and a vector. */
-template<
-    typename E, class AT,
-    typename VecT, typename OrderT, typename CrossT>
-struct QuaternionPromote<
-    cml::vector<E,AT>,
-    cml::quaternion<VecT,OrderT,CrossT>
->
-{
-    /* The deduced vector type: */
-    typedef typename VectorPromote<
-        cml::vector<E,AT>, VecT
-    >::type promoted_vector;
-
-    /* The deduced quaternion result type: */
-    typedef cml::quaternion<promoted_vector,OrderT,CrossT> type;
+    typedef cml::quaternion<value_type,storage_type,OT,CT> type;
 };
 
 /** Type promotion for a quaternion and a scalar. */
-template<typename VecT, typename OrderT, typename CrossT, typename S>
-struct QuaternionPromote<cml::quaternion<VecT,OrderT,CrossT>, S>
+template<typename E, class AT, class OT, class CT, typename S>
+struct QuaternionPromote<cml::quaternion<E,AT,OT,CT>, S>
 {
     /* The deduced vector type: */
-    typedef typename VectorPromote<VecT,S>::type promoted_vector;
+    typedef typename VectorPromote<
+        typename quaternion<E,AT,OT,CT>::vector_type, S
+        >::type promoted_vector;
+
+    /* The deduced element and storage types: */
+    typedef typename promoted_vector::value_type value_type;
+    typedef typename promoted_vector::storage_type storage_type;
 
     /* The deduced quaternion result type: */
-    typedef cml::quaternion<promoted_vector,OrderT,CrossT> type;
+    typedef cml::quaternion<value_type,storage_type,OT,CT> type;
 };
 
 /** Type promotion for a scalar and a quaternion. */
-template<typename S, typename VecT, typename OrderT, typename CrossT>
-struct QuaternionPromote<S, cml::quaternion<VecT,OrderT,CrossT> >
+template<class S, typename E, class AT, class OT, class CT>
+struct QuaternionPromote<S, cml::quaternion<E,AT,OT,CT> >
 {
     /* The deduced vector type: */
-    typedef typename VectorPromote<S,VecT>::type promoted_vector;
+    typedef typename VectorPromote<
+        S, typename quaternion<E,AT,OT,CT>::vector_type
+        >::type promoted_vector;
+
+    /* The deduced element and storage types: */
+    typedef typename promoted_vector::value_type value_type;
+    typedef typename promoted_vector::storage_type storage_type;
 
     /* The deduced quaternion result type: */
-    typedef cml::quaternion<promoted_vector,OrderT,CrossT> type;
+    typedef cml::quaternion<value_type,storage_type,OT,CT> type;
 };
 
 } // namespace et

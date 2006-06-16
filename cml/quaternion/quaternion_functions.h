@@ -15,9 +15,9 @@
 namespace cml {
 
 /** Returns the real part of the quaternion. */
-template<typename VecT, typename OrderT, typename CrossT>
-inline typename VecT::value_type
-real(const quaternion<VecT,OrderT,CrossT>& q)
+template<typename E, class AT, class OT, class CT>
+inline typename quaternion<E,AT,OT,CT>::value_type
+real(const quaternion<E,AT,OT,CT>& q)
 {
     return q.real();
 }
@@ -31,25 +31,25 @@ real(const et::QuaternionXpr<XprT>& e)
 }
 
 /** Returns the imaginary (vector) part of the quaternion. */
-template<typename VecT, typename OrderT, typename CrossT>
-inline const VecT&
-imaginary(const quaternion<VecT,OrderT,CrossT>& q)
+template<typename E, class AT, class OT, class CT>
+inline typename quaternion<E,AT,OT,CT>::imaginary_type
+imaginary(const quaternion<E,AT,OT,CT>& q)
 {
     return q.imaginary();
 }
 
 /** Returns the imaginary (vector) part of the QuaternionXpr. */
 template<typename XprT>
-inline typename et::QuaternionXpr<XprT>::result_type
+inline typename et::QuaternionXpr<XprT>::temporary_type
 imaginary(const et::QuaternionXpr<XprT>& e)
 {
     return e.imaginary();
 }
 
 /** Cayley norm of a quaternion. */
-template<typename VecT, typename OrderT, typename CrossT>
-inline typename VecT::value_type
-norm(const quaternion<VecT,OrderT,CrossT>& arg)
+template<typename E, class AT, class OT, class CT>
+inline typename quaternion<E,AT,OT,CT>::value_type
+norm(const quaternion<E,AT,OT,CT>& arg)
 {
     return arg.length_squared();
 }
@@ -63,9 +63,9 @@ norm(QUATXPR_ARG_TYPE arg)
 }
 
 /** Squared length of a quaternion. */
-template<typename VecT, typename OrderT, typename CrossT>
-inline typename VecT::value_type
-length_squared(const quaternion<VecT,OrderT,CrossT>& arg)
+template<typename E, class AT, class OT, class CT>
+inline typename quaternion<E,AT,OT,CT>::value_type
+length_squared(const quaternion<E,AT,OT,CT>& arg)
 {
     return arg.length_squared();
 }
@@ -79,9 +79,9 @@ length_squared(QUATXPR_ARG_TYPE arg)
 }
 
 /** Length of a quaternion. */
-template<typename VecT, typename OrderT, typename CrossT>
-inline typename VecT::value_type
-length(const quaternion<VecT,OrderT,CrossT>& arg)
+template<typename E, class AT, class OT, class CT>
+inline typename quaternion<E,AT,OT,CT>::value_type
+length(const quaternion<E,AT,OT,CT>& arg)
 {
     return arg.length();
 }
@@ -98,18 +98,18 @@ length(QUATXPR_ARG_TYPE arg)
  *
  * The input quaternion is not changed.
  */
-template<typename VecT, typename OrderT, typename CrossT>
-inline quaternion<VecT,OrderT,CrossT>
-normalize(const quaternion<VecT,OrderT,CrossT>& arg)
+template<typename E, class AT, class OT, class CT>
+inline quaternion<E,AT,OT,CT>
+normalize(const quaternion<E,AT,OT,CT>& arg)
 {
-    quaternion<VecT,OrderT,CrossT> result(arg);
+    typename quaternion<E,AT,OT,CT>::temporary_type result(arg);
     result.normalize();
     return result;
 }
 
 /** Normalize a quaternion expr. */
 template<typename XprT>
-inline typename XprT::result_type
+inline typename XprT::temporary_type
 normalize(QUATXPR_ARG_TYPE arg)
 {
     return arg.normalize();
@@ -119,11 +119,11 @@ normalize(QUATXPR_ARG_TYPE arg)
  *
  * The input quaternion is not changed.
  */
-template<typename VecT, typename OrderT, typename CrossT>
-inline quaternion<VecT,OrderT,CrossT>
-identity(const quaternion<VecT,OrderT,CrossT>& arg)
+template<typename E, class AT, class OT, class CT>
+inline quaternion<E,AT,OT,CT>
+identity(const quaternion<E,AT,OT,CT>& arg)
 {
-    quaternion<VecT,OrderT,CrossT> result(arg);
+    typename quaternion<E,AT,OT,CT>::temporary_type result(arg);
     result.identity();
     return result;
 }

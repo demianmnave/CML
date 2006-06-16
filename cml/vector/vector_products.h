@@ -184,6 +184,8 @@ dot(const LeftT& left, const RightT& right)
     typedef detail::DotPromote<LeftT,RightT> dot_helper;
     typedef et::ExprTraits<LeftT> left_traits;
     typedef et::ExprTraits<RightT> right_traits;
+    typedef typename left_traits::result_type left_type;
+    typedef typename right_traits::result_type right_type;
     typedef typename left_traits::size_tag left_size;
     typedef typename right_traits::size_tag right_size;
 
@@ -197,7 +199,7 @@ dot(const LeftT& left, const RightT& right)
 
     /* Figure out the unroller to use (fixed or dynamic): */
     typedef typename et::VectorPromote<
-        LeftT,RightT>::temporary_type promoted_vector;
+        left_type, right_type>::temporary_type promoted_vector;
     typedef typename promoted_vector::size_tag size_tag;
 
     /* Call unroller: */

@@ -21,7 +21,7 @@
 /* This is used below to create a more meaningful compile-time error when
  * the quaternion class is not created with a fixed-size 4-vector:
  */
-struct quaternion_requires_fixed_size_4_vector_error;
+struct quaternion_requires_fixed_size_array_type_error;
 
 namespace cml {
 
@@ -56,30 +56,38 @@ struct vector_first {
  * external<> storage type.
  */
 template<
-    typename VecT,
-    typename OrderT = scalar_first,
-    typename CrossT = positive_cross
+    typename Element,
+    class ArrayType = fixed<>,
+    class Order = scalar_first,
+    class Cross = positive_cross
 >
 class quaternion
 {
-    /* The argument must be a fixed-size 3-vector without external<>
-     * storage:
-     */
+    /* The ArrayType must be fixed<> or external<>: */
     CML_STATIC_REQUIRE_M(
-            ((VecT::array_size == 4)
-            && same_type<typename VecT::size_tag, fixed_size_tag>::is_true),
-            quaternion_requires_fixed_size_4_vector_error);
+            (same_type< ArrayType, fixed<> >::is_true
+             || same_type< ArrayType, external<> >::is_true),
+            quaternion_requires_fixed_size_array_type_error);
 
   public:
 
-    /* Vector representing the quaternion: */
-    typedef VecT vector_type;
+    /* Shorthand for the array type generator: */
+    typedef ArrayType storage_type;
+    typedef typename ArrayType::template rebind<4>::other generator_type;
+
+    /* Vector representing the quaternion.  Use the rebinding template to
+     * set the vector size:
+     */
+    typedef vector<Element, generator_type> vector_type;
+
+    /* Vector temporary type: */
+    typedef typename vector_type::temporary_type vector_temporary;
 
     /* Quaternion order: */
-    typedef OrderT order_type;
+    typedef Order order_type;
 
     /* Quaternion multiplication order: */
-    typedef CrossT cross_type;
+    typedef Cross cross_type;
 
     /* Scalar type representing the scalar part: */
     typedef typename vector_type::value_type value_type;
@@ -88,14 +96,16 @@ class quaternion
     /* XXX Need to verify that this is a true scalar type. */
 
     /* The quaternion type: */
-    typedef quaternion<vector_type,order_type,cross_type> quaternion_type;
+    typedef quaternion<Element,storage_type,order_type,cross_type>
+        quaternion_type;
 
     /* For integration into the expression template code: */
     typedef quaternion_type expr_type;
 
     /* For integration into the expression template code: */
-    typedef quaternion<typename vector_type::temporary_type,
-            order_type, cross_type> temporary_type;
+    typedef quaternion<
+        Element, typename vector_temporary::storage_type,
+        order_type, cross_type> temporary_type;
 
     /* For integration into the expression templates code: */
     typedef quaternion_type& expr_reference;
@@ -108,7 +118,7 @@ class quaternion
     typedef typename vector_type::size_tag size_tag;
 
     /* Get the imaginary part type: */
-    typedef typename vector_type::subvector_type imaginary_type;
+    typedef typename vector_temporary::subvector_type imaginary_type;
 
     /* For matching by result-type: */
     typedef cml::et::quaternion_result_tag result_tag;
@@ -183,8 +193,8 @@ class quaternion
     reference operator[](size_t i) { return m_q[i]; }
 
     /** Pairwise minimum of this quaternion with another. */
-    template<typename VT, typename OT, typename CT>
-    void minimize(const quaternion<VT,OT,CT>& q) {
+    template<typename E, class AT, class OT, class CT>
+    void minimize(const quaternion<E,AT,OT,CT>& q) {
       /* XXX This should probably use ScalarPromote: */
       for (size_t i = 0; i < 4; ++i) {
         (*this)[i] = std::min((*this)[i],q[i]);
@@ -192,8 +202,8 @@ class quaternion
     }
 
     /** Pairwise maximum of this quaternion with another. */
-    template<typename VT, typename OT, typename CT>
-    void maximize(const quaternion<VT,OT,CT>& q) {
+    template<typename E, class AT, class OT, class CT>
+    void maximize(const quaternion<E,AT,OT,CT>& q) {
       /* XXX This should probably use ScalarPromote: */
       for (size_t i = 0; i < 4; ++i) {
         (*this)[i] = std::max((*this)[i],q[i]);
@@ -213,15 +223,22 @@ class quaternion
 
   public:
 
-    /** Default initializer. */
+    /** Default initializer.
+     *
+     * The default constructor cannot be used with an external<> array
+     * type.
+     */
     quaternion() {}
+
+    /** Initializer for an external<> vector type. */
+    quaternion(Element* const array) : m_q(array) {}
 
     /** Copy construct from the same type of quaternion. */
     quaternion(const quaternion_type& q) : m_q(q.m_q) {}
 
-    /** Construct from a quaternion having a different vector type. */
-    template<typename V> quaternion(
-            const quaternion<V,order_type,cross_type>& q) : m_q(q.m_q) {}
+    /** Construct from a quaternion having a different array type. */
+    template<typename E, class AT> quaternion(
+            const quaternion<E,AT,order_type,cross_type>& q) : m_q(q.m_q) {}
 
     /** Copy construct from a QuaternionXpr. */
     template<typename XprT> quaternion(QUATXPR_ARG_TYPE e) {
@@ -236,14 +253,14 @@ class quaternion
 
     /** Initialize from a 4-vector.
      *
-     * If OrderT is scalar_first, then v[0] is the real part.  Otherwise,
+     * If Order is scalar_first, then v[0] is the real part.  Otherwise,
      * v[3] is the real part.
      */
     quaternion(const vector_type& v) : m_q(v) {}
 
     /** Initialize from an array of scalars.
      *
-     * If OrderT is scalar_first, then v[0] is the real part.  Otherwise,
+     * If Order is scalar_first, then v[0] is the real part.  Otherwise,
      * v[3] is the real part.
      *
      * @note The target vector must have CML_VEC_COPY_FROM_ARRAY
@@ -301,29 +318,29 @@ class quaternion
      * This assumes that _op_ is defined for both the quaternion's vector
      * type and its scalar type.
      */
-#define CML_QUAT_ASSIGN_FROM_QUAT(_op_)                           \
-    template<typename V> const quaternion_type&                   \
-    operator _op_ (const quaternion<V,order_type,cross_type>& q) {\
-        m_q[W] _op_ q[W];                                         \
-        m_q[X] _op_ q[X];                                         \
-        m_q[Y] _op_ q[Y];                                         \
-        m_q[Z] _op_ q[Z];                                         \
-        return *this;                                             \
+#define CML_QUAT_ASSIGN_FROM_QUAT(_op_)                                 \
+    template<typename E, class AT> const quaternion_type&               \
+    operator _op_ (const quaternion<E,AT,order_type,cross_type>& q) {   \
+        m_q[W] _op_ q[W];                                               \
+        m_q[X] _op_ q[X];                                               \
+        m_q[Y] _op_ q[Y];                                               \
+        m_q[Z] _op_ q[Z];                                               \
+        return *this;                                                   \
     }
 
     /** In-place op from a QuaternionXpr.
      *
      * This assumes that _op_ is defined for the quaternion's scalar type.
      */
-#define CML_QUAT_ASSIGN_FROM_QUATXPR(_op_)                        \
-    template<typename XprT> quaternion_type&                      \
-    operator _op_ (QUATXPR_ARG_TYPE e) {                          \
-        typedef typename XprT::order_type arg_order;              \
-        m_q[W] _op_ e[arg_order::W];                              \
-        m_q[X] _op_ e[arg_order::X];                              \
-        m_q[Y] _op_ e[arg_order::Y];                              \
-        m_q[Z] _op_ e[arg_order::Z];                              \
-        return *this;                                             \
+#define CML_QUAT_ASSIGN_FROM_QUATXPR(_op_)                              \
+    template<typename XprT> quaternion_type&                            \
+    operator _op_ (QUATXPR_ARG_TYPE e) {                                \
+        typedef typename XprT::order_type arg_order;                    \
+        m_q[W] _op_ e[arg_order::W];                                    \
+        m_q[X] _op_ e[arg_order::X];                                    \
+        m_q[Y] _op_ e[arg_order::Y];                                    \
+        m_q[Z] _op_ e[arg_order::Z];                                    \
+        return *this;                                                   \
     }
 
     /** In-place op from a scalar type.

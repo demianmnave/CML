@@ -23,6 +23,7 @@ class vector< Element, dynamic<Alloc> >
   public:
 
     /* Shorthand for the generator: */
+    typedef dynamic<> storage_type;
     typedef dynamic<Alloc> generator_type;
 
     /* Shorthand for the array type: */

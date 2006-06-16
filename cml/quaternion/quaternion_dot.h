@@ -14,7 +14,7 @@
 namespace cml {
 namespace detail {
 
-template<typename LeftT, typename RightT> inline
+template<class LeftT, class RightT> inline
 typename detail::DotPromote<LeftT,RightT>::promoted_scalar
 quaternion_dot(const LeftT& p, const RightT& q)
 {
@@ -23,35 +23,35 @@ quaternion_dot(const LeftT& p, const RightT& q)
 
 } // namespace detail
 
-template<typename VecT1, typename VecT2, typename OrderT, typename CrossT>
+template<typename E1, class AT1, typename E2, class AT2, class OT, class CT>
 inline typename detail::DotPromote<
-    quaternion<VecT1,OrderT,CrossT>, quaternion<VecT2,OrderT,CrossT>
+    quaternion<E1,AT1,OT,CT>, quaternion<E2,AT2,OT,CT>
 >::promoted_scalar
-dot(const quaternion<VecT1,OrderT,CrossT>& p,
-    const quaternion<VecT2,OrderT,CrossT>& q)
+dot(const quaternion<E1,AT1,OT,CT>& p,
+    const quaternion<E2,AT2,OT,CT>& q)
 {
     return detail::quaternion_dot(p,q);
 }
 
-template<typename VecT, typename OrderT, typename CrossT, typename XprT>
+template<typename E, class AT, class OT, class CT, class XprT>
 inline typename detail::DotPromote<
-    quaternion<VecT,OrderT,CrossT>, et::QuaternionXpr<XprT>
+    quaternion<E,AT,OT,CT>, et::QuaternionXpr<XprT>
 >::promoted_scalar
-dot(const quaternion<VecT,OrderT,CrossT>& p, QUATXPR_ARG_TYPE q)
+dot(const quaternion<E,AT,OT,CT>& p, QUATXPR_ARG_TYPE q)
 {
     return detail::quaternion_dot(p,q);
 }
 
-template<typename XprT, typename VecT, typename OrderT, typename CrossT>
+template<class XprT, typename E, class AT, class OT, class CT>
 inline typename detail::DotPromote<
-    et::QuaternionXpr<XprT>, quaternion<VecT,OrderT,CrossT>
+    et::QuaternionXpr<XprT>, quaternion<E,AT,OT,CT>
 >::promoted_scalar
-dot(QUATXPR_ARG_TYPE p, const quaternion<VecT,OrderT,CrossT>& q)
+dot(QUATXPR_ARG_TYPE p, const quaternion<E,AT,OT,CT>& q)
 {
     return detail::quaternion_dot(p,q);
 }
 
-template<typename XprT1, typename XprT2> inline
+template<class XprT1, class XprT2> inline
 typename detail::DotPromote<
     et::QuaternionXpr<XprT1>, et::QuaternionXpr<XprT2>
 >::promoted_scalar

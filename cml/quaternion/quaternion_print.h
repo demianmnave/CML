@@ -14,10 +14,8 @@ namespace cml {
 namespace detail {
 
 /** Print a quaternion given scalar first. */
-template<typename VecT, typename CrossT> inline std::ostream&
-print(
-        std::ostream& os, const cml::quaternion<VecT,scalar_first,CrossT>& q
-        )
+template<typename E, class AT, class CT> inline std::ostream&
+print(std::ostream& os, const cml::quaternion<E,AT,scalar_first,CT>& q)
 {
     os << ((q[0] < 0)?" - ":"") << std::fabs(q[0]);
     os << ((q[1] < 0)?" - ":" + ") << std::fabs(q[1]) << "i";
@@ -27,10 +25,8 @@ print(
 }
 
 /** Print a quaternion given vector (imaginary) first. */
-template<typename VecT, typename CrossT> std::ostream&
-quat_print(
-        std::ostream& os, const cml::quaternion<VecT,vector_first,CrossT>& q
-        )
+template<typename E, class AT, class CT> std::ostream&
+quat_print(std::ostream& os, const cml::quaternion<E,AT,vector_first,CT>& q)
 {
     os << ((q[0] < 0)?" - ":"") << std::fabs(q[0]) << "i";
     os << ((q[1] < 0)?" - ":" + ") << std::fabs(q[1]) << "j";
@@ -43,8 +39,8 @@ quat_print(
 
 #if !defined(CML_PLAIN_QUATERNION_OUTPUT)
 
-template<typename VecT, typename CrossT> std::ostream&
-operator<<(std::ostream& os, const quaternion<VecT,scalar_first,CrossT>& q)
+template<typename E, class AT, class CT> std::ostream&
+operator<<(std::ostream& os, const cml::quaternion<E,AT,scalar_first,CT>& q)
 {
     os << ((q[0] < 0)?" - ":"") << std::fabs(q[0]);
     os << ((q[1] < 0)?" - ":" + ") << std::fabs(q[1]) << "i";
@@ -53,8 +49,8 @@ operator<<(std::ostream& os, const quaternion<VecT,scalar_first,CrossT>& q)
     return os;
 }
 
-template<typename VecT, typename CrossT> std::ostream&
-operator<<(std::ostream& os, const quaternion<VecT,vector_first,CrossT>& q)
+template<typename E, class AT, class CT> std::ostream&
+operator<<(std::ostream& os, const cml::quaternion<E,AT,vector_first,CT>& q)
 {
     os << ((q[0] < 0)?" - ":"") << std::fabs(q[0]) << "i";
     os << ((q[1] < 0)?" - ":" + ") << std::fabs(q[1]) << "j";
@@ -66,8 +62,8 @@ operator<<(std::ostream& os, const quaternion<VecT,vector_first,CrossT>& q)
 #else
 
 /** Output a quaternion to a std::ostream. */
-template<typename VecT, typename OrderT, typename CrossT> std::ostream&
-operator<<(std::ostream& os, const quaternion<VecT,OrderT,CrossT>& q)
+template<typename E, class AT, class OT, typename CT> std::ostream&
+operator<<(std::ostream& os, const cml::quaternion<E,AT,OT,CT>& q)
 {
     os << "[";
     for (size_t i = 0; i < 4; ++i) {

@@ -118,8 +118,8 @@ class QuaternionMulOp
     }
 
     /** Return the result as a normalized quaternion. */
-    result_type normalize() const {
-        result_type q(QuaternionXpr<expr_type>(*this));
+    temporary_type normalize() const {
+        temporary_type q(QuaternionXpr<expr_type>(*this));
         return q.normalize();
     }
 
@@ -242,48 +242,48 @@ struct ExprTraits< QuaternionMulOp<LeftT,RightT> >
 } // namespace et
 
 /** Declare mul taking two quaternion operands. */
-template<typename VecT1, typename VecT2, typename OrderT, typename CrossT>
+template<typename E1, class AT1, typename E2, class AT2, class OT, class CT>
 inline et::QuaternionXpr<
     et::QuaternionMulOp<
-        quaternion<VecT1,OrderT,CrossT>, quaternion<VecT2,OrderT,CrossT>
+        quaternion<E1,AT1,OT,CT>, quaternion<E2,AT2,OT,CT>
     >
 >
 operator* (
-        const quaternion<VecT1,OrderT,CrossT>& left,
-        const quaternion<VecT2,OrderT,CrossT>& right)
+        const quaternion<E1,AT1,OT,CT>& left,
+        const quaternion<E2,AT2,OT,CT>& right)
 {
     typedef et::QuaternionMulOp<
-            quaternion<VecT1,OrderT,CrossT>,
-            quaternion<VecT2,OrderT,CrossT>
+            quaternion<E1,AT1,OT,CT>,
+            quaternion<E2,AT2,OT,CT>
         > ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(left,right));
 }
 
 
 /** Declare mul taking a quaternion and a et::QuaternionXpr. */
-template<typename VecT, typename OrderT, typename CrossT, class XprT>
+template<typename E, class AT, class OT, class CT, class XprT>
 inline et::QuaternionXpr<
-    et::QuaternionMulOp<quaternion<VecT,OrderT,CrossT>, XprT>
+    et::QuaternionMulOp<quaternion<E,AT,OT,CT>, XprT>
 >
-operator* (
-        const quaternion<VecT,OrderT,CrossT>& left,
+operator*(
+        const quaternion<E,AT,OT,CT>& left,
         QUATXPR_ARG_TYPE right)
 {
-    typedef et::QuaternionMulOp<quaternion<VecT,OrderT,CrossT>, XprT> ExprT;
+    typedef et::QuaternionMulOp<quaternion<E,AT,OT,CT>, XprT> ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(left,right.expression()));
 }
 
 
 /** Declare mul taking an et::QuaternionXpr and a quaternion. */
-template<class XprT, typename VecT, typename OrderT, typename CrossT>
+template<class XprT, typename E, class AT, class OT, class CT>
 inline et::QuaternionXpr<
-    et::QuaternionMulOp< XprT, quaternion<VecT,OrderT,CrossT> >
+    et::QuaternionMulOp< XprT, quaternion<E,AT,OT,CT> >
 >
 operator* (
         QUATXPR_ARG_TYPE left,
-        const quaternion<VecT,OrderT,CrossT>& right)
+        const quaternion<E,AT,OT,CT>& right)
 {
-    typedef et::QuaternionMulOp< XprT, quaternion<VecT,OrderT,CrossT> > ExprT;
+    typedef et::QuaternionMulOp< XprT, quaternion<E,AT,OT,CT> > ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(left.expression(),right));
 }
 

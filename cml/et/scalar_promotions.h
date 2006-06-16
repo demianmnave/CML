@@ -22,9 +22,11 @@ struct ScalarPromote
         /* Note: order is important here, since the first type_pair matched
          * is returned:
          */
+#if defined(CML_USE_LONG_DOUBLE)
         type_pair<long double,long double>,       long double,
         type_pair<long double,E2>,                long double,
         type_pair<E1,long double>,                long double,
+#endif
 
         type_pair<double,double>,                 double,
         type_pair<double,E2>,                     double,
@@ -41,6 +43,12 @@ struct ScalarPromote
         type_pair<long,long>,                     long,
         type_pair<long,E2>,                       long,
         type_pair<E1,long>,                       long,
+
+/* Workaround MSVC's limited number of template arguments: */
+#if defined(MSVC)
+        Default, typename select_switch<
+        type_pair<E1,E2>,
+#endif
 
         /* Note: this works because a longer type would have been matched
          * already, so the any_type parameter has to be a shorter type.
@@ -79,10 +87,22 @@ struct ScalarPromote
         type_pair<unsigned char,E2>,              unsigned char,
         type_pair<E1,unsigned char>,              unsigned char,
 
+/* Workaround MSVC's limited number of template arguments: */
+#if defined(MSVC)
+        Default, typename select_switch<
+        type_pair<E1,E2>,
+#endif
+
         /* This case matches signed char to signed char: */
         type_pair<char,char>,                     char,
         type_pair<char,E2>,                       char,
         type_pair<E1,char>,                       char
+
+#if defined(MSVC)
+        >::result
+     >::result
+#endif
+
     >::result type;
 };
 

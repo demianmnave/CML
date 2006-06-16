@@ -25,6 +25,7 @@ class vector< Element, fixed<Size> >
   public:
 
     /* Shorthand for the generator: */
+    typedef fixed<> storage_type;
     typedef fixed<Size> generator_type;
 
     /* Shorthand for the array type: */
@@ -32,13 +33,13 @@ class vector< Element, fixed<Size> >
 
     /* Shorthand for the type of this vector: */
     typedef vector<Element,generator_type> vector_type;
-    typedef vector< Element, fixed<Size-1> > subvector_type;
 
     /* For integration into the expression template code: */
     typedef vector_type expr_type;
 
     /* For integration into the expression template code: */
     typedef vector_type temporary_type;
+    typedef vector< Element, fixed<Size-1> > subvector_type;
 
     /* Standard: */
     typedef typename array_type::value_type value_type;

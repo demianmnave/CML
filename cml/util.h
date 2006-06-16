@@ -11,6 +11,10 @@
 #include <stdlib.h>     // For random().
 #include <cml/constants.h>
 
+#if defined(MSVC)
+inline long random() { return ::rand(); }
+#endif
+
 namespace cml {
 
 /** Sign of input value as double. */

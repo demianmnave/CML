@@ -95,7 +95,7 @@ class QuaternionXpr
     }
 
     /** Return the result as a normalized quaternion. */
-    result_type normalize() const {
+    temporary_type normalize() const {
         return m_expr.normalize();
     }
 
@@ -247,8 +247,8 @@ class UnaryQuaternionOp
     }
 
     /** Return the result as a normalized quaternion. */
-    result_type normalize() const {
-        result_type q(QuaternionXpr<expr_type>(*this));
+    temporary_type normalize() const {
+        temporary_type q(QuaternionXpr<expr_type>(*this));
         return q.normalize();
     }
 
@@ -413,8 +413,8 @@ class BinaryQuaternionOp
     }
 
     /** Return the result as a normalized quaternion. */
-    result_type normalize() const {
-        result_type q(QuaternionXpr<expr_type>(*this));
+    temporary_type normalize() const {
+        temporary_type q(QuaternionXpr<expr_type>(*this));
         return q.normalize();
     }
 
@@ -506,7 +506,7 @@ struct ExprTraits< BinaryQuaternionOp<LeftT,RightT,OpT> >
 
 
 /* Helper struct to verify that both arguments are quaternion expressions: */
-template<typename LeftTraits, typename RightTraits>
+template<class LeftTraits, class RightTraits>
 struct QuaternionExpressions
 {
     /* Require that both arguments are quaternion expressions: */

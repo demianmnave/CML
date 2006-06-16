@@ -16,7 +16,7 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 
 #-- CXX=ppc64-redhat-linux-g++
 #-- CPP=$(CXX) -MM
-#-- CXXFLAGS=-ftemplate-depth-50 -O3 -m64 -mcpu=G5 -mtune=G5 -mpowerpc64 \
+#-- CXXFLAGS=-Wall -ftemplate-depth-50 -O3 -m64 -mcpu=G5 -mtune=G5 -mpowerpc64 \
 #-- 	 -mpowerpc-gpopt -fomit-frame-pointer -funroll-loops \
 #-- 	 -finline-functions -finline-limit=2000000000 \
 #-- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
@@ -29,7 +29,7 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 
 #-- CXX=powerpc-apple-darwin8-g++-4.0.0
 #-- CPP=$(CXX) -MM
-#-- CXXFLAGS=-ftemplate-depth-1000 -O3 \
+#-- CXXFLAGS=-Wall -ftemplate-depth-1000 -O3 \
 #-- 	 -mpowerpc-gpopt -fomit-frame-pointer -funroll-loops \
 #-- 	 -finline-functions -finline-limit=2000000000 \
 #-- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=25
@@ -41,7 +41,7 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 
 CXX=powerpc-apple-darwin8-g++-4.0.1
 CPP=$(CXX) -MM
-CXXFLAGS=-ftemplate-depth-1000 -O3 -mcpu=G4 -mtune=G4 -mpowerpc \
+CXXFLAGS=-Wall -ftemplate-depth-1000 -O3 -mcpu=G4 -mtune=G4 -mpowerpc \
 	 -mpowerpc-gpopt -fomit-frame-pointer -funroll-loops \
 	 -finline-functions -finline-limit=2000000000 \
 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100
@@ -53,7 +53,7 @@ LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 #-- CXX=i686-apple-darwin8-g++-4.0.1
 #-- CPP=$(CXX) -MM
-#-- CXXFLAGS=-ftemplate-depth-1000 -O3 \
+#-- CXXFLAGS=-Wall -ftemplate-depth-1000 -O3 \
 #-- 	 -fomit-frame-pointer -funroll-loops \
 #-- 	 -finline-functions -finline-limit=2000000000 \
 #-- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100
@@ -67,7 +67,7 @@ LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 #-- Note: this is for gcc 3.4, which requires explicit inlining:
 #-- CXX=x86_64-redhat-linux-g++ -Wall -W
 #-- CPP=$(CXX) -M
-#-- CXXFLAGS=-ftemplate-depth-1000 -mtune=opteron -march=opteron -O3 \
+#-- CXXFLAGS=-Wall -ftemplate-depth-1000 -mtune=opteron -march=opteron -O3 \
 #-- 	 -fomit-frame-pointer -funroll-loops -finline-functions \
 #-- 	 -finline-limit=2000000000 -DCML_ENABLE_ALL_INLINES \
 #--  	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100 #\
@@ -93,7 +93,7 @@ LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 #-- CXX=i386-redhat-linux-g++ -Wall -W
 #-- CPP=$(CXX) -M
-#-- CXXFLAGS=-ftemplate-depth-1000 -march=pentium4 -mtune=pentium4 -O3 \
+#-- CXXFLAGS=-Wall -ftemplate-depth-1000 -march=pentium4 -mtune=pentium4 -O3 \
 #--  	 -finline-limit=10000000 \
 #-- 	 -fomit-frame-pointer -funroll-all-loops -finline-functions \
 #--  	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100 #\
@@ -114,7 +114,7 @@ LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 #-- CXX=icpc -Wcheck -U__GXX_WEAK__
 #-- CPP=icpc -M
-#-- CXXFLAGS=-ftemplate-depth-250 -O2 -msse2 \
+#-- CXXFLAGS=-Wall -ftemplate-depth-250 -O2 -msse2 \
 #-- 	 -fomit-frame-pointer \
 #-- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100 #\
 #-- 	 -DCML_USE_GENERATED_MATRIX_ASSIGN_OP \
@@ -145,7 +145,7 @@ LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 #-- CXX=mingw32-g++
 #-- CPP=$(CXX) -MM
-#-- CXXFLAGS=-ftemplate-depth-50 -march=pentium4 -mtune=pentium4 -O3 \
+#-- CXXFLAGS=-Wall -ftemplate-depth-50 -march=pentium4 -mtune=pentium4 -O3 \
 #-- -funroll-loops -finline-functions -finline-limit=100000000
 #-- CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS)
 #-- exe=.exe

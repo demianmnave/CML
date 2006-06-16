@@ -100,8 +100,8 @@ class ConjugateOp
     }
 
     /** Return the result as a normalized quaternion. */
-    result_type normalize() const {
-        result_type q(QuaternionXpr<expr_type>(*this));
+    temporary_type normalize() const {
+        temporary_type q(QuaternionXpr<expr_type>(*this));
         return q.normalize();
     }
 
@@ -167,16 +167,16 @@ struct ExprTraits< ConjugateOp<ExprT> >
 } // namespace et
 
 /** Conjugation of a quaternion. */
-template<typename VecT, typename OrderT, typename CrossT> inline
-et::QuaternionXpr< et::ConjugateOp< quaternion<VecT,OrderT,CrossT> > >
-conjugate(const quaternion<VecT,OrderT,CrossT>& arg)
+template<typename E, class AT, class OT, class CT> inline
+et::QuaternionXpr< et::ConjugateOp< quaternion<E,AT,OT,CT> > >
+conjugate(const quaternion<E,AT,OT,CT>& arg)
 {
-    typedef et::ConjugateOp< quaternion<VecT,OrderT,CrossT> > ExprT;
+    typedef et::ConjugateOp< quaternion<E,AT,OT,CT> > ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(arg));
 }
 
 /** Conjugation of a QuaternionXpr. */
-template<typename XprT> inline
+template<class XprT> inline
 et::QuaternionXpr< et::ConjugateOp<XprT> >
 conjugate(QUATXPR_ARG_TYPE arg)
 {

@@ -114,8 +114,8 @@ class QuaternionInverseOp
     }
 
     /** Return the result as a normalized quaternion. */
-    result_type normalize() const {
-        result_type q(QuaternionXpr<expr_type>(*this));
+    temporary_type normalize() const {
+        temporary_type q(QuaternionXpr<expr_type>(*this));
         return q.normalize();
     }
 
@@ -184,16 +184,16 @@ struct ExprTraits< QuaternionInverseOp<ExprT> >
 } // namespace et
 
 /** Inverse of a quaternion. */
-template<typename VecT, typename OrderT, typename CrossT> inline
-et::QuaternionXpr< et::QuaternionInverseOp< quaternion<VecT,OrderT,CrossT> > >
-inverse(const quaternion<VecT,OrderT,CrossT>& arg)
+template<typename E, class AT, class OrderT, class CrossT> inline
+et::QuaternionXpr< et::QuaternionInverseOp< quaternion<E,AT,OrderT,CrossT> > >
+inverse(const quaternion<E,AT,OrderT,CrossT>& arg)
 {
-    typedef et::QuaternionInverseOp< quaternion<VecT,OrderT,CrossT> > ExprT;
+    typedef et::QuaternionInverseOp< quaternion<E,AT,OrderT,CrossT> > ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(arg));
 }
 
 /** Inverse of a QuaternionXpr. */
-template<typename XprT> inline
+template<class XprT> inline
 et::QuaternionXpr< et::QuaternionInverseOp<XprT> >
 inverse(QUATXPR_ARG_TYPE arg)
 {

@@ -38,7 +38,7 @@ struct type_quad {
 };
 
 /** Match any type (for use with same_type<> and select_switch<>). */
-typedef struct any_type {};
+struct any_type {};
 
 /** Determine if two types are the same.
  *

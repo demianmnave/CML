@@ -28,6 +28,7 @@ class vector< Element, external<Size> >
   public:
 
     /* Shorthand for the generator: */
+    typedef external<> storage_type;
     typedef external<Size> generator_type;
 
     /* Shorthand for the array type: */
@@ -41,6 +42,7 @@ class vector< Element, external<Size> >
 
     /* For integration into the expression template code: */
     typedef vector< Element,fixed<Size> > temporary_type;
+    typedef typename temporary_type::subvector_type subvector_type;
     /* Note: this ensures that an external vector is copied into the proper
      * temporary; external<> temporaries are not allowed.
      */
@@ -162,6 +164,7 @@ class vector< Element, external<> >
   public:
 
     /* Shorthand for the generator: */
+    typedef external<> storage_type;
     typedef external<> generator_type;
 
     /* Shorthand for the array type: */

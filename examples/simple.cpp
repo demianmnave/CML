@@ -518,8 +518,7 @@ void example18()
 {
     cout << std::endl << "Example18:" << endl;
 
-    typedef vector< double, fixed<4> > vector_type;
-    typedef quaternion<vector_type> quaternion_type;
+    typedef quaternion< double, fixed<> > quaternion_type;
 
     double v1[] = {1.,0.,0.}, v2[] = {1.,0.,1.};
     quaternion_type p(1.,v1), q(0.,v2), r, s;
@@ -576,9 +575,9 @@ void example19()
 {
     cout << std::endl << "Example19:" << endl;
 
-    typedef vector< double, fixed<4> > vector_type;
     typedef negative_cross cross_type;
-    typedef quaternion<vector_type, scalar_first, cross_type> quaternion_type;
+    typedef quaternion<
+        double, fixed<>, scalar_first, cross_type> quaternion_type;
 
     double v1[] = {1.,0.,0.}, v2[] = {0.,1.,0.};
     quaternion_type p(0.,v1), q(0.,v2), r, s;
@@ -614,12 +613,17 @@ void example20()
 {
     cout << std::endl << "Example20:" << endl;
 
-    typedef vector< double, fixed<4> > vector_type;
     typedef positive_cross cross_type;
-    typedef quaternion<vector_type, scalar_first, cross_type> quaternion_type;
+    typedef quaternion<
+        double, fixed<>, scalar_first, cross_type> quaternion_type;
+    typedef quaternion<
+        double, external<>, scalar_first, cross_type> extquat_type;
 
-    double v1[] = {3.,4.,0.}, v2[] = {11.,60.,0.};
-    quaternion_type p(0.,v1), q(0.,v2), r, s;
+    double _v1[4] = {0.,3.,4.,0.};
+    extquat_type p(_v1);
+
+    double v2[] = {11.,60.,0.};
+    quaternion_type q(0.,v2), r, s;
     cout << "p = " << p << endl;
     cout << "length(p) = " << length(p) << endl;
     cout << "q = " << q << endl;

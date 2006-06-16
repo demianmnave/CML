@@ -76,6 +76,7 @@ template<typename Find
 , typename T14 = NilCase, typename R14 = void
 , typename T15 = NilCase, typename R15 = void
 , typename T16 = NilCase, typename R16 = void
+#if !defined(MSVC)
 , typename T17 = NilCase, typename R17 = void
 , typename T18 = NilCase, typename R18 = void
 , typename T19 = NilCase, typename R19 = void
@@ -100,6 +101,7 @@ template<typename Find
 , typename T38 = NilCase, typename R38 = void
 , typename T39 = NilCase, typename R39 = void
 , typename T40 = NilCase, typename R40 = void
+#endif
 > struct select_switch
 {
     typedef typename
@@ -119,6 +121,7 @@ template<typename Find
         , meta::select_case< T14,R14
         , meta::select_case< T15,R15
         , meta::select_case< T16,R16
+#if !defined(MSVC)
         , meta::select_case< T17,R17
         , meta::select_case< T18,R18
         , meta::select_case< T19,R19
@@ -145,7 +148,9 @@ template<typename Find
         , meta::select_case< T40,R40
         > > > > > > > > > >     /* 10 */
         > > > > > > > > > >     /* 10 */
-        > > > > > > > > > >     /* 10 */
+        > > > >    /* 4 */
+#endif
+        > > > > > >     /* 6 */
         > > > > > > > > > >     /* 10 */
         ::template match<Find>::result result;
 };
