@@ -31,7 +31,7 @@
  */
 #define CML_ASSIGN_MAT_22                                               \
 matrix_type&                                                            \
-assign(                                                                 \
+set(                                                                    \
     ELEMENT_ARG_TYPE e00, ELEMENT_ARG_TYPE e01,                         \
     ELEMENT_ARG_TYPE e10, ELEMENT_ARG_TYPE e11                          \
     )                                                                   \
@@ -52,7 +52,7 @@ assign(                                                                 \
  */
 #define CML_ASSIGN_MAT_33                                               \
 matrix_type&                                                            \
-assign(                                                                 \
+set(                                                                    \
     ELEMENT_ARG_TYPE e00, ELEMENT_ARG_TYPE e01, ELEMENT_ARG_TYPE e02,   \
     ELEMENT_ARG_TYPE e10, ELEMENT_ARG_TYPE e11, ELEMENT_ARG_TYPE e12,   \
     ELEMENT_ARG_TYPE e20, ELEMENT_ARG_TYPE e21, ELEMENT_ARG_TYPE e22    \
@@ -78,7 +78,7 @@ assign(                                                                 \
  */
 #define CML_ASSIGN_MAT_44                                               \
 matrix_type&                                                            \
-assign(                                                                 \
+set(                                                                    \
     ELEMENT_ARG_TYPE e00, ELEMENT_ARG_TYPE e01,                         \
         ELEMENT_ARG_TYPE e02, ELEMENT_ARG_TYPE e03,                     \
     ELEMENT_ARG_TYPE e10, ELEMENT_ARG_TYPE e11,                         \
@@ -114,7 +114,7 @@ matrix(                                                                 \
     ELEMENT_ARG_TYPE e10, ELEMENT_ARG_TYPE e11                          \
     )                                                                   \
 {                                                                       \
-    assign(                                                             \
+    set(                                                                \
          e00,e01,                                                       \
          e10,e11                                                        \
     );                                                                  \
@@ -131,7 +131,7 @@ matrix(                                                                 \
     ELEMENT_ARG_TYPE e20, ELEMENT_ARG_TYPE e21, ELEMENT_ARG_TYPE e22    \
     )                                                                   \
 {                                                                       \
-    assign(                                                             \
+    set(                                                                \
          e00,e01,e02,                                                   \
          e10,e11,e12,                                                   \
          e20,e21,e22                                                    \
@@ -154,7 +154,7 @@ matrix(                                                                 \
         ELEMENT_ARG_TYPE e32, ELEMENT_ARG_TYPE e33                      \
     )                                                                   \
 {                                                                       \
-    assign(                                                             \
+    set(                                                                \
          e00,e01,e02,e03,                                               \
          e10,e11,e12,e13,                                               \
          e20,e21,e22,e23,                                               \
