@@ -20,7 +20,7 @@
 /** Set a vector from 2 values. */
 #define CML_ASSIGN_VEC_2                                                \
 vector_type&                                                            \
-set(ELEMENT_ARG_TYPE e0, ELEMENT_ARG_TYPE e1) {                      \
+set(ELEMENT_ARG_TYPE e0, ELEMENT_ARG_TYPE e1) {                         \
     _DO_VECTOR_SET_RESIZE(2);                                           \
     /* This is overkill, but simplifies size checking: */               \
     value_type v[] = {e0,e1};                                           \
@@ -33,7 +33,7 @@ set(ELEMENT_ARG_TYPE e0, ELEMENT_ARG_TYPE e1) {                      \
 /** Set a vector from 3 values. */
 #define CML_ASSIGN_VEC_3                                                \
 vector_type&                                                            \
-set(                                                                 \
+set(                                                                    \
         ELEMENT_ARG_TYPE e0,                                            \
         ELEMENT_ARG_TYPE e1,                                            \
         ELEMENT_ARG_TYPE e2                                             \
@@ -51,7 +51,7 @@ set(                                                                 \
 /** Create a vector from 4 values. */
 #define CML_ASSIGN_VEC_4                                                \
 vector_type&                                                            \
-set(                                                                 \
+set(                                                                    \
         ELEMENT_ARG_TYPE e0,                                            \
         ELEMENT_ARG_TYPE e1,                                            \
         ELEMENT_ARG_TYPE e2,                                            \
@@ -71,7 +71,7 @@ set(                                                                 \
 /** Create a vector from 2 values. */
 #define CML_CONSTRUCT_VEC_2(_add_)                                      \
 vector(ELEMENT_ARG_TYPE e0, ELEMENT_ARG_TYPE e1) _add_ {                \
-    set(e0,e1);                                                      \
+    set(e0,e1);                                                         \
 }
 
 /** Create a vector from 3 values. */
@@ -82,7 +82,7 @@ vector(                                                                 \
         ELEMENT_ARG_TYPE e2                                             \
         ) _add_                                                         \
 {                                                                       \
-    set(e0,e1,e2);                                                   \
+    set(e0,e1,e2);                                                      \
 }
 
 /** Create a vector from 4 values. */
@@ -94,7 +94,7 @@ vector(                                                                 \
         ELEMENT_ARG_TYPE e3                                             \
         ) _add_                                                         \
 {                                                                       \
-    set(e0,e1,e2,e3);                                                \
+    set(e0,e1,e2,e3);                                                   \
 }
 
 /** Copy-construct a vector from a fixed-size array of values. */
