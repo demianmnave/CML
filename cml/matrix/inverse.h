@@ -18,6 +18,9 @@ namespace detail {
  */
 template<typename MatT, int _tag> struct inverse_f;
 
+/* @todo: Reciprocal optimization for division by determinant.
+ */
+
 /* 2x2 inverse.  Despite being marked for fixed_size matrices, this can
  * be used for dynamic-sized ones also:
  */
@@ -194,6 +197,117 @@ struct inverse_f<MatT,4>
     }
 };
 
+/* If more extensive general linear algebra functionality is offered in
+ * future versions it may be useful to make the elementary row and column
+ * operations separate functions. For now they're simply performed in place,
+ * but the commented-out lines of code show where the calls to these functions
+ * should go if and when they become available.
+ */
+ 
+/* @todo: In-place version, and address memory allocation for pivot vector.
+ */
+
+/* General NxN inverse by Gauss-Jordan elimination with full pivoting:  */
+template<typename MatT, int _tag>
+struct inverse_f
+{
+    typename MatT::temporary_type operator()(const MatT& M) const
+    {
+        /* Shorthand. */
+        typedef typename MatT::value_type value_type;
+        
+        /* Size of matrix */
+        size_t N = M.rows();
+
+        /* Matrix containing the inverse: */
+        typename MatT::temporary_type Z;
+        cml::et::detail::Resize(Z,N,N);
+        Z = M;
+
+        /* For tracking pivots */
+        std::vector<size_t> row_index(N);
+        std::vector<size_t> col_index(N);
+        std::vector<size_t> pivoted(N,0);
+
+        /* For each column */
+        for (size_t i = 0; i < N; ++i) {
+        
+            /* Find the pivot */
+            size_t row = 0, col = 0;
+            value_type max = value_type(0);
+            for (size_t j = 0; j < N; ++j) {
+                if (!pivoted[j]) {
+                    for (size_t k = 0; k < N; ++k) {
+                        if (!pivoted[k]) {
+                            value_type mag = std::fabs(Z(j,k));
+                            if (mag > max) {
+                                max = mag;
+                                row = j;
+                                col = k;
+                            }
+                        }
+                    }
+                }
+            }
+
+            /* TODO: Check max against epsilon here to catch singularity */
+
+            row_index[i] = row;
+            col_index[i] = col;
+
+            /* Swap rows if necessary */
+            if (row != col) {
+                /*Z.row_op_swap(row,col);*/
+                for (size_t j = 0; j < Z.cols(); ++j) {
+                    std::swap(Z(row,j),Z(col,j));
+                }
+            }
+            
+            /* Process pivot row */
+            pivoted[col] = true;
+            value_type pivot = Z(col,col);
+            Z(col,col) = value_type(1);
+            /*Z.row_op_mult(col,value_type(1)/pivot);*/
+            value_type k = value_type(1)/pivot;
+            for (size_t j = 0; j < Z.cols(); ++j) {
+                Z(col,j) *= k;
+            }
+
+            /* Process other rows */
+            for (size_t j = 0; j < N; ++j) {
+                if (j != col) {
+                    value_type mult = -Z(j,col);
+                    Z(j,col) = value_type(0);
+                    /*Z.row_op_add_mult(col,j,mult);*/
+                    for (size_t k = 0; k < Z.cols(); ++k) {
+                        Z(j,k) += mult * Z(col,k);
+                    }
+                }
+            }
+        }
+
+        /* Swap columns if necessary */
+        for (int i = N-1; i >= 0; --i) {
+            if (row_index[i] != col_index[i]) {
+                /*Z.col_op_swap(row_index[i],col_index[i]);*/
+                for (size_t j = 0; j < Z.rows(); ++j) {
+                    std::swap(Z(j,row_index[i]),Z(j,col_index[i]));
+                }
+            }
+        }
+
+        /* Return result */
+        return Z;
+    }
+};
+
+/* Inversion by LU factorization is turned off for now due to lack of
+ * pivoting in the implementation, but we may switch back to it at some future
+ * time.
+ */
+ 
+#if 0
+
 /* General NxN inverse by LU factorization:  */
 template<typename MatT, int _tag>
 struct inverse_f
@@ -237,28 +351,46 @@ struct inverse_f
 
 };
 
+#endif
+
+/* Note: force_NxN is for checking general NxN inversion against the special-
+ * case 2x2, 3x3 and 4x4 code. I'm leaving it in for now since we may need to
+ * test the NxN code further if the implementation changes. At some future
+ * time when the implementation is stable, everything related to force_NxN can
+ * be taken out.
+ */
+
 /* Generator for the inverse functional for fixed-size matrices: */
 template<typename MatT> typename MatT::temporary_type
-inverse(const MatT& M, fixed_size_tag)
+inverse(const MatT& M, fixed_size_tag, bool force_NxN)
 {
     /* Require a square matrix: */
     cml::et::CheckedSquare(M, fixed_size_tag());
-    return inverse_f<MatT,MatT::array_rows>()(M);
+    
+    if (force_NxN) {
+        return inverse_f<MatT,0>()(M);
+    } else {
+        return inverse_f<MatT,MatT::array_rows>()(M);
+    }
 }
 
 /* Generator for the inverse functional for dynamic-size matrices: */
 template<typename MatT> typename MatT::temporary_type
-inverse(const MatT& M, dynamic_size_tag)
+inverse(const MatT& M, dynamic_size_tag, bool force_NxN)
 {
     /* Require a square matrix: */
     cml::et::CheckedSquare(M, dynamic_size_tag());
-
-    /* Dispatch based upon the matrix dimension: */
-    switch(M.rows()) {
-        case 2:  return inverse_f<MatT,2>()(M);
-        case 3:  return inverse_f<MatT,3>()(M);
-        case 4:  return inverse_f<MatT,4>()(M);
-        default: return inverse_f<MatT,0>()(M);     // > 4x4.
+    
+    if (force_NxN) { 
+        return inverse_f<MatT,0>()(M);
+    } else {
+        /* Dispatch based upon the matrix dimension: */
+        switch(M.rows()) {
+            case 2:  return inverse_f<MatT,2>()(M);     //   2x2
+            case 3:  return inverse_f<MatT,3>()(M);     //   3x3
+            case 4:  return inverse_f<MatT,4>()(M);     //   4x4
+            default: return inverse_f<MatT,0>()(M);     // > 4x4 (or 1x1)
+        }
     }
 }
 
@@ -267,19 +399,19 @@ inverse(const MatT& M, dynamic_size_tag)
 /** Inverse of a matrix. */
 template<typename E, class AT, typename BO, typename L> inline
 typename matrix<E,AT,BO,L>::temporary_type
-inverse(const matrix<E,AT,BO,L>& M)
+inverse(const matrix<E,AT,BO,L>& M, bool force_NxN = false)
 {
     typedef typename matrix<E,AT,BO,L>::size_tag size_tag;
-    return detail::inverse(M,size_tag());
+    return detail::inverse(M,size_tag(),force_NxN);
 }
 
 /** Inverse of a matrix expression. */
 template<typename XprT> inline
 typename et::MatrixXpr<XprT>::temporary_type
-inverse(const et::MatrixXpr<XprT>& e)
+inverse(const et::MatrixXpr<XprT>& e, bool force_NxN = false)
 {
     typedef typename et::MatrixXpr<XprT>::size_tag size_tag;
-    return detail::inverse(e,size_tag());
+    return detail::inverse(e,size_tag(),force_NxN);
 }
 
 } // namespace cml
