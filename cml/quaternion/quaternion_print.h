@@ -75,6 +75,16 @@ operator<<(std::ostream& os, const cml::quaternion<E,AT,OT,CT>& q)
 
 #endif
 
+/** Output a quaternion expression to a std::ostream. */
+template< class XprT > inline std::ostream&
+operator<<(std::ostream& os, const et::QuaternionXpr<XprT>& q)
+{
+    typedef typename et::QuaternionXpr<XprT>::result_type quaternion_type;
+
+    os << quaternion_type(q);
+    return os;
+}
+
 } // namespace cml
 
 #endif

@@ -29,6 +29,23 @@ operator<<(std::ostream& os, const matrix<E,AT,BO,L>& m)
     return os;
 }
 
+/** Output a matrix expression to a std::ostream. */
+template< class XprT > inline std::ostream&
+operator<<(std::ostream& os, const et::MatrixXpr<XprT>& m)
+{
+    for(size_t i = 0; i < m.rows(); ++i) {
+        os << "[";
+        for(size_t j = 0; j < m.cols(); ++j) {
+            os << " " << m(i,j);
+        }
+        os << " ]";
+        if (i != m.rows()-1) {
+            os << std::endl;
+        }
+    }
+    return os;
+}
+
 } // namespace cml
 
 #endif
