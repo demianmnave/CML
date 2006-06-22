@@ -199,7 +199,7 @@ inline double random_unit() {
 }
 
 /* Random integer in the range [min, max] */
-inline size_t random_integer(size_t min, size_t max) {
+inline long random_integer(long min, long max) {
     return min + ::random() % (max - min + 1);
 }
 
