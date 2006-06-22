@@ -59,6 +59,9 @@ class QuaternionXpr
 
     /* Record the order type: */
     typedef typename result_type::order_type order_type;
+    
+    /* Record the cross type: */
+    typedef typename result_type::cross_type cross_type;
 
 
   public:
