@@ -53,6 +53,9 @@ class MatrixXpr
 
     /* Get the result type: */
     typedef typename expr_traits::result_type result_type;
+    
+    /* Get the basis type: */
+    typedef typename result_type::basis_orient basis_orient;
 
     /* Get the temporary type: */
     typedef typename result_type::temporary_type temporary_type;
@@ -91,6 +94,11 @@ class MatrixXpr
     value_type operator()(size_t i, size_t j) const {
         return expr_traits().get(m_expr,i,j);
     }
+    
+    /** Return element j of basis vector i. */
+    value_type basis_element(size_t i, size_t j) const {
+        return basis_element(i,j,basis_orient());
+    }
 
 
   public:
@@ -100,6 +108,17 @@ class MatrixXpr
 
     /** Copy constructor. */
     MatrixXpr(const expr_type& e) : m_expr(e.m_expr) {}
+
+
+  protected:
+
+    value_type basis_element(size_t i, size_t j, row_basis) const {
+        return (*this)(i,j);
+    }
+
+    value_type basis_element(size_t i, size_t j, col_basis) const {
+        return (*this)(j,i);
+    }
 
 
   protected:
