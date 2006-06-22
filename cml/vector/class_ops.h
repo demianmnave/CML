@@ -97,6 +97,19 @@ vector(                                                                 \
     set(e0,e1,e2,e3);                                                   \
 }
 
+/** Create a (fixed-size) N vector from an N-1-vector and a scalar. */
+#define CML_CONSTRUCT_FROM_SUBVEC(_add_)                                \
+vector(                                                                 \
+        const subvector_type& s,                                        \
+        ELEMENT_ARG_TYPE e                                              \
+        ) _add_                                                         \
+{                                                                       \
+    _DO_VECTOR_SET_RESIZE(s.size()+1);                                  \
+    for(ssize_t i = 0; i < s.size(); ++ i)                              \
+        (*this)[i] = s[i];                                              \
+    (*this)[s.size()] = e;                                              \
+}
+
 /** Copy-construct a vector from a fixed-size array of values. */
 #define CML_VEC_COPY_FROM_FIXED_ARRAY(_N_,_add_)                        \
 vector(const value_type v[_N_]) _add_ {                                 \

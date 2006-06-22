@@ -36,6 +36,9 @@ struct QuaternionPromote<
 
     /* The deduced quaternion result type: */
     typedef cml::quaternion<value_type,storage_type,OT,CT> type;
+
+    /* The temporary type: */
+    typedef typename type::temporary_type temporary_type;
 };
 
 /** Type promotion for a quaternion and a scalar. */
@@ -53,6 +56,9 @@ struct QuaternionPromote<cml::quaternion<E,AT,OT,CT>, S>
 
     /* The deduced quaternion result type: */
     typedef cml::quaternion<value_type,storage_type,OT,CT> type;
+
+    /* The temporary type: */
+    typedef typename type::temporary_type temporary_type;
 };
 
 /** Type promotion for a scalar and a quaternion. */
@@ -70,6 +76,9 @@ struct QuaternionPromote<S, cml::quaternion<E,AT,OT,CT> >
 
     /* The deduced quaternion result type: */
     typedef cml::quaternion<value_type,storage_type,OT,CT> type;
+
+    /* The temporary type: */
+    typedef typename type::temporary_type temporary_type;
 };
 
 } // namespace et

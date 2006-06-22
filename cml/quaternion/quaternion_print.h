@@ -11,31 +11,6 @@
 #include <iostream>
 
 namespace cml {
-namespace detail {
-
-/** Print a quaternion given scalar first. */
-template<typename E, class AT, class CT> inline std::ostream&
-print(std::ostream& os, const cml::quaternion<E,AT,scalar_first,CT>& q)
-{
-    os << ((q[0] < 0)?" - ":"") << std::fabs(q[0]);
-    os << ((q[1] < 0)?" - ":" + ") << std::fabs(q[1]) << "i";
-    os << ((q[2] < 0)?" - ":" + ") << std::fabs(q[2]) << "j";
-    os << ((q[3] < 0)?" - ":" + ") << std::fabs(q[3]) << "k";
-    return os;
-}
-
-/** Print a quaternion given vector (imaginary) first. */
-template<typename E, class AT, class CT> std::ostream&
-quat_print(std::ostream& os, const cml::quaternion<E,AT,vector_first,CT>& q)
-{
-    os << ((q[0] < 0)?" - ":"") << std::fabs(q[0]) << "i";
-    os << ((q[1] < 0)?" - ":" + ") << std::fabs(q[1]) << "j";
-    os << ((q[2] < 0)?" - ":" + ") << std::fabs(q[2]) << "k";
-    os << ((q[3] < 0)?" - ":" + ") << std::fabs(q[3]);
-    return os;
-}
-
-} // namespace detail
 
 #if !defined(CML_PLAIN_QUATERNION_OUTPUT)
 
@@ -82,6 +57,10 @@ operator<<(std::ostream& os, const et::QuaternionXpr<XprT>& q)
     typedef typename et::QuaternionXpr<XprT>::result_type quaternion_type;
 
     os << quaternion_type(q);
+    /* XXX This temporary can be removed by templating the stream insertion
+     * operators above.
+     */
+
     return os;
 }
 

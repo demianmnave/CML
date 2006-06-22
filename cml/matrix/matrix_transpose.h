@@ -206,7 +206,7 @@ transpose(MATXPR_ARG_TYPE expr)
     /* Create the temporary and return it: */
     tmp_type tmp;
     cml::et::detail::Resize(tmp,expr.rows(),expr.cols());
-    tmp = ExprT(Op(expr));
+    tmp = ExprT(Op(expr.expression()));
     return tmp;
 }
 

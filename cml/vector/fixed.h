@@ -133,6 +133,8 @@ class vector< Element, fixed<Size> >
     CML_CONSTRUCT_VEC_3(/**/)
     CML_CONSTRUCT_VEC_4(/**/)
 
+    CML_CONSTRUCT_FROM_SUBVEC(/**/)
+
     CML_VEC_COPY_FROM_FIXED_ARRAY(array_type::array_size,/**/)
     CML_VEC_COPY_FROM_VECTYPE(/**/)
     CML_VEC_COPY_FROM_VEC

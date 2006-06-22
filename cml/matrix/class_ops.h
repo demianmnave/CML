@@ -40,7 +40,8 @@ set(                                                                    \
     /* This is overkill, but simplifies size checking: */               \
     value_type v[2][2] = {{e00,e01},{e10,e11}};                         \
     typedef et::OpAssign<Element,Element> OpT;                          \
-    cml::matrix<const value_type, external<2,2>, basis_orient, layout>  \
+    typedef const value_type element;                                   \
+    cml::matrix<element, external<2,2>, basis_orient, row_major>        \
         src(&v[0][0]);                                                  \
     et::UnrollAssignment<OpT>(*this,src);                               \
     return *this;                                                       \
@@ -66,7 +67,8 @@ set(                                                                    \
         {e20,e21,e22}                                                   \
     };                                                                  \
     typedef et::OpAssign<Element,Element> OpT;                          \
-    cml::matrix<const value_type, external<3,3>, basis_orient, layout>  \
+    typedef const value_type element;                                   \
+    cml::matrix<element, external<3,3>, basis_orient, row_major>        \
         src(&v[0][0]);                                                  \
     et::UnrollAssignment<OpT>(*this,src);                               \
     return *this;                                                       \
@@ -98,7 +100,8 @@ set(                                                                    \
         {e30,e31,e32,e33}                                               \
     };                                                                  \
     typedef et::OpAssign<Element,Element> OpT;                          \
-    cml::matrix<const value_type, external<4,4>, basis_orient, layout>  \
+    typedef const value_type element;                                   \
+    cml::matrix<element, external<4,4>, basis_orient, row_major>        \
         src(&v[0][0]);                                                  \
     et::UnrollAssignment<OpT>(*this,src);                               \
     return *this;                                                       \
@@ -167,7 +170,7 @@ matrix(                                                                 \
 matrix(const value_type m[_R_][_C_]) {                                  \
     typedef et::OpAssign<Element,Element> OpT;                          \
     cml::matrix<const value_type, external<_R_,_C_>,                    \
-        basis_orient, layout> src(&m[0][0]);                            \
+        basis_orient, row_major> src(&m[0][0]);                         \
     et::UnrollAssignment<OpT>(*this,src);                               \
 }
 

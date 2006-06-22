@@ -86,7 +86,7 @@ void example3()
     cout << "  A = " << A << endl;
     cout << "  B = " << B << endl;
 
-    C = T(A)+B;
+    C = T(A+B);
     cout << "  C(0,0) = " << C(0,0) << endl;
     cout << "  C(2,0) = " << C(2,0) << endl;
 
@@ -118,7 +118,7 @@ void example4()
     cout << "  A = " << A << endl;
     cout << "  B = " << B << endl;
 
-    C = A+B;
+    C = T(A+B);
     cout << "  C(0,0) = " << C(0,0) << endl;
 
     A = identity(C);
