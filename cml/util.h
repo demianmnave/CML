@@ -257,6 +257,17 @@ size_t index_of_min_abs(T a, T b, T c) {
     return index_of_min(std::fabs(a),std::fabs(b),std::fabs(c));
 }
 
+/** Wrap input value to the range [min,max]. */
+template < typename T >
+T wrap(T value, T min, T max) {
+    max -= min;
+    value = std::fmod(value - min, max);
+    if (value < T(0)) {
+        value += max;
+    }
+    return min + value;
+}
+
 /** Convert horizontal field of view to vertical field of view. */
 template < typename T >
 T xfov_to_yfov(T xfov, T aspect) {
