@@ -242,6 +242,20 @@ cross(const LeftT& left, const RightT& right)
     return V;
 }
 
+/** Return the triple product of three 3D vectors.
+ *
+ * No checking is done here, as dot() and cross() will catch any size or
+ * type errors.
+ */
+
+template < class VecT_1, class VecT_2, class VecT_3 >
+typename detail::DotPromote<
+    VecT_1, typename detail::CrossPromote< VecT_2, VecT_3 >::promoted_vector
+>::promoted_scalar
+triple_product(const VecT_1& v1, const VecT_2& v2, const VecT_3& v3) {
+    return dot(v1,cross(v2,v3));
+}
+
 template<typename LeftT, typename RightT>
 inline typename detail::OuterPromote<LeftT,RightT>::promoted_matrix
 outer(const LeftT& left, const RightT& right)
