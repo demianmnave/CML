@@ -19,9 +19,15 @@
 #include <cml/matrix/matrix_expr.h>
 
 /* This is used below to create a more meaningful compile-time error when
- * dot is not provided with vector or VectorExpr arguments:
+ * dot() is not provided with vector or VectorExpr arguments:
  */
 struct dot_expects_vector_args_error;
+
+/* This is used below to create a more meaningful compile-time error when
+ * perp_dot() is not provided with 2D vector or VectorExpr arguments:
+ */
+struct perp_dot_expects_vector_args_error;
+struct perp_dot_expects_2D_vector_args_error;
 
 /* This is used below to create a more meaningful compile-time error when
  * outer() is not provided with vector or VectorExpr arguments:
@@ -165,10 +171,25 @@ Require3D(const VecT& v, fixed_size_tag) {
 }
 
 /** For cross(): run-time check for a 3D vector. */
-template<typename VecT, size_t N> inline void
+template<typename VecT/*, size_t N*/> inline void
 Require3D(const VecT& v, dynamic_size_tag) {
     et::GetCheckedSize<VecT,VecT,dynamic_size_tag>()
         .equal_or_fail(v.size(),size_t(3));
+}
+
+/** For perp_dot(): compile-time check for a 2D vector. */
+template<typename VecT> inline void
+Require2D(const VecT& v, fixed_size_tag) {
+    CML_STATIC_REQUIRE_M(
+            ((size_t)VecT::array_size == 2),
+            perp_dot_expects_2D_vector_args_error);
+}
+
+/** For perp_dot(): run-time check for a 2D vector. */
+template<typename VecT/*, size_t N*/> inline void
+Require2D(const VecT& v, dynamic_size_tag) {
+    et::GetCheckedSize<VecT,VecT,dynamic_size_tag>()
+        .equal_or_fail(v.size(),size_t(2));
 }
 
 } // namespace detail
@@ -206,6 +227,39 @@ dot(const LeftT& left, const RightT& right)
     return detail::UnrollDot(left,right,size_tag());
 }
 
+/** perp_dot()
+ */
+template<typename LeftT, typename RightT>
+inline typename detail::DotPromote<LeftT,RightT>::promoted_scalar
+perp_dot(const LeftT& left, const RightT& right)
+{
+    /* Shorthand: */
+    typedef et::ExprTraits<LeftT> left_traits;
+    typedef et::ExprTraits<RightT> right_traits;
+    typedef typename left_traits::result_tag left_result;
+    typedef typename right_traits::result_tag right_result;
+
+    /* perp_dot() requires vector expressions: */
+    CML_STATIC_REQUIRE_M(
+        (same_type<left_result, et::vector_result_tag>::is_true
+         && same_type<right_result, et::vector_result_tag>::is_true),
+        perp_dot_expects_vector_args_error);
+    /* Note: parens are required here so that the preprocessor ignores the
+     * commas.
+     */
+
+    /* Make sure arguments are 2D vectors: */
+    detail::Require2D(left, typename left_traits::size_tag());
+    detail::Require2D(right, typename right_traits::size_tag());
+
+    /* Get result type: */
+    typedef typename detail::DotPromote<
+        LeftT,RightT>::promoted_scalar result_type;
+
+    /* Compute and return: */
+    return result_type(left[0]*right[1]-left[1]*right[0]);
+}
+
 template<typename LeftT, typename RightT>
 inline typename detail::CrossPromote<LeftT,RightT>::promoted_vector
 cross(const LeftT& left, const RightT& right)
@@ -236,8 +290,8 @@ cross(const LeftT& left, const RightT& right)
     /* Now, compute and return the cross product: */
     result_type V(
             left[1]*right[2] - left[2]*right[1],
-            left[2]*right[0] - right[2]*left[0],
-            left[0]*right[1] - right[0]*left[1]
+            left[2]*right[0] - left[0]*right[2],
+            left[0]*right[1] - left[1]*right[0]
             );
     return V;
 }
