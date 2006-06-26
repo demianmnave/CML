@@ -202,10 +202,19 @@ CML_VECXPR_VEC_ORDER(    total_order, operator==, et::OpEquals)
 CML_VEC_VECXPR_ORDER(    total_order, operator==, et::OpEquals)
 CML_VECXPR_VECXPR_ORDER( total_order, operator==, et::OpEquals)
 
+#if 0
 CML_VEC_VEC_ORDER(       weak_order, operator!=, et::OpEquals)
 CML_VECXPR_VEC_ORDER(    weak_order, operator!=, et::OpEquals)
 CML_VEC_VECXPR_ORDER(    weak_order, operator!=, et::OpEquals)
 CML_VECXPR_VECXPR_ORDER( weak_order, operator!=, et::OpEquals)
+#endif
+
+/* Changed from OpEquals (above) by Jesse */
+CML_VEC_VEC_ORDER(       weak_order, operator!=, et::OpUnequal)
+CML_VECXPR_VEC_ORDER(    weak_order, operator!=, et::OpUnequal)
+CML_VEC_VECXPR_ORDER(    weak_order, operator!=, et::OpUnequal)
+CML_VECXPR_VECXPR_ORDER( weak_order, operator!=, et::OpUnequal)
+/* End change */
 
 CML_VEC_VEC_ORDER(        weak_order, operator<, et::OpLess)
 CML_VECXPR_VEC_ORDER(     weak_order, operator<, et::OpLess)
