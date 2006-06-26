@@ -65,6 +65,13 @@
 #include <cml/quaternion.h>
 #include <cml/util.h>
 
+/* All of the higher-level math code is pulled in from mathlib/mathlib.h.
+ * If we need to go back to a 'clean' version of the CML, it should be simply
+ * a matter of removing this #include, and the mathlib directory itself.
+ */
+
+#include <cml/mathlib/mathlib.h>
+
 #endif
 
 // -------------------------------------------------------------------------
