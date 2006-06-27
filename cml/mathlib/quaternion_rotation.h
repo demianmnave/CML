@@ -8,7 +8,7 @@
 #ifndef quaternion_rotation_h
 #define quaternion_rotation_h
 
-#include "cml_code/checking.h"
+#include <cml/mathlib/checking.h>
 
 /* Functions related to quaternion rotations.
  *
