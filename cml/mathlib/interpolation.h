@@ -20,11 +20,11 @@
  * decided to give this a try instead.
  *
  * This definitely needs another look though, if nothing else to make sure
- * that all necessary dynamic resizing is take care of. Also, I'm wondering
+ * that all necessary dynamic resizing is taken care of. Also, I'm wondering
  * if more than one temporary is generated due to the layers involved; can
  * this be addressed through inlining?
  *
- * Actually, not that I think about it this was probably the wrong way to go
+ * Actually, now that I think about it this was probably the wrong way to go
  * about it. Since there are only two arguments to slerp() that can be CML
  * expressions, and three types, that would only be 12 function signatures.
  * So instead, we could have 12 overloaded versions of slerp() that passed off
@@ -34,13 +34,17 @@
  * This is already in place though, so I'm just going to finish this up as is.
  * We'll come back and clean it up later.
  *
+ * UPDATE: I'll probably stick with the current architecture for slerp() and
+ * nlerp(), as it's necessary to support lerp(), bilerp() and trilerp(), each
+ * of which can accept arbitrary types.
+ *
  * There are also a couple of things I'm not quite sure of and need to look
  * into. One is whether, by any stretch, it's appropriate to use the term
  * 'nlerp' with matrices. This implies, among other things, that to
  * 'normalize' a rotation matrix is to orthogonalize it. I think I've seen
- * normalize used in this way, but I'm not sure whether or not it's
- * technically correct. It would be nice if it were, since then we would have
- * a nice uniform interface.
+ * 'normalize' used in this way, but I'm not sure whether it's technically
+ * correct. It would be nice if it were, since then we would have a nice
+ * uniform interface.
  *
  * The other thing I'm not sure about is what the best method of linearly
  * interpolating rotation matrices is. Currently I'm lerping them and then
@@ -59,20 +63,94 @@ namespace detail {
 // Helper struct to promote a vector, quaternion or matrix
 //////////////////////////////////////////////////////////////////////////////
 
+/* @todo: Wrap this up in a single TypePromote struct, with specialized
+ * internal structs to do the actual promoting. This should clean things
+ * up a bit; among other things, the 'same type' assertion would only need to
+ * occur once.
+ *
+ * Also, I might instead check that the result tag of each is equal to
+ * ResultT rathen than checking them against each other; it should be
+ * equivalent.
+ */
+
 template< class T1, class T2, class ResultT > struct TypePromote;
+
+// Winging it here. Users should be able to call lerp() and friends on their
+// own class types, as long as they have the correct semantics. The expression
+// traits for such classes will default to the scalar type, which means a
+// scalar promotion will be attempted unsuccessfully.
+
+// Two objects of exactly the same type should always promote to that type,
+// so, maybe we can do a specialization to catch user-defined types:
+
+template< class T >
+struct TypePromote< T,T,et::scalar_result_tag > {
+    typedef T temporary_type;
+};
+
+// Seems ok, although the default expression tag 'scalar_result_tag' isn't
+// really appropriately named in this context.
+
+template< class T1, class T2 >
+struct TypePromote< T1,T2,et::scalar_result_tag > {
+    typedef et::ExprTraits<T1> traits_1;
+    typedef et::ExprTraits<T2> traits_2;
+    typedef typename traits_1::result_tag result_type_1;
+    typedef typename traits_2::result_tag result_type_2;
+    
+    /* Check that results are of the same type */
+    CML_STATIC_REQUIRE_M(
+        (same_type<result_type_1, result_type_2>::is_true),
+        function_expects_args_of_same_type_error);
+
+    typedef typename et::ScalarPromote<T1,T2>::type temporary_type;
+};
 
 template< class T1, class T2 >
 struct TypePromote< T1,T2,et::vector_result_tag > {
+    typedef et::ExprTraits<T1> traits_1;
+    typedef et::ExprTraits<T2> traits_2;
+    typedef typename traits_1::result_tag result_type_1;
+    typedef typename traits_2::result_tag result_type_2;
+    
+    /* Check that results are of the same type */
+    CML_STATIC_REQUIRE_M(
+        (same_type<result_type_1, result_type_2>::is_true),
+        function_expects_args_of_same_type_error);
+
+    /* @todo: This should be VectorPromote<> for symmetry with the other
+     * type promotions.
+     */
     typedef typename CrossPromote<T1,T2>::promoted_vector temporary_type;
 };
 
 template< class T1, class T2 >
 struct TypePromote< T1,T2,et::matrix_result_tag > {
+    typedef et::ExprTraits<T1> traits_1;
+    typedef et::ExprTraits<T2> traits_2;
+    typedef typename traits_1::result_tag result_type_1;
+    typedef typename traits_2::result_tag result_type_2;
+    
+    /* Check that results are of the same type */
+    CML_STATIC_REQUIRE_M(
+        (same_type<result_type_1, result_type_2>::is_true),
+        function_expects_args_of_same_type_error);
+
     typedef typename et::MatrixPromote<T1,T2>::temporary_type temporary_type;
 };
 
 template< class T1, class T2 >
 struct TypePromote< T1,T2,et::quaternion_result_tag > {
+    typedef et::ExprTraits<T1> traits_1;
+    typedef et::ExprTraits<T2> traits_2;
+    typedef typename traits_1::result_tag result_type_1;
+    typedef typename traits_2::result_tag result_type_2;
+    
+    /* Check that results are of the same type */
+    CML_STATIC_REQUIRE_M(
+        (same_type<result_type_1, result_type_2>::is_true),
+        function_expects_args_of_same_type_error);
+
     typedef typename et::QuaternionPromote<T1,T2>::temporary_type
         temporary_type;
 };
@@ -81,9 +159,12 @@ struct TypePromote< T1,T2,et::quaternion_result_tag > {
 // Helper functions to resize a vector, quaternion or matrix
 //////////////////////////////////////////////////////////////////////////////
 
-template< typename E, class A, class VecT > void
-InterpResize(vector<E,A>&, const VecT&, fixed_size_tag) {
-}
+// Should be able to catch all no-ops with a generic function template...
+
+template < class T1, class T2, class SizeTag > void
+InterpResize(T1& t1, const T2& t2, SizeTag) {}
+
+// Catch vector and matrix resizes...
 
 template< typename E, class A, class VecT > void
 InterpResize(vector<E,A>& v, const VecT& target, dynamic_size_tag) {
@@ -91,20 +172,9 @@ InterpResize(vector<E,A>& v, const VecT& target, dynamic_size_tag) {
 }
 
 template< typename E, class A, class B, class L, class MatT > void
-InterpResize(matrix<E,A,B,L>&, const MatT&, fixed_size_tag) {
-}
-
-template< typename E, class A, class B, class L, class MatT > void
 InterpResize(matrix<E,A,B,L>& m, const MatT& target, dynamic_size_tag) {
     m.resize(target.rows(),target.cols());
 }
-
-template< typename E, class A, class O, class C, class QuatT > void
-InterpResize(quaternion<E,A,O,C>&, const QuatT&, fixed_size_tag) {
-}
-
-template< typename E, class A, class O, class C, class QuatT > void
-InterpResize(quaternion<E,A,O,C>&, const QuatT&, dynamic_size_tag) {}
 
 //////////////////////////////////////////////////////////////////////////////
 // Spherical linear interpolation of two vectors of any size
@@ -177,16 +247,9 @@ slerp(
     
     value_type omega = acos_safe(c);
     value_type s = std::sin(omega);
-    
-    /* @todo: Here we are working around the fact that the utility function
-     * lerp() is not expression-aware. By wrapping both input expressions in
-     * temporaries of the same type, we can match lerp()'s template
-     * signature.
-     */
 
     return (s < tolerance) ?
-        //normalize(lerp(q1,q3,t)) :
-        normalize(lerp(temporary_type(q1),temporary_type(q3),value_type(t))) :
+        normalize(lerp(q1,q3,t)) :
         (value_type(std::sin((value_type(1) - t) * omega)) * q1+
             value_type(std::sin(t * omega)) * q3) / s;
 }
@@ -373,22 +436,8 @@ nlerp(
         detail::TypePromote<QuatT_1,QuatT_2,result_type>::temporary_type
             temporary_type;
     typedef typename temporary_type::value_type value_type;
-    
-    /* @todo: Here we are working around the fact that the utility function
-     * lerp() is not expression-aware. By wrapping both input expressions in
-     * temporaries of the same type, we can match lerp()'s template
-     * signature.
-     */
 
-    //return normalize(lerp(q1, (dot(q1,q2) < value_type(0)) ? -q2 : q2, t));
-    
-    return normalize(
-        lerp(
-            temporary_type(q1),
-            temporary_type(dot(q1,q2) < value_type(0) ? -q2 : q2),
-            value_type(t)
-        )
-    );
+    return normalize(lerp(q1, (dot(q1,q2) < value_type(0)) ? -q2 : q2, t));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -412,12 +461,10 @@ template< class MatT_1, class MatT_2 > struct nlerp_f<MatT_1,MatT_2,3>
             MatT_1,MatT_2,typename et::ExprTraits<MatT_1>::result_tag
         >::temporary_type temporary_type;
         typedef typename temporary_type::value_type value_type;
-        
-        /* @todo: Use lerp() when fixed*/
 
         temporary_type m;
         et::detail::Resize(m,3,3);
-        m = (value_type(1)-t)*m1+t*m2;
+        m = lerp(m1,m2,t);
         matrix_orthogonalize_3x3(m);
         return m;
     }
@@ -438,19 +485,17 @@ template< class MatT_1, class MatT_2 > struct nlerp_f<MatT_1,MatT_2,2>
             MatT_1,MatT_2,typename et::ExprTraits<MatT_1>::result_tag
         >::temporary_type temporary_type;
         typedef typename temporary_type::value_type value_type;
-        
-        /* @todo: Use lerp() when fixed*/
 
         temporary_type m;
         et::detail::Resize(m,2,2);
-        m = (value_type(1)-t)*m1+t*m2;
+        m = lerp(m1,m2,t);
         matrix_orthogonalize_2x2(m);
         return m;
     }
 };
 
 //////////////////////////////////////////////////////////////////////////////
-// Spherical linear interpolation of two matrices of size 3x3 or 2x2
+// Normalized linear interpolation of two matrices of size 3x3 or 2x2
 //////////////////////////////////////////////////////////////////////////////
 
 template< class MatT_1, class MatT_2, typename Real >
@@ -517,15 +562,8 @@ slerp(
     Real tolerance = epsilon<Real>::placeholder())
 {
     typedef et::ExprTraits<T1> traits_1;
-    typedef et::ExprTraits<T2> traits_2;
     typedef typename traits_1::result_tag result_type_1;
-    typedef typename traits_2::result_tag result_type_2;
-    
-    /* Check that results are of the same type */
-    CML_STATIC_REQUIRE_M(
-        (same_type<result_type_1, result_type_2>::is_true),
-        function_expects_args_of_same_type_error);
-    
+
     typedef typename detail::TypePromote<T1,T2,result_type_1>::temporary_type
         temporary_type;
     typedef et::ExprTraits<temporary_type> result_traits;
@@ -533,7 +571,7 @@ slerp(
 
     temporary_type result;
     detail::InterpResize(result, t1, size_tag());
-    
+
     result = detail::slerp(t1,t2,t,tolerance,result_type_1(),size_tag());
     return result;
 }
@@ -549,15 +587,8 @@ typename detail::TypePromote<
 nlerp(const T1& t1, const T2& t2, Real t)
 {
     typedef et::ExprTraits<T1> traits_1;
-    typedef et::ExprTraits<T2> traits_2;
     typedef typename traits_1::result_tag result_type_1;
-    typedef typename traits_2::result_tag result_type_2;
-    
-    /* Check that results are of the same type */
-    CML_STATIC_REQUIRE_M(
-        (same_type<result_type_1, result_type_2>::is_true),
-        function_expects_args_of_same_type_error);
-    
+
     typedef typename detail::TypePromote<T1,T2,result_type_1>::temporary_type
         temporary_type;
     typedef et::ExprTraits<temporary_type> result_traits;
@@ -567,6 +598,173 @@ nlerp(const T1& t1, const T2& t2, Real t)
     detail::InterpResize(result, t1, size_tag());
 
     result = detail::nlerp(t1,t2,t,result_type_1(),size_tag());
+    return result;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Linear interpolation of two values of any qualified type
+//////////////////////////////////////////////////////////////////////////////
+
+/** Linear interpolation of 2 values.
+ *
+ * @note The data points are assumed to be sampled at u = 0 and u = 1, so
+ * for interpolation u must lie between 0 and 1.
+ */
+template< class T1, class T2, typename Scalar >
+typename detail::TypePromote<
+    T1,T2,typename et::ExprTraits<T1>::result_tag
+>::temporary_type
+lerp(const T1& val0, const T2& val1, Scalar u)
+{
+    typedef et::ExprTraits<T1> traits_1;
+    typedef typename traits_1::result_tag result_type_1;
+
+    typedef typename detail::TypePromote<T1,T2,result_type_1>::temporary_type
+        temporary_type;
+    typedef et::ExprTraits<temporary_type> result_traits;
+    typedef typename result_traits::size_tag size_tag;
+
+    temporary_type result;
+    detail::InterpResize(result, val1, size_tag());
+    
+    result = (Scalar(1) - u) * val0 + u * val1;
+    return result;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Bilinear interpolation of four values of any qualified type
+//////////////////////////////////////////////////////////////////////////////
+
+template < class T1, class T2, class T3, class T4, typename Scalar >
+typename detail::TypePromote<
+    typename detail::TypePromote<
+        T1,T2,typename et::ExprTraits<T1>::result_tag
+    >::temporary_type,
+    typename detail::TypePromote<
+        T3,T4,typename et::ExprTraits<T1>::result_tag
+    >::temporary_type,
+    typename et::ExprTraits<T1>::result_tag
+>::temporary_type
+bilerp(const T1& val00, const T2& val10,
+       const T3& val01, const T4& val11,
+       Scalar u, Scalar v)
+{
+    typedef et::ExprTraits<T1> traits_1;
+    typedef typename traits_1::result_tag result_type_1;
+
+    typedef
+        typename detail::TypePromote<
+            typename detail::TypePromote<
+                T1,T2,typename et::ExprTraits<T1>::result_tag
+            >::temporary_type,
+            typename detail::TypePromote<
+                T3,T4,typename et::ExprTraits<T1>::result_tag
+            >::temporary_type,
+            typename et::ExprTraits<T1>::result_tag
+        >::temporary_type temporary_type;
+
+    typedef et::ExprTraits<temporary_type> result_traits;
+    typedef typename result_traits::size_tag size_tag;
+
+    temporary_type result;
+    detail::InterpResize(result, val00, size_tag());
+
+    Scalar uv = u * v;
+    result = (
+        (Scalar(1.0) - u - v + uv) * val00 +
+                          (u - uv) * val10 +
+                          (v - uv) * val01 +
+                                uv * val11
+    );
+    return result;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Trilinear interpolation of eight values of any qualified type
+//////////////////////////////////////////////////////////////////////////////
+
+/** Trilinear interpolation of 8 values.
+ *
+ * @note The data values are assumed to be sampled at the corners of a unit
+ * cube, so for interpolation, u, v, and w must lie between 0 and 1.
+ */
+template < class T1, class T2, class T3, class T4,
+           class T5, class T6, class T7, class T8,
+           typename Scalar >
+typename detail::TypePromote<
+    typename detail::TypePromote<
+        typename detail::TypePromote<
+            T1,T2,typename et::ExprTraits<T1>::result_tag
+        >::temporary_type,
+        typename detail::TypePromote<
+            T3,T4,typename et::ExprTraits<T1>::result_tag
+        >::temporary_type,
+        typename et::ExprTraits<T1>::result_tag
+    >::temporary_type,
+    typename detail::TypePromote<
+        typename detail::TypePromote<
+            T5,T6,typename et::ExprTraits<T1>::result_tag
+        >::temporary_type,
+        typename detail::TypePromote<
+            T7,T8,typename et::ExprTraits<T1>::result_tag
+        >::temporary_type,
+        typename et::ExprTraits<T1>::result_tag
+    >::temporary_type,
+    typename et::ExprTraits<T1>::result_tag
+>::temporary_type
+trilerp(const T1& val000, const T2& val100,
+        const T3& val010, const T4& val110,
+        const T5& val001, const T6& val101,
+        const T7& val011, const T8& val111,
+        Scalar u, Scalar v, Scalar w)
+{
+    typedef et::ExprTraits<T1> traits_1;
+    typedef typename traits_1::result_tag result_type_1;
+
+    typedef
+        typename detail::TypePromote<
+            typename detail::TypePromote<
+                typename detail::TypePromote<
+                    T1,T2,typename et::ExprTraits<T1>::result_tag
+                >::temporary_type,
+                typename detail::TypePromote<
+                    T3,T4,typename et::ExprTraits<T1>::result_tag
+                >::temporary_type,
+                typename et::ExprTraits<T1>::result_tag
+            >::temporary_type,
+            typename detail::TypePromote<
+                typename detail::TypePromote<
+                    T5,T6,typename et::ExprTraits<T1>::result_tag
+                >::temporary_type,
+                typename detail::TypePromote<
+                    T7,T8,typename et::ExprTraits<T1>::result_tag
+                >::temporary_type,
+                typename et::ExprTraits<T1>::result_tag
+            >::temporary_type,
+            typename et::ExprTraits<T1>::result_tag
+        >::temporary_type temporary_type;
+
+    typedef et::ExprTraits<temporary_type> result_traits;
+    typedef typename result_traits::size_tag size_tag;
+
+    temporary_type result;
+    detail::InterpResize(result, val000, size_tag());
+
+    Scalar uv = u * v;
+    Scalar vw = v * w;
+    Scalar wu = w * u;
+    Scalar uvw = uv * w;
+    
+    result = (
+        (Scalar(1.0) - u - v - w + uv + vw + wu - uvw) * val000 +
+                                   (u - uv - wu + uvw) * val100 +
+                                   (v - uv - vw + uvw) * val010 +
+                                            (uv - uvw) * val110 +
+                                   (w - vw - wu + uvw) * val001 +
+                                            (wu - uvw) * val101 +
+                                            (vw - uvw) * val011 +
+                                                   uvw * val111
+    );
     return result;
 }
 
