@@ -641,7 +641,7 @@ typename detail::TypePromote<
         T1,T2,typename et::ExprTraits<T1>::result_tag
     >::temporary_type,
     typename detail::TypePromote<
-        T3,T4,typename et::ExprTraits<T1>::result_tag
+        T3,T4,typename et::ExprTraits<T3>::result_tag
     >::temporary_type,
     typename et::ExprTraits<T1>::result_tag
 >::temporary_type
@@ -697,16 +697,16 @@ typename detail::TypePromote<
             T1,T2,typename et::ExprTraits<T1>::result_tag
         >::temporary_type,
         typename detail::TypePromote<
-            T3,T4,typename et::ExprTraits<T1>::result_tag
+            T3,T4,typename et::ExprTraits<T3>::result_tag
         >::temporary_type,
         typename et::ExprTraits<T1>::result_tag
     >::temporary_type,
     typename detail::TypePromote<
         typename detail::TypePromote<
-            T5,T6,typename et::ExprTraits<T1>::result_tag
+            T5,T6,typename et::ExprTraits<T5>::result_tag
         >::temporary_type,
         typename detail::TypePromote<
-            T7,T8,typename et::ExprTraits<T1>::result_tag
+            T7,T8,typename et::ExprTraits<T7>::result_tag
         >::temporary_type,
         typename et::ExprTraits<T1>::result_tag
     >::temporary_type,
