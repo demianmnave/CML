@@ -129,7 +129,9 @@ T rad(T theta) {
     return theta * constants<T>::rad_per_deg();
 }
 
+/* Note: Moving interpolation functions to interpolation.h */
 
+#if 0
 /** Linear interpolation of 2 values.
  *
  * @note The data points are assumed to be sampled at u = 0 and u = 1, so
@@ -139,7 +141,9 @@ template <typename T, typename Scalar>
 T lerp(const T& f0, const T& f1, Scalar u) {
     return (Scalar(1.0) - u) * f0 + u * f1;
 }
+#endif
 
+#if 0
 /** Bilinear interpolation of 4 values.
  *
  * @note The data points are assumed to be sampled at the corners of a unit
@@ -158,7 +162,9 @@ T bilerp(const T& f00, const T& f10,
                                 uv * f11
     );
 }
+#endif
 
+#if 0
 /** Trilinear interpolation of 8 values.
  *
  * @note The data values are assumed to be sampled at the corners of a unit
@@ -187,6 +193,7 @@ T trilerp(const T& f000, const T& f100,
                                                    uvw * f111
     );
 }
+#endif
 
 /** Random binary (0,1) value. */
 inline size_t random_binary() {
