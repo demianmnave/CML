@@ -188,7 +188,7 @@ slerp(
     const VecT_1& v1,
     const VecT_2& v2,
     Real t,
-    Real tolerance = epsilon<Real>::placeholder(),
+    Real tolerance,
     et::vector_result_tag,
     SizeT)
 {
@@ -227,7 +227,7 @@ slerp(
     const QuatT_1& q1,
     const QuatT_2& q2,
     Real t,
-    Real tolerance = epsilon<Real>::placeholder(),
+    Real tolerance,
     et::quaternion_result_tag,
     SizeT)
 {
@@ -270,7 +270,7 @@ template< class MatT_1, class MatT_2 > struct slerp_f<MatT_1,MatT_2,3>
         const MatT_1& m1,
         const MatT_2& m2,
         Real t,
-        Real tolerance = epsilon<Real>::placeholder())
+        Real tolerance)
     {
         typedef typename detail::TypePromote<
             MatT_1,MatT_2,typename et::ExprTraits<MatT_1>::result_tag
@@ -295,7 +295,7 @@ template< class MatT_1, class MatT_2 > struct slerp_f<MatT_1,MatT_2,2>
         const MatT_1& m1,
         const MatT_2& m2,
         Real t,
-        Real tolerance = epsilon<Real>::placeholder())
+        Real tolerance)
     {
         typedef typename detail::TypePromote<
             MatT_1,MatT_2,typename et::ExprTraits<MatT_1>::result_tag
@@ -322,7 +322,7 @@ slerp(
     const MatT_1& m1,
     const MatT_2& m2,
     Real t,
-    Real tolerance = epsilon<Real>::placeholder(),
+    Real tolerance,
     et::matrix_result_tag,
     fixed_size_tag)
 {
@@ -337,7 +337,7 @@ slerp(
     const MatT_1& m1,
     const MatT_2& m2,
     Real t,
-    Real tolerance = epsilon<Real>::placeholder(),
+    Real tolerance,
     et::matrix_result_tag,
     dynamic_size_tag)
 {
