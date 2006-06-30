@@ -616,11 +616,11 @@ typename detail::TypePromote<
 >::temporary_type
 lerp(const T1& val0, const T2& val1, Scalar u)
 {
-    typedef et::ExprTraits<T1> traits_1;
-    typedef typename traits_1::result_tag result_type_1;
+    typedef
+        typename detail::TypePromote<
+            T1,T2,typename et::ExprTraits<T1>::result_tag
+        >::temporary_type temporary_type;
 
-    typedef typename detail::TypePromote<T1,T2,result_type_1>::temporary_type
-        temporary_type;
     typedef et::ExprTraits<temporary_type> result_traits;
     typedef typename result_traits::size_tag size_tag;
 
@@ -649,9 +649,6 @@ bilerp(const T1& val00, const T2& val10,
        const T3& val01, const T4& val11,
        Scalar u, Scalar v)
 {
-    typedef et::ExprTraits<T1> traits_1;
-    typedef typename traits_1::result_tag result_type_1;
-
     typedef
         typename detail::TypePromote<
             typename detail::TypePromote<
@@ -718,9 +715,6 @@ trilerp(const T1& val000, const T2& val100,
         const T7& val011, const T8& val111,
         Scalar u, Scalar v, Scalar w)
 {
-    typedef et::ExprTraits<T1> traits_1;
-    typedef typename traits_1::result_tag result_type_1;
-
     typedef
         typename detail::TypePromote<
             typename detail::TypePromote<
