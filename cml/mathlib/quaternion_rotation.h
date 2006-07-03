@@ -169,22 +169,22 @@ quaternion_rotation_matrix(quaternion<E,A,O,C>& q, const MatT& m)
 template < class E, class A, class O, class C > void
 quaternion_rotation_euler(
     quaternion<E,A,O,C>& q, E angle_0, E angle_1, E angle_2,
-    const euler_order& order)
+    EulerOrder order)
 {
     typedef quaternion<E,A,O,C> quaternion_type;
     typedef typename quaternion_type::value_type value_type;
     typedef typename quaternion_type::order_type order_type;
 
-    size_t i = order.i();
-    size_t j = order.j();
-    size_t k = order.k();
+    size_t i, j, k;
+    bool odd, repeat;
+    detail::unpack_euler_order(order, i, j, k, odd, repeat);
     
     const size_t W = order_type::W;
     const size_t I = order_type::X + i;
     const size_t J = order_type::X + j;
     const size_t K = order_type::X + k;
 
-    if (order.odd()) {
+    if (odd) {
         angle_1 = -angle_1;
     }
 
@@ -204,7 +204,7 @@ quaternion_rotation_euler(
     value_type c0s2 = c0 * s2;
     value_type c0c2 = c0 * c2;
 
-    if (order.repeat()) {
+    if (repeat) {
         q[I] = c1 * (c0s2 + s0c2);
         q[J] = s1 * (c0c2 + s0s2);
         q[K] = s1 * (c0s2 - s0c2);
@@ -215,7 +215,7 @@ quaternion_rotation_euler(
         q[K] = c1 * c0s2 - s1 * s0c2;
         q[W] = c1 * c0c2 + s1 * s0s2;
     }
-    if (order.odd()) {
+    if (odd) {
         q[J] = -q[J];
     }
 }
@@ -231,7 +231,7 @@ quaternion_rotation_align(
     const VecT_1& align,
     const VecT_2& reference,
     bool normalize = true,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
     
@@ -243,7 +243,7 @@ quaternion_rotation_align(
 /** See vector_ortho.h for details */
 template < typename E, class A, class O, class C, class VecT > void
 quaternion_rotation_align(quaternion<E,A,O,C>& q, const VecT& align,
-    bool normalize = true, const axis_order& order = axis_order::zyx)
+    bool normalize = true, AxisOrder order = axis_order_zyx)
 {
     typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
     
@@ -256,7 +256,7 @@ quaternion_rotation_align(quaternion<E,A,O,C>& q, const VecT& align,
 template < typename E,class A,class O,class C,class VecT_1,class VecT_2 > void
 quaternion_rotation_align_axial(quaternion<E,A,O,C>& q, const VecT_1& align,
     const VecT_2& axis, bool normalize = true,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
     
@@ -270,13 +270,13 @@ template < typename E, class A, class O, class C, class MatT > void
 quaternion_rotation_align_viewplane(
     quaternion<E,A,O,C>& q,
     const MatT& view_matrix,
-    const handedness& handed,
-    const axis_order& order = axis_order::zyx)
+    Handedness handedness,
+    AxisOrder order = axis_order_zyx)
 {
     typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
     
     matrix_type m;
-    matrix_rotation_align_viewplane(m,view_matrix,handed,order);
+    matrix_rotation_align_viewplane(m,view_matrix,handedness,order);
     quaternion_rotation_matrix(q,m);
 }
 
@@ -285,7 +285,7 @@ template < typename E, class A, class O, class C, class MatT > void
 quaternion_rotation_align_viewplane_LH(
     quaternion<E,A,O,C>& q,
     const MatT& view_matrix,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
     
@@ -299,7 +299,7 @@ template < typename E, class A, class O, class C, class MatT > void
 quaternion_rotation_align_viewplane_RH(
     quaternion<E,A,O,C>& q,
     const MatT& view_matrix,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
     
@@ -320,7 +320,7 @@ quaternion_rotation_aim_at(
     const VecT_1& pos,
     const VecT_2& target,
     const VecT_3& reference,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
     
@@ -336,7 +336,7 @@ quaternion_rotation_aim_at(
     quaternion<E,A,O,C>& q,
     const VecT_1& pos,
     const VecT_2& target,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
     
@@ -353,7 +353,7 @@ quaternion_rotation_aim_at_axial(
     const VecT_1& pos,
     const VecT_2& target,
     const VecT_3& axis,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
     
@@ -647,7 +647,7 @@ quaternion_to_axis_angle(
 template < class QuatT, typename Real > void
 quaternion_to_euler(
     const QuatT& q, Real& angle_0, Real& angle_1, Real& angle_2,
-    const euler_order& order)
+    EulerOrder order)
 {
     typedef QuatT quaternion_type;
     typedef typename quaternion_type::value_type value_type;

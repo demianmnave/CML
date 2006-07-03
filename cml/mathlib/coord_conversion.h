@@ -74,7 +74,7 @@ cylindrical_to_cartesian(
 /* Convert spherical coordinates to Cartesian coordinates in R3 */
 template < typename E, class A > void
 spherical_to_cartesian(E radius, E theta, E phi, size_t axis,
-    const spherical_type& type, vector<E,A>& v)
+    SphericalType type, vector<E,A>& v)
 {
     typedef vector<E,A> vector_type;
     typedef typename vector_type::value_type value_type;
@@ -82,8 +82,12 @@ spherical_to_cartesian(E radius, E theta, E phi, size_t axis,
     /* Checking */
     detail::CheckVec3(v);
     detail::CheckIndex3(axis);
+    
+    if (type == latitude) {
+        phi = constants<value_type>::pi_over_2() - phi;
+    }
 
-    phi = type.convert(phi);
+    //phi = type.convert(phi);
     
     value_type sin_phi = std::sin(phi);
     value_type cos_phi = std::cos(phi);
@@ -140,7 +144,7 @@ cartesian_to_cylindrical(const VecT& v, Real& radius, Real& theta,
 /* Convert Cartesian coordinates to spherical coordinates in R3 */
 template < class VecT, typename Real > void
 cartesian_to_spherical(const VecT& v, Real& radius, Real& theta, Real& phi,
-    size_t axis, const spherical_type& type,
+    size_t axis, SphericalType type,
     Real tolerance = epsilon<Real>::placeholder())
 {
     typedef Real value_type;
@@ -159,7 +163,10 @@ cartesian_to_spherical(const VecT& v, Real& radius, Real& theta, Real& phi,
         phi = value_type(0);
     } else {
         phi = std::atan2(len,v[i]);
-        phi = type.convert(phi);
+        //phi = type.convert(phi);
+        if (type == latitude) {
+            phi = constants<value_type>::pi_over_2() - phi;
+        }
     }
 }
 

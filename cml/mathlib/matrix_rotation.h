@@ -186,7 +186,7 @@ matrix_rotation_quaternion(matrix<E,A,B,L>& m, const QuatT& q)
 
 template < typename E, class A, class B, class L > void
 matrix_rotation_euler(matrix<E,A,B,L>& m, E angle_0, E angle_1, E angle_2,
-    const euler_order& order)
+    EulerOrder order)
 {
     typedef matrix<E,A,B,L> matrix_type;
     typedef typename matrix_type::value_type value_type;
@@ -195,12 +195,12 @@ matrix_rotation_euler(matrix<E,A,B,L>& m, E angle_0, E angle_1, E angle_2,
     detail::CheckMatLinear3D(m);
 
     identity_transform(m);
+    
+    size_t i, j, k;
+    bool odd, repeat;
+    detail::unpack_euler_order(order, i, j, k, odd, repeat);
 
-    size_t i = order.i();
-    size_t j = order.j();
-    size_t k = order.k();
-
-    if (order.odd()) {
+    if (odd) {
         angle_0 = -angle_0;
         angle_1 = -angle_1;
         angle_2 = -angle_2;
@@ -218,7 +218,7 @@ matrix_rotation_euler(matrix<E,A,B,L>& m, E angle_0, E angle_1, E angle_2,
     value_type c0s2 = c0 * s2;
     value_type c0c2 = c0 * c2;
 
-    if (order.repeat()) {
+    if (repeat) {
         m.set_basis_element(i,i, c1              );
         m.set_basis_element(i,j, s1 * s2         );
         m.set_basis_element(i,k,-s1 * c2         );
@@ -252,7 +252,7 @@ matrix_rotation_align(
     const VecT_1& align,
     const VecT_2& reference,
     bool normalize = true,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     typedef vector< E,fixed<3> > vector_type;
 
@@ -267,7 +267,7 @@ matrix_rotation_align(
 /** See vector_ortho.h for details */
 template < typename E, class A, class B, class L, class VecT > void
 matrix_rotation_align(matrix<E,A,B,L>& m, const VecT& align,
-    bool normalize = true, const axis_order& order = axis_order::zyx)
+    bool normalize = true, AxisOrder order = axis_order_zyx)
 {
     typedef vector< E,fixed<3> > vector_type;
 
@@ -283,7 +283,7 @@ matrix_rotation_align(matrix<E,A,B,L>& m, const VecT& align,
 template < typename E,class A,class B,class L,class VecT_1,class VecT_2 > void
 matrix_rotation_align_axial(matrix<E,A,B,L>& m, const VecT_1& align,
     const VecT_2& axis, bool normalize = true,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     typedef vector< E,fixed<3> > vector_type;
 
@@ -300,8 +300,8 @@ template < typename E, class A, class B, class L, class MatT > void
 matrix_rotation_align_viewplane(
     matrix<E,A,B,L>& m,
     const MatT& view_matrix,
-    const handedness& handed,
-    const axis_order& order = axis_order::zyx)
+    Handedness handedness,
+    AxisOrder order = axis_order_zyx)
 {
     typedef vector< E, fixed<3> > vector_type;
 
@@ -309,7 +309,7 @@ matrix_rotation_align_viewplane(
     
     vector_type x, y, z;
 
-    orthonormal_basis_viewplane(view_matrix, x, y, z, handed, order);
+    orthonormal_basis_viewplane(view_matrix, x, y, z, handedness, order);
     matrix_set_basis_vectors(m, x, y, z);
 }
 
@@ -318,10 +318,10 @@ template < typename E, class A, class B, class L, class MatT > void
 matrix_rotation_align_viewplane_LH(
     matrix<E,A,B,L>& m,
     const MatT& view_matrix,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     matrix_rotation_align_viewplane(
-        m,view_matrix,handedness::left_handed,order);
+        m,view_matrix,left_handed,order);
 }
 
 /** See vector_ortho.h for details */
@@ -329,10 +329,10 @@ template < typename E, class A, class B, class L, class MatT > void
 matrix_rotation_align_viewplane_RH(
     matrix<E,A,B,L>& m,
     const MatT& view_matrix,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     matrix_rotation_align_viewplane(
-        m,view_matrix,handedness::right_handed,order);
+        m,view_matrix,right_handed,order);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -347,7 +347,7 @@ matrix_rotation_aim_at(
     const VecT_1& pos,
     const VecT_2& target,
     const VecT_3& reference,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     matrix_rotation_align(m, target - pos, reference, true, order);
 }
@@ -359,7 +359,7 @@ matrix_rotation_aim_at(
     matrix<E,A,B,L>& m,
     const VecT_1& pos,
     const VecT_2& target,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     matrix_rotation_align(m, target - pos, true, order);
 }
@@ -372,7 +372,7 @@ matrix_rotation_aim_at_axial(
     const VecT_1& pos,
     const VecT_2& target,
     const VecT_3& axis,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     matrix_rotation_align_axial(m, target - pos, axis, true, order);
 }
@@ -409,7 +409,7 @@ matrix_rotation_2D( matrix<E,A,B,L>& m, E angle)
 /** See vector_ortho.h for details */
 template < typename E, class A, class B, class L, class VecT > void
 matrix_rotation_align_2D(matrix<E,A,B,L>& m, const VecT& align,
-    bool normalize = true, const axis_order_2D& order = axis_order_2D::xy)
+    bool normalize = true, AxisOrder2D order = axis_order_xy)
 {
     typedef vector< E, fixed<2> > vector_type;
 
@@ -805,7 +805,7 @@ void matrix_to_euler(
     Real& angle_0,
     Real& angle_1,
     Real& angle_2,
-    const euler_order& order,
+    EulerOrder order,
     Real tolerance = epsilon<Real>::placeholder())
 {
     typedef MatT matrix_type;
@@ -814,11 +814,11 @@ void matrix_to_euler(
     /* Checking */
     detail::CheckMatLinear3D(m);
 
-    size_t i = order.i();
-    size_t j = order.j();
-    size_t k = order.k();
+    size_t i, j, k;
+    bool odd, repeat;
+    detail::unpack_euler_order(order, i, j, k, odd, repeat);
 
-    if (order.repeat()) {
+    if (repeat) {
         value_type s1 = length(m.basis_element(j,i),m.basis_element(k,i));
         value_type c1 = m.basis_element(i,i);
 
@@ -846,7 +846,7 @@ void matrix_to_euler(
         }
     }
     
-    if (order.odd()) {
+    if (odd) {
         angle_0 = -angle_0;
         angle_1 = -angle_1;
         angle_2 = -angle_2;

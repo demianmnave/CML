@@ -459,7 +459,7 @@ template < typename E, class A, class B, class L,
     class VecT_1, class VecT_2, class VecT_3 > void
 matrix_aim_at(matrix<E,A,B,L>& m, const VecT_1& pos, const VecT_2& target,
     const VecT_3& reference,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     matrix_rotation_aim_at(m, pos, target, reference, order);
     matrix_set_translation(m, pos);
@@ -469,7 +469,7 @@ matrix_aim_at(matrix<E,A,B,L>& m, const VecT_1& pos, const VecT_2& target,
 template < typename E, class A, class B, class L,
     class VecT_1, class VecT_2 > void
 matrix_aim_at(matrix<E,A,B,L>& m, const VecT_1& pos, const VecT_2& target,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     matrix_rotation_aim_at(m, pos, target, order);
     matrix_set_translation(m, pos);
@@ -483,7 +483,7 @@ matrix_aim_at_axial(
     const VecT_1& pos,
     const VecT_2& target,
     const VecT_3& axis,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     matrix_rotation_aim_at_axial(m, pos, target, axis, order);
     matrix_set_translation(m, pos);
@@ -495,10 +495,10 @@ matrix_aim_at_viewplane(
     matrix<E,A,B,L>& m,
     const VecT& pos,
     const MatT& view_matrix,
-    const handedness& handed,
-    const axis_order& order = axis_order::zyx)
+    Handedness handedness,
+    AxisOrder order = axis_order_zyx)
 {
-    matrix_rotation_align_viewplane(m, view_matrix, handed, order);
+    matrix_rotation_align_viewplane(m, view_matrix, handedness, order);
     matrix_set_translation(m, pos);
 }
 
@@ -512,7 +512,7 @@ matrix_aim_at_2D(
     matrix<E,A,B,L>& m,
     const VecT_1& pos,
     const VecT_2& target,
-    const axis_order_2D& order = axis_order_2D::xy)
+    AxisOrder2D order = axis_order_xy)
 {
     matrix_rotation_align_2D(m, target - pos, true, order);
     matrix_set_translation_2D(m, pos);
@@ -530,7 +530,7 @@ matrix_look_at(
     const VecT_1& eye,
     const VecT_2& target,
     const VecT_3& up,
-    const handedness& handed)
+    Handedness handedness)
 {
     typedef matrix<E,A,B,L> matrix_type;
     typedef vector< E,fixed<3> > vector_type;
@@ -541,7 +541,8 @@ matrix_look_at(
 
     identity_transform(m);
 
-    vector_type z = handed.sign<value_type>() * normalize(target - eye);
+    value_type s = handedness == left_handed ? 1 : -1;
+    vector_type z = s * normalize(target - eye);
     vector_type x = unit_cross(up,z);
     vector_type y = cross(z,x);
 
@@ -549,29 +550,29 @@ matrix_look_at(
     matrix_set_translation(m,-dot(eye,x),-dot(eye,y),-dot(eye,z));
 }
 
-/** Build a matrix representing a left-handed 'look at' view transform */
+/** Build a matrix representing a left-handedness 'look at' view transform */
 template < typename E, class A, class B, class L,
     class VecT_1, class VecT_2, class VecT_3 > void
 matrix_look_at_LH(matrix<E,A,B,L>& m, const VecT_1& eye,
     const VecT_2& target, const VecT_3& up)
 {
-    matrix_look_at(m, eye, target, up, handedness::left_handed);
+    matrix_look_at(m, eye, target, up, left_handed);
 }
 
-/** Build a matrix representing a right-handed 'look at' view transform */
+/** Build a matrix representing a right-handedness 'look at' view transform */
 template < typename E, class A, class B, class L,
     class VecT_1, class VecT_2, class VecT_3 > void
 matrix_look_at_RH(matrix<E,A,B,L>& m, const VecT_1& eye,
     const VecT_2& target, const VecT_3& up)
 {
-    matrix_look_at(m, eye, target, up, handedness::right_handed);
+    matrix_look_at(m, eye, target, up, right_handed);
 }
 
 /** Build a matrix representing a 'look at' view transform */
 template < typename E, class A, class B, class L > void
 matrix_look_at(matrix<E,A,B,L>& m, E eye_x, E eye_y, E eye_z, E target_x,
     E target_y, E target_z, E up_x, E up_y, E up_z,
-    const handedness& handed)
+    Handedness handedness)
 {
     typedef vector< E, fixed<3> > vector_type;
     
@@ -579,7 +580,7 @@ matrix_look_at(matrix<E,A,B,L>& m, E eye_x, E eye_y, E eye_z, E target_x,
         vector_type(eye_x,eye_y,eye_z),
         vector_type(target_x,target_y,target_z),
         vector_type(up_x,up_y,up_z),
-        handed
+        handedness
     );
 }
 
@@ -589,7 +590,7 @@ matrix_look_at_LH(matrix<E,A,B,L>& m, E eye_x, E eye_y, E eye_z,
     E target_x, E target_y, E target_z, E up_x, E up_y, E up_z)
 {
     matrix_look_at(m,eye_x,eye_y,eye_z,target_x,target_y,target_z,up_x,up_y,
-        up_z,handedness::left_handed);
+        up_z,left_handed);
 }
 
 /** Build a matrix representing a right-handed'look at' view transform */
@@ -598,7 +599,7 @@ matrix_look_at_RH(matrix<E,A,B,L>& m, E eye_x, E eye_y, E eye_z,
     E target_x, E target_y, E target_z, E up_x, E up_y, E up_z)
 {
     matrix_look_at(m,eye_x,eye_y,eye_z,target_x,target_y,target_z,up_x,up_y,
-        up_z,handedness::right_handed);
+        up_z,right_handed);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -693,7 +694,7 @@ matrix_affine_transform(
 /** 3D affine transform from an Euler-angle triple and a translation */
 template < typename E, class A, class B, class L, class VecT > void
 matrix_affine_transform(matrix<E,A,B,L>& m, E angle_0, E angle_1,
-    E angle_2, const euler_order& order, const VecT& translation)
+    E angle_2, EulerOrder order, const VecT& translation)
 {
     matrix_rotation_euler(m,angle_0,angle_1,angle_2,order);
     matrix_set_translation(m,translation);

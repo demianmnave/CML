@@ -162,24 +162,24 @@ orthonormal_basis(
     vector<E,A>& y,
     vector<E,A>& z,
     bool normalize_align = true,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     typedef vector< E,fixed<3> > vector_type;
     typedef typename vector_type::value_type value_type;
     
     /* Checking handled by cross() and assignment to fixed<3>. */
-
-    size_t i = order.i();
-    size_t j = order.j();
-    size_t k = order.k();
     
+    size_t i, j, k;
+    bool odd;
+    detail::unpack_axis_order(order, i, j, k, odd);
+
     vector_type axis[3];
 
     axis[i] = normalize_align ? normalize(align) : align;
     axis[k] = unit_cross(axis[i],reference);
     axis[j] = cross(axis[k],axis[i]);
     
-    if (order.odd()) {
+    if (odd) {
         axis[k] = -axis[k];
     }
     
@@ -204,7 +204,7 @@ void orthonormal_basis(
     vector<E,A>& y,
     vector<E,A>& z,
     bool normalize_align = true,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     /* Checking (won't be necessary with index_of_min_abs() member function */
     detail::CheckVec3(align);
@@ -240,14 +240,21 @@ void orthonormal_basis_axial(
     vector<E,A>& y,
     vector<E,A>& z,
     bool normalize_align = true,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
-    orthonormal_basis(axis,align,x,y,z,normalize_align,order.swapped());
+    orthonormal_basis(
+        axis,
+        align,
+        x,
+        y,
+        z,
+        normalize_align,
+        detail::swap_axis_order(order));
 }
 
 /* orthonormal_basis_viewplane() builds a basis aligned with a viewplane, as
  * extracted from the input view matrix. The function takes into account the
- * handed of the input view matrix and orients the basis accordingly.
+ * handedness of the input view matrix and orients the basis accordingly.
  *
  * The generated basis will always be valid.
  */
@@ -257,44 +264,44 @@ void orthonormal_basis_viewplane(
     vector<E,A>& x,
     vector<E,A>& y,
     vector<E,A>& z,
-    const handedness& handed,
-    const axis_order& order = axis_order::zyx)
+    Handedness handedness,
+    AxisOrder order = axis_order_zyx)
 {
     typedef MatT matrix_type;
     typedef typename matrix_type::value_type value_type;
 
     orthonormal_basis(
-        -handed.sign<value_type>() *
+        -(handedness == left_handed ? value_type(1) : value_type(-1)) *
             matrix_get_transposed_z_basis_vector(view_matrix),
         matrix_get_transposed_y_basis_vector(view_matrix),
         x, y, z, false, order
     );
 }
 
-/** Build a viewplane-oriented basis from a left-handed view matrix. */
+/** Build a viewplane-oriented basis from a left-handedness view matrix. */
 template < class MatT, typename E, class A >
 void orthonormal_basis_viewplane_LH(
     const MatT& view_matrix,
     vector<E,A>& x,
     vector<E,A>& y,
     vector<E,A>& z,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     orthonormal_basis_viewplane(
-        view_matrix,x,y,z,handedness::left_handed,order);
+        view_matrix,x,y,z,left_handed,order);
 }
 
-/** Build a viewplane-oriented basis from a right-handed view matrix. */
+/** Build a viewplane-oriented basis from a right-handedness view matrix. */
 template < class MatT, typename E, class A >
 void orthonormal_basis_viewplane_RH(
     const MatT& view_matrix,
     vector<E,A>& x,
     vector<E,A>& y,
     vector<E,A>& z,
-    const axis_order& order = axis_order::zyx)
+    AxisOrder order = axis_order_zyx)
 {
     orthonormal_basis_viewplane(
-        view_matrix,x,y,z,handedness::right_handed,order);
+        view_matrix,x,y,z,right_handed,order);
 }
 
 /* Build a 2D orthonormal basis. */
@@ -304,21 +311,22 @@ void orthonormal_basis_2D(
     vector<E,A>& x,
     vector<E,A>& y,
     bool normalize_align = true,
-    const axis_order_2D& order = axis_order_2D::xy)
+    AxisOrder2D order = axis_order_xy)
 {
     typedef vector< E,fixed<2> > vector_type;
 
     /* Checking handled by perp() and assignment to fixed<2>. */
 
-    size_t i = order.i();
-    size_t j = order.j();
+    size_t i, j;
+    bool odd;
+    detail::unpack_axis_order_2D(order, i, j, odd);
     
     vector_type axis[2];
 
     axis[i] = normalize_align ? normalize(align) : align;
     axis[j] = perp(axis[i]);
 
-    if (order.odd()) {
+    if (odd) {
         axis[j] = -axis[j];
     }
 

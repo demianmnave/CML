@@ -179,7 +179,7 @@ random_unit(vector<E,A>& v)
                 value_type(random_unit() * constants<value_type>::two_pi()),
                 acos_safe(random_real(value_type(-1),value_type(1))),
                 2,
-                spherical_type::colatitude,
+                colatitude,
                 temp
             );
             v[0] = temp[0];
