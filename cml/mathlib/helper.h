@@ -45,179 +45,173 @@ namespace cml {
  * handedness, Euler-angle order, or what have you. Once we've settled on a
  * syntax for this, updating user code to reflect it should be a simple matter
  * of a few search-and-replace's.
+ *
+ * Update: Switched to enums. May revisit again though.
+ */
+ 
+//////////////////////////////////////////////////////////////////////////////
+// Euler order
+//////////////////////////////////////////////////////////////////////////////
+
+enum EulerOrder {
+    euler_order_xyz, // 0x00 [0000]
+    euler_order_xyx, // 0x01 [0001]
+    euler_order_xzy, // 0x02 [0010]
+    euler_order_xzx, // 0x03 [0011]
+    euler_order_yzx, // 0x04 [0100]
+    euler_order_yzy, // 0x05 [0101]
+    euler_order_yxz, // 0x06 [0110]
+    euler_order_yxy, // 0x07 [0111]
+    euler_order_zxy, // 0x08 [1000]
+    euler_order_zxz, // 0x09 [1001]
+    euler_order_zyx, // 0x0A [1010]
+    euler_order_zyz  // 0x0B [1011]
+};
+
+namespace detail {
+
+/* Note: All this bit-hacking is kind of old-school, so I may try to replace
+ * it at some point with something more elegant (ideally without disturbing
+ * the API).
  */
 
-/** A class to represent Euler angle orders */
-template < class T > // Hack
-class euler_order_
+inline void unpack_euler_order(
+    EulerOrder order,
+    size_t& i,
+    size_t& j,
+    size_t& k,
+    bool& odd,
+    bool& repeat)
 {
-public:
+    enum { REPEAT = 0x01, ODD = 0x02, AXIS = 0x0C };
 
-    euler_order_(size_t first, bool odd, bool repeat)
-        : m_odd(odd), m_repeat(repeat)
-    {
-        // TODO: reverse_cyclic_permutation()? reverse argument?
-        //cyclic_permutation(first, m_i, m_j, m_k);
-        // TODO: Use cyclic_permutation(), but currently having a problem
-        // including util.h.
-        m_i = first;
-        m_j = (m_i + 1) % 3;
-        m_k = (m_i + 2) % 3;
-        //if (m_odd) { std::swap(m_j,m_k); }
-        // TODO: Use std::swap (ouch)
-        if (m_odd) {
-            size_t temp = m_j;
-            m_j = m_k;
-            m_k = temp;
-        }
-    }
+    repeat = order & REPEAT;
+    odd = order & ODD;
+    size_t offset = size_t(odd);
+    i = (order & AXIS) % 3;
+    j = (i + 1 + offset) % 3;
+    k = (i + 2 - offset) % 3;
     
-    size_t i() const { return m_i; }
-    size_t j() const { return m_j; }
-    size_t k() const { return m_k; }
-    bool odd() const { return m_odd; }
-    bool repeat() const { return m_repeat; }
+    /* @todo: I'm thinking about either adding a 'reverse' argument to
+     * cyclic_permutation(), or offering a reverse_cyclic_permutation()
+     * function, in which case the above can be passed off to this (these)
+     * function (functions).
+     */
+}
 
-    static const euler_order_ xyz;
-    static const euler_order_ xzy;
-    static const euler_order_ xyx;
-    static const euler_order_ xzx;
-    static const euler_order_ yzx;
-    static const euler_order_ yxz;
-    static const euler_order_ yzy;
-    static const euler_order_ yxy;
-    static const euler_order_ zxy;
-    static const euler_order_ zyx;
-    static const euler_order_ zxz;
-    static const euler_order_ zyz;
+} // namespace detail
 
-protected:
+//////////////////////////////////////////////////////////////////////////////
+// Axis order
+//////////////////////////////////////////////////////////////////////////////
 
-    size_t m_i;
-    size_t m_j;
-    size_t m_k;
-    bool   m_odd;
-    bool   m_repeat;
+enum AxisOrder {
+    axis_order_xyz = euler_order_xyz, // 0x00 [0000]
+    axis_order_xzy = euler_order_xzy, // 0x02 [0010]
+    axis_order_yzx = euler_order_yzx, // 0x04 [0100]
+    axis_order_yxz = euler_order_yxz, // 0x06 [0110]
+    axis_order_zxy = euler_order_zxy, // 0x08 [1000]
+    axis_order_zyx = euler_order_zyx, // 0x0A [1010]
 };
 
-template< class T > const euler_order_<T> euler_order_<T>::xyz(0,false,false);
-template< class T > const euler_order_<T> euler_order_<T>::xzy(0,true, false);
-template< class T > const euler_order_<T> euler_order_<T>::xyx(0,false,true );
-template< class T > const euler_order_<T> euler_order_<T>::xzx(0,true, true );
-template< class T > const euler_order_<T> euler_order_<T>::yzx(1,false,false);
-template< class T > const euler_order_<T> euler_order_<T>::yxz(1,true, false);
-template< class T > const euler_order_<T> euler_order_<T>::yzy(1,false,true );
-template< class T > const euler_order_<T> euler_order_<T>::yxy(1,true, true );
-template< class T > const euler_order_<T> euler_order_<T>::zxy(2,false,false);
-template< class T > const euler_order_<T> euler_order_<T>::zyx(2,true, false);
-template< class T > const euler_order_<T> euler_order_<T>::zxz(2,false,true );
-template< class T > const euler_order_<T> euler_order_<T>::zyz(2,true, true );
+namespace detail {
 
-typedef euler_order_<size_t> euler_order; // Hack
+/* Note: There's some duplicated effort here. I might try to clean it up
+ * within the current context, or replace the whole system with something more
+ * elegant as noted above.
+ */
 
-/** A class to represent axis orders (non-repeating) */
-template < class T > // Hack
-class axis_order_ : public euler_order_<T>
+inline void unpack_axis_order(
+    AxisOrder order,
+    size_t& i,
+    size_t& j,
+    size_t& k,
+    bool& odd)
 {
-public:
+    enum { ODD = 0x02, AXIS = 0x0C };
 
-    axis_order_(size_t first, bool odd) : euler_order_<T>(first, odd, false) {}
-    axis_order_ swapped() const {
-        return axis_order_(this->m_j, !(this->m_odd));
-    }
+    odd = order & ODD;
+    size_t offset = size_t(odd);
+    i = (order & AXIS) % 3;
+    j = (i + 1 + offset) % 3;
+    k = (i + 2 - offset) % 3;
     
-    static const axis_order_ xyz;
-    static const axis_order_ xzy;
-    static const axis_order_ yzx;
-    static const axis_order_ yxz;
-    static const axis_order_ zxy;
-    static const axis_order_ zyx;
-};
+    /* @todo: I'm thinking about either adding a 'reverse' argument to
+     * cyclic_permutation(), or offering a reverse_cyclic_permutation()
+     * function, in which case the above can be passed off to this (these)
+     * function (functions).
+     */
+}
 
-template< class T > const axis_order_<T> axis_order_<T>::xyz(0,false);
-template< class T > const axis_order_<T> axis_order_<T>::xzy(0,true );
-template< class T > const axis_order_<T> axis_order_<T>::yzx(1,false);
-template< class T > const axis_order_<T> axis_order_<T>::yxz(1,true );
-template< class T > const axis_order_<T> axis_order_<T>::zxy(2,false);
-template< class T > const axis_order_<T> axis_order_<T>::zyx(2,true );
+inline AxisOrder pack_axis_order(size_t i, bool odd) {
+    return AxisOrder((i << 2) | (size_t(odd) << 1));
+}
 
-typedef axis_order_<size_t> axis_order; // Hack
-
-/** A class to represent 2D axis orders (non-repeating) */
-template < class T > // Hack
-class axis_order_2D_
+inline AxisOrder swap_axis_order(AxisOrder order)
 {
-public:
+    size_t i, j, k;
+    bool odd;
+    unpack_axis_order(order, i, j, k, odd);
+    return pack_axis_order(j, !odd);
+}
 
-    axis_order_2D_(size_t first) : m_i(first), m_j((first+1) % 2) {}
-    
-    size_t i() const { return m_i; }
-    size_t j() const { return m_j; }
-    bool odd() const { return m_i == 1; }
-    
-    static const axis_order_2D_ xy;
-    static const axis_order_2D_ yx;
+} // namespace detail
 
-private:
+//////////////////////////////////////////////////////////////////////////////
+// Axis order 2D
+//////////////////////////////////////////////////////////////////////////////
 
-    size_t m_i;
-    size_t m_j;
+enum AxisOrder2D {
+    axis_order_xy = axis_order_xyz, // 0x00 [0000]
+    axis_order_yx = axis_order_yxz, // 0x06 [0110]
 };
 
-template< class T > const axis_order_2D_<T> axis_order_2D_<T>::xy(0);
-template< class T > const axis_order_2D_<T> axis_order_2D_<T>::yx(1);
+namespace detail {
 
-typedef axis_order_2D_<size_t> axis_order_2D; // Hack
+/* Note: There's some duplicated effort here. I might try to clean it up
+ * within the current context, or replace the whole system with something more
+ * elegant as noted above.
+ */
 
-/** A class to represent the handedness of a coordinate system */
-template < class T > // Hack
-class handedness_ {
-    public : handedness_(bool left) : m_sign(left ? 1 : -1) {}
-    public : template < class S > S sign() const { return S(m_sign); }
-    private: int m_sign;
+inline void unpack_axis_order_2D(
+    AxisOrder2D order,
+    size_t& i,
+    size_t& j,
+    bool& odd)
+{
+    enum { ODD = 0x02, AXIS = 0x0C };
+
+    odd = order & ODD;
+    size_t offset = size_t(odd);
+    i = (order & AXIS) % 3;
+    j = (i + 1 + offset) % 3;
     
-    public: static const handedness_ left_handed;
-    public: static const handedness_ right_handed;
-};
+    /* @todo: I'm thinking about either adding a 'reverse' argument to
+     * cyclic_permutation(), or offering a reverse_cyclic_permutation()
+     * function, in which case the above can be passed off to this (these)
+     * function (functions).
+     */
+}
 
-template< class T > const handedness_<T> handedness_<T>::left_handed(true);
-template< class T > const handedness_<T> handedness_<T>::right_handed(false);
+} // namespace detail
 
-typedef handedness_<size_t> handedness; // Hack
+//////////////////////////////////////////////////////////////////////////////
+// Handedness
+//////////////////////////////////////////////////////////////////////////////
 
-/** A class to represent the z-clipping range of a projection matrix */
-template < class T > // Hack
-class z_clip_ {
-    public : z_clip_(bool neg_one) : m_clip(neg_one ? -1 : 0) {}
-    public : int clip() const { return m_clip; }
-    private: int m_clip;
-    
-    public: static const z_clip_ neg_one;
-    public: static const z_clip_ zero;
-};
+enum Handedness { left_handed, right_handed };
 
-template< class T > const z_clip_<T> z_clip_<T>::neg_one(true);
-template< class T > const z_clip_<T> z_clip_<T>::zero(false);
+//////////////////////////////////////////////////////////////////////////////
+// Z clip
+//////////////////////////////////////////////////////////////////////////////
 
-typedef z_clip_<size_t> z_clip; // Hack
+enum ZClip { z_clip_neg_one, z_clip_zero };
 
-/** A class to represent the type for spherical coordinate conversion */
-template < class T > // Hack
-class spherical_type_ {
-    public : spherical_type_(bool latitude) : m_latitude(latitude) {}
-    public : template < class S > S convert(S phi) const {
-        return m_latitude ? constants<S>::pi_over_2() - phi : phi;
-    }
-    private: bool m_latitude;
-    
-    public: static const spherical_type_ latitude;
-    public: static const spherical_type_ colatitude;
-};
+//////////////////////////////////////////////////////////////////////////////
+// Spherical coordinate type
+//////////////////////////////////////////////////////////////////////////////
 
-template< class T > const spherical_type_<T> spherical_type_<T>::latitude(true);
-template< class T > const spherical_type_<T> spherical_type_<T>::colatitude(false);
-
-typedef spherical_type_<size_t> spherical_type; // Hack
+enum SphericalType { latitude, colatitude };
 
 } // namespace cml
 
