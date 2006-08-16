@@ -64,6 +64,24 @@ typedef signed long ssize_t;
 #define CML_DEFAULT_ARRAY_ALLOC std::allocator<void>
 #endif
 
+/* By default, automatically resize dynamic vectors and matrices: */
+#if !defined(CML_AUTOMATIC_VECTOR_RESIZE_ON_ASSIGNMENT)
+#define CML_AUTOMATIC_VECTOR_RESIZE_ON_ASSIGNMENT
+#endif
+
+#if !defined(CML_AUTOMATIC_MATRIX_RESIZE_ON_ASSIGNMENT)
+#define CML_AUTOMATIC_MATRIX_RESIZE_ON_ASSIGNMENT
+#endif
+
+/* By default, check vector and matrix sizes: */
+#if !defined(CML_CHECK_VECTOR_EXPR_SIZES)
+#define CML_CHECK_VECTOR_EXPR_SIZES
+#endif
+
+#if !defined(CML_CHECK_MATRIX_EXPR_SIZES)
+#define CML_CHECK_MATRIX_EXPR_SIZES
+#endif
+
 #endif
 
 // -------------------------------------------------------------------------
