@@ -288,12 +288,12 @@ cross(const LeftT& left, const RightT& right)
         LeftT,RightT>::promoted_vector result_type;
 
     /* Now, compute and return the cross product: */
-    result_type V(
+    result_type result(
             left[1]*right[2] - left[2]*right[1],
             left[2]*right[0] - left[0]*right[2],
             left[0]*right[1] - left[1]*right[0]
             );
-    return V;
+    return result;
 }
 
 /** Return the triple product of three 3D vectors.
