@@ -11,7 +11,7 @@
 #include <stdlib.h>     // For random().
 #include <cml/constants.h>
 
-#if defined(_WIN32)
+#if defined(_MSC_VER)
 inline long random() { return ::rand(); }
 #endif
 
