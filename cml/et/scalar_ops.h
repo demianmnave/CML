@@ -51,9 +51,9 @@ template<typename LeftT, typename RightT> struct _op_name_ {             \
     typedef typename left_traits::value_type left_value;                 \
     typedef typename right_traits::value_type right_value;               \
     typedef typename ScalarPromote<left_value,right_value>::type value_type; \
-    typedef scalar_result_tag result_tag;                               \
+    typedef scalar_result_tag result_tag;                                \
     value_type apply(left_reference left, right_reference right) const { \
-        return left _op_ right; }                                        \
+        return left _op_ (LeftT) right; }                                \
 };
 
 /** Declare a binary boolean operator, like less-than, s1 < s2.

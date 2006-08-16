@@ -8,6 +8,26 @@
 #ifndef defaults_h
 #define defaults_h
 
+#if defined(_MSC_VER)
+
+#if _MSC_VER >= 1400
+/* XXX Is it possible to differentiate between VC8 and VC8 Express? */
+
+/* This is apparently not defined by VC8 Express: */
+typedef signed long ssize_t;
+
+/* Ignore "C4003: not enough actual parameters for macro": */
+#pragma warning (disable: 4003)
+
+/* This one is odd, but apparently harmless:
+ * "C4348: redefinition of default parameter"
+ */
+#pragma warning (disable: 4348)
+
+#endif
+
+#endif
+
 /* The default vector unroll limit: */
 #if !defined(CML_VECTOR_UNROLL_LIMIT)
 #define CML_VECTOR_UNROLL_LIMIT 8

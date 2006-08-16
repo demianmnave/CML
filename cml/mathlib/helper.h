@@ -86,7 +86,7 @@ inline void unpack_euler_order(
     enum { REPEAT = 0x01, ODD = 0x02, AXIS = 0x0C };
 
     repeat = order & REPEAT;
-    odd = order & ODD;
+    odd = ((order & ODD) == ODD);
     size_t offset = size_t(odd);
     i = (order & AXIS) % 3;
     j = (i + 1 + offset) % 3;
@@ -130,7 +130,7 @@ inline void unpack_axis_order(
 {
     enum { ODD = 0x02, AXIS = 0x0C };
 
-    odd = order & ODD;
+    odd = ((order & ODD) == ODD);
     size_t offset = size_t(odd);
     i = (order & AXIS) % 3;
     j = (i + 1 + offset) % 3;
@@ -181,7 +181,7 @@ inline void unpack_axis_order_2D(
 {
     enum { ODD = 0x02, AXIS = 0x0C };
 
-    odd = order & ODD;
+    odd = ((order & ODD) == ODD);
     size_t offset = size_t(odd);
     i = (order & AXIS) % 3;
     j = (i + 1 + offset) % 3;
