@@ -293,6 +293,46 @@ matrix_viewport(matrix<E,A,B,L>& m, E left, E right, E bottom,
     m = inverse(m);
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// 3D picking volume
+//////////////////////////////////////////////////////////////////////////////
+
+/* Build a pick volume matrix
+ *
+ * When post-concatenated with a projection matrix, the pick matrix modifies
+ * the view volume to create a 'picking volume'. This volume corresponds to
+ * a screen rectangle centered at (pick_x, pick_y) and with dimensions
+ * pick_widthXpick_height.
+ *
+ * @todo: Representation of viewport between this function and
+ * matrix_viewport() is inconsistent (position and dimensions vs. bounds).
+ * Should this be addressed?
+ */
+
+template < typename E, class A, class B, class L > void
+matrix_pick(
+    matrix<E,A,B,L>& m, E pick_x, E pick_y, E pick_width, E pick_height,
+    E viewport_x, E viewport_y, E viewport_width, E viewport_height)
+{
+    typedef matrix<E,A,B,L> matrix_type;
+    typedef typename matrix_type::value_type value_type;
+
+    /* Checking */
+    detail::CheckMatHomogeneous3D(m);
+
+    identity_transform(m);
+    
+    value_type inv_width = value_type(1) / pick_width;
+    value_type inv_height = value_type(1) / pick_height;
+    
+    m.set_basis_element(0,0,viewport_width*inv_width);
+    m.set_basis_element(1,1,viewport_height*inv_height);
+    m.set_basis_element(3,0,
+        (viewport_width+value_type(2)*(viewport_x-pick_x))*inv_width);
+    m.set_basis_element(3,1,
+        (viewport_height+value_type(2)*(viewport_y-pick_y))*inv_height);
+}
+
 } // namespace cml
 
 #endif
