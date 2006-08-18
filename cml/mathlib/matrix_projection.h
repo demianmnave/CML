@@ -49,9 +49,9 @@ matrix_perspective(matrix<E,A,B,L>& m, E left, E right, E bottom, E top,
     if (z_clip == z_clip_neg_one) {
         m.set_basis_element(2,2,s * (far + near) * inv_depth);
         m.set_basis_element(3,2,value_type(-2) * far * near * inv_depth);
-    } else { // z_clip.z_clip() == 0
+    } else { // z_clip == z_clip_zero
         m.set_basis_element(2,2,s * far * inv_depth);
-        m.set_basis_element(3,2,-near * m.basis_element(2,2));
+        m.set_basis_element(3,2,-s * near * m.basis_element(2,2));
     }
     
     m.set_basis_element(0,0,near2 * inv_width               );
