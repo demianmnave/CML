@@ -21,6 +21,15 @@
 
 namespace cml {
 
+/** A fixed-size temporary 4D vector */
+#define TEMP_VEC4 vector<          \
+    typename et::ScalarPromote<    \
+        typename MatT::value_type, \
+        typename VecT::value_type  \
+    >::type,                       \
+    fixed<4>                       \
+>
+
 /** A fixed-size temporary 3D vector */
 #define TEMP_VEC3 vector<          \
     typename et::ScalarPromote<    \
@@ -38,6 +47,26 @@ namespace cml {
     >::type,                       \
     fixed<2>                       \
 >
+
+namespace detail {
+
+template < class MatT, class VecT > TEMP_VEC4
+transform_vector_4D(const MatT& m, const VecT& v, row_basis) {
+    return v*m;
+}
+
+template < class MatT, class VecT > TEMP_VEC4
+transform_vector_4D(const MatT& m, const VecT& v, col_basis) {
+    return m*v;
+}
+
+} // namespace detail
+
+/** Apply a 4x4 homogeneous transform matrix to a 4D vector */
+template < class MatT, class VecT > TEMP_VEC4
+transform_vector_4D(const MatT& m, const VecT& v) {
+    return detail::transform_vector_4D(m,v,typename MatT::basis_orient());
+}
 
 /** Apply a 3D affine transform to a 3D point */
 template < class MatT, class VecT > TEMP_VEC3
@@ -113,6 +142,7 @@ transform_vector_2D(const MatT& m, const VecT& v)
     );
 }
 
+#undef TEMP_VEC4
 #undef TEMP_VEC3
 #undef TEMP_VEC2
 
