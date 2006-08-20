@@ -25,5 +25,8 @@
 #include <cml/mathlib/quaternion_rotation.h>
 #include <cml/mathlib/coord_conversion.h>
 #include <cml/mathlib/interpolation.h>
+#include <cml/mathlib/frustum.h>
+#include <cml/mathlib/projection.h>
+#include <cml/mathlib/picking.h>
 
 #endif
