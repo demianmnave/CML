@@ -70,7 +70,7 @@
  * a matter of removing this #include, and the mathlib directory itself.
  */
 
-//#include <cml/mathlib/mathlib.h>
+#include <cml/mathlib/mathlib.h>
 
 #endif
 
