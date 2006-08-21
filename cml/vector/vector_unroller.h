@@ -128,7 +128,7 @@ class VectorAssignmentUnroller
 
 #if defined(CML_AUTOMATIC_VECTOR_RESIZE_ON_ASSIGNMENT)
         /* Get the size of src.  This also causes src to check its size: */
-        size_t N = src_traits().size(src);
+        size_t N = std::max(dest.size(),src_traits().size(src));
 
         /* Set the destination vector's size: */
         cml::et::detail::Resize(dest,N);

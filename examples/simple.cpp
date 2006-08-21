@@ -712,6 +712,7 @@ void example22()
     cout << "  e = " << constants_t::e() << endl;
 }
 
+#if 0
 void example23()
 {
     using cml::lerp;
@@ -724,6 +725,7 @@ void example23()
     cout << "    f(.3) ~= lerp(" << f0 << "," << f1 << "," << u << ") = "
         << fu << endl;
 }
+#endif
 
 
 typedef vector< double, fixed<3> > g_vector_t;
@@ -737,6 +739,34 @@ void example24()
     cout << std::endl << "Example24:" << endl;
     g_vector_t u(1., 1., 0.), v(1., 0., 0.);
     example24_part1(u+2.*v);
+}
+
+void example25()
+{
+    cout << std::endl << "Example25:" << endl;
+
+    /* 3-space matrix, fixed length, double coordinates: */
+    typedef cml::matrix<double, fixed<3,3>, col_basis> matrix_d3c;
+
+    /* 3-space matrix, fixed length, double coordinates: */
+    typedef cml::matrix<double, fixed<3,3>, row_basis> matrix_d3r;
+
+    /* 3-space vector, fixed length, double coordinates: */
+    typedef cml::vector< double, fixed<3> > vector_d3;
+
+    matrix_d3c A(
+            1., 0., 0.,
+            0., 1., 0.,
+            0., 0., 1.
+            );
+    cout << "A:\n" << A << endl;
+
+    vector_d3 x(1., 0., 1.);
+    vector_d3 y = A*x;
+
+    matrix_d3r B = outer(x,y);
+
+    cout << "B:\n" << B << endl;
 }
 
 int main()
@@ -765,8 +795,9 @@ int main()
     example20();
     example21();
     example22();
-    example23();
+//    example23();
     example24();
+    example25();
     return 0;
 }
 

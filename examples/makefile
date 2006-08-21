@@ -7,7 +7,7 @@ LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 all: simple
 
 simple: simple.o
-simple.o: simple.cpp
+simple.o: simple.cpp cml_config.h
 
 clean:
 	rm simple simple.o

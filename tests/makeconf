@@ -39,10 +39,22 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 #-- rm=rm -f
 #-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
-CXX=powerpc-apple-darwin8-g++-4.0.1
+#--CXX=powerpc-apple-darwin8-g++-4.0.1
+#--CPP=$(CXX) -MM
+#--CXXFLAGS=-Wall -ftemplate-depth-1000 -O3 -mcpu=G4 -mtune=G4 -mpowerpc \
+#--	 -mpowerpc-gpopt -fomit-frame-pointer -funroll-loops \
+#--	 -finline-functions -finline-limit=2000000000 \
+#--	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100
+#--CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS)
+#--exe=
+#--obj=.o
+#--rm=rm -f
+#--LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+
+CXX=i686-apple-darwin8-g++-4.0.1
 CPP=$(CXX) -MM
-CXXFLAGS=-Wall -ftemplate-depth-1000 -O3 -mcpu=G4 -mtune=G4 -mpowerpc \
-	 -mpowerpc-gpopt -fomit-frame-pointer -funroll-loops \
+CXXFLAGS=-Wall -ftemplate-depth-1000 -O3 \
+	 -fomit-frame-pointer -funroll-loops \
 	 -finline-functions -finline-limit=2000000000 \
 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100
 CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS)
@@ -50,18 +62,6 @@ exe=
 obj=.o
 rm=rm -f
 LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
-
-#-- CXX=i686-apple-darwin8-g++-4.0.1
-#-- CPP=$(CXX) -MM
-#-- CXXFLAGS=-Wall -ftemplate-depth-1000 -O3 \
-#-- 	 -fomit-frame-pointer -funroll-loops \
-#-- 	 -finline-functions -finline-limit=2000000000 \
-#-- 	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100
-#-- CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS)
-#-- exe=
-#-- obj=.o
-#-- rm=rm -f
-#-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 
 #-- Note: this is for gcc 3.4, which requires explicit inlining:

@@ -112,8 +112,8 @@ CML_BINARY_SCALAR_OP_ASSIGN(/=, OpDivAssign)
 #endif
 
 /* Boolean operators for scalars: */
-CML_BOOLEAN_SCALAR_OP(==, OpEquals)
-CML_BOOLEAN_SCALAR_OP(!=, OpUnequal) /* added by Jesse */
+CML_BOOLEAN_SCALAR_OP(==, OpEqual)
+CML_BOOLEAN_SCALAR_OP(!=, OpNotEqual)
 CML_BOOLEAN_SCALAR_OP( <, OpLess)
 CML_BOOLEAN_SCALAR_OP( >, OpGreater)
 CML_BOOLEAN_SCALAR_OP(<=, OpLessEqual)

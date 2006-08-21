@@ -258,10 +258,12 @@ int main()
 {
     fixed_test();
     dynamic_test();
+#if 0
     external_test();
     mixed_fixed_dynamic_test();
     mixed_fixed_external_test();
     mixed_dynamic_external_test();
+#endif
 }
 
 // -------------------------------------------------------------------------

@@ -96,10 +96,7 @@ vector_weak_order(const LeftT& left, const RightT& right, OpT)
 
     /* Verify expression size: */
     ssize_t N = (ssize_t) et::CheckedSize(left,right,size_tag());
-
-    /* Apply op to each element, and return true on true comparison: */
     for(ssize_t i = 0; i < N; ++ i) {
-
         if(OpT().apply(
                     left_traits().get(left,i),
                     right_traits().get(right,i)
@@ -157,14 +154,13 @@ vector_total_order(const LeftT& left, const RightT& right, OpT)
 
     /* Verify expression size: */
     ssize_t N = (ssize_t) et::CheckedSize(left,right,size_tag());
-
-    /* Apply op to each element, and test total and weak orders: */
     for(ssize_t i = 0; i < N; ++ i) {
 
         /* Test total order: */
         if(OpT().apply(
                     left_traits().get(left,i),
-                    right_traits().get(right,i)))
+                    right_traits().get(right,i)
+		    ))
         {
             /* Automatically true if weak order (a <= b) && !(b <= a) <=>
              * (a <= b) && (b > a) <=> (a < b) is satisfied:
@@ -189,7 +185,7 @@ vector_total_order(const LeftT& left, const RightT& right, OpT)
     }
     /* XXX Can this be unrolled in any reasonable way? */
 
-    /* Total (==, !=) or weak (<) order was satisfied, so return true: */
+    /* Total (==) or weak (<) order was satisfied, so return true: */
     return true;
 }
 
@@ -197,44 +193,35 @@ vector_total_order(const LeftT& left, const RightT& right, OpT)
 
 /* XXX There is a better way to handle these with operator traits... */
 
-CML_VEC_VEC_ORDER(       total_order, operator==, et::OpEquals)
-CML_VECXPR_VEC_ORDER(    total_order, operator==, et::OpEquals)
-CML_VEC_VECXPR_ORDER(    total_order, operator==, et::OpEquals)
-CML_VECXPR_VECXPR_ORDER( total_order, operator==, et::OpEquals)
+CML_VEC_VEC_ORDER(       total_order, operator==, et::OpEqual)
+CML_VECXPR_VEC_ORDER(    total_order, operator==, et::OpEqual)
+CML_VEC_VECXPR_ORDER(    total_order, operator==, et::OpEqual)
+CML_VECXPR_VECXPR_ORDER( total_order, operator==, et::OpEqual)
 
-#if 0
-CML_VEC_VEC_ORDER(       weak_order, operator!=, et::OpEquals)
-CML_VECXPR_VEC_ORDER(    weak_order, operator!=, et::OpEquals)
-CML_VEC_VECXPR_ORDER(    weak_order, operator!=, et::OpEquals)
-CML_VECXPR_VECXPR_ORDER( weak_order, operator!=, et::OpEquals)
-#endif
+CML_VEC_VEC_ORDER(       weak_order, operator!=, et::OpNotEqual)
+CML_VECXPR_VEC_ORDER(    weak_order, operator!=, et::OpNotEqual)
+CML_VEC_VECXPR_ORDER(    weak_order, operator!=, et::OpNotEqual)
+CML_VECXPR_VECXPR_ORDER( weak_order, operator!=, et::OpNotEqual)
 
-/* Changed from OpEquals (above) by Jesse */
-CML_VEC_VEC_ORDER(       weak_order, operator!=, et::OpUnequal)
-CML_VECXPR_VEC_ORDER(    weak_order, operator!=, et::OpUnequal)
-CML_VEC_VECXPR_ORDER(    weak_order, operator!=, et::OpUnequal)
-CML_VECXPR_VECXPR_ORDER( weak_order, operator!=, et::OpUnequal)
-/* End change */
+CML_VEC_VEC_ORDER(       weak_order, operator<, et::OpLess)
+CML_VECXPR_VEC_ORDER(    weak_order, operator<, et::OpLess)
+CML_VEC_VECXPR_ORDER(    weak_order, operator<, et::OpLess)
+CML_VECXPR_VECXPR_ORDER( weak_order, operator<, et::OpLess)
 
-CML_VEC_VEC_ORDER(        weak_order, operator<, et::OpLess)
-CML_VECXPR_VEC_ORDER(     weak_order, operator<, et::OpLess)
-CML_VEC_VECXPR_ORDER(     weak_order, operator<, et::OpLess)
-CML_VECXPR_VECXPR_ORDER(  weak_order, operator<, et::OpLess)
+CML_VEC_VEC_ORDER(       weak_order, operator>, et::OpGreater)
+CML_VECXPR_VEC_ORDER(    weak_order, operator>, et::OpGreater)
+CML_VEC_VECXPR_ORDER(    weak_order, operator>, et::OpGreater)
+CML_VECXPR_VECXPR_ORDER( weak_order, operator>, et::OpGreater)
 
-CML_VEC_VEC_ORDER(        weak_order, operator>, et::OpGreater)
-CML_VECXPR_VEC_ORDER(     weak_order, operator>, et::OpGreater)
-CML_VEC_VECXPR_ORDER(     weak_order, operator>, et::OpGreater)
-CML_VECXPR_VECXPR_ORDER(  weak_order, operator>, et::OpGreater)
+CML_VEC_VEC_ORDER(       total_order, operator<=, et::OpLessEqual)
+CML_VECXPR_VEC_ORDER(    total_order, operator<=, et::OpLessEqual)
+CML_VEC_VECXPR_ORDER(    total_order, operator<=, et::OpLessEqual)
+CML_VECXPR_VECXPR_ORDER( total_order, operator<=, et::OpLessEqual)
 
-CML_VEC_VEC_ORDER(        total_order, operator<=, et::OpLessEqual)
-CML_VECXPR_VEC_ORDER(     total_order, operator<=, et::OpLessEqual)
-CML_VEC_VECXPR_ORDER(     total_order, operator<=, et::OpLessEqual)
-CML_VECXPR_VECXPR_ORDER(  total_order, operator<=, et::OpLessEqual)
-
-CML_VEC_VEC_ORDER(        total_order, operator>=, et::OpGreaterEqual)
-CML_VECXPR_VEC_ORDER(     total_order, operator>=, et::OpGreaterEqual)
-CML_VEC_VECXPR_ORDER(     total_order, operator>=, et::OpGreaterEqual)
-CML_VECXPR_VECXPR_ORDER(  total_order, operator>=, et::OpGreaterEqual)
+CML_VEC_VEC_ORDER(       total_order, operator>=, et::OpGreaterEqual)
+CML_VECXPR_VEC_ORDER(    total_order, operator>=, et::OpGreaterEqual)
+CML_VEC_VECXPR_ORDER(    total_order, operator>=, et::OpGreaterEqual)
+CML_VECXPR_VECXPR_ORDER( total_order, operator>=, et::OpGreaterEqual)
 
 } // namespace cml
 

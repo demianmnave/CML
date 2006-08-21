@@ -171,7 +171,7 @@ Require3D(const VecT& v, fixed_size_tag) {
 }
 
 /** For cross(): run-time check for a 3D vector. */
-template<typename VecT/*, size_t N*/> inline void
+template<typename VecT> inline void
 Require3D(const VecT& v, dynamic_size_tag) {
     et::GetCheckedSize<VecT,VecT,dynamic_size_tag>()
         .equal_or_fail(v.size(),size_t(3));
@@ -186,7 +186,7 @@ Require2D(const VecT& v, fixed_size_tag) {
 }
 
 /** For perp_dot(): run-time check for a 2D vector. */
-template<typename VecT/*, size_t N*/> inline void
+template<typename VecT> inline void
 Require2D(const VecT& v, dynamic_size_tag) {
     et::GetCheckedSize<VecT,VecT,dynamic_size_tag>()
         .equal_or_fail(v.size(),size_t(2));
