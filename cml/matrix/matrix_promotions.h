@@ -31,22 +31,27 @@ namespace et {
 /* Default matrix type promotion template. */
 template<typename LeftT, typename RightT> struct MatrixPromote;
 
-/** Type promotion for two matrix types. */
-template<typename E1, class AT1, typename L1,
-         typename E2, class AT2, typename L2, typename BO>
-struct MatrixPromote< cml::matrix<E1,AT1,BO,L1>, cml::matrix<E2,AT2,BO,L2> >
+/** Type promotion for two matrix types.
+ *
+ * @note This always uses the basis orientation of the left-hand matrix.
+ * @bug This always uses the basis orientation of the left-hand matrix,
+ *      which is not always correct.
+ */
+template<typename E1, class AT1, typename L1, typename BO1,
+         typename E2, class AT2, typename L2, typename BO2>
+struct MatrixPromote< cml::matrix<E1,AT1,BO1,L1>, cml::matrix<E2,AT2,BO2,L2> >
 {
     /* Promote the arrays: */
     typedef typename ArrayPromote<
-        typename cml::matrix<E1,AT1,BO,L1>::array_type,
-        typename cml::matrix<E2,AT2,BO,L2>::array_type
+        typename cml::matrix<E1,AT1,BO1,L1>::array_type,
+        typename cml::matrix<E2,AT2,BO2,L2>::array_type
     >::type promoted_array;
 
     /* The deduced matrix result type: */
     typedef cml::matrix<
         typename promoted_array::value_type,
         typename promoted_array::generator_type,
-        BO,
+        BO1,
         typename promoted_array::layout
     > type;
 

@@ -767,6 +767,9 @@ void example25()
     matrix_d3r B = outer(x,y);
 
     cout << "B:\n" << B << endl;
+
+    A = 2.*B;
+    cout << "A = 2*B =\n" << A << endl;
 }
 
 int main()
