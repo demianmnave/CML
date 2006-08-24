@@ -49,11 +49,6 @@ struct vector_first {
  *
  * @note Quaternions with two different orders cannot be used in the same
  * expression.
- *
- * @note The vector currently cannot have an external<> storage type.
- *
- * @internal The quaternion class would have to be specialized to allow an
- * external<> storage type.
  */
 template<
     typename Element,
@@ -225,8 +220,8 @@ class quaternion
 
     /** Default initializer.
      *
-     * The default constructor cannot be used with an external<> array
-     * type.
+     * @note The default constructor cannot be used with an external<>
+     * array type.
      */
     quaternion() {}
 
@@ -264,29 +259,23 @@ class quaternion
      * v[3] is the real part.
      *
      * @note The target vector must have CML_VEC_COPY_FROM_ARRAY
-     * implemented.
+     * implemented, so this cannot be used with external<> vectors.
      */
     quaternion(const value_type v[4]) : m_q(v) {}
 
-#if 0
-    /* XXX This needs a function specialized on the order type to properly
-     * interpret a as W or X and d as Z or W.
-     */
-
     /** Initialize from 4 scalars.
      *
-     * If then a is the real part, and (b,c,d) is the imaginary part.
-     * Otherwise, (a,b,c) is the imaginary part, and d is the real part.
+     * If Order is scalar_first, then a is the real part, and (b,c,d) is
+     * the imaginary part.  Otherwise, (a,b,c) is the imaginary part, and d
+     * is the real part.
      */
     quaternion(
             const value_type& a, const value_type& b,
             const value_type& c, const value_type& d)
     {
-        m_q[0] = a; m_q[1] = b; m_q[2] = c; m_q[3] = d;
+      /* Call the overloaded assignment function: */
+      assign(a, b, c, d, Order());
     }
-#endif
-
-
 
     /** Initialize both the real and imaginary parts.
      *
@@ -370,6 +359,23 @@ class quaternion
 
 #undef CML_QUAT_ASSIGN_FROM_QUAT
 #undef CML_QUAT_ASSIGN_FROM_QUATXPR
+
+
+  protected:
+
+    /** Overloaded function to assign the quaternion from 4 scalars. */
+    void assign(const value_type& a, const value_type& b,
+	const value_type& c, const value_type& d, scalar_first)
+    {
+      m_q[W] = a; m_q[X] = b; m_q[Y] = c; m_q[Z] = d;
+    }
+
+    /** Overloaded function to assign the quaternion from 4 scalars. */
+    void assign(const value_type& a, const value_type& b,
+	const value_type& c, const value_type& d, vector_first)
+    {
+      m_q[X] = a; m_q[Y] = b; m_q[Z] = c; m_q[W] = d;
+    }
 
 
   protected:

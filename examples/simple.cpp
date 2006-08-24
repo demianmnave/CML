@@ -518,10 +518,11 @@ void example18()
 {
     cout << std::endl << "Example18:" << endl;
 
-    typedef quaternion< double, fixed<> > quaternion_type;
+    typedef quaternion<double, fixed<>, scalar_first> quaternion_type;
 
-    double v1[] = {1.,0.,0.}, v2[] = {1.,0.,1.};
-    quaternion_type p(1.,v1), q(0.,v2), r, s;
+    double v1[] = {1.,0.,0.};
+    quaternion_type p(1.,v1), q(0., 1., 0., 1.);
+    quaternion_type r, s;
     cout << "p = " << p << endl;
     cout << "q = " << q << endl;
     
@@ -745,8 +746,8 @@ void example25()
 {
     cout << std::endl << "Example25:" << endl;
 
-    /* 3-space matrix, fixed length, double coordinates: */
-    typedef cml::matrix<double, fixed<3,3>, col_basis> matrix_d3c;
+    /* 3-space matrix, fixed length, double coordinates, col basis: */
+    typedef cml::matrix< double, fixed<3,3> > matrix_d3c;
 
     /* 3-space matrix, fixed length, double coordinates: */
     typedef cml::matrix<double, fixed<3,3>, row_basis> matrix_d3r;

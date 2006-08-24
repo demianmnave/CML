@@ -30,7 +30,8 @@ namespace cml {
  * the same size.  This is particularly important for dynamically-sized
  * matrices.
  */
-template<typename Element, class ArrayType, typename BasisOrient,
+template<typename Element, class ArrayType,
+    typename BasisOrient = CML_DEFAULT_BASIS_ORIENTATION,
     typename Layout = CML_DEFAULT_ARRAY_LAYOUT> class matrix;
 
 } // namespace cml
