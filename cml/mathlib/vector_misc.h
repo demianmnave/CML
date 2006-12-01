@@ -276,6 +276,24 @@ random_unit(vector<E,A>& v, const VecT& axis, E theta)
     }
 }
 
+/* NEW: Manhattan distance */
+
+template< class VecT_1, class VecT_2 >
+typename detail::DotPromote< VecT_1, VecT_2 >::promoted_scalar
+manhattan_distance(const VecT_1& v1, const VecT_2& v2) {
+    /* Check that a promotion exists */
+    typedef typename et::VectorPromote<
+        VecT_1,VecT_2>::temporary_type promoted_vector;
+        
+    typedef typename detail::DotPromote< VecT_1, VecT_2 >::promoted_scalar scalar_type;
+    
+    scalar_type sum = scalar_type(0);
+    for (size_t i = 0; i < v1.size(); ++i) {
+        sum += std::fabs(v2[i]-v1[i]);
+    }
+    return sum;
+}
+
 } // namespace cml
 
 #endif
