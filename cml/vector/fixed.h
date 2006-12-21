@@ -136,7 +136,7 @@ class vector< Element, fixed<Size> >
     CML_CONSTRUCT_FROM_SUBVEC(/**/)
 
     CML_VEC_COPY_FROM_FIXED_ARRAY(array_type::array_size,/**/)
-    CML_VEC_COPY_FROM_VECTYPE(/**/)
+    CML_VEC_COPY_FROM_VECTYPE(: array_type())
     CML_VEC_COPY_FROM_VEC
     CML_VEC_COPY_FROM_VECXPR
 

@@ -65,6 +65,9 @@ class fixed_1D
     /* For matching by size type: */
     typedef fixed_size_tag size_tag;
 
+    /* For matching by resizability: */
+    typedef not_resizable_tag resizing_tag;
+
     /* For matching by dimensions: */
     typedef oned_tag dimension_tag;
 
@@ -103,6 +106,10 @@ class fixed_1D
 
     /** Return access to the data as a raw pointer. */
     const_pointer data() const { return &m_data[0]; }
+
+  protected:
+
+    fixed_1D() {}
 
 
   protected:

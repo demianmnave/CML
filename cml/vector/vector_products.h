@@ -164,7 +164,7 @@ UnrollDot(const LeftT& left, const RightT& right, dynamic_size_tag)
 
 /** For cross(): compile-time check for a 3D vector. */
 template<typename VecT> inline void
-Require3D(const VecT& v, fixed_size_tag) {
+Require3D(const VecT&, fixed_size_tag) {
     CML_STATIC_REQUIRE_M(
             ((size_t)VecT::array_size == 3),
             cross_expects_3D_vector_args_error);

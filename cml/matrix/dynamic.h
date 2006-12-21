@@ -59,6 +59,9 @@ class matrix<Element,dynamic<Alloc>,BasisOrient,Layout>
     /* For matching by size type if necessary: */
     typedef typename array_type::size_tag size_tag;
 
+    /* For matching by resizability: */
+    typedef typename array_type::resizing_tag resizing_tag;
+
     /* For matching by result type: */
     typedef cml::et::matrix_result_tag result_tag;
 
@@ -202,6 +205,7 @@ class matrix<Element,dynamic<Alloc>,BasisOrient,Layout>
     CML_CONSTRUCT_MAT_33
     CML_CONSTRUCT_MAT_44
 
+    CML_MAT_COPY_FROM_ARRAY(: array_type())
     CML_MAT_COPY_FROM_MATTYPE
     CML_MAT_COPY_FROM_MAT
     CML_MAT_COPY_FROM_MATXPR

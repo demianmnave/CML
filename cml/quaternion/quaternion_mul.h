@@ -125,9 +125,9 @@ class QuaternionMulOp
 
     /** Compute value of the product at index i.
      *
-     * @internal The switch should be completely eliminated since operations
-     * on quaternions use constant integers explicitly (like assignment), so
-     * no jumps are executed.
+     * @bug This is dumb.  The result of the multiplication should be stored
+     * in a temporary, and the coefficients of the temporary should be
+     * returned.
      */
     value_type operator[](size_t i) const {
 
@@ -142,22 +142,28 @@ class QuaternionMulOp
         switch(i) {
 
             /* s1*s2-dot(v1,v2): */
-            case W: return m_left[W]*m_right[W] - m_left[X]*m_right[X]
-                    - m_left[Y]*m_right[Y] - m_left[Z]*m_right[Z];
+            case W: {
+	      return m_left[W]*m_right[W] - m_left[X]*m_right[X]
+		- m_left[Y]*m_right[Y] - m_left[Z]*m_right[Z];
+	    } break;
 
-            /* (s1*v2 + s2*v1 + v1^v2) i: */
-            case X: return m_left[W]*m_right[X] + m_right[W]*m_left[X]
-                    + scale*(m_left[Y]*m_right[Z] - m_left[Z]*m_right[Y]);
+            case X: {
+	      /* (s1*v2 + s2*v1 + v1^v2) i: */
+	      return m_left[W]*m_right[X] + m_right[W]*m_left[X]
+		+ scale*(m_left[Y]*m_right[Z] - m_left[Z]*m_right[Y]);
+	    } break;
 
-            case Y:
-                /* (s1*v2 + s2*v1 + v1^v2) j: */
-                return m_left[W]*m_right[Y] + m_right[W]*m_left[Y]
-                    + scale*(m_left[Z]*m_right[X] - m_left[X]*m_right[Z]);
+            case Y: {
+	      /* (s1*v2 + s2*v1 + v1^v2) j: */
+	      return m_left[W]*m_right[Y] + m_right[W]*m_left[Y]
+		+ scale*(m_left[Z]*m_right[X] - m_left[X]*m_right[Z]);
+	    } break;
 
-            case Z:
-                /* (s1*v2 + s2*v1 + v1^v2) k: */
-                return m_left[W]*m_right[Z] + m_right[W]*m_left[Z]
-                    + scale*(m_left[X]*m_right[Y] - m_left[Y]*m_right[X]);
+            case Z: {
+	      /* (s1*v2 + s2*v1 + v1^v2) k: */
+	      return m_left[W]*m_right[Z] + m_right[W]*m_left[Z]
+		+ scale*(m_left[X]*m_right[Y] - m_left[Y]*m_right[X]);
+	    } break;
         }
         throw std::runtime_error(
                 "invalid index in QuaternionMulOp::operator[]");

@@ -504,7 +504,7 @@ quaternion_rotation_vec_to_vec(
     } else {
         q = quaternion_type(
             std::sqrt(v1.length_squared() * v2.length_squared()) + dot(v1,v2),
-            c.data()
+            c/*.data()*/
         );
     }
     q.normalize();

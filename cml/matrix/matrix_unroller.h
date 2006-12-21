@@ -187,6 +187,7 @@ class MatrixAssignmentUnroller
     }
 
 
+  private:
     /* XXX Blah, a temp. hack to fix the auto-resizing stuff below. */
     matrix_size hack_actual_size(const SrcT& src, scalar_result_tag) {
         return matrix_size(1,1);
@@ -196,21 +197,10 @@ class MatrixAssignmentUnroller
         typedef ExprTraits<SrcT> src_traits;
         return src_traits().size(src);
     }
-    /* XXX Blah, a temp. hack to fix the auto-resizing stuff below. */
 
-
-    /** Use a loop for dynamic-sized matrix assignment.
-     *
-     * @note The target matrix must already have the correct size.
-     *
-     * @todo This needs to be specialized for efficient row-major or col-major
-     * layout access.
-     */
-    void operator()(cml::matrix<E,AT,BO,L>& dest,
-            const SrcT& src, cml::dynamic_size_tag)
+    matrix_size CheckOrResize(
+            matrix_type& dest, const SrcT& src, cml::resizable_tag)
     {
-        typedef ExprTraits<SrcT> src_traits;
-
 #if defined(CML_AUTOMATIC_MATRIX_RESIZE_ON_ASSIGNMENT)
         /* Get the size of src.  This also causes src to check its size: */
         matrix_size N = hack_actual_size(
@@ -221,7 +211,30 @@ class MatrixAssignmentUnroller
 #else
         matrix_size N = CheckedSize(dest,src,dynamic_size_tag());
 #endif
+        return N;
+    }
 
+    matrix_size CheckOrResize(
+            matrix_type& dest, const SrcT& src, cml::not_resizable_tag)
+    {
+        return CheckedSize(dest,src,dynamic_size_tag());
+    }
+    /* XXX Blah, a temp. hack to fix the auto-resizing stuff below. */
+  public:
+
+
+    /** Use a loop for dynamic-sized matrix assignment.
+     *
+     * @note The target matrix must already have the correct size.
+     *
+     * @todo This needs to be specialized for efficient row-major or col-major
+     * layout access.
+     */
+    void operator()(matrix_type& dest, const SrcT& src, cml::dynamic_size_tag)
+    {
+        typedef ExprTraits<SrcT> src_traits;
+        matrix_size N = this->CheckOrResize(
+                dest,src,typename matrix_type::resizing_tag());
         for(size_t i = 0; i < N.first; ++i) {
             for(size_t j = 0; j < N.second; ++j) {
                 OpT().apply(dest(i,j), src_traits().get(src,i,j));

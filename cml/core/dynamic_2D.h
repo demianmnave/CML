@@ -54,6 +54,9 @@ class dynamic_2D
     /* For matching by size type: */
     typedef dynamic_size_tag size_tag;
 
+    /* For matching by resizability: */
+    typedef resizable_tag resizing_tag;
+
     /* For matching by dimensions: */
     typedef twod_tag dimension_tag;
 

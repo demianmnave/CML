@@ -32,8 +32,14 @@ struct external_memory_tag {};
 /** Statically-sized tag. */
 struct fixed_size_tag {};
 
-/** Dynamically-sized tag. */
+/** Runtime-sized tag. */
 struct dynamic_size_tag {};
+
+/** Resizable tag. */
+struct resizable_tag {};
+
+/** Not resizable tag. */
+struct not_resizable_tag {};
 
 /** Unit-sized tag. */
 struct unit_size_tag {};

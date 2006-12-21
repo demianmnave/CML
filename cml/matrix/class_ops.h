@@ -174,13 +174,22 @@ matrix(const value_type m[_R_][_C_]) {                                  \
     et::UnrollAssignment<OpT>(*this,src);                               \
 }
 
+/** Copy-construct a matrix from a runtime-sized array of values. */
+#define CML_MAT_COPY_FROM_ARRAY(_add_)                                  \
+matrix(const value_type* const v, size_t R, size_t C) _add_ {           \
+    typedef et::OpAssign<Element,Element> OpT;                          \
+    cml::matrix<value_type, external<>, basis_orient,                   \
+        row_major > src(const_cast<value_type*>(v),R,C);                \
+    et::UnrollAssignment<OpT>(*this,src);                               \
+}
+
 /** Copy this matrix from another using the given elementwise op.
  *
  * @internal This is required for GCC4, since it won't elide the default
  * copy constructor.
  */
 #define CML_MAT_COPY_FROM_MATTYPE                                       \
-matrix(const matrix_type& m) {                                          \
+matrix(const matrix_type& m) : array_type() {                           \
     typedef et::OpAssign <Element,Element> OpT;                         \
     et::UnrollAssignment<OpT>(*this,m);                                 \
 }

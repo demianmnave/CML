@@ -54,6 +54,9 @@ class external_2D
     /* For matching by size type: */
     typedef fixed_size_tag size_tag;
 
+    /* For matching by resizability: */
+    typedef not_resizable_tag resizing_tag;
+
     /* For matching by dimensions: */
     typedef twod_tag dimension_tag;
 
@@ -78,8 +81,12 @@ class external_2D
 
   public:
 
-    /** Construct an external array with no size. */
-    external_2D(pointer const ptr) : m_data(ptr) {}
+    /** Construct an external array from a pointer. */
+    external_2D(value_type const ptr[Rows][Cols])
+        : m_data(const_cast<pointer>(&ptr[0][0])) {}
+
+    /** Construct an external array from a pointer. */
+    external_2D(value_type* const ptr) : m_data(ptr) {}
 
 
   public:
@@ -184,6 +191,9 @@ class external_2D<Element,-1,-1,Layout>
 
     /* For matching by size type: */
     typedef dynamic_size_tag size_tag;
+
+    /* For matching by resizability: */
+    typedef not_resizable_tag resizing_tag;
 
     /* For matching by dimensions: */
     typedef twod_tag dimension_tag;

@@ -62,6 +62,9 @@ class matrix<Element,external<Rows,Cols>,BasisOrient,Layout>
     /* For matching by size type if necessary: */
     typedef typename array_type::size_tag size_tag;
 
+    /* For matching by resizability: */
+    typedef typename array_type::resizing_tag resizing_tag;
+
     /* For matching by result-type: */
     typedef cml::et::matrix_result_tag result_tag;
 
@@ -166,6 +169,18 @@ class matrix<Element,external<Rows,Cols>,BasisOrient,Layout>
 
 
   public:
+
+    /** Constructor for fixed-size external matrices.
+     *
+     * The array must be given as a pointer to Element*, not a
+     * multi-dimensional array.  The caller owns the pointer, and is
+     * responsible for doing any necessary memory management.
+     *
+     * @param ptr specify the external pointer.
+     *
+     * @throws same as the ArrayType constructor.
+     */
+    explicit matrix(value_type ptr[Rows][Cols]) : array_type(ptr) {}
 
     /** Constructor for fixed-size external matrices.
      *
@@ -300,6 +315,9 @@ class matrix<Element,external<-1,-1>,BasisOrient,Layout>
 
     /* For matching by size type if necessary: */
     typedef typename array_type::size_tag size_tag;
+
+    /* For matching by resizability: */
+    typedef typename array_type::resizing_tag resizing_tag;
 
     /* For matching by result-type: */
     typedef cml::et::matrix_result_tag result_tag;

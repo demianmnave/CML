@@ -105,7 +105,7 @@ vector(                                                                 \
         ) _add_                                                         \
 {                                                                       \
     _DO_VECTOR_SET_RESIZE(s.size()+1);                                  \
-    for(ssize_t i = 0; i < s.size(); ++ i)                              \
+    for(size_t i = 0; i < s.size(); ++ i)                               \
         (*this)[i] = s[i];                                              \
     (*this)[s.size()] = e;                                              \
 }

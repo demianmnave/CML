@@ -120,12 +120,12 @@ class VectorAssignmentUnroller
         Unroller()(dest,src);
     }
 
-    /** Just use a loop to assign to a resizable vector. */
-    void operator()(vector_type& dest, const SrcT& src, cml::dynamic_size_tag)
-    {
-        /* Shorthand: */
-        typedef ExprTraits<SrcT> src_traits;
 
+  private:
+    /* XXX Blah, a temp. hack to fix the auto-resizing stuff below. */
+    size_t CheckOrResize(
+            vector_type& dest, const SrcT& src, cml::resizable_tag)
+    {
 #if defined(CML_AUTOMATIC_VECTOR_RESIZE_ON_ASSIGNMENT)
         /* Get the size of src.  This also causes src to check its size: */
         size_t N = std::max(dest.size(),src_traits().size(src));
@@ -136,6 +136,25 @@ class VectorAssignmentUnroller
         size_t N = CheckedSize(dest,src,dynamic_size_tag());
 #endif
 
+        return N;
+    }
+
+    size_t CheckOrResize(
+            vector_type& dest, const SrcT& src, cml::not_resizable_tag)
+    {
+        return CheckedSize(dest,src,dynamic_size_tag());
+    }
+    /* XXX Blah, a temp. hack to fix the auto-resizing stuff below. */
+  public:
+    
+
+    /** Just use a loop to assign to a runtime-sized vector. */
+    void operator()(vector_type& dest, const SrcT& src, cml::dynamic_size_tag)
+    {
+        /* Shorthand: */
+        typedef ExprTraits<SrcT> src_traits;
+        size_t N = this->CheckOrResize(
+                dest,src,typename vector_type::resizing_tag());
         for(size_t i = 0; i < N; ++i) {
             OpT().apply(dest[i], src_traits().get(src,i));
             /* Note: we don't need get(), since dest is a vector. */

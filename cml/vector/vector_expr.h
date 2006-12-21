@@ -429,18 +429,17 @@ struct VectorExpressions
 
 namespace detail {
 
-/* Helpers for resizing vectors: */
-template<typename VecT, typename MT> inline
-void Resize(VecT&, size_t, fixed_size_tag, MT) {}
+template<typename VecT, typename RT, typename MT> inline
+void Resize(VecT&,size_t,RT,MT) {}
 
 template<typename VecT> inline
-void Resize(VecT& v, size_t S, dynamic_size_tag, dynamic_memory_tag) {
+void Resize(VecT& v, size_t S, resizable_tag, dynamic_memory_tag) {
     v.resize(S);
 }
 
 template<typename VecT> inline
 void Resize(VecT& v, size_t S) {
-    Resize(v, S, typename VecT::size_tag(), typename VecT::memory_tag());
+    Resize(v, S, typename VecT::resizing_tag(), typename VecT::memory_tag());
 }
 
 } // namespace detail

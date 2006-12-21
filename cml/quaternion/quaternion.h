@@ -279,7 +279,39 @@ class quaternion
 
     /** Initialize both the real and imaginary parts.
      *
-     * The imaginary part is given by an array of scalars.
+     * The imaginary part is given by a 3-vector.  Although the imaginary
+     * part is specified first, the proper coefficient order (vector or
+     * scalar first) is maintained.
+     */
+    quaternion(const value_type& s, const imaginary_type& v) {
+        m_q[W] = s; m_q[X] = v[0]; m_q[Y] = v[1]; m_q[Z] = v[2];
+    }
+
+    /** Initialize both the real and imaginary parts.
+     *
+     * The imaginary part is given by a 3-vector.  Although the imaginary
+     * part is specified second, the proper coefficient order (vector or
+     * scalar first) is maintained.
+     */
+    quaternion(const imaginary_type& v, const value_type& s) {
+        m_q[W] = s; m_q[X] = v[0]; m_q[Y] = v[1]; m_q[Z] = v[2];
+    }
+
+    /** Initialize both the real and imaginary parts.
+     *
+     * The imaginary part is given by an array of scalars.  Although the
+     * imaginary part is specified first, the proper coefficient order
+     * (vector or scalar first) is maintained.
+     */
+    quaternion(const value_type v[3], const value_type& s) {
+        m_q[W] = s; m_q[X] = v[0]; m_q[Y] = v[1]; m_q[Z] = v[2];
+    }
+
+    /** Initialize both the real and imaginary parts.
+     *
+     * The imaginary part is given by an array of scalars.  Although the
+     * imaginary part is specified second, the proper coefficient order
+     * (vector or scalar first) is maintained.
      */
     quaternion(const value_type& s, const value_type v[3]) {
         m_q[W] = s; m_q[X] = v[0]; m_q[Y] = v[1]; m_q[Z] = v[2];

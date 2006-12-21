@@ -2,11 +2,11 @@
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 /** @file
- *  @brief Specialization for fixed-size, external-memory vectors.
+ *  @brief Specializations for external-memory vectors.
  *
- *  @note External vectors currently cannot be copy-constructed.  Making
- *  copy construction work properly requires a safe way to transfer
- *  ownership of pointers.
+ *  @note Copy-constructing one external<> vector from another is not
+ *  supported, since an external<> vector is essentially a wrapper for a
+ *  pointer and has no allocated storage of its own.
  */
 
 #ifndef external_vector_h
@@ -134,9 +134,6 @@ class vector< Element, external<Size> >
 
   public:
 
-    /* Define class operators for external vectors. Note: external vectors
-     * cannot be copy-constructed, but they can be assigned to:
-     */
     CML_ASSIGN_VEC_2
     CML_ASSIGN_VEC_3
     CML_ASSIGN_VEC_4
@@ -197,8 +194,14 @@ class vector< Element, external<> >
     /* For matching by size type: */
     typedef typename array_type::size_tag size_tag;
 
+    /* For matching by resizability: */
+    typedef typename array_type::resizing_tag resizing_tag;
+
     /* For matching by result-type: */
     typedef cml::et::vector_result_tag result_tag;
+
+    /* For matching by assignability: */
+    typedef cml::et::assignable_tag assignable_tag;
 
 
   public:

@@ -53,6 +53,9 @@ class vector< Element, dynamic<Alloc> >
     /* For matching by size type: */
     typedef typename array_type::size_tag size_tag;
 
+    /* For matching by resizability: */
+    typedef typename array_type::resizing_tag resizing_tag;
+
     /* For matching by result-type: */
     typedef cml::et::vector_result_tag result_tag;
 

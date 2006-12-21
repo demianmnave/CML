@@ -52,6 +52,9 @@ class external_1D
     /* For matching by size type: */
     typedef fixed_size_tag size_tag;
 
+    /* For matching by resizability: */
+    typedef not_resizable_tag resizing_tag;
+
     /* For matching by dimensions: */
     typedef oned_tag dimension_tag;
 
@@ -138,6 +141,9 @@ class external_1D<Element,-1>
 
     /* For matching by size type: */
     typedef dynamic_size_tag size_tag;
+
+    /* For matching by resizability: */
+    typedef not_resizable_tag resizing_tag;
 
     /* For matching by dimensions: */
     typedef oned_tag dimension_tag;

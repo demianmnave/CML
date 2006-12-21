@@ -7,8 +7,10 @@
 CML_ROOT=../
 include makeconf
 
-VEC_TEST_SRC	= vector_et1.cpp
-VEC_TESTS	= vector_et1$(exe)
+VEC_TEST_SRC	= vector_et1.cpp \
+		  external_assignment.cpp
+VEC_TESTS	= vector_et1$(exe) \
+		  external_assignment$(exe)
 
 MAT_TEST_SRC	= matrix_et1.cpp
 MAT_TESTS	= matrix_et1$(exe)

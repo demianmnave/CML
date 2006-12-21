@@ -48,6 +48,9 @@ class dynamic_1D
     /* For matching by size type: */
     typedef dynamic_size_tag size_tag;
 
+    /* For matching by resizability: */
+    typedef resizable_tag resizing_tag;
+
     /* For matching by dimensions: */
     typedef oned_tag dimension_tag;
 

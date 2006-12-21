@@ -125,7 +125,7 @@ class matrix<Element,fixed<Rows,Cols>,BasisOrient,Layout>
      */
     matrix_type& inverse() {
         /* inverse() returns a temporary: */
-        *this = inverse(*this);
+        *this = cml::inverse(*this);
         return *this;
     }
 

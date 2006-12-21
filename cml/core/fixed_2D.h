@@ -88,6 +88,9 @@ class fixed_2D
     /* For matching by size type: */
     typedef fixed_size_tag size_tag;
 
+    /* For matching by resizability: */
+    typedef not_resizable_tag resizing_tag;
+
     /* For matching by dimensions: */
     typedef twod_tag dimension_tag;
 
@@ -146,6 +149,11 @@ class fixed_2D
 
     /** Return access to the data as a raw pointer. */
     const_pointer data() const { return &m_data[0][0]; }
+
+
+  public:
+
+    fixed_2D() {}
 
 
   protected:
