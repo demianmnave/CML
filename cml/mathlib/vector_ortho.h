@@ -90,7 +90,7 @@ orthonormalize(vector<E,A>& v0, vector<E,A>& v1, vector<E,A>& v2,
 /* Orthonormalize 2 basis vectors in R2 */
 template < typename E, class A > void
 orthonormalize(vector<E,A>& v0, vector<E,A>& v1,
-    size_t stable_axis = 2, size_t num_iter = 0, E s = E(1))
+    size_t stable_axis = 0, size_t num_iter = 0, E s = E(1))
 {
     typedef vector< E, fixed<2> > vector_type;
     typedef typename vector_type::value_type value_type;
