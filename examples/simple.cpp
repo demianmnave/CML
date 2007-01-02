@@ -773,6 +773,35 @@ void example25()
     cout << "A = 2*B =\n" << A << endl;
 }
 
+void example26()
+{
+    cout << std::endl << "Example26:" << endl;
+
+    typedef quaternion<double, fixed<>, scalar_first> quaternion_type;
+
+    double v1[] = {1.,0.,0.};
+    quaternion_type p(1.,v1), q(0., 1., 0., 1.);
+    quaternion_type r = p;
+    cout << "p = " << p << endl;
+    cout << "q = " << q << endl;
+
+    cout << "p * q = " << p*q << endl;
+    p *= q;
+    cout << "p *= q = " << p << endl;
+
+    cout << "p * (p+q) = " << p*(p+q) << endl;
+    p *= (p+q);
+    cout << "p *= (p+q) = " << p << endl;
+
+    cout << "p / q = " << p/q << endl;
+    p /= q;
+    cout << "p /= q = " << p << endl;
+
+    cout << "p / (p+q) = " << p/(p+q) << endl;
+    p /= (p+q);
+    cout << "p /= (p+q) = " << p << endl;
+}
+
 int main()
 {
     example1();
@@ -802,6 +831,7 @@ int main()
 //    example23();
     example24();
     example25();
+    example26();
     return 0;
 }
 

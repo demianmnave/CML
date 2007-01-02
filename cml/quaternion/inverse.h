@@ -143,7 +143,8 @@ class QuaternionInverseOp
 
     /** Construct from an input expression. */
     explicit QuaternionInverseOp(arg_reference arg)
-        : m_expr(arg), m_norm(cml::norm(arg)) {}
+        //: m_expr(arg), m_norm(cml::norm(arg)) {}
+        : m_expr(arg), m_norm(arg.norm()) {}
 
     /** Copy constructor. */
     QuaternionInverseOp(const expr_type& e)
@@ -199,6 +200,55 @@ inverse(QUATXPR_ARG_TYPE arg)
 {
     typedef et::QuaternionInverseOp<XprT> ExprT;
     return et::QuaternionXpr<ExprT>(ExprT(arg.expression()));
+}
+
+
+/** Declare div taking two quaternion operands. */
+template<typename E1, class AT1, typename E2, class AT2, class OT, class CT>
+inline typename et::QuaternionPromote<
+    quaternion<E1,AT1,OT,CT>, quaternion<E2,AT2,OT,CT>
+>::temporary_type
+operator/(
+        const quaternion<E1,AT1,OT,CT>& left,
+        const quaternion<E2,AT2,OT,CT>& right)
+{
+    return left*inverse(right);
+}
+
+/** Declare div taking a quaternion and a et::QuaternionXpr. */
+template<typename E, class AT, class OT, class CT, class XprT>
+inline typename et::QuaternionPromote<
+    quaternion<E,AT,OT,CT>, typename XprT::result_type
+>::temporary_type
+operator/(
+        const quaternion<E,AT,OT,CT>& left,
+        QUATXPR_ARG_TYPE right)
+{
+    return left*inverse(right);
+}
+
+/** Declare div taking an et::QuaternionXpr and a quaternion. */
+template<class XprT, typename E, class AT, class OT, class CT>
+inline typename et::QuaternionPromote<
+    typename XprT::result_type, quaternion<E,AT,OT,CT>
+>::temporary_type
+operator/(
+        QUATXPR_ARG_TYPE left,
+        const quaternion<E,AT,OT,CT>& right)
+{
+    return left*inverse(right);
+}
+
+/** Declare div taking two et::QuaternionXpr operands. */
+template<class XprT1, class XprT2>
+inline typename et::QuaternionPromote<
+    typename XprT1::result_type, typename XprT2::result_type
+>::temporary_type
+operator/(
+        QUATXPR_ARG_TYPE_N(1) left,
+        QUATXPR_ARG_TYPE_N(2) right)
+{
+    return left*inverse(right);
 }
 
 } // namespace cml

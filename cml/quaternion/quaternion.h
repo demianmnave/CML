@@ -148,6 +148,11 @@ class quaternion
         return v;
     }
 
+    /** Return the vector representing the quaternion. */
+    const vector_type& as_vector() const {
+        return this->m_q;
+    }
+
     /** Return the Cayley norm of the quaternion. */
     value_type norm() const {
         return length_squared();
@@ -233,7 +238,8 @@ class quaternion
 
     /** Construct from a quaternion having a different array type. */
     template<typename E, class AT> quaternion(
-            const quaternion<E,AT,order_type,cross_type>& q) : m_q(q.m_q) {}
+            const quaternion<E,AT,order_type,cross_type>& q)
+        : m_q(q.as_vector()) {}
 
     /** Copy construct from a QuaternionXpr. */
     template<typename XprT> quaternion(QUATXPR_ARG_TYPE e) {
@@ -391,6 +397,75 @@ class quaternion
 
 #undef CML_QUAT_ASSIGN_FROM_QUAT
 #undef CML_QUAT_ASSIGN_FROM_QUATXPR
+#undef CML_QUAT_ASSIGN_FROM_SCALAR
+
+    /** Accumulated multiplication with a quaternion.
+     *
+     * Compute p = p * q for two quaternions p and q.
+     *
+     * @internal Using operator* here is okay, as long as cml/quaternion.h
+     * is included before using this method (the only supported case for
+     * end-user code). This is because modern compilers won't instantiate a
+     * method in a template class until it is used, and including the main
+     * header ensures all definitions are available before any possible use
+     * of this method.
+     */
+    quaternion_type& operator*=(const quaternion_type& q) {
+        return (*this = *this * q);
+    }
+
+    /** Accumulated multiplication with a quaternion expression.
+     *
+     * Compute p = p * e for a quaternion p and a quaternion expression e.
+     *
+     * @internal Using operator* here is okay, as long as cml/quaternion.h
+     * is included before using this method (the only supported case for
+     * end-user code). This is because modern compilers won't instantiate a
+     * method in a template class until it is used, and including the main
+     * header ensures all definitions are available before any possible use
+     * of this method.
+     */
+    template<typename XprT> quaternion_type& operator*=(QUATXPR_ARG_TYPE e) {
+        return (*this = *this * e);
+    }
+
+    /** Accumulated division with a quaternion.
+     *
+     * Compute p = p * inverse(q).
+     *
+     * @note Because quaternion multiplication is non-commutative, division
+     * is ambiguous.  This method assumes a multiplication order consistent
+     * with the notational order; i.e. p = q / r means p = q*inverse(r).
+     *
+     * @internal Using operator* and cml::inverse here is okay, as long as
+     * cml/quaternion.h is included before using this method (the only
+     * supported case for end-user code). This is because modern compilers
+     * won't instantiate a method in a template class until it is used, and
+     * including the main header ensures all definitions are available
+     * before any possible use of this method.
+     */
+    quaternion_type& operator/=(const quaternion_type& q) {
+        return (*this = *this * inverse(q));
+    }
+
+    /** Accumulated division with a quaternion expression.
+     *
+     * Compute p = p * inverse(q).
+     *
+     * @note Because quaternion multiplication is non-commutative, division
+     * is ambiguous.  This method assumes a multiplication order consistent
+     * with the notational order; i.e. p = q / r means p = q*inverse(r).
+     *
+     * @internal Using operator* and cml::inverse here is okay, as long as
+     * cml/quaternion.h is included before using this method (the only
+     * supported case for end-user code). This is because modern compilers
+     * won't instantiate a method in a template class until it is used, and
+     * including the main header ensures all definitions are available
+     * before any possible use of this method.
+     */
+    template<typename XprT> quaternion_type& operator/=(QUATXPR_ARG_TYPE e) {
+        return (*this = *this * inverse(e));
+    }
 
 
   protected:
