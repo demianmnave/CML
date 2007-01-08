@@ -23,11 +23,6 @@
  */
 struct quaternion_requires_fixed_size_array_type_error;
 
-/* This is used below to create a more meaningful compile-time error when
- * the copy constructor is called on a quaternion with external storage:
- */
-struct quaternion_external_copy_construct_error;
-
 namespace cml {
 
 /** Helper to specify v1^v2 multiplication order. */
@@ -239,13 +234,7 @@ class quaternion
     quaternion(Element* const array) : m_q(array) {}
 
     /** Copy construct from the same type of quaternion. */
-    quaternion(const quaternion_type& q) : m_q(q.m_q) {
-        /* note: added by Jesse */
-        CML_STATIC_REQUIRE_M(
-            (same_type< generator_type, external<4> >::is_false),
-            quaternion_external_copy_construct_error
-        );
-    }
+    quaternion(const quaternion_type& q) : m_q(q.m_q) {}
 
     /** Construct from a quaternion having a different array type. */
     template<typename E, class AT> quaternion(
