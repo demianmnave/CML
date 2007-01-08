@@ -23,6 +23,11 @@
  */
 struct quaternion_requires_fixed_size_array_type_error;
 
+/* This is used below to create a more meaningful compile-time error when
+ * the copy constructor is called on a quaternion with external storage:
+ */
+struct quaternion_external_copy_construct_error;
+
 namespace cml {
 
 /** Helper to specify v1^v2 multiplication order. */
@@ -234,7 +239,13 @@ class quaternion
     quaternion(Element* const array) : m_q(array) {}
 
     /** Copy construct from the same type of quaternion. */
-    quaternion(const quaternion_type& q) : m_q(q.m_q) {}
+    quaternion(const quaternion_type& q) : m_q(q.m_q) {
+        /* note: added by Jesse */
+        CML_STATIC_REQUIRE_M(
+            (same_type< generator_type, external<4> >::is_false),
+            quaternion_external_copy_construct_error
+        );
+    }
 
     /** Construct from a quaternion having a different array type. */
     template<typename E, class AT> quaternion(
@@ -337,8 +348,12 @@ class quaternion
         quaternion(const value_type& s, VECXPR_ARG_TYPE e) {
             m_q[W] = s; m_q[X] = e[0]; m_q[Y] = e[1]; m_q[Z] = e[2];
         }
-
-
+        
+    // @todo: Are we missing:
+    
+    // quaternion(VECXPR_ARG_TYPE e, const value_type& s) {}
+    
+    // Or is that covered elsewhere?
 
     /** In-place op from a quaternion.
      *
