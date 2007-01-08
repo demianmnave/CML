@@ -13,6 +13,7 @@
 #include <cml/quaternion/conjugate.h>
 #include <cml/quaternion/quaternion_mul.h>
 #include <cml/quaternion/quaternion_functions.h>
+#include <cml/quaternion/quaternion_comparison.h>
 #include <cml/quaternion/inverse.h>
 #include <cml/quaternion/quaternion_print.h>
 
