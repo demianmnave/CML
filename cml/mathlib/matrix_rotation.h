@@ -172,8 +172,7 @@ matrix_rotation_quaternion(matrix<E,A,B,L>& m, const QuatT& q)
 /** Build a rotation matrix from an Euler-angle triple
  *
  * The rotations are applied about the cardinal axes in the order specified by
- * the 'order' argument, where 'order' is one of the following CML global
- * objects:
+ * the 'order' argument, where 'order' is one of the following enumerants:
  *
  * euler_order_xyz
  * euler_order_xzy
@@ -711,7 +710,7 @@ matrix_rotation_difference_2D(const MatT_1& m1, const MatT_2& m2) {
 /* @todo: It might be as fast or faster to simply convert the matrices to
  * quaternions, interpolate, and convert back.
  *
- * @todo: The behavior of matrix slerp is currently a little different that
+ * @todo: The behavior of matrix slerp is currently a little different than
  * for quaternions: in the matrix function, when the two matrices are close
  * to identical the first is returned, while in the quaternion function the
  * quaternions are nlerp()'d in this case.

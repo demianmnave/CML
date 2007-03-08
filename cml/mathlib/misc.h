@@ -17,27 +17,9 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 
 /* A few miscellaneous functions and helper classes.
  *
- * @todo: Fix this.
- *
- * Although we have functions to modify an existing vector to be the zero
- * vector or a cardinal axis (similarly with matrix and identity(), I often
- * find it useful to have these available as 'one-liners', for use in object
- * creation or for passing as arguments to functions, e.g.:
- *
- * vector3f v = zero_3D();
- *
- * For right now I've thrown together an ad hoc set of functions to do this,
- * but there is probably a much more elegant way to do this, perhaps involving
- * returning expressions that perform the assignment. Also:
- *
- * @todo: Function for quaternion identity.
- *
- * How to do this using this system is not immediately obvious due to
- * incompatibility between different order and cross types.
- *
- * A perhaps better option (for all these function) would be to make them
- * static member functions of the classes to which they belong. Since this
- * would involve altering existing code, I'm going to leave it alone for now.
+ * @note: This is somewhat ad-hoc and will probably all be replaced in a future
+ * version of the CML (I don't think I even bothered to document these functions
+ * on the website).
  */
 
 namespace cml {

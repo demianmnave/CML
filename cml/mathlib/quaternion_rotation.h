@@ -598,6 +598,9 @@ quaternion_slerp(const QuatT_1& q1, const QuatT_2& q2, Real t,
      * lerp() is not expression-aware. By wrapping both input expressions in
      * temporaries of the same type, we can match lerp()'s template
      * signature.
+     *
+     * @note I think lerp() has been fixed now, so this code can be changed to
+     * reflect that at some point.
      */
 
     return (s < tolerance) ?
@@ -642,8 +645,8 @@ quaternion_to_axis_angle(
  * Note: I've implemented direct quaternion-to-Euler conversion, but as far as
  * I can tell it more or less reduces to converting the quaternion to a matrix
  * as you go. The direct method is a little more efficient in that it doesn't
- * require a temporary and only the necessary matrix elements need be,
- * computed. But, the implementation is complex and there's considerable
+ * require a temporary and only the necessary matrix elements need be
+ * computed. However, the implementation is complex and there's considerable
  * opportunity for error, so from a development and debugging standpoint I
  * think it's better to just perform the conversion via matrix_to_euler(),
  * which is already known to be correct.

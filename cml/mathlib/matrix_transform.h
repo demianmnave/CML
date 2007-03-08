@@ -19,8 +19,6 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 
 /* Functions for building matrix transforms other than rotations
  * (matrix_rotation.h) and viewing projections (matrix_projection.h).
- *
- * @todo: Clean up comments and documentation throughout.
  */
 
 namespace cml {
