@@ -13,10 +13,6 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #ifndef mathlib_h
 #define mathlib_h
 
-/* Note: There may be some redundant inclusions here, which I'll clean up at
- * some point.
- */
-
 #include <cml/mathlib/typedef.h>
 #include <cml/mathlib/epsilon.h>
 #include <cml/mathlib/vector_angle.h>

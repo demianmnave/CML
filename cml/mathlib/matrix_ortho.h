@@ -21,8 +21,8 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
  * of any matrix of suitable size; this is to allow orthonormalization of the
  * rotation part of an affine transform matrix.
  *
- * Note: These functions pass off the the orthonormalization functions in
- * vector_ortho.h, so see that file for details on the optional paramters.
+ * Note: These functions pass off to the orthonormalization functions in
+ * vector_ortho.h, so see that file for details on the optional parameters.
  *
  * @todo: General NxN matrix orthogonalization.
  */
