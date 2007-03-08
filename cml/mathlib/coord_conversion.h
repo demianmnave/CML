@@ -26,19 +26,7 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
  *
  * For spherical coordinates the option of whether to treat phi as latitude
  * or colatitude is also available. The 'type' argument takes either of the
- * global objects cml::latitude and cml::colatitude to reflect this.
- *
- * @todo: There are various issues here with conventions, such as angle naming
- * and order and use of latitude or colatitude. For now I'm using theta and
- * phi in that order, but may change that if there are objections. Also,
- * although the 'elevation' angle of a spherical coordinate is most commonly
- * specified as colatitude, google seems to indicate that it's not entirely
- * improper to use latitude instead. Nevertheless, I may be committing an
- * error of terminology here somewhere, so some double-checking is probably
- * in order.
- *
- * @todo: Should the *_to_cartesian() functions return a vector instead of
- * taking it as an argument?
+ * enumerants cml::latitude and cml::colatitude to reflect this.
  */
 
 namespace cml {
@@ -58,15 +46,6 @@ cylindrical_to_cartesian(
     /* Checking */
     detail::CheckVec3(v);
     detail::CheckIndex3(axis);
-    
-    /* @todo: Add a set_permuted() function for vectors, and replace the
-     * following five lines of code with:
-     *
-     * v.set_permuted(
-     *     axis, height, std::cos(theta) * radius, std::sin(theta) * radius);
-     *
-     * This would also eliminate the need for the vector argument check.
-     */
 
     size_t i, j, k;
     cyclic_permutation(axis, i, j, k);
@@ -92,20 +71,9 @@ spherical_to_cartesian(E radius, E theta, E phi, size_t axis,
         phi = constants<value_type>::pi_over_2() - phi;
     }
 
-    //phi = type.convert(phi);
-    
     value_type sin_phi = std::sin(phi);
     value_type cos_phi = std::cos(phi);
     value_type sin_phi_r = sin_phi * radius;
-
-    /* @todo: Add a set_permuted() function for vectors, and replace the
-     * following five lines of code with:
-     *
-     * v.set_permuted(axis, cos_phi * radius,
-     *     sin_phi_r * std::cos(theta), sin_phi_r * std::sin(theta));
-     *
-     * This would also eliminate the need for the vector argument check.
-     */
 
     size_t i, j, k;
     cyclic_permutation(axis, i, j, k);

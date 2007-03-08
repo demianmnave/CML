@@ -17,39 +17,7 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #include <cml/matrix/matrix_expr.h>
 #include <cml/quaternion/quaternion_expr.h>
 
-/* Run- and compile-time checking of argument types, values and sizes.
- *
- * @todo: Currently there's checking code scattered throughout the library,
- * some of it redundant. Depending on what design we settle on, it would be
- * nice to generalize all the checking code and localize it in one file.
- *
- * @todo: It may be that some users would prefer run-time assertions over
- * exceptions for invalid arguments, dynamic size errors, and so on; for now
- * we'll exceptions, but perhaps we could make this configurable via the
- * preprocessor.
- *
- * @todo: We might also look into ways of making errors or exception messages
- * more informative about the nature of the error.
- *
- * @todo: Some of these functions are in support of others and probably
- * shouldn't be called directly. It might be nice to organize the functions
- * so that it's more clear which are intended to be used directly.
- *
- * @todo: This isn't really related to checking, but it would also be good to
- * generalize and consolidate promotion code. For example, I'm currently using
- * CrossPromote<> for genereal vector promotion, since despite the name it
- * isn't specified for 3D vectors only.
- *
- * @todo: A number of functions take integer index arguments. They're
- * currently checked here, with an exception thrown if invalid, but we might
- * look into more robust handling since an invalid index could lead to, at
- * best, undefined behavior. Perhaps global 'axis' objects, similar to how
- * axis order is handled?
- *
- * @todo: There's some redundancy in the handling of template and function
- * arguments. I imagine this will all be revised considerably though, so I'm
- * sure that'll get worked out.
- */
+/* Run- and compile-time checking of argument types, values and sizes. */
 
 struct function_expects_vector_arg_error;
 struct function_expects_matrix_arg_error;
