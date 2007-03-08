@@ -17,46 +17,8 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 
 /* Interpolation functions.
  *
- * This code is currently a huge mess, but we'll get it cleaned up as we go.
- * The complexity comes from overloading slerp() to work with vectors (of any
- * size), quaternions, and matrices (of size 3x3 or 2x2). I originally had
- * these as separate named functions - quaternion_slerp() and so on. This
- * seemed cumbersome for the user and contrary to convention though, so I
- * decided to give this a try instead.
- *
- * This definitely needs another look though, if nothing else to make sure
- * that all necessary dynamic resizing is taken care of. Also, I'm wondering
- * if more than one temporary is generated due to the layers involved; can
- * this be addressed through inlining?
- *
- * Actually, now that I think about it this was probably the wrong way to go
- * about it. Since there are only two arguments to slerp() that can be CML
- * expressions, and three types, that would only be 12 function signatures.
- * So instead, we could have 12 overloaded versions of slerp() that passed off
- * to named helper functions. Matrix slerp would still have to be dispatched
- * by size, but otherwise I think things would be simpler.
- *
- * This is already in place though, so I'm just going to finish this up as is.
- * We'll come back and clean it up later.
- *
- * UPDATE: I'll probably stick with the current architecture for slerp() and
- * nlerp(), as it's necessary to support lerp(), bilerp() and trilerp(), each
- * of which can accept arbitrary types.
- *
- * There are also a couple of things I'm not quite sure of and need to look
- * into. One is whether, by any stretch, it's appropriate to use the term
- * 'nlerp' with matrices. This implies, among other things, that to
- * 'normalize' a rotation matrix is to orthogonalize it. I think I've seen
- * 'normalize' used in this way, but I'm not sure whether it's technically
- * correct. It would be nice if it were, since then we would have a nice
- * uniform interface.
- *
- * The other thing I'm not sure about is what the best method of linearly
- * interpolating rotation matrices is. Currently I'm lerping them and then
- * orthogonalizing, but I've heard it suggested that it's better to lerp two
- * of the basis vectors rather than the whole matrix. I'm not sure why this
- * would be though; I'll have to think about it.
-*/
+ * @todo: This code works, but it needs a lot of cleanup.
+ */
 
 namespace cml {
 
@@ -68,33 +30,12 @@ namespace detail {
 // Helper struct to promote a vector, quaternion or matrix
 //////////////////////////////////////////////////////////////////////////////
 
-/* @todo: Wrap this up in a single TypePromote struct, with specialized
- * internal structs to do the actual promoting. This should clean things
- * up a bit; among other things, the 'same type' assertion would only need to
- * occur once.
- *
- * Also, I might instead check that the result tag of each is equal to
- * ResultT rathen than checking them against each other; it should be
- * equivalent.
- */
-
 template< class T1, class T2, class ResultT > struct TypePromote;
-
-// Winging it here. Users should be able to call lerp() and friends on their
-// own class types, as long as they have the correct semantics. The expression
-// traits for such classes will default to the scalar type, which means a
-// scalar promotion will be attempted unsuccessfully.
-
-// Two objects of exactly the same type should always promote to that type,
-// so, maybe we can do a specialization to catch user-defined types:
 
 template< class T >
 struct TypePromote< T,T,et::scalar_result_tag > {
     typedef T temporary_type;
 };
-
-// Seems ok, although the default expression tag 'scalar_result_tag' isn't
-// really appropriately named in this context.
 
 template< class T1, class T2 >
 struct TypePromote< T1,T2,et::scalar_result_tag > {
@@ -394,27 +335,7 @@ nlerp(
             
     temporary_type result;
     detail::InterpResize(result, v1, size_tag());
-    
-    /* @todo: Fix lerp() issue, after which we can write:
-     *
-     * result = normalize(lerp(v1,v2,t));
-     */
-    
-    //temporary_type temp1, temp2;
-    //detail::InterpResize(temp1, v1, size_tag());
-    //detail::InterpResize(temp2, v1, size_tag());
-    //temp1 = v1;
-    //temp2 = v2;
-    //result = normalize(lerp(temp1,temp2,t));
-    //result = normalize(lerp(v1,v2,t));
-    
-    /* Aha! lerp() doesn't work for dynamic vectors yet. So:
-     * @todo.
-     *
-     * Furthermore, normalize() doesn't work with dynamic vectors either.
-     */
-     
-    //result = normalize((value_type(1)-t)*v1+t*v2);
+
     result = (value_type(1)-t)*v1+t*v2;
     result.normalize();
     return result;
