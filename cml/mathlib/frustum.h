@@ -140,7 +140,7 @@ namespace detail {
 
 /* This is currently only in support of finding the corners of a frustum.
  * The input planes are assumed to have a single unique intersection, so
- * no tolerances are applied.
+ * no tolerance is used.
  */
 
 template < typename Real > vector< Real, fixed<3> >
@@ -180,7 +180,6 @@ intersect_planes(Real p1[4], Real p2[4], Real p3[4])
 template < typename Real, typename E, class A > void
 get_frustum_corners(Real planes[6][4], vector<E,A> corners[8])
 {
-    /* @todo: Use these in extract_frustum_planes() also? */
     enum { LEFT, RIGHT, BOTTOM, TOP, NEAR, FAR };
 
     corners[0] =

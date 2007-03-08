@@ -20,38 +20,6 @@ namespace cml {
 
 /* Helper classes for axis order, coordinate system handedness, z-clipping
  * range and spherical coordinate type.
- *
- * @todo: Figure out the best way to handle this.
- *
- * Initially I used enumerations for these parameters, but switched to class
- * objects to prevent the passing of erroneous values for arguments. However,
- * it had slipped my mind that type is enforced with C++ enums, so passing of
- * correct arguments would have been ensured anyway. Duh.
- *
- * Still, enums seem a little clunky, so maybe this is better. We'll see.
- *
- * Also, these should go in their own file, but I couldn't think of a name for
- * it. And finally, they should probably be taken out of the detail namespace,
- * as users may want to declare variables of these types. The only issue with
- * that is that some functions have argument names that are the same as the
- * class names, so those will probably have to be revised.
- *
- * Update: Ok, I backed myself into a bit of a corner here and had to do some
- * hackery to get myself out. In short, I made the helper object global, which
- * worked fine within an Xcode project, but not (I think) in the CML as a
- * standalone library.
- *
- * Rather than re-write a lot of code, I did some hacks in this file so that
- * the code elsewhere would only require minimal changes. The motivation was
- * basically to avoid yet another delay in getting the library out, but once
- * things have settled down a bit I'll redo all this. From the user's
- * perspective, all that really matters is that there is some constant or
- * global or static object that can be passed to represent a particular
- * handedness, Euler-angle order, or what have you. Once we've settled on a
- * syntax for this, updating user code to reflect it should be a simple matter
- * of a few search-and-replace's.
- *
- * Update: Switched to enums. May revisit again though.
  */
  
 //////////////////////////////////////////////////////////////////////////////
@@ -75,11 +43,6 @@ enum EulerOrder {
 
 namespace detail {
 
-/* Note: All this bit-hacking is kind of old-school, so I may try to replace
- * it at some point with something more elegant (ideally without disturbing
- * the API).
- */
-
 inline void unpack_euler_order(
     EulerOrder order,
     size_t& i,
@@ -96,12 +59,6 @@ inline void unpack_euler_order(
     i = (order & AXIS) % 3;
     j = (i + 1 + offset) % 3;
     k = (i + 2 - offset) % 3;
-    
-    /* @todo: I'm thinking about either adding a 'reverse' argument to
-     * cyclic_permutation(), or offering a reverse_cyclic_permutation()
-     * function, in which case the above can be passed off to this (these)
-     * function (functions).
-     */
 }
 
 } // namespace detail
@@ -121,11 +78,6 @@ enum AxisOrder {
 
 namespace detail {
 
-/* Note: There's some duplicated effort here. I might try to clean it up
- * within the current context, or replace the whole system with something more
- * elegant as noted above.
- */
-
 inline void unpack_axis_order(
     AxisOrder order,
     size_t& i,
@@ -140,12 +92,6 @@ inline void unpack_axis_order(
     i = (order & AXIS) % 3;
     j = (i + 1 + offset) % 3;
     k = (i + 2 - offset) % 3;
-    
-    /* @todo: I'm thinking about either adding a 'reverse' argument to
-     * cyclic_permutation(), or offering a reverse_cyclic_permutation()
-     * function, in which case the above can be passed off to this (these)
-     * function (functions).
-     */
 }
 
 inline AxisOrder pack_axis_order(size_t i, bool odd) {
@@ -173,11 +119,6 @@ enum AxisOrder2D {
 
 namespace detail {
 
-/* Note: There's some duplicated effort here. I might try to clean it up
- * within the current context, or replace the whole system with something more
- * elegant as noted above.
- */
-
 inline void unpack_axis_order_2D(
     AxisOrder2D order,
     size_t& i,
@@ -190,12 +131,6 @@ inline void unpack_axis_order_2D(
     size_t offset = size_t(odd);
     i = (order & AXIS) % 3;
     j = (i + 1 + offset) % 3;
-    
-    /* @todo: I'm thinking about either adding a 'reverse' argument to
-     * cyclic_permutation(), or offering a reverse_cyclic_permutation()
-     * function, in which case the above can be passed off to this (these)
-     * function (functions).
-     */
 }
 
 } // namespace detail
