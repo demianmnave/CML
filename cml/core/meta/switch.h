@@ -16,6 +16,8 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #include <cml/core/meta/common.h>
 #include <cml/core/meta/if.h>
 
+namespace cml {
+
 struct NilCase {};      /* For terminating the case list. */
 struct Default {};      /* For indicating the default result. */
 
@@ -162,6 +164,8 @@ template<typename Find
         > > > > > > > > > >     /* 10 */
         ::template match<Find>::result result;
 };
+
+} // namespace cml
 
 #endif
 

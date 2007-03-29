@@ -15,6 +15,8 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 
 #include <cml/core/meta/common.h>
 
+namespace cml {
+
 /** Select argument type based upon truth value. */
 template<bool yn, typename TrueT, typename FalseT> struct select_if;
 
@@ -31,6 +33,8 @@ struct select_if<false,TrueT,FalseT> {
     typedef FalseT result;
     enum { is_true = false };
 };
+
+} // namespace cml
 
 #endif
 

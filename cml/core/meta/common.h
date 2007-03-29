@@ -13,6 +13,8 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #ifndef core_meta_common_h
 #define core_meta_common_h
 
+namespace cml {
+
 /** Type of a true statement. */
 struct true_type {};
 
@@ -77,6 +79,8 @@ template<> struct same_type<any_type,any_type> {
     typedef true_type result;
     enum { is_true = true, is_false = false };
 };
+
+} // namespace cml
 
 #endif
 

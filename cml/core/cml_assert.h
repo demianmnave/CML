@@ -18,6 +18,8 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 
 #include <cml/core/cml_meta.h>
 
+namespace cml {
+
 /* Join preprocessor macros into a new preprocessor macro: */
 #define CML_JOIN(X,Y) CML_DO_JOIN(X,Y)
 #define CML_DO_JOIN(X,Y) CML_DO_JOIN2(X,Y)
@@ -86,6 +88,8 @@ template<typename M> struct STATIC_ASSERTION_FAILURE_M<true,M> {
 #define CML_STATIC_REQUIRE_M(_E_, _M_) \
     typedef typename STATIC_ASSERTION_FAILURE_M<(_E_),_M_> \
         ::result CML_JOIN(__bogus_assert_type_, __LINE__)
+
+} // namespace cml
 
 #endif
 
