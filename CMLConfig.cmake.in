@@ -10,13 +10,13 @@ IF(CML_DIR)
   # Compute CML_INSTALL_DIR from CML_DIR:
   IF(WIN32)
 
-    # On Windows, CMLConfig.cmake is in <install>/<version>/<build>:
-    SET(CML_INSTALL_DIR "${CML_DIR}/../..")
+    # On Windows, CMLConfig.cmake is in <install>:
+    SET(CML_INSTALL_DIR "${CML_DIR}")
   ELSE(WIN32)
 
-    # On UNIX, includes are in <install>/include/boost_cmake/<version> and
-    # libraries are in <install>/lib/boost_cmake/<version>/<build>:
-    SET(CML_INSTALL_DIR "${CML_DIR}/../../../..")
+    # On UNIX, includes are in <install>/include/cml and libraries are in
+    # <install>/lib/cml:
+    SET(CML_INSTALL_DIR "${CML_DIR}/../..")
   ENDIF(WIN32)
 
   # Use the configured relative paths when CML was built to
@@ -31,8 +31,7 @@ ENDIF(CML_DIR)
 SET(CML_BUILD_TYPE "@CMAKE_BUILD_TYPE@")
 
 # File included from CMakeLists.txt to setup CML:
-SET(CML_USE_FILE
-  "${CML_DIR}/@CML_USE_FILE@")
+SET(CML_USE_FILE "${CML_LIBRARY_DIR}/@CML_USE_FILE@")
 
 # File containing the original CML build configuration:
 SET(CML_BUILD_SETTINGS_FILE

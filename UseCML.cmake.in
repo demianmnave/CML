@@ -13,10 +13,7 @@ IF(CML_BUILD_SETTINGS_FILE)
 ENDIF(CML_BUILD_SETTINGS_FILE)
 
 # Setup include paths:
-INCLUDE_DIRECTORIES(BEFORE ${CML_INCLUDE_DIRS})
-
-# Setup link paths:
-LINK_DIRECTORIES(${CML_LIBRARY_DIRS})
+INCLUDE_DIRECTORIES(BEFORE ${CML_HEADER_PATH})
 
 # --------------------------------------------------------------------------
 # vim:ft=cmake

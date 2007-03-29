@@ -33,10 +33,6 @@ SET(CML_BUILD_TESTS ${BUILD_TESTS})
 # Add the toplevel directory to all includes:
 INCLUDE_DIRECTORIES(BEFORE ${CML_SRC_ROOT} ${CML_BUILD_ROOT})
 
-# Subdirectories to build:
-ADD_SUBDIRECTORY(cml)
-ADD_SUBDIRECTORY(tests)
-
 
 # Record the installation paths (these are also used in subdirectory
 # INSTALL rules, and must be here before any ADD_SUBDIRECTORY command):
@@ -49,11 +45,10 @@ IF(WIN32)
 
   # The subdirectory under CMAKE_INSTALL_PREFIX into which the current
   # build goes:
-  SET(CML_ROOT "")
+  SET(CML_DIR "")
 
   # The directory into which build-specific files are installed:
-  #SET(CML_BUILD_PATH "${CML_ROOT}/${CMAKE_BUILD_TYPE}")
-  SET(CML_BUILD_PATH "${CML_ROOT}")
+  SET(CML_BUILD_PATH "${CML_DIR}")
 
   # Where to find CMLConfig.cmake, UseCML.cmake, and
   # CMLConfigLibraries.cmake:
@@ -63,7 +58,7 @@ IF(WIN32)
   SET(CML_LIBRARY_PATH "${CML_BUILD_PATH}")
 
   # Include directory, common to all installed builds:
-  SET(CML_HEADER_PATH "${CML_ROOT}")
+  SET(CML_HEADER_PATH "${CML_DIR}")
 
   # Set the library build output path:
   SET(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/${CML_BUILD_PATH}")
@@ -77,12 +72,15 @@ ELSE(WIN32)
 
   # The subdirectory under CMAKE_INSTALL_PREFIX into which the current
   # build goes:
-  #SET(CML_LIBRARY_ROOT "lib/cml/${CMAKE_BUILD_TYPE}")
-  SET(CML_LIBRARY_ROOT "lib/cml")
+  SET(CML_DIR "lib/cml")
+
+  # The subdirectory under CMAKE_INSTALL_PREFIX into which the current
+  # build goes:
+  SET(CML_LIBRARY_ROOT "${CML_DIR}")
 
   # The subdirectory under CMAKE_INSTALL_PREFIX into which the headers
   # for the current build go:
-  SET(CML_HEADER_ROOT "include/cml/")
+  SET(CML_HEADER_ROOT "include")
 
   # The directory into which build-specific files are installed:
   SET(CML_BUILD_PATH "${CML_LIBRARY_ROOT}")
@@ -98,9 +96,14 @@ ELSE(WIN32)
   SET(CML_HEADER_PATH "${CML_HEADER_ROOT}")
 
   # Set the library build output path:
-  #SET(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}")
   SET(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
 ENDIF(WIN32)
+
+# Subdirectories to build:
+ADD_SUBDIRECTORY(cml)
+IF(CML_BUILD_TESTS)
+  ADD_SUBDIRECTORY(tests)
+ENDIF(CML_BUILD_TESTS)
 
 
 # Setup config file names:
@@ -117,12 +120,12 @@ SET(CML_USE_FILE UseCML.cmake)
 SET(CML_BUILD_SETTINGS_FILE CMLBuildSettings.cmake)
 
 
-# Configure the global config.h file (it will be installed by
-# systools/CMakeLists.txt):
-CONFIGURE_FILE(
-  ${CMAKE_SOURCE_DIR}/config.h.in
-  ${CMAKE_BINARY_DIR}/cml/config.h
-  @ONLY)
+#-- # Configure the global config.h file (it will be installed by
+#-- # systools/CMakeLists.txt):
+#-- CONFIGURE_FILE(
+#--   ${CMAKE_SOURCE_DIR}/config.h.in
+#--   ${CMAKE_BINARY_DIR}/cml/config.h
+#--   @ONLY)
 
 # Configure and install the main config file:
 CONFIGURE_FILE(
