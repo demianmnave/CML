@@ -21,6 +21,13 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #include <cml/core/fwd.h>
 #include <cml/et/traits.h>
 
+#if defined(_MSC_VER) && _MSC_VER < 1400
+#pragma warning(push)
+#pragma warning(disable:4348)
+// XXX This is a terrible hack for VC7.1, and should really be fixed by
+// separating out the "impl" templates from GetCheckedSize.
+#endif
+
 /* This is used below to create a more meaningful compile-time error when
  * fixed-size vector arguments don't match at compile time:
  */
@@ -33,6 +40,9 @@ struct square_matrix_arg_expected_error;
 
 namespace cml {
 namespace et {
+namespace detail {
+
+} // namespace detail
 
 /* Forward declare for specialization below: */
 template<typename LeftT, typename RightT, typename SizeT>
@@ -405,6 +415,10 @@ CheckedSquare(const MatT& m, dynamic_size_tag)
 
 } // namespace et
 } // namespace cml
+
+#if defined(_MSC_VER) && _MSC_VER < 1400
+#pragma warning(pop)
+#endif
 
 #endif
 

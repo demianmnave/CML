@@ -13,6 +13,12 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #ifndef vector_class_ops_h
 #define vector_class_ops_h
 
+#if defined(_MSC_VER) && _MSC_VER < 1400
+#pragma warning(disable:4003)
+// XXX Horrible hack to turn off warnings about "not enough actual params"
+// for the macros below.
+#endif
+
 /* XXX HACK!!! This is a hack to resize in the assign() functions only when
  * auto resizing is turned off.
  */

@@ -51,17 +51,17 @@ CML_OPTS=-DCML_NO_DEFAULT_EXPR_TRAITS \
 #--rm=rm -f
 #--LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
-CXX=i686-apple-darwin8-g++-4.0.1
-CPP=$(CXX) -MM
-CXXFLAGS=-Wall -ftemplate-depth-1000 -O3 \
-	 -fomit-frame-pointer -funroll-loops \
-	 -finline-functions -finline-limit=2000000000 \
-	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100
-CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS)
-exe=
-obj=.o
-rm=rm -f
-LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
+#--CXX=i686-apple-darwin8-g++-4.0.1
+#--CPP=$(CXX) -MM
+#--CXXFLAGS=-Wall -ftemplate-depth-1000 -O3 \
+#--	 -fomit-frame-pointer -funroll-loops \
+#--	 -finline-functions -finline-limit=2000000000 \
+#--	 -DCML_2D_UNROLLER -DCML_MATRIX_UNROLL_LIMIT=100
+#--CPPFLAGS=-I$(CML_ROOT) $(CML_OPTS)
+#--exe=
+#--obj=.o
+#--rm=rm -f
+#--LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 
 
 #-- Note: this is for gcc 3.4, which requires explicit inlining:
@@ -130,18 +130,19 @@ LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH)
 #-- LINK.o = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TARGET_ARCH) -lpthread
 
 
-#-- CXX=cl
-#-- CXXFLAGS=/nologo /O2 /Ob2 /Og /Oi /Ot /Oy /G7 /EHsc /I.. $(CML_OPTS)
-#-- #CXXFLAGS=/nologo /Ox /EHsc /I..
-#-- exe=.exe
-#-- obj=.obj
-#-- rm=erase
-#-- 
-#-- .cpp.obj:
-#-- 	$(CXX) $(CXXFLAGS) -c $**
-#-- 
-#-- .obj.exe:
-#-- 	$(CXX) $(CXXFLAGS) -o $@ $**
+CXX=cl
+CXXFLAGS=/nologo /O2 /Ob2 /Og /Oi /Ot /Oy /G7 /EHsc /I.. $(CML_OPTS)
+#CXXFLAGS=/nologo /Ox /EHsc /I..
+CPPFLAGS=/showIncludes -I$(CML_ROOT) $(CML_OPTS)
+exe=.exe
+obj=.obj
+rm=erase
+
+.cpp.obj:
+	$(CXX) $(CXXFLAGS) -c $*
+
+.obj.exe:
+	$(CXX) $(CXXFLAGS) -o $@ $*
 
 #-- CXX=mingw32-g++
 #-- CPP=$(CXX) -MM

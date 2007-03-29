@@ -23,7 +23,7 @@ struct Default {};      /* For indicating the default result. */
 namespace meta {
 
 /* "Interior" case statements: */
-template<typename Case, typename Result, typename NextCase = NilCase>
+template<typename Case, typename Result, typename NextCase>
 struct select_case
 {
     template<typename Find> struct match {
@@ -36,8 +36,10 @@ struct select_case
 };
 
 /* Default case, returned when no match is found in a previous case: */
-template<typename Result, typename NextCase>
-struct select_case<Default,Result,NextCase>
+//template<typename Result, typename NextCase>
+//struct select_case<Default,Result,NextCase>
+template<typename Result>
+struct select_case<Default,Result,NilCase>
 {
     template<typename Find> struct match {
         typedef Result result;
@@ -81,7 +83,7 @@ template<typename Find
 , typename T14 = NilCase, typename R14 = void
 , typename T15 = NilCase, typename R15 = void
 , typename T16 = NilCase, typename R16 = void
-#if !defined(MSVC)
+#if !defined(_MSC_VER)
 , typename T17 = NilCase, typename R17 = void
 , typename T18 = NilCase, typename R18 = void
 , typename T19 = NilCase, typename R19 = void
@@ -126,7 +128,7 @@ template<typename Find
         , meta::select_case< T14,R14
         , meta::select_case< T15,R15
         , meta::select_case< T16,R16
-#if !defined(MSVC)
+#if !defined(_MSC_VER)
         , meta::select_case< T17,R17
         , meta::select_case< T18,R18
         , meta::select_case< T19,R19
@@ -151,9 +153,12 @@ template<typename Find
         , meta::select_case< T38,R38
         , meta::select_case< T39,R39
         , meta::select_case< T40,R40
+        , NilCase
         > > > > > > > > > >     /* 10 */
         > > > > > > > > > >     /* 10 */
         > > > >    /* 4 */
+#else
+        , NilCase
 #endif
         > > > > > >     /* 6 */
         > > > > > > > > > >     /* 10 */

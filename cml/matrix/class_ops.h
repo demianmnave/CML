@@ -16,6 +16,12 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #ifndef matrix_class_ops_h
 #define matrix_class_ops_h
 
+#if defined(_MSC_VER) && _MSC_VER < 1400
+#pragma warning(disable:4003)
+// XXX Horrible hack to turn off warnings about "not enough actual params"
+// for the macros below.
+#endif
+
 /* This is to circumvent the problem of commas in a macro argument.  It's
  * used to instantiate CML_ACCUMULATED_MATRIX_MULT:
  */

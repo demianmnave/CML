@@ -50,7 +50,7 @@ struct ScalarPromote
         type_pair<E1,long>,                       long,
 
 /* Workaround MSVC's limited number of template arguments: */
-#if defined(MSVC)
+#if defined(_MSC_VER)
         Default, typename select_switch<
         type_pair<E1,E2>,
 #endif
@@ -93,7 +93,7 @@ struct ScalarPromote
         type_pair<E1,unsigned char>,              unsigned char,
 
 /* Workaround MSVC's limited number of template arguments: */
-#if defined(MSVC)
+#if defined(_MSC_VER)
         Default, typename select_switch<
         type_pair<E1,E2>,
 #endif
@@ -103,7 +103,7 @@ struct ScalarPromote
         type_pair<char,E2>,                       char,
         type_pair<E1,char>,                       char
 
-#if defined(MSVC)
+#if defined(_MSC_VER)
         >::result
      >::result
 #endif
