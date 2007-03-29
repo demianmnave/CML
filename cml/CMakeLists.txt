@@ -15,6 +15,7 @@ LIST(REMOVE_ITEM FILELIST
 INSTALL(FILES ${FILELIST} DESTINATION include/cml)
 
 SET(HEADER_SUBDIRS
+  core
   et
   mathlib
   matrix
