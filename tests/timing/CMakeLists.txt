@@ -94,5 +94,14 @@ FOREACH(Test ${TimingTests})
   ADD_EXECUTABLE(${Test} ${Test}.cpp)
 ENDFOREACH(Test)
 
+# Copy test data into the output directory:
+SET(TimingData vals.txt mvals.txt)
+FOREACH(Data ${TimingData})
+  CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/${Data}
+    ${CMAKE_CURRENT_BINARY_DIR}
+    COPYONLY)
+ENDFOREACH(Data)
+
 # --------------------------------------------------------------------------
 # vim:ft=cmake
