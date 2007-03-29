@@ -65,17 +65,10 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #ifndef cml_h
 #define cml_h
 
-#include <cml/config.h>
 #include <cml/vector.h>
 #include <cml/matrix.h>
 #include <cml/quaternion.h>
 #include <cml/util.h>
-
-/* All of the higher-level math code is pulled in from mathlib/mathlib.h.
- * If we need to go back to a 'clean' version of the CML, it should be simply
- * a matter of removing this #include, and the mathlib directory itself.
- */
-
 #include <cml/mathlib/mathlib.h>
 
 #endif
