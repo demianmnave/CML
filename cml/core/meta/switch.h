@@ -36,8 +36,6 @@ struct select_case
 };
 
 /* Default case, returned when no match is found in a previous case: */
-//template<typename Result, typename NextCase>
-//struct select_case<Default,Result,NextCase>
 template<typename Result>
 struct select_case<Default,Result,NilCase>
 {
