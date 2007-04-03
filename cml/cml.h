@@ -65,6 +65,11 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #ifndef cml_h
 #define cml_h
 
+#if defined(_WIN32) && defined(near)
+#undef near
+#undef far
+#endif
+
 #include <cml/vector.h>
 #include <cml/matrix.h>
 #include <cml/quaternion.h>
