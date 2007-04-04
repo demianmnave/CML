@@ -25,13 +25,16 @@ namespace cml {
  
 namespace detail {
 
+// NOTE: Changed 'near' and 'far' to 'f' and 'n' to work around windows.h
+// 'near' and 'far' macros.
+
 template < class MatT, typename Real > void
-depth_range_from_viewport_matrix(const MatT& viewport, Real& near, Real& far)
+depth_range_from_viewport_matrix(const MatT& viewport, Real& n, Real& f)
 {
     detail::CheckMatHomogeneous3D(viewport);
     
-    near = viewport.basis_element(3,2);
-    far = viewport.basis_element(2,2) + near;
+    n = viewport.basis_element(3,2);
+    f = viewport.basis_element(2,2) + n;
 }
 
 } // namespace detail
@@ -65,17 +68,19 @@ void make_pick_ray(
 {
     typedef vector<E,A> vector_type;
     typedef typename vector_type::value_type value_type;
-    
-    value_type near, far;
-    detail::depth_range_from_viewport_matrix(viewport, near, far);
+
+    // NOTE: Changed 'near' and 'far' to 'f' and 'n' to work around
+    // windows.h 'near' and 'far' macros.
+    value_type n, f;
+    detail::depth_range_from_viewport_matrix(viewport, n, f);
 
     origin =
         unproject_point(
-            view,projection,viewport,vector_type(pick_x,pick_y,near)
+            view,projection,viewport,vector_type(pick_x,pick_y,n)
         );
     direction =
         unproject_point(
-            view,projection,viewport,vector_type(pick_x,pick_y,far)
+            view,projection,viewport,vector_type(pick_x,pick_y,f)
         ) - origin;
     if (normalize) {
         direction.normalize();
