@@ -25,7 +25,7 @@ namespace cml {
  
 namespace detail {
 
-// NOTE: Changed 'near' and 'far' to 'f' and 'n' to work around windows.h
+// NOTE: Changed 'near' and 'far' to 'n' and 'f' to work around windows.h
 // 'near' and 'far' macros.
 
 template < class MatT, typename Real > void
@@ -69,7 +69,7 @@ void make_pick_ray(
     typedef vector<E,A> vector_type;
     typedef typename vector_type::value_type value_type;
 
-    // NOTE: Changed 'near' and 'far' to 'f' and 'n' to work around
+    // NOTE: Changed 'near' and 'far' to 'n' and 'f' to work around
     // windows.h 'near' and 'far' macros.
     value_type n, f;
     detail::depth_range_from_viewport_matrix(viewport, n, f);
