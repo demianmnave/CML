@@ -1,3 +1,4 @@
+PSCCMakeTools
 *.cmake
 cmake.*
 CMakeTmp

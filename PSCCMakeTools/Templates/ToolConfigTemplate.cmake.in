@@ -1,0 +1,52 @@
+# -*- cmake -*- -----------------------------------------------------------
+# @@COPYRIGHT@@
+#*-------------------------------------------------------------------------
+# @file
+# @brief
+
+# The path to @PSC_TOOL_CONFIG_NAME@Config.cmake, set by FIND_PACKAGE(@PSC_TOOL_CONFIG_NAME@):
+IF(@PSC_TOOL_CONFIG_NAME@_DIR)
+  SET(_confdir ${@PSC_TOOL_CONFIG_NAME@_DIR})
+
+  # Compute @PSC_TOOL_NAME@_INSTALL_DIR from @PSC_TOOL_NAME@_DIR:
+  SET(@PSC_TOOL_NAME@_INSTALL_DIR
+    "${_confdir}@_TemplateRelativeInstallDir@")
+
+  # Use the configured relative paths when @PSC_TOOL_CONFIG_NAME@ was built to
+  # generate absolute paths to the libraries and headers:
+  GET_FILENAME_COMPONENT(@PSC_TOOL_NAME@_LIBRARY_DIR
+    "${@PSC_TOOL_NAME@_INSTALL_DIR}/@_TemplateLibDir@" ABSOLUTE)
+  GET_FILENAME_COMPONENT(@PSC_TOOL_NAME@_HEADER_DIR
+    "${@PSC_TOOL_NAME@_INSTALL_DIR}/@_TemplateIncDir@" ABSOLUTE)
+ELSE(@PSC_TOOL_CONFIG_NAME@_DIR)
+  MESSAGE(FATAL_ERROR "Can't find a @PSC_TOOL_CONFIG_NAME@ installation.")
+ENDIF(@PSC_TOOL_CONFIG_NAME@_DIR)
+
+# The configured build type for this installation:
+SET(@PSC_TOOL_NAME@_BUILD_TYPE "@CMAKE_BUILD_TYPE@")
+
+# File included from CMakeLists.txt to setup @PSC_TOOL_CONFIG_NAME@:
+SET(@PSC_TOOL_NAME@_USE_FILE
+  "${@PSC_TOOL_NAME@_LIBRARY_DIR}/@_TemplateUseFile@")
+
+# File containing the original @PSC_TOOL_CONFIG_NAME@ build configuration:
+SET(@PSC_TOOL_NAME@_BUILD_SETTINGS_FILE
+  "${@PSC_TOOL_NAME@_LIBRARY_DIR}/@_TemplateBuildSettingsFile@")
+
+# Setup variables for external builds against @PSC_TOOL_CONFIG_NAME@:
+SET(@PSC_TOOL_NAME@_HEADER_PATH "${@PSC_TOOL_NAME@_HEADER_DIR}")
+SET(@PSC_TOOL_NAME@_LIBRARY_PATH "${@PSC_TOOL_NAME@_LIBRARY_DIR}")
+
+# Include the library dependencies:
+INCLUDE("${@PSC_TOOL_NAME@_LIBRARY_DIR}/@_TemplateLibDependenciesFile@")
+
+# Required flags (used in Use@PSC_TOOL_CONFIG_NAME@.cmake):
+SET(@PSC_TOOL_NAME@_REQUIRED_CXX_FLAGS "@_TemplateRequiredCxxFlags@")
+
+# Additional configuration for @PSC_TOOL_CONFIG_NAME@:
+IF(EXISTS ${@PSC_TOOL_NAME@_LIBRARY_DIR}/@_TemplateConfigExtraFile@)
+  INCLUDE(${@PSC_TOOL_NAME@_LIBRARY_DIR}/@_TemplateConfigExtraFile@)
+ENDIF(EXISTS ${@PSC_TOOL_NAME@_LIBRARY_DIR}/@_TemplateConfigExtraFile@)
+
+# --------------------------------------------------------------------------
+# vim:ft=cmake
