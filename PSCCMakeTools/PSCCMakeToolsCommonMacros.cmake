@@ -21,6 +21,9 @@ IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE "Release" CACHE STRING ${CMAKE_BUILD_TYPE_HELP} FORCE)
 ENDIF(NOT CMAKE_BUILD_TYPE)
 
+# Export build settings by default:
+SET(PSC_TOOL_EXPORT_BUILD_SETTINGS TRUE)
+
 # Generate the variables holding the project's VERSION string, and the
 # variables holding the MAJOR, MINOR, and PATCH versions.  _VersionString
 # is expected to be in <major>.<minor>.<patch> format, where each component
@@ -188,7 +191,9 @@ MACRO(SetupToolInstallRules)
   SET(_TemplateUseFile Use${_config_name}.cmake)
 
   # The settings used to build the current installation:
-  SET(_TemplateBuildSettingsFile ${_config_name}BuildSettings.cmake)
+  IF(PSC_TOOL_EXPORT_BUILD_SETTINGS)
+    SET(_TemplateBuildSettingsFile ${_config_name}BuildSettings.cmake)
+  ENDIF(PSC_TOOL_EXPORT_BUILD_SETTINGS)
 
   # The library dependencies file:
   SET(_TemplateLibDependenciesFile ${_config_name}LibraryDependencies.cmake)
@@ -202,8 +207,7 @@ MACRO(SetupToolInstallRules)
   # Required CXX flags (not required to be defined):
   SET(_TemplateRequiredCxxFlags ${${_name}_REQUIRED_CXX_FLAGS})
 
-  # This is the build path only:
-  #SET(_TemplateBuildDir ${_build_path})
+  # This is the build path, relative to CMAKE_INSTALL_PREFIX:
   SET(_TemplateBuildVersion ${_version_path})
   SET(_TemplateBuildVariant ${_variant_path})
 
@@ -275,12 +279,14 @@ MACRO(SetupToolInstallRules)
     DESTINATION "${_confdir}")
 
   # Export and install the build settings:
-  INCLUDE(CMakeExportBuildSettings)
-  CMAKE_EXPORT_BUILD_SETTINGS(
-    ${LIBRARY_OUTPUT_PATH}/${_TemplateBuildSettingsFile})
-  INSTALL(
-    FILES ${LIBRARY_OUTPUT_PATH}/${_TemplateBuildSettingsFile}
-    DESTINATION "${_confdir}")
+  IF(PSC_TOOL_EXPORT_BUILD_SETTINGS)
+    INCLUDE(CMakeExportBuildSettings)
+    CMAKE_EXPORT_BUILD_SETTINGS(
+      ${LIBRARY_OUTPUT_PATH}/${_TemplateBuildSettingsFile})
+    INSTALL(
+      FILES ${LIBRARY_OUTPUT_PATH}/${_TemplateBuildSettingsFile}
+      DESTINATION "${_confdir}")
+  ENDIF(PSC_TOOL_EXPORT_BUILD_SETTINGS)
 
   # Export and install the library dependencies file:
   EXPORT_LIBRARY_DEPENDENCIES(

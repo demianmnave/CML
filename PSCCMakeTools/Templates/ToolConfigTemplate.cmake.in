@@ -30,8 +30,11 @@ SET(@PSC_TOOL_NAME@_USE_FILE
   "${@PSC_TOOL_NAME@_LIBRARY_DIR}/@_TemplateUseFile@")
 
 # File containing the original @PSC_TOOL_CONFIG_NAME@ build configuration:
-SET(@PSC_TOOL_NAME@_BUILD_SETTINGS_FILE
-  "${@PSC_TOOL_NAME@_LIBRARY_DIR}/@_TemplateBuildSettingsFile@")
+SET(_HaveBuildSettings @PSC_TOOL_EXPORT_BUILD_SETTINGS@)
+IF(_HaveBuildSettings)
+  SET(@PSC_TOOL_NAME@_BUILD_SETTINGS_FILE
+    "${@PSC_TOOL_NAME@_LIBRARY_DIR}/@_TemplateBuildSettingsFile@")
+ENDIF(_HaveBuildSettings)
 
 # Setup variables for external builds against @PSC_TOOL_CONFIG_NAME@:
 SET(@PSC_TOOL_NAME@_HEADER_PATH "${@PSC_TOOL_NAME@_HEADER_DIR}")

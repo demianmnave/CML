@@ -25,11 +25,12 @@ IF(@PSC_TOOL_CONFIG_NAME@_DIR)
   # the new value into the cache so it appears in the GUI after CMake
   # returns:
   SET(@PSC_TOOL_CONFIG_NAME@_DIR
-    "${@PSC_TOOL_CONFIG_NAME@_DIR}@_TemplateBuildDir@"
+    #    "${@PSC_TOOL_CONFIG_NAME@_DIR}@_TemplateBuildDir@"
+    "${@PSC_TOOL_CONFIG_NAME@_DIR}/${_build_path}"
     CACHE PATH "The directory containing @_TemplateConfigFile@."
     FORCE)
   INCLUDE(${@PSC_TOOL_CONFIG_NAME@_DIR}/@_TemplateConfigFile@)
-ENDIF(BoostCMake_DIR)
+ENDIF(@PSC_TOOL_CONFIG_NAME@_DIR)
 
 # --------------------------------------------------------------------------
 # vim:ft=cmake
