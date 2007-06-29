@@ -9,7 +9,7 @@ PROJECT(CMLFunctionalityTests)
 # Default definitions (should *really* be configured into a global
 # "config.h" file to help satisfy the one definition rule [ODR]):
 ADD_DEFINITIONS(
-  -DCML_NO_DEFAULT_EXPR_TRAITS
+  #  -DCML_NO_DEFAULT_EXPR_TRAITS
   -DCML_VECTOR_UNROLL_LIMIT=25
   -DCML_VECTOR_DOT_UNROLL_LIMIT=25
   -DCML_ALWAYS_PROMOTE_TO_DEFAULT_LAYOUT
@@ -24,6 +24,8 @@ SET(FunctionTests
   vector_et1
   matrix_et1
   external_assignment
+
+  integer_vectors
   )
 FOREACH(Test ${FunctionTests})
   ADD_EXECUTABLE(${Test} ${Test}.cpp)
