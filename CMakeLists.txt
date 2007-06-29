@@ -19,6 +19,10 @@ SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake ${PSCCMakeTools_DIR})
 # Pick up PSCCMakeToolsCommonMacros.cmake:
 INCLUDE(PSCCMakeToolsCommonMacros)
 
+# Disable exporting build settings, which aren't needed (CML is a header
+# only libeary):
+SET(PSC_TOOL_EXPORT_BUILD_SETTINGS FALSE)
+
 # Generate the tool version:
 SetToolVersion(1.0b1)
 

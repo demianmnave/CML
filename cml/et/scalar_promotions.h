@@ -18,15 +18,48 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 namespace cml {
 namespace et {
 
-template<class E1, class E2>
-struct ScalarPromote
+namespace detail {
+
+/** @class IntPromote
+ *  @brief Helper template to int-promote a type.
+ */
+template<class T> struct IntPromote
 {
+    /* Signed -> signed int, unsigned -> unsigned int: */
+    typedef typename select_switch<T,
+            unsigned char,                       unsigned int,
+            unsigned short,                      unsigned int,
+            signed char,                         int,
+            char,                                int,
+            short,                               int,
+            T,                                   T
+    >::result   result;
+};
+
+} // namespace detail
+
+/** @class ScalarPromote
+ *  @brief Template for compile-time type promotion via C promotion rules.
+ */
+template<class E1_in, class E2_in> struct ScalarPromote
+{
+
+    /* Integral-promote the types (if possible). */
+    typedef typename detail::IntPromote<E1_in>::result  E1;
+    typedef typename detail::IntPromote<E2_in>::result  E2;
+
+    /* If sizeof(long) == sizeof(unsigned int), promote to unsigned long.
+     * Otherwise, sizeof(long) > sizeof(int), so promote to long.
+     */
+    typedef typename select_if<sizeof(long) == sizeof(unsigned int),
+            unsigned long,
+            long
+    >::result   uint_promotion;
+
+    /* Do the selection on the promoted types: */
     typedef typename select_switch<
         type_pair<E1,E2>,
 
-        /* Note: order is important here, since the first type_pair matched
-         * is returned:
-         */
 #if defined(CML_USE_LONG_DOUBLE)
         type_pair<long double,long double>,       long double,
         type_pair<long double,E2>,                long double,
@@ -41,74 +74,41 @@ struct ScalarPromote
         type_pair<float,E2>,                      float,
         type_pair<E1,float>,                      float,
 
+        type_pair<E1,E2>,                         void
+
+    >::result   float_filter;
+
+    /* The promoted integral types really matter here: */
+    typedef typename select_switch<
+        type_pair<E1,E2>,
+
         type_pair<unsigned long,unsigned long>,   unsigned long,
         type_pair<unsigned long,E2>,              unsigned long,
         type_pair<E1,unsigned long>,              unsigned long,
 
         type_pair<long,long>,                     long,
+        type_pair<long,unsigned int>,             uint_promotion,
+        type_pair<unsigned int,long>,             uint_promotion,
+
         type_pair<long,E2>,                       long,
         type_pair<E1,long>,                       long,
 
-/* Workaround MSVC's limited number of template arguments: */
-#if defined(_MSC_VER)
-        Default, typename select_switch<
-        type_pair<E1,E2>,
-#endif
-
-        /* Note: this works because a longer type would have been matched
-         * already, so the any_type parameter has to be a shorter type.
-         *
-         * This case matches unsigned int to signed int, signed/unsigned
-         * short, and signed/unsigned char:
-         */
         type_pair<unsigned int,unsigned int>,     unsigned int,
         type_pair<unsigned int,E2>,               unsigned int,
         type_pair<E1,unsigned int>,               unsigned int,
 
-        /* This case matches signed int to signed int, signed/unsigned
-         * short, and signed/unsigned char:
-         */
         type_pair<int,int>,                       int,
         type_pair<int,E2>,                        int,
         type_pair<E1,int>,                        int,
 
-        /* This case matches unsigned short to signed/unsigned short, and
-         * signed/unsigned char:
-         */
-        type_pair<unsigned short,unsigned short>, unsigned short,
-        type_pair<unsigned short,E2>,             unsigned short,
-        type_pair<E1,unsigned short>,             unsigned short,
+        type_pair<E1,E2>,                         void
 
-        /* This case matches signed short to signed short, and
-         * signed/unsigned char:
-         */
-        type_pair<short,short>,                   short,
-        type_pair<short,E2>,                      short,
-        type_pair<E1,short>,                      short,
+    >::result   int_filter;
 
-        /* This case matches unsigned char to signed/unsigned char:
-         */
-        type_pair<unsigned char,unsigned char>,   unsigned char,
-        type_pair<unsigned char,E2>,              unsigned char,
-        type_pair<E1,unsigned char>,              unsigned char,
-
-/* Workaround MSVC's limited number of template arguments: */
-#if defined(_MSC_VER)
-        Default, typename select_switch<
-        type_pair<E1,E2>,
-#endif
-
-        /* This case matches signed char to signed char: */
-        type_pair<char,char>,                     char,
-        type_pair<char,E2>,                       char,
-        type_pair<E1,char>,                       char
-
-#if defined(_MSC_VER)
-        >::result
-     >::result
-#endif
-
-    >::result type;
+    /* Deduce the final type: */
+    typedef typename select_if<
+        same_type<float_filter,void>::is_true,
+        int_filter, float_filter>::result         type;
 };
 
 } // namespace et
