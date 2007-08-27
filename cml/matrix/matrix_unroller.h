@@ -194,7 +194,7 @@ class MatrixAssignmentUnroller
 
   private:
     /* XXX Blah, a temp. hack to fix the auto-resizing stuff below. */
-    matrix_size hack_actual_size(const SrcT& src, scalar_result_tag) {
+    matrix_size hack_actual_size(const SrcT& /*src*/, scalar_result_tag) {
         return matrix_size(1,1);
     }
 

@@ -20,7 +20,7 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 
 namespace cml {
 
-/** Fixed-size, fixed-memory vector. */
+/** Fixed-size, fixed-memory matrix. */
 template<typename Element, int Rows, int Cols,
     typename BasisOrient, typename Layout>
 class matrix<Element,fixed<Rows,Cols>,BasisOrient,Layout>
@@ -119,7 +119,7 @@ class matrix<Element,fixed<Rows,Cols>,BasisOrient,Layout>
      */
     matrix_type& transpose() {
         /* transpose() returns a temporary: */
-        *this = transpose(*this);
+        *this = cml::transpose(*this);
         return *this;
     }
 

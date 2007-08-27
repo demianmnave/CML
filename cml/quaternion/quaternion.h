@@ -30,26 +30,6 @@ struct quaternion_requires_fixed_size_array_type_error;
 
 namespace cml {
 
-/** Helper to specify v1^v2 multiplication order. */
-struct positive_cross {
-    enum { scale = 1 };
-};
-
-/** Helper to specify v2^v1 multiplication order. */
-struct negative_cross {
-    enum { scale = -1 };
-};
-
-/** Helper to specify scalar-first quaternion ordering. */
-struct scalar_first {
-    enum { W, X, Y, Z };
-};
-
-/** Helper to specify vector-first quaternion ordering. */
-struct vector_first {
-    enum { X, Y, Z, W };
-};
-
 /** A configurable quaternion type.
  *
  * @note Quaternions with two different orders cannot be used in the same
@@ -57,9 +37,9 @@ struct vector_first {
  */
 template<
     typename Element,
-    class ArrayType = fixed<>,
-    class Order = scalar_first,
-    class Cross = positive_cross
+    class ArrayType,
+    class Order,
+    class Cross
 >
 class quaternion
 {
@@ -165,7 +145,7 @@ class quaternion
 
     /** Return square of the quaternion length. */
     value_type length_squared() const {
-        return dot(*this,*this);
+        return cml::dot(*this,*this);
     }
 
     /** Return the quaternion length. */
@@ -173,12 +153,22 @@ class quaternion
         return std::sqrt(length_squared());
     }
 
-    /** Normalize this vector (divide by its length).
+    /** Normalize this quaternion (divide by its length).
      *
      * @todo Make this return a QuaternionXpr.
      */
     quaternion_type& normalize() {
         return (*this /= length());
+    }
+
+    /** Set this quaternion to the conjugate. */
+    quaternion_type& conjugate() {
+        return (*this) = cml::conjugate(*this);
+    }
+
+    /** Set this quaternion to the inverse. */
+    quaternion_type& inverse() {
+        return (*this) = cml::inverse(*this);
     }
 
     /** Set this quaternion to the multiplicative identity. */

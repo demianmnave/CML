@@ -13,6 +13,7 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #ifndef cml_util_h
 #define cml_util_h
 
+#include <algorithm>	// For std::min and std::max.
 #include <stdlib.h>     // For random().
 #include <cml/constants.h>
 

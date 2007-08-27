@@ -41,10 +41,6 @@ template<typename Element, class ArrayType,
 
 } // namespace cml
 
-
-
-#include <cml/core/common.h>
-
 #include <cml/matrix/matrix_ops.h>
 #include <cml/matrix/matrix_transpose.h>
 #include <cml/matrix/matrix_rowcol.h>
@@ -54,7 +50,6 @@ template<typename Element, class ArrayType,
 #include <cml/matrix/lu.h>
 #include <cml/matrix/inverse.h>
 #include <cml/matrix/determinant.h>
-//#include <cml/matrix/matrix_comparison.h>
 #include <cml/matrix/matrix_print.h>
 
 #include <cml/matrix/fixed.h>
