@@ -157,7 +157,8 @@ intersect_planes(Real p1[4], Real p2[4], Real p3[4])
     value_type d2 = -p2[3];
     value_type d3 = -p3[3];
     
-    vector_type numer = d1*cross(n2,n3) + d2*cross(n3,n1) + d3*cross(n1,n2);
+    vector_type numer =
+        d1*cross(n2,n3) + d2*cross(n3,n1) + d3*cross(n1,n2);
     value_type denom = triple_product(n1,n2,n3);
     return numer/denom;
 }
@@ -180,24 +181,57 @@ intersect_planes(Real p1[4], Real p2[4], Real p3[4])
 template < typename Real, typename E, class A > void
 get_frustum_corners(Real planes[6][4], vector<E,A> corners[8])
 {
-    enum { LEFT, RIGHT, BOTTOM, TOP, NEAR, FAR };
+    // NOTE: Prefixed with 'PLANE_' due to symbol conflict with Windows
+    // macros PLANE_LEFT and PLANE_RIGHT.
+    enum {
+        PLANE_LEFT,
+        PLANE_RIGHT,
+        PLANE_BOTTOM,
+        PLANE_TOP,
+        PLANE_NEAR,
+        PLANE_FAR
+    };
 
-    corners[0] =
-        detail::intersect_planes(planes[LEFT], planes[BOTTOM], planes[NEAR]);
-    corners[1] =
-        detail::intersect_planes(planes[RIGHT], planes[BOTTOM], planes[NEAR]);
-    corners[2] =
-        detail::intersect_planes(planes[RIGHT], planes[TOP], planes[NEAR]);
-    corners[3] =
-        detail::intersect_planes(planes[LEFT], planes[TOP], planes[NEAR]);
-    corners[4] =
-        detail::intersect_planes(planes[LEFT], planes[BOTTOM], planes[FAR]);
-    corners[5] =
-        detail::intersect_planes(planes[RIGHT], planes[BOTTOM], planes[FAR]);
-    corners[6] =
-        detail::intersect_planes(planes[RIGHT], planes[TOP], planes[FAR]);
-    corners[7] =
-        detail::intersect_planes(planes[LEFT], planes[TOP], planes[FAR]);
+    corners[0] = detail::intersect_planes(
+        planes[PLANE_LEFT],
+        planes[PLANE_BOTTOM],
+        planes[PLANE_NEAR]
+    );
+    corners[1] = detail::intersect_planes(
+        planes[PLANE_RIGHT],
+        planes[PLANE_BOTTOM],
+        planes[PLANE_NEAR]
+    );
+    corners[2] = detail::intersect_planes(
+        planes[PLANE_RIGHT],
+        planes[PLANE_TOP],
+        planes[PLANE_NEAR]
+    );
+    corners[3] = detail::intersect_planes(
+        planes[PLANE_LEFT],
+        planes[PLANE_TOP],
+        planes[PLANE_NEAR]
+    );
+    corners[4] = detail::intersect_planes(
+        planes[PLANE_LEFT],
+        planes[PLANE_BOTTOM],
+        planes[PLANE_FAR]
+    );
+    corners[5] = detail::intersect_planes(
+        planes[PLANE_RIGHT],
+        planes[PLANE_BOTTOM],
+        planes[PLANE_FAR]
+    );
+    corners[6] = detail::intersect_planes(
+        planes[PLANE_RIGHT],
+        planes[PLANE_TOP],
+        planes[PLANE_FAR]
+    );
+    corners[7] = detail::intersect_planes(
+        planes[PLANE_LEFT],
+        planes[PLANE_TOP],
+        planes[PLANE_FAR]
+    );
 }
 
 } // namespace cml
