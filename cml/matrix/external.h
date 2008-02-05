@@ -137,7 +137,7 @@ class matrix<Element,external<Rows,Cols>,BasisOrient,Layout>
      */
     matrix_type& inverse() {
         /* inverse() returns a temporary: */
-        *this = inverse(*this);
+        *this = cml::inverse(*this);
         return *this;
     }
 
@@ -380,7 +380,7 @@ class matrix<Element,external<-1,-1>,BasisOrient,Layout>
      */
     matrix_type& transpose() {
         /* transpose() returns a temporary: */
-        *this = transpose(*this);
+        *this = cml::transpose(*this);
         return *this;
     }
 
@@ -421,7 +421,7 @@ class matrix<Element,external<-1,-1>,BasisOrient,Layout>
     void random(ELEMENT_ARG_TYPE min, ELEMENT_ARG_TYPE max) {
       for(size_t i = 0; i < this->rows(); ++i) {
         for(size_t j = 0; j < this->cols(); ++j) {
-          (*this)(i,j) = random_real(min,max);
+          (*this)(i,j) = cml::random_real(min,max);
         }
       }
     }

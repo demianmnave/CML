@@ -72,7 +72,7 @@ class vector< Element, dynamic<Alloc> >
 
     /** Return square of the length. */
     value_type length_squared() const {
-        return dot(*this,*this);
+        return cml::dot(*this,*this);
     }
 
     /** Return the length. */
@@ -120,7 +120,7 @@ class vector< Element, dynamic<Alloc> >
     /** Fill vector with random elements. */
     void random(value_type min, value_type max) {
         for (size_t i = 0; i < this->size(); ++i) {
-            (*this)[i] = random_real(min,max);
+            (*this)[i] = cml::random_real(min,max);
         }
     }
 

@@ -444,7 +444,7 @@ class quaternion
      * before any possible use of this method.
      */
     quaternion_type& operator/=(const quaternion_type& q) {
-        return (*this = *this * inverse(q));
+        return (*this = *this * cml::inverse(q));
     }
 
     /** Accumulated division with a quaternion expression.
@@ -463,7 +463,7 @@ class quaternion
      * before any possible use of this method.
      */
     template<typename XprT> quaternion_type& operator/=(QUATXPR_ARG_TYPE e) {
-        return (*this = *this * inverse(e));
+        return (*this = *this * cml::inverse(e));
     }
 
 

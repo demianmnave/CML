@@ -160,7 +160,7 @@ class matrix<Element,fixed<Rows,Cols>,BasisOrient,Layout>
     void random(ELEMENT_ARG_TYPE min, ELEMENT_ARG_TYPE max) {
       for(size_t i = 0; i < this->rows(); ++i) {
         for(size_t j = 0; j < this->cols(); ++j) {
-          (*this)(i,j) = random_real(min,max);
+          (*this)(i,j) = cml::random_real(min,max);
         }
       }
     }
