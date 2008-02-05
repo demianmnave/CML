@@ -13,13 +13,9 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #ifndef cml_util_h
 #define cml_util_h
 
-#include <algorithm>	// For std::min and std::max.
-#include <stdlib.h>     // For random().
+#include <algorithm>   // For std::min and std::max.
+#include <cstdlib>     // For std::rand.
 #include <cml/constants.h>
-
-#if defined(_MSC_VER)
-inline long random() { return ::rand(); }
-#endif
 
 namespace cml {
 
@@ -203,17 +199,22 @@ T trilerp(const T& f000, const T& f100,
 
 /** Random binary (0,1) value. */
 inline size_t random_binary() {
-    return ::random() % 2;
+    return std::rand() % 2;
+}
+
+/** Random polar (-1,1) value. */
+inline int random_polar() {
+    return random_binary() ? 1 : -1;
 }
 
 /** Random real in [0,1]. */
 inline double random_unit() {
-    return double(::random()) / double(RAND_MAX);
+    return double(std::rand()) / double(RAND_MAX);
 }
 
 /* Random integer in the range [min, max] */
 inline long random_integer(long min, long max) {
-    return min + ::random() % (max - min + 1);
+    return min + std::rand() % (max - min + 1);
 }
 
 /* Random real number in the range [min, max] */
