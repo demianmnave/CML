@@ -654,8 +654,12 @@ quaternion_to_axis_angle(
 
 template < class QuatT, typename Real > void
 quaternion_to_euler(
-    const QuatT& q, Real& angle_0, Real& angle_1, Real& angle_2,
-    EulerOrder order)
+    const QuatT& q,
+    Real& angle_0,
+    Real& angle_1,
+    Real& angle_2,
+    EulerOrder order,
+    Real tolerance = epsilon<Real>::placeholder())
 {
     typedef QuatT quaternion_type;
     typedef typename quaternion_type::value_type value_type;
@@ -663,7 +667,7 @@ quaternion_to_euler(
 
     matrix_type m;
     matrix_rotation_quaternion(m, q);
-    matrix_to_euler(m, angle_0, angle_1, angle_2, order);
+    matrix_to_euler(m, angle_0, angle_1, angle_2, order, tolerance);
 }
 
 } // namespace cml
