@@ -798,6 +798,186 @@ matrix_3D_affine_from_3D_affine(matrix<E,A,B,L>& m, const MatT& affine_3D)
     matrix_set_translation(m,p);
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// Matrix decomposition (scale->rotate->translate)
+//////////////////////////////////////////////////////////////////////////////
+
+/* 3x3 matrix version */
+template <
+    class MatT,
+    typename Real,
+    typename ME,
+    class MA,
+    class B,
+    class L,
+    typename VE,
+    class VA
+>
+void matrix_decompose_SRT(
+    const MatT& m,
+    Real& scale_x,
+    Real& scale_y,
+    Real& scale_z,
+    matrix<ME,MA,B,L>& rotation,
+    vector<VE,VA>& translation)
+{
+    typedef MatT matrix_type;
+    typedef typename matrix_type::value_type value_type;
+    typedef vector<value_type, fixed<3> > vector_type;
+
+    /* Checking */
+    detail::CheckMatAffine3D(m);
+    detail::CheckMatLinear3D(rotation);
+    
+    vector_type x, y, z;
+    matrix_get_basis_vectors(m, x, y, z);
+    
+    scale_x = x.length();
+    scale_y = y.length();
+    scale_z = z.length();
+    
+    x /= scale_x;
+    y /= scale_y;
+    z /= scale_z;
+    
+    matrix_set_basis_vectors(rotation, x, y, z);
+    translation = matrix_get_translation(m);
+}
+
+/* Quaternion version */
+template <
+    class MatT,
+    typename Real,
+    typename QE,
+    class QA,
+    class O,
+    class C,
+    typename VE,
+    class VA
+>
+void matrix_decompose_SRT(
+    const MatT& m,
+    Real& scale_x,
+    Real& scale_y,
+    Real& scale_z,
+    quaternion<QE,QA,O,C>& rotation,
+    vector<VE,VA>& translation)
+{
+    typedef MatT matrix_type;
+    typedef typename matrix_type::value_type value_type;
+    typedef matrix< value_type, fixed<3,3> > rotation_type;
+
+    rotation_type rotation_matrix;
+    matrix_decompose_SRT(
+        m, scale_x, scale_y, scale_z, rotation_matrix, translation);
+    quaternion_rotation_matrix(rotation, rotation_matrix);
+}
+
+/* Euler angle version */
+template < class MatT, typename Real, typename E, class A >
+void matrix_decompose_SRT(
+    const MatT& m,
+    Real& scale_x,
+    Real& scale_y,
+    Real& scale_z,
+    Real& angle_0,
+    Real& angle_1,
+    Real& angle_2,
+    EulerOrder order,
+    vector<E,A>& translation,
+    Real tolerance = epsilon<Real>::placeholder())
+{
+    typedef MatT matrix_type;
+    typedef typename matrix_type::value_type value_type;
+    typedef matrix< value_type, fixed<3,3> > rotation_type;
+
+    rotation_type rotation_matrix;
+    matrix_decompose_SRT(
+        m, scale_x, scale_y, scale_z, rotation_matrix, translation);
+    matrix_to_euler(
+        rotation_matrix, angle_0, angle_1, angle_2, order, tolerance);
+}
+
+/* Axis-angle version */
+template < class MatT, typename Real, typename E, class A >
+void matrix_decompose_SRT(
+    const MatT& m,
+    Real& scale_x,
+    Real& scale_y,
+    Real& scale_z,
+    vector<E,A>& axis,
+    Real& angle,
+    vector<E,A>& translation,
+    Real tolerance = epsilon<Real>::placeholder())
+{
+    typedef MatT matrix_type;
+    typedef typename matrix_type::value_type value_type;
+    typedef matrix< value_type, fixed<3,3> > rotation_type;
+
+    rotation_type rotation_matrix;
+    matrix_decompose_SRT(
+        m, scale_x, scale_y, scale_z, rotation_matrix, translation);
+    matrix_to_axis_angle(rotation_matrix, axis, angle, tolerance);
+}
+
+/* 2x2 matrix version, 2-d */
+template <
+    class MatT,
+    typename Real,
+    typename ME,
+    class MA,
+    class B,
+    class L,
+    typename VE,
+    class VA
+>
+void matrix_decompose_SRT_2D(
+    const MatT& m,
+    Real& scale_x,
+    Real& scale_y,
+    matrix<ME,MA,B,L>& rotation,
+    vector<VE,VA>& translation)
+{
+    typedef MatT matrix_type;
+    typedef typename matrix_type::value_type value_type;
+    typedef vector<value_type, fixed<2> > vector_type;
+
+    /* Checking */
+    detail::CheckMatAffine2D(m);
+    detail::CheckMatLinear2D(rotation);
+    
+    vector_type x, y;
+    matrix_get_basis_vectors_2D(m, x, y);
+    
+    scale_x = x.length();
+    scale_y = y.length();
+    
+    x /= scale_x;
+    y /= scale_y;
+    
+    matrix_set_basis_vectors_2D(rotation, x, y);
+    translation = matrix_get_translation_2D(m);
+}
+
+/* Angle version, 2-d */
+template < class MatT, typename Real, typename E, class A >
+void matrix_decompose_SRT_2D(
+    const MatT& m,
+    Real& scale_x,
+    Real& scale_y,
+    Real& angle,
+    vector<E,A>& translation)
+{
+    typedef MatT matrix_type;
+    typedef typename matrix_type::value_type value_type;
+    typedef matrix< value_type, fixed<2,2> > rotation_type;
+
+    rotation_type rotation_matrix;
+    matrix_decompose_SRT_2D(
+        m, scale_x, scale_y, rotation_matrix, translation);
+    angle = matrix_to_rotation_2D(rotation_matrix);
+}
+
 } // namespace cml
 
 #endif
