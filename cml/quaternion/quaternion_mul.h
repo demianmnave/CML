@@ -21,6 +21,24 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 namespace cml {
 namespace et {
 
+namespace detail {
+
+template < class CrossType, class Real > struct SumOp;
+
+template < class Real > struct SumOp< positive_cross, Real > {
+    Real operator()(Real a, Real b) const {
+        return a + b;
+    }
+};
+
+template < class Real > struct SumOp< negative_cross, Real > {
+    Real operator()(Real a, Real b) const {
+        return a - b;
+    }
+};
+
+} // namespace detail
+
 /** A binary expression tree node for multiplication. */
 template<class LeftT, class RightT>
 class QuaternionMulOp
@@ -135,11 +153,7 @@ class QuaternionMulOp
      * returned.
      */
     value_type operator[](size_t i) const {
-
-        /* Get scale for cross-product from the order (changes from v1^v2
-         * to v2^v1):
-         */
-        enum { scale = cross_type::scale };
+        typedef detail::SumOp<cross_type, value_type> sum_op;
 
         /* Both expressions must be quaternions, so it's okay to use
          * operator[]:
@@ -154,20 +168,26 @@ class QuaternionMulOp
 
             case X: {
 	      /* (s1*v2 + s2*v1 + v1^v2) i: */
-	      return m_left[W]*m_right[X] + m_right[W]*m_left[X]
-		+ scale*(m_left[Y]*m_right[Z] - m_left[Z]*m_right[Y]);
+          return sum_op()(
+            m_left[W]*m_right[X] + m_right[W]*m_left[X],
+            m_left[Y]*m_right[Z] - m_left[Z]*m_right[Y]
+          );
 	    } break;
 
             case Y: {
 	      /* (s1*v2 + s2*v1 + v1^v2) j: */
-	      return m_left[W]*m_right[Y] + m_right[W]*m_left[Y]
-		+ scale*(m_left[Z]*m_right[X] - m_left[X]*m_right[Z]);
+          return sum_op()(
+            m_left[W]*m_right[Y] + m_right[W]*m_left[Y],
+            m_left[Z]*m_right[X] - m_left[X]*m_right[Z]
+          );
 	    } break;
 
             case Z: {
 	      /* (s1*v2 + s2*v1 + v1^v2) k: */
-	      return m_left[W]*m_right[Z] + m_right[W]*m_left[Z]
-		+ scale*(m_left[X]*m_right[Y] - m_left[Y]*m_right[X]);
+          return sum_op()(
+            m_left[W]*m_right[Z] + m_right[W]*m_left[Z],
+            m_left[X]*m_right[Y] - m_left[Y]*m_right[X]
+          );
 	    } break;
         }
         throw std::runtime_error(
