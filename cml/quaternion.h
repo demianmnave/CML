@@ -17,14 +17,16 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 
 namespace cml {
 
+// NOTE: 'scale' constant no longer used.
+
 /** Helper to specify v1^v2 multiplication order. */
 struct positive_cross {
-    enum { scale = 1 };
+    /*enum { scale = 1 };*/
 };
 
 /** Helper to specify v2^v1 multiplication order. */
 struct negative_cross {
-    enum { scale = -1 };
+    /*enum { scale = -1 };*/
 };
 
 /** Helper to specify scalar-first quaternion ordering. */
