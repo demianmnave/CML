@@ -37,8 +37,6 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
  * @todo Specialize matrix multiplication based upon the size type (fixed or
  * dynamic). This makes a difference for at least GCC 3.4.
  *
- * @todo verify on Windows
- *
  * @todo need a build system for the tests/ and examples/ directories.
  *
  * @todo clean up the testing infrastructure, and make it easier to add new

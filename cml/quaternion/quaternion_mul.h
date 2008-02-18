@@ -148,51 +148,10 @@ class QuaternionMulOp
 
     /** Compute value of the product at index i.
      *
-     * @bug This is dumb.  The result of the multiplication should be stored
-     * in a temporary, and the coefficients of the temporary should be
-     * returned.
+     * @internal Is a temporary <em>really</em> necessary?
      */
     value_type operator[](size_t i) const {
-        typedef detail::SumOp<cross_type, value_type> sum_op;
-
-        /* Both expressions must be quaternions, so it's okay to use
-         * operator[]:
-         */
-        switch(i) {
-
-            /* s1*s2-dot(v1,v2): */
-            case W: {
-	      return m_left[W]*m_right[W] - m_left[X]*m_right[X]
-		- m_left[Y]*m_right[Y] - m_left[Z]*m_right[Z];
-	    } break;
-
-            case X: {
-	      /* (s1*v2 + s2*v1 + v1^v2) i: */
-          return sum_op()(
-            m_left[W]*m_right[X] + m_right[W]*m_left[X],
-            m_left[Y]*m_right[Z] - m_left[Z]*m_right[Y]
-          );
-	    } break;
-
-            case Y: {
-	      /* (s1*v2 + s2*v1 + v1^v2) j: */
-          return sum_op()(
-            m_left[W]*m_right[Y] + m_right[W]*m_left[Y],
-            m_left[Z]*m_right[X] - m_left[X]*m_right[Z]
-          );
-	    } break;
-
-            case Z: {
-	      /* (s1*v2 + s2*v1 + v1^v2) k: */
-          return sum_op()(
-            m_left[W]*m_right[Z] + m_right[W]*m_left[Z],
-            m_left[X]*m_right[Y] - m_left[Y]*m_right[X]
-          );
-	    } break;
-        }
-        throw std::runtime_error(
-                "invalid index in QuaternionMulOp::operator[]");
-        return 0.;
+        return m_temp[i];
     }
 
 
@@ -225,17 +184,49 @@ class QuaternionMulOp
 
     /** Construct from the two subexpressions. */
     explicit QuaternionMulOp(left_reference left, right_reference right)
-        : m_left(left), m_right(right) {}
+        : m_left(left), m_right(right)
+    {
+        typedef detail::SumOp<cross_type, value_type> sum_op;
+
+        /* Compute the temporary.  Both expressions must be quaternions, so
+         * it's okay to use operator[]:
+         */
+
+        /* s1*s2-dot(v1,v2): */
+        m_temp[W]
+            = m_left[W]*m_right[W] - m_left[X]*m_right[X]
+            - m_left[Y]*m_right[Y] - m_left[Z]*m_right[Z]
+            ;
+
+        /* (s1*v2 + s2*v1 + v1^v2) i: */
+        m_temp[X] = sum_op()(
+                m_left[W]*m_right[X] + m_right[W]*m_left[X],
+                m_left[Y]*m_right[Z] - m_left[Z]*m_right[Y]
+                );
+
+        /* (s1*v2 + s2*v1 + v1^v2) j: */
+        m_temp[Y] = sum_op()(
+                m_left[W]*m_right[Y] + m_right[W]*m_left[Y],
+                m_left[Z]*m_right[X] - m_left[X]*m_right[Z]
+                );
+
+        /* (s1*v2 + s2*v1 + v1^v2) k: */
+        m_temp[Z] = sum_op()(
+                m_left[W]*m_right[Z] + m_right[W]*m_left[Z],
+                m_left[X]*m_right[Y] - m_left[Y]*m_right[X]
+                );
+    }
 
     /** Copy constructor. */
     QuaternionMulOp(const expr_type& e)
-        : m_left(e.m_left), m_right(e.m_right) {}
+        : m_left(e.m_left), m_right(e.m_right), m_temp(e.m_temp) {}
 
 
   protected:
 
     left_reference m_left;
     right_reference m_right;
+    result_type m_temp;
 
 
   private:
