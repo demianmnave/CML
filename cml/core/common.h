@@ -13,6 +13,19 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #ifndef core_common_h
 #define core_common_h
 
+// XXX This isn't really the right place for this.
+#if defined(_MSC_VER) && (_MSCVER < 1400)
+#include <cstdlib>
+#ifndef _SSIZE_T_DEFINED
+#ifdef  _WIN64
+typedef __int64    ssize_t;
+#else
+typedef _W64 int   ssize_t;
+#endif
+#define _SSIZE_T_DEFINED
+#endif
+#endif
+
 #include <cstddef>              // for size_t
 #include <utility>              // for std::pair<>
 #include <cml/defaults.h>
