@@ -428,6 +428,10 @@ class quaternion
         return (*this = *this * e);
     }
 
+    /* NOTE: Quaternion division no longer supported, but I'm leaving the
+       code here for reference (Jesse) */
+
+    #if 0
     /** Accumulated division with a quaternion.
      *
      * Compute p = p * inverse(q).
@@ -465,6 +469,7 @@ class quaternion
     template<typename XprT> quaternion_type& operator/=(QUATXPR_ARG_TYPE e) {
         return (*this = *this * cml::inverse(e));
     }
+    #endif
 
 
   protected:
