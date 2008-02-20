@@ -44,16 +44,17 @@ template<typename Element, class ArrayType> class vector;
 } // namespace cml
 
 #include <cml/core/common.h>
-
-#include <cml/vector/fixed.h>
-#include <cml/vector/dynamic.h>
-#include <cml/vector/external.h>
+#include <cml/util.h>
 
 #include <cml/vector/vector_ops.h>
 #include <cml/vector/vector_products.h>
 #include <cml/vector/vector_functions.h>
 #include <cml/vector/vector_comparison.h>
 #include <cml/vector/vector_print.h>
+
+#include <cml/vector/fixed.h>
+#include <cml/vector/dynamic.h>
+#include <cml/vector/external.h>
 
 #endif
 
