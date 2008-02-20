@@ -207,7 +207,10 @@ inverse(QUATXPR_ARG_TYPE arg)
     return et::QuaternionXpr<ExprT>(ExprT(arg.expression()));
 }
 
+/* NOTE: Quaternion division no longer supported, but I'm leaving the
+   code here for reference (Jesse) */
 
+#if 0
 /** Declare div taking two quaternion operands. */
 template<typename E1, class AT1, typename E2, class AT2, class OT, class CT>
 inline typename et::QuaternionPromote<
@@ -255,6 +258,7 @@ operator/(
 {
     return left*inverse(right);
 }
+#endif
 
 } // namespace cml
 
