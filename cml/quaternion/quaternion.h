@@ -186,7 +186,10 @@ class quaternion
 
     /** Mutable access to the quaternion as a vector. */
     reference operator[](size_t i) { return m_q[i]; }
+    
+    /* NOTE: minimize() and maximize() no longer supported (Jesse) */
 
+    #if 0
     /** Pairwise minimum of this quaternion with another. */
     template<typename E, class AT, class OT, class CT>
     void minimize(const quaternion<E,AT,OT,CT>& q) {
@@ -204,6 +207,7 @@ class quaternion
         (*this)[i] = std::max((*this)[i],q[i]);
       }
     }
+    #endif
 
     /** Fill quaternion with random elements.
      *
