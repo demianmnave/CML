@@ -17,7 +17,10 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 
 namespace cml {
 
-#if !defined(CML_PLAIN_QUATERNION_OUTPUT)
+/* NOTE: Made 'plain' quaternion output the default (Jesse) */
+
+/* #if !defined(CML_PLAIN_QUATERNION_OUTPUT) */
+#if defined(CML_COMPLEX_QUATERNION_OUTPUT)
 
 template<typename E, class AT, class CT> std::ostream&
 operator<<(std::ostream& os, const cml::quaternion<E,AT,scalar_first,CT>& q)
