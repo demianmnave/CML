@@ -134,27 +134,31 @@ class matrix<Element,fixed<Rows,Cols>,BasisOrient,Layout>
         return *this;
     }
 
+    /* NOTE: minimize() and maximize() no longer supported (Jesse) */
+
+    #if 0
     /** Pairwise minimum of this matrix with another. */
     template<typename E, class AT, typename L>
     void minimize(const matrix<E,AT,basis_orient,L>& v) {
       /* XXX This should probably use ScalarPromote: */
       for (size_t i = 0; i < this->rows(); ++i) {
         for (size_t j = 0; j < this->cols(); ++j) {
-          (*this)[i] = std::min((*this)(i,j),v(i,j));
+          (*this)(i,j) = std::min((*this)(i,j),v(i,j));
         }
       }
     }
 
     /** Pairwise maximum of this matrix with another. */
-    template<typename E, class AT, class BO, typename L>
+    template<typename E, class AT, typename L>
     void maximize(const matrix<E,AT,basis_orient,L>& v) {
       /* XXX This should probably use ScalarPromote: */
       for (size_t i = 0; i < this->rows(); ++i) {
         for (size_t j = 0; j < this->cols(); ++j) {
-          (*this)[i] = std::max((*this)(i,j),v(i,j));
+          (*this)(i,j) = std::max((*this)(i,j),v(i,j));
         }
       }
     }
+    #endif
 
     /* Set each element to a random number in the range [min,max] */
     void random(ELEMENT_ARG_TYPE min, ELEMENT_ARG_TYPE max) {
