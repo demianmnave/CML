@@ -792,14 +792,6 @@ void example26()
     cout << "p * (p+q) = " << p*(p+q) << endl;
     p *= (p+q);
     cout << "p *= (p+q) = " << p << endl;
-
-    cout << "p / q = " << p/q << endl;
-    p /= q;
-    cout << "p /= q = " << p << endl;
-
-    cout << "p / (p+q) = " << p/(p+q) << endl;
-    p /= (p+q);
-    cout << "p /= (p+q) = " << p << endl;
 }
 
 int main()
