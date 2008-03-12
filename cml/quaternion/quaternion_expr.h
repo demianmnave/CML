@@ -14,8 +14,10 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #define quaternion_expr_h
 
 #include <cml/et/size_checking.h>
+#include <cml/mathlib/epsilon.h>
 #include <cml/quaternion/quaternion_traits.h>
 #include <cml/quaternion/quaternion_promotions.h>
+#include <cml/util.h>
 
 #define QUATXPR_ARG_TYPE  const et::QuaternionXpr<XprT>&
 #define QUATXPR_ARG_TYPE_N(_N_)  const et::QuaternionXpr<XprT##_N_>&
@@ -105,6 +107,23 @@ class QuaternionXpr
     /** Return the result as a normalized quaternion. */
     temporary_type normalize() const {
         return m_expr.normalize();
+    }
+
+    /** Return the log of the expression. */
+    temporary_type log(
+        value_type tolerance = epsilon<value_type>::placeholder()) const
+    {
+        return m_expr.log(tolerance);
+    }
+
+    /** 
+     * Return the result of the exponential function as applied to
+     * this expression.
+     */
+    temporary_type exp(
+        value_type tolerance = epsilon<value_type>::placeholder()) const
+    {
+        return m_expr.exp(tolerance);
     }
 
     /** Compute value at index i of the result quaternion. */
@@ -258,6 +277,37 @@ class UnaryQuaternionOp
     temporary_type normalize() const {
         temporary_type q(QuaternionXpr<expr_type>(*this));
         return q.normalize();
+    }
+
+    /** Return the log of this expression. */
+    temporary_type log(
+        value_type tolerance = epsilon<value_type>::placeholder()) const
+    {
+        value_type a = acos_safe(real());
+        value_type s = std::sin(a);
+        
+        if (s > tolerance) {
+            return temporary_type(value_type(0), imaginary() * (a / s));
+        } else {
+            return temporary_type(value_type(0), imaginary());
+        }
+    }
+    
+    /** 
+     * Return the result of the exponential function as applied to
+     * this expression.
+     */
+    temporary_type exp(
+        value_type tolerance = epsilon<value_type>::placeholder()) const
+    {
+        imaginary_type v = imaginary();
+        value_type a = cml::length(v);
+        
+        if (a > tolerance) {
+            return temporary_type(std::cos(a), v * (std::sin(a) / a));
+        } else {
+            return temporary_type(std::cos(a), v);
+        }
     }
 
     /** Compute value at index i of the result quaternion. */
@@ -424,6 +474,37 @@ class BinaryQuaternionOp
     temporary_type normalize() const {
         temporary_type q(QuaternionXpr<expr_type>(*this));
         return q.normalize();
+    }
+
+    /** Return the log of this expression. */
+    temporary_type log(
+        value_type tolerance = epsilon<value_type>::placeholder()) const
+    {
+        value_type a = acos_safe(real());
+        value_type s = std::sin(a);
+        
+        if (s > tolerance) {
+            return temporary_type(value_type(0), imaginary() * (a / s));
+        } else {
+            return temporary_type(value_type(0), imaginary());
+        }
+    }
+    
+    /** 
+     * Return the result of the exponential function as applied to
+     * this expression.
+     */
+    temporary_type exp(
+        value_type tolerance = epsilon<value_type>::placeholder()) const
+    {
+        imaginary_type v = imaginary();
+        value_type a = cml::length(v);
+        
+        if (a > tolerance) {
+            return temporary_type(std::cos(a), v * (std::sin(a) / a));
+        } else {
+            return temporary_type(std::cos(a), v);
+        }
     }
 
     /** Compute value at index i of the result quaternion. */
