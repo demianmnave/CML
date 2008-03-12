@@ -82,7 +82,7 @@ struct TypePromote< T1,T2,et::matrix_result_tag > {
         (same_type<result_type_1, result_type_2>::is_true),
         function_expects_args_of_same_type_error);
 
-    typedef typename et::MatrixPromote<T1,T2>::temporary_type temporary_type;
+    typedef typename et::MatrixPromote2<T1,T2>::temporary_type temporary_type;
 };
 
 template< class T1, class T2 >
@@ -97,7 +97,7 @@ struct TypePromote< T1,T2,et::quaternion_result_tag > {
         (same_type<result_type_1, result_type_2>::is_true),
         function_expects_args_of_same_type_error);
 
-    typedef typename et::QuaternionPromote<T1,T2>::temporary_type
+    typedef typename et::QuaternionPromote2<T1,T2>::temporary_type
         temporary_type;
 };
 
