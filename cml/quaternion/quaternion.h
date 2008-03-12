@@ -20,8 +20,10 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #ifndef quaternion_h
 #define quaternion_h
 
+#include <cml/mathlib/epsilon.h>
 #include <cml/quaternion/quaternion_expr.h>
 #include <cml/quaternion/quaternion_dot.h>
+#include <cml/util.h>
 
 /* This is used below to create a more meaningful compile-time error when
  * the quaternion class is not created with a fixed-size 4-vector:
@@ -128,14 +130,17 @@ class quaternion
 
     /** Return the imaginary vector. */
     imaginary_type imaginary() const {
+        /*
         imaginary_type v;
         v[0] = m_q[X]; v[1] = m_q[Y]; v[2] = m_q[Z];
         return v;
+        */
+        return imaginary_type(m_q[X], m_q[Y], m_q[Z]);
     }
 
     /** Return the vector representing the quaternion. */
     const vector_type& as_vector() const {
-        return this->m_q;
+        return m_q;
     }
 
     /** Return the Cayley norm of the quaternion. */
@@ -173,11 +178,42 @@ class quaternion
 
     /** Set this quaternion to the multiplicative identity. */
     quaternion_type& identity() {
-        (*this)[W] = value_type(1);
-        (*this)[X] = value_type(0);
-        (*this)[Y] = value_type(0);
-        (*this)[Z] = value_type(0);
+        m_q[W] = value_type(1);
+        m_q[X] = value_type(0);
+        m_q[Y] = value_type(0);
+        m_q[Z] = value_type(0);
         return *this;
+    }
+    
+    /** Return the log of this quaternion. */
+    temporary_type log(
+        value_type tolerance = epsilon<value_type>::placeholder()) const
+    {
+        value_type a = acos_safe(real());
+        value_type s = std::sin(a);
+        
+        if (s > tolerance) {
+            return temporary_type(value_type(0), imaginary() * (a / s));
+        } else {
+            return temporary_type(value_type(0), imaginary());
+        }
+    }
+    
+    /** 
+     * Return the result of the exponential function as applied to
+     * this quaternion.
+     */
+    temporary_type exp(
+        value_type tolerance = epsilon<value_type>::placeholder()) const
+    {
+        imaginary_type v = imaginary();
+        value_type a = cml::length(v);
+        
+        if (a > tolerance) {
+            return temporary_type(std::cos(a), v * (std::sin(a) / a));
+        } else {
+            return temporary_type(std::cos(a), v);
+        }
     }
 
 
@@ -186,28 +222,6 @@ class quaternion
 
     /** Mutable access to the quaternion as a vector. */
     reference operator[](size_t i) { return m_q[i]; }
-    
-    /* NOTE: minimize() and maximize() no longer supported (Jesse) */
-
-    #if 0
-    /** Pairwise minimum of this quaternion with another. */
-    template<typename E, class AT, class OT, class CT>
-    void minimize(const quaternion<E,AT,OT,CT>& q) {
-      /* XXX This should probably use ScalarPromote: */
-      for (size_t i = 0; i < 4; ++i) {
-        (*this)[i] = std::min((*this)[i],q[i]);
-      }
-    }
-
-    /** Pairwise maximum of this quaternion with another. */
-    template<typename E, class AT, class OT, class CT>
-    void maximize(const quaternion<E,AT,OT,CT>& q) {
-      /* XXX This should probably use ScalarPromote: */
-      for (size_t i = 0; i < 4; ++i) {
-        (*this)[i] = std::max((*this)[i],q[i]);
-      }
-    }
-    #endif
 
     /** Fill quaternion with random elements.
      *
@@ -215,10 +229,9 @@ class quaternion
      */
     void random(value_type min, value_type max) {
         for (size_t i = 0; i < 4; ++i) {
-            (*this)[i] = random_real(min,max);
+            m_q[i] = random_real(min,max);
         }
     }
-
 
   public:
 
