@@ -64,6 +64,21 @@ struct MatrixPromote< cml::matrix<E1,AT1,BO1,L1>, cml::matrix<E2,AT2,BO2,L2> >
     typedef typename type::temporary_type temporary_type;
 };
 
+/**
+ * NOTE: MatrixPromote2 is somewhat ad hoc, and was added to simplify the
+ * code for quaternion slerp, etc.
+ */
+
+/** Type promotion for two matrix types. */
+template < class Mat1_T, class Mat2_T >
+struct MatrixPromote2
+{
+    typedef typename MatrixPromote<
+        typename Mat1_T::temporary_type, typename Mat2_T::temporary_type
+    >::temporary_type temporary_type;
+    typedef typename temporary_type::value_type value_type;
+};
+
 /** Type promotion for a matrix and a scalar. */
 template<typename E, class AT, typename BO, typename L, typename S>
 struct MatrixPromote<cml::matrix<E,AT,BO,L>, S>
