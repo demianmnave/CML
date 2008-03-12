@@ -19,7 +19,7 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 namespace cml {
 namespace et {
 
-/* Default quaternion type promotion template. */
+/* Default quaternion type promotion templates. */
 template<class LeftT, class RightT> struct QuaternionPromote;
 
 /** Type promotion for two quaternion types. */
@@ -44,6 +44,51 @@ struct QuaternionPromote<
 
     /* The temporary type: */
     typedef typename type::temporary_type temporary_type;
+};
+
+/**
+ * NOTE: QuaternionPromote* are somewhat ad hoc, and were added to
+ * simplify the code for quaternion slerp/squad/etc.
+ */
+
+/** Type promotion for two quaternion types. */
+template < class Quat1_T, class Quat2_T >
+struct QuaternionPromote2
+{
+    typedef typename QuaternionPromote<
+        typename Quat1_T::temporary_type, typename Quat2_T::temporary_type
+    >::temporary_type temporary_type;
+    typedef typename temporary_type::value_type value_type;
+};
+
+/** Type promotion for three quaternion types. */
+template < class Quat1_T, class Quat2_T, class Quat3_T >
+struct QuaternionPromote3
+{
+    typedef typename QuaternionPromote<
+        typename Quat1_T::temporary_type,
+        typename QuaternionPromote<
+            typename Quat2_T::temporary_type, typename Quat3_T::temporary_type
+        >::temporary_type
+    >::temporary_type temporary_type;
+    typedef typename temporary_type::value_type value_type;
+};
+
+/** Type promotion for four quaternion types. */
+template < class Quat1_T, class Quat2_T, class Quat3_T, class Quat4_T >
+struct QuaternionPromote4
+{
+    typedef typename QuaternionPromote<
+        typename Quat1_T::temporary_type,
+        typename QuaternionPromote<
+            typename Quat2_T::temporary_type,
+            typename QuaternionPromote<
+                typename Quat3_T::temporary_type,
+                typename Quat4_T::temporary_type
+            >::temporary_type
+        >::temporary_type
+    >::temporary_type temporary_type;
+    typedef typename temporary_type::value_type value_type;
 };
 
 /** Type promotion for a quaternion and a scalar. */
