@@ -17,6 +17,10 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #ifndef quaternion_functions_h
 #define quaternion_functions_h
 
+#include <cml/mathlib/checking.h> // For CheckQuat()
+#include <cml/mathlib/epsilon.h>
+#include <cml/util.h> // For acos_safe()
+
 namespace cml {
 
 /** Returns the real part of the quaternion. */
@@ -45,7 +49,8 @@ imaginary(const quaternion<E,AT,OT,CT>& q)
 
 /** Returns the imaginary (vector) part of the QuaternionXpr. */
 template<typename XprT>
-inline typename et::QuaternionXpr<XprT>::temporary_type
+//inline typename et::QuaternionXpr<XprT>::temporary_type
+inline typename et::QuaternionXpr<XprT>::imaginary_type
 imaginary(const et::QuaternionXpr<XprT>& e)
 {
     return e.imaginary();
@@ -131,6 +136,32 @@ identity(const quaternion<E,AT,OT,CT>& arg)
     typename quaternion<E,AT,OT,CT>::temporary_type result(arg);
     result.identity();
     return result;
+}
+
+/** Log of a quaternion or quaternion expression.
+ */
+template < class QuatT >
+typename QuatT::temporary_type log(
+    const QuatT& q,
+    typename QuatT::value_type tolerance =
+        epsilon<typename QuatT::value_type>::placeholder())
+{
+    detail::CheckQuat(q);
+
+    return q.log();
+}
+
+/** Exponential function of a quaternion or quaternion expression.
+ */
+template < class QuatT >
+typename QuatT::temporary_type exp(
+    const QuatT& q,
+    typename QuatT::value_type tolerance =
+        epsilon<typename QuatT::value_type>::placeholder())
+{
+    detail::CheckQuat(q);
+
+    return q.exp();
 }
 
 } // namespace cml
