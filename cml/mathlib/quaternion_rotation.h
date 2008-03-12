@@ -540,7 +540,7 @@ namespace detail {
 
 /** Concatenate two quaternions in the order q1->q2 */
 template < class QuatT_1, class QuatT_2 >
-typename et::QuaternionPromote<QuatT_1,QuatT_2>::temporary_type
+typename et::QuaternionPromote2<QuatT_1,QuatT_2>::temporary_type
 quaternion_rotation_difference(
     const QuatT_1& q1, const QuatT_2& q2, positive_cross)
 {
@@ -549,7 +549,7 @@ quaternion_rotation_difference(
 
 /** Concatenate two quaternions in the order q1->q2 */
 template < class QuatT_1, class QuatT_2 >
-typename et::QuaternionPromote<QuatT_1,QuatT_2>::temporary_type
+typename et::QuaternionPromote2<QuatT_1,QuatT_2>::temporary_type
 quaternion_rotation_difference(
     const QuatT_1& q1, const QuatT_2& q2, negative_cross)
 {
@@ -564,52 +564,12 @@ quaternion_rotation_difference(
 
 /** Return the rotational 'difference' between two quaternions */
 template < class QuatT_1, class QuatT_2 >
-typename et::QuaternionPromote<QuatT_1,QuatT_2>::temporary_type
+typename et::QuaternionPromote2<QuatT_1,QuatT_2>::temporary_type
 quaternion_rotation_difference(const QuatT_1& q1, const QuatT_2& q2) {
     return detail::quaternion_rotation_difference(
         q1, q2, typename QuatT_1::cross_type());
 }
-#if 0
-//////////////////////////////////////////////////////////////////////////////
-// Spherical linear interpolation of quaternions
-//////////////////////////////////////////////////////////////////////////////
 
-/** Spherical linear interpolation of two quaternions */
-template < class QuatT_1, class QuatT_2, typename Real >
-    typename et::QuaternionPromote< QuatT_1, QuatT_2 >::temporary_type
-quaternion_slerp(const QuatT_1& q1, const QuatT_2& q2, Real t,
-    Real tolerance = epsilon<Real>::placeholder())
-{
-    typedef typename et::QuaternionPromote< QuatT_1, QuatT_2 >::temporary_type
-        temporary_type;
-    typedef typename temporary_type::value_type value_type;
-
-    temporary_type q3 = q2;
-    value_type c = dot(q1,q3);
-    if (c < value_type(0)) {
-        q3 = -q3;
-        c = -c;
-    }
-    
-    value_type omega = acos_safe(c);
-    value_type s = std::sin(omega);
-    
-    /* @todo: Here we are working around the fact that the utility function
-     * lerp() is not expression-aware. By wrapping both input expressions in
-     * temporaries of the same type, we can match lerp()'s template
-     * signature.
-     *
-     * @note I think lerp() has been fixed now, so this code can be changed to
-     * reflect that at some point.
-     */
-
-    return (s < tolerance) ?
-        //normalize(lerp(q1,q3,t)) :
-        normalize(lerp(temporary_type(q1),temporary_type(q3),value_type(t))) :
-        (value_type(std::sin((value_type(1) - t) * omega)) * q1+
-            value_type(std::sin(t * omega)) * q3) / s;
-}
-#endif
 //////////////////////////////////////////////////////////////////////////////
 // Conversions
 //////////////////////////////////////////////////////////////////////////////
