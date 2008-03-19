@@ -16,15 +16,11 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #if defined(_MSC_VER)
 
 #if _MSC_VER >= 1400
-/* XXX Is it possible to differentiate between VC8 and VC8 Express? */
-
-/* This is apparently not defined by VC8 Express: */
-typedef signed long ssize_t;
 
 /* Ignore "C4003: not enough actual parameters for macro": */
 #pragma warning (disable: 4003)
 
-/* This one is odd, but apparently harmless:
+/* This one is odd, but apparently harmless (but should be fixed!):
  * "C4348: redefinition of default parameter"
  */
 #pragma warning (disable: 4348)
