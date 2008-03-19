@@ -12,8 +12,8 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
  * Defines promotions for matrices used in matrix/matrix or matrix/scalar
  * expressions.
  *
- * @sa UnaryMatrixOp
- * @sa BinaryMatrixOp
+ * @sa UnaryMat4_TOp
+ * @sa BinaryMat4_TOp
  */
 
 #ifndef matrix_promotions_h
@@ -65,8 +65,8 @@ struct MatrixPromote< cml::matrix<E1,AT1,BO1,L1>, cml::matrix<E2,AT2,BO2,L2> >
 };
 
 /**
- * NOTE: MatrixPromote2 is somewhat ad hoc, and was added to simplify the
- * code for quaternion slerp, etc.
+ * NOTE: MatrixPromote* are somewhat ad hoc, and were added to
+ * simplify the code for matrix slerp/squad/etc.
  */
 
 /** Type promotion for two matrix types. */
@@ -75,6 +75,36 @@ struct MatrixPromote2
 {
     typedef typename MatrixPromote<
         typename Mat1_T::temporary_type, typename Mat2_T::temporary_type
+    >::temporary_type temporary_type;
+    typedef typename temporary_type::value_type value_type;
+};
+
+/** Type promotion for three matrix types. */
+template < class Mat1_T, class Mat2_T, class Mat3_T >
+struct MatrixPromote3
+{
+    typedef typename MatrixPromote<
+        typename Mat1_T::temporary_type,
+        typename MatrixPromote<
+            typename Mat2_T::temporary_type, typename Mat3_T::temporary_type
+        >::temporary_type
+    >::temporary_type temporary_type;
+    typedef typename temporary_type::value_type value_type;
+};
+
+/** Type promotion for four matrix types. */
+template < class Mat1_T, class Mat2_T, class Mat3_T, class Mat4_T >
+struct MatrixPromote4
+{
+    typedef typename MatrixPromote<
+        typename Mat1_T::temporary_type,
+        typename MatrixPromote<
+            typename Mat2_T::temporary_type,
+            typename MatrixPromote<
+                typename Mat3_T::temporary_type,
+                typename Mat4_T::temporary_type
+            >::temporary_type
+        >::temporary_type
     >::temporary_type temporary_type;
     typedef typename temporary_type::value_type value_type;
 };
