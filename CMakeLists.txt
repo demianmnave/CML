@@ -6,6 +6,7 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.4 FATAL_ERROR)
 PROJECT(CML)
+
 SET(CML_VERSION_MAJOR 1)
 SET(CML_VERSION_MINOR 0)
 SET(CML_VERSION_REV)
@@ -14,6 +15,24 @@ SET(CML_VERSION_STRING
 
 # Systools version number:
 MESSAGE(STATUS "Building CML ${CML_VERSION}")
+
+# Installation configuration:
+INCLUDE(CMakeExportBuildSettings)
+IF(WIN32)
+
+  # The paths relative to the installation path into which libraries and
+  # headers should be installed for Windows builds (there are currently no
+  # libraries to install):
+  SET(CML_LIBARARY_PATH)
+  SET(CML_HEADER_PATH)
+ELSE(WIN32)
+
+  # The paths relative to the installation path into which libraries and
+  # headers should be installed for UNIX-like builds (there are currently
+  # no libraries to install):
+  SET(CML_LIBARARY_PATH lib)
+  SET(CML_HEADER_PATH include)
+ENDIF(WIN32)
 
 # Don't build tests by default:
 OPTION(BUILD_TESTS "Build CML tests." OFF)
@@ -42,16 +61,18 @@ CONFIGURE_FILE(
   @ONLY
   )
 
-## Setup and install the config.h header:
-#CONFIGURE_FILE(
-#  ${CMAKE_SOURCE_DIR}/config.h.in
-#  ${CMAKE_BINARY_DIR}/cml/config.h
-#  @ONLY
-#  )
-#INSTALL(
-#  FILES ${CMAKE_BINARY_DIR}/cml/config.h
-#  DESTINATION "${CML_HEADER_PATH}cml"
-#  )
+CMAKE_EXPORT_BUILD_SETTINGS(
+  ${CMAKE_BINARY_DIR}/CMLBuildSettings.cmake)
+INSTALL(FILES
+  ${CMAKE_BINARY_DIR}/CMLBuildSettings.cmake
+  DESTINATION /
+  )
+
+INSTALL(FILES
+  ${CMAKE_BINARY_DIR}/UseCML.cmake
+  ${CMAKE_BINARY_DIR}/CMLConfig.cmake
+  DESTINATION /
+  )
 
 # Setup CPack:
 IF(WIN32 AND NOT UNIX)

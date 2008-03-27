@@ -31,11 +31,10 @@ ENDIF(CML_DIR)
 SET(CML_BUILD_TYPE "@CMAKE_BUILD_TYPE@")
 
 # File included from CMakeLists.txt to setup CML:
-SET(CML_USE_FILE "${CML_LIBRARY_DIR}/@CML_USE_FILE@")
+SET(CML_USE_FILE "${CML_LIBRARY_DIR}/UseCML.cmake")
 
 # File containing the original CML build configuration:
-SET(CML_BUILD_SETTINGS_FILE
-  "${CML_DIR}/@CML_BUILD_SETTINGS_FILE@")
+SET(CML_BUILD_SETTINGS_FILE "${CML_DIR}/CMLBuildSettings.cmake")
 
 # Setup variables for external builds against CML:
 SET(CML_HEADER_PATH "${CML_HEADER_DIR}")
