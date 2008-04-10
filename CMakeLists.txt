@@ -19,8 +19,10 @@ MESSAGE(STATUS "Building CML ${CML_RELEASE_VERSION}")
 
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 
+# XXX Importing build settings for a header-only library leads to annoying
+# "Setting CML_BUILD_TYPE to T" warnings:
 # Installation configuration:
-INCLUDE(CMakeExportBuildSettings)
+#INCLUDE(CMakeExportBuildSettings)
 IF(WIN32)
 
   # The paths relative to the installation path into which libraries and
@@ -64,12 +66,14 @@ CONFIGURE_FILE(
   @ONLY
   )
 
-CMAKE_EXPORT_BUILD_SETTINGS(
-  ${CMAKE_BINARY_DIR}/CMLBuildSettings.cmake)
-INSTALL(FILES
-  ${CMAKE_BINARY_DIR}/CMLBuildSettings.cmake
-  DESTINATION .
-  )
+# XXX Importing build settings for a header-only library leads to annoying
+# "Setting CML_BUILD_TYPE to T" warnings:
+# CMAKE_EXPORT_BUILD_SETTINGS(
+#   ${CMAKE_BINARY_DIR}/CMLBuildSettings.cmake)
+# INSTALL(FILES
+#   ${CMAKE_BINARY_DIR}/CMLBuildSettings.cmake
+#   DESTINATION .
+#   )
 
 INSTALL(FILES
   ${CMAKE_BINARY_DIR}/UseCML.cmake

@@ -33,8 +33,10 @@ SET(CML_BUILD_TYPE "@CMAKE_BUILD_TYPE@")
 # File included from CMakeLists.txt to setup CML:
 SET(CML_USE_FILE "${CML_LIBRARY_DIR}/UseCML.cmake")
 
+# XXX Importing build settings for a header-only library leads to annoying
+# "Setting CML_BUILD_TYPE to T" warnings:
 # File containing the original CML build configuration:
-SET(CML_BUILD_SETTINGS_FILE "${CML_DIR}/CMLBuildSettings.cmake")
+# SET(CML_BUILD_SETTINGS_FILE "${CML_DIR}/CMLBuildSettings.cmake")
 
 # Setup variables for external builds against CML:
 SET(CML_HEADER_PATH "${CML_HEADER_DIR}")
