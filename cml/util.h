@@ -34,7 +34,7 @@ T clamp(T value, T min, T max) {
 /** Test input value for inclusion in [min, max]. */
 template < typename T >
 bool in_range(T value, T min, T max) {
-    return value >= min && value <= max;
+    return !(value < min) && !(value > max);
 }
 
 /** Map input value from [min1, max1] to [min2, max2]. */
@@ -63,10 +63,16 @@ T sqrt_safe(T value) {
 }
 
 
-/** For convenient squaring of expressions. */
+/** Square a value. */
 template < typename T >
 T sqr(T value) {
     return value * value;
+}
+
+/** Cube a value. */
+template < typename T >
+T cub(T value) {
+    return value * value * value;
 }
 
 /** Inverse square root. */
