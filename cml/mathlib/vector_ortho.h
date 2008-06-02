@@ -7,7 +7,9 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 
  *-----------------------------------------------------------------------*/
 /** @file
- *  @brief
+ *
+ * Functions for orthonormalizing a set of basis vectors in 3D or 2D, and for
+ * constructing an orthonormal basis given various input parameters.
  */
 
 #ifndef vector_ortho_h
@@ -16,13 +18,14 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #include <cml/mathlib/vector_misc.h>
 #include <cml/mathlib/misc.h>
 
-/* Functions for orthonormalizing a set of basis vector in 3D or 2D, and for
- * constructing an orthonormal basis given various input parameters.
- */
-
 namespace cml {
 
-/* Orthonormalize 3 basis vectors in R3.
+//////////////////////////////////////////////////////////////////////////////
+// Orthonormalization in 3D and 2D
+//////////////////////////////////////////////////////////////////////////////
+
+
+/** Orthonormalize 3 basis vectors in R3.
  *
  * Called with the default values, this function performs a single Gram-
  * Schmidt step to orthonormalize the input vectors. By default, the direction
@@ -36,11 +39,6 @@ namespace cml {
  * In most cases, the default arguments can be ignored, leaving only the three
  * input vectors.
  */
-
-//////////////////////////////////////////////////////////////////////////////
-// Orthonormalization in 3D and 2D
-//////////////////////////////////////////////////////////////////////////////
-
 template < typename E, class A > void
 orthonormalize(vector<E,A>& v0, vector<E,A>& v1, vector<E,A>& v2,
     size_t stable_axis = 2, size_t num_iter = 0, E s = E(1))
@@ -92,7 +90,7 @@ orthonormalize(vector<E,A>& v0, vector<E,A>& v1, vector<E,A>& v2,
     v2 = v[2];
 }
 
-/* Orthonormalize 2 basis vectors in R2 */
+/** Orthonormalize 2 basis vectors in R2 */
 template < typename E, class A > void
 orthonormalize(vector<E,A>& v0, vector<E,A>& v1,
     size_t stable_axis = 0, size_t num_iter = 0, E s = E(1))
@@ -138,7 +136,7 @@ orthonormalize(vector<E,A>& v0, vector<E,A>& v1,
 // Orthonormal basis construction in 3D and 2D
 //////////////////////////////////////////////////////////////////////////////
 
-/* This version of orthonormal_basis() ultimately does the work for all
+/** This version of orthonormal_basis() ultimately does the work for all
  * orthonormal_basis_*() functions. Given input vectors 'align' and
  * 'reference', and an order 'axis_order_<i><j><k>', it constructs an
  * orthonormal basis such that the i'th basis vector is aligned with (parallel
@@ -146,19 +144,17 @@ orthonormalize(vector<E,A>& v0, vector<E,A>& v1,
  * vector is maximally aligned with 'reference'. The k'th basis vector is
  * chosen such that the basis has a determinant of +1.
  *
- * Note that the algorithm fails when 'align' is nearly parallel to
+ * @note The algorithm fails when 'align' is nearly parallel to
  * 'reference'; this should be checked for and handled externally if it's a
  * case that may occur.
- */
-
-/* Note: This is an example of the 'non-const argument modification
+ *
+ * @internal This is an example of the 'non-const argument modification
  * invalidates expression' gotcha. If x, y or z were to be assigned to before
  * we were 'done' with align and reference, and if one of them were the same
  * object as align or reference, then the algorithm could fail. As is the
  * basis vectors are assigned at the end of the function from a temporary
  * array, so all is well.
  */
-
 template < class VecT_1, class VecT_2, typename E, class A > void
 orthonormal_basis(
     const VecT_1& align,
@@ -193,7 +189,7 @@ orthonormal_basis(
     z = axis[2];
 }
 
-/* This version of orthonormal_basis() constructs in arbitrary basis given a
+/** This version of orthonormal_basis() constructs in arbitrary basis given a
  * vector with which to align the i'th basis vector. To avoid the failure
  * case, the reference vector is always chosen so as to not be parallel to
  * 'align'. This means the algorithm will always generate a valid basis, which
@@ -201,7 +197,6 @@ orthonormal_basis(
  * basis will likely 'pop' as the alignment vector changes, and so may not be
  * suitable for billboarding or other similar applications.
  */
-
 template < class VecT, typename E, class A >
 void orthonormal_basis(
     const VecT& align,
@@ -223,7 +218,7 @@ void orthonormal_basis(
     );
 }
 
-/* orthonormal_basis_axial() generates a basis in which the j'th basis vector
+/** orthonormal_basis_axial() generates a basis in which the j'th basis vector
  * is aligned with 'axis' and the i'th basis vector is maximally aligned (as
  * 'aligned as possible') with 'align'. This can be used for e.g. axial
  * billboarding for, say, trees or beam effects.
@@ -232,11 +227,10 @@ void orthonormal_basis(
  * of orthonormal_basis(), with the parameters adjusted so that the alignment
  * is axial.
  *
- * With this algorithm the failure case is when 'align' and 'axis' are nearly
- * parallel; if this is likely, it should be checked for and handled
- * externally.
+ * @note With this algorithm the failure case is when 'align' and 'axis'
+ * are nearly parallel; if this is likely, it should be checked for and
+ * handled externally.
  */
-
 template < class VecT_1, class VecT_2, typename E, class A >
 void orthonormal_basis_axial(
     const VecT_1& align,
@@ -257,11 +251,11 @@ void orthonormal_basis_axial(
         detail::swap_axis_order(order));
 }
 
-/* orthonormal_basis_viewplane() builds a basis aligned with a viewplane, as
+/** orthonormal_basis_viewplane() builds a basis aligned with a viewplane, as
  * extracted from the input view matrix. The function takes into account the
  * handedness of the input view matrix and orients the basis accordingly.
  *
- * The generated basis will always be valid.
+ * @note The generated basis will always be valid.
  */
 template < class MatT, typename E, class A >
 void orthonormal_basis_viewplane(
@@ -309,7 +303,7 @@ void orthonormal_basis_viewplane_RH(
         view_matrix,x,y,z,right_handed,order);
 }
 
-/* Build a 2D orthonormal basis. */
+/** Build a 2D orthonormal basis. */
 template < class VecT, typename E, class A >
 void orthonormal_basis_2D(
     const VecT& align,
