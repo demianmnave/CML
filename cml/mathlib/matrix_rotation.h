@@ -186,8 +186,11 @@ matrix_rotation_quaternion(matrix<E,A,B,L>& m, const QuatT& q)
  * euler_order_zyx
  * euler_order_zxz
  * euler_order_zyz
+ *
+ * e.g. euler_order_xyz means compute the column-basis rotation matrix
+ * equivalent to R_x * R_y * R_z, where R_i is the rotation matrix above
+ * axis i (the row-basis matrix would be R_z * R_y * R_x).
  */
-
 template < typename E, class A, class B, class L > void
 matrix_rotation_euler(matrix<E,A,B,L>& m, E angle_0, E angle_1, E angle_2,
     EulerOrder order)

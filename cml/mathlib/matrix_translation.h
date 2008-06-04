@@ -104,6 +104,26 @@ matrix_get_translation(const MatT& m)
     );
 }
 
+/** Get the translation of a 3D affine transform */
+template < class MatT > void
+matrix_get_translation(
+    const MatT& m,
+    typename MatT::value_type& t1,
+    typename MatT::value_type& t2,
+    typename MatT::value_type& t3
+    )
+{
+    typedef typename MatT::value_type value_type;
+    typedef vector< value_type, fixed<3> > vector_type;
+
+    /* Checking */
+    detail::CheckMatAffine3D(m);
+    
+    t1 = m.basis_element(3,0);
+    t2 = m.basis_element(3,1);
+    t3 = m.basis_element(3,2);
+}
+
 /** Get the translation of a 2D affine transform */
 template < class MatT > vector< typename MatT::value_type, fixed<2> >
 matrix_get_translation_2D(const MatT& m)
@@ -115,6 +135,24 @@ matrix_get_translation_2D(const MatT& m)
     detail::CheckMatAffine2D(m);
     
     return vector_type(m.basis_element(2,0), m.basis_element(2,1));
+}
+
+/** Get the translation of a 2D affine transform */
+template < class MatT > void
+matrix_get_translation_2D(
+    const MatT& m,
+    typename MatT::value_type& t1,
+    typename MatT::value_type& t2
+    )
+{
+    typedef typename MatT::value_type value_type;
+    typedef vector< value_type, fixed<2> > vector_type;
+
+    /* Checking */
+    detail::CheckMatAffine2D(m);
+    
+    t1 = m.basis_element(2,0);
+    t2 = m.basis_element(2,1);
 }
 
 //////////////////////////////////////////////////////////////////////////////

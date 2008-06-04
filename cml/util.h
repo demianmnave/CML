@@ -17,6 +17,13 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #include <cstdlib>     // For std::rand.
 #include <cml/constants.h>
 
+#if defined(_MSC_VER)
+#pragma push_macro("min")
+#pragma push_macro("max")
+#undef min
+#undef max
+#endif
+
 namespace cml {
 
 /** Sign of input value as double. */
@@ -325,6 +332,11 @@ T fov_to_zoom(T fov) {
 }
 
 } // namespace cml
+
+#if defined(_MSC_VER)
+#pragma pop_macro("min")
+#pragma pop_macro("max")
+#endif
 
 #endif
 
