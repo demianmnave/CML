@@ -124,6 +124,17 @@ class vector< Element, fixed<Size> >
         }
     }
 
+    /** Return a subvector by removing element i.
+     *
+     * @internal This is horribly inefficient...
+     */
+    subvector_type subvector(size_t i) const {
+        subvector_type s;
+        for(size_t m = 0, n = 0; m < this->size(); ++ m)
+            if(m != i) s[n++] = (*this)[m];
+        return s;
+    };
+
 
   public:
 
