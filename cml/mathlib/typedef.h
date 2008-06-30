@@ -98,6 +98,8 @@ typedef quaternion<double,fixed<>,vector_first,negative_cross>
     quaterniond_n;
 typedef quaternion<double,fixed<>,vector_first,positive_cross>
     quaterniond_p;
+typedef quaternion<float> quaternionf;
+typedef quaternion<double> quaterniond;
 
 
 /* dynamically resizable vectors */
