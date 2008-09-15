@@ -108,18 +108,7 @@ extract_frustum_planes(
     planes[5][3] = m.basis_element(3,3) - m.basis_element(3,2);
     
     /* Near:   [03+02, 13+12, 23+22, 33+32] : [02, 12, 22, 32] */
-    
-    if (z_clip == z_clip_neg_one) {       
-        planes[4][0] = m.basis_element(0,3) + m.basis_element(0,2);
-        planes[4][1] = m.basis_element(1,3) + m.basis_element(1,2);
-        planes[4][2] = m.basis_element(2,3) + m.basis_element(2,2);  
-        planes[4][3] = m.basis_element(3,3) + m.basis_element(3,2);
-    } else { // z_clip == z_clip_zero
-        planes[4][0] = m.basis_element(0,2);
-        planes[4][1] = m.basis_element(1,2);
-        planes[4][2] = m.basis_element(2,2);  
-        planes[4][3] = m.basis_element(3,2);
-    }
+    extract_near_frustum_plane(m, planes[4], z_clip);
 
     /* @todo: This will be handled by the plane class */
     if (normalize) {
@@ -133,6 +122,36 @@ extract_frustum_planes(
             planes[i][2] *= invl;
             planes[i][3] *= invl;
         }
+    }
+}
+
+/** Extract the near plane of a frustum given a concatenated modelview and
+ * projection matrix with the given near z-clipping range. The plane is
+ * not normalized.
+ *
+ * @note The plane is in ax+by+cz+d = 0 form.
+ *
+ * @warning The matrix is assumed to be a homogeneous transformation
+ * matrix.
+ */
+template < class MatT, class PlaneT > void
+extract_near_frustum_plane(
+    const MatT& m,
+    PlaneT& plane,
+    ZClip z_clip
+    )
+{
+    /* Near:   [03+02, 13+12, 23+22, 33+32] : [02, 12, 22, 32] */
+    if (z_clip == z_clip_neg_one) {       
+        plane[0] = m.basis_element(0,3) + m.basis_element(0,2);
+        plane[1] = m.basis_element(1,3) + m.basis_element(1,2);
+        plane[2] = m.basis_element(2,3) + m.basis_element(2,2);  
+        plane[3] = m.basis_element(3,3) + m.basis_element(3,2);
+    } else { // z_clip == z_clip_zero
+        plane[0] = m.basis_element(0,2);
+        plane[1] = m.basis_element(1,2);
+        plane[2] = m.basis_element(2,2);  
+        plane[3] = m.basis_element(3,2);
     }
 }
 
