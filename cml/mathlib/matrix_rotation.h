@@ -248,6 +248,98 @@ matrix_rotation_euler(matrix<E,A,B,L>& m, E angle_0, E angle_1, E angle_2,
     }
 }
 
+/** Build a matrix of derivatives of Euler angles about the specified axis.
+ *
+ * The rotation derivatives are applied about the cardinal axes in the
+ * order specified by the 'order' argument, where 'order' is one of the
+ * following enumerants:
+ *
+ * euler_order_xyz
+ * euler_order_xzy
+ * euler_order_yzx
+ * euler_order_yxz
+ * euler_order_zxy
+ * euler_order_zyx
+ *
+ * e.g. euler_order_xyz means compute the column-basis rotation matrix
+ * equivalent to R_x * R_y * R_z, where R_i is the rotation matrix above
+ * axis i (the row-basis matrix would be R_z * R_y * R_x).
+ *
+ * The derivative is taken with respect to the specified 'axis', which is
+ * the position of the axis in the triple; e.g. if order = euler_order_xyz,
+ * then axis = 0 would mean take the derivative with respect to x.  Note
+ * that repeated axes are not currently supported.
+ */
+template < typename E, class A, class B, class L > void
+matrix_rotation_euler_derivatives(
+    matrix<E,A,B,L>& m, int axis, E angle_0, E angle_1, E angle_2,
+    EulerOrder order)
+{
+    typedef matrix<E,A,B,L> matrix_type;
+    typedef typename matrix_type::value_type value_type;
+
+    /* Checking */
+    detail::CheckMatLinear3D(m);
+
+    identity_transform(m);
+    
+    size_t i, j, k;
+    bool odd, repeat;
+    detail::unpack_euler_order(order, i, j, k, odd, repeat);
+    if(repeat) throw std::invalid_argument(
+	"matrix_rotation_euler_derivatives does not support repeated axes");
+
+    if (odd) {
+        angle_0 = -angle_0;
+        angle_1 = -angle_1;
+        angle_2 = -angle_2;
+    }
+
+    value_type s0 = std::sin(angle_0);
+    value_type c0 = std::cos(angle_0);
+    value_type s1 = std::sin(angle_1);
+    value_type c1 = std::cos(angle_1);
+    value_type s2 = std::sin(angle_2);
+    value_type c2 = std::cos(angle_2);
+    
+    value_type s0s2 = s0 * s2;
+    value_type s0c2 = s0 * c2;
+    value_type c0s2 = c0 * s2;
+    value_type c0c2 = c0 * c2;
+
+    if(axis == 0) {
+      m.set_basis_element(i,i, 0.              );
+      m.set_basis_element(i,j, 0.              );
+      m.set_basis_element(i,k, 0.              );
+      m.set_basis_element(j,i, s1 * c0*c2 + s0*s2);
+      m.set_basis_element(j,j, s1 * c0*s2 - s0*c2);
+      m.set_basis_element(j,k, c0 * c1         );
+      m.set_basis_element(k,i,-s1 * s0*c2 + c0*s2);
+      m.set_basis_element(k,j,-s1 * s0*s2 - c0*c2);
+      m.set_basis_element(k,k,-s0 * c1         );
+    } else if(axis == 1) {
+      m.set_basis_element(i,i,-s1 * c2         );
+      m.set_basis_element(i,j,-s1 * s2         );
+      m.set_basis_element(i,k,-c1              );
+      m.set_basis_element(j,i, c1 * s0*c2      );
+      m.set_basis_element(j,j, c1 * s0*s2      );
+      m.set_basis_element(j,k,-s0 * s1         );
+      m.set_basis_element(k,i, c1 * c0*c2      );
+      m.set_basis_element(k,j, c1 * c0*s2      );
+      m.set_basis_element(k,k,-c0 * s1         );
+    } else if(axis == 2) {
+      m.set_basis_element(i,i,-c1 * s2         );
+      m.set_basis_element(i,j, c1 * c2         );
+      m.set_basis_element(i,k, 0.              );
+      m.set_basis_element(j,i,-s1 * s0*s2 - c0*c2);
+      m.set_basis_element(j,j, s1 * s0*c2 - c0*s2);
+      m.set_basis_element(j,k, 0.              );
+      m.set_basis_element(k,i,-s1 * c0*s2 + s0*c2);
+      m.set_basis_element(k,j, s1 * c0*c2 + s0*s2);
+      m.set_basis_element(k,k, 0.              );
+    }
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // 3D rotation to align with a vector, multiple vectors, or the view plane
 //////////////////////////////////////////////////////////////////////////////
