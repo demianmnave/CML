@@ -81,6 +81,19 @@ INSTALL(FILES
   DESTINATION .
   )
 
+INSTALL(FILES
+  ${CMAKE_SOURCE_DIR}/doc/parameters.txt
+  DESTINATION doc
+  )
+
+INSTALL(FILES
+  ${CMAKE_SOURCE_DIR}/examples/simple.cpp
+  ${CMAKE_SOURCE_DIR}/examples/cml_config.h
+  ${CMAKE_SOURCE_DIR}/examples/makefile
+  ${CMAKE_SOURCE_DIR}/examples/CMakeLists.txt
+  DESTINATION examples
+  )
+
 # Setup CPack:
 IF(WIN32 AND NOT UNIX)
 

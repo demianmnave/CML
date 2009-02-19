@@ -523,6 +523,8 @@ void example18()
     double v1[] = {1.,0.,0.};
     quaternion_type p(1.,v1), q(0., 1., 0., 1.);
     quaternion_type r, s;
+    cout << "p @ " << p.data() << endl;
+    cout << "q @ " << q.data() << endl;
     cout << "p = " << p << endl;
     cout << "q = " << q << endl;
     

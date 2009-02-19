@@ -445,6 +445,13 @@ class quaternion
         return (*this = *this * e);
     }
 
+    /** Return access to the data as a raw pointer. */
+    typename vector_type::pointer data() { return m_q.data(); }
+
+    /** Return access to the data as a const raw pointer. */
+    const typename vector_type::pointer data() const { return m_q.data(); }
+
+
     /* NOTE: Quaternion division no longer supported, but I'm leaving the
        code here for reference (Jesse) */
 
