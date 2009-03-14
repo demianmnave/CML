@@ -1,0 +1,45 @@
+Configurable Math Library
+Changelog
+
+CML version 1.0 20080326
+
+* Macro fixes for Visual Studio 8 and 9.
+
+* Added support for quaternion log() and exp().
+
+* Fixed quaternion slerp() to work transparently with quaternion expressions.
+
+* Fixed quaternion_rotation_difference() to work transparently with
+  quaternion expressions.
+
+* Fixed line endings and made sure files have trailing newlines.
+
+* Added inverse determinant optimization.
+
+* Added integer-based vector and matrix types.
+
+* Removed support for quaternion division.
+
+* Fixed header include order for GCC4.
+
+* Replaced switch-case in QuaternionMulOp::operator[] with a temporary
+  computed in the constructor.
+
+* Changed multiplication mechanism to remove extra multiplications by
+ 'scale' constant
+
+* Added six 'matrix decomposition' functions
+
+* Added "cml::" prefix to a number of free-function calls from vector<> and
+  matrix<> methods that VS8 incorrectly tries to match with methods in
+  those classes having the same names as (but different arguments from) the
+  free functions.
+
+* Added 'tolerance' argument to quaternion_to_euler() function
+
+
+* Added PLANE_ prefix to enums to avoid symbol conflict with Windows macros
+  LEFT and RIGHT
+
+* Fixed bug in ScalarPromote code; now implements the C promotion rules
+  (see test/integer_vectors.cpp).
