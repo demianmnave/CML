@@ -2,7 +2,7 @@
 /* A config file is generally the way to define configuration macros.  This
  * should be done automatically, though, not by the user:
  */
-#define CML_NO_DEFAULT_EXPR_TRAITS
+//#define CML_NO_DEFAULT_EXPR_TRAITS
 #define CML_VECTOR_UNROLL_LIMIT 25
 #define CML_VECTOR_DOT_UNROLL_LIMIT 25
 #define CML_NO_2D_UNROLLER

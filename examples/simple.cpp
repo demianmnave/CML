@@ -796,6 +796,35 @@ void example26()
     cout << "p *= (p+q) = " << p << endl;
 }
 
+void example27()
+{
+    cout << std::endl << "Example27:" << endl;
+
+    /* Shorthand: */
+    typedef unsigned long long ULL;
+
+    /* 3-space matrix, fixed length, unsigned long-long coordinates: */
+    typedef cml::matrix< ULL, fixed<3,3> > matrix_ull3;
+
+    matrix_ull3 A(
+            1, 0, 0,
+            0, 1, 0,
+            0, 0, 1
+            );
+    cout << "A:\n" << A << endl;
+
+    cml::vector3d x(1., 0., 1.);
+    cml::vector3d y = A*x;
+
+    cml::vector< ULL, fixed<3> > x2(1, 2, 3);
+    matrix_ull3 B = outer(x2,x2);
+
+    cout << "B:\n" << B << endl;
+
+    A = 2*B;
+    cout << "A = 2*B =\n" << A << endl;
+}
+
 int main()
 {
     example1();
@@ -826,8 +855,10 @@ int main()
     example24();
     example25();
     example26();
+    example27();
     return 0;
 }
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp
+

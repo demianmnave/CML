@@ -80,6 +80,36 @@ template<> struct same_type<any_type,any_type> {
     enum { is_true = true, is_false = false };
 };
 
+/** Remove a reference qualifier from a type. */
+template<typename T> struct remove_reference {
+    template<typename Q, typename Dummy> struct helper {
+        typedef Q type;
+    };
+
+    template<typename Q> struct helper<Q&, void> {
+        typedef Q type;
+    };
+
+    template<typename Q> struct helper<const Q&, void> {
+        typedef const Q type;
+    };
+
+    typedef typename helper<T,void>::type type;
+};
+
+/** Remove a const qualifier from a type. */
+template<typename T> struct remove_const {
+    template<typename Q, typename Dummy> struct helper {
+        typedef Q type;
+    };
+
+    template<typename Q> struct helper<const Q, void> {
+        typedef Q type;
+    };
+
+    typedef typename helper<T,void>::type type;
+};
+
 } // namespace cml
 
 #endif

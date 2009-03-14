@@ -43,3 +43,12 @@ CML version 1.0 20080326
 
 * Fixed bug in ScalarPromote code; now implements the C promotion rules
   (see test/integer_vectors.cpp).
+
+
+CML version 1.0 20090314
+
+* Replaced ScalarPromote<> with more robust code from
+http://ubiety.uwaterloo.ca/~tveldhui/papers/techniques/techniques01.html
+
+* Fixed a bug in MatrixPromote<> due to a dependence upon broken behavior
+of the previous ScalarPromote<> code.
