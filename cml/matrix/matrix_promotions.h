@@ -37,7 +37,7 @@ namespace et {
 template<typename LeftT, typename RightT> struct MatrixPromote
 {
     /* Default matrix type promotion template. */
-    template<typename LeftT, typename RightT> struct MatrixPromoteHelper;
+    template<typename M1, typename M2> struct MatrixPromoteHelper;
 
     /** Type promotion for two matrix types.
      *

@@ -94,8 +94,8 @@ struct promote_trait {
     // True if T1 is higher ranked
     enum {
       T1IsBetter =
-        precision_trait<T1>::precisionRank >
-          precision_trait<T2>::precisionRank,
+        (int) precision_trait<T1>::precisionRank >
+          (int) precision_trait<T2>::precisionRank,
 
     // True if we know ranks for both T1 and T2
       knowBothRanks =
