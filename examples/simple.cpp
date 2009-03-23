@@ -17,6 +17,13 @@ using std::cout;
 using std::endl;
 using std::sqrt;
 
+void q()
+{
+using namespace cml;
+typedef matrix<double, fixed<4,4> > Matrix;
+    Matrix a ;
+}
+
 void example1()
 {
     cout << std::endl << "Example1:" << endl;
@@ -104,12 +111,15 @@ void example4()
     /* 3-space matrix, dynamic size, double coordinates: */
     typedef cml::matrix<double, dynamic<>, col_basis> matrix_d;
 
-    matrix_d3 A, C;
+    matrix_d3 A;
     matrix_d B(
             1.0, 0.0, 1.0,
             0.0, 1.0, 0.0,
             0.0, 0.0, 1.0
             );
+    matrix_d C(3,3);
+    C.zero();
+    cout << "  C is " << C.rows() << "x" << C.cols() << endl;
 
     A(0,0) = 1.0; A(0,1) = 0.0; A(0,2) = 0.0;
     A(1,0) = 0.0; A(1,1) = 1.0; A(1,2) = 0.0;
@@ -118,7 +128,7 @@ void example4()
     cout << "  A = " << A << endl;
     cout << "  B = " << B << endl;
 
-    C = T(A+B);
+    C = transpose(A+B);
     cout << "  C(0,0) = " << C(0,0) << endl;
 
     A = identity(C);

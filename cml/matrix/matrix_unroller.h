@@ -194,11 +194,18 @@ class MatrixAssignmentUnroller
 
   private:
     /* XXX Blah, a temp. hack to fix the auto-resizing stuff below. */
-    matrix_size hack_actual_size(const SrcT& /*src*/, scalar_result_tag) {
-        return matrix_size(1,1);
+    matrix_size hack_actual_size(
+        matrix_type& dest, const SrcT& /*src*/, scalar_result_tag
+        )
+    {
+        typedef ExprTraits<matrix_type> dest_traits;
+        return dest_traits().size(dest);
     }
 
-    matrix_size hack_actual_size(const SrcT& src, matrix_result_tag) {
+    matrix_size hack_actual_size(
+        matrix_type& /*dest*/, const SrcT& src, matrix_result_tag
+        )
+    {
         typedef ExprTraits<SrcT> src_traits;
         return src_traits().size(src);
     }
@@ -209,7 +216,7 @@ class MatrixAssignmentUnroller
 #if defined(CML_AUTOMATIC_MATRIX_RESIZE_ON_ASSIGNMENT)
         /* Get the size of src.  This also causes src to check its size: */
         matrix_size N = hack_actual_size(
-                src, typename src_traits::result_tag());
+            dest, src, typename src_traits::result_tag());
 
         /* Set the destination matrix's size: */
         dest.resize(N.first,N.second);
@@ -224,7 +231,8 @@ class MatrixAssignmentUnroller
     {
         return CheckedSize(dest,src,dynamic_size_tag());
     }
-    /* XXX Blah, a temp. hack to fix the auto-resizing stuff below. */
+
+
   public:
 
 
