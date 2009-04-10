@@ -260,6 +260,30 @@ T length(T x, T y, T z) {
     return std::sqrt(length_squared(x,y,z));
 }
 
+/** Index of maximum of 2 values. */
+template < typename T >
+size_t index_of_max(T a, T b) {
+    return a > b ? 0 : 1;
+}
+
+/** Index of maximum of 2 values by magnitude. */
+template < typename T >
+size_t index_of_max_abs(T a, T b) {
+    return index_of_max(std::fabs(a),std::fabs(b));
+}
+
+/** Index of minimum of 2 values. */
+template < typename T >
+size_t index_of_min(T a, T b) {
+    return a < b ? 0 : 1;
+}
+
+/** Index of minimum of 2 values by magnitude. */
+template < typename T >
+size_t index_of_min_abs(T a, T b) {
+    return index_of_min(std::fabs(a),std::fabs(b));
+}
+
 /** Index of maximum of 3 values. */
 template < typename T >
 size_t index_of_max(T a, T b, T c) {

@@ -205,6 +205,16 @@ class matrix<Element,dynamic<Alloc>,BasisOrient,Layout>
         set_basis_element(i,j,s,basis_orient());
     }
 
+    /** Set the matrix row from the given vector. */
+    void set_row(size_t i, const row_vector_type& row) {
+      for(size_t j = 0; j < this->cols(); ++ j) (*this)(i,j) = row[j];
+    }
+
+    /** Set the matrix column from the given vector. */
+    void set_col(size_t j, const col_vector_type& col) {
+      for(size_t i = 0; i < this->rows(); ++ i) (*this)(i,j) = col[i];
+    }
+
 
   public:
 
