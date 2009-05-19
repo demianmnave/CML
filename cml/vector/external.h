@@ -42,6 +42,9 @@ class vector< Element, external<Size> >
     /* Shorthand for the type of this vector: */
     typedef vector<Element,generator_type> vector_type;
 
+    /* The vector coordinate type: */
+    typedef Element coordinate_type;
+
     /* For integration into the expression template code: */
     typedef vector_type expr_type;
 
@@ -72,6 +75,12 @@ class vector< Element, external<Size> >
 
     /* For matching by assignability: */
     typedef cml::et::assignable_tag assignable_tag;
+
+
+  public:
+
+    /** Static constant containing the vector's space dimension. */
+    enum { dimension = Size };
 
 
   public:

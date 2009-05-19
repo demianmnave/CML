@@ -37,6 +37,9 @@ class vector< Element, dynamic<Alloc> >
     /* Shorthand for the type of this vector: */
     typedef vector<Element,generator_type> vector_type;
 
+    /* The vector coordinate type: */
+    typedef Element coordinate_type;
+
     /* For integration into the expression template code: */
     typedef vector_type expr_type;
 
