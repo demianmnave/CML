@@ -59,7 +59,6 @@ void example2()
     typedef cml::vector< double, dynamic<> > vector_d;
 
     vector_d u(0.,0.,1.);
-#if 0
     vector_d v(3);
 
     v[0] = 1.; v[1] = 0.; v[2] = 0.;
@@ -69,7 +68,6 @@ void example2()
     cout << "  dot(u+v,v) = " << dot(u+v,v) << endl;
     cout << "  cos(u,v) = " << dot(u,v)/sqrt(dot(u,u)*dot(v,v))
         << endl;
-#endif
 }
 
 void example3()
@@ -834,6 +832,15 @@ void example27()
     A = 2*B;
     cout << "A = 2*B =\n" << A << endl;
 }
+
+void example28()
+{
+    float degf = cml::deg(1.f);
+    float radf = cml::rad(degf);
+    double degd = cml::deg(1.);
+    double radd = cml::rad(degd);
+}
+
 
 int main()
 {

@@ -37,19 +37,21 @@ namespace cml {
  */
 template<typename Float>
 struct constants {
-    static Float pi()           { return M_PI;                             }
-    static Float two_pi()       { return 2.*M_PI;                          }
-    static Float inv_pi()       { return 1./M_PI;                          }
-    static Float inv_two_pi()   { return 1./(2.*M_PI);                     }
-    static Float pi_over_2()    { return M_PI/2.;                          }
-    static Float pi_over_4()    { return M_PI/4.;                          }
-    static Float deg_per_rad()  { return 180./M_PI;                        }
-    static Float rad_per_deg()  { return M_PI/180.;                        }
-    static Float sqrt_2()       { return M_SQRT2;                          }
-    static Float sqrt_3()       { return 1.732050807568877293527446341505; }
-    static Float sqrt_5()       { return 2.236067977499789696409173668731; }
-    static Float sqrt_6()       { return 2.449489742783178098197284074705; }
-    static Float e()            { return M_E;                              }
+    static Float pi()          { return Float(M_PI); }
+    static Float two_pi()      { return Float(2.*M_PI); }
+    static Float inv_pi()      { return Float(1./M_PI); }
+    static Float inv_two_pi()  { return Float(1./(2.*M_PI)); }
+    static Float pi_over_2()   { return Float(M_PI/2.); }
+    static Float pi_over_4()   { return Float(M_PI/4.); }
+    static Float deg_per_rad() { return Float(180./M_PI); }
+    static Float rad_per_deg() { return Float(M_PI/180.); }
+
+    static Float sqrt_2() { return Float(M_SQRT2); }
+    static Float sqrt_3() { return Float(1.732050807568877293527446341505); }
+    static Float sqrt_5() { return Float(2.236067977499789696409173668731); }
+    static Float sqrt_6() { return Float(2.449489742783178098197284074705); }
+
+    static Float e() { return Float(M_E); }
 };
 
 #else

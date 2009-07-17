@@ -450,6 +450,8 @@ class matrix<Element,external<-1,-1>,BasisOrient,Layout>
      * responsible for doing any necessary memory management.
      *
      * @param ptr specify the external pointer.
+     * @param rows the number of rows in the C array.
+     * @param cols the number of columns in the C array.
      *
      * @throws same as the ArrayType constructor.
      */

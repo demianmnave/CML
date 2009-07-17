@@ -138,7 +138,7 @@ orthonormalize(vector<E,A>& v0, vector<E,A>& v1,
 
 /** This version of orthonormal_basis() ultimately does the work for all
  * orthonormal_basis_*() functions. Given input vectors 'align' and
- * 'reference', and an order 'axis_order_<i><j><k>', it constructs an
+ * 'reference', and an order 'axis_order_\<i\>\<j\>\<k\>', it constructs an
  * orthonormal basis such that the i'th basis vector is aligned with (parallel
  * to and pointing in the same direction as) 'align', and the j'th basis
  * vector is maximally aligned with 'reference'. The k'th basis vector is
