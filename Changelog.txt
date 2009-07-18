@@ -1,6 +1,35 @@
 Configurable Math Library
 Changelog
 
+CML version 1.0.1 20090717
+
+* Minor documentation updates, and a fix for "warning C4305: 'return'
+  : truncation from 'double' to 'float'".  Added an "example" function to
+  simple.cpp to test the change.
+
+* Added the "coordinate_type" typedef to get access to the vector's Element
+  (coordinate) type using a more descriptive name than "value_type".
+
+* Added index_of_max() and index_of_max_abs() for 2 arguments.
+
+* Added matrix<>::set_row() and matrix<>::get_row().
+
+* Fixed a bug in MatrixAssignmentUnroller that caused matrix<>::zero() to
+  resize a matrix to 1x1.
+
+* Fixed MatrixPromoteHelper<> to eliminate shadowed template parameter.
+  Also modified ScalarPromote<> to avoid GCC warnings.
+
+
+CML version 1.0 20090314
+
+* Replaced ScalarPromote<> with more robust code from
+http://ubiety.uwaterloo.ca/~tveldhui/papers/techniques/techniques01.html
+
+* Fixed a bug in MatrixPromote<> due to a dependence upon broken behavior
+of the previous ScalarPromote<> code.
+
+
 CML version 1.0 20080326
 
 * Macro fixes for Visual Studio 8 and 9.
@@ -37,18 +66,8 @@ CML version 1.0 20080326
 
 * Added 'tolerance' argument to quaternion_to_euler() function
 
-
 * Added PLANE_ prefix to enums to avoid symbol conflict with Windows macros
   LEFT and RIGHT
 
 * Fixed bug in ScalarPromote code; now implements the C promotion rules
   (see test/integer_vectors.cpp).
-
-
-CML version 1.0 20090314
-
-* Replaced ScalarPromote<> with more robust code from
-http://ubiety.uwaterloo.ca/~tveldhui/papers/techniques/techniques01.html
-
-* Fixed a bug in MatrixPromote<> due to a dependence upon broken behavior
-of the previous ScalarPromote<> code.
