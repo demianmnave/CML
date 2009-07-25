@@ -16,19 +16,7 @@ inline void timed1(
         )
 {
     for(size_t i = 0; i < n_iter; ++i) {
-        /* XXX Note: this is slow for external vectors (GCC4): */
         v = v+v1+v2+v3;
-
-        /* XXX Note: this is fast for external vectors (GCC4): */
-        //v += v1+v2+v3;
-        //v += v1+v2;
-        //v = v+v1+v2;
-        //v = v+v1+v2+2.*v3;
-        //v = v+v1;
-        //v = v+v1+v2+v3;
-        //v += v1+v2+v3;
-        //v += v3*dot(v2,(v1*dot(v1,v2)));
-        //v = v+v1*dot(T(v2),v3);
     }
 }
 
