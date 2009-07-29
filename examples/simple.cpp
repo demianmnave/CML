@@ -24,6 +24,28 @@ typedef matrix<double, fixed<4,4> > Matrix;
     Matrix a ;
 }
 
+void q2()
+{
+using namespace cml;
+typedef matrix<const float, external<4,4> > Matrix;
+const float* a;
+    Matrix A(a);
+    Matrix B(a);
+typedef matrix<float, fixed<4,4> > Matrix2;
+    Matrix2 C = A*B;
+}
+
+void q3()
+{
+using namespace cml;
+typedef vector<const float, external<4> > Vector;
+const float* a;
+    Vector A(a);
+    Vector B(a);
+typedef vector<float, fixed<4> > Vector2;
+    Vector2 C = A+B;
+}
+
 void example1()
 {
     cout << std::endl << "Example1:" << endl;

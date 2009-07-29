@@ -66,7 +66,8 @@ class dynamic_2D
     typedef twod_tag dimension_tag;
 
     /* To simplify the matrix transpose operator: */
-    typedef dynamic_2D<Element,Layout,Alloc> transposed_type;
+    typedef dynamic_2D<typename cml::remove_const<Element>::type,
+            Layout,Alloc> transposed_type;
 
     /* To simplify the matrix row and column operators: */
     typedef dynamic_1D<Element,Alloc> row_array_type;

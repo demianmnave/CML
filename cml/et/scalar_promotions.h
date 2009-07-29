@@ -87,9 +87,14 @@ struct promote2<T1,T2,0> {
 
 template<class T1_orig, class T2_orig>
 struct promote_trait {
+
+    // Need to remove const-ness:
+    typedef typename cml::remove_const<T1_orig>::type T1_non_const;
+    typedef typename cml::remove_const<T2_orig>::type T2_non_const;
+
     // Handle promotion of small integers to int/unsigned int
-    typedef typename autopromote_trait<T1_orig>::T_numtype T1;
-    typedef typename autopromote_trait<T2_orig>::T_numtype T2;
+    typedef typename autopromote_trait<T1_non_const>::T_numtype T1;
+    typedef typename autopromote_trait<T2_non_const>::T_numtype T2;
 
     // True if T1 is higher ranked
     enum {

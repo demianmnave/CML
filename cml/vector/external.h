@@ -49,7 +49,8 @@ class vector< Element, external<Size> >
     typedef vector_type expr_type;
 
     /* For integration into the expression template code: */
-    typedef vector< Element,fixed<Size> > temporary_type;
+    typedef vector<typename cml::remove_const<Element>::type,
+            fixed<Size> > temporary_type;
     typedef typename temporary_type::subvector_type subvector_type;
     /* Note: this ensures that an external vector is copied into the proper
      * temporary; external<> temporaries are not allowed.
@@ -188,7 +189,8 @@ class vector< Element, external<> >
     typedef vector_type expr_type;
 
     /* For integration into the expression template code: */
-    typedef vector< Element, dynamic<> > temporary_type;
+    typedef vector<typename cml::remove_const<Element>::type,
+            dynamic<> > temporary_type;
     /* Note: this ensures that an external vector is copied into the proper
      * temporary; external<> temporaries are not allowed.
      */

@@ -71,10 +71,9 @@ class matrix<Element,fixed<Rows,Cols>,BasisOrient,Layout>
 
     /* To simplify the matrix transpose operator: */
     typedef matrix<
-        Element,
+        typename cml::remove_const<Element>::type,
         typename array_type::transposed_type::generator_type,
-        BasisOrient,
-        Layout
+        BasisOrient, Layout
     > transposed_type;
 
     /* To simplify the matrix row and column operators: */

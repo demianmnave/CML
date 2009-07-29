@@ -100,7 +100,8 @@ class fixed_2D
     typedef twod_tag dimension_tag;
 
     /* To simplify the matrix transpose operator: */
-    typedef fixed_2D<Element,Cols,Rows,Layout> transposed_type;
+    typedef fixed_2D<typename cml::remove_const<Element>::type,
+            Cols,Rows,Layout> transposed_type;
 
     /* To simplify the matrix row and column operators: */
     typedef fixed_1D<Element,Rows> row_array_type;
