@@ -83,32 +83,6 @@ template<typename Find
 , typename T14 = NilCase, typename R14 = void
 , typename T15 = NilCase, typename R15 = void
 , typename T16 = NilCase, typename R16 = void
-#if !defined(_MSC_VER)
-, typename T17 = NilCase, typename R17 = void
-, typename T18 = NilCase, typename R18 = void
-, typename T19 = NilCase, typename R19 = void
-, typename T20 = NilCase, typename R20 = void
-, typename T21 = NilCase, typename R21 = void
-, typename T22 = NilCase, typename R22 = void
-, typename T23 = NilCase, typename R23 = void
-, typename T24 = NilCase, typename R24 = void
-, typename T25 = NilCase, typename R25 = void
-, typename T26 = NilCase, typename R26 = void
-, typename T27 = NilCase, typename R27 = void
-, typename T28 = NilCase, typename R28 = void
-, typename T29 = NilCase, typename R29 = void
-, typename T30 = NilCase, typename R30 = void
-, typename T31 = NilCase, typename R31 = void
-, typename T32 = NilCase, typename R32 = void
-, typename T33 = NilCase, typename R33 = void
-, typename T34 = NilCase, typename R34 = void
-, typename T35 = NilCase, typename R35 = void
-, typename T36 = NilCase, typename R36 = void
-, typename T37 = NilCase, typename R37 = void
-, typename T38 = NilCase, typename R38 = void
-, typename T39 = NilCase, typename R39 = void
-, typename T40 = NilCase, typename R40 = void
-#endif
 > struct select_switch
 {
     typedef typename
@@ -128,38 +102,7 @@ template<typename Find
         , meta::select_case< T14,R14
         , meta::select_case< T15,R15
         , meta::select_case< T16,R16
-#if !defined(_MSC_VER)
-        , meta::select_case< T17,R17
-        , meta::select_case< T18,R18
-        , meta::select_case< T19,R19
-        , meta::select_case< T20,R20
-        , meta::select_case< T21,R21
-        , meta::select_case< T22,R22
-        , meta::select_case< T23,R23
-        , meta::select_case< T24,R24
-        , meta::select_case< T25,R25
-        , meta::select_case< T26,R26
-        , meta::select_case< T27,R27
-        , meta::select_case< T28,R28
-        , meta::select_case< T29,R29
-        , meta::select_case< T30,R30
-        , meta::select_case< T31,R31
-        , meta::select_case< T32,R32
-        , meta::select_case< T33,R33
-        , meta::select_case< T34,R34
-        , meta::select_case< T35,R35
-        , meta::select_case< T36,R36
-        , meta::select_case< T37,R37
-        , meta::select_case< T38,R38
-        , meta::select_case< T39,R39
-        , meta::select_case< T40,R40
         , NilCase
-        > > > > > > > > > >     /* 10 */
-        > > > > > > > > > >     /* 10 */
-        > > > >    /* 4 */
-#else
-        , NilCase
-#endif
         > > > > > >     /* 6 */
         > > > > > > > > > >     /* 10 */
         ::template match<Find>::result result;
