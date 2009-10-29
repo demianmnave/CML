@@ -59,10 +59,8 @@ template<typename Element, class ArrayType = fixed<>,
 #include <cml/quaternion/quaternion_functions.h>
 #include <cml/quaternion/quaternion_comparison.h>
 #include <cml/quaternion/inverse.h>
-#include <cml/quaternion/quaternion_print.h>
-
 #include <cml/quaternion/quaternion.h>
-
+#include <cml/quaternion/quaternion_print.h>
 #endif
 
 // -------------------------------------------------------------------------

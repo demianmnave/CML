@@ -48,11 +48,21 @@ operator<<(std::ostream& os, const cml::quaternion<E,AT,vector_first,CT>& q)
 template<typename E, class AT, class OT, typename CT> std::ostream&
 operator<<(std::ostream& os, const cml::quaternion<E,AT,OT,CT>& q)
 {
-    os << "[";
-    for (size_t i = 0; i < 4; ++i) {
-        os << " " << q[i];
-    }
-    os << " ]";
+    typedef typename cml::quaternion<E,AT,OT,CT>::order_type order_type;
+    enum {
+        W = order_type::W,
+        X = order_type::X,
+        Y = order_type::Y,
+        Z = order_type::Z
+    };
+
+    os << "[ "
+      << " " << q[W]
+      << " " << q[X]
+      << " " << q[Y]
+      << " " << q[Z]
+      << " ]";
+
     return os;
 }
 
