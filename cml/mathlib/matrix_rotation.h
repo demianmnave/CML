@@ -281,8 +281,6 @@ matrix_rotation_euler_derivatives(
     /* Checking */
     detail::CheckMatLinear3D(m);
 
-    identity_transform(m);
-    
     size_t i, j, k;
     bool odd, repeat;
     detail::unpack_euler_order(order, i, j, k, odd, repeat);
@@ -950,6 +948,20 @@ void matrix_to_euler(
         angle_1 = -angle_1;
         angle_2 = -angle_2;
     }
+}
+
+/** Convenience function to return a 3D vector containing the Euler angles
+ * in the requested order.
+ */
+template < class MatT, typename Real > vector< Real, fixed<3> >
+matrix_to_euler(
+    const MatT& m,
+    EulerOrder order,
+    Real tolerance = epsilon<Real>::placeholder())
+{
+  Real e0, e1, e2;
+  matrix_to_euler(m, e0, e1, e2, order, tolerance);
+  return vector< Real, fixed<3> >(e0, e1, e2);
 }
 
 /** Convert a 2D rotation matrix to a rotation angle */
