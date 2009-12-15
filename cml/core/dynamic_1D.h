@@ -13,7 +13,7 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #ifndef dynamic_1D_h
 #define dynamic_1D_h
 
-#include <vector>
+#include <memory>
 #include <cml/core/common.h>
 #include <cml/dynamic.h>
 
@@ -37,15 +37,12 @@ class dynamic_1D
     /* Record the generator: */
     typedef dynamic<Alloc> generator_type;
 
-    /* Array implementation: */
-    typedef std::vector<Element,allocator_type> array_impl;
-
     /* Standard: */
-    typedef typename array_impl::value_type value_type;
-    typedef typename array_impl::pointer pointer; 
-    typedef typename array_impl::reference reference; 
-    typedef typename array_impl::const_reference const_reference; 
-    typedef typename array_impl::const_pointer const_pointer; 
+    typedef typename allocator_type::value_type value_type;
+    typedef typename allocator_type::pointer pointer; 
+    typedef typename allocator_type::reference reference; 
+    typedef typename allocator_type::const_reference const_reference; 
+    typedef typename allocator_type::const_pointer const_pointer; 
 
     /* For matching by memory type: */
     typedef dynamic_memory_tag memory_tag;
@@ -69,16 +66,22 @@ class dynamic_1D
   public:
 
     /** Construct a dynamic array with no size. */
-    dynamic_1D() {}
+    dynamic_1D() : m_size(0), m_data(0), m_alloc() {}
 
     /** Construct a dynamic array given the size. */
-    explicit dynamic_1D(size_t size) : m_data(size) {}
+    explicit dynamic_1D(size_t size) : m_size(0), m_data(0), m_alloc() {
+      this->resize(size);
+    }
+
+    ~dynamic_1D() {
+      this->destroy();
+    }
 
 
   public:
 
     /** Return the number of elements in the array. */
-    size_t size() const { return this->m_data.size(); }
+    size_t size() const { return m_size; }
 
     /** Access to the data as a C array.
      *
@@ -87,7 +90,7 @@ class dynamic_1D
      *
      * @note This function does not range-check the argument.
      */
-    reference operator[](size_t i) { return this->m_data[i]; }
+    reference operator[](size_t i) { return m_data[i]; }
 
     /** Const access to the data as a C array.
      *
@@ -96,7 +99,7 @@ class dynamic_1D
      *
      * @note This function does not range-check the argument.
      */
-    const_reference operator[](size_t i) const { return this->m_data[i]; }
+    const_reference operator[](size_t i) const { return m_data[i]; }
 
     /** Return access to the data as a raw pointer. */
     pointer data() { return &m_data[0]; }
@@ -107,16 +110,54 @@ class dynamic_1D
 
   public:
 
-    /** Set the array size to the given value.
+    /** Set the array size to the given value.  The previous contents are
+     * destroyed before reallocating the array.  If s == size(),
+     * nothing happens.
      *
      * @warning This is not guaranteed to preserve the original data.
      */
-    void resize(size_t s) { this->m_data.resize(s); }
+    void resize(size_t s) {
+
+      /* Nothing to do if the size isn't changing: */
+      if(s == m_size) return;
+
+      /* Destroy the current array contents: */
+      this->destroy();
+
+      /* Set the new size if non-zero: */
+      if(s > 0) {
+	m_size = s;
+	m_data = m_alloc.allocate(m_size);
+	for(size_t i = 0; i < m_size; ++ i)
+	  m_alloc.construct(&m_data[i], value_type());
+      }
+    }
 
 
   protected:
 
-    array_impl                  m_data;
+    /** Destroy the current contents of the array. */
+    void destroy() {
+      if(m_data) {
+	for(size_t i = 0; i < m_size; ++ i)
+	  m_alloc.destroy(&m_data[i]);
+	m_alloc.deallocate(m_data, m_size);
+	m_size = 0;
+	m_data = 0;
+      }
+    }
+
+
+  protected:
+
+    /** Current array size (may be 0). */
+    size_t			m_size;
+
+    /** Array data (may be NULL). */
+    value_type*			m_data;
+
+    /** Allocator for the array. */
+    allocator_type		m_alloc;
 };
 
 } // namespace cml

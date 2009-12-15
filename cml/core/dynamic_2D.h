@@ -13,7 +13,7 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #ifndef dynamic_2D_h
 #define dynamic_2D_h
 
-#include <vector>
+#include <memory>
 #include <cml/core/common.h>
 #include <cml/core/dynamic_1D.h>
 #include <cml/dynamic.h>
@@ -40,15 +40,12 @@ class dynamic_2D
     /* Record the generator: */
     typedef dynamic<Alloc> generator_type;
 
-    /* Array implementation: */
-    typedef std::vector<Element,allocator_type> array_impl;
-
     /* Standard: */
-    typedef typename array_impl::value_type value_type;
-    typedef typename array_impl::pointer pointer; 
-    typedef typename array_impl::reference reference; 
-    typedef typename array_impl::const_reference const_reference; 
-    typedef typename array_impl::const_pointer const_pointer; 
+    typedef typename allocator_type::value_type value_type;
+    typedef typename allocator_type::pointer pointer; 
+    typedef typename allocator_type::reference reference; 
+    typedef typename allocator_type::const_reference const_reference; 
+    typedef typename allocator_type::const_pointer const_pointer; 
 
     /* For matching by memory layout: */
     typedef Layout layout;
@@ -77,7 +74,7 @@ class dynamic_2D
   protected:
 
     /** Construct a dynamic array with no size. */
-    dynamic_2D() {}
+    dynamic_2D() : m_rows(0), m_cols(0), m_data(0), m_alloc() {}
 
     /** Construct a dynamic matrix given the dimensions.
      *
@@ -89,7 +86,14 @@ class dynamic_2D
      * @throws only if the allocator throws during an allocation.
      */
     explicit dynamic_2D(size_t rows, size_t cols) 
-        : m_rows(rows), m_cols(cols), m_data(rows*cols) {}
+        : m_rows(0), m_cols(0), m_data(0), m_alloc()
+       	{
+	  this->resize(rows, cols)
+	}
+
+    ~dynamic_2D() {
+      this->destroy();
+    }
 
 
   public:
@@ -115,7 +119,7 @@ class dynamic_2D
      * @returns mutable reference.
      */
     reference operator()(size_t row, size_t col) {
-        return get_element(row, col, layout());
+        return this->get_element(row, col, layout());
     }
 
     /** Access the given element of the matrix.
@@ -125,7 +129,7 @@ class dynamic_2D
      * @returns const reference.
      */
     const_reference operator()(size_t row, size_t col) const {
-        return get_element(row, col, layout());
+        return this->get_element(row, col, layout());
     }
 
     /** Return access to the data as a raw pointer. */
@@ -137,12 +141,29 @@ class dynamic_2D
 
   public:
 
-    /** Resize the array.
+    /** Set the array dimensions.  The previous contents are destroyed
+     * before reallocating the array.  If the number of rows and columns
+     * isn't changing, nothing happens.  Also, if either rows or cols is 0,
+     * the array is cleared.
      *
      * @warning This is not guaranteed to preserve the original data.
      */
     void resize(size_t rows, size_t cols) {
-        m_data.resize(rows*cols); m_rows = rows; m_cols = cols;
+
+      /* Nothing to do if the size isn't changing: */
+      if(rows == m_rows && cols == m_cols) return;
+
+      /* Destroy the current array contents: */
+      this->destroy();
+
+      /* Set the new size if non-zero: */
+      if(rows*cols > 0) {
+	m_rows = rows;
+	m_cols = cols;
+	m_data = m_alloc.allocate(m_rows*m_cols);
+	for(size_t i = 0; i < m_rows*m_cols; ++ i)
+	  m_alloc.construct(&m_data[i], value_type());
+      }
     }
 
 
@@ -167,8 +188,28 @@ class dynamic_2D
 
   protected:
 
+    /** Destroy the current contents of the array. */
+    void destroy() {
+      if(m_data) {
+	for(size_t i = 0; i < m_rows*m_cols; ++ i)
+	  m_alloc.destroy(&m_data[i]);
+	m_alloc.deallocate(m_data, m_rows*m_cols);
+	m_rows = m_cols = 0;
+	m_data = 0;
+      }
+    }
+
+
+  protected:
+
+    /** Current array dimensions (may be 0,0). */
     size_t                      m_rows, m_cols;
-    array_impl                  m_data;
+
+    /** Array data (may be NULL). */
+    value_type*			m_data;
+
+    /** Allocator for the array. */
+    allocator_type		m_alloc;
 };
 
 } // namespace cml
