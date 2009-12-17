@@ -76,19 +76,18 @@ class dynamic_2D
     /** Construct a dynamic array with no size. */
     dynamic_2D() : m_rows(0), m_cols(0), m_data(0), m_alloc() {}
 
-    /** Construct a dynamic matrix given the dimensions.
-     *
-     * This constructor is guaranteed to throw only if the allocator throws.
-     * If the array implementation guarantees that the array data structure is
-     * not modified after an exception, then this constructor is
-     * exception-safe.
-     *
-     * @throws only if the allocator throws during an allocation.
-     */
+    /** Construct a dynamic matrix given the dimensions. */
     explicit dynamic_2D(size_t rows, size_t cols) 
         : m_rows(0), m_cols(0), m_data(0), m_alloc()
        	{
 	  this->resize(rows, cols)
+	}
+
+    /** Copy construct a dynamic matrix. */
+    dynamic_2D(const dynamic_2D& other)
+        : m_rows(0), m_cols(0), m_data(0), m_alloc()
+       	{
+	  this->copy(other)
 	}
 
     ~dynamic_2D() {
@@ -158,11 +157,40 @@ class dynamic_2D
 
       /* Set the new size if non-zero: */
       if(rows*cols > 0) {
+	value_type* data = m_alloc.allocate(rows*cols);
+	for(size_t i = 0; i < rows*cols; ++ i)
+	  m_alloc.construct(&data[i], value_type());
+
+	/* Success, so save the new array and the dimensions: */
 	m_rows = rows;
 	m_cols = cols;
-	m_data = m_alloc.allocate(m_rows*m_cols);
-	for(size_t i = 0; i < m_rows*m_cols; ++ i)
-	  m_alloc.construct(&m_data[i], value_type());
+	m_data = data;
+      }
+    }
+
+    /** Copy the other array.  The previous contents are destroyed before
+     * reallocating the array.  If other == *this, nothing happens.  Also,
+     * if either other.rows() or other.cols() is 0, the array is cleared.
+     */
+    void copy(const dynamic_2D& other) {
+
+      /* Nothing to do if it's the same array: */
+      if(&other == this) return;
+
+      /* Destroy the current array contents: */
+      this->destroy();
+
+      /* Set the new size if non-zero: */
+      size_t rows = other.rows(), cols = other.cols();
+      if(rows*cols > 0) {
+	value_type* data = m_alloc.allocate(rows*cols);
+	for(size_t i = 0; i < rows*cols; ++ i)
+	  m_alloc.construct(&data[i], other[i]);
+
+	/* Success, so save the new array and the dimensions: */
+	m_rows = rows;
+	m_cols = cols;
+	m_data = data;
       }
     }
 

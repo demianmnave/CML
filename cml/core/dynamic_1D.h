@@ -73,6 +73,13 @@ class dynamic_1D
       this->resize(size);
     }
 
+    /** Copy construct a dynamic array. */
+    dynamic_1D(const dynamic_1D& other)
+      : m_size(0), m_data(0), m_alloc()
+    {
+      this->copy(other);
+    }
+
     ~dynamic_1D() {
       this->destroy();
     }
@@ -126,10 +133,37 @@ class dynamic_1D
 
       /* Set the new size if non-zero: */
       if(s > 0) {
+	value_type* data = m_alloc.allocate(s);
+	for(size_t i = 0; i < s; ++ i)
+	  m_alloc.construct(&data[i], value_type());
+
+	/* Success, save s and data: */
 	m_size = s;
-	m_data = m_alloc.allocate(m_size);
-	for(size_t i = 0; i < m_size; ++ i)
-	  m_alloc.construct(&m_data[i], value_type());
+	m_data = data;
+      }
+    }
+
+    /** Copy the source array. The previous contents are destroyed before
+     * reallocating the array.  If other == *this, nothing happens.
+     */
+    void copy(const dynamic_1D& other) {
+
+      /* Nothing to do if it's the same array: */
+      if(&other == this) return;
+
+      /* Destroy the current array contents: */
+      this->destroy();
+
+      /* Set the new size if non-zero: */
+      size_t s = other.size();
+      if(s > 0) {
+	value_type* data = m_alloc.allocate(s);
+	for(size_t i = 0; i < s; ++ i)
+	  m_alloc.construct(&data[i], other[i]);
+
+	/* Success, so save the new array and the size: */
+	m_size = s;
+	m_data = data;
       }
     }
 
