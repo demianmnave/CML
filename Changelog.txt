@@ -1,7 +1,11 @@
 Configurable Math Library
 Changelog
 
-CML version 1.0.2 20100108 (Rev 242)
+CML version 1.0.2 20100108 (Rev 246)
+
+* Added missing <vector> include for std::vector<>.
+
+* Added missing semicolons in cml/core/dynamic_2D.h.
 
 * Added a copy constructor and the copy() method to dynamic_1D and
   dynamic_2D.
