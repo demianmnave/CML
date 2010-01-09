@@ -13,6 +13,7 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #ifndef matrix_inverse_h
 #define matrix_inverse_h
 
+#include <vector>
 #include <cml/matrix/lu.h>
 
 namespace cml {

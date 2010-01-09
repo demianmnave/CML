@@ -80,14 +80,14 @@ class dynamic_2D
     explicit dynamic_2D(size_t rows, size_t cols) 
         : m_rows(0), m_cols(0), m_data(0), m_alloc()
        	{
-	  this->resize(rows, cols)
+	  this->resize(rows, cols);
 	}
 
     /** Copy construct a dynamic matrix. */
     dynamic_2D(const dynamic_2D& other)
         : m_rows(0), m_cols(0), m_data(0), m_alloc()
        	{
-	  this->copy(other)
+	  this->copy(other);
 	}
 
     ~dynamic_2D() {
