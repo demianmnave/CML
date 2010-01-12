@@ -47,6 +47,7 @@ template<typename Element, class ArrayType,
 #include <cml/matrix/matrix_mul.h>
 #include <cml/matvec/matvec_mul.h>
 #include <cml/matrix/matrix_functions.h>
+#include <cml/matrix/matrix_comparison.h>
 #include <cml/matrix/lu.h>
 #include <cml/matrix/inverse.h>
 #include <cml/matrix/determinant.h>
