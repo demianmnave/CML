@@ -47,7 +47,12 @@ class vector< Element, fixed<Size> >
 
     /* For integration into the expression template code: */
     typedef vector_type temporary_type;
+
+    /* The type for a vector in one lower dimension: */
     typedef vector< Element, fixed<Size-1> > subvector_type;
+
+    /* The type for a vector in one higher dimension: */
+    typedef vector< Element, fixed<Size+1> > supervector_type;
 
     /* Standard: */
     typedef typename array_type::value_type value_type;
