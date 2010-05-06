@@ -962,7 +962,7 @@ matrix_to_euler(
 {
   typename MatT::value_type e0, e1, e2;
   matrix_to_euler(m, e0, e1, e2, order, tolerance);
-  return vector< Real, fixed<3> >(e0, e1, e2);
+  return vector< typename MatT::value_type, fixed<3> >(e0, e1, e2);
 }
 
 /** Convert a 2D rotation matrix to a rotation angle */
