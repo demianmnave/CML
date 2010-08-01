@@ -162,7 +162,12 @@ class external_2D
   protected:
 
     /* Declare the data array: */
-    pointer const               m_data;
+    pointer                     m_data;
+
+
+  private:
+
+    external_2D& operator=(const external_2D&);
 };
 
 /** Run-time sized external 2D array.
@@ -292,9 +297,14 @@ class external_2D<Element,-1,-1,Layout>
   protected:
 
     /* Declare the data array: */
-    value_type* const           m_data;
-    const size_t                m_rows;
-    const size_t                m_cols;
+    value_type*                 m_data;
+    size_t                      m_rows;
+    size_t                      m_cols;
+
+
+  private:
+
+    external_2D& operator=(const external_2D&);
 };
 
 } // namespace cml

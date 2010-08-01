@@ -108,13 +108,18 @@ class external_1D
 
   protected:
 
-    pointer const               m_data;
+    pointer                     m_data;
 
 
   private:
 
     /* Initialization without an argument isn't allowed: */
     external_1D();
+
+
+  private:
+
+    external_1D& operator=(const external_1D&);
 };
 
 /** Run-time sized external 1D array.
@@ -198,14 +203,19 @@ class external_1D<Element,-1>
 
   protected:
 
-    pointer const               m_data;
-    const size_t                m_size;
+    pointer                     m_data;
+    size_t                      m_size;
 
 
   private:
 
     /* Initialization without an argument isn't allowed: */
     external_1D();
+
+
+  private:
+
+    external_1D& operator=(const external_1D&);
 };
 
 } // namespace cml

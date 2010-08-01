@@ -294,7 +294,12 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
         typedef size_t size_type;
 
         /* Return the vector size: */
-        size_type size(const LeftT& left, const RightT& right) const {
+#if defined(CML_CHECK_MATVEC_EXPR_SIZES)
+        size_type size(const LeftT& left, const RightT& right) const
+#else
+        size_type size(const LeftT& left, const RightT& /*right*/) const
+#endif
+	{
 #if defined(CML_CHECK_MATVEC_EXPR_SIZES)
             self().equal_or_fail(left.cols(), right.size());
 #endif

@@ -120,6 +120,11 @@ class fixed_1D
   protected:
 
     array_impl                  m_data;
+
+
+  private:
+
+    fixed_1D& operator=(const fixed_1D&);
 };
 
 } // namespace cml

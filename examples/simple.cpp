@@ -832,6 +832,16 @@ void example28()
     float radf = cml::rad(degf);
     double degd = cml::deg(1.);
     double radd = cml::rad(degd);
+    std::clog << degf << std::endl;
+    std::clog << radf << std::endl;
+    std::clog << degd << std::endl;
+    std::clog << radd << std::endl;
+}
+
+void example29()
+{
+  vector3i v(1,2,3);
+  std::clog << v << std::endl;
 }
 
 
