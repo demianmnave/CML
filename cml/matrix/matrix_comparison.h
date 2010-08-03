@@ -166,8 +166,8 @@ matrix_total_order(const LeftT& left, const RightT& right, OpT)
 
     /* Verify expression size: */
     matrix_size N = et::CheckedSize(left,right,size_tag());
-    for(ssize_t i = 0; i < N.first; ++ i) {
-        for(ssize_t j = 0; j < N.second; ++ j) {
+    for(size_t i = 0; i < N.first; ++ i) {
+        for(size_t j = 0; j < N.second; ++ j) {
 
             /* Test total order: */
             if(OpT().apply(
