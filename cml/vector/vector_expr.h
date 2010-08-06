@@ -18,10 +18,10 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #include <cml/vector/vector_traits.h>
 #include <cml/vector/vector_promotions.h>
 
-/* XXX Don't know which it should be just yet, since RVO seems to obviate need
- * for a reference type.  However, copy by value copies the *entire expression
- * tree rooted at the VectorXpr<>, so this choice is bound to affect
- * performace for some compiler or another:
+/* XXX Don't know which it should be just yet, since RVO seems to obviate
+ * need for a reference type.  However, copy by value copies the entire
+ * expression tree rooted at the VectorXpr<>, so this choice is bound to
+ * affect performace for some compiler or another:
  */
 #define VECXPR_ARG_TYPE  const et::VectorXpr<XprT>&
 #define VECXPR_ARG_TYPE_N(_N_)  const et::VectorXpr<XprT##_N_>&

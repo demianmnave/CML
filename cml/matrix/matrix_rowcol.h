@@ -62,6 +62,12 @@ class MatrixRowOp
         return expr_traits().rows(m_expr);
     }
 
+    /** Return the result as a normalized vector. */
+    result_type normalize() const {
+        result_type v(VectorXpr<expr_type>(*this));
+        return v.normalize();
+    }
+
     /** Return reference to contained expression. */
     expr_reference expression() const { return m_expr; }
 
@@ -157,6 +163,12 @@ class MatrixColOp
 
     /** Return reference to contained expression. */
     expr_reference expression() const { return m_expr; }
+
+    /** Return the result as a normalized vector. */
+    result_type normalize() const {
+        result_type v(VectorXpr<expr_type>(*this));
+        return v.normalize();
+    }
 
     /** Compute value at index i of the col vector. */
     value_type operator[](size_t i) const {
