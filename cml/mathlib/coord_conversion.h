@@ -88,7 +88,7 @@ template < typename E, class A > void
 polar_to_cartesian(E radius, E theta, vector<E,A>& v)
 {
     /* Checking handled by set() */
-    v.set(std::cos(theta) * double(radius), std::sin(theta) * double(radius));
+    v.set(std::cos(theta) * radius, std::sin(theta) * radius);
 }
 
 //////////////////////////////////////////////////////////////////////////////
