@@ -233,7 +233,7 @@ inline long random_integer(long min, long max) {
 /* Random real number in the range [min, max] */
 template < typename T >
 T random_real(T min, T max) {
-    return min + random_unit() * (max - min);
+    return min + static_cast<T>(random_unit()) * (max - min);
 }
 
 /** Squared length in R2. */
