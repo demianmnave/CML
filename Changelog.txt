@@ -1,6 +1,50 @@
 Configurable Math Library
 Changelog
 
+CML version 1.0.3 20110614 (Rev 264)
+
+* Fixed VS 'loss of data' warning in cml/mathlib/coord_conversion.h and
+  cml/util.h.
+
+* Added missing normalize() methods to Matrix{Row,Col}Op.
+
+* Fixed signed-unsigned warnings in lines 169-170 of
+  cml/matrix/matrix_comparison.h.
+
+* Fixed a number of MSVC /W4 warnings (examples/simple.cpp compiles without
+  warnings on 2005).
+
+* Fixed a warning due to assigning an integer to a float in
+  matrix_orthographic.  Also changed similar code in matrix_perspective to use
+  value_type() instead of static_cast<> to perform the cast to the proper type.
+
+* Added cml::transform_point_4D to transform a 3D point by a 4D homogeneous
+  matrix.
+
+* Modified the vector stream output (operator<<) to avoid printing a leading
+  space to the stream.
+
+* Removed the Real template parameter from the cml::matrix_to_euler() function
+  returning a vector<>.  The vector coefficient type is now taken from the
+  matrix coefficient type.
+
+* Added the "subvector_type" typedef to dynamic and external vectors.
+
+* Added vector<>::subvector() to both dynamic and external vectors, which is
+  projects a vector to a cardinal plane and returns the resulting vector of one
+  lower dimension.
+
+* Added the "supervector_type" to fixed vectors.  This is mainly for
+  convenience in creating homogeneous points and vectors.
+
+* Warning fix: added static casts in matrix_perspective and matrix_look_at.
+
+* Removed trailing commas from 'axis order' enums.
+
+* Added inclusion of matrix_comparison.h to cml/matrix.h
+
+
+
 CML version 1.0.2 20100108 (Rev 246)
 
 * Added missing <vector> include for std::vector<>.
