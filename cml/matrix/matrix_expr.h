@@ -401,7 +401,7 @@ class BinaryMatrixOp
   private:
 
     /* This ensures that a compile-time size check is executed: */
-    typename checked_size::check_type _dummy;
+    typedef typename checked_size::check_type _dummy;
 
 
   private:
