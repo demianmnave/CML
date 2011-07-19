@@ -57,9 +57,9 @@ class MatrixRowOp
 
   public:
 
-    /** Return the expression size as a pair. */
-    matrix_size size() const {
-        return expr_traits().rows(m_expr);
+    /** The length of the row is the number of matrix columns. */
+    size_t size() const {
+        return expr_traits().cols(m_expr);
     }
 
     /** Return the result as a normalized vector. */
@@ -156,9 +156,9 @@ class MatrixColOp
 
   public:
 
-    /** Return the expression size as a pair. */
-    matrix_size size() const {
-        return expr_traits().cols(m_expr);
+    /** The length of the column is the number of matrix rows. */
+    size_t size() const {
+        return expr_traits().rows(m_expr);
     }
 
     /** Return reference to contained expression. */
