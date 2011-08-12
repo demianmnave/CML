@@ -309,31 +309,31 @@ matrix_rotation_euler_derivatives(
       m.set_basis_element(i,i, 0.              );
       m.set_basis_element(i,j, 0.              );
       m.set_basis_element(i,k, 0.              );
-      m.set_basis_element(j,i, s1 * c0*c2 + s0*s2);
-      m.set_basis_element(j,j, s1 * c0*s2 - s0*c2);
+      m.set_basis_element(j,i, s1 * c0c2 + s0s2);
+      m.set_basis_element(j,j, s1 * c0s2 - s0c2);
       m.set_basis_element(j,k, c0 * c1         );
-      m.set_basis_element(k,i,-s1 * s0*c2 + c0*s2);
-      m.set_basis_element(k,j,-s1 * s0*s2 - c0*c2);
+      m.set_basis_element(k,i,-s1 * s0c2 + c0s2);
+      m.set_basis_element(k,j,-s1 * s0s2 - c0c2);
       m.set_basis_element(k,k,-s0 * c1         );
     } else if(axis == 1) {
       m.set_basis_element(i,i,-s1 * c2         );
       m.set_basis_element(i,j,-s1 * s2         );
       m.set_basis_element(i,k,-c1              );
-      m.set_basis_element(j,i, c1 * s0*c2      );
-      m.set_basis_element(j,j, c1 * s0*s2      );
+      m.set_basis_element(j,i, c1 * s0c2       );
+      m.set_basis_element(j,j, c1 * s0s2       );
       m.set_basis_element(j,k,-s0 * s1         );
-      m.set_basis_element(k,i, c1 * c0*c2      );
-      m.set_basis_element(k,j, c1 * c0*s2      );
+      m.set_basis_element(k,i, c1 * c0c2       );
+      m.set_basis_element(k,j, c1 * c0s2       );
       m.set_basis_element(k,k,-c0 * s1         );
     } else if(axis == 2) {
       m.set_basis_element(i,i,-c1 * s2         );
       m.set_basis_element(i,j, c1 * c2         );
       m.set_basis_element(i,k, 0.              );
-      m.set_basis_element(j,i,-s1 * s0*s2 - c0*c2);
-      m.set_basis_element(j,j, s1 * s0*c2 - c0*s2);
+      m.set_basis_element(j,i,-s1 * s0s2 - c0c2);
+      m.set_basis_element(j,j, s1 * s0c2 - c0s2);
       m.set_basis_element(j,k, 0.              );
-      m.set_basis_element(k,i,-s1 * c0*s2 + s0*c2);
-      m.set_basis_element(k,j, s1 * c0*c2 + s0*s2);
+      m.set_basis_element(k,i,-s1 * c0s2 + s0c2);
+      m.set_basis_element(k,j, s1 * c0c2 + s0s2);
       m.set_basis_element(k,k, 0.              );
     }
 }
