@@ -184,7 +184,7 @@ Require3D(const VecT& v, dynamic_size_tag) {
 
 /** For perp_dot(): compile-time check for a 2D vector. */
 template<typename VecT> inline void
-Require2D(const VecT& v, fixed_size_tag) {
+Require2D(const VecT&, fixed_size_tag) {
     CML_STATIC_REQUIRE_M(
             ((size_t)VecT::array_size == 2),
             perp_dot_expects_2D_vector_args_error);
