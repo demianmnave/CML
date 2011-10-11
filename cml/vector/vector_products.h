@@ -21,6 +21,7 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #include <cml/et/size_checking.h>
 #include <cml/vector/vector_unroller.h>
 #include <cml/vector/vector_expr.h>
+#include <cml/vector/vecop_macros.h>
 #include <cml/matrix/matrix_expr.h>
 
 /* This is used below to create a more meaningful compile-time error when
@@ -352,6 +353,18 @@ outer(const LeftT& left, const RightT& right)
 
     return C;
 }
+
+/* Component-wise product: */
+CML_VEC_VEC_BINOP(       component_product, et::OpMul)
+CML_VECXPR_VEC_BINOP(    component_product, et::OpMul)
+CML_VEC_VECXPR_BINOP(    component_product, et::OpMul)
+CML_VECXPR_VECXPR_BINOP( component_product, et::OpMul)
+
+/* Component-wise division: */
+CML_VEC_VEC_BINOP(       component_quotient, et::OpDiv)
+CML_VECXPR_VEC_BINOP(    component_quotient, et::OpDiv)
+CML_VEC_VECXPR_BINOP(    component_quotient, et::OpDiv)
+CML_VECXPR_VECXPR_BINOP( component_quotient, et::OpDiv)
 
 } // namespace cml
 
