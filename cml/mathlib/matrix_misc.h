@@ -130,6 +130,54 @@ matrix_invert_RT_only_2D(matrix<E,A,B,L>& m)
     matrix_set_translation_2D(m,-dot(p,x),-dot(p,y));
 }
 
+/** Invert a matrix consisting of a rotation and translation */
+template < typename E, class A, class B, class L > void
+matrix_invert_RT(matrix<E,A,B,L>& m)
+{
+  /* Checking */
+  detail::CheckMatSquare(m);
+
+  /* Dimension of the points the matrix operates on: */
+  int dimension = m.rows()-1;
+
+  /* Transpose the rotation part of m in-place: */
+  for(int i = 0; i < dimension; ++ i) {
+    for(int j = i+1; j < dimension; ++ j) {
+      E e_ij = m.basis_element(i,j);
+      E e_ji = m.basis_element(j,i);
+      m.set_basis_element(i,j, e_ji);
+      m.set_basis_element(j,i, e_ij);
+    }
+  }
+
+  /* Figure out the translation vector type based upon the matrix basis
+   * orientation:
+   */
+  typedef matrix<E,A,B,L> matrix_type;
+  typedef typename cml::select_if<
+    cml::same_type<B, cml::row_basis>::is_true,
+    typename matrix_type::row_vector_type,
+    typename matrix_type::col_vector_type>::result basis_vector_type;
+
+  /* Negate the translation and multiply by the transposed rotation: */
+  basis_vector_type T;
+  for(int i = 0; i < dimension; ++ i) {
+    E e(0);
+    for(int j = 0; j < dimension; ++ j) {
+      e += m.basis_element(j,i)*m.basis_element(dimension,j);
+    }
+    T[i] = -e;
+  }
+  for(int i = 0; i < dimension; ++ i) {
+    m.set_basis_element(dimension, i, T[i]);
+  }
+
+  /* Fix the last basis vector coefficients: */
+  for(int j = 0; j < dimension; ++ j)
+    m.set_basis_element(j,dimension, E(0));
+  m.set_basis_element(dimension,dimension, E(1));
+}
+
 } // namespace cml
 
 #endif
