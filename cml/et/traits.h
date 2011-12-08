@@ -13,6 +13,7 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #ifndef traits_h
 #define traits_h
 
+#include <cml/core/common.h>
 #include <cml/et/tags.h>
 
 /* XXX This is here temporarily, should be rolled into the traits classes
