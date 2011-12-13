@@ -138,6 +138,23 @@ matrix_scale_2D(matrix<E,A,B,L>& m, const VecT& scale)
     matrix_scale_2D(m, scale[0], scale[1]);
 }
 
+/** Build a matrix representing the inverse of a non-uniform 2D scale */
+template < typename E, class A, class B, class L > void
+matrix_inverse_scale_2D(matrix<E,A,B,L>& m, E scale_x, E scale_y)
+{
+    matrix_scale_2D(m, E(1)/scale_x, E(1)/scale_y);
+}
+
+/** Build a matrix representing the inverse of a non-uniform 2D scale */
+template < typename E, class A, class B, class L, class VecT > void
+matrix_inverse_scale_2D(matrix<E,A,B,L>& m, const VecT& scale)
+{
+    /* Checking */
+    detail::CheckVec2(scale);
+    
+    matrix_inverse_scale_2D(m, scale[0], scale[1]);
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // 3D scale along axis
 //////////////////////////////////////////////////////////////////////////////
