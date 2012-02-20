@@ -308,6 +308,38 @@ size_t index_of_min_abs(T a, T b, T c) {
     return index_of_min(std::fabs(a),std::fabs(b),std::fabs(c));
 }
 
+/** Index of maximum of 4 values. */
+template < typename T >
+size_t index_of_max(T a, T b, T c, T d) {
+  if(a > b) {
+    return (c > d) ? ((a > c) ? 0 : 2) : ((a > d) ? 0 : 3);
+  } else {
+    return (c > d) ? ((b > c) ? 1 : 2) : ((b > d) ? 1 : 3);
+  }
+}
+
+/** Index of maximum of 4 values by magnitude. */
+template < typename T >
+size_t index_of_max_abs(T a, T b, T c, T d) {
+    return index_of_max(std::fabs(a),std::fabs(b),std::fabs(c),std::fabs(d));
+}
+
+/** Index of minimum of 3 values. */
+template < typename T >
+size_t index_of_min(T a, T b, T c, T d) {
+  if(a < b) {
+    return (c < d) ? ((a < c) ? 0 : 2) : ((a < d) ? 0 : 3);
+  } else {
+    return (c < d) ? ((b < c) ? 1 : 2) : ((b < d) ? 1 : 3);
+  }
+}
+
+/** Index of minimum of 4 values by magnitude. */
+template < typename T >
+size_t index_of_min_abs(T a, T b, T c, T d) {
+    return index_of_min(std::fabs(a),std::fabs(b),std::fabs(c),std::fabs(d));
+}
+
 /** Wrap input value to the range [min,max]. */
 template < typename T >
 T wrap(T value, T min, T max) {

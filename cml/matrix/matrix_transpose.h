@@ -242,6 +242,32 @@ T(MATXPR_ARG_TYPE expr)
     return transpose(expr);
 }
 
+/** Matrix transpose operator taking a matrix operand, no temporary used.
+ *
+ * @note If used in an assignment statement, the matrix being assigned to
+ * cannot appear in the expression being transposed.
+ */
+template<typename E, class AT, typename BO, typename L>
+et::MatrixXpr< et::MatrixTransposeOp< matrix<E,AT,BO,L> > >
+transpose_fast(const matrix<E,AT,BO,L>& expr)
+{
+    typedef et::MatrixTransposeOp< matrix<E,AT,BO,L> > ExprT;
+    return et::MatrixXpr<ExprT>(ExprT(expr));
+}
+
+/** Matrix transpose operator taking an et::MatrixXpr operand.
+ *
+ * @note If used in an assignment statement, the matrix being assigned to
+ * cannot appear in the expression being transposed.
+ */
+template<class XprT>
+et::MatrixXpr< et::MatrixTransposeOp<XprT> >
+transpose_fast(MATXPR_ARG_TYPE expr)
+{
+    typedef et::MatrixTransposeOp<XprT> ExprT;
+    return et::MatrixXpr<ExprT>(ExprT(expr.expression()));
+}
+
 #else
 
 /* XXX For this to work correctly, matrix assignment and copy have to be
