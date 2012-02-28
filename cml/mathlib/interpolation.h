@@ -417,7 +417,9 @@ squad_intermediate(
 
     temporary_type m;
     et::detail::Resize(m,m1.rows(),m1.cols());
-    
+
+    CML_THROW_IF(m1.rows() != 3 && m1.rows() != 2, std::invalid_argument(
+	"matrix squad_intermediate_f() expects sizes 3x3 or 2x2"));
     switch (m1.rows()) {
         case 3:
             m = squad_intermediate_f<MatT_1,MatT_2,MatT_3,3>()(m1,m2,m3,tolerance);
@@ -426,8 +428,6 @@ squad_intermediate(
             m = squad_intermediate_f<MatT_1,MatT_2,MatT_3,2>()(m1,m2,m3,tolerance);
             break;
         default:
-            throw std::invalid_argument(
-                "matrix squad_intermediate_f() expects sizes 3x3 or 2x2");
             break;
     }
     return m;
@@ -607,6 +607,8 @@ slerp(
     temporary_type m;
     et::detail::Resize(m,m1.rows(),m1.cols());
     
+    CML_THROW_IF(m1.rows() != 3 && m1.rows() != 2, std::invalid_argument(
+	"matrix slerp() expects sizes 3x3 or 2x2"));
     switch (m1.rows()) {
         case 3:
             m = slerp_f<MatT_1,MatT_2,3>()(m1,m2,t,tolerance);
@@ -615,8 +617,6 @@ slerp(
             m = slerp_f<MatT_1,MatT_2,2>()(m1,m2,t,tolerance);
             break;
         default:
-            throw std::invalid_argument(
-                "matrix slerp() expects sizes 3x3 or 2x2");
             break;
     }
     return m;
@@ -769,6 +769,8 @@ nlerp(
     temporary_type m;
     et::detail::Resize(m,m1.rows(),m1.cols());
     
+    CML_THROW_IF(m1.rows() != 3 && m1.rows() != 2, std::invalid_argument(
+	"matrix nlerp() expects sizes 3x3 or 2x2"));
     switch (m1.rows()) {
         case 3:
             m = nlerp_f<MatT_1,MatT_2,3>()(m1,m2,t);
@@ -777,8 +779,6 @@ nlerp(
             m = nlerp_f<MatT_1,MatT_2,2>()(m1,m2,t);
             break;
         default:
-            throw std::invalid_argument(
-                "matrix nlerp() expects sizes 3x3 or 2x2");
             break;
     }
     return m;

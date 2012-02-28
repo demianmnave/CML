@@ -83,6 +83,20 @@ Boost Software License, v1.0 (see cml/LICENSE for details).
 #define CML_CHECK_MATRIX_EXPR_SIZES
 #endif
 
+#if defined(CML_NO_THROW)
+#include <cassert>
+# ifdef NDEBUG
+   /* Avoid spurious "unused parameter" warnings when assert()
+    * is an empty macro:
+    */
+#  define CML_THROW_IF(_bool_, _x_) (void)(_bool_)
+# else
+#  define CML_THROW_IF(_bool_, _x_) assert(_bool_)
+# endif
+#else
+#define CML_THROW_IF(_bool_, _x_) if(_bool_) throw _x_
+#endif
+
 #endif
 
 // -------------------------------------------------------------------------

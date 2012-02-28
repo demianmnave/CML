@@ -111,10 +111,8 @@ CheckVec2Or3(const VecT& v, fixed_size_tag) {
 template< class VecT > inline void
 CheckVec2Or3(const VecT& v, dynamic_size_tag) {
     CheckVec(v);
-
-    if (v.size() != 2 && v.size() != 3) {
-        throw std::invalid_argument("2d or 3d vector arg expected");
-    }
+    CML_THROW_IF(v.size() != 2 && v.size() != 3,
+	std::invalid_argument("2d or 3d vector arg expected"));
 }
 
 /** Check for a vector of size 2 or 3 */
@@ -208,11 +206,8 @@ CheckMatMinNxM(const MatT& m, fixed_size_tag) {
 template< class MatT, size_t N, size_t M, class /*ErrorT*/ > inline void
 CheckMatMinNxM(const MatT& m, dynamic_size_tag) {
     CheckMat(m);
-
-    if (m.rows() < N || m.cols() < M) {
-        throw std::invalid_argument(
-            "matrix does not meet minimum size requirement");
-    }
+    CML_THROW_IF(m.rows() < N || m.cols() < M, std::invalid_argument(
+	"matrix does not meet minimum size requirement"));
 }
 
 /** Check for a matrix with minimum dimensions NxM */
@@ -315,11 +310,8 @@ CheckMatSquare(const MatT& m, fixed_size_tag) {
 template< class MatT, class /*ErrorT*/ > inline void
 CheckMatSquare(const MatT& m, dynamic_size_tag) {
     CheckMat(m);
-
-    if (m.rows() != m.cols()) {
-        throw std::invalid_argument(
-            "function expects square matrix as argument");
-    }
+    CML_THROW_IF(m.rows() != m.cols(), std::invalid_argument(
+	"function expects square matrix as argument"));
 }
 
 /** Check for a square matrix */
@@ -355,9 +347,8 @@ CheckQuat(const QuatT& /*q*/)
 /** Run-time check for a valid argument */
 inline void CheckValidArg(bool valid)
 {
-    if (!valid) {
-        throw std::invalid_argument("invalid function argument");
-    }
+    CML_THROW_IF(!valid,
+	std::invalid_argument("invalid function argument"));
 }
 
 /** Check for a valid integer index with value < N */

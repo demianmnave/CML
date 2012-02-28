@@ -174,7 +174,9 @@ random_unit(vector<E,A>& v)
 {
     typedef vector<E,A> vector_type;
     typedef typename vector_type::value_type value_type;
-    
+
+    CML_THROW_IF(v.size() != 3 && v.size() != 2, std::invalid_argument(
+	"random_unit() for N-d vectors not implemented yet"));    
     switch (v.size()) {
         case 3:
         {
@@ -205,8 +207,6 @@ random_unit(vector<E,A>& v)
             break;
         }
         default:
-            throw std::invalid_argument(
-                "random_unit() for N-d vectors not implemented yet");
             break;
     }
 }
@@ -230,7 +230,9 @@ random_unit(vector<E,A>& v, const VecT& axis, E theta)
 {
     typedef vector<E,A> vector_type;
     typedef typename vector_type::value_type value_type;
-    
+
+    CML_THROW_IF(v.size() != 3 && v.size() != 2, std::invalid_argument(
+	"random_unit(v,axis,theta) only implemented for 2D and 3D"));
     switch (v.size()) {
         case 3:
         {
@@ -275,8 +277,6 @@ random_unit(vector<E,A>& v, const VecT& axis, E theta)
             break;
         }
         default:
-            throw std::invalid_argument(
-                "random_unit(v,axis,theta) only implemented for 2D and 3D");
             break;
     }
 }

@@ -269,9 +269,8 @@ struct GetCheckedSize<LeftT,RightT,dynamic_size_tag>
 
     /* Return the size if the same, or fail if different: */
     template<typename V> V equal_or_fail(V left, V right) const {
-        if(left != right)
-            throw std::invalid_argument(
-                    "expressions have incompatible sizes.");
+        CML_THROW_IF(left != right, std::invalid_argument(
+                "expressions have incompatible sizes."));
         return left;
     }
 

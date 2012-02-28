@@ -284,8 +284,8 @@ matrix_rotation_euler_derivatives(
     size_t i, j, k;
     bool odd, repeat;
     detail::unpack_euler_order(order, i, j, k, odd, repeat);
-    if(repeat) throw std::invalid_argument(
-	"matrix_rotation_euler_derivatives does not support repeated axes");
+    CML_THROW_IF(repeat, std::invalid_argument(
+	"matrix_rotation_euler_derivatives does not support repeated axes"));
 
     if (odd) {
         angle_0 = -angle_0;
