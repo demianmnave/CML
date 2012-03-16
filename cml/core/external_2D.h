@@ -73,8 +73,8 @@ class external_2D
      */
 
     /* To simplify the matrix row and column operators: */
-    typedef fixed_1D<Element,Rows> row_array_type;
-    typedef fixed_1D<Element,Cols> col_array_type;
+    typedef fixed_1D<Element,Cols> row_array_type;
+    typedef fixed_1D<Element,Rows> col_array_type;
     /* Note: the row types must be fixed_1D, since external arrays cannot be
      * specified without a memory location.
      */
