@@ -35,7 +35,7 @@ int main(int argc, char** argv)
     timed1(v,v1,v2,v3,v4, n_iter);
     usec_t t_end = usec_time();
     double t = double(t_end - t_start);
-    printf("%.4g s\n", t/1e6);
+    std::printf("%.4g s\n", t/1e6);
 
     /* Force result to be used: */
     cerr << "v = " << v << endl;

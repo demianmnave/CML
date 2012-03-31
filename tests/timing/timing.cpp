@@ -15,6 +15,8 @@
 #define NOMCX
 #define NOIME
 #include <windows.h>
+#include <cstdlib>
+#include <cstdio>
 
 usec_t usec_time()
 {
