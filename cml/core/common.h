@@ -24,8 +24,11 @@ typedef _W64 int   ssize_t;
 #endif
 #define _SSIZE_T_DEFINED
 #endif
+#else
+#include <sys/types.h>
 #endif
 
+#include <cctype>
 #include <cstddef>              // for size_t
 #include <utility>              // for std::pair<>
 #include <cml/defaults.h>
