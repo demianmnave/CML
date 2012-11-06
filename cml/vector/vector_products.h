@@ -354,6 +354,13 @@ outer(const LeftT& left, const RightT& right)
     return C;
 }
 
+template<typename VectorT>
+inline typename detail::OuterPromote<VectorT,VectorT>::promoted_matrix
+outer(const VectorT& v)
+{
+  return cml::outer(v,v);
+}
+
 /* Component-wise product: */
 CML_VEC_VEC_BINOP(       component_product, et::OpMul)
 CML_VECXPR_VEC_BINOP(    component_product, et::OpMul)
