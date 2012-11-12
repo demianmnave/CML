@@ -69,19 +69,19 @@ _op_ (MATXPR_ARG_TYPE arg)                                               \
 
 /** Declare an operator taking two matrix operands. */
 #define CML_MAT_MAT_BINOP(_op_, _OpT_)                                   \
-template<typename E1, class AT1, typename L1,                            \
-         typename E2, class AT2, typename L2, typename BO>               \
+template<typename E1, class AT1, typename BO1, typename L1,              \
+         typename E2, class AT2, typename BO2, typename L2>              \
 inline et::MatrixXpr<                                                    \
     et::BinaryMatrixOp<                                                  \
-        matrix<E1,AT1,BO,L2>, matrix<E2,AT2,BO,L2>, _OpT_<E1,E2> >       \
+        matrix<E1,AT1,BO1,L1>, matrix<E2,AT2,BO2,L2>, _OpT_<E1,E2> >     \
 >                                                                        \
                                                                          \
 _op_ (                                                                   \
-        const matrix<E1,AT1,BO,L1>& left,                                \
-        const matrix<E2,AT2,BO,L2>& right)                               \
+        const matrix<E1,AT1,BO1,L1>& left,                               \
+        const matrix<E2,AT2,BO2,L2>& right)                              \
 {                                                                        \
     typedef et::BinaryMatrixOp<                                          \
-            matrix<E1,AT1,BO,L1>, matrix<E2,AT2,BO,L2>, _OpT_<E1,E2>     \
+            matrix<E1,AT1,BO1,L1>, matrix<E2,AT2,BO2,L2>, _OpT_<E1,E2>   \
         > ExprT;                                                         \
     return et::MatrixXpr<ExprT>(ExprT(left,right));                      \
 }
