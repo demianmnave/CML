@@ -138,7 +138,7 @@ matrix_invert_RT(matrix<E,A,B,L>& m)
   detail::CheckMatSquare(m);
 
   /* Dimension of the points the matrix operates on: */
-  int dimension = m.rows()-1;
+  size_t dimension = m.rows()-1;
 
   /* Transpose the rotation part of m in-place: */
   for(int i = 0; i < dimension; ++ i) {
