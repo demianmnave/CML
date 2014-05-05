@@ -238,6 +238,9 @@ class external_2D<Element,-1,-1,Layout>
     /** Return the number of cols in the array. */
     size_t cols() const { return m_cols; }
 
+    /** Return the number of elements in the array. */
+    size_t count() const { return rows() * cols(); }
+
 
   public:
 
