@@ -844,6 +844,19 @@ void example29()
   std::clog << v << std::endl;
 }
 
+void example30()
+{
+    cout << std::endl << "Example30:" << endl;
+
+    typedef quaternion<double, fixed<>, scalar_first> quaternion_type;
+
+    double v1[] = {1.,0.,0.};
+    quaternion_type p(1.,v1), q(0., 1., 0., 1.);
+    const quaternion_type r(1.,v1);
+    const double* data = r.data();
+    std::clog << "r[0] = " << data[0] << std::endl;
+}
+
 
 int main()
 {
