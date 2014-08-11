@@ -297,11 +297,11 @@ struct inverse_f
         }
 
         /* Swap columns if necessary */
-        for (size_t i = N-1; i >= 0; --i) {
+        for (size_t i = 0; i < N; ++ i) {
             if (row_index[i] != col_index[i]) {
                 /*Z.col_op_swap(row_index[i],col_index[i]);*/
                 for (size_t j = 0; j < Z.rows(); ++j) {
-                    std::swap(Z(j,row_index[i]),Z(j,col_index[i]));
+                    std::swap(Z(j,row_index[i]), Z(j,col_index[i]));
                 }
             }
         }

@@ -857,6 +857,39 @@ void example30()
     std::clog << "r[0] = " << data[0] << std::endl;
 }
 
+void example31()
+{
+    cout << std::endl << "Example31:" << endl;
+    typedef cml::vector< double, fixed<4> > vector_d4;
+
+    cml::matrixd M(4,4);
+    M(0,0) = 1.0;  M(0,1) = 8.0;  M(0,2) = 3.0; M(0,3) = 11.0;
+    M(1,0) = 9.0;  M(1,1) = 5.0;  M(1,2) = 2.0; M(1,3) = 17.0;
+    M(2,0) = 12.0; M(2,1) = 12.0; M(2,2) = 7.0; M(2,3) = 2.0;
+    M(3,0) = 15.0; M(3,1) = 17.0; M(3,2) = 9.0; M(3,3) = 16.0;
+
+    cml::matrixd LU = cml::lu(M);
+    cout << "M = " << M << endl;
+    cout << "M = LU = " << LU << endl;
+
+    vector_d4 x, y;
+    y[0] = 1.; y[1] = 7.; y[2] = 13.; y[3] = 6.;
+    cout << "y = " << y << endl;
+
+    cml::matrixd Minv = inverse(M);
+    cout << "Minv = " << Minv << endl;
+
+    x = Minv*y;
+    y = M*x;
+    cout << "x = Minv*y = " << x << endl;
+    cout << "y = M*x = " << y << endl;
+
+    double D = determinant(M);
+    cout << "det(M) = " << D << endl;
+    cout << "det(M)[lu] = "
+        << cml::detail::determinant_f<cml::matrixd,0>()(M) << endl;
+}
+
 
 int main()
 {
@@ -889,6 +922,10 @@ int main()
     example25();
     example26();
     example27();
+    example28();
+    example29();
+    example30();
+    example31();
     return 0;
 }
 
