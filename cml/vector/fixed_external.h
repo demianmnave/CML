@@ -6,16 +6,16 @@
 
 #pragma once
 
-#ifndef	cml_vector_fixed_h
-#define	cml_vector_fixed_h
+#ifndef	cml_vector_fixed_external_h
+#define	cml_vector_fixed_external_h
 
-#include <cml/common/fixed_selector.h>
+#include <cml/common/external_selector.h>
 #include <cml/vector/writable_vector.h>
 
 namespace cml {
 
 template<class Element, int Size>
-struct vector_traits< vector<Element, fixed<Size>> >
+struct vector_traits< vector<Element, external<Size>> >
 {
   typedef Element					value_type;
   typedef value_type*					pointer;
@@ -27,12 +27,12 @@ struct vector_traits< vector<Element, fixed<Size>> >
 };
 
 template<class Element, int Size>
-class vector<Element, fixed<Size>>
-: public writable_vector< vector<Element, fixed<Size>> >
+class vector<Element, external<Size>>
+: public writable_vector< vector<Element, external<Size>> >
 {
   public:
 
-    typedef vector<Element, fixed<Size>>		vector_type;
+    typedef vector<Element, external<Size>>		vector_type;
     typedef writable_vector<vector_type>		writable_type;
     typedef vector_traits<vector_type>			traits_type;
     typedef typename traits_type::value_type		value_type;
@@ -51,17 +51,8 @@ class vector<Element, fixed<Size>>
 
   public:
 
-    /** Default constructor.
-     *
-     * @note The vector elements are uninitialized.
-     */
-    vector();
-
-    /** Construct from a C-style array. */
-    vector(const value_type data[Size]);
-
-    /** Construct from std::initialize_list. */
-    template<class Other> vector(std::initializer_list<Other> l);
+    /** Construct from the wrapped pointer. */
+    vector(pointer data);
 
 
   public:
@@ -87,15 +78,15 @@ class vector<Element, fixed<Size>>
 
   protected:
 
-    /** Fixed-length array. */
-    value_type			m_data[Size];
+    /** Wrapped pointer. */
+    pointer			m_data;
 };
 
 } // namespace cml
 
-#define __CML_VECTOR_FIXED_TPP
-#include <cml/vector/fixed.tpp>
-#undef __CML_VECTOR_FIXED_TPP
+#define __CML_VECTOR_FIXED_EXTERNAL_TPP
+#include <cml/vector/fixed_external.tpp>
+#undef __CML_VECTOR_FIXED_EXTERNAL_TPP
 
 #endif
 

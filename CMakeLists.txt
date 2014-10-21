@@ -1,125 +1,69 @@
 # -*- cmake -*- -----------------------------------------------------------
 # @@COPYRIGHT@@
 #*-------------------------------------------------------------------------
-# @file
-# @brief
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.4 FATAL_ERROR)
-PROJECT(CML)
+# Set the minimum CMake version:
+cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 
-# Build the current CML version number:
-SET(CML_MAJOR 1)
-SET(CML_MINOR 0)
-SET(CML_PATCH 3)
-SET(CML_RELEASE_VERSION "${CML_MAJOR}.${CML_MINOR}.${CML_PATCH}")
-SET(CML_FILE_VERSION "${CML_MAJOR}_${CML_MINOR}_${CML_PATCH}")
+# Allow solution folders:
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# Handy message:
-MESSAGE(STATUS "Building CML ${CML_RELEASE_VERSION}")
+# The project name:
+project(CML)
 
-SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
+# Path to the project source tree:
+set(CML_ROOT "${CML_SOURCE_DIR}")
 
-# XXX Importing build settings for a header-only library leads to annoying
-# "Setting CML_BUILD_TYPE to T" warnings:
-# Installation configuration:
-#INCLUDE(CMakeExportBuildSettings)
-IF(WIN32)
+# Path to project-specific configuration files:
+list(APPEND CMAKE_MODULE_PATH ${CML_ROOT}/CMake)
 
-  # The paths relative to the installation path into which libraries and
-  # headers should be installed for Windows builds (there are currently no
-  # libraries to install):
-  SET(CML_LIBARARY_PATH)
-  SET(CML_HEADER_PATH)
-ELSE(WIN32)
+# Search for a Boost installation:
+find_package(Boost 1.56 REQUIRED)
 
-  # The paths relative to the installation path into which libraries and
-  # headers should be installed for UNIX-like builds (there are currently
-  # no libraries to install):
-  SET(CML_LIBARARY_PATH lib)
-  SET(CML_HEADER_PATH include)
-ENDIF(WIN32)
+# Include project macros:
+include(CMLBuildMacros)
 
-# Don't build tests by default:
-OPTION(BUILD_TESTS "Build CML tests." OFF)
-SET(CML_BUILD_TESTS ${BUILD_TESTS})
-
-# Include the source CML headers before others:
-INCLUDE_DIRECTORIES(BEFORE ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
-
-# Add subdirectories to build:
-ADD_SUBDIRECTORY(cml)
-ADD_SUBDIRECTORY(examples)
-IF(CML_BUILD_TESTS)
-  ADD_SUBDIRECTORY(tests)
-ENDIF(CML_BUILD_TESTS)
-
-# Setup configuration files:
-CONFIGURE_FILE(
-  ${CMAKE_SOURCE_DIR}/UseCML.cmake.in
-  ${CMAKE_BINARY_DIR}/UseCML.cmake
-  @ONLY
+# Figure out which version of CML is being built by parsing CML/version.h (this
+# is from the root Boost.CMake CMakeLists.txt file):
+CML_VERSION_FROM_FILE(
+  ${CML_ROOT}/cml/version.h		# Path to version.h
+  "CML_VERSION"				# The macro name to find
+  CML_VERSION_MAJOR			# Parsed major version
+  CML_VERSION_MINOR			# Parsed minor version
+  CML_VERSION_PATCH			# Parsed patch version
+  CML_VERSION				# String MM.mm.pp
   )
+message(STATUS "Building CML ${CML_VERSION}")
 
-CONFIGURE_FILE(
-  ${CMAKE_SOURCE_DIR}/CMLConfig.cmake.in
-  ${CMAKE_BINARY_DIR}/CMLConfig.cmake
-  @ONLY
-  )
 
-# XXX Importing build settings for a header-only library leads to annoying
-# "Setting CML_BUILD_TYPE to T" warnings:
-# CMAKE_EXPORT_BUILD_SETTINGS(
-#   ${CMAKE_BINARY_DIR}/CMLBuildSettings.cmake)
-# INSTALL(FILES
-#   ${CMAKE_BINARY_DIR}/CMLBuildSettings.cmake
-#   DESTINATION .
-#   )
+## Optional configuration:
 
-INSTALL(FILES
-  ${CMAKE_BINARY_DIR}/UseCML.cmake
-  ${CMAKE_BINARY_DIR}/CMLConfig.cmake
-  DESTINATION .
-  )
+# Enable tests if requested:
+option(CML_BUILD_TESTING "Build CML tests" ON)
+if(CML_BUILD_TESTING)
+  include(CMLTestMacros)
+  ENABLE_TESTING()
+endif()
 
-INSTALL(FILES
-  ${CMAKE_SOURCE_DIR}/doc/parameters.txt
-  DESTINATION doc
-  )
 
-INSTALL(FILES
-  ${CMAKE_SOURCE_DIR}/examples/simple.cpp
-  ${CMAKE_SOURCE_DIR}/examples/cml_config.h
-  ${CMAKE_SOURCE_DIR}/examples/makefile
-  ${CMAKE_SOURCE_DIR}/examples/CMakeLists.txt
-  DESTINATION examples
-  )
+## PATH CONFIGURATION ##
 
-# Setup CPack:
-IF(WIN32 AND NOT UNIX)
+# Include directories:
+include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${CML_ROOT})
 
-  # Build ZIP and NSIS packages:
-  SET(CPACK_GENERATOR "NSIS;ZIP")
+# Output paths:
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-  # Set the name used by NSIS to refer to the project:
-  SET(CPACK_NSIS_DISPLAY_NAME "CML ${CML_RELEASE_VERSION}")
-  SET(CPACK_PACKAGE_VERSION_MAJOR ${CML_MAJOR})
-  SET(CPACK_PACKAGE_VERSION_MINOR ${CML_MINOR})
-  SET(CPACK_PACKAGE_VERSION_PATCH ${CML_PATCH})
 
-  SET(CPACK_PACKAGE_FILE_NAME "cml-${CML_FILE_VERSION}")
-  SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Configurable Math Libary")
-  SET(CPACK_PACKAGE_VENDOR "Jesse Krebs, Demian Nave")
-  SET(CPACK_PACKAGE_INSTALL_DIRECTORY "cml-${CML_FILE_VERSION}")
-  #SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/About.txt")
-  #SET(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/<icon>")
-  #SET(CPACK_PACKAGE_EXECUTABLES "" "")
+## Build subdirectories:
 
-  #SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/Welcome.txt")
-  SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.rtf")
-  #SET(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.txt")
-
-  INCLUDE(CPack)
-ENDIF(WIN32 AND NOT UNIX)
+# Build tests if requested:
+if(CML_BUILD_TESTING)
+  add_subdirectory(tests)
+endif()
 
 # --------------------------------------------------------------------------
 # vim:ft=cmake

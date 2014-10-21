@@ -6,10 +6,14 @@
 
 #pragma once
 
-#ifndef	cml_vector_external_h
-#define	cml_vector_external_h
+#ifndef	cml_version_h
+#define	cml_version_h
 
-#include <cml/vector/fixed_external.h>
+/* Current CML version: */
+#define CML_VERSION			200000U
+
+/* Current CML version as a string: */
+#define CML_VERSION_STRING		"2.0.0"
 
 #endif
 

@@ -6,10 +6,15 @@
 
 #pragma once
 
-#ifndef	cml_vector_external_h
-#define	cml_vector_external_h
+#ifndef	cml_vector_vector_h
+#define	cml_vector_vector_h
 
-#include <cml/vector/fixed_external.h>
+namespace cml {
+
+/** Specializable class for building vector types. */
+template<class Element, class StorageType> class vector;
+
+} // namespace cml
 
 #endif
 
