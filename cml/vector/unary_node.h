@@ -13,24 +13,24 @@
 
 namespace cml {
 
-template<class SubNode, class Op> class vector_unary_node;
+template<class Sub, class Op> class vector_unary_node;
 
 /** vector_unary_node<> traits. */
-template<class SubNode, class Op>
-struct vector_traits< vector_unary_node<SubNode,Op> >
+template<class Sub, class Op>
+struct vector_traits< vector_unary_node<Sub,Op> >
 {
   typedef typename Op::result_type			value_type;
   typedef value_type					immutable_value;
 };
 
 /** Represents a unary vector operation in an expression tree. */
-template<class SubNode, class Op>
+template<class Sub, class Op>
 class vector_unary_node
-: public readable_vector< vector_unary_node<SubNode,Op> >
+: public readable_vector< vector_unary_node<Sub,Op> >
 {
   public:
 
-    typedef vector_unary_node<SubNode,Op>		node_type;
+    typedef vector_unary_node<Sub,Op>			node_type;
     typedef vector_traits<node_type>			traits_type;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
@@ -41,7 +41,7 @@ class vector_unary_node
     /** Construct from the wrapped sub-expression, derived from
      * readable_vector<>.
      */
-    explicit vector_unary_node(const readable_vector<SubNode>& sub);
+    explicit vector_unary_node(const readable_vector<Sub>& sub);
 
 
   public:
@@ -56,7 +56,7 @@ class vector_unary_node
   protected:
 
     /** The wrapped subexpression. */
-    const SubNode&		m_sub;
+    const Sub&			m_sub;
 };
 
 } // namespace cml

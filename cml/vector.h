@@ -12,6 +12,8 @@
 #include <cml/vector/fixed.h>
 #include <cml/vector/external.h>
 #include <cml/vector/unary_ops.h>
+#include <cml/vector/binary_ops.h>
+#include <cml/vector/scalar_ops.h>
 
 #endif
 

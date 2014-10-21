@@ -12,8 +12,8 @@ namespace cml {
 
 /* vector_unary_node 'structors: */
 
-template<class SN, class Op>
-vector_unary_node<SN,Op>::vector_unary_node(const readable_vector<SN>& sub)
+template<class Sub, class Op>
+vector_unary_node<Sub,Op>::vector_unary_node(const readable_vector<Sub>& sub)
 : m_sub(sub.actual())
 {
 }
@@ -22,14 +22,14 @@ vector_unary_node<SN,Op>::vector_unary_node(const readable_vector<SN>& sub)
 
 /* Public methods: */
 
-template<class SN, class Op> int
-vector_unary_node<SN,Op>::size() const
+template<class Sub, class Op> int
+vector_unary_node<Sub,Op>::size() const
 {
   return this->m_sub.size();
 }
 
-template<class SN, class Op> auto
-vector_unary_node<SN,Op>::get(int i) const -> immutable_value
+template<class Sub, class Op> auto
+vector_unary_node<Sub,Op>::get(int i) const -> immutable_value
 {
   return Op().apply(this->m_sub.get(i));
 }

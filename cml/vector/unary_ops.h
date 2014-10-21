@@ -17,14 +17,14 @@ namespace cml {
 /** Return an expression node for unary minus over the elements of the
  * sub-expression @c sub.
  */
-template<class Readable> auto operator-(const readable_vector<Readable>& sub)
--> vector_unary_node<Readable, op::unary_minus<typename Readable::value_type>>;
+template<class Sub> auto operator-(const readable_vector<Sub>& sub)
+-> vector_unary_node<Sub, op::unary_minus<typename Sub::value_type>>;
 
 /** Return an expression node for unary plus over the elements of the
  * sub-expression @c sub.
  */
-template<class Readable> auto operator+(const readable_vector<Readable>& sub)
--> vector_unary_node<Readable, op::unary_plus<typename Readable::value_type>>;
+template<class Sub> auto operator+(const readable_vector<Sub>& sub)
+-> vector_unary_node<Sub, op::unary_plus<typename Sub::value_type>>;
 
 } // namespace cml
 

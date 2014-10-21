@@ -10,22 +10,20 @@
 
 namespace cml {
 
-template<class Readable> inline auto
-operator-(const readable_vector<Readable>& sub)
--> vector_unary_node<
-	Readable, op::unary_minus<typename Readable::value_type>>
+template<class Sub> inline auto
+operator-(const readable_vector<Sub>& sub)
+-> vector_unary_node<Sub, op::unary_minus<typename Sub::value_type>>
 {
   return vector_unary_node<
-    Readable, op::unary_minus<typename Readable::value_type>>(sub);
+    Sub, op::unary_minus<typename Sub::value_type>>(sub);
 }
 
-template<class Readable> inline auto
-operator+(const readable_vector<Readable>& sub)
--> vector_unary_node<
-	Readable, op::unary_plus<typename Readable::value_type>>
+template<class Sub> inline auto
+operator+(const readable_vector<Sub>& sub)
+-> vector_unary_node<Sub, op::unary_plus<typename Sub::value_type>>
 {
   return vector_unary_node<
-    Readable, op::unary_plus<typename Readable::value_type>>(sub);
+    Sub, op::unary_plus<typename Sub::value_type>>(sub);
 }
 
 } // namespace cml
