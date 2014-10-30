@@ -14,21 +14,21 @@
 
 namespace cml {
 
-/** Mixin class for readable vector types.  Readable vectors support const
+/** Base class for readable vector types.  Readable vectors support const
  * access to its elements.
  *
- * DerivedT must implement <X> get(int i) const, where <X> is the
- * immutable_value type defined by vector_traits<DerivedT>.  Note that
- * immutable_value is not necessarily a reference or const type.
+ * DerivedT must implement:
+ *
+ * - int size() const, returning the number of vector elements (even if
+ * static); and
+ *
+ * - <X> get(int i) const, where <X> is the immutable_value type defined by
+ * vector_traits<DerivedT>.  Note that immutable_value is not necessarily a
+ * reference or const type.
  */
 template<class DerivedT>
 class readable_vector
 {
-  public:
-
-    const DerivedT& actual() const { return (const DerivedT&) *this; }
-
-
   public:
 
     typedef DerivedT					vector_type;
@@ -39,10 +39,16 @@ class readable_vector
 
   public:
 
-    /** Conversion to DerivedT. */
-    operator const DerivedT& () const;
+    /** Return a const reference to the vector cast as DerivedT. */
+    const DerivedT& actual() const;
 
-    /** Return a const reference to element @c i. */
+    /** Return the number of vector elements. */
+    int size() const;
+
+    /** Return const element @c i. */
+    immutable_value get(int i) const;
+
+    /** Return const element @c i. */
     immutable_value operator[](int i) const;
 };
 

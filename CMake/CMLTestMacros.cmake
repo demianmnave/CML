@@ -36,6 +36,9 @@ macro(ADD_CML_TEST
   # Setup the build target:
   add_executable(${ExecName} ${_Name}.cpp)
   set_target_properties(${ExecName} PROPERTIES FOLDER "${test_group}")
+  if(NOT MSVC AND Boost_UNIT_TEST_FRAMEWORK_FOUND)
+    target_link_libraries(${ExecName} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+  endif()
 
   # Setup the test:
   add_test(NAME ${TestName} COMMAND ${ExecName})

@@ -13,8 +13,14 @@ namespace cml {
 /* vector_unary_node 'structors: */
 
 template<class Sub, class Op>
-vector_unary_node<Sub,Op>::vector_unary_node(const readable_vector<Sub>& sub)
-: m_sub(sub.actual())
+vector_unary_node<Sub,Op>::vector_unary_node(Sub sub)
+: m_sub(std::move(sub))
+{
+}
+
+template<class Sub, class Op>
+vector_unary_node<Sub,Op>::vector_unary_node(node_type&& other)
+: m_sub(std::move(other.m_sub))
 {
 }
 

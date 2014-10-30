@@ -9,46 +9,32 @@
 #ifndef	cml_common_scalar_binary_ops_h
 #define	cml_common_scalar_binary_ops_h
 
+#include <cml/common/scalar_promotion.h>
+
 namespace cml {
 namespace op {
 
-/** Binary minus (subtraction).
- *
- * @note Type deduction for Scalar1-Scalar2 uses C++ rules for built-in
- * types, or user-defined rules via operator-().
- */
+/** Binary minus (subtraction). */
 template<class Scalar1, class Scalar2> struct binary_minus {
-  typedef decltype(Scalar1() - Scalar2()) result_type;
+  typedef typename scalar_promote<Scalar1, Scalar2>::scalar_type result_type;
   result_type apply(const Scalar1& a, const Scalar2& b) const { return a-b; }
 };
 
-/** Binary plus (addition).
- *
- * @note Type deduction for Scalar1+Scalar2 uses C++ rules for built-in
- * types, or user-defined rules via operator+().
- */
+/** Binary plus (addition). */
 template<class Scalar1, class Scalar2> struct binary_plus {
-  typedef decltype(Scalar1() + Scalar2()) result_type;
+  typedef typename scalar_promote<Scalar1, Scalar2>::scalar_type result_type;
   result_type apply(const Scalar1& a, const Scalar2& b) const { return a+b; }
 };
 
-/** Binary multiply.
- *
- * @note Type deduction for Scalar1*Scalar2 uses C++ rules for built-in
- * types, or user-defined rules via operator*().
- */
+/** Binary multiply. */
 template<class Scalar1, class Scalar2> struct binary_multiply {
-  typedef decltype(Scalar1() * Scalar2()) result_type;
+  typedef typename scalar_promote<Scalar1, Scalar2>::scalar_type result_type;
   result_type apply(const Scalar1& a, const Scalar2& b) const { return a*b; }
 };
 
-/** Binary divide.
- *
- * @note Type deduction for Scalar1/Scalar2 uses C++ rules for built-in
- * types, or user-defined rules via operator/().
- */
+/** Binary divide. */
 template<class Scalar1, class Scalar2> struct binary_divide {
-  typedef decltype(Scalar1() / Scalar2()) result_type;
+  typedef typename scalar_promote<Scalar1, Scalar2>::scalar_type result_type;
   result_type apply(const Scalar1& a, const Scalar2& b) const { return a/b; }
 };
 

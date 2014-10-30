@@ -36,6 +36,44 @@ CML_VERSION_FROM_FILE(
 message(STATUS "Building CML ${CML_VERSION}")
 
 
+# Modify build settings locally for static linking of tests and examples:
+if(MINGW)
+
+  # Convert compiler command lines to lists for easier manipulation:
+  separate_arguments(CMAKE_CXX_FLAGS)
+
+  # Enforce common compiler settings:
+  list(APPEND CMAKE_CXX_FLAGS "-static -static-libgcc -static-libstdc++")
+elseif(MSVC)
+
+  # Convert compiler command lines to lists for easier manipulation:
+  separate_arguments(CMAKE_CXX_FLAGS_DEBUG)
+  separate_arguments(CMAKE_CXX_FLAGS_RELEASE)
+
+  ## Remove runtime flags:
+  set(runtime_flags /MD /MT /MTd /MDd)
+  list(REMOVE_ITEM CMAKE_CXX_FLAGS ${runtime_flags})
+  list(REMOVE_ITEM CMAKE_CXX_FLAGS_DEBUG ${runtime_flags})
+  list(REMOVE_ITEM CMAKE_CXX_FLAGS_RELEASE ${runtime_flags})
+
+  # Enforce common compiler settings:
+  list(APPEND CMAKE_CXX_FLAGS_DEBUG "/MTd")
+  list(APPEND CMAKE_CXX_FLAGS_RELEASE "/MT")
+else()
+  message(FATAL_ERROR "Unknown compiler")
+endif()
+list(REMOVE_DUPLICATES CMAKE_CXX_FLAGS)
+list(REMOVE_DUPLICATES CMAKE_CXX_FLAGS_DEBUG)
+list(REMOVE_DUPLICATES CMAKE_CXX_FLAGS_RELEASE)
+string(REPLACE ";" " " CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+string(REPLACE ";" " " CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+string(REPLACE ";" " " CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+
+
+
 ## Optional configuration:
 
 # Enable tests if requested:

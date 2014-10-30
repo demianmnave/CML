@@ -10,41 +10,14 @@
 
 namespace cml {
 
-template<class Sub, class Scalar> inline auto
-operator*(
-  const readable_vector<Sub>&	sub,
-  const Scalar&			v
-  )
--> vector_scalar_node<Sub, Scalar,
-  op::binary_multiply<typename Sub::value_type, Scalar>>
-{
-  return vector_scalar_node<Sub, Scalar, op::binary_multiply<
-    typename Sub::value_type, Scalar>>(sub,v);
-}
+/* Boilerplate for scalar-vector multiply: */
+__CML_MAKE_RIGHT_VECTOR_SCALAR_OPERATORS( * , scalar_multiply_type)
 
-template<class Scalar, class Sub> inline auto
-operator*(
-  const Scalar&			v,
-  const readable_vector<Sub>&	sub
-  )
--> vector_scalar_node<Sub, Scalar,
-  op::binary_multiply<typename Sub::value_type, Scalar>>
-{
-  return vector_scalar_node<Sub, Scalar, op::binary_multiply<
-    typename Sub::value_type, Scalar>>(sub,v);
-}
+/* Boilerplate for vector-scalar multiply: */
+__CML_MAKE_LEFT_VECTOR_SCALAR_OPERATORS( * , scalar_multiply_type)
 
-template<class Sub, class Scalar> inline auto
-operator/(
-  const readable_vector<Sub>& sub,
-  const Scalar&			   v
-  )
--> vector_scalar_node<Sub, Scalar,
-  op::binary_divide<typename Sub::value_type, Scalar>>
-{
-  return vector_scalar_node<Sub, Scalar, op::binary_divide<
-    typename Sub::value_type, Scalar>>(sub,v);
-}
+/* Boilerplate for vector-scalar divide: */
+__CML_MAKE_LEFT_VECTOR_SCALAR_OPERATORS( / , scalar_divide_type)
 
 } // namespace cml
 

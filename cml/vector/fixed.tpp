@@ -18,16 +18,29 @@ vector<E, fixed<S>>::vector()
 }
 
 template<class E, int S>
-vector<E, fixed<S>>::vector(const value_type data[S])
+vector<E, fixed<S>>::vector(const vector_type& other)
 {
-  for(int i = 0; i < S; ++ i) this->m_data[i] = data[i];
+  this->assign(other);
+}
+
+template<class E, int S> template<class Sub>
+vector<E, fixed<S>>::vector(const readable_vector<Sub>& sub)
+{
+  this->assign(sub);
+}
+
+template<class E, int S> template<class Array>
+vector<E, fixed<S>>::vector(
+  const Array& array, cml::enable_if_array_t<Array>*
+  )
+{
+  this->assign(array);
 }
 
 template<class E, int S> template<class Other>
 vector<E, fixed<S>>::vector(std::initializer_list<Other> l)
 {
-  // cml::require_same_size(self, l);
-  int i = 0; for(Other v : l) { this->m_data[i++] = v; }
+  this->assign(l);
 }
 
 
@@ -53,7 +66,7 @@ vector<E, fixed<S>>::get(int i) const -> immutable_value
 }
 
 template<class E, int S> auto
-vector<E, fixed<S>>::set(int i, mutable_value v) -> vector_type&
+vector<E, fixed<S>>::set(int i, immutable_value v) -> vector_type&
 {
   this->m_data[i] = v;
   return *this;

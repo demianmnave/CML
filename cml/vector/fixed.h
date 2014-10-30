@@ -24,8 +24,10 @@ struct vector_traits< vector<Element, fixed<Size>> >
   typedef value_type const&				const_reference;
   typedef value_type&					mutable_value;
   typedef value_type const&				immutable_value;
+  typedef fixed_size_tag				size_tag;
 };
 
+/** Fixed-length vector. */
 template<class Element, int Size>
 class vector<Element, fixed<Size>>
 : public writable_vector< vector<Element, fixed<Size>> >
@@ -42,11 +44,19 @@ class vector<Element, fixed<Size>>
     typedef typename traits_type::const_reference	const_reference;
     typedef typename traits_type::mutable_value		mutable_value;
     typedef typename traits_type::immutable_value	immutable_value;
+    typedef typename traits_type::size_tag		size_tag;
 
 
   public:
 
+    /* Include methods from writable_type: */
     using writable_type::operator=;
+
+
+  public:
+
+    /** Constant containing the array size. */
+    static const int array_size = Size;
 
 
   public:
@@ -57,10 +67,17 @@ class vector<Element, fixed<Size>>
      */
     vector();
 
-    /** Construct from a C-style array. */
-    vector(const value_type data[Size]);
+    /** Copy constructor. */
+    vector(const vector_type& other);
 
-    /** Construct from std::initialize_list. */
+    /** Construct from a readable_vector. */
+    template<class Sub> vector(const readable_vector<Sub>& sub);
+
+    /** Construct from an array type. */
+    template<class Array> vector(
+      const Array& array, cml::enable_if_array_t<Array>* = 0);
+
+    /** Construct from std::initializer_list. */
     template<class Other> vector(std::initializer_list<Other> l);
 
 
@@ -76,7 +93,7 @@ class vector<Element, fixed<Size>>
     immutable_value get(int i) const;
 
     /** Set vector element @c i. */
-    vector_type& set(int i, mutable_value v);
+    vector_type& set(int i, immutable_value v);
 
     /** Return access to the vector data as a raw pointer. */
     pointer data();

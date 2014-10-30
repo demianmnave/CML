@@ -13,11 +13,16 @@ namespace cml {
 /* fixed_external 'structors: */
 
 template<class E, int S>
-vector<E, external<S>>::vector(
-  pointer 			data
-  )
+vector<E, external<S>>::vector(pointer data)
 : m_data(data)
 {
+}
+
+template<class E, int S>
+vector<E, external<S>>::vector(vector_type&& other)
+{
+  this->m_data = other.m_data;
+  other.m_data = nullptr;
 }
 
 
@@ -43,7 +48,7 @@ vector<E, external<S>>::get(int i) const -> immutable_value
 }
 
 template<class E, int S> auto
-vector<E, external<S>>::set(int i, mutable_value v) -> vector_type&
+vector<E, external<S>>::set(int i, immutable_value v) -> vector_type&
 {
   this->m_data[i] = v;
   return *this;

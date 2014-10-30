@@ -8,17 +8,23 @@
 #error "vector/binary_node.tpp not included correctly"
 #endif
 
+#include <cml/vector/size_checking.h>
+
 namespace cml {
 
 /* vector_binary_node 'structors: */
 
 template<class Sub1, class Sub2, class Op>
-vector_binary_node<Sub1,Sub2,Op>::vector_binary_node(
-  const readable_vector<Sub1>& sub1, const readable_vector<Sub2>& sub2
-  )
-: m_sub1(sub1.actual()), m_sub2(sub2.actual())
+vector_binary_node<Sub1,Sub2,Op>::vector_binary_node(Sub1 left, Sub2 right)
+: m_left(std::move(left)), m_right(std::move(right))
 {
-  // cml::require_same_size(sub1, sub2);
+  cml::check_same_size(this->m_left, this->m_right);
+}
+
+template<class Sub1, class Sub2, class Op>
+vector_binary_node<Sub1,Sub2,Op>::vector_binary_node(node_type&& other)
+: m_left(std::move(other.m_left)), m_right(std::move(other.m_right))
+{
 }
 
 
@@ -28,13 +34,13 @@ vector_binary_node<Sub1,Sub2,Op>::vector_binary_node(
 template<class Sub1, class Sub2, class Op> int
 vector_binary_node<Sub1,Sub2,Op>::size() const
 {
-  return this->m_sub1.size();
+  return this->m_left.size();
 }
 
 template<class Sub1, class Sub2, class Op> auto
 vector_binary_node<Sub1,Sub2,Op>::get(int i) const -> immutable_value
 {
-  return Op().apply(this->m_sub1.get(i), this->m_sub2.get(i));
+  return Op().apply(this->m_left.get(i), this->m_right.get(i));
 }
 
 } // namespace cml

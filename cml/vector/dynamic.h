@@ -6,16 +6,17 @@
 
 #pragma once
 
-#ifndef	cml_vector_fixed_external_h
-#define	cml_vector_fixed_external_h
+#ifndef	cml_vector_dynamic_h
+#define	cml_vector_dynamic_h
 
-#include <cml/common/external_selector.h>
+#include <vector>
+#include <cml/common/dynamic_selector.h>
 #include <cml/vector/writable_vector.h>
 
 namespace cml {
 
-template<class Element, int Size>
-struct vector_traits< vector<Element, external<Size>> >
+template<class Element, class Allocator>
+struct vector_traits< vector<Element, dynamic<Allocator>> >
 {
   typedef Element					value_type;
   typedef value_type*					pointer;
@@ -24,17 +25,17 @@ struct vector_traits< vector<Element, external<Size>> >
   typedef value_type const&				const_reference;
   typedef value_type&					mutable_value;
   typedef value_type const&				immutable_value;
-  typedef fixed_size_tag				size_tag;
+  typedef dynamic_size_tag				size_tag;
 };
 
-/** Fixed-length wrapped array pointer as a vector. */
-template<class Element, int Size>
-class vector<Element, external<Size>>
-: public writable_vector< vector<Element, external<Size>> >
+/** Fixed-length vector. */
+template<class Element, class Allocator>
+class vector<Element, dynamic<Allocator>>
+: public writable_vector< vector<Element, dynamic<Allocator>> >
 {
   public:
 
-    typedef vector<Element, external<Size>>		vector_type;
+    typedef vector<Element, dynamic<Allocator>>		vector_type;
     typedef writable_vector<vector_type>		writable_type;
     typedef vector_traits<vector_type>			traits_type;
     typedef typename traits_type::value_type		value_type;
@@ -56,16 +57,38 @@ class vector<Element, external<Size>>
   public:
 
     /** Constant containing the array size. */
-    static const int array_size = Size;
+    static const int array_size = -1;
 
 
   public:
 
-    /** Construct from the wrapped pointer. */
-    vector(pointer data);
+    /** Default constructor.
+     *
+     * @note The vector has no elements.
+     */
+    vector();
+
+    /** Construct given a size.
+     *
+     * @throws std::invalid_argument if size < 0.
+     */
+    explicit vector(int size);
+
+    /** Copy constructor. */
+    vector(const vector_type& other);
 
     /** Move constructor. */
     vector(vector_type&& other);
+
+    /** Construct from a readable_vector. */
+    template<class Sub> vector(const readable_vector<Sub>& sub);
+
+    /** Construct from an array type. */
+    template<class Array> vector(
+      const Array& array, cml::enable_if_array_t<Array>* = 0);
+
+    /** Construct from std::initializer_list. */
+    template<class Other> vector(std::initializer_list<Other> l);
 
 
   public:
@@ -88,18 +111,37 @@ class vector<Element, external<Size>>
     /** Return const access to the vector data as a raw pointer. */
     const_pointer data() const;
 
+    /** Resize the vector to the specified size.
+     *
+     * @note This will reallocate the array and copy existing elements, if
+     * any.
+     *
+     * @throws std::invalid_argument if @c n is negative.
+     */
+    void resize(int n);
+
 
   protected:
 
-    /** Wrapped pointer. */
-    pointer			m_data;
+    /** The real allocator type. */
+    typedef typename Allocator::template
+      rebind<Element>::other				allocator_type;
+
+    /** Use std::vector<> as the array storage. */
+    typedef std::vector<value_type, allocator_type>	storage_type;
+
+
+  protected:
+
+    /** Dynamic storage. */
+    storage_type		m_data;
 };
 
 } // namespace cml
 
-#define __CML_VECTOR_FIXED_EXTERNAL_TPP
-#include <cml/vector/fixed_external.tpp>
-#undef __CML_VECTOR_FIXED_EXTERNAL_TPP
+#define __CML_VECTOR_DYNAMIC_TPP
+#include <cml/vector/dynamic.tpp>
+#undef __CML_VECTOR_DYNAMIC_TPP
 
 #endif
 

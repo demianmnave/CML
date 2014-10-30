@@ -9,6 +9,7 @@
 #ifndef	cml_vector_scalar_node_h
 #define	cml_vector_scalar_node_h
 
+#include <cml/common/size_tags.h>
 #include <cml/vector/readable_vector.h>
 
 namespace cml {
@@ -19,8 +20,12 @@ template<class Sub, class Scalar, class Op> class vector_scalar_node;
 template<class Sub, class Scalar, class Op>
 struct vector_traits< vector_scalar_node<Sub,Scalar,Op> >
 {
+  /* Figure out the basic types of Sub and Scalar: */
+  typedef cml::unqualified_type_t<Sub>			left_type;
+  typedef cml::unqualified_type_t<Scalar>		right_type;
   typedef typename Op::result_type			value_type;
   typedef value_type					immutable_value;
+  typedef typename left_type::size_tag			size_tag;
 };
 
 /** Represents a binary vector operation, where one operand is a scalar
@@ -32,18 +37,35 @@ class vector_scalar_node
 {
   public:
 
-    typedef vector_scalar_node<Sub,Scalar,Op>	node_type;
+    typedef vector_scalar_node<Sub,Scalar,Op>		node_type;
     typedef vector_traits<node_type>			traits_type;
+    typedef typename traits_type::left_type		left_type;
+    typedef typename traits_type::right_type		right_type;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
+    typedef typename traits_type::size_tag		size_tag;
 
 
   public:
 
+    /** The array size constant is the same as the subexpression. */
+    static const int array_size = left_type::array_size;
+
+
+  public:
+
+#if 0
     /** Construct from the wrapped sub-expression, derived from
      * readable_vector<>, and the scalar operand.
      */
-    vector_scalar_node(const readable_vector<Sub>& sub, const Scalar& v);
+    vector_scalar_node(
+      const readable_vector<left_type>& left, const right_type& right);
+#endif
+
+    vector_scalar_node(Sub left, const right_type& right);
+
+    /** Move constructor. */
+    vector_scalar_node(node_type&& other);
 
 
   public:
@@ -59,11 +81,30 @@ class vector_scalar_node
 
   protected:
 
+    /** The type used to store the left subexpression.  The expression is
+     * stored as a copy if Sub is an rvalue reference (temporary), or by
+     * const reference if Sub is an lvalue reference.
+     */
+    typedef cml::if_t<std::is_rvalue_reference<Sub>::value,
+	    left_type, const left_type&>		left_wrap_type;
+
+
+  protected:
+
     /** The vector operand. */
-    const Sub&			m_sub;
+    left_wrap_type		m_left;
 
     /** The scalar operand. */
-    const Scalar		m_v;
+    const right_type		m_right;
+
+
+  private:
+
+    // Not copyable constructible.
+    vector_scalar_node(const node_type&);
+
+    // Not assignable.
+    node_type& operator=(const node_type&);
 };
 
 } // namespace cml

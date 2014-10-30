@@ -14,9 +14,15 @@ namespace cml {
 
 template<class Sub, class Scalar, class Op>
 vector_scalar_node<Sub,Scalar,Op>::vector_scalar_node(
-  const readable_vector<Sub>& sub, const Scalar& v
+  Sub left, const right_type& right
   )
-: m_sub(sub.actual()), m_v(v)
+: m_left(std::move(left)), m_right(right)
+{
+}
+
+template<class Sub, class Scalar, class Op>
+vector_scalar_node<Sub,Scalar,Op>::vector_scalar_node(node_type&& other)
+: m_left(std::move(other.m_left)), m_right(std::move(other.m_right))
 {
 }
 
@@ -27,13 +33,13 @@ vector_scalar_node<Sub,Scalar,Op>::vector_scalar_node(
 template<class Sub, class Scalar, class Op> int
 vector_scalar_node<Sub,Scalar,Op>::size() const
 {
-  return this->m_sub.size();
+  return this->m_left.size();
 }
 
 template<class Sub, class Scalar, class Op> auto
 vector_scalar_node<Sub,Scalar,Op>::get(int i) const -> immutable_value
 {
-  return Op().apply(this->m_sub.get(i), this->m_v);
+  return Op().apply(this->m_left.get(i), this->m_right);
 }
 
 } // namespace cml
