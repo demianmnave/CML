@@ -23,6 +23,8 @@ template<class Sub, class Scalar> using scalar_multiply_type
 template<class Sub, class Scalar> using scalar_divide_type
 = op::binary_divide<typename Sub::value_type, Scalar>;
 
+} // namespace cml
+
 /** Macro to create two boilerplate scalar-vector operator functions
  * taking const& and && arguments. To create the operators for
  * left multiplication:
@@ -93,11 +95,12 @@ template<class Scalar, class Sub> inline auto operator _sym_ (		\
   	Sub&&, Scalar, _op_type_ <Sub,Scalar>>((Sub&&) sub, v);		\
 }									\
 
-} // namespace cml
-
 #define __CML_VECTOR_SCALAR_OPS_TPP
 #include <cml/vector/scalar_ops.tpp>
 #undef __CML_VECTOR_SCALAR_OPS_TPP
+
+#undef __CML_MAKE_RIGHT_VECTOR_SCALAR_OPERATORS
+#undef __CML_MAKE_LEFT_VECTOR_SCALAR_OPERATORS
 
 #endif
 

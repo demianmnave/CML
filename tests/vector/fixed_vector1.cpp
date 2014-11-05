@@ -4,6 +4,7 @@
 /** @file
  */
 
+#include <iostream>
 #include <cml/vector/fixed.h>
 
 /* Testing headers: */
@@ -26,6 +27,36 @@ BOOST_AUTO_TEST_CASE(array_temp_construct)
   BOOST_REQUIRE_EQUAL(v.size(), 3);
   BOOST_CHECK_EQUAL(v.data()[0], 1.);
   BOOST_CHECK_EQUAL(v[0], 1.);
+}
+
+BOOST_AUTO_TEST_CASE(element_construct1)
+{
+  cml::vector<double, cml::fixed<3>> v(1.);
+  BOOST_REQUIRE_EQUAL(v.size(), 3);
+  BOOST_CHECK_EQUAL(v.data()[0], 1.);
+  BOOST_CHECK_EQUAL(v[0], 1.);
+  BOOST_CHECK_EQUAL(v[1], 0.);
+  BOOST_CHECK_EQUAL(v[2], 0.);
+}
+
+BOOST_AUTO_TEST_CASE(element_construct2)
+{
+  cml::vector<double, cml::fixed<3>> v(1., 2.);
+  BOOST_REQUIRE_EQUAL(v.size(), 3);
+  BOOST_CHECK_EQUAL(v.data()[0], 1.);
+  BOOST_CHECK_EQUAL(v[0], 1.);
+  BOOST_CHECK_EQUAL(v[1], 2.);
+  BOOST_CHECK_EQUAL(v[2], 0.);
+}
+
+BOOST_AUTO_TEST_CASE(element_construct3)
+{
+  cml::vector<double, cml::fixed<3>> v(1., 2., 3.);
+  BOOST_REQUIRE_EQUAL(v.size(), 3);
+  BOOST_CHECK_EQUAL(v.data()[0], 1.);
+  BOOST_CHECK_EQUAL(v[0], 1.);
+  BOOST_CHECK_EQUAL(v[1], 2.);
+  BOOST_CHECK_EQUAL(v[2], 3.);
 }
 
 BOOST_AUTO_TEST_CASE(array_assign)
@@ -77,7 +108,7 @@ BOOST_AUTO_TEST_CASE(size_check1)
   cml::vector<double, cml::fixed<3>> v;
   BOOST_REQUIRE_EQUAL(v.size(), 3);
   BOOST_REQUIRE_THROW(
-    (v = { 1., 2., 3., 4. }), cml::incompatible_vector_sizes);
+    (v = { 1., 2., 3., 4. }), cml::incompatible_vector_size_error);
 }
 
 // -------------------------------------------------------------------------

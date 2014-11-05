@@ -4,6 +4,7 @@
 /** @file
  */
 
+#include <cml/vector/fixed.h>
 #include <cml/vector/fixed_external.h>
 
 /* Testing headers: */

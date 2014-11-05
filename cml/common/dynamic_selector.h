@@ -17,8 +17,11 @@ namespace cml {
 /** Specializable type for 1D or 2D storage via a dynamically-allocated
  * array.
  *
- * @tparam Alloc Optional allocator type compatible with std::allocator.
+ * @tparam Allocator Optional allocator type compatible with std::allocator.
  * The default is std::allocator<void>.
+ *
+ * @note A stateful allocator will increase the size of the dynamic<>
+ * object beyond that required to store a pointer and array length.
  *
  * @note Dynamic 1D arrays must define a constant, array_size, set to -1.
  *

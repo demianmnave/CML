@@ -14,6 +14,9 @@
 #include <cml/vector/unary_ops.h>
 #include <cml/vector/binary_ops.h>
 #include <cml/vector/scalar_ops.h>
+#include <cml/vector/comparison.h>
+#include <cml/vector/dot.h>
+#include <cml/vector/cross.h>
 
 #endif
 

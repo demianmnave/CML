@@ -9,7 +9,7 @@
 #ifndef	cml_vector_dynamic_h
 #define	cml_vector_dynamic_h
 
-#include <vector>
+#include <type_traits>
 #include <cml/common/dynamic_selector.h>
 #include <cml/vector/writable_vector.h>
 
@@ -28,7 +28,7 @@ struct vector_traits< vector<Element, dynamic<Allocator>> >
   typedef dynamic_size_tag				size_tag;
 };
 
-/** Fixed-length vector. */
+/** Resizable vector. */
 template<class Element, class Allocator>
 class vector<Element, dynamic<Allocator>>
 : public writable_vector< vector<Element, dynamic<Allocator>> >
@@ -83,12 +83,29 @@ class vector<Element, dynamic<Allocator>>
     /** Construct from a readable_vector. */
     template<class Sub> vector(const readable_vector<Sub>& sub);
 
+    /** Construct from at least 2 constant values.  The vector is resized
+     * to accomodate the number of elements passed.
+     *
+     * @note There must be fewer arguments than the vector size.  This is
+     * enforced at compile time.
+     */
+    template<class... Elements>
+      vector(immutable_value e0, const Elements&... eN);
+
+    /** Construct a 2D vector from a single constant value @c e0 and
+     * value_type(0).
+     */
+    explicit vector(immutable_value e0);
+
     /** Construct from an array type. */
     template<class Array> vector(
       const Array& array, cml::enable_if_array_t<Array>* = 0);
 
     /** Construct from std::initializer_list. */
     template<class Other> vector(std::initializer_list<Other> l);
+
+    /** Destructor. */
+    ~vector();
 
 
   public:
@@ -120,6 +137,16 @@ class vector<Element, dynamic<Allocator>>
      */
     void resize(int n);
 
+    /** Resize the vector to the specified size without copying the old
+     * elements.
+     *
+     * @note This will reallocate the array and copy existing elements, if
+     * any.
+     *
+     * @throws std::invalid_argument if @c n is negative.
+     */
+    void resize_fast(int n);
+
 
   protected:
 
@@ -127,14 +154,31 @@ class vector<Element, dynamic<Allocator>>
     typedef typename Allocator::template
       rebind<Element>::other				allocator_type;
 
-    /** Use std::vector<> as the array storage. */
-    typedef std::vector<value_type, allocator_type>	storage_type;
+    /** Require a stateless allocator. */
+    static_assert(std::is_empty<allocator_type>::value,
+      "cannot use a stateful allocator for dynamic<> vectors");
+
+
+  protected:
+
+    /** No-op for trivially destructible elements
+     * (is_trivially_destructible).
+     */
+    void destruct(pointer, int, std::true_type);
+
+    /** Invoke non-trivial destructors for @c n elements starting at @c
+     * data.
+     */
+    void destruct(pointer data, int n, std::false_type);
 
 
   protected:
 
     /** Dynamic storage. */
-    storage_type		m_data;
+    pointer			m_data;
+
+    /** Size of the vector. */
+    int				m_size;
 };
 
 } // namespace cml

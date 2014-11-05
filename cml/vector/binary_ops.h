@@ -22,6 +22,8 @@ template<class Sub1, class Sub2> using binary_minus_type
 template<class Sub1, class Sub2> using binary_plus_type
 = op::binary_plus<typename Sub1::value_type, typename Sub2::value_type>;
 
+} // namespace cml
+
 /** Macro to create four boilerplate binary vector operator functions
  * taking const& and && arguments. To create the four operators for binary
  * minus:
@@ -39,6 +41,11 @@ template<class Sub1, class Sub2> using binary_plus_type
  * ensure that they are copied by value into the returned node.  This
  * avoids prematurely destructing temporary nodes before they are used,
  * particulary in statements like "auto xpr = a-b".
+ *
+ * @throws incompatible_vector_sizes at run-time if either Sub1 or Sub2 is
+ * a dynamically-sized vector, and sub1.size() != sub2.size().  If both
+ * Sub1 and Sub2 are fixed-size expressions, then the sizes are checked at
+ * compile time.
  */
 #define __CML_MAKE_VECTOR_BINARY_OPERATORS(_sym_, _op_type_)		\
 template<class Sub1, class Sub2> inline auto operator _sym_ (		\
@@ -73,11 +80,11 @@ template<class Sub1, class Sub2> inline auto operator _sym_ (		\
 	 _op_type_<Sub1,Sub2>>((Sub1&&) sub1, (Sub2&&) sub2);		\
 }
 
-} // namespace cml
-
 #define __CML_VECTOR_BINARY_OPS_TPP
 #include <cml/vector/binary_ops.tpp>
 #undef __CML_VECTOR_BINARY_OPS_TPP
+
+#undef __CML_MAKE_VECTOR_BINARY_OPERATORS
 
 #endif
 

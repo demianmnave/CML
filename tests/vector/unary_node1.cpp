@@ -4,7 +4,6 @@
 /** @file
  */
 
-#include <iostream>
 #include <cml/vector/fixed.h>
 #include <cml/vector/fixed_external.h>
 

@@ -11,7 +11,11 @@
 
 namespace cml {
 
-/** Specializable class for building vector types. */
+/** Specializable class for building vector types.
+ *
+ * @note @c Element must have the following operators defined: +, -, *, /,
+ * <, >, ==, = (assign).
+ */
 template<class Element, class StorageType> class vector;
 
 } // namespace cml

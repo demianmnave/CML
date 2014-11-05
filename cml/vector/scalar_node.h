@@ -54,14 +54,9 @@ class vector_scalar_node
 
   public:
 
-#if 0
-    /** Construct from the wrapped sub-expression, derived from
-     * readable_vector<>, and the scalar operand.
+    /** Construct from the wrapped sub-expression and the scalar to apply.
+     * @c sub must be an lvalue reference or rvalue reference.
      */
-    vector_scalar_node(
-      const readable_vector<left_type>& left, const right_type& right);
-#endif
-
     vector_scalar_node(Sub left, const right_type& right);
 
     /** Move constructor. */

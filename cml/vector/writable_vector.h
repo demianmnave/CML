@@ -66,23 +66,51 @@ class writable_vector
     /** Return a mutable reference to element @c i. */
     mutable_value operator[](int i);
 
-    /** Assign from a readable_vector. */
+    /** Assign from a readable_vector.
+     *
+     * @throws incompatible_vector_sizes at run-time if the vector is not
+     * resizable, and @c other.size() != this->size().  If both Sub1 and
+     * Sub2 are fixed-size expressions, then the sizes are checked at
+     * compile time.
+     */
     template<class OtherDerivedT>
       DerivedT& operator=(const readable_vector<OtherDerivedT>& other);
 
-    /** Assign from an array type. */
+    /** Assign from a fixed-length array type.
+     *
+     * @throws incompatible_vector_sizes at run-time if the vector is not
+     * resizable, and @c cml::array_size_of_c<value>::value != this->size().
+     * If both Sub1 and Sub2 are fixed-size expressions, then the sizes are
+     * checked at compile time.
+     */
     template<class Array, typename cml::enable_if_array_t<Array>* = nullptr>
 	DerivedT& operator=(const Array& array);
 
-    /** Assign from initializer list. */
+    /** Assign from initializer list.
+     *
+     * @throws incompatible_vector_sizes if the vector is not resizable,
+     * and @c l.size() != this->size().
+     */
     template<class Other>
       DerivedT& operator=(std::initializer_list<Other> l);
 
-    /** Modify the vector by addition of another vector. */
+    /** Modify the vector by addition of another vector.
+     *
+     * @throws incompatible_vector_sizes at run-time if the vector is
+     * dynamically-sized, and @c other.size() != this->size().  If both
+     * Sub1 and Sub2 are fixed-size expressions, then the sizes are checked
+     * at compile time.
+     */
     template<class OtherDerivedT>
       DerivedT& operator+=(const readable_vector<OtherDerivedT>& other);
 
-    /** Modify the vector by subtraction of another vector. */
+    /** Modify the vector by subtraction of another vector.
+     *
+     * @throws incompatible_vector_sizes at run-time if the vector is
+     * dynamically-sized, and @c other.size() != this->size().  If both
+     * Sub1 and Sub2 are fixed-size expressions, then the sizes are checked
+     * at compile time.
+     */
     template<class OtherDerivedT>
       DerivedT& operator-=(const readable_vector<OtherDerivedT>& other);
 
@@ -95,18 +123,45 @@ class writable_vector
 
   protected:
 
-    /** Assign from a readable_vector. */
+    /** Assign from a readable_vector.
+     *
+     * @throws incompatible_vector_sizes at run-time if the vector is not
+     * resizable, and @c other.size() != this->size().  If both Sub1 and
+     * Sub2 are fixed-size expressions, then the sizes are checked at
+     * compile time.
+     */
     template<class OtherDerivedT>
       DerivedT& assign(const readable_vector<OtherDerivedT>& other);
 
-    /** Assign from an array type. */
+    /** Assign from an array type.
+     *
+     * @throws incompatible_vector_sizes at run-time if the vector is not
+     * resizable, and @c cml::array_size_of_c<value>::value != this->size().
+     * If both Sub1 and Sub2 are fixed-size expressions, then the sizes are
+     * checked at compile time.
+     */
     template<class Array,
       typename cml::enable_if_array_t<Array>* = nullptr>
 	DerivedT& assign(const Array& array);
 
-    /** Assign from an initializer_list. */
+    /** Assign from an initializer_list.
+     *
+     * @throws incompatible_vector_sizes if the vector is not resizable,
+     * and @c l.size() != this->size().
+     */
     template<class Other>
       DerivedT& assign(const std::initializer_list<Other>& l);
+
+    /** Construct from a variable list of at least 2 constant values. If
+     * the vector is fixed-size and longer than the variable argument list,
+     * the remaining elements are set to value_type(0).  Resizable vectors
+     * are resized to accomodate the number of arguments.
+     *
+     * @note For fixed-size vectors, there must be fewer arguments than the
+     * vector size.  This is enforced at compile time.
+     */
+    template<class... Elements>
+      DerivedT& assign(immutable_value e0, const Elements&... eN);
 
 
   protected:

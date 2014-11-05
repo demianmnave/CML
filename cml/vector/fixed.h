@@ -27,11 +27,15 @@ struct vector_traits< vector<Element, fixed<Size>> >
   typedef fixed_size_tag				size_tag;
 };
 
-/** Fixed-length vector. */
+/** Fixed-length vector.
+ *
+ * @note Fixed-length vectors must have at least 2 elements.
+ */
 template<class Element, int Size>
 class vector<Element, fixed<Size>>
 : public writable_vector< vector<Element, fixed<Size>> >
 {
+  static_assert(Size >= 2, "fixed vectors must have at least 2 elements");
   public:
 
     typedef vector<Element, fixed<Size>>		vector_type;
@@ -72,6 +76,21 @@ class vector<Element, fixed<Size>>
 
     /** Construct from a readable_vector. */
     template<class Sub> vector(const readable_vector<Sub>& sub);
+
+    /** Construct from at least 2 constant values. If the vector is longer
+     * than the variable argument list, the remaining elements are set to
+     * value_type(0).
+     *
+     * @note There must be fewer arguments than the vector size.  This is
+     * enforced at compile time.
+     */
+    template<class... Elements>
+      vector(immutable_value e0, const Elements&... eN);
+
+    /** Construct from a single constant value.  The remaining vector
+     * elements are set to value_type(0).
+     */
+    explicit vector(immutable_value e0);
 
     /** Construct from an array type. */
     template<class Array> vector(

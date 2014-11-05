@@ -14,6 +14,8 @@
 #include <cml/vector/binary_ops.h>
 
 namespace cml {
+
+/* Local functions: */
 namespace detail {
 
 /** check_or_resize for a read-only vector @c left that just forwards to
@@ -33,6 +35,44 @@ check_or_resize(writable_vector<Sub>& left, const Other& right)
 -> decltype(left.actual().resize(0), void())
 {
   left.actual().resize(cml::array_size_of(right));
+}
+
+
+/** check_minimum_or_resize for a read-only vector @c left and constant
+ * size N that just forwards to check_size.
+ */
+template<class Sub, int N> inline void
+check_minimum_or_resize(const readable_vector<Sub>& sub, cml::int_c<N>)
+{
+  cml::check_minimum_size(sub, cml::int_c<N>());
+}
+
+/** check_minimum_or_resize for a read-write vector @c left and constant
+ * size N that resizes the vector to N.
+ */
+template<class Sub, int N> inline auto
+check_minimum_or_resize(writable_vector<Sub>& sub, cml::int_c<N>)
+-> decltype(sub.actual().resize(0), void())
+{
+  sub.actual().resize(N);
+}
+
+
+/** Terminate the assignment recursion at the final element. */
+template<int I, class Sub, class E0> inline void
+element_assign(writable_vector<Sub>& sub, const E0& e0)
+{
+  sub.set(I,e0);
+}
+
+/** Set element I of sub to e0, then assign the remainder of the elements
+ * starting from I+1.
+ */
+template<int I, class Sub, class E0, class... Es> inline void
+element_assign(writable_vector<Sub>& sub, const E0& e0, const Es&... eN)
+{
+  sub.set(I,e0);
+  element_assign<I+1>(sub, eN...);
 }
 
 } // namespace detail
@@ -136,6 +176,24 @@ writable_vector<DT>::assign(const std::initializer_list<Other>& l)
 {
   detail::check_or_resize(*this, l);
   int i = 0; for(Other v : l) { this->set(i ++, v); }
+  return this->actual();
+}
+
+template<class DT>
+template<class... Es> DT&
+writable_vector<DT>::assign(immutable_value e0, const Es&... eN)
+{
+  static const int N = int(sizeof...(eN))+1;
+  detail::check_minimum_or_resize(*this, cml::int_c<N>());
+
+  /* Assign up to sizeof...(eN)-1: */
+  this->set(0,e0);
+  detail::element_assign<1>(*this, eN...);
+
+  /* Set N...size()-1: */
+  for(int i = N; i < this->size(); ++ i) this->set(i, value_type(0));
+
+  /* Done: */
   return this->actual();
 }
 

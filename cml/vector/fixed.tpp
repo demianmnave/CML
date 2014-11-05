@@ -29,6 +29,18 @@ vector<E, fixed<S>>::vector(const readable_vector<Sub>& sub)
   this->assign(sub);
 }
 
+template<class E, int S> template<class... Es>
+vector<E, fixed<S>>::vector(immutable_value e0, const Es&... eN)
+{
+  this->assign(e0, eN...);
+}
+
+template<class E, int S>
+vector<E, fixed<S>>::vector(immutable_value e0)
+{
+  this->assign(e0, value_type(0));
+}
+
 template<class E, int S> template<class Array>
 vector<E, fixed<S>>::vector(
   const Array& array, cml::enable_if_array_t<Array>*

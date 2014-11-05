@@ -56,8 +56,8 @@ BOOST_AUTO_TEST_CASE(size_check1)
   double av[3];
   cml::vector<double, cml::external<3>> v(av);
   BOOST_REQUIRE_EQUAL(v.size(), 3);
-  BOOST_REQUIRE_THROW(
-    (v = { 1., 2., 3., 4. }), cml::incompatible_vector_sizes);
+  BOOST_CHECK_THROW(
+    (v = { 1., 2., 3., 4. }), cml::incompatible_vector_size_error);
 }
 
 // -------------------------------------------------------------------------
