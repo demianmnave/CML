@@ -8,6 +8,9 @@
 #error "vector/readable_vector.tpp not included correctly"
 #endif
 
+#include <cmath>
+#include <cml/vector/dot.h>
+
 namespace cml {
 
 /* Public methods: */
@@ -34,6 +37,19 @@ template<class DT> auto
 readable_vector<DT>::operator[](int i) const -> immutable_value
 {
   return this->get(i);
+}
+
+
+template<class DT> auto
+readable_vector<DT>::length_squared() const -> value_type
+{
+  return cml::dot(this->actual(),this->actual());
+}
+
+template<class DT> auto
+readable_vector<DT>::length() const -> value_type
+{
+  return std::sqrt(this->length_squared());
 }
 
 } // namespace cml

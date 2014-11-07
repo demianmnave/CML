@@ -23,9 +23,10 @@ struct vector_traits< vector_scalar_node<Sub,Scalar,Op> >
   /* Figure out the basic types of Sub and Scalar: */
   typedef cml::unqualified_type_t<Sub>			left_type;
   typedef cml::unqualified_type_t<Scalar>		right_type;
-  typedef typename Op::result_type			value_type;
-  typedef value_type					immutable_value;
-  typedef typename left_type::size_tag			size_tag;
+  typedef scalar_traits<typename Op::result_type>	element_traits;
+  typedef typename element_traits::value_type		value_type;
+  typedef typename element_traits::immutable_value	immutable_value;
+  typedef typename vector_traits<left_type>::size_tag	size_tag;
 };
 
 /** Represents a binary vector operation, where one operand is a scalar
@@ -89,13 +90,13 @@ class vector_scalar_node
     /** The vector operand. */
     left_wrap_type		m_left;
 
-    /** The scalar operand. */
+    /** The read-only scalar operand. */
     const right_type		m_right;
 
 
   private:
 
-    // Not copyable constructible.
+    // Not copy constructible.
     vector_scalar_node(const node_type&);
 
     // Not assignable.

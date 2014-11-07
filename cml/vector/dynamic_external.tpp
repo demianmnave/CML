@@ -53,8 +53,8 @@ vector<E, external<>>::get(int i) const -> immutable_value
   return this->m_data[i];
 }
 
-template<class E> auto
-vector<E, external<>>::set(int i, immutable_value v) -> vector_type&
+template<class E> template<class Other> auto
+vector<E, external<>>::set(int i, const Other& v) -> vector_type&
 {
   this->m_data[i] = v;
   return *this;

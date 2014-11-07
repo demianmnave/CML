@@ -16,11 +16,11 @@ namespace cml {
 
 /** Template helper for unary minus. */
 template<class Sub> using unary_minus_type
-= op::unary_minus<typename Sub::value_type>;
+= op::unary_minus<typename vector_traits<Sub>::value_type>;
 
 /** Template helper for unary plus. */
 template<class Sub> using unary_plus_type
-= op::unary_plus<typename Sub::value_type>;
+= op::unary_plus<typename vector_traits<Sub>::value_type>;
 
 /** Return an expression node for unary minus over the elements of the
  * sub-expression @c sub, stored as a const reference in the node.

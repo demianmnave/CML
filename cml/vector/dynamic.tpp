@@ -52,17 +52,17 @@ vector<E, dynamic<A>>::vector(const readable_vector<Sub>& sub)
 }
 
 template<class E, class A> template<class... Es>
-vector<E, dynamic<A>>::vector(immutable_value e0, const Es&... eN)
+vector<E, dynamic<A>>::vector(const_reference e0, const Es&... eN)
 : m_data(0), m_size(0)
 {
-  this->assign(e0, eN...);
+  this->assign_elements(e0, eN...);
 }
 
 template<class E, class A>
-vector<E, dynamic<A>>::vector(immutable_value e0)
+vector<E, dynamic<A>>::vector(const_reference e0)
 : m_data(0), m_size(0)
 {
-  this->assign(e0, value_type(0));
+  this->assign_elements(e0, value_type(0));
 }
 
 template<class E, class A> template<class Array>
@@ -112,8 +112,8 @@ vector<E, dynamic<A>>::get(int i) const -> immutable_value
   return this->m_data[i];
 }
 
-template<class E, class A> auto
-vector<E, dynamic<A>>::set(int i, immutable_value v) -> vector_type&
+template<class E, class A> template<class Other> auto
+vector<E, dynamic<A>>::set(int i, const Other& v) -> vector_type&
 {
   this->m_data[i] = v;
   return *this;

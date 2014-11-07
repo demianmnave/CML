@@ -49,21 +49,21 @@ BOOST_AUTO_TEST_CASE(cross2)
 BOOST_AUTO_TEST_CASE(size_check1)
 {
   cml::vector<double, cml::dynamic<>> v1(2);
-  BOOST_REQUIRE_THROW(cml::cross(v1,v1), cml::vector_size_error);
+  BOOST_CHECK_THROW(cml::cross(v1,v1), cml::vector_size_error);
 }
 
 BOOST_AUTO_TEST_CASE(size_check2)
 {
   cml::vector<double, cml::dynamic<>> v1(2,3);
   cml::vector<double, cml::fixed<3>> v2(2,3,3);
-  BOOST_REQUIRE_THROW(cml::cross(v1,v2), cml::vector_size_error);
+  BOOST_CHECK_THROW(cml::cross(v1,v2), cml::vector_size_error);
 }
 
 BOOST_AUTO_TEST_CASE(size_check3)
 {
   cml::vector<double, cml::fixed<3>> v1(2,3,3);
   cml::vector<double, cml::dynamic<>> v2(2,3);
-  BOOST_REQUIRE_THROW(cml::cross(v1,v2), cml::vector_size_error);
+  BOOST_CHECK_THROW(cml::cross(v1,v2), cml::vector_size_error);
 }
 
 // -------------------------------------------------------------------------

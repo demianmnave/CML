@@ -14,15 +14,15 @@ namespace op {
 
 /** Unary minus (negation). */
 template<class Scalar> struct unary_minus {
-  typedef Scalar value_type;
-  typedef decltype(- Scalar()) result_type;
+  typedef typename scalar_traits<Scalar>::value_type value_type;
+  typedef decltype(- value_type()) result_type;
   result_type apply(const value_type& v) const { return - v; }
 };
 
 /** Unary plus. */
 template<class Scalar> struct unary_plus {
-  typedef Scalar value_type;
-  typedef decltype(+ Scalar()) result_type;
+  typedef typename scalar_traits<Scalar>::value_type value_type;
+  typedef decltype(+ value_type()) result_type;
   result_type apply(const value_type& v) const { return + v; }
 };
 

@@ -14,7 +14,11 @@ ADD_CML_TEST(binary_node1)
 ADD_CML_TEST(scalar_node1)
 ADD_CML_TEST(comparison1)
 ADD_CML_TEST(dot1)
+ADD_CML_TEST(perp_dot1)
 ADD_CML_TEST(cross1)
+ADD_CML_TEST(triple_product1)
+ADD_CML_TEST(functions1)
+ADD_CML_TEST(subvector1)
 
 # --------------------------------------------------------------------------
 # vim:ft=cmake

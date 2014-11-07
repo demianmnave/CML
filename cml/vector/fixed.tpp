@@ -30,15 +30,15 @@ vector<E, fixed<S>>::vector(const readable_vector<Sub>& sub)
 }
 
 template<class E, int S> template<class... Es>
-vector<E, fixed<S>>::vector(immutable_value e0, const Es&... eN)
+vector<E, fixed<S>>::vector(const_reference e0, const Es&... eN)
 {
-  this->assign(e0, eN...);
+  this->assign_elements(e0, eN...);
 }
 
 template<class E, int S>
-vector<E, fixed<S>>::vector(immutable_value e0)
+vector<E, fixed<S>>::vector(const_reference e0)
 {
-  this->assign(e0, value_type(0));
+  this->assign_elements(e0, value_type(0));
 }
 
 template<class E, int S> template<class Array>
@@ -77,8 +77,8 @@ vector<E, fixed<S>>::get(int i) const -> immutable_value
   return this->m_data[i];
 }
 
-template<class E, int S> auto
-vector<E, fixed<S>>::set(int i, immutable_value v) -> vector_type&
+template<class E, int S> template<class Other> auto
+vector<E, fixed<S>>::set(int i, const Other& v) -> vector_type&
 {
   this->m_data[i] = v;
   return *this;

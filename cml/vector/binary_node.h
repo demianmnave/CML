@@ -20,19 +20,12 @@ template<class Sub1, class Sub2, class Op> class vector_binary_node;
 template<class Sub1, class Sub2, class Op>
 struct vector_traits< vector_binary_node<Sub1,Sub2,Op> >
 {
-  /* Figure out the basic types of Sub1 and Sub2: */
   typedef cml::unqualified_type_t<Sub1>			left_type;
   typedef cml::unqualified_type_t<Sub2>			right_type;
-
-  /* Figure out the scalar type: */
-  typedef typename Op::result_type			value_type;
-  typedef value_type					immutable_value;
-
-  /* Figure out the size type of the resulting expression: */
-  typedef typename left_type::size_tag			left_size_tag;
-  typedef typename right_type::size_tag			right_size_tag;
-  typedef typename vector_size_tag_promote<
-    left_size_tag, right_size_tag>::size_tag		size_tag;
+  typedef scalar_traits<typename Op::result_type>	element_traits;
+  typedef typename element_traits::value_type		value_type;
+  typedef typename element_traits::immutable_value	immutable_value;
+  typedef vector_size_tag_promote_t<left_type, right_type> size_tag;
 };
 
 /** Represents a binary vector operation in an expression tree. */
@@ -116,7 +109,7 @@ class vector_binary_node
 
   private:
 
-    // Not copyable constructible.
+    // Not copy constructible.
     vector_binary_node(const node_type&);
 
     // Not assignable.

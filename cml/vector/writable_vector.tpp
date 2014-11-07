@@ -60,7 +60,7 @@ check_minimum_or_resize(writable_vector<Sub>& sub, cml::int_c<N>)
 
 /** Terminate the assignment recursion at the final element. */
 template<int I, class Sub, class E0> inline void
-element_assign(writable_vector<Sub>& sub, const E0& e0)
+assign_elements(writable_vector<Sub>& sub, const E0& e0)
 {
   sub.set(I,e0);
 }
@@ -69,10 +69,10 @@ element_assign(writable_vector<Sub>& sub, const E0& e0)
  * starting from I+1.
  */
 template<int I, class Sub, class E0, class... Es> inline void
-element_assign(writable_vector<Sub>& sub, const E0& e0, const Es&... eN)
+assign_elements(writable_vector<Sub>& sub, const E0& e0, const Es&... eN)
 {
   sub.set(I,e0);
-  element_assign<I+1>(sub, eN...);
+  assign_elements<I+1>(sub, eN...);
 }
 
 } // namespace detail
@@ -93,8 +93,8 @@ writable_vector<DT>::get(int i) -> mutable_value
   return this->actual().get(i);
 }
 
-template<class DT> DT&
-writable_vector<DT>::set(int i, immutable_value v)
+template<class DT> template<class Other> DT&
+writable_vector<DT>::set(int i, const Other& v)
 {
   return this->actual().set(i,v);
 }
@@ -104,6 +104,47 @@ writable_vector<DT>::operator[](int i) -> mutable_value
 {
   return this->get(i);
 }
+
+
+template<class DT> DT&
+writable_vector<DT>::normalize()
+{
+  return this->operator/=(this->length());
+}
+
+template<class DT> DT&
+writable_vector<DT>::zero()
+{
+  for(int i = 0; i < this->size(); ++ i) this->set(i, value_type(0));
+  return this->actual();
+}
+
+template<class DT> DT&
+writable_vector<DT>::cardinal(int i)
+{
+  return this->zero().set(i, value_type(1));
+}
+
+template<class DT> template<class ODT> DT&
+writable_vector<DT>::minimize(const readable_vector<ODT>& other)
+{
+  cml::check_same_size(*this, other);
+  for(int i = 0; i < this->size(); ++ i) {
+    this->set(i, std::min(this->get(i), other.get(i)));
+  }
+  return this->actual();
+}
+
+template<class DT> template<class ODT> DT&
+writable_vector<DT>::maximize(const readable_vector<ODT>& other)
+{
+  cml::check_same_size(*this, other);
+  for(int i = 0; i < this->size(); ++ i) {
+    this->set(i, std::max(this->get(i), other.get(i)));
+  }
+  return this->actual();
+}
+
 
 template<class DT> template<class ODT> DT&
 writable_vector<DT>::operator=(const readable_vector<ODT>& other)
@@ -137,13 +178,13 @@ writable_vector<DT>::operator-=(const readable_vector<ODT>& other)
 }
 
 template<class DT> DT&
-writable_vector<DT>::operator*=(immutable_value v)
+writable_vector<DT>::operator*=(const_reference v)
 {
   return (*this = (*this)*v);
 }
 
 template<class DT> DT&
-writable_vector<DT>::operator/=(immutable_value v)
+writable_vector<DT>::operator/=(const_reference v)
 {
   return (*this = (*this)/v);
 }
@@ -179,16 +220,14 @@ writable_vector<DT>::assign(const std::initializer_list<Other>& l)
   return this->actual();
 }
 
-template<class DT>
-template<class... Es> DT&
-writable_vector<DT>::assign(immutable_value e0, const Es&... eN)
+template<class DT> template<class... Es> DT&
+writable_vector<DT>::assign_elements(const Es&... eN)
 {
-  static const int N = int(sizeof...(eN))+1;
+  static const int N = int(sizeof...(eN));
   detail::check_minimum_or_resize(*this, cml::int_c<N>());
 
-  /* Assign up to sizeof...(eN)-1: */
-  this->set(0,e0);
-  detail::element_assign<1>(*this, eN...);
+  /* Assign up to sizeof...(eN): */
+  detail::assign_elements<0>(*this, eN...);
 
   /* Set N...size()-1: */
   for(int i = N; i < this->size(); ++ i) this->set(i, value_type(0));

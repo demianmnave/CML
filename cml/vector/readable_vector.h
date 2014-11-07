@@ -50,6 +50,15 @@ class readable_vector
 
     /** Return const element @c i. */
     immutable_value operator[](int i) const;
+
+
+  public:
+
+    /** Return the squared length of the vector. */
+    value_type length_squared() const;
+
+    /** Return the length of the vector. */
+    value_type length() const;
 };
 
 } // namespace cml

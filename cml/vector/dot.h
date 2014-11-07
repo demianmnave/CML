@@ -9,6 +9,7 @@
 #ifndef	cml_vector_dot_h
 #define	cml_vector_dot_h
 
+#include <cml/common/scalar_promotion.h>
 #include <cml/vector/readable_vector.h>
 #include <cml/vector/promotion.h>
 
@@ -17,7 +18,7 @@ namespace cml {
 /** Compute the dot-product of two vectors.
  *
  * @note Currently, the result is computed immediately, even if it appears
- * in an expression.
+ * as a term in an expression.
  *
  * @throws incompatible_vector_size_error at run-time if either left or
  * right is a dynamically-sized vector, and left.size() != right.size(). If
@@ -30,7 +31,7 @@ namespace cml {
  */
 template<class Sub1, class Sub2> auto dot(
   const readable_vector<Sub1>& left, const readable_vector<Sub2>& right)
-  -> typename value_type_promote<Sub1, Sub2>::scalar_type;
+  -> value_type_promote_t<Sub1, Sub2>;
 
 } // namespace cml
 

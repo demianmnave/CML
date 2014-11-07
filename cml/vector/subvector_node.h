@@ -5,8 +5,8 @@
 
 #pragma once
 
-#ifndef	cml_vector_unary_node_h
-#define	cml_vector_unary_node_h
+#ifndef	cml_subvector_node_h
+#define	cml_subvector_node_h
 
 #include <cml/common/mpl/if_t.h>
 #include <cml/common/size_tags.h>
@@ -14,28 +14,30 @@
 
 namespace cml {
 
-template<class Sub, class Op> class vector_unary_node;
+template<class Sub> class subvector_node;
 
-/** vector_unary_node<> traits. */
-template<class Sub, class Op>
-struct vector_traits< vector_unary_node<Sub,Op> >
+/** subvector_node<> traits. */
+template<class Sub>
+struct vector_traits< subvector_node<Sub> >
 {
   /* Figure out the basic type of Sub: */
   typedef cml::unqualified_type_t<Sub>			sub_type;
-  typedef scalar_traits<typename Op::result_type>	element_traits;
-  typedef typename element_traits::value_type		value_type;
-  typedef typename element_traits::immutable_value	immutable_value;
-  typedef typename vector_traits<sub_type>::size_tag	size_tag;
+  typedef vector_traits<sub_type>			sub_traits;
+  typedef typename sub_traits::value_type		value_type;
+  typedef typename sub_traits::immutable_value 		immutable_value;
+  typedef typename sub_traits::size_tag			size_tag;
 };
 
-/** Represents a unary vector operation in an expression tree. */
-template<class Sub, class Op>
-class vector_unary_node
-: public readable_vector< vector_unary_node<Sub,Op> >
+/** Represents an N-1 subvector operation in an expression tree, where N is
+ * the length of the wrapped subexpression.
+ */
+template<class Sub>
+class subvector_node
+: public readable_vector< subvector_node<Sub> >
 {
   public:
 
-    typedef vector_unary_node<Sub,Op>			node_type;
+    typedef subvector_node<Sub>				node_type;
     typedef vector_traits<node_type>			traits_type;
     typedef typename traits_type::sub_type		sub_type;
     typedef typename traits_type::value_type		value_type;
@@ -45,19 +47,20 @@ class vector_unary_node
 
   public:
 
-    /** The array size constant is the same as the subexpression. */
-    static const int array_size = sub_type::array_size;
+    /** The array size constant depends upon the subexpression size. */
+    static const int array_size
+      = (sub_type::array_size > 0) ? (sub_type::array_size - 1) : -1;
 
 
   public:
 
-    /** Construct from the wrapped sub-expression.  @c sub must be an
-     * lvalue reference or rvalue reference.
+    /** Construct from the wrapped sub-expression and the element to drop.
+     * @c sub must be an lvalue reference or rvalue reference.
      */
-    explicit vector_unary_node(Sub sub);
+    explicit subvector_node(Sub sub, int skip);
 
     /** Move constructor. */
-    vector_unary_node(node_type&& other);
+    subvector_node(node_type&& other);
 
 
   public:
@@ -81,11 +84,14 @@ class vector_unary_node
     /** The wrapped subexpression. */
     wrap_type			m_sub;
 
+    /** The element to skip. */
+    int				m_skip;
+
 
   private:
 
     // Not copy constructible.
-    vector_unary_node(const node_type&);
+    subvector_node(const node_type&);
 
     // Not assignable.
     node_type& operator=(const node_type&);
@@ -93,9 +99,9 @@ class vector_unary_node
 
 } // namespace cml
 
-#define __CML_VECTOR_UNARY_NODE_TPP
-#include <cml/vector/unary_node.tpp>
-#undef __CML_VECTOR_UNARY_NODE_TPP
+#define __CML_VECTOR_SUBVECTOR_NODE_TPP
+#include <cml/vector/subvector_node.tpp>
+#undef __CML_VECTOR_SUBVECTOR_NODE_TPP
 
 #endif
 

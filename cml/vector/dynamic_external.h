@@ -9,6 +9,7 @@
 #ifndef	cml_vector_dynamic_external_h
 #define	cml_vector_dynamic_external_h
 
+#include <cml/common/scalar_traits.h>
 #include <cml/common/external_selector.h>
 #include <cml/vector/writable_vector.h>
 
@@ -17,13 +18,14 @@ namespace cml {
 template<class Element>
 struct vector_traits< vector<Element, external<>> >
 {
-  typedef Element					value_type;
-  typedef value_type*					pointer;
-  typedef value_type&					reference;
-  typedef value_type const*				const_pointer;
-  typedef value_type const&				const_reference;
-  typedef value_type&					mutable_value;
-  typedef value_type const&				immutable_value;
+  typedef scalar_traits<Element>			element_traits;
+  typedef typename element_traits::value_type		value_type;
+  typedef typename element_traits::pointer		pointer;
+  typedef typename element_traits::reference		reference;
+  typedef typename element_traits::const_pointer	const_pointer;
+  typedef typename element_traits::const_reference	const_reference;
+  typedef typename element_traits::mutable_value	mutable_value;
+  typedef typename element_traits::immutable_value	immutable_value;
   typedef dynamic_size_tag				size_tag;
 };
 
@@ -80,7 +82,7 @@ class vector<Element, external<>>
     immutable_value get(int i) const;
 
     /** Set vector element @c i. */
-    vector_type& set(int i, immutable_value v);
+    template<class Other> vector_type& set(int i, const Other& v);
 
     /** Return access to the vector data as a raw pointer. */
     pointer data();

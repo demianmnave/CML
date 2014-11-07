@@ -16,11 +16,13 @@ namespace cml {
 
 /** Template helper for binary minus. */
 template<class Sub1, class Sub2> using binary_minus_type
-= op::binary_minus<typename Sub1::value_type, typename Sub2::value_type>;
+  = op::binary_minus<typename vector_traits<Sub1>::value_type,
+  typename vector_traits<Sub2>::value_type>;
 
 /** Template helper for binary plus. */
 template<class Sub1, class Sub2> using binary_plus_type
-= op::binary_plus<typename Sub1::value_type, typename Sub2::value_type>;
+  = op::binary_plus<typename vector_traits<Sub1>::value_type,
+  typename vector_traits<Sub2>::value_type>;
 
 } // namespace cml
 

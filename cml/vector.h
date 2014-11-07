@@ -11,12 +11,13 @@
 
 #include <cml/vector/fixed.h>
 #include <cml/vector/external.h>
+#include <cml/vector/dynamic.h>
+#include <cml/vector/comparison.h>
 #include <cml/vector/unary_ops.h>
 #include <cml/vector/binary_ops.h>
 #include <cml/vector/scalar_ops.h>
-#include <cml/vector/comparison.h>
-#include <cml/vector/dot.h>
-#include <cml/vector/cross.h>
+#include <cml/vector/products.h>
+#include <cml/vector/subvector.h>
 
 #endif
 
