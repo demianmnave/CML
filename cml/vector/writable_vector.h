@@ -28,6 +28,13 @@ namespace cml {
  *
  * - template<class T> DerivedT& set(int i, const T&)
  *
+ *   for compilers without support for rvalue reference from *this; and
+ *
+ *   template<class T> DerivedT& set(int i, const T&) &
+ *   template<class T> DerivedT&& set(int i, const T&) &&
+ *
+ *   for compilers with support for rvalue reference from this.
+ *
  * Note that mutable_value need not be a reference type.
  */
 template<class DerivedT>
@@ -57,11 +64,16 @@ class writable_vector
     /** Return a mutable reference to the vector cast as DerivedT. */
     DerivedT& actual();
 
+    /** Set element @c i. */
+    template<class Other> DerivedT& set(int i, const Other& v) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set element @c i on a temporary. */
+    template<class Other> DerivedT&& set(int i, const Other& v) &&;
+#endif
+
     /** Return mutable element @c i. */
     mutable_value get(int i);
-
-    /** Set element @c i. */
-    template<class Other> DerivedT& set(int i, const Other& v);
 
     /** Return a mutable reference to element @c i. */
     mutable_value operator[](int i);
@@ -70,13 +82,32 @@ class writable_vector
   public:
 
     /** Divide the vector elements by the length of the vector. */
-    DerivedT& normalize();
+    DerivedT& normalize() __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Divide the vector elements of a temporary by the length of the
+     * vector.
+     */
+    DerivedT&& normalize() &&;
+#endif
 
     /** Zero the vector elements. */
-    DerivedT& zero();
+    DerivedT& zero() __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Zero the vector elements of a temporary. */
+    DerivedT&& zero() &&;
+#endif
 
     /** Set element @c i to value_type(1), and the other elements to 0. */
-    DerivedT& cardinal(int i);
+    DerivedT& cardinal(int i) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set element @c i of a temporary to value_type(1), and the other
+     * elements to 0.
+     */
+    DerivedT&& cardinal(int i) &&;
+#endif
 
     /** Set the vector to the pairwise minimum elements with @c other.
      *
@@ -84,8 +115,20 @@ class writable_vector
      * dynamically-sized, and @c other.size() != this->size().  If both are
      * fixed-size expressions, then the size is checked at compile time.
      */
-    template<class OtherDerivedT>
-      DerivedT& minimize(const readable_vector<OtherDerivedT>& other);
+    template<class OtherDerivedT> DerivedT&
+      minimize(const readable_vector<OtherDerivedT>& other) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set the temporary vector to the pairwise minimum elements with @c
+     * other.
+     *
+     * @throws incompatible_vector_sizes at run-time if either vector is
+     * dynamically-sized, and @c other.size() != this->size().  If both are
+     * fixed-size expressions, then the size is checked at compile time.
+     */
+    template<class OtherDerivedT> DerivedT&&
+      minimize(const readable_vector<OtherDerivedT>& other) &&;
+#endif
 
     /** Set the vector to the pairwise minimum elements with @c other.
      *
@@ -93,8 +136,19 @@ class writable_vector
      * dynamically-sized, and @c other.size() != this->size().  If both are
      * fixed-size expressions, then the size is checked at compile time.
      */
-    template<class OtherDerivedT>
-      DerivedT& maximize(const readable_vector<OtherDerivedT>& other);
+    template<class OtherDerivedT> DerivedT&
+      maximize(const readable_vector<OtherDerivedT>& other) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set the vector to the pairwise minimum elements with @c other.
+     *
+     * @throws incompatible_vector_sizes at run-time if either vector is
+     * dynamically-sized, and @c other.size() != this->size().  If both are
+     * fixed-size expressions, then the size is checked at compile time.
+     */
+    template<class OtherDerivedT> DerivedT&&
+      maximize(const readable_vector<OtherDerivedT>& other) &&;
+#endif
 
 
   public:
@@ -105,8 +159,19 @@ class writable_vector
      * resizable, and if @c other.size() != this->size().  If both are
      * fixed-size, then the size is checked at compile time.
      */
-    template<class OtherDerivedT>
-      DerivedT& operator=(const readable_vector<OtherDerivedT>& other);
+    template<class OtherDerivedT> DerivedT&
+      operator=(const readable_vector<OtherDerivedT>& other) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Assign a temporary from a readable_vector.
+     *
+     * @throws incompatible_vector_sizes at run-time if the vector is not
+     * resizable, and if @c other.size() != this->size().  If both are
+     * fixed-size, then the size is checked at compile time.
+     */
+    template<class OtherDerivedT> DerivedT&&
+      operator=(const readable_vector<OtherDerivedT>& other) &&;
+#endif
 
     /** Assign from a fixed-length array type.
      *
@@ -116,7 +181,19 @@ class writable_vector
      * compile time.
      */
     template<class Array, typename cml::enable_if_array_t<Array>* = nullptr>
-	DerivedT& operator=(const Array& array);
+	DerivedT& operator=(const Array& array) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Assign a temporary from a fixed-length array type.
+     *
+     * @throws incompatible_vector_sizes at run-time if the vector is not
+     * resizable, and if @c cml::array_size_of_c<value>::value !=
+     * this->size().  If both are fixed-size, then the size is checked at
+     * compile time.
+     */
+    template<class Array, typename cml::enable_if_array_t<Array>* = nullptr>
+	DerivedT&& operator=(const Array& array) &&;
+#endif
 
     /** Assign from initializer list.
      *
@@ -124,7 +201,17 @@ class writable_vector
      * and if @c l.size() != this->size().
      */
     template<class Other>
-      DerivedT& operator=(std::initializer_list<Other> l);
+      DerivedT& operator=(std::initializer_list<Other> l) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Assign a temporary from initializer list.
+     *
+     * @throws incompatible_vector_sizes if the vector is not resizable,
+     * and if @c l.size() != this->size().
+     */
+    template<class Other>
+      DerivedT&& operator=(std::initializer_list<Other> l) &&;
+#endif
 
     /** Modify the vector by addition of another vector.
      *
@@ -133,8 +220,20 @@ class writable_vector
      * are fixed-size expressions, then the size is checked at compile
      * time.
      */
-    template<class OtherDerivedT>
-      DerivedT& operator+=(const readable_vector<OtherDerivedT>& other);
+    template<class OtherDerivedT> DerivedT&
+      operator+=(const readable_vector<OtherDerivedT>& other) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Modify a temporary vector by addition of another vector.
+     *
+     * @throws incompatible_vector_sizes at run-time if the vector is
+     * dynamically-sized, and if @c other.size() != this->size().  If both
+     * are fixed-size expressions, then the size is checked at compile
+     * time.
+     */
+    template<class OtherDerivedT> DerivedT&&
+      operator+=(const readable_vector<OtherDerivedT>& other) &&;
+#endif
 
     /** Modify the vector by subtraction of another vector.
      *
@@ -143,22 +242,52 @@ class writable_vector
      * are fixed-size expressions, then the size is checked at compile
      * time.
      */
-    template<class OtherDerivedT>
-      DerivedT& operator-=(const readable_vector<OtherDerivedT>& other);
+    template<class OtherDerivedT> DerivedT&
+      operator-=(const readable_vector<OtherDerivedT>& other) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Modify a temporary vector by subtraction of another vector.
+     *
+     * @throws incompatible_vector_sizes at run-time if the vector is
+     * dynamically-sized, and if @c other.size() != this->size().  If both
+     * are fixed-size expressions, then the size is checked at compile
+     * time.
+     */
+    template<class OtherDerivedT> DerivedT&&
+      operator-=(const readable_vector<OtherDerivedT>& other) &&;
+#endif
 
     /** Multiply the vector by a scalar.
      *
      * @note This depends upon implicit conversion of @c v to the
      * vector value_type.
      */
-    DerivedT& operator*=(const_reference v);
+    DerivedT& operator*=(const_reference v) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Multiply a temporary vector by a scalar.
+     *
+     * @note This depends upon implicit conversion of @c v to the
+     * vector value_type.
+     */
+    DerivedT&& operator*=(const_reference v) &&;
+#endif
 
     /** Divide the vector by a scalar.
      *
      * @note This depends upon implicit conversion of @c v to the
      * vector value_type.
      */
-    DerivedT& operator/=(const_reference v);
+    DerivedT& operator/=(const_reference v) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Divide a temporary vector by a scalar.
+     *
+     * @note This depends upon implicit conversion of @c v to the
+     * vector value_type.
+     */
+    DerivedT&& operator/=(const_reference v) &&;
+#endif
 
 
   protected:
@@ -221,8 +350,19 @@ class writable_vector
 
   protected:
 
+    // Use the compiler-generated default constructor:
+    writable_vector() = default;
+
+    // Use the compiler-generated copy constructor:
+    writable_vector(const writable_vector&) = default;
+
+#ifdef CML_HAS_DEFAULTED_MOVE_CONSTRUCTOR
+    // Use the compiler-generated move constructor:
+    writable_vector(writable_vector&&) = default;
+#endif
+
     // Force assignment through operator=(readable_vector<>):
-    writable_vector& operator=(writable_vector&) = delete;
+    writable_vector& operator=(const writable_vector&) = delete;
 };
 
 } // namespace cml

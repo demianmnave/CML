@@ -21,11 +21,14 @@ template<class Sub>
 struct vector_traits< subvector_node<Sub> >
 {
   /* Figure out the basic type of Sub: */
+  typedef Sub						sub_arg_type;
   typedef cml::unqualified_type_t<Sub>			sub_type;
   typedef vector_traits<sub_type>			sub_traits;
+  typedef typename sub_traits::element_traits		element_traits;
   typedef typename sub_traits::value_type		value_type;
   typedef typename sub_traits::immutable_value 		immutable_value;
   typedef typename sub_traits::size_tag			size_tag;
+  typedef typename sub_traits::temporary_type		temporary_type;
 };
 
 /** Represents an N-1 subvector operation in an expression tree, where N is
@@ -39,10 +42,12 @@ class subvector_node
 
     typedef subvector_node<Sub>				node_type;
     typedef vector_traits<node_type>			traits_type;
+    typedef typename traits_type::sub_arg_type		sub_arg_type;
     typedef typename traits_type::sub_type		sub_type;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
     typedef typename traits_type::size_tag		size_tag;
+    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:

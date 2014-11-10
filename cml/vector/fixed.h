@@ -12,6 +12,7 @@
 #include <cml/common/scalar_traits.h>
 #include <cml/common/fixed_selector.h>
 #include <cml/vector/writable_vector.h>
+#include <cml/vector/vector.h>
 
 namespace cml {
 
@@ -27,6 +28,7 @@ struct vector_traits< vector<Element, fixed<Size>> >
   typedef typename element_traits::mutable_value	mutable_value;
   typedef typename element_traits::immutable_value	immutable_value;
   typedef fixed_size_tag				size_tag;
+  typedef vector<Element, fixed<Size>>			temporary_type;
 };
 
 /** Fixed-length vector.
@@ -51,6 +53,7 @@ class vector<Element, fixed<Size>>
     typedef typename traits_type::mutable_value		mutable_value;
     typedef typename traits_type::immutable_value	immutable_value;
     typedef typename traits_type::size_tag		size_tag;
+    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:
@@ -67,14 +70,22 @@ class vector<Element, fixed<Size>>
 
   public:
 
-    /** Default constructor.
+    /** Compiler-default constructor.
      *
      * @note The vector elements are uninitialized.
      */
-    vector();
+    vector() = default;
 
-    /** Copy constructor. */
-    vector(const vector_type& other);
+    /** Compiler-default destructor. */
+    ~vector() = default;
+
+    /** Compiler-default copy constructor. */
+    vector(const vector_type& other) = default;
+
+#ifdef CML_HAS_DEFAULTED_MOVE_CONSTRUCTOR
+    /** Compiler-default move constructor. */
+    vector(vector_type&& other) = default;
+#endif
 
     /** Construct from a readable_vector. */
     template<class Sub> vector(const readable_vector<Sub>& sub);
@@ -113,8 +124,13 @@ class vector<Element, fixed<Size>>
     /** Return vector const element @c i. */
     immutable_value get(int i) const;
 
-    /** Set vector element @c i. */
-    template<class Other> vector_type& set(int i, const Other& v);
+    /** Set element @c i. */
+    template<class Other> vector_type& set(int i, const Other& v) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set element @c i on a temporary. */
+    template<class Other> vector_type&& set(int i, const Other& v) &&;
+#endif
 
     /** Return access to the vector data as a raw pointer. */
     pointer data();

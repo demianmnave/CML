@@ -21,11 +21,14 @@ template<class Sub, class Op>
 struct vector_traits< vector_unary_node<Sub,Op> >
 {
   /* Figure out the basic type of Sub: */
+  typedef Sub						sub_arg_type;
   typedef cml::unqualified_type_t<Sub>			sub_type;
+  typedef vector_traits<sub_type>			sub_traits;
   typedef scalar_traits<typename Op::result_type>	element_traits;
   typedef typename element_traits::value_type		value_type;
   typedef typename element_traits::immutable_value	immutable_value;
-  typedef typename vector_traits<sub_type>::size_tag	size_tag;
+  typedef typename sub_traits::size_tag			size_tag;
+  typedef typename sub_traits::temporary_type		temporary_type;
 };
 
 /** Represents a unary vector operation in an expression tree. */
@@ -37,10 +40,12 @@ class vector_unary_node
 
     typedef vector_unary_node<Sub,Op>			node_type;
     typedef vector_traits<node_type>			traits_type;
+    typedef typename traits_type::sub_arg_type		sub_arg_type;
     typedef typename traits_type::sub_type		sub_type;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
     typedef typename traits_type::size_tag		size_tag;
+    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:

@@ -12,17 +12,6 @@ namespace cml {
 
 /* fixed 'structors: */
 
-template<class E, int S>
-vector<E, fixed<S>>::vector()
-{
-}
-
-template<class E, int S>
-vector<E, fixed<S>>::vector(const vector_type& other)
-{
-  this->assign(other);
-}
-
 template<class E, int S> template<class Sub>
 vector<E, fixed<S>>::vector(const readable_vector<Sub>& sub)
 {
@@ -78,11 +67,20 @@ vector<E, fixed<S>>::get(int i) const -> immutable_value
 }
 
 template<class E, int S> template<class Other> auto
-vector<E, fixed<S>>::set(int i, const Other& v) -> vector_type&
+vector<E, fixed<S>>::set(int i, const Other& v) __CML_REF -> vector_type&
 {
   this->m_data[i] = v;
   return *this;
 }
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class E, int S> template<class Other> auto
+vector<E, fixed<S>>::set(int i, const Other& v) && -> vector_type&&
+{
+  this->set(i,v);
+  return (vector_type&&) *this;
+}
+#endif
 
 template<class E, int S> auto
 vector<E, fixed<S>>::data() -> pointer

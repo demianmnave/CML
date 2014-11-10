@@ -10,7 +10,7 @@
 #include <cml/vector/dynamic.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE binary_node1
+#define BOOST_TEST_MODULE vector_binary_node1
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(fixed)

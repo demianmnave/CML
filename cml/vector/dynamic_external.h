@@ -10,7 +10,9 @@
 #define	cml_vector_dynamic_external_h
 
 #include <cml/common/scalar_traits.h>
+#include <cml/common/dynamic_selector.h>
 #include <cml/common/external_selector.h>
+#include <cml/vector/vector.h>
 #include <cml/vector/writable_vector.h>
 
 namespace cml {
@@ -27,6 +29,7 @@ struct vector_traits< vector<Element, external<>> >
   typedef typename element_traits::mutable_value	mutable_value;
   typedef typename element_traits::immutable_value	immutable_value;
   typedef dynamic_size_tag				size_tag;
+  typedef vector<Element, dynamic<>>			temporary_type;
 };
 
 /** Runtime-length wrapped array pointer as a vector. */
@@ -47,6 +50,7 @@ class vector<Element, external<>>
     typedef typename traits_type::mutable_value		mutable_value;
     typedef typename traits_type::immutable_value	immutable_value;
     typedef typename traits_type::size_tag		size_tag;
+    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:
@@ -81,8 +85,13 @@ class vector<Element, external<>>
     /** Return vector const element @c i. */
     immutable_value get(int i) const;
 
-    /** Set vector element @c i. */
-    template<class Other> vector_type& set(int i, const Other& v);
+    /** Set element @c i. */
+    template<class Other> vector_type& set(int i, const Other& v) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set element @c i on a temporary. */
+    template<class Other> vector_type&& set(int i, const Other& v) &&;
+#endif
 
     /** Return access to the vector data as a raw pointer. */
     pointer data();
@@ -98,6 +107,12 @@ class vector<Element, external<>>
 
     /** Number of elements. */
     int				m_size;
+
+
+  private:
+
+    // external<> vectors cannot be default constructed.
+    vector() = delete;
 };
 
 } // namespace cml

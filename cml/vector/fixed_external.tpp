@@ -48,11 +48,20 @@ vector<E, external<S>>::get(int i) const -> immutable_value
 }
 
 template<class E, int S> template<class Other> auto
-vector<E, external<S>>::set(int i, const Other& v) -> vector_type&
+vector<E, external<S>>::set(int i, const Other& v) __CML_REF -> vector_type&
 {
   this->m_data[i] = v;
   return *this;
 }
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class E, int S> template<class Other> auto
+vector<E, external<S>>::set(int i, const Other& v) && -> vector_type&&
+{
+  this->set(i,v);
+  return (vector_type&&) *this;
+}
+#endif
 
 template<class E, int S> auto
 vector<E, external<S>>::data() -> pointer

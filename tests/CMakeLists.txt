@@ -10,6 +10,9 @@ find_package(Boost COMPONENTS unit_test_framework)
 # Link to Boost:
 link_directories(${Boost_LIBRARY_DIR})
 
+# Common functionality tests:
+add_subdirectory(common)
+
 # cml::vector<> tests:
 add_subdirectory(vector)
 

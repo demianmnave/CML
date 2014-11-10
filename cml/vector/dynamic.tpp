@@ -113,11 +113,20 @@ vector<E, dynamic<A>>::get(int i) const -> immutable_value
 }
 
 template<class E, class A> template<class Other> auto
-vector<E, dynamic<A>>::set(int i, const Other& v) -> vector_type&
+vector<E, dynamic<A>>::set(int i, const Other& v) __CML_REF -> vector_type&
 {
   this->m_data[i] = v;
   return *this;
 }
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class E, class A> template<class Other> auto
+vector<E, dynamic<A>>::set(int i, const Other& v) && -> vector_type&&
+{
+  this->set(i,v);
+  return (vector_type&&) *this;
+}
+#endif
 
 template<class E, class A> auto
 vector<E, dynamic<A>>::data() -> pointer

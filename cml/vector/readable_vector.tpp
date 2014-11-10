@@ -10,6 +10,7 @@
 
 #include <cmath>
 #include <cml/vector/dot.h>
+#include <cml/vector/subvector_node.h>
 
 namespace cml {
 
@@ -49,8 +50,29 @@ readable_vector<DT>::length_squared() const -> value_type
 template<class DT> auto
 readable_vector<DT>::length() const -> value_type
 {
-  return std::sqrt(this->length_squared());
+  return element_traits::sqrt(this->length_squared());
 }
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> auto
+readable_vector<DT>::subvector(int i) const & -> subvector_node<const DT&>
+{
+  return std::move(subvector_node<const DT&>((const DT&) *this, i));
+}
+
+template<class DT> auto
+readable_vector<DT>::subvector(int i) const && -> subvector_node<DT&&>
+{
+  return std::move(subvector_node<DT&&>((DT&&) *this, i));
+}
+#else
+template<class DT> auto
+readable_vector<DT>::subvector(int i) const
+-> subvector_node<temporary_type&&>
+{
+  return std::move(subvector_node<temporary_type&&>(temporary_type(*this), i));
+}
+#endif
 
 } // namespace cml
 

@@ -9,6 +9,8 @@
 #ifndef	cml_common_scalar_traits_h
 #define	cml_common_scalar_traits_h
 
+#include <cmath>
+
 namespace cml {
 
 /** Specializable class aggregating scalar properties.  The default is
@@ -25,6 +27,15 @@ template<typename Scalar> struct scalar_traits
   typedef value_type const&				const_reference;
   typedef value_type&					mutable_value;
   typedef value_type const				immutable_value;
+
+  /** @name Basic Functions */
+  /*@{*/
+
+  static inline value_type sqrt(const value_type& v) {
+    return std::sqrt(v);
+  }
+
+  /*@}*/
 };
 
 } // namespace cml

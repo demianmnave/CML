@@ -9,10 +9,14 @@
 #ifndef	cml_vector_readable_vector_h
 #define	cml_vector_readable_vector_h
 
-#include <cml/vector/vector.h>
+#include <cml/common/compiler.h>
+#include <cml/common/mpl/if_t.h>
 #include <cml/vector/traits.h>
 
 namespace cml {
+
+/* Forward declarations: */
+template<class Sub> class subvector_node;
 
 /** Base class for readable vector types.  Readable vectors support const
  * access to its elements.
@@ -33,8 +37,11 @@ class readable_vector
 
     typedef DerivedT					vector_type;
     typedef vector_traits<vector_type>			traits_type;
+    typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
+    typedef typename traits_type::size_tag		size_tag;
+    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:
@@ -59,6 +66,37 @@ class readable_vector
 
     /** Return the length of the vector. */
     value_type length() const;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Return subvector @c i as an expression node, storing a reference of
+     * the source vector in the node.
+     */
+    subvector_node<const DerivedT&> subvector(int i) const &;
+
+    /** Return subvector @c i as an expression node, storing a copy of the
+     * vector in the node.
+     */
+    subvector_node<DerivedT&&> subvector(int i) const &&;
+#else
+    /** Return subvector @c i as an expression node, storing a copy of the
+     * source vector in the node.
+     */
+    subvector_node<temporary_type&&> subvector(int i) const;
+#endif
+
+
+  protected:
+
+    // Use the compiler-generated default constructor:
+    readable_vector() = default;
+
+    // Use the compiler-generated copy constructor:
+    readable_vector(const readable_vector&) = default;
+
+#ifdef CML_HAS_DEFAULTED_MOVE_CONSTRUCTOR
+    // Use the compiler-generated move constructor:
+    readable_vector(readable_vector&&) = default;
+#endif
 };
 
 } // namespace cml

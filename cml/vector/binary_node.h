@@ -9,7 +9,7 @@
 #ifndef	cml_vector_binary_node_h
 #define	cml_vector_binary_node_h
 
-#include <cml/vector/readable_vector.h>
+#include <cml/vector/vector.h>
 #include <cml/vector/promotion.h>
 
 namespace cml {
@@ -20,12 +20,16 @@ template<class Sub1, class Sub2, class Op> class vector_binary_node;
 template<class Sub1, class Sub2, class Op>
 struct vector_traits< vector_binary_node<Sub1,Sub2,Op> >
 {
+  typedef Sub1						left_arg_type;
+  typedef Sub2						right_arg_type;
   typedef cml::unqualified_type_t<Sub1>			left_type;
   typedef cml::unqualified_type_t<Sub2>			right_type;
   typedef scalar_traits<typename Op::result_type>	element_traits;
   typedef typename element_traits::value_type		value_type;
   typedef typename element_traits::immutable_value	immutable_value;
   typedef vector_size_tag_promote_t<left_type, right_type> size_tag;
+  typedef vector<value_type,
+	  vector_selector_promote_t<left_type,right_type>> temporary_type;
 };
 
 /** Represents a binary vector operation in an expression tree. */
@@ -37,11 +41,14 @@ class vector_binary_node
 
     typedef vector_binary_node<Sub1,Sub2,Op>		node_type;
     typedef vector_traits<node_type>			traits_type;
+    typedef typename traits_type::left_arg_type		left_arg_type;
+    typedef typename traits_type::right_arg_type	right_arg_type;
     typedef typename traits_type::left_type		left_type;
     typedef typename traits_type::right_type		right_type;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
     typedef typename traits_type::size_tag		size_tag;
+    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:
