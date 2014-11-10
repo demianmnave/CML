@@ -5,13 +5,13 @@
  */
 
 #include <type_traits>
-#include <iostream>
 #include <cml/vector/fixed.h>
 #include <cml/vector/dynamic.h>
 #include <cml/vector/external.h>
+#include <cml/vector/functions.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE functions1
+#define BOOST_TEST_MODULE vector_functions1
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(fixed)
@@ -23,6 +23,13 @@ BOOST_AUTO_TEST_CASE(length_squared1)
   BOOST_CHECK_EQUAL(l2, 3.);
 }
 
+BOOST_AUTO_TEST_CASE(length_squared2)
+{
+  cml::vector<double, cml::fixed<3>> v1 = { 1., 1., 1. };
+  double l2 = cml::length_squared(v1);
+  BOOST_CHECK_EQUAL(l2, 3.);
+}
+
 BOOST_AUTO_TEST_CASE(length1)
 {
   cml::vector<double, cml::fixed<3>> v1 = { 1., 1., 1. };
@@ -30,10 +37,34 @@ BOOST_AUTO_TEST_CASE(length1)
   BOOST_CHECK_CLOSE(l, std::sqrt(3.), 1e-4);
 }
 
+BOOST_AUTO_TEST_CASE(length2)
+{
+  cml::vector<double, cml::fixed<3>> v1 = { 1., 1., 1. };
+  double l = cml::length(v1);
+  BOOST_CHECK_CLOSE(l, std::sqrt(3.), 1e-4);
+}
+
 BOOST_AUTO_TEST_CASE(normalize1)
 {
   cml::vector<double, cml::fixed<3>> v1 = { 1., 1., 1. };
   double l2 = v1.normalize().length_squared();
+  BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
+}
+
+BOOST_AUTO_TEST_CASE(normalize2)
+{
+  cml::vector<double, cml::fixed<3>> v1 = { 1., 1., 1. };
+  double l2 = cml::normalize(v1).length_squared();
+  BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
+}
+
+BOOST_AUTO_TEST_CASE(normalize3)
+{
+  BOOST_CHECK_EQUAL((std::is_rvalue_reference<decltype(
+	cml::normalize(cml::vector<double, cml::fixed<3>>()))>::value)
+    , true);
+  double l2 = cml::normalize(
+    cml::vector<double, cml::fixed<3>>(1., 1., 1.)).length_squared();
   BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
 }
 
@@ -76,6 +107,16 @@ BOOST_AUTO_TEST_CASE(cardinal1)
   BOOST_CHECK_EQUAL(v1[2], 0.);
 }
 
+BOOST_AUTO_TEST_CASE(random1)
+{
+  cml::vector<double, cml::fixed<4>> v1;
+  v1.random(0.,1.);
+  for(const auto& e : v1) {
+    BOOST_CHECK_GE(e, 0.);
+    BOOST_CHECK_LT(e, 1.);
+  }
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -102,6 +143,14 @@ BOOST_AUTO_TEST_CASE(normalize1)
   double av1[] = { 1., 1., 1. };
   cml::vector<double, cml::external<3>> v1(av1);
   double l2 = v1.normalize().length_squared();
+  BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
+}
+
+BOOST_AUTO_TEST_CASE(normalize2)
+{
+  double av1[] = { 1., 1., 1. };
+  cml::vector<double, cml::external<3>> v1(av1);
+  double l2 = cml::normalize(v1).length_squared();
   BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
 }
 
@@ -150,6 +199,17 @@ BOOST_AUTO_TEST_CASE(cardinal1)
   BOOST_CHECK_EQUAL(v1[2], 0.);
 }
 
+BOOST_AUTO_TEST_CASE(random1)
+{
+  double av1[4];
+  cml::vector<double, cml::external<3>> v1(av1);
+  v1.random(0.,1.);
+  for(const auto& e : v1) {
+    BOOST_CHECK_GE(e, 0.);
+    BOOST_CHECK_LT(e, 1.);
+  }
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -173,6 +233,13 @@ BOOST_AUTO_TEST_CASE(normalize1)
 {
   cml::vector<double, cml::dynamic<>> v1 = { 1., 1., 1. };
   double l2 = v1.normalize().length_squared();
+  BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
+}
+
+BOOST_AUTO_TEST_CASE(normalize2)
+{
+  cml::vector<double, cml::dynamic<>> v1 = { 1., 1., 1. };
+  double l2 = cml::normalize(v1).length_squared();
   BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
 }
 
@@ -215,6 +282,16 @@ BOOST_AUTO_TEST_CASE(cardinal1)
   BOOST_CHECK_EQUAL(v1[2], 0.);
 }
 
+BOOST_AUTO_TEST_CASE(random1)
+{
+  cml::vector<double, cml::dynamic<>> v1(4);
+  v1.random(0.,1.);
+  for(const auto& e : v1) {
+    BOOST_CHECK_GE(e, 0.);
+    BOOST_CHECK_LT(e, 1.);
+  }
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -241,6 +318,14 @@ BOOST_AUTO_TEST_CASE(normalize1)
   double av1[] = { 1., 1., 1. };
   cml::vector<double, cml::external<>> v1(av1, 3);
   double l2 = v1.normalize().length_squared();
+  BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
+}
+
+BOOST_AUTO_TEST_CASE(normalize2)
+{
+  double av1[] = { 1., 1., 1. };
+  cml::vector<double, cml::external<>> v1(av1, 3);
+  double l2 = cml::normalize(v1).length_squared();
   BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
 }
 
@@ -287,6 +372,17 @@ BOOST_AUTO_TEST_CASE(cardinal1)
   BOOST_CHECK_EQUAL(v1[0], 1.);
   BOOST_CHECK_EQUAL(v1[1], 0.);
   BOOST_CHECK_EQUAL(v1[2], 0.);
+}
+
+BOOST_AUTO_TEST_CASE(random1)
+{
+  double av1[4];
+  cml::vector<double, cml::external<>> v1(av1, 4);
+  v1.random(0.,1.);
+  for(const auto& e : v1) {
+    BOOST_CHECK_GE(e, 0.);
+    BOOST_CHECK_LT(e, 1.);
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -140,6 +140,18 @@ vector<E, dynamic<A>>::data() const -> const_pointer
   return this->m_data;
 }
 
+template<class E, class A> auto
+vector<E, dynamic<A>>::begin() const -> const_pointer
+{
+  return this->m_data;
+}
+
+template<class E, class A> auto
+vector<E, dynamic<A>>::end() const -> const_pointer
+{
+  return this->m_data + this->m_size;
+}
+
 template<class E, class A> void
 vector<E, dynamic<A>>::resize(int n)
 {

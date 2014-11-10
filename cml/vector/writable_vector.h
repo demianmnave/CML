@@ -150,6 +150,16 @@ class writable_vector
       maximize(const readable_vector<OtherDerivedT>& other) &&;
 #endif
 
+    /** Set elements to random values in the range @c[low,high]. */
+    DerivedT& random(const_reference low, const_reference high) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set elements of a temporary to random values in the range
+     * @c[low,high].
+     */
+    DerivedT&& random(const_reference low, const_reference high) &&;
+#endif
+
 
   public:
 

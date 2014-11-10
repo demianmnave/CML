@@ -81,6 +81,18 @@ vector<E, external<>>::data() const -> const_pointer
   return this->m_data;
 }
 
+template<class E> auto
+vector<E, external<>>::begin() const -> const_pointer
+{
+  return this->m_data;
+}
+
+template<class E> auto
+vector<E, external<>>::end() const -> const_pointer
+{
+  return this->m_data + this->m_size;
+}
+
 } // namespace cml
 
 // -------------------------------------------------------------------------

@@ -94,6 +94,18 @@ vector<E, fixed<S>>::data() const -> const_pointer
   return &this->m_data[0];
 }
 
+template<class E, int S> auto
+vector<E, fixed<S>>::begin() const -> const_pointer
+{
+  return &this->m_data[0];
+}
+
+template<class E, int S> auto
+vector<E, fixed<S>>::end() const -> const_pointer
+{
+  return (&this->m_data[0]) + S;
+}
+
 } // namespace cml
 
 // -------------------------------------------------------------------------

@@ -8,7 +8,7 @@
 #include <cml/vector/comparison.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE comparison1
+#define BOOST_TEST_MODULE vector_comparison1
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_CASE(less_greater1)

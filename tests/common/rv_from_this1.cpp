@@ -13,7 +13,9 @@
 #include <boost/test/unit_test.hpp>
 
 struct rv_from_this {
-  rv_from_this&& mover() __CML_MOVE;
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+  rv_from_this&& mover() &&;
+#endif
   rv_from_this& refer() __CML_REF;
 };
 

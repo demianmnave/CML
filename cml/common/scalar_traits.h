@@ -31,8 +31,40 @@ template<typename Scalar> struct scalar_traits
   /** @name Basic Functions */
   /*@{*/
 
+  static inline value_type fabs(const value_type& v) {
+    return std::fabs(v);
+  }
+
+  static inline value_type fmod(const value_type& v, const value_type& w) {
+    return std::fmod(v, w);
+  }
+
   static inline value_type sqrt(const value_type& v) {
     return std::sqrt(v);
+  }
+
+  static inline value_type cos(const value_type& v) {
+    return std::cos(v);
+  }
+
+  static inline value_type sin(const value_type& v) {
+    return std::sin(v);
+  }
+
+  static inline value_type tan(const value_type& v) {
+    return std::tan(v);
+  }
+
+  static inline value_type acos(const value_type& v) {
+    return std::acos(v);
+  }
+
+  static inline value_type asin(const value_type& v) {
+    return std::asin(v);
+  }
+
+  static inline value_type atan(const value_type& v) {
+    return std::atan(v);
   }
 
   /*@}*/

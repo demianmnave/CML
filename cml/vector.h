@@ -18,6 +18,7 @@
 #include <cml/vector/scalar_ops.h>
 #include <cml/vector/products.h>
 #include <cml/vector/subvector.h>
+#include <cml/vector/functions.h>
 
 #endif
 

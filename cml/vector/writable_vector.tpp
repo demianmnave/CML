@@ -8,6 +8,7 @@
 #error "vector/writable_vector.tpp not included correctly"
 #endif
 
+#include <random>
 #include <cml/vector/size_checking.h>
 #include <cml/vector/scalar_ops.h>
 #include <cml/vector/unary_ops.h>
@@ -302,6 +303,31 @@ template<class DT> DT&&
 writable_vector<DT>::operator/=(const_reference v) &&
 {
   this->operator/=(v);
+  return (DT&&) *this;
+}
+#endif
+
+template<class DT> DT&
+writable_vector<DT>::random(
+  const_reference low, const_reference high
+  ) __CML_REF
+{
+  typedef if_t<std::is_integral<value_type>::value
+    , std::uniform_int_distribution<value_type>
+    , std::uniform_real_distribution<value_type>>	distribution_type;
+
+  std::random_device rd;	// Non-deterministic seed, if supported.
+  std::default_random_engine gen(rd());
+  distribution_type d(low, high);
+  for(int i = 0; i < this->size(); ++ i) this->set(i, d(gen));
+  return this->actual();
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> DT&&
+writable_vector<DT>::random(const_reference low, const_reference high) &&
+{
+  this->random(low, high);
   return (DT&&) *this;
 }
 #endif

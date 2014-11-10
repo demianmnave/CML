@@ -138,6 +138,12 @@ class vector<Element, fixed<Size>>
     /** Return const access to the vector data as a raw pointer. */
     const_pointer data() const;
 
+    /** Read-only iterator. */
+    const_pointer begin() const;
+
+    /** Read-only iterator. */
+    const_pointer end() const;
+
 
   protected:
 
