@@ -21,7 +21,7 @@ triple_product(const readable_vector<Sub1>& a,
   cml::check_size(a, cml::int_c<3>());
   cml::check_size(b, cml::int_c<3>());
   cml::check_size(c, cml::int_c<3>());
-  return cml::dot(a, cml::cross(b,c));
+  return cml::dot(a, cross(b,c));
 }
 
 } // namespace cml

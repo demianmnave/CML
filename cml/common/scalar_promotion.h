@@ -42,17 +42,15 @@ template<class... Scalars> struct scalar_promote {
 template<class... Scalars> using scalar_promote_t
   = typename scalar_promote<Scalars...>::type;
 
-/** Alias to simplify pairwise promotion of the value_type from two
- * objects that implement a value_type typedef.
+/** Alias to simplify scalar promotion from objects that implement a
+ * value_type typedef.
  */
-template<class Sub1, class Sub2> using value_type_promote
-  = scalar_promote<typename Sub1::value_type, typename Sub2::value_type>;
+template<class... Subs> using value_type_promote
+  = scalar_promote<typename Subs::value_type...>;
 
-/** Alias to simplify pairwise promotion of the value_type from two
- * objects that implement a value_type typedef.
- */
-template<class Sub1, class Sub2> using value_type_promote_t
-  = scalar_promote_t<typename Sub1::value_type, typename Sub2::value_type>;
+/** Convenience alias for value_type_promote<>::type. */
+template<class... Subs> using value_type_promote_t
+  = scalar_promote_t<typename Subs::value_type...>;
 
 } // namespace cml
 

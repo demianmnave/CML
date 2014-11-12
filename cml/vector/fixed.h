@@ -9,8 +9,9 @@
 #ifndef	cml_vector_fixed_h
 #define	cml_vector_fixed_h
 
-#include <cml/common/scalar_traits.h>
 #include <cml/common/fixed_selector.h>
+#include <cml/common/size_tags.h>
+#include <cml/common/scalar_traits.h>
 #include <cml/vector/writable_vector.h>
 #include <cml/vector/vector.h>
 

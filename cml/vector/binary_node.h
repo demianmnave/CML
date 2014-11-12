@@ -27,9 +27,10 @@ struct vector_traits< vector_binary_node<Sub1,Sub2,Op> >
   typedef scalar_traits<typename Op::result_type>	element_traits;
   typedef typename element_traits::value_type		value_type;
   typedef typename element_traits::immutable_value	immutable_value;
-  typedef vector_size_tag_promote_t<left_type, right_type> size_tag;
-  typedef vector<value_type,
-	  vector_selector_promote_t<left_type,right_type>> temporary_type;
+  typedef vector_size_tag_promote_t<
+    left_type, right_type>				size_tag;
+  typedef vector_temporary_promote_t<
+    left_type, right_type, value_type>			temporary_type;
 };
 
 /** Represents a binary vector operation in an expression tree. */
@@ -45,6 +46,7 @@ class vector_binary_node
     typedef typename traits_type::right_arg_type	right_arg_type;
     typedef typename traits_type::left_type		left_type;
     typedef typename traits_type::right_type		right_type;
+    typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
     typedef typename traits_type::size_tag		size_tag;
@@ -91,15 +93,15 @@ class vector_binary_node
   protected:
 
     /** The type used to store the left subexpression.  The expression is
-     * stored as a copy if Sub is an rvalue reference (temporary), or by
-     * const reference if Sub is an lvalue reference.
+     * stored as a copy if Sub1 is an rvalue reference (temporary), or by
+     * const reference if Sub1 is an lvalue reference.
      */
     typedef cml::if_t<std::is_rvalue_reference<Sub1>::value,
 	    left_type, const left_type&>		left_wrap_type;
 
     /** The type used to store the right subexpression.  The expression is
-     * stored as a copy if Sub is an rvalue reference (temporary), or by
-     * const reference if Sub is an lvalue reference.
+     * stored as a copy if Sub2 is an rvalue reference (temporary), or by
+     * const reference if Sub2 is an lvalue reference.
      */
     typedef cml::if_t<std::is_rvalue_reference<Sub2>::value,
 	    right_type, const right_type&>		right_wrap_type;

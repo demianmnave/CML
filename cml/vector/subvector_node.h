@@ -9,7 +9,6 @@
 #define	cml_subvector_node_h
 
 #include <cml/common/mpl/if_t.h>
-#include <cml/common/size_tags.h>
 #include <cml/vector/readable_vector.h>
 
 namespace cml {
@@ -44,6 +43,7 @@ class subvector_node
     typedef vector_traits<node_type>			traits_type;
     typedef typename traits_type::sub_arg_type		sub_arg_type;
     typedef typename traits_type::sub_type		sub_type;
+    typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
     typedef typename traits_type::size_tag		size_tag;

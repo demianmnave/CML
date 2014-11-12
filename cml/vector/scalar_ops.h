@@ -9,7 +9,6 @@
 #ifndef	cml_vector_scalar_ops_h
 #define	cml_vector_scalar_ops_h
 
-#include <cml/common/mpl/if_t.h>
 #include <cml/common/scalar_binary_ops.h>
 #include <cml/vector/scalar_node.h>
 

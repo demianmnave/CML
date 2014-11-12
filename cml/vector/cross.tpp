@@ -8,13 +8,14 @@
 #error "vector/cross.tpp not included correctly"
 #endif
 
+#include <cml/vector/readable_vector.h>
 #include <cml/vector/size_checking.h>
 
 namespace cml {
 
-template<class Sub1, class Sub2> auto cross(
-  const readable_vector<Sub1>& left, const readable_vector<Sub2>& right
-  ) -> cross_promote_t<Sub1,Sub2>
+template<class Sub1, class Sub2> auto
+cross(const readable_vector<Sub1>& left, const readable_vector<Sub2>& right)
+-> cross_promote_t<Sub1,Sub2>
 {
   typedef cross_promote_t<Sub1,Sub2> result_type;
   cml::check_size(left, cml::int_c<3>());

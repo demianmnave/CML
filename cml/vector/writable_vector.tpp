@@ -15,11 +15,9 @@
 #include <cml/vector/binary_ops.h>
 
 namespace cml {
-
-/* Local functions: */
 namespace detail {
 
-/** check_or_resize for a read-only vector @c left that just forwards to
+/* check_or_resize for a read-only vector left that just forwards to
  * check_same_size.
  */
 template<class Sub, class Other> inline void
@@ -28,8 +26,8 @@ check_or_resize(const readable_vector<Sub>& left, const Other& right)
   cml::check_same_size(left, right);
 }
 
-/** check_or_resize for a read-write vector @c left that resizes the vector
- * to ensure it has the same size as @c right.
+/* check_or_resize for a read-write vector left that resizes the vector
+ * to ensure it has the same size as right.
  */
 template<class Sub, class Other> inline auto
 check_or_resize(writable_vector<Sub>& left, const Other& right)
@@ -38,35 +36,53 @@ check_or_resize(writable_vector<Sub>& left, const Other& right)
   left.actual().resize(cml::array_size_of(right));
 }
 
-
-/** check_minimum_or_resize for a read-only vector @c left and constant
- * size N that just forwards to check_size.
+/* check_or_resize for a read-only vector left and constant size N that
+ * just forwards to check_size.
  */
 template<class Sub, int N> inline void
-check_minimum_or_resize(const readable_vector<Sub>& sub, cml::int_c<N>)
+check_or_resize(const readable_vector<Sub>& sub, int_c<N>)
 {
-  cml::check_minimum_size(sub, cml::int_c<N>());
+  cml::check_size(sub, int_c<N>());
 }
 
-/** check_minimum_or_resize for a read-write vector @c left and constant
- * size N that resizes the vector to N.
+/* check_or_resize for a read-only vector left and run-time size N that
+ * just forwards to check_size.
+ */
+template<class Sub> inline void
+check_or_resize(const readable_vector<Sub>& sub, int N)
+{
+  cml::check_size(sub, N);
+}
+
+/* check_or_resize for a read-write vector left and compile-time size N
+ * that resizes the vector to N.
  */
 template<class Sub, int N> inline auto
-check_minimum_or_resize(writable_vector<Sub>& sub, cml::int_c<N>)
+check_or_resize(writable_vector<Sub>& sub, int_c<N>)
+-> decltype(sub.actual().resize(0), void())
+{
+  sub.actual().resize(N);
+}
+
+/* check_or_resize for a read-write vector left and run-time size N
+ * that resizes the vector to N.
+ */
+template<class Sub> inline auto
+check_or_resize(writable_vector<Sub>& sub, int N)
 -> decltype(sub.actual().resize(0), void())
 {
   sub.actual().resize(N);
 }
 
 
-/** Terminate the assignment recursion at the final element. */
+/* Terminate the assignment recursion at the final element. */
 template<int I, class Sub, class E0> inline void
 assign_elements(writable_vector<Sub>& sub, const E0& e0)
 {
   sub.set(I,e0);
 }
 
-/** Set element I of sub to e0, then assign the remainder of the elements
+/* Set element I of sub to e0, then assign the remainder of the elements
  * starting from I+1.
  */
 template<int I, class Sub, class E0, class... Es> inline void
@@ -74,6 +90,13 @@ assign_elements(writable_vector<Sub>& sub, const E0& e0, const Es&... eN)
 {
   sub.set(I,e0);
   assign_elements<I+1>(sub, eN...);
+}
+
+/* Assign the elements of sub from eN, starting from index 0. */
+template<class Sub, class... Es> inline void
+assign_elements(writable_vector<Sub>& sub, const Es&... eN)
+{
+  assign_elements<0>(sub, eN...);
 }
 
 } // namespace detail
@@ -348,10 +371,9 @@ template<class DT>
 template<class Array, typename cml::enable_if_array_t<Array>*> DT&
 writable_vector<DT>::assign(const Array& array)
 {
-  detail::check_or_resize(*this, array);
-  for(int i = 0; i < cml::array_size_of_c<Array>::value; ++ i) {
-    this->set(i, array[i]);
-  }
+  static const int N = cml::array_size_of_c<Array>::value;
+  detail::check_or_resize(*this, N);
+  for(int i = 0; i < N; ++ i) this->set(i, array[i]);
   return this->actual();
 }
 
@@ -367,15 +389,8 @@ template<class DT> template<class... Es> DT&
 writable_vector<DT>::assign_elements(const Es&... eN)
 {
   static const int N = int(sizeof...(eN));
-  detail::check_minimum_or_resize(*this, cml::int_c<N>());
-
-  /* Assign up to sizeof...(eN): */
-  detail::assign_elements<0>(*this, eN...);
-
-  /* Set N...size()-1: */
-  for(int i = N; i < this->size(); ++ i) this->set(i, value_type(0));
-
-  /* Done: */
+  detail::check_or_resize(*this, int_c<N>());
+  detail::assign_elements(*this, eN...);
   return this->actual();
 }
 

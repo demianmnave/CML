@@ -9,6 +9,8 @@
 #ifndef	cml_vector_subvector_ops_h
 #define	cml_vector_subvector_ops_h
 
+#include <cml/vector/subvector_node.h>
+
 namespace cml {
 
 /** Return an expression node for the subvector @c i of @c sub. @c sub is

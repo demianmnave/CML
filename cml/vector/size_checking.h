@@ -12,9 +12,11 @@
 #include <cml/common/mpl/int_c.h>
 #include <cml/common/mpl/enable_if_array.h>
 #include <cml/common/exception.h>
-#include <cml/vector/readable_vector.h>
 
 namespace cml {
+
+/* Forward declarations: */
+template<class Sub> class readable_vector;
 
 /** Exception thrown when run-time size checking is enabled, and the
  * operands of a vector expression have incompatible sizes.
@@ -107,13 +109,13 @@ auto check_same_size(const readable_vector<Sub1>& left, const Sub2& right)
 /** Front-end for minimum expression length checking against a run-time
  * size.  The expression must derive from readable_vector.
  *
- * @throws minimum_vector_size_error if left.size() < n.
+ * @throws minimum_vector_size_error if left.size() < N.
  *
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
  */
 template<class Sub>
-void check_minimum_size(const readable_vector<Sub>& left, int n);
+void check_minimum_size(const readable_vector<Sub>& left, int N);
 
 /** Front-end for compile-time and run-time minimum expression length
  * checking against an integer constant via cml::int_c<N>.  The expression
@@ -133,21 +135,21 @@ void check_minimum_size(const readable_vector<Sub>& left, cml::int_c<N>);
 /** Front-end for expression length checking against a run-time size.  The
  * expression must derive from readable_vector.
  *
- * @throws minimum_vector_size_error if left.size() != n.
+ * @throws vector_size_error if left.size() != N.
  *
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
  */
 template<class Sub>
-void check_size(const readable_vector<Sub>& left, int n);
+void check_size(const readable_vector<Sub>& left, int N);
 
 /** Front-end for compile-time and run-time expression length checking
- * against an integer constant via cml::int_c<N>.  The expression must
- * derive from readable_vector.
+ * against an integer constant via int_c<N>.  The expression must derive
+ * from readable_vector.
  *
- * @throws minimum_vector_size_error at run-time if left is a
- * dynamically-sized expression and left.size() != N. If left is a
- * fixed-size expression, then the size is checked at compile time.
+ * @throws vector_size_error at run-time if left is a dynamically-sized
+ * expression and left.size() != N. If left is a fixed-size expression,
+ * then the size is checked at compile time.
  *
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.

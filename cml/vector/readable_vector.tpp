@@ -8,7 +8,6 @@
 #error "vector/readable_vector.tpp not included correctly"
 #endif
 
-#include <cmath>
 #include <cml/vector/dot.h>
 #include <cml/vector/subvector_node.h>
 

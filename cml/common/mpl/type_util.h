@@ -10,6 +10,7 @@
 #define	cml_common_mpl_type_util_h
 
 #include <type_traits>
+#include <cml/common/compiler.h>
 
 namespace cml {
 

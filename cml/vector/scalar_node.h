@@ -48,6 +48,7 @@ class vector_scalar_node
     typedef typename traits_type::right_arg_type	right_arg_type;
     typedef typename traits_type::left_type		left_type;
     typedef typename traits_type::right_type		right_type;
+    typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
     typedef typename traits_type::size_tag		size_tag;

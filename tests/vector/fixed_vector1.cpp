@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE(array_temp_construct)
 
 BOOST_AUTO_TEST_CASE(element_construct1)
 {
-  cml::vector<double, cml::fixed<3>> v(1.);
+  cml::vector<double, cml::fixed<3>> v(1., 0., 0.);
   BOOST_REQUIRE_EQUAL(v.size(), 3);
   BOOST_CHECK_EQUAL(v.data()[0], 1.);
   BOOST_CHECK_EQUAL(v[0], 1.);
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(element_construct1)
 
 BOOST_AUTO_TEST_CASE(element_construct2)
 {
-  cml::vector<double, cml::fixed<3>> v(1., 2.);
+  cml::vector<double, cml::fixed<3>> v(1., 2., 0.);
   BOOST_REQUIRE_EQUAL(v.size(), 3);
   BOOST_CHECK_EQUAL(v.data()[0], 1.);
   BOOST_CHECK_EQUAL(v[0], 1.);

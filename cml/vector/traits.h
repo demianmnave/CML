@@ -12,8 +12,8 @@
 namespace cml {
 
 /** Specializable class wrapping traits for cml::vector<> types. This class
- * is used to simplify static polymorphism by providing a polymorphic base
- * class the types used by a particular derived class.
+ * is used to simplify static polymorphism by providing a base class the
+ * types used by a particular derived class.
  *
  * @tparam Vector The vector<> type the traits correspond to.
  */

@@ -13,8 +13,15 @@ namespace cml {
 
 /** Specializable class for building vector types.
  *
- * @note @c Element must have the following operators defined: +, -, *, /,
- * <, >, ==, = (assign).
+ * This class encapsulates the notion of a vector.
+ *
+ * @tparam Element The scalar type for vector elements, with the following
+ * operators defined: +, -, *, /, <, >, ==, = (assign).
+ *
+ * @tparam StorageType Used to select the type of array to be used as
+ * internal storage for an array of type Element.
+ *
+ * @sa scalar_traits
  */
 template<class Element, class StorageType> class vector;
 

@@ -10,15 +10,19 @@
 #define	cml_vector_triple_product_h
 
 #include <cml/common/scalar_promotion.h>
+#include <cml/vector/traits.h>
 
 namespace cml {
+
+/* Forward declarations: */
+template<class DerivedT> class readable_vector;
 
 /** Convenience alias to determine the scalar type to return from
  * cml::triple_product.
  */
-template<class Sub1, class Sub2, class Sub3> using triple_product_promote_t
-  = scalar_promote_t<typename Sub1::value_type,
-  	typename Sub2::value_type, typename Sub3::value_type>;
+template<class Sub1, class Sub2, class Sub3>
+  using triple_product_promote_t = value_type_promote_t<
+    vector_traits<Sub1>, vector_traits<Sub2>, vector_traits<Sub3>>;
 
 /** Compute the scalar triple product ("box product") of 3 3D vectors, and
  * return the scalar result.
