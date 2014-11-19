@@ -16,25 +16,8 @@ namespace cml {
 /** Use C++ type deduction via std::common_type to determine the result of
  * combining N scalars.
  */
-#ifdef _MSC_VER
-// At least VC++ 2013 can't grok the better solution below, so fake it for
-// now:
-template<class S0, class S1, class S2 = void, class = void>
-  struct scalar_promote;
-
-template<class S0, class S1> struct scalar_promote<S0,S1,void> {
-  typedef typename std::common_type<S0,S1>::type type;
-};
-
-template<class S0, class S1, class S2> struct scalar_promote<S0,S1,S2,void> {
-  typedef typename std::common_type<S0,S1,S2>::type type;
-};
-#else
-// The real C++11 solution for N scalar arguments:
-template<class... Scalars> struct scalar_promote {
-  typedef typename std::common_type<Scalars...>::type type;
-};
-#endif
+template<class... Scalars> using
+  scalar_promote = std::common_type<Scalars...>;
 
 /** Use C++ type deduction via std::common_type to determine the result of
  * combining N scalars.

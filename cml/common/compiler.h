@@ -45,6 +45,8 @@
 /* VC++ (at least VS12) does not support default move constructors: */
 # define __CML_DEFAULT_MOVE
 
+/* VC++ (at least VS12) has brain-dead operator= overload resolution: */
+# define CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
 
 #else
 #warning "Unrecognized compiler; using safe defaults"

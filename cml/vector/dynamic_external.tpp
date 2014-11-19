@@ -15,9 +15,17 @@ namespace cml {
 /* dynamic_external 'structors: */
 
 template<class E>
+vector<E, external<>>::vector()
+: m_data(0), m_size(0)
+{
+#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+  static_assert(false, "external vector default constructor not supported");
+#endif
+}
+
+template<class E>
 vector<E, external<>>::vector(pointer data, int size)
-: m_data(data)
-, m_size(size)
+: m_data(data), m_size(size)
 {
   cml_require(size >= 0, std::invalid_argument, "size < 0");
 }
@@ -25,10 +33,7 @@ vector<E, external<>>::vector(pointer data, int size)
 template<class E>
 vector<E, external<>>::vector(vector_type&& other)
 {
-  this->m_data = other.m_data;
-  other.m_data = nullptr;
-  this->m_size = other.m_size;
-  other.m_size = 0;
+  this->operator=(std::move(other));
 }
 
 
@@ -91,6 +96,23 @@ template<class E> auto
 vector<E, external<>>::end() const -> const_pointer
 {
   return this->m_data + this->m_size;
+}
+
+
+template<class E> auto
+vector<E, external<>>::operator=(const vector_type& other) -> vector_type&
+{
+  return this->assign(other);
+}
+
+template<class E> auto
+vector<E, external<>>::operator=(vector_type&& other) -> vector_type&
+{
+  this->m_data = other.m_data;
+  this->m_size = other.m_size;
+  other.m_data = nullptr;
+  other.m_size = 0;
+  return *this;
 }
 
 } // namespace cml

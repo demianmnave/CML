@@ -18,16 +18,15 @@ vector<E, fixed<S>>::vector(const readable_vector<Sub>& sub)
   this->assign(sub);
 }
 
-template<class E, int S> template<class... Es>
-vector<E, fixed<S>>::vector(const_reference e0, const Es&... eN)
+template<class E, int S>
+template<class E0, class... Es,
+  typename std::enable_if<cml::are_convertible<
+  typename vector_traits<vector<E,fixed<S>>>::value_type
+  , E0, Es...>::value>::type*
+>
+vector<E, fixed<S>>::vector(const E0& e0, const Es&... eN)
 {
   this->assign_elements(e0, eN...);
-}
-
-template<class E, int S>
-vector<E, fixed<S>>::vector(const_reference e0)
-{
-  this->assign_elements(e0, value_type(0));
 }
 
 template<class E, int S> template<class Array>
@@ -104,6 +103,21 @@ template<class E, int S> auto
 vector<E, fixed<S>>::end() const -> const_pointer
 {
   return (&this->m_data[0]) + S;
+}
+
+template<class E, int S> auto
+vector<E, fixed<S>>::operator=(const vector_type& other)
+-> vector_type&
+{
+  return this->assign(other);
+}
+
+template<class E, int S> auto
+vector<E, fixed<S>>::operator=(vector_type&& other)
+-> vector_type&
+{
+  for(int i = 0; i < S; ++ i) this->m_data[i] = std::move(other.m_data[i]);
+  return *this;
 }
 
 } // namespace cml

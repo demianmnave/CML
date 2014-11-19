@@ -14,13 +14,15 @@
 
 namespace cml {
 
-/** Remove const-volatile and reference types from @c T. */
+/** Remove const-volatile and reference types from @c T, but leave array and
+ * function pointer types alone.
+ */
 template<class T> struct unqualified_type {
   typedef typename std::remove_cv<
     typename std::remove_reference<T>::type>::type type;
 };
 
-/** Remove const-volatile and reference types from @c T. */
+/** Convenience alias for unqualified_type. */
 template<class T> using unqualified_type_t
   = typename cml::unqualified_type<T>::type;
 

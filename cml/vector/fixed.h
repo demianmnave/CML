@@ -9,6 +9,7 @@
 #ifndef	cml_vector_fixed_h
 #define	cml_vector_fixed_h
 
+#include <cml/common/mpl/are_convertible.h>
 #include <cml/common/fixed_selector.h>
 #include <cml/common/size_tags.h>
 #include <cml/common/scalar_traits.h>
@@ -40,12 +41,13 @@ template<class Element, int Size>
 class vector<Element, fixed<Size>>
 : public writable_vector< vector<Element, fixed<Size>> >
 {
-  static_assert(Size >= 2, "fixed vectors must have at least 2 elements");
+  static_assert(Size >= 1, "fixed vectors must have at least 1 element");
   public:
 
     typedef vector<Element, fixed<Size>>		vector_type;
     typedef writable_vector<vector_type>		writable_type;
     typedef vector_traits<vector_type>			traits_type;
+    typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::pointer		pointer;
     typedef typename traits_type::reference		reference;
@@ -59,8 +61,10 @@ class vector<Element, fixed<Size>>
 
   public:
 
+#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
     /* Include methods from writable_type: */
     using writable_type::operator=;
+#endif
 
 
   public:
@@ -91,20 +95,17 @@ class vector<Element, fixed<Size>>
     /** Construct from a readable_vector. */
     template<class Sub> vector(const readable_vector<Sub>& sub);
 
-    /** Construct from at least 2 constant values. If the vector is longer
-     * than the variable argument list, the remaining elements are set to
-     * value_type(0).
+    /** Construct from at least 1 value.
      *
-     * @note There must be fewer arguments than the vector size.  This is
-     * enforced at compile time.
+     * @note This overload is enabled only if all of the arguments are
+     * convertible to value_type.
      */
-    template<class... Elements>
-      vector(const_reference e0, const Elements&... eN);
-
-    /** Construct from a single constant value.  The remaining vector
-     * elements are set to value_type(0).
-     */
-    explicit vector(const_reference e0);
+    template<class E0, class... Elements,
+      typename std::enable_if<cml::are_convertible<
+	typename vector_traits<vector<Element,fixed<Size>>>::value_type
+	, E0, Elements...>::value>::type* = nullptr
+	>
+	vector(const E0& e0, const Elements&... eN);
 
     /** Construct from an array type. */
     template<class Array> vector(
@@ -144,6 +145,32 @@ class vector<Element, fixed<Size>>
 
     /** Read-only iterator. */
     const_pointer end() const;
+
+
+  public:
+
+    /** Copy assignment. */
+    vector_type& operator=(const vector_type& other);
+
+    /** Move assignment. */
+    vector_type& operator=(vector_type&& other);
+
+#ifdef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
+    template<class Other>
+      inline vector_type& operator=(const readable_vector<Other>& other) {
+	return this->assign(other);
+      }
+
+    template<class Array, typename cml::enable_if_array_t<Array>* = nullptr>
+      inline vector_type& operator=(const Array& array) {
+	return this->assign(array);
+      }
+
+    template<class Other>
+      inline vector_type& operator=(std::initializer_list<Other> l) {
+	return this->assign(l);
+      }
+#endif
 
 
   protected:

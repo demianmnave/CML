@@ -9,6 +9,7 @@
 #ifndef	cml_vector_dynamic_h
 #define	cml_vector_dynamic_h
 
+#include <cml/common/mpl/are_convertible.h>
 #include <cml/common/scalar_traits.h>
 #include <cml/common/dynamic_selector.h>
 #include <cml/vector/vector.h>
@@ -52,6 +53,7 @@ class vector<Element, dynamic<Allocator>>
     typedef vector<Element, dynamic<Allocator>>		vector_type;
     typedef writable_vector<vector_type>		writable_type;
     typedef vector_traits<vector_type>			traits_type;
+    typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::pointer		pointer;
     typedef typename traits_type::reference		reference;
@@ -65,8 +67,10 @@ class vector<Element, dynamic<Allocator>>
 
   public:
 
+#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
     /* Include methods from writable_type: */
     using writable_type::operator=;
+#endif
 
 
   public:
@@ -85,7 +89,7 @@ class vector<Element, dynamic<Allocator>>
 
     /** Construct given a size.
      *
-     * @throws std::invalid_argument if size < 0.
+     * @throws std::invalid_argument if @c size < 0.
      */
     explicit vector(int size);
 
@@ -98,16 +102,18 @@ class vector<Element, dynamic<Allocator>>
     /** Construct from a readable_vector. */
     template<class Sub> vector(const readable_vector<Sub>& sub);
 
-    /** Construct from at least 2 constant values.  The vector is resized
-     * to accomodate the number of elements passed.
+    /** Construct from at least 1 value.  The vector is resized to
+     * accomodate the number of elements passed.
+     *
+     * @note This overload is enabled only if all of the arguments are
+     * convertible to value_type.
      */
-    template<class... Elements>
-      vector(const_reference e0, const Elements&... eN);
-
-    /** Construct a 2D vector from a single constant value @c e0 and
-     * value_type(0).
-     */
-    explicit vector(const_reference e0);
+    template<class E0, class... Elements,
+      typename std::enable_if<cml::are_convertible<
+	typename vector<Element,dynamic<>>::value_type
+	, E0, Elements...>::value>::type* = nullptr
+	>
+	vector(const E0& e0, const Elements&... eN);
 
     /** Construct from an array type. */
     template<class Array> vector(
@@ -163,12 +169,35 @@ class vector<Element, dynamic<Allocator>>
     /** Resize the vector to the specified size without copying the old
      * elements.
      *
-     * @note This will reallocate the array and copy existing elements, if
-     * any.
-     *
      * @throws std::invalid_argument if @c n is negative.
      */
     void resize_fast(int n);
+
+
+  public:
+
+    /** Copy assignment. */
+    vector_type& operator=(const vector_type& other);
+
+    /** Move assignment. */
+    vector_type& operator=(vector_type&& other);
+
+#ifdef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
+    template<class Other>
+      inline vector_type& operator=(const readable_vector<Other>& other) {
+	return this->assign(other);
+      }
+
+    template<class Array, typename cml::enable_if_array_t<Array>* = nullptr>
+      inline vector_type& operator=(const Array& array) {
+	return this->assign(array);
+      }
+
+    template<class Other>
+      inline vector_type& operator=(std::initializer_list<Other> l) {
+	return this->assign(l);
+      }
+#endif
 
 
   protected:

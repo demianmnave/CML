@@ -9,7 +9,7 @@
 #ifndef	cml_vector_scalar_node_h
 #define	cml_vector_scalar_node_h
 
-#include <cml/common/size_tags.h>
+#include <cml/common/scalar_traits.h>
 #include <cml/vector/readable_vector.h>
 
 namespace cml {
@@ -24,7 +24,7 @@ struct vector_traits< vector_scalar_node<Sub,Scalar,Op> >
   typedef Sub						left_arg_type;
   typedef Scalar 					right_arg_type;
   typedef cml::unqualified_type_t<Sub>			left_type;
-  typedef cml::unqualified_type_t<Sub>			left_traits;
+  typedef vector_traits<left_type>			left_traits;
   typedef cml::unqualified_type_t<Scalar>		right_type;
   typedef scalar_traits<typename Op::result_type>	element_traits;
   typedef typename element_traits::value_type		value_type;

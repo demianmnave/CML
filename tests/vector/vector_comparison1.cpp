@@ -4,8 +4,10 @@
 /** @file
  */
 
-#include <cml/vector/fixed.h>
+// Make sure the main header compiles cleanly:
 #include <cml/vector/comparison.h>
+
+#include <cml/vector/fixed.h>
 
 /* Testing headers: */
 #define BOOST_TEST_MODULE vector_comparison1

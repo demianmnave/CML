@@ -9,6 +9,8 @@
 #ifndef	cml_common_scalar_unary_ops_h
 #define	cml_common_scalar_unary_ops_h
 
+#include <cml/common/scalar_traits.h>
+
 namespace cml {
 namespace op {
 

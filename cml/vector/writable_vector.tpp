@@ -17,7 +17,7 @@
 namespace cml {
 namespace detail {
 
-/* check_or_resize for a read-only vector left that just forwards to
+/* check_or_resize for a read-only vector, left, that just forwards to
  * check_same_size.
  */
 template<class Sub, class Other> inline void
@@ -26,7 +26,7 @@ check_or_resize(const readable_vector<Sub>& left, const Other& right)
   cml::check_same_size(left, right);
 }
 
-/* check_or_resize for a read-write vector left that resizes the vector
+/* check_or_resize for a read-write vector, left, that resizes the vector
  * to ensure it has the same size as right.
  */
 template<class Sub, class Other> inline auto
@@ -223,6 +223,31 @@ writable_vector<DT>::maximize(const readable_vector<ODT>& other) &&
 }
 #endif
 
+template<class DT> DT&
+writable_vector<DT>::random(
+  const_reference low, const_reference high
+  ) __CML_REF
+{
+  typedef if_t<std::is_integral<value_type>::value
+    , std::uniform_int_distribution<value_type>
+    , std::uniform_real_distribution<value_type>>	distribution_type;
+
+  std::random_device rd;	// Non-deterministic seed, if supported.
+  std::default_random_engine gen(rd());
+  distribution_type d(low, high);
+  for(int i = 0; i < this->size(); ++ i) this->set(i, d(gen));
+  return this->actual();
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> DT&&
+writable_vector<DT>::random(const_reference low, const_reference high) &&
+{
+  this->random(low, high);
+  return (DT&&) *this;
+}
+#endif
+
 
 template<class DT> template<class ODT> DT&
 writable_vector<DT>::operator=(const readable_vector<ODT>& other) __CML_REF
@@ -326,31 +351,6 @@ template<class DT> DT&&
 writable_vector<DT>::operator/=(const_reference v) &&
 {
   this->operator/=(v);
-  return (DT&&) *this;
-}
-#endif
-
-template<class DT> DT&
-writable_vector<DT>::random(
-  const_reference low, const_reference high
-  ) __CML_REF
-{
-  typedef if_t<std::is_integral<value_type>::value
-    , std::uniform_int_distribution<value_type>
-    , std::uniform_real_distribution<value_type>>	distribution_type;
-
-  std::random_device rd;	// Non-deterministic seed, if supported.
-  std::default_random_engine gen(rd());
-  distribution_type d(low, high);
-  for(int i = 0; i < this->size(); ++ i) this->set(i, d(gen));
-  return this->actual();
-}
-
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-template<class DT> DT&&
-writable_vector<DT>::random(const_reference low, const_reference high) &&
-{
-  this->random(low, high);
   return (DT&&) *this;
 }
 #endif

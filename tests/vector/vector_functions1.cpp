@@ -5,10 +5,13 @@
  */
 
 #include <type_traits>
+
+// Make sure the main header compiles cleanly:
+#include <cml/vector/functions.h>
+
 #include <cml/vector/fixed.h>
 #include <cml/vector/dynamic.h>
 #include <cml/vector/external.h>
-#include <cml/vector/functions.h>
 
 /* Testing headers: */
 #define BOOST_TEST_MODULE vector_functions1

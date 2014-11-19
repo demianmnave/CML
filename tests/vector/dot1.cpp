@@ -4,9 +4,11 @@
 /** @file
  */
 
+// Make sure the main header compiles cleanly:
+#include <cml/vector/dot.h>
+
 #include <cml/vector/fixed.h>
 #include <cml/vector/dynamic.h>
-#include <cml/vector/dot.h>
 
 /* Testing headers: */
 #define BOOST_TEST_MODULE dot1

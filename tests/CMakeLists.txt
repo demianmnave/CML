@@ -17,7 +17,7 @@ add_subdirectory(common)
 add_subdirectory(vector)
 
 # cml::matrix<> tests:
-# add_subdirectory(matrix)
+add_subdirectory(matrix)
 
 # --------------------------------------------------------------------------
 # vim:ft=cmake

@@ -4,6 +4,7 @@
 /** @file
  */
 
+#include <iostream>
 #include <cml/vector/fixed.h>
 
 /* Testing headers: */
@@ -56,6 +57,22 @@ BOOST_AUTO_TEST_CASE(element_construct3)
   BOOST_CHECK_EQUAL(v[0], 1.);
   BOOST_CHECK_EQUAL(v[1], 2.);
   BOOST_CHECK_EQUAL(v[2], 3.);
+}
+
+BOOST_AUTO_TEST_CASE(element_construct4)
+{
+  cml::vector<double, cml::fixed<1>> v(1.);
+  BOOST_REQUIRE_EQUAL(v.size(), 1);
+  BOOST_CHECK_EQUAL(v.data()[0], 1.);
+  BOOST_CHECK_EQUAL(v[0], 1.);
+}
+
+BOOST_AUTO_TEST_CASE(element_construct5)
+{
+  cml::vector<double, cml::fixed<4>> v(1.,2.f,3,4U);
+  BOOST_REQUIRE_EQUAL(v.size(), 4);
+  BOOST_CHECK_EQUAL(v.data()[0], 1.);
+  BOOST_CHECK_EQUAL(v[0], 1.);
 }
 
 BOOST_AUTO_TEST_CASE(array_assign)

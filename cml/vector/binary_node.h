@@ -9,6 +9,8 @@
 #ifndef	cml_vector_binary_node_h
 #define	cml_vector_binary_node_h
 
+#include <cml/common/scalar_traits.h>
+#include <cml/vector/readable_vector.h>
 #include <cml/vector/vector.h>
 #include <cml/vector/promotion.h>
 

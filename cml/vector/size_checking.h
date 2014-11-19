@@ -43,8 +43,8 @@ struct vector_size_error : std::runtime_error {
 };
 
 
-/** Front-end for both compile-time and run-time binary expression length
- * checking.  Both expressions must derive from readable_vector.
+/** Front-end for both compile-time and run-time vector binary expression
+ * length checking.  Both expressions must derive from readable_vector.
  *
  * @tparam Sub1 the actual type of the first expression.
  * @tparam Sub2 the actual type of the second expression.
@@ -63,10 +63,10 @@ struct vector_size_error : std::runtime_error {
 template<class Sub1, class Sub2> void check_same_size(
   const readable_vector<Sub1>& left, const readable_vector<Sub2>& right);
 
-/** Front-end for both compile-time and run-time binary expression length
- * checking against a fixed-length array.  The first expression must derive
- * from readable_vector, and std::is_array<>::value must be true for the
- * second expression (e.g. double v[3]).
+/** Front-end for both compile-time and run-time vector binary expression
+ * length checking against a fixed-length array.  The first expression must
+ * derive from readable_vector, and std::is_array<>::value must be true for
+ * the second expression (e.g. double v[3]).
  *
  * @tparam Sub1 the actual type of the first expression.
  * @tparam Sub2 the actual type of the second expression.
@@ -86,8 +86,8 @@ template<class Sub1, class Sub2> void
 check_same_size(const readable_vector<Sub1>& left, const Sub2& right,
   cml::enable_if_array_t<Sub2>* = 0);
 
-/** Front-end for run-time binary expression length checking.  The first
- * expression must derive from readable_vector, and the second must
+/** Front-end for run-time vector binary expression length checking.  The
+ * first expression must derive from readable_vector, and the second must
  * implement a size() method for this overload to be enabled.
  *
  * @tparam Sub1 the actual type of the first expression.
@@ -106,8 +106,8 @@ auto check_same_size(const readable_vector<Sub1>& left, const Sub2& right)
 -> decltype(right.size(), void());
 
 
-/** Front-end for minimum expression length checking against a run-time
- * size.  The expression must derive from readable_vector.
+/** Front-end for minimum vector expression length checking against a
+ * run-time size.  The expression must derive from readable_vector.
  *
  * @throws minimum_vector_size_error if left.size() < N.
  *
@@ -117,9 +117,9 @@ auto check_same_size(const readable_vector<Sub1>& left, const Sub2& right)
 template<class Sub>
 void check_minimum_size(const readable_vector<Sub>& left, int N);
 
-/** Front-end for compile-time and run-time minimum expression length
- * checking against an integer constant via cml::int_c<N>.  The expression
- * must derive from readable_vector.
+/** Front-end for compile-time and run-time minimum vector expression
+ * length checking against an integer constant via cml::int_c<N>.  The
+ * expression must derive from readable_vector.
  *
  * @throws minimum_vector_size_error at run-time if left is a
  * dynamically-sized expression and left.size() < N. If left is a
@@ -132,8 +132,8 @@ template<class Sub, int N>
 void check_minimum_size(const readable_vector<Sub>& left, cml::int_c<N>);
 
 
-/** Front-end for expression length checking against a run-time size.  The
- * expression must derive from readable_vector.
+/** Front-end for vector expression length checking against a run-time
+ * size.  The expression must derive from readable_vector.
  *
  * @throws vector_size_error if left.size() != N.
  *
@@ -143,9 +143,9 @@ void check_minimum_size(const readable_vector<Sub>& left, cml::int_c<N>);
 template<class Sub>
 void check_size(const readable_vector<Sub>& left, int N);
 
-/** Front-end for compile-time and run-time expression length checking
- * against an integer constant via int_c<N>.  The expression must derive
- * from readable_vector.
+/** Front-end for compile-time and run-time vector expression length
+ * checking against an integer constant via int_c<N>.  The expression must
+ * derive from readable_vector.
  *
  * @throws vector_size_error at run-time if left is a dynamically-sized
  * expression and left.size() != N. If left is a fixed-size expression,

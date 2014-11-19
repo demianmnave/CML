@@ -8,7 +8,6 @@
 #ifndef	cml_subvector_node_h
 #define	cml_subvector_node_h
 
-#include <cml/common/mpl/if_t.h>
 #include <cml/vector/readable_vector.h>
 
 namespace cml {

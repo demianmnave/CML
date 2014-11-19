@@ -1,4 +1,5 @@
-/* -*- C++ -*- ------------------------------------------------------------ @@COPYRIGHT@@
+/* -*- C++ -*- ------------------------------------------------------------
+ @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 /** @file
  */
@@ -8,8 +9,7 @@
 #ifndef	cml_vector_unary_node_h
 #define	cml_vector_unary_node_h
 
-#include <cml/common/mpl/if_t.h>
-#include <cml/common/size_tags.h>
+#include <cml/common/scalar_traits.h>
 #include <cml/vector/readable_vector.h>
 
 namespace cml {
@@ -82,10 +82,10 @@ class vector_unary_node
      * reference if Sub is an lvalue reference.
      */
     typedef cml::if_t<std::is_rvalue_reference<Sub>::value,
-	    sub_type, const sub_type&>			wrap_type;
+	    sub_type, const sub_type&>			sub_wrap_type;
 
     /** The wrapped subexpression. */
-    wrap_type			m_sub;
+    sub_wrap_type		m_sub;
 
 
   private:

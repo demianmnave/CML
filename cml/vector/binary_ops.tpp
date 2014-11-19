@@ -11,10 +11,10 @@
 namespace cml {
 
 /* Boilerplate for operator-: */
-__CML_MAKE_VECTOR_BINARY_OPERATORS( - , binary_minus_type )
+__CML_MAKE_VECTOR_BINARY_OPERATORS( - , vector_binary_minus )
 
 /* Boilerplate for operator+: */
-__CML_MAKE_VECTOR_BINARY_OPERATORS( + , binary_plus_type )
+__CML_MAKE_VECTOR_BINARY_OPERATORS( + , vector_binary_plus )
 
 } // namespace cml
 

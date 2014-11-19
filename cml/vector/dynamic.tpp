@@ -38,10 +38,7 @@ template<class E, class A>
 vector<E, dynamic<A>>::vector(vector_type&& other)
 : m_data(0), m_size(0)
 {
-  /* Ensure deletion of the current array, if any: */
-  std::swap(this->m_data, other.m_data);
-  std::swap(this->m_size, other.m_size);
-  /* Note: swap() can't throw here, so this is exception-safe. */
+  this->operator=(std::move(other));
 }
 
 template<class E, class A> template<class Sub>
@@ -51,18 +48,15 @@ vector<E, dynamic<A>>::vector(const readable_vector<Sub>& sub)
   this->assign(sub);
 }
 
-template<class E, class A> template<class... Es>
-vector<E, dynamic<A>>::vector(const_reference e0, const Es&... eN)
+template<class E, class A>
+template<class E0, class... Es,
+  typename std::enable_if<cml::are_convertible<
+  typename vector<E,dynamic<>>::value_type, E0, Es...>::value>::type*
+>
+vector<E, dynamic<A>>::vector(const E0& e0, const Es&... eN)
 : m_data(0), m_size(0)
 {
   this->assign_elements(e0, eN...);
-}
-
-template<class E, class A>
-vector<E, dynamic<A>>::vector(const_reference e0)
-: m_data(0), m_size(0)
-{
-  this->assign_elements(e0, value_type(0));
 }
 
 template<class E, class A> template<class Array>
@@ -224,6 +218,24 @@ vector<E, dynamic<A>>::resize_fast(int n)
   /* Save the new array: */
   this->m_data = copy;
   this->m_size = n;
+}
+
+
+template<class E, class A> auto
+vector<E, dynamic<A>>::operator=(const vector_type& other) -> vector_type&
+{
+  return this->assign(other);
+}
+
+template<class E, class A> auto
+vector<E, dynamic<A>>::operator=(vector_type&& other) -> vector_type&
+{
+  /* Ensure deletion of the current array, if any: */
+  std::swap(this->m_data, other.m_data);
+  std::swap(this->m_size, other.m_size);
+  /* Note: swap() can't throw here, so this is exception-safe. */
+
+  return *this;
 }
 
 

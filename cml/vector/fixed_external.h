@@ -42,6 +42,7 @@ class vector<Element, external<Size>>
     typedef vector<Element, external<Size>>		vector_type;
     typedef writable_vector<vector_type>		writable_type;
     typedef vector_traits<vector_type>			traits_type;
+    typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::pointer		pointer;
     typedef typename traits_type::reference		reference;
@@ -55,8 +56,10 @@ class vector<Element, external<Size>>
 
   public:
 
+#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
     /* Include methods from writable_type: */
     using writable_type::operator=;
+#endif
 
 
   public:
@@ -66,6 +69,13 @@ class vector<Element, external<Size>>
 
 
   public:
+
+    /** Default construct with a null pointer.
+     *
+     * @warning The default constructor is enabled only if the compiler
+     * supports rvalue references from *this.
+     */
+    vector();
 
     /** Construct from the wrapped pointer. */
     explicit vector(pointer data);
@@ -106,16 +116,36 @@ class vector<Element, external<Size>>
     const_pointer end() const;
 
 
+  public:
+
+    /** Copy assignment. */
+    vector_type& operator=(const vector_type& other);
+
+    /** Move assignment. */
+    vector_type& operator=(vector_type&& other);
+
+#ifdef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
+    template<class Other>
+      inline vector_type& operator=(const readable_vector<Other>& other) {
+	return this->assign(other);
+      }
+
+    template<class Array, typename cml::enable_if_array_t<Array>* = nullptr>
+      inline vector_type& operator=(const Array& array) {
+	return this->assign(array);
+      }
+
+    template<class Other>
+      inline vector_type& operator=(std::initializer_list<Other> l) {
+	return this->assign(l);
+      }
+#endif
+
+
   protected:
 
     /** Wrapped pointer. */
     pointer			m_data;
-
-
-  private:
-
-    // external<> vectors cannot be default constructed.
-    vector() = delete;
 };
 
 } // namespace cml

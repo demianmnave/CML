@@ -23,13 +23,13 @@ template<class Array> struct array_size_of_c<
   static const int value = int(std::extent<Array>::value);
 };
 
-/** Compile-time size of an object implementing an array_size static
- * integral member.
+/** Compile-time size of an object implementing an array_size integral or
+ * enum member.
  */
-template<class Array> struct array_size_of_c<
-  Array, typename std::enable_if<(Array::array_size>0)>::type>
+template<class Array> struct array_size_of_c<Array
+, typename std::enable_if<Array::array_size == Array::array_size>::type>
 {
-  static const int value = Array::array_size;
+  static const int value = int(Array::array_size);
 };
 
 /** Return the size of @c v if it implements the size() method. */

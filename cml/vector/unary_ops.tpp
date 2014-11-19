@@ -12,32 +12,32 @@ namespace cml {
 
 template<class Sub> inline auto
 operator-(const readable_vector<Sub>& sub)
--> vector_unary_node<const Sub&, unary_minus_type<Sub>>
+-> vector_unary_node<const Sub&, vector_unary_minus<Sub>>
 {
-  return vector_unary_node<const Sub&, unary_minus_type<Sub>>(sub.actual());
+  return vector_unary_node<const Sub&, vector_unary_minus<Sub>>(sub.actual());
 }
 
 template<class Sub> inline auto
 operator-(readable_vector<Sub>&& sub)
--> vector_unary_node<Sub&&, unary_minus_type<Sub>>
+-> vector_unary_node<Sub&&, vector_unary_minus<Sub>>
 {
   return vector_unary_node<
-    Sub&&, unary_minus_type<Sub>>((Sub&&) sub);
+    Sub&&, vector_unary_minus<Sub>>((Sub&&) sub);
 }
 
 template<class Sub> inline auto
 operator+(const readable_vector<Sub>& sub)
--> vector_unary_node<const Sub&, unary_plus_type<Sub>>
+-> vector_unary_node<const Sub&, vector_unary_plus<Sub>>
 {
-  return vector_unary_node<const Sub&, unary_plus_type<Sub>>(sub.actual());
+  return vector_unary_node<const Sub&, vector_unary_plus<Sub>>(sub.actual());
 }
 
 template<class Sub> inline auto
 operator+(readable_vector<Sub>&& sub)
--> vector_unary_node<Sub&&, unary_plus_type<Sub>>
+-> vector_unary_node<Sub&&, vector_unary_plus<Sub>>
 {
   return vector_unary_node<
-    Sub&&, unary_plus_type<Sub>>((Sub&&) sub);
+    Sub&&, vector_unary_plus<Sub>>((Sub&&) sub);
 }
 
 } // namespace cml

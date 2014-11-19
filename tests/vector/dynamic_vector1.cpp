@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_CASE(alloc1)
   BOOST_REQUIRE_EQUAL(v.size(), 3);
 }
 
-BOOST_AUTO_TEST_CASE(alloc2)
+BOOST_AUTO_TEST_CASE(resize1)
 {
   cml::vector<double, cml::dynamic<>> v(3);
   BOOST_REQUIRE_EQUAL(v.size(), 3);
@@ -55,10 +55,9 @@ BOOST_AUTO_TEST_CASE(array_assign)
 BOOST_AUTO_TEST_CASE(element_construct1)
 {
   cml::vector<double, cml::dynamic<>> v(1.);
-  BOOST_REQUIRE_EQUAL(v.size(), 2);
+  BOOST_REQUIRE_EQUAL(v.size(), 1);
   BOOST_CHECK_EQUAL(v.data()[0], 1.);
   BOOST_CHECK_EQUAL(v[0], 1.);
-  BOOST_CHECK_EQUAL(v[1], 0.);
 }
 
 BOOST_AUTO_TEST_CASE(element_construct2)
@@ -78,6 +77,14 @@ BOOST_AUTO_TEST_CASE(element_construct3)
   BOOST_CHECK_EQUAL(v[0], 1.);
   BOOST_CHECK_EQUAL(v[1], 2.);
   BOOST_CHECK_EQUAL(v[2], 3.);
+}
+
+BOOST_AUTO_TEST_CASE(element_construct4)
+{
+  cml::vector<double, cml::dynamic<>> v(1.,2.f,3,4U);
+  BOOST_REQUIRE_EQUAL(v.size(), 4);
+  BOOST_CHECK_EQUAL(v.data()[0], 1.);
+  BOOST_CHECK_EQUAL(v[0], 1.);
 }
 
 BOOST_AUTO_TEST_CASE(list_construct)

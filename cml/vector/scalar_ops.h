@@ -15,11 +15,11 @@
 namespace cml {
 
 /** Template helper for scalar multiplication. */
-template<class Sub, class Scalar> using scalar_multiply_type
+template<class Sub, class Scalar> using vector_scalar_multiply
 = op::binary_multiply<typename Sub::value_type, Scalar>;
 
 /** Template helper for scalar division. */
-template<class Sub, class Scalar> using scalar_divide_type
+template<class Sub, class Scalar> using vector_scalar_divide
 = op::binary_divide<typename Sub::value_type, Scalar>;
 
 } // namespace cml
@@ -28,7 +28,7 @@ template<class Sub, class Scalar> using scalar_divide_type
  * taking const& and && arguments. To create the operators for
  * left multiplication:
  *
- * __CML_MAKE_RIGHT_VECTOR_SCALAR_OPERATORS( * , scalar_multiply_type)
+ * __CML_MAKE_RIGHT_VECTOR_SCALAR_OPERATORS( * , vector_scalar_multiply)
  *
  * This creates:
  *
@@ -63,7 +63,7 @@ template<class Scalar, class Sub> inline auto operator _sym_ (		\
  * taking const& and && arguments. To create the operators for
  * right multiplication:
  *
- * __CML_MAKE_LEFT_VECTOR_SCALAR_OPERATORS( * , scalar_multiply_type)
+ * __CML_MAKE_LEFT_VECTOR_SCALAR_OPERATORS( * , vector_scalar_multiply)
  *
  * This creates:
  *

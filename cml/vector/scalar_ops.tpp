@@ -11,13 +11,13 @@
 namespace cml {
 
 /* Boilerplate for scalar-vector multiply: */
-__CML_MAKE_RIGHT_VECTOR_SCALAR_OPERATORS( * , scalar_multiply_type)
+__CML_MAKE_RIGHT_VECTOR_SCALAR_OPERATORS( * , vector_scalar_multiply)
 
 /* Boilerplate for vector-scalar multiply: */
-__CML_MAKE_LEFT_VECTOR_SCALAR_OPERATORS( * , scalar_multiply_type)
+__CML_MAKE_LEFT_VECTOR_SCALAR_OPERATORS( * , vector_scalar_multiply)
 
 /* Boilerplate for vector-scalar divide: */
-__CML_MAKE_LEFT_VECTOR_SCALAR_OPERATORS( / , scalar_divide_type)
+__CML_MAKE_LEFT_VECTOR_SCALAR_OPERATORS( / , vector_scalar_divide)
 
 } // namespace cml
 

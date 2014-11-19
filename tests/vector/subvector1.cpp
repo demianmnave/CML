@@ -4,6 +4,9 @@
 /** @file
  */
 
+// Make sure the main header compiles cleanly:
+#include <cml/vector/subvector_node.h>
+
 #include <cml/vector/fixed.h>
 #include <cml/vector/dynamic.h>
 #include <cml/vector/external.h>
