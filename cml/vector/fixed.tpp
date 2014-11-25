@@ -20,7 +20,7 @@ vector<E, fixed<S>>::vector(const readable_vector<Sub>& sub)
 
 template<class E, int S>
 template<class E0, class... Es,
-  typename std::enable_if<cml::are_convertible<
+  typename std::enable_if<cml::are_convertible_to_scalar<
   typename vector_traits<vector<E,fixed<S>>>::value_type
   , E0, Es...>::value>::type*
 >

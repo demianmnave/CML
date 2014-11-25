@@ -22,6 +22,8 @@ template<class Sub1, class Sub2, class Op> class matrix_binary_node;
 template<class Sub1, class Sub2, class Op>
 struct matrix_traits< matrix_binary_node<Sub1,Sub2,Op> >
 {
+  typedef matrix_binary_node<Sub1,Sub2,Op>		node_type;
+  typedef matrix_traits<node_type>			traits_type;
   typedef Sub1						left_arg_type;
   typedef Sub2						right_arg_type;
   typedef cml::unqualified_type_t<Sub1>			left_type;

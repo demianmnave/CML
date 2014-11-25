@@ -9,6 +9,7 @@
 #endif
 
 #include <cml/common/mpl/array_size_of.h>
+#include <cml/vector/readable_vector.h>
 #include <cml/matrix/readable_matrix.h>
 #include <cml/matrix/promotion.h>
 
@@ -111,6 +112,66 @@ template<class Sub, class Other, int R, int C> inline void check_same_size(
 #endif
 }
 
+
+/* No-op binary matrix expression row size checking: */
+template<class Sub1, class Sub2> inline void check_same_row_size(
+  const readable_matrix<Sub1>&, const Sub2&, any_size_tag) {}
+
+/* Compile-time binary matrix expression row size checking against a
+ * fixed-size readable_vector:
+ */
+template<class Sub1, class Sub2> inline void check_same_row_size(
+  const readable_matrix<Sub1>&, const readable_vector<Sub2>&, fixed_size_tag
+  )
+{
+  static_assert(Sub1::array_rows == Sub2::array_size,
+    "incompatible matrix row sizes");
+}
+
+/* Run-time binary matrix expression row size checking against a
+ * dynamic-size readable_vector:
+ */
+template<class Sub1, class Sub2> inline void
+check_same_row_size(const readable_matrix<Sub1>& left,
+  const readable_vector<Sub2>& right, dynamic_size_tag
+  )
+{
+#ifndef CML_NO_RUNTIME_MATRIX_SIZE_CHECKS
+  cml_require(left.rows() == right.size(),
+    incompatible_matrix_row_size_error, /**/);
+#endif
+}
+
+
+/* No-op binary matrix expression column size checking: */
+template<class Sub1, class Sub2> inline void check_same_col_size(
+  const readable_matrix<Sub1>&, const Sub2&, any_size_tag) {}
+
+/* Compile-time binary matrix expression row size checking against a
+ * fixed-size readable_vector:
+ */
+template<class Sub1, class Sub2> inline void check_same_col_size(
+  const readable_matrix<Sub1>&, const readable_vector<Sub2>&, fixed_size_tag
+  )
+{
+  static_assert(Sub1::array_cols == Sub2::array_size,
+    "incompatible matrix row sizes");
+}
+
+/* Run-time binary matrix expression row size checking against a
+ * dynamic-size readable_vector:
+ */
+template<class Sub1, class Sub2> inline void
+check_same_size(const readable_matrix<Sub1>& left,
+  const readable_vector<Sub2>& right, dynamic_size_tag
+  )
+{
+#ifndef CML_NO_RUNTIME_MATRIX_SIZE_CHECKS
+  cml_require(left.cols() == right.size(),
+    incompatible_matrix_col_size_error, /**/);
+#endif
+}
+
 } // namespace detail
 
 
@@ -188,6 +249,28 @@ check_same_size(
   typedef matrix_size_tag_of_t<Sub> tag1;
   typedef fixed_size_tag tag2;
   detail::check_same_size(left, array, size_check_promote_t<tag1,tag2>());
+}
+
+template<class Sub1, class Sub2> void
+check_same_row_size(
+  const readable_matrix<Sub1>& left, const readable_vector<Sub2>& right
+  )
+{
+  typedef matrix_size_tag_of_t<Sub1> tag1;
+  typedef vector_size_tag_of_t<Sub2> tag2;
+  detail::check_same_row_size(
+    left, right, size_check_promote_t<tag1,tag2>());
+}
+
+template<class Sub1, class Sub2> void
+check_same_col_size(
+  const readable_matrix<Sub1>& left, const readable_vector<Sub2>& right
+  )
+{
+  typedef matrix_size_tag_of_t<Sub1> tag1;
+  typedef vector_size_tag_of_t<Sub2> tag2;
+  detail::check_same_col_size(
+    left, right, size_check_promote_t<tag1,tag2>());
 }
 
 } // namespace cml

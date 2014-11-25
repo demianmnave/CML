@@ -15,6 +15,9 @@
 
 namespace cml {
 
+/* Forward declarations: */
+template<class DerivedT> class readable_vector;
+
 /** Base class for writable matrix types.  Writable matrices support
  * non-const read-write access to its elements, in addition to read-only
  * access via readable_matrix.
@@ -50,6 +53,7 @@ class writable_matrix
     typedef typename traits_type::mutable_value		mutable_value;
     typedef typename traits_type::basis_tag		basis_tag;
     typedef typename traits_type::layout_tag		layout_tag;
+    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:
@@ -84,12 +88,70 @@ class writable_matrix
 
   public:
 
+    /** Set element @c j of basis vector @c i. */
+    template<class Other> DerivedT&
+      set_basis_element(int i, int j, const Other& v) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set element @c j of basis vector @c i on a temporary. */
+    template<class Other> DerivedT&&
+      set_basis_element(int i, int j, const Other& v) &&;
+#endif
+
+    /** Copy @c v to row @c i of the matrix.
+     *
+     * @throws cml::incompatible_matrix_col_size_error if the matrix is
+     * dynamic and the number of columns does not match the size of
+     * @c v.  The sizes are checked at compile time otherwise.
+     */
+    template<class Sub> DerivedT&
+      set_row(int i, const readable_vector<Sub>& v) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Copy @c v to row @c i of a temporary matrix.
+     *
+     * @throws cml::incompatible_matrix_col_size_error if the matrix is
+     * dynamic and the number of columns does not match the size of
+     * @c v.  The sizes are checked at compile time otherwise.
+     */
+    template<class Sub> DerivedT&&
+      set_row(int i, const readable_vector<Sub>& v) &&;
+#endif
+
+    /** Copy @c v to column @c j of the matrix.
+     *
+     * @throws cml::incompatible_matrix_row_size_error if the matrix is
+     * dynamic and the number of rows does not match the size of @c v.  The
+     * sizes are checked at compile time otherwise.
+     */
+    template<class Sub> DerivedT&
+      set_col(int j, const readable_vector<Sub>& v);
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Copy @c v to column @c j of a temporary matrix.
+     *
+     * @throws cml::incompatible_matrix_row_size_error if the matrix is
+     * dynamic and the number of rows does not match the size of @c v.  The
+     * sizes are checked at compile time otherwise.
+     */
+    template<class Sub> DerivedT&&
+      set_col(int j, const readable_vector<Sub>& v) &&;
+#endif
+
     /** Zero the matrix elements. */
     DerivedT& zero() __CML_REF;
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
     /** Zero the matrix elements of a temporary. */
     DerivedT&& zero() &&;
+#endif
+
+    /** Set the matrix to the identity. */
+    DerivedT& identity() __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set a temporary matrix to the identity. */
+    DerivedT&& identity() &&;
 #endif
 
     /** Set elements to random values in the range @c[low,high]. */
@@ -327,6 +389,17 @@ class writable_matrix
      */
     template<class... Elements> DerivedT&
       assign_elements(const Elements&... eN);
+
+
+  protected:
+
+    /** Set basis element @c (i,j) for a row-basis matrix. */
+    template<class Other> void set_basis_element(
+      int i, int j, const Other& v, row_basis);
+
+    /** Set basis element @c (i,j) for a column-basis matrix. */
+    template<class Other> void set_basis_element(
+      int i, int j, const Other& v, col_basis);
 
 
   protected:

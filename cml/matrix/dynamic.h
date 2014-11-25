@@ -9,7 +9,6 @@
 #ifndef	cml_matrix_dynamic_h
 #define	cml_matrix_dynamic_h
 
-#include <cml/common/mpl/are_convertible.h>
 #include <cml/common/dynamic_selector.h>
 #include <cml/common/size_tags.h>
 #include <cml/common/scalar_traits.h>
@@ -134,8 +133,7 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
      */
     template<class E0, class... Elements,
       typename std::enable_if<
-	cml::are_convertible<
-	typename matrix_traits<
+	cml::are_convertible_to_scalar<typename matrix_traits<
 	  matrix<Element,dynamic<Allocator>,BasisOrient,Layout>>::value_type
 	  , E0, Elements...>::value>::type* = nullptr
 	>

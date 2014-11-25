@@ -51,7 +51,25 @@ readable_matrix<DT>::operator()(int i, int j) const -> immutable_value
 template<class DT> auto
 readable_matrix<DT>::basis_element(int i, int j) const -> immutable_value
 {
-  return this->actual().basis_element(i,j);
+  return this->basis_element(i,j, basis_tag());
+}
+
+
+
+/* Internal methods: */
+
+template<class DT> auto
+readable_matrix<DT>::basis_element(int i, int j, row_basis) const
+-> immutable_value
+{
+  return this->get(i,j);
+}
+
+template<class DT> auto
+readable_matrix<DT>::basis_element(int i, int j, col_basis) const
+-> immutable_value
+{
+  return this->get(j,i);
 }
 
 } // namespace cml

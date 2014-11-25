@@ -9,7 +9,6 @@
 #ifndef	cml_vector_fixed_h
 #define	cml_vector_fixed_h
 
-#include <cml/common/mpl/are_convertible.h>
 #include <cml/common/fixed_selector.h>
 #include <cml/common/size_tags.h>
 #include <cml/common/scalar_traits.h>
@@ -101,7 +100,7 @@ class vector<Element, fixed<Size>>
      * convertible to value_type.
      */
     template<class E0, class... Elements,
-      typename std::enable_if<cml::are_convertible<
+      typename std::enable_if<cml::are_convertible_to_scalar<
 	typename vector_traits<vector<Element,fixed<Size>>>::value_type
 	, E0, Elements...>::value>::type* = nullptr
 	>

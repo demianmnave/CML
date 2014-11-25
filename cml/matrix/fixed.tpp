@@ -20,7 +20,7 @@ matrix<E, fixed<R,C>, BO, L>::matrix(const readable_matrix<Sub>& sub)
 
 template<class E, int R, int C, typename BO, typename L>
 template<class E0, class... Es,
-  typename std::enable_if<cml::are_convertible<
+  typename std::enable_if<cml::are_convertible_to_scalar<
   typename matrix_traits<matrix<E,fixed<R,C>,BO,L>>::value_type
   , E0, Es...>::value>::type*
   >

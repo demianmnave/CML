@@ -50,7 +50,7 @@ vector<E, dynamic<A>>::vector(const readable_vector<Sub>& sub)
 
 template<class E, class A>
 template<class E0, class... Es,
-  typename std::enable_if<cml::are_convertible<
+  typename std::enable_if<cml::are_convertible_to_scalar<
   typename vector<E,dynamic<>>::value_type, E0, Es...>::value>::type*
 >
 vector<E, dynamic<A>>::vector(const E0& e0, const Es&... eN)

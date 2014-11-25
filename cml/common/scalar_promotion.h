@@ -35,6 +35,14 @@ template<class... Subs> using value_type_promote
 template<class... Subs> using value_type_promote_t
   = scalar_promote_t<typename Subs::value_type...>;
 
+/** Helper to determine if a sequence of scalar types (@c From) are
+ * convertible to another type (@c To).
+ */
+template<class To, class... Froms> struct are_convertible_to_scalar {
+  static const int value
+    = std::is_convertible<cml::scalar_promote_t<Froms...>, To>::value;
+};
+
 } // namespace cml
 
 #endif

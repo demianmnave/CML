@@ -9,6 +9,7 @@
 #endif
 
 #include <random>
+#include <cml/vector/readable_vector.h>
 #include <cml/matrix/size_checking.h>
 #include <cml/matrix/scalar_ops.h>
 #include <cml/matrix/unary_ops.h>
@@ -121,20 +122,30 @@ template<class Sub, class Other> inline void copy(
       left.set(i,j, get(right, i,j));
 }
 
-template<class Sub, class F> inline void fill(
-  writable_matrix<Sub>& left, F f, row_major
+
+
+/** Assign the value of @c f(i,j) to the element @c (i,j) of row-major
+ * matrix @c left.
+ */
+template<class Sub, class F> inline void generate(
+  writable_matrix<Sub>& left, F&& f, row_major
   )
 {
   for(int i = 0; i < left.rows(); ++ i)
-    for(int j = 0; j < left.cols(); ++ j) left.set(i,j, f());
+    for(int j = 0; j < left.cols(); ++ j)
+      left.set(i,j, (std::forward<F>(f))(i,j));
 }
 
-template<class Sub, class F> inline void fill(
-  writable_matrix<Sub>& left, F f, col_major
+/** Assign the value of @c f(i,j) to the element @c (i,j) of column-major
+ * matrix @c left.
+ */
+template<class Sub, class F> inline void generate(
+  writable_matrix<Sub>& left, F&& f, col_major
   )
 {
   for(int j = 0; j < left.cols(); ++ j)
-    for(int i = 0; i < left.rows(); ++ i) left.set(i,j, f());
+    for(int i = 0; i < left.rows(); ++ i)
+      left.set(i,j, (std::forward<F>(f))(i,j));
 }
 
 } // namespace detail
@@ -177,11 +188,63 @@ writable_matrix<DT>::operator()(int i, int j) -> mutable_value
 }
 
 
+template<class DT> template<class Other> DT&
+writable_matrix<DT>::set_basis_element(int i, int j, const Other& v) __CML_REF
+{
+  this->set_basis_element(i, j, v, basis_tag());
+  return this->actual();
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> template<class Other> DT&&
+writable_matrix<DT>::set_basis_element(int i, int j, const Other& v) &&
+{
+  this->set_basis_element(i,j,v);	// Forward to set(...) &
+  return (DT&&) *this;
+}
+#endif
+
+
+template<class DT> template<class Sub> DT&
+writable_matrix<DT>::set_row(int i, const readable_vector<Sub>& v) __CML_REF
+{
+  cml::check_same_col_size(*this, v);
+  for(int j = 0; j < this->cols(); ++ j) this->set(i,j, v.get(j));
+  return this->actual();
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> template<class Sub> DT&&
+writable_matrix<DT>::set_row(int i, const readable_vector<Sub>& v) &&
+{
+  this->set_row(i, v);
+  return (DT&&) *this;
+}
+#endif
+
+template<class DT> template<class Sub> DT&
+writable_matrix<DT>::set_col(int j, const readable_vector<Sub>& v)
+{
+  cml::check_same_row_size(*this, v);
+  for(int i = 0; i < this->rows(); ++ i) this->set(i,j, v.get(i));
+  return this->actual();
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> template<class Sub> DT&&
+writable_matrix<DT>::set_col(int j, const readable_vector<Sub>& v) &&
+{
+  this->set_col(j, v);
+  return (DT&&) *this;
+}
+#endif
+
+
 template<class DT> DT&
 writable_matrix<DT>::zero() __CML_REF
 {
-  auto zero_f = []() { return value_type(0); };
-  detail::fill(*this, zero_f, layout_tag());
+  auto zero_f = [](int,int) { return value_type(0); };
+  detail::generate(*this, zero_f, layout_tag());
   return this->actual();
 }
 
@@ -193,6 +256,25 @@ writable_matrix<DT>::zero() &&
   return (DT&&) *this;
 }
 #endif
+
+
+template<class DT> DT&
+writable_matrix<DT>::identity() __CML_REF
+{
+  auto identity_f = [](int i, int j) { return value_type(i == j); };
+  detail::generate(*this, identity_f, layout_tag());
+  return this->actual();
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> DT&&
+writable_matrix<DT>::identity() &&
+{
+  this->identity();		// Forward to zero &
+  return (DT&&) *this;
+}
+#endif
+
 
 template<class DT> DT&
 writable_matrix<DT>::random(
@@ -206,8 +288,8 @@ writable_matrix<DT>::random(
   std::random_device rd;	// Non-deterministic seed, if supported.
   std::default_random_engine gen(rd());
   distribution_type d(low, high);
-  auto random_f = [&d,&gen]() { return d(gen); };
-  detail::fill(*this, random_f, layout_tag());
+  auto random_f = [&d,&gen](int,int) { return d(gen); };
+  detail::generate(*this, random_f, layout_tag());
   return this->actual();
 }
 
@@ -397,6 +479,23 @@ writable_matrix<DT>::assign_elements(const Es&... eN)
 
   /* Done: */
   return this->actual();
+}
+
+
+template<class DT> template<class Other> void
+writable_matrix<DT>::set_basis_element(
+  int i, int j, const Other& v, row_basis
+  )
+{
+  this->set(i, j, v);
+}
+
+template<class DT> template<class Other> void
+writable_matrix<DT>::set_basis_element(
+  int i, int j, const Other& v, col_basis
+  )
+{
+  this->set(j, i, v);
 }
 
 } // namespace cml

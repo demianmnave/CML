@@ -16,6 +16,7 @@
 namespace cml {
 
 /* Forward declarations: */
+template<class Sub> class readable_vector;
 template<class Sub> class readable_matrix;
 
 /** Exception thrown when run-time size checking is enabled, and the
@@ -40,6 +41,24 @@ struct minimum_matrix_size_error : std::runtime_error {
 struct matrix_size_error : std::runtime_error {
   matrix_size_error()
     : std::runtime_error("incorrect matrix expression size") {}
+};
+
+/** Exception thrown when run-time size checking is enabled, and the row
+ * size of a matrix operand does not match the (row) size of a second
+ * operand.
+ */
+struct incompatible_matrix_row_size_error : std::runtime_error {
+  incompatible_matrix_row_size_error()
+    : std::runtime_error("incompatible matrix row sizes") {}
+};
+
+/** Exception thrown when run-time size checking is enabled, and the column
+ * size of a matrix operand does not match the (row) size of a second
+ * operand.
+ */
+struct incompatible_matrix_col_size_error : std::runtime_error {
+  incompatible_matrix_col_size_error()
+    : std::runtime_error("incompatible matrix column sizes") {}
 };
 
 
@@ -154,7 +173,7 @@ template<class Sub, int N> void check_linear_size(
  * checked at compile time.
  *
  * @note Run-time checking can be disabled by defining
- * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
+ * CML_NO_RUNTIME_MATRIX_SIZE_CHECKS at compile time.
  */
 template<class Sub1, class Sub2> void check_same_size(
   const readable_matrix<Sub1>& left, const readable_matrix<Sub2>& right);
@@ -177,10 +196,52 @@ template<class Sub1, class Sub2> void check_same_size(
  * sizes are checked at compile time.
  *
  * @note Run-time checking can be disabled by defining
- * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
+ * CML_NO_RUNTIME_MATRIX_SIZE_CHECKS at compile time.
  */
 template<class Sub, class Other, int Rows, int Cols> void check_same_size(
   const readable_matrix<Sub>& left, Other const (&array)[Rows][Cols]);
+
+/** Front-end for both compile-time and run-time matrix row size
+ * checking against a vector expression.  @c left must derive from
+ * readable_matrix, and @c right must derived from readable_vector.
+ *
+ * @tparam Sub1 the actual type of the matrix expression.
+ * @tparam Sub2 the actual type of the vector expression.
+ *
+ * @param left Matrix expression.
+ * @param left Vector expression.
+ *
+ * @throws incompatible_matrix_row_size_error at run-time if left is a
+ * dynamically-sized expression and does not have the same number of rows
+ * as @c right has elements.  If left is a fixed-size expression, then the
+ * sizes are checked at compile time.
+ *
+ * @note Run-time checking can be disabled by defining
+ * CML_NO_RUNTIME_MATRIX_SIZE_CHECKS at compile time.
+ */
+template<class Sub1, class Sub2> void check_same_row_size(
+  const readable_matrix<Sub1>& left, const readable_vector<Sub2>& right);
+
+/** Front-end for both compile-time and run-time matrix column size
+ * checking against a vector expression.  @c left must derive from
+ * readable_matrix, and @c right must derived from readable_vector.
+ *
+ * @tparam Sub1 the actual type of the matrix expression.
+ * @tparam Sub2 the actual type of the vector expression.
+ *
+ * @param left Matrix expression.
+ * @param left Vector expression.
+ *
+ * @throws incompatible_matrix_col_size_error at run-time if left is a
+ * dynamically-sized expression and does not have the same number of columns
+ * as @c right has elements.  If left is a fixed-size expression, then the
+ * sizes are checked at compile time.
+ *
+ * @note Run-time checking can be disabled by defining
+ * CML_NO_RUNTIME_MATRIX_SIZE_CHECKS at compile time.
+ */
+template<class Sub1, class Sub2> void check_same_col_size(
+  const readable_matrix<Sub1>& left, const readable_vector<Sub2>& right);
 
 } // namespace cml
 

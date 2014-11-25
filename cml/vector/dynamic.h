@@ -9,7 +9,6 @@
 #ifndef	cml_vector_dynamic_h
 #define	cml_vector_dynamic_h
 
-#include <cml/common/mpl/are_convertible.h>
 #include <cml/common/scalar_traits.h>
 #include <cml/common/dynamic_selector.h>
 #include <cml/vector/vector.h>
@@ -109,7 +108,7 @@ class vector<Element, dynamic<Allocator>>
      * convertible to value_type.
      */
     template<class E0, class... Elements,
-      typename std::enable_if<cml::are_convertible<
+      typename std::enable_if<cml::are_convertible_to_scalar<
 	typename vector<Element,dynamic<>>::value_type
 	, E0, Elements...>::value>::type* = nullptr
 	>

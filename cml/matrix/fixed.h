@@ -9,7 +9,6 @@
 #ifndef	cml_matrix_fixed_h
 #define	cml_matrix_fixed_h
 
-#include <cml/common/mpl/are_convertible.h>
 #include <cml/common/fixed_selector.h>
 #include <cml/common/size_tags.h>
 #include <cml/common/scalar_traits.h>
@@ -22,6 +21,9 @@ template<class Element,
   int Rows, int Cols, typename BasisOrient, typename Layout>
 struct matrix_traits< matrix<Element, fixed<Rows,Cols>, BasisOrient, Layout> >
 {
+  typedef matrix<Element,
+	    fixed<Rows,Cols>, BasisOrient, Layout>	matrix_type;
+  typedef matrix_traits<matrix_type>			traits_type;
   typedef scalar_traits<Element>			element_traits;
   typedef typename element_traits::value_type		value_type;
   typedef typename element_traits::pointer		pointer;
@@ -58,7 +60,6 @@ class matrix<Element, fixed<Rows,Cols>, BasisOrient, Layout>
 
     typedef matrix<Element,
 	    fixed<Rows,Cols>, BasisOrient, Layout>	matrix_type;
-    typedef writable_matrix<matrix_type>		writable_type;
     typedef matrix_traits<matrix_type>			traits_type;
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
@@ -76,9 +77,9 @@ class matrix<Element, fixed<Rows,Cols>, BasisOrient, Layout>
 
   public:
 
-#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
     /* Include methods from writable_type: */
-    using writable_type::operator=;
+#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
+    using writable_matrix<matrix_type>::operator=;
 #endif
 
 
@@ -125,8 +126,7 @@ class matrix<Element, fixed<Rows,Cols>, BasisOrient, Layout>
      * convertible to value_type.
      */
     template<class E0, class... Elements,
-      typename std::enable_if<
-	cml::are_convertible<
+      typename std::enable_if<cml::are_convertible_to_scalar<
 	typename matrix_traits<
 	  matrix<Element,fixed<Rows,Cols>,BasisOrient,Layout>>::value_type
 	  , E0, Elements...>::value>::type* = nullptr

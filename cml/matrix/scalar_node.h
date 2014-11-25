@@ -32,6 +32,8 @@ struct matrix_traits< matrix_scalar_node<Sub,Scalar,Op> >
   typedef typename element_traits::value_type		value_type;
   typedef typename element_traits::immutable_value	immutable_value;
   typedef typename left_traits::size_tag		size_tag;
+  typedef typename left_traits::basis_tag		basis_tag;
+  typedef typename left_traits::layout_tag		layout_tag;
   typedef typename left_traits::temporary_type		temporary_type;
 };
 

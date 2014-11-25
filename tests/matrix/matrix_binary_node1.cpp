@@ -6,6 +6,7 @@
 
 // Make sure the main header compiles cleanly:
 #include <cml/matrix/binary_node.h>
+#include <cml/matrix/binary_ops.h>
 
 #include <cml/matrix/fixed.h>
 #include <cml/matrix/external.h>
@@ -14,6 +15,101 @@
 /* Testing headers: */
 #define BOOST_TEST_MODULE matrix_binary_node1
 #include <boost/test/unit_test.hpp>
+
+BOOST_AUTO_TEST_CASE(binary_types1)
+{
+  typedef cml::matrix<double, cml::fixed<2,2>> matrix_type;
+  {
+    BOOST_CHECK(!cml::is_statically_polymorphic<int>::value);
+    BOOST_CHECK(cml::is_statically_polymorphic<matrix_type>::value);
+  }
+  {
+    auto xpr = matrix_type() + matrix_type();
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::left_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::right_arg_type>::value
+      );
+  }
+  {
+    auto xpr = matrix_type() - matrix_type();
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::left_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::right_arg_type>::value
+      );
+  }
+  {
+    matrix_type M;
+    auto xpr = matrix_type() + M;
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::left_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_lvalue_reference<typename xpr_type::right_arg_type>::value
+      );
+  }
+  {
+    matrix_type M;
+    auto xpr = M + matrix_type();
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_lvalue_reference<typename xpr_type::left_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::right_arg_type>::value
+      );
+  }
+  {
+    matrix_type M;
+    auto xpr = matrix_type() - M;
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::left_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_lvalue_reference<typename xpr_type::right_arg_type>::value
+      );
+  }
+  {
+    matrix_type M;
+    auto xpr = M - matrix_type();
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_lvalue_reference<typename xpr_type::left_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::right_arg_type>::value
+      );
+  }
+  {
+    matrix_type M1, M2;
+    auto xpr = M1 + M2;
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_lvalue_reference<typename xpr_type::left_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_lvalue_reference<typename xpr_type::right_arg_type>::value
+      );
+  }
+  {
+    matrix_type M1, M2;
+    auto xpr = M1 - M2;
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_lvalue_reference<typename xpr_type::left_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_lvalue_reference<typename xpr_type::right_arg_type>::value
+      );
+  }
+}
 
 BOOST_AUTO_TEST_SUITE(fixed)
 
@@ -239,6 +335,7 @@ BOOST_AUTO_TEST_CASE(assign_plus1)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
 
 BOOST_AUTO_TEST_SUITE(fixed_external)
 

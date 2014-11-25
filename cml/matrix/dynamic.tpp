@@ -50,7 +50,7 @@ matrix<E, dynamic<A>, BO, L>::matrix(const readable_matrix<Sub>& sub)
 
 template<class E, class A, typename BO, typename L>
 template<class E0, class... Es,
-  typename std::enable_if<cml::are_convertible<
+  typename std::enable_if<cml::are_convertible_to_scalar<
   typename matrix_traits<matrix<E,dynamic<A>,BO,L>>::value_type
   , E0, Es...>::value>::type*
   >

@@ -10,7 +10,7 @@
 #define	cml_matrix_readable_matrix_h
 
 #include <utility>
-#include <cml/common/compiler.h>
+#include <cml/matrix/basis_tags.h>
 #include <cml/matrix/traits.h>
 
 namespace cml {
@@ -47,7 +47,9 @@ class readable_matrix
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
     typedef typename traits_type::size_tag		size_tag;
-    //typedef typename traits_type::temporary_type	temporary_type;
+    typedef typename traits_type::basis_tag		basis_tag;
+    typedef typename traits_type::layout_tag		layout_tag;
+    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:
@@ -70,10 +72,19 @@ class readable_matrix
     /** Return const element at @c i, @c j. */
     immutable_value operator()(int i, int j) const;
 
-    /** Return element @c j of basis vector @c i.  The interpretation of @c
-     * i and @c j depend upon the basis orientation of the matrix.
+    /** Returns element @c j of basis vector @c i.  The returned value
+     * depends upon the basis orientation.
      */
     immutable_value basis_element(int i, int j) const;
+
+
+  protected:
+
+    /** Return basis element @c (i,j) for a row-basis matrix. */
+    immutable_value basis_element(int i, int j, row_basis) const;
+
+    /** Return basis element @c (i,j) for a column-basis matrix. */
+    immutable_value basis_element(int i, int j, col_basis) const;
 
 
   protected:
