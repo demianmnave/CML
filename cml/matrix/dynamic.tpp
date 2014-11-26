@@ -48,11 +48,11 @@ matrix<E, dynamic<A>, BO, L>::matrix(const readable_matrix<Sub>& sub)
   this->assign(sub);
 }
 
+#if 0
 template<class E, class A, typename BO, typename L>
 template<class E0, class... Es,
-  typename std::enable_if<cml::are_convertible_to_scalar<
-  typename matrix_traits<matrix<E,dynamic<A>,BO,L>>::value_type
-  , E0, Es...>::value>::type*
+  typename cml::enable_if_convertible<
+  typename scalar_traits<E>::value_type, E0, Es...>::type*
   >
 matrix<E, dynamic<A>, BO, L>::matrix(
   int rows, int cols, const E0& e0, const Es&... eN
@@ -62,6 +62,7 @@ matrix<E, dynamic<A>, BO, L>::matrix(
   this->resize_fast(rows,cols);
   this->assign_elements(e0, eN...);
 }
+#endif
 
 template<class E, class A, typename BO, typename L> template<class Array>
 matrix<E, dynamic<A>, BO, L>::matrix(

@@ -6,8 +6,8 @@
 
 #pragma once
 
-#ifndef	cml_common_mpl_type_util_h
-#define	cml_common_mpl_type_util_h
+#ifndef	cml_common_type_util_h
+#define	cml_common_type_util_h
 
 #include <utility>
 #include <cml/common/compiler.h>
@@ -32,7 +32,6 @@ template<class T> using unqualified_type_t
  * The static bool @c value is set to true or false to match @c type.
  */
 template<class T> struct is_statically_polymorphic {
-
   private:
 
   /* SFINAE overload to deduce the return type of T::actual, if it exists. */
@@ -60,38 +59,47 @@ template<class T> struct is_statically_polymorphic {
   static const bool value = type::value;
 };
 
-/** Deduce the derived type of a statically polymorphic type @c T.  @c T
- * must implement a method, actual(), having a reference return type based
- * on @c T (e.g. T&, const T&).
+/** Deduce the derived type of a statically polymorphic type @c T from the
+ * reference return type of @c T::actual, if defined.  If @c T does not
+ * implement @c T::actual having a reference return type, then @c type is
+ * defined as the unqualified base type of @c T.
  */
 template<class T> struct actual_type_of {
   private:
-  static_assert(is_statically_polymorphic<T>::value,
-    "T does not implement actual() returning a reference type");
 
   /* Strip const, volatile, and reference from T to get the return type
    * of T::actual:
    */
   typedef cml::unqualified_type_t<T>			naked_type;
 
+  /* SFINAE overload to deduce the return type of T::actual, if it exists. */
+  template<class U> static auto get_naked_type_of_actual(int)
+    -> cml::unqualified_type_t<decltype(std::declval<U>().actual())>;
+
+  /* The default overload deduces a void return type. */
+  template<class U> static auto get_naked_type_of_actual(...)
+    -> void;
+
 
   public:
 
   /* Deduce the return type of T::actual: */
-  typedef cml::unqualified_type_t<
-    decltype(std::declval<naked_type>().actual())>	type;
+  typedef cml::if_t<is_statically_polymorphic<T>::value,
+	  decltype(get_naked_type_of_actual<naked_type>(0)),
+	  naked_type>					type;
 };
 
 /** Convenience alias for actual_type_of<>. */
 template<class T> using actual_type_of_t = typename actual_type_of<T>::type;
 
-/** Defines @c type as a reference to the derived type of a
- * statically polymorphic type @c T.  For example, if @c T is
- * readable_matrix<S>&, then @c type is S&.  The const-ness of @c T is
- * maintained for lvalue references.
+/** If @c T is a reference type, @c type is defined as a reference to the
+ * derived type of a statically polymorphic type @c T, or as @c T for other
+ * types.  For example, if @c T is readable_matrix<S>&, then @c type is S&.
+ * The const-ness of @c T is maintained for lvalue references.
  */
 template<class T> struct actual_operand_type_of {
   private:
+  static_assert(std::is_reference<T>::value, "T is not a reference type");
 
   /* Possibly const, non-reference type: */
   typedef typename std::remove_reference<T>::type	base_type;
@@ -112,6 +120,24 @@ template<class T> struct actual_operand_type_of {
 /** Convenience alias for actual_operand_type_of<>. */
 template<class T> using actual_operand_type_of_t
   = typename actual_operand_type_of<T>::type;
+
+
+/** Determine if a set of types, @c Froms, are convertible to another type,
+ * @c To via std::is_convertible.
+ */
+template<class To, class... Froms> struct are_convertible;
+
+/** Determine if @c From is convertible to @c To. */
+template<class To, class From>
+  struct are_convertible<To,From> : std::is_convertible<From,To> {};
+
+/** Recursively determine if @c From and @c Froms are convertible to @c To. */
+template<class To, class From, class... Froms>
+struct are_convertible<To, From, Froms...> {
+  static const bool value
+    =  std::is_convertible<From,To>::value
+    && are_convertible<To,Froms...>::value;
+};
 
 } // namespace cml
 

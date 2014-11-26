@@ -11,20 +11,19 @@
 
 #include <cml/common/scalar_binary_ops.h>
 #include <cml/matrix/binary_node.h>
+#include <cml/matrix/type_util.h>
 
 namespace cml {
 
 /** Template helper for matrix binary minus. */
-template<class Sub1, class Sub2> using matrix_binary_minus = op::binary_minus<
-  typename matrix_traits<cml::unqualified_type_t<Sub1>>::value_type,
-  typename matrix_traits<cml::unqualified_type_t<Sub2>>::value_type
-  >;
+template<class Sub1, class Sub2>
+  using matrix_binary_minus = op::binary_minus<
+    matrix_element_type_of_t<Sub1>, matrix_element_type_of_t<Sub2>>;
 
 /** Template helper for matrix binary plus. */
-template<class Sub1, class Sub2> using matrix_binary_plus = op::binary_plus<
-  typename matrix_traits<cml::unqualified_type_t<Sub1>>::value_type,
-  typename matrix_traits<cml::unqualified_type_t<Sub2>>::value_type
-  >;
+template<class Sub1, class Sub2>
+  using matrix_binary_plus = op::binary_plus<
+    matrix_element_type_of_t<Sub1>, matrix_element_type_of_t<Sub2>>;
 
 } // namespace cml
 

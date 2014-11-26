@@ -9,8 +9,8 @@
 #ifndef	cml_vector_fixed_h
 #define	cml_vector_fixed_h
 
+#include <cml/common/mpl/enable_if_convertible.h>
 #include <cml/common/fixed_selector.h>
-#include <cml/common/size_tags.h>
 #include <cml/common/scalar_traits.h>
 #include <cml/vector/writable_vector.h>
 #include <cml/vector/vector.h>
@@ -34,7 +34,7 @@ struct vector_traits< vector<Element, fixed<Size>> >
 
 /** Fixed-length vector.
  *
- * @note Fixed-length vectors must have at least 2 elements.
+ * @note Fixed-length vectors must have at least 1 element.
  */
 template<class Element, int Size>
 class vector<Element, fixed<Size>>
@@ -100,11 +100,14 @@ class vector<Element, fixed<Size>>
      * convertible to value_type.
      */
     template<class E0, class... Elements,
-      typename std::enable_if<cml::are_convertible_to_scalar<
-	typename vector_traits<vector<Element,fixed<Size>>>::value_type
-	, E0, Elements...>::value>::type* = nullptr
-	>
-	vector(const E0& e0, const Elements&... eN);
+      typename cml::enable_if_convertible<
+	value_type, E0, Elements...>::type* = nullptr>
+	vector(const E0& e0, const Elements&... eN)
+	// XXX Should be in vector/fixed.tpp, but VC++12 has brain-dead
+	// out-of-line template argument matching...
+	{
+	  this->assign_elements(e0, eN...);
+	}
 
     /** Construct from an array type. */
     template<class Array> vector(

@@ -14,9 +14,9 @@ namespace cml {
 
 template<class Sub, class Scalar, class Op>
 matrix_scalar_node<Sub,Scalar,Op>::matrix_scalar_node(
-  Sub left, const right_type& right
+  Sub left, Scalar right
   )
-: m_left(std::move(left)), m_right(right)
+: m_left(std::move(left)), m_right(std::move(right))
 {
 }
 

@@ -9,8 +9,8 @@
 #ifndef	cml_matrix_scalar_node_h
 #define	cml_matrix_scalar_node_h
 
-#include <cml/common/mpl/type_util.h>
 #include <cml/common/mpl/if_t.h>
+#include <cml/common/type_util.h>
 #include <cml/common/scalar_traits.h>
 #include <cml/matrix/readable_matrix.h>
 
@@ -22,7 +22,8 @@ template<class Sub, class Scalar, class Op> class matrix_scalar_node;
 template<class Sub, class Scalar, class Op>
 struct matrix_traits< matrix_scalar_node<Sub,Scalar,Op> >
 {
-  /* Figure out the basic types of Sub and Scalar: */
+  typedef matrix_scalar_node<Sub,Scalar,Op>		node_type;
+  typedef matrix_traits<node_type>			traits_type;
   typedef Sub						left_arg_type;
   typedef Scalar 					right_arg_type;
   typedef cml::unqualified_type_t<Sub>			left_type;
@@ -71,9 +72,9 @@ class matrix_scalar_node
   public:
 
     /** Construct from the wrapped sub-expression and the scalar to apply.
-     * @c sub must be an lvalue reference or rvalue reference.
+     * @c sub and @c right must be lvalue or rvalue references.
      */
-    matrix_scalar_node(Sub left, const right_type& right);
+    matrix_scalar_node(Sub left, Scalar right);
 
     /** Move constructor. */
     matrix_scalar_node(node_type&& other);
@@ -108,8 +109,8 @@ class matrix_scalar_node
     /** The matrix operand. */
     left_wrap_type		m_left;
 
-    /** The read-only scalar operand. */
-    const right_type		m_right;
+    /** The scalar operand. */
+    right_type			m_right;
 
 
   private:

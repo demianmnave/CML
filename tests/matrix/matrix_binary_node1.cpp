@@ -20,7 +20,6 @@ BOOST_AUTO_TEST_CASE(binary_types1)
 {
   typedef cml::matrix<double, cml::fixed<2,2>> matrix_type;
   {
-    BOOST_CHECK(!cml::is_statically_polymorphic<int>::value);
     BOOST_CHECK(cml::is_statically_polymorphic<matrix_type>::value);
   }
   {

@@ -48,16 +48,20 @@ vector<E, dynamic<A>>::vector(const readable_vector<Sub>& sub)
   this->assign(sub);
 }
 
+#if 0
+// XXX Should be here, but VC++12 has brain-dead out-of-line template
+// argument matching...
 template<class E, class A>
 template<class E0, class... Es,
-  typename std::enable_if<cml::are_convertible_to_scalar<
-  typename vector<E,dynamic<>>::value_type, E0, Es...>::value>::type*
+  typename cml::enable_if_convertible<
+  typename scalar_traits<E>::value_type, E0, Es...>::type*
 >
 vector<E, dynamic<A>>::vector(const E0& e0, const Es&... eN)
 : m_data(0), m_size(0)
 {
   this->assign_elements(e0, eN...);
 }
+#endif
 
 template<class E, class A> template<class Array>
 vector<E, dynamic<A>>::vector(

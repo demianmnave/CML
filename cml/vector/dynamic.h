@@ -9,10 +9,11 @@
 #ifndef	cml_vector_dynamic_h
 #define	cml_vector_dynamic_h
 
-#include <cml/common/scalar_traits.h>
+#include <cml/common/mpl/enable_if_convertible.h>
 #include <cml/common/dynamic_selector.h>
-#include <cml/vector/vector.h>
+#include <cml/common/scalar_traits.h>
 #include <cml/vector/writable_vector.h>
+#include <cml/vector/vector.h>
 
 namespace cml {
 
@@ -108,11 +109,15 @@ class vector<Element, dynamic<Allocator>>
      * convertible to value_type.
      */
     template<class E0, class... Elements,
-      typename std::enable_if<cml::are_convertible_to_scalar<
-	typename vector<Element,dynamic<>>::value_type
-	, E0, Elements...>::value>::type* = nullptr
-	>
-	vector(const E0& e0, const Elements&... eN);
+      typename cml::enable_if_convertible<
+	value_type, E0, Elements...>::type* = nullptr>
+	vector(const E0& e0, const Elements&... eN)
+	// XXX Should be in vector/dynamic.tpp, but VC++12 has brain-dead
+	// out-of-line template argument matching...
+	: m_data(0), m_size(0)
+	{
+	  this->assign_elements(e0, eN...);
+	}
 
     /** Construct from an array type. */
     template<class Array> vector(

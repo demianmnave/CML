@@ -9,8 +9,8 @@
 #ifndef	cml_matrix_unary_node_h
 #define	cml_matrix_unary_node_h
 
-#include <cml/common/mpl/type_util.h>
 #include <cml/common/mpl/if_t.h>
+#include <cml/common/type_util.h>
 #include <cml/common/scalar_traits.h>
 #include <cml/matrix/readable_matrix.h>
 
@@ -22,6 +22,8 @@ template<class Sub, class Op> class matrix_unary_node;
 template<class Sub, class Op>
 struct matrix_traits< matrix_unary_node<Sub,Op> >
 {
+  typedef matrix_unary_node<Sub,Op>			node_type;
+  typedef matrix_traits<node_type>			traits_type;
   typedef Sub						sub_arg_type;
   typedef cml::unqualified_type_t<Sub>			sub_type;
   typedef matrix_traits<sub_type>			sub_traits;

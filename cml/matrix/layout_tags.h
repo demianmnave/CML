@@ -9,7 +9,7 @@
 #ifndef	cml_matrix_layout_tags_h
 #define	cml_matrix_layout_tags_h
 
-#include <cml/common/mpl/type_util.h>
+#include <cml/common/type_util.h>
 
 namespace cml {
 

@@ -18,6 +18,92 @@
 #define BOOST_TEST_MODULE vector_scalar_node1
 #include <boost/test/unit_test.hpp>
 
+BOOST_AUTO_TEST_CASE(scalar_types1)
+{
+  typedef cml::vector<double, cml::fixed<3>> vector_type;
+  {
+    auto xpr = vector_type()*int();
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::left_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::right_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_arithmetic<typename xpr_type::right_type>::value
+      );
+  }
+  {
+    auto xpr = int()*vector_type();
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::left_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::right_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_arithmetic<typename xpr_type::right_type>::value
+      );
+  }
+  {
+    auto xpr = vector_type()/int();
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::left_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::right_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_arithmetic<typename xpr_type::right_type>::value
+      );
+  }
+  {
+    double v = 0.;
+    auto xpr = vector_type()*v;
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::left_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_lvalue_reference<typename xpr_type::right_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_arithmetic<typename xpr_type::right_type>::value
+      );
+  }
+  {
+    double v = 0.;
+    auto xpr = v*vector_type();
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_lvalue_reference<typename xpr_type::right_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::left_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_arithmetic<typename xpr_type::right_type>::value
+      );
+  }
+  {
+    double v = 0.;
+    auto xpr = vector_type()/v;
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::left_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_lvalue_reference<typename xpr_type::right_arg_type>::value
+      );
+    BOOST_CHECK(
+      std::is_arithmetic<typename xpr_type::right_type>::value
+      );
+  }
+}
+
 BOOST_AUTO_TEST_SUITE(fixed)
 
 BOOST_AUTO_TEST_CASE(scalar_multiply1)

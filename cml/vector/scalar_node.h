@@ -98,8 +98,8 @@ class vector_scalar_node
     /** The vector operand. */
     left_wrap_type		m_left;
 
-    /** The read-only scalar operand. */
-    const right_type		m_right;
+    /** The scalar operand. */
+    right_type			m_right;
 
 
   private:

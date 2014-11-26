@@ -9,8 +9,8 @@
 #ifndef	cml_matrix_dynamic_h
 #define	cml_matrix_dynamic_h
 
+#include <cml/common/mpl/enable_if_convertible.h>
 #include <cml/common/dynamic_selector.h>
-#include <cml/common/size_tags.h>
 #include <cml/common/scalar_traits.h>
 #include <cml/matrix/writable_matrix.h>
 #include <cml/matrix/matrix.h>
@@ -132,12 +132,16 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
      * convertible to value_type.
      */
     template<class E0, class... Elements,
-      typename std::enable_if<
-	cml::are_convertible_to_scalar<typename matrix_traits<
-	  matrix<Element,dynamic<Allocator>,BasisOrient,Layout>>::value_type
-	  , E0, Elements...>::value>::type* = nullptr
-	>
-      matrix(int rows, int cols, const E0& e0, const Elements&... eN);
+      typename cml::enable_if_convertible<
+	value_type, E0, Elements...>::type* = nullptr>
+	matrix(int rows, int cols, const E0& e0, const Elements&... eN)
+	// XXX Should be in matrix/dynamic.tpp, but VC++12 has brain-dead
+	// out-of-line template argument matching...
+	: m_data(0), m_rows(0), m_cols(0)
+	{
+	  this->resize_fast(rows,cols);
+	  this->assign_elements(e0, eN...);
+	}
 
     /** Construct from an array type. */
     template<class Array> matrix(int rows, int cols,

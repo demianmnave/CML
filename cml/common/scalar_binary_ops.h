@@ -10,39 +10,40 @@
 #define	cml_common_scalar_binary_ops_h
 
 #include <cml/common/scalar_traits.h>
+#include <cml/common/scalar_promotion.h>
 
 namespace cml {
 namespace op {
 
-#define __CML_BINARY_OP_PROMOTE(_S1_, _S2_, _sym_)			\
-  decltype(typename scalar_traits<_S1_>::value_type()			\
-    _sym_ typename scalar_traits<_S2_>::value_type())
+template<class Scalar1, class Scalar2> using scalar_value_promote
+  = cml::value_type_promote<scalar_traits<Scalar1>, scalar_traits<Scalar2>>;
+
+template<class Scalar1, class Scalar2> using scalar_value_promote_t
+  = typename scalar_value_promote<Scalar1,Scalar2>::type;
 
 /** Binary minus (subtraction). */
 template<class Scalar1, class Scalar2> struct binary_minus {
-  typedef __CML_BINARY_OP_PROMOTE(Scalar1, Scalar2, -) result_type;
+  typedef scalar_value_promote_t<Scalar1,Scalar2> result_type;
   result_type apply(const Scalar1& a, const Scalar2& b) const { return a-b; }
 };
 
 /** Binary plus (addition). */
 template<class Scalar1, class Scalar2> struct binary_plus {
-  typedef __CML_BINARY_OP_PROMOTE(Scalar1, Scalar2, +) result_type;
+  typedef scalar_value_promote_t<Scalar1,Scalar2> result_type;
   result_type apply(const Scalar1& a, const Scalar2& b) const { return a+b; }
 };
 
 /** Binary multiply. */
 template<class Scalar1, class Scalar2> struct binary_multiply {
-  typedef __CML_BINARY_OP_PROMOTE(Scalar1, Scalar2, *) result_type;
+  typedef scalar_value_promote_t<Scalar1,Scalar2> result_type;
   result_type apply(const Scalar1& a, const Scalar2& b) const { return a*b; }
 };
 
 /** Binary divide. */
 template<class Scalar1, class Scalar2> struct binary_divide {
-  typedef __CML_BINARY_OP_PROMOTE(Scalar1, Scalar2, /) result_type;
+  typedef scalar_value_promote_t<Scalar1,Scalar2> result_type;
   result_type apply(const Scalar1& a, const Scalar2& b) const { return a/b; }
 };
-
-#undef __CML_BINARY_OP_PROMOTE
 
 } // namespace op
 } // namespace cml

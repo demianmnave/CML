@@ -5,6 +5,7 @@
  */
 
 // Make sure the main header compiles cleanly:
+#include <cml/matrix/unary_node.h>
 #include <cml/matrix/unary_ops.h>
 
 #include <cml/matrix/fixed.h>
@@ -14,6 +15,44 @@
 /* Testing headers: */
 #define BOOST_TEST_MODULE matrix_unary_node1
 #include <boost/test/unit_test.hpp>
+
+BOOST_AUTO_TEST_CASE(unary_types1)
+{
+  typedef cml::matrix<double, cml::fixed<2,2>> matrix_type;
+  {
+    BOOST_CHECK(cml::is_statically_polymorphic<matrix_type>::value);
+  }
+  {
+    auto xpr = - matrix_type();
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::sub_arg_type>::value
+      );
+  }
+  {
+    auto xpr = + matrix_type();
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_rvalue_reference<typename xpr_type::sub_arg_type>::value
+      );
+  }
+  {
+    matrix_type M;
+    auto xpr = - M;
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_lvalue_reference<typename xpr_type::sub_arg_type>::value
+      );
+  }
+  {
+    matrix_type M;
+    auto xpr = + M;
+    typedef decltype(xpr) xpr_type;
+    BOOST_CHECK(
+      std::is_lvalue_reference<typename xpr_type::sub_arg_type>::value
+      );
+  }
+}
 
 BOOST_AUTO_TEST_SUITE(fixed)
 

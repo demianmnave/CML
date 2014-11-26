@@ -18,16 +18,19 @@ vector<E, fixed<S>>::vector(const readable_vector<Sub>& sub)
   this->assign(sub);
 }
 
+#if 0
+// XXX Should be here, but VC++12 has brain-dead out-of-line template
+// argument matching...
 template<class E, int S>
 template<class E0, class... Es,
-  typename std::enable_if<cml::are_convertible_to_scalar<
-  typename vector_traits<vector<E,fixed<S>>>::value_type
-  , E0, Es...>::value>::type*
+  typename cml::enable_if_convertible<
+  typename scalar_traits<E>::value_type, E0, Es...>::type*
 >
 vector<E, fixed<S>>::vector(const E0& e0, const Es&... eN)
 {
   this->assign_elements(e0, eN...);
 }
+#endif
 
 template<class E, int S> template<class Array>
 vector<E, fixed<S>>::vector(

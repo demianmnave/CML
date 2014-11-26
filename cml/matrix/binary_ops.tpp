@@ -8,47 +8,57 @@
 #error "matrix/binary_ops.tpp not included correctly"
 #endif
 
-#include <cml/matrix/is_matrix.h>
-
 namespace cml {
 
 /** Helper function to generate a matrix_binary_node from two matrix types
  * (i.e. derived from readable_matrix<>).
  */
 template<class Op, class Sub1, class Sub2,
-  typename std::enable_if<is_matrix<Sub1>::value>::type* = nullptr,
-  typename std::enable_if<is_matrix<Sub2>::value>::type* = nullptr
+  cml::enable_if_matrix_t<Sub1>* = nullptr,
+  cml::enable_if_matrix_t<Sub2>* = nullptr
 > inline auto
 make_matrix_binary_node(Sub1&& sub1, Sub2&& sub2)
-->  matrix_binary_node<
-typename actual_operand_type_of<decltype(std::forward<Sub1>(sub1))>::type,
-typename actual_operand_type_of<decltype(std::forward<Sub2>(sub2))>::type,
+-> matrix_binary_node<
+actual_operand_type_of_t<decltype(sub1)>,
+actual_operand_type_of_t<decltype(sub2)>,
 Op
 >
 {
-  typedef typename actual_operand_type_of<
-    decltype(std::forward<Sub1>(sub1))>::type		sub1_type;
-  typedef typename actual_operand_type_of<
-    decltype(std::forward<Sub2>(sub2))>::type		sub2_type;
-  return matrix_binary_node<sub1_type, sub2_type, Op>(
-    (sub1_type) sub1, (sub2_type) sub2);
+  static_assert(std::is_same<
+    decltype(sub1), decltype(std::forward<Sub1>(sub1))>::value,
+    "internal error: unexpected expression type (sub1)");
+  static_assert(std::is_same<
+    decltype(sub2), decltype(std::forward<Sub2>(sub2))>::value,
+    "internal error: unexpected expression type (sub2)");
+
+  /* Deduce the operand types of the subexpressions (&, const&, &&): */
+  typedef actual_operand_type_of_t<decltype(sub1)> sub1_type;
+  typedef actual_operand_type_of_t<decltype(sub2)> sub2_type;
+  return matrix_binary_node<
+    sub1_type, sub2_type, Op>((sub1_type) sub1, (sub2_type) sub2);
 }
 
-template<class Sub1, class Sub2>
+template<class Sub1, class Sub2,
+  cml::enable_if_matrix_t<Sub1>* = nullptr,
+  cml::enable_if_matrix_t<Sub2>* = nullptr
+>
 inline auto operator-(Sub1&& sub1, Sub2&& sub2)
--> decltype(make_matrix_binary_node<op::binary_minus<double,double>>(
+-> decltype(make_matrix_binary_node<matrix_binary_minus<Sub1,Sub2>>(
     std::forward<Sub1>(sub1), std::forward<Sub2>(sub2)))
 {
-  return make_matrix_binary_node<op::binary_minus<double,double>>
+  return make_matrix_binary_node<matrix_binary_minus<Sub1,Sub2>>
     (std::forward<Sub1>(sub1), std::forward<Sub2>(sub2));
 }
 
-template<class Sub1, class Sub2>
+template<class Sub1, class Sub2,
+  cml::enable_if_matrix_t<Sub1>* = nullptr,
+  cml::enable_if_matrix_t<Sub2>* = nullptr
+>
 inline auto operator+(Sub1&& sub1, Sub2&& sub2)
--> decltype(make_matrix_binary_node<op::binary_plus<double,double>>(
+-> decltype(make_matrix_binary_node<matrix_binary_plus<Sub1,Sub2>>(
     std::forward<Sub1>(sub1), std::forward<Sub2>(sub2)))
 {
-  return make_matrix_binary_node<op::binary_plus<double,double>>
+  return make_matrix_binary_node<matrix_binary_plus<Sub1,Sub2>>
     (std::forward<Sub1>(sub1), std::forward<Sub2>(sub2));
 }
 

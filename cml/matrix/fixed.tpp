@@ -18,11 +18,13 @@ matrix<E, fixed<R,C>, BO, L>::matrix(const readable_matrix<Sub>& sub)
   this->assign(sub);
 }
 
+#if 0
+// XXX Should be here, but VC++12 has brain-dead out-of-line template
+// argument matching...
 template<class E, int R, int C, typename BO, typename L>
 template<class E0, class... Es,
-  typename std::enable_if<cml::are_convertible_to_scalar<
-  typename matrix_traits<matrix<E,fixed<R,C>,BO,L>>::value_type
-  , E0, Es...>::value>::type*
+  typename cml::enable_if_convertible<
+  typename scalar_traits<E>::value_type, E0, Es...>::type*
   >
 matrix<E, fixed<R,C>, BO, L>::matrix(
   const E0& e0, const Es&... eN
@@ -30,6 +32,7 @@ matrix<E, fixed<R,C>, BO, L>::matrix(
 {
   this->assign_elements(e0, eN...);
 }
+#endif
 
 template<class E, int R, int C, typename BO, typename L> template<class Array>
 matrix<E, fixed<R,C>, BO, L>::matrix(
