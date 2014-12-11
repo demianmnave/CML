@@ -41,7 +41,7 @@ macro(ADD_CML_TEST
   endif()
 
   # Setup the test:
-  add_test(NAME ${TestName} COMMAND ${ExecName})
+  add_test(NAME ${TestName} COMMAND ${ExecName} --log_level=warning)
 endmacro()
 
 # --------------------------------------------------------------------------
