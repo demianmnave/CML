@@ -21,13 +21,5 @@ ADD_CML_TEST(cross1)
 ADD_CML_TEST(triple_product1)
 ADD_CML_TEST(subvector1)
 
-# Mark tests that are expected to fail on MSVC:
-if(MSVC)
-  set_tests_properties(
-    CML:Vector:vector_scalar_node1_test
-    PROPERTIES WILL_FAIL TRUE
-    )
-endif()
-
 # --------------------------------------------------------------------------
 # vim:ft=cmake
