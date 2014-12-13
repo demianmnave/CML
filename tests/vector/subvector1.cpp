@@ -160,8 +160,7 @@ BOOST_AUTO_TEST_CASE(sub1)
   BOOST_CHECK_EQUAL((std::is_rvalue_reference<
       typename node_type::sub_arg_type>::value), true);
   BOOST_CHECK_EQUAL((std::is_same<
-      typename node_type::sub_type,
-      typename vector3_t::temporary_type>::value), true);
+      typename node_type::sub_type, vector3_t>::value), true);
 
   auto xpr = vector3_t(1., 2., 3.).subvector(0);
   BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
@@ -179,8 +178,7 @@ BOOST_AUTO_TEST_CASE(sub2)
   BOOST_CHECK_EQUAL((std::is_rvalue_reference<
       typename node_type::sub_arg_type>::value), true);
   BOOST_CHECK_EQUAL((std::is_same<
-      typename node_type::sub_type,
-      typename vector3_t::temporary_type>::value), true);
+      typename node_type::sub_type, vector3_t>::value), true);
 
   auto xpr = v1.subvector(0);
   BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);

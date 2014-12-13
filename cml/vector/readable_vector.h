@@ -11,6 +11,7 @@
 
 #include <cml/common/compiler.h>
 #include <cml/vector/traits.h>
+#include <cml/vector/vector.h>
 
 namespace cml {
 
@@ -40,7 +41,6 @@ class readable_vector
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
     typedef typename traits_type::size_tag		size_tag;
-    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:
@@ -78,9 +78,9 @@ class readable_vector
     subvector_node<DerivedT&&> subvector(int i) const &&;
 #else
     /** Return subvector @c i as an expression node, storing a copy of the
-     * source vector in the node.
+     * source in the node.
      */
-    subvector_node<temporary_type&&> subvector(int i) const;
+    subvector_node<DerivedT&&> subvector(int i) const;
 #endif
 
 

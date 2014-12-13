@@ -10,12 +10,16 @@
 #define	cml_vector_dot_h
 
 #include <cml/common/scalar_promotion.h>
-#include <cml/vector/promotion.h>
+#include <cml/vector/traits.h>
 
 namespace cml {
 
 /* Forward declarations: */
 template<class DerivedT> class readable_vector;
+
+/** Convenience alias to determine the scalar type to return from cml::dot. */
+template<class Sub1, class Sub2>
+  using dot_promote_t = value_type_trait_promote_t<Sub1, Sub2>;
 
 /** Compute the dot-product of two vectors.
  *
@@ -29,7 +33,7 @@ template<class DerivedT> class readable_vector;
  */
 template<class Sub1, class Sub2> auto
 dot(const readable_vector<Sub1>& left, const readable_vector<Sub2>& right)
--> value_type_promote_t<vector_traits<Sub1>, vector_traits<Sub2>>;
+-> dot_promote_t<Sub1,Sub2>;
 
 } // namespace cml
 

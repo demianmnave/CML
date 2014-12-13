@@ -10,7 +10,8 @@
 #define	cml_matrix_readable_matrix_h
 
 #include <utility>
-#include <cml/matrix/basis_tags.h>
+#include <cml/common/basis_tags.h>
+#include <cml/common/layout_tags.h>
 #include <cml/matrix/traits.h>
 
 namespace cml {
@@ -49,7 +50,6 @@ class readable_matrix
     typedef typename traits_type::size_tag		size_tag;
     typedef typename traits_type::basis_tag		basis_tag;
     typedef typename traits_type::layout_tag		layout_tag;
-    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:

@@ -11,7 +11,7 @@
 
 #include <utility>
 #include <cml/common/compiler.h>
-#include <cml/common/mpl/if_t.h>
+#include <cml/common/mpl/is_statically_polymorphic.h>
 
 namespace cml {
 
@@ -26,38 +26,6 @@ template<class T> struct unqualified_type {
 /** Convenience alias for unqualified_type. */
 template<class T> using unqualified_type_t
   = typename cml::unqualified_type<T>::type;
-
-/** Defines typedef @c type as std::true_type if @c T has a member function
- * actual() that returns a reference type, or std::false_type otherwise.
- * The static bool @c value is set to true or false to match @c type.
- */
-template<class T> struct is_statically_polymorphic {
-  private:
-
-  /* SFINAE overload to deduce the return type of T::actual, if it exists. */
-  template<class U> static auto get_type_of_actual(int)
-    -> decltype(std::declval<U>().actual());
-
-  /* The default overload deduces a void return type. */
-  template<class U> static auto get_type_of_actual(...)
-    -> void;
-
-  /* Strip const, volatile, and reference from T to detect actual(): */
-  typedef cml::unqualified_type_t<T> naked_type;
-
-
-  public:
-
-  /* std::true_type if T::actual is a member function returning a
-   * reference type, std::false_type otherwise.
-   */
-  typedef cml::if_t<
-    std::is_reference<decltype(get_type_of_actual<naked_type>(0))>::value,
-    std::true_type, std::false_type> type;
-
-  /* True or false, depending upon 'type': */
-  static const bool value = type::value;
-};
 
 /** Deduce the derived type of a statically polymorphic type @c T from the
  * reference return type of @c T::actual, if defined.  If @c T does not
@@ -84,7 +52,7 @@ template<class T> struct actual_type_of {
   public:
 
   /* Deduce the return type of T::actual: */
-  typedef cml::if_t<is_statically_polymorphic<T>::value,
+  typedef cml::if_t<is_statically_polymorphic<naked_type>::value,
 	  decltype(get_naked_type_of_actual<naked_type>(0)),
 	  naked_type>					type;
 };

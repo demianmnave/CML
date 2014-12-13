@@ -10,9 +10,9 @@
 #define	cml_matrix_binary_node_h
 
 #include <cml/common/scalar_traits.h>
+#include <cml/common/promotion.h>
 #include <cml/matrix/readable_matrix.h>
 #include <cml/matrix/matrix.h>
-#include <cml/matrix/promotion.h>
 
 namespace cml {
 
@@ -22,23 +22,17 @@ template<class Sub1, class Sub2, class Op> class matrix_binary_node;
 template<class Sub1, class Sub2, class Op>
 struct matrix_traits< matrix_binary_node<Sub1,Sub2,Op> >
 {
-  typedef matrix_binary_node<Sub1,Sub2,Op>		node_type;
-  typedef matrix_traits<node_type>			traits_type;
   typedef Sub1						left_arg_type;
   typedef Sub2						right_arg_type;
   typedef cml::unqualified_type_t<Sub1>			left_type;
   typedef cml::unqualified_type_t<Sub2>			right_type;
   typedef scalar_traits<typename Op::result_type>	element_traits;
   typedef typename element_traits::value_type		value_type;
-  typedef typename element_traits::immutable_value	immutable_value;
-  typedef matrix_size_tag_promote_t<
-    left_type, right_type>				size_tag;
-  typedef matrix_basis_tag_promote_t<
-    left_type,right_type>				basis_tag;
-  typedef matrix_layout_tag_promote_t<
-    left_type,right_type>				layout_tag;
-  typedef matrix_temporary_promote_t<
-    left_type, right_type, value_type>			temporary_type;
+  typedef value_type					immutable_value;
+
+  typedef size_tag_trait_promote_t<left_type, right_type> size_tag;
+  typedef basis_tag_trait_promote_t<left_type,right_type> basis_tag;
+  typedef layout_tag_trait_promote_t<left_type,right_type> layout_tag;
 };
 
 /** Represents a binary matrix operation in an expression tree. */
@@ -60,7 +54,6 @@ class matrix_binary_node
     typedef typename traits_type::size_tag		size_tag;
     typedef typename traits_type::basis_tag		basis_tag;
     typedef typename traits_type::layout_tag		layout_tag;
-    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:

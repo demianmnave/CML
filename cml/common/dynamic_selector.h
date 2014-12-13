@@ -10,7 +10,7 @@
 #define	cml_common_dynamic_selector_h
 
 #include <memory>
-#include <cml/common/size_tags.h>
+#include <cml/common/storage_traits.h>
 
 namespace cml {
 
@@ -29,6 +29,20 @@ namespace cml {
  * array_cols, both set to -1.
  */
 template<class Allocator = std::allocator<void>> struct dynamic;
+
+/** storage_traits for dynamic<>. */
+template<class Allocator>
+struct storage_traits<dynamic<Allocator>>
+{
+  typedef dynamic<Allocator>				storage_type;
+  typedef dynamic<Allocator>				solid_type;
+  typedef dynamic_size_tag				size_tag;
+};
+
+/** traits_of for dynamic<>. */
+template<class Allocator> struct traits_of<dynamic<Allocator>, void> {
+  typedef storage_traits<dynamic<Allocator>>		type;
+};
 
 } // namespace cml
 

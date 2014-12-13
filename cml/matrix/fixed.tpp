@@ -74,15 +74,13 @@ matrix<E, fixed<R,C>, BO, L>::cols() const
 template<class E, int R, int C, typename BO, typename L> auto
 matrix<E, fixed<R,C>, BO, L>::get(int i, int j) -> mutable_value
 {
-  return (L::value == row_major_c)
-    ? this->m_data[i][j] : this->m_data[j][i];
+  return get(*this, i, j, layout_tag());
 }
 
 template<class E, int R, int C, typename BO, typename L> auto
 matrix<E, fixed<R,C>, BO, L>::get(int i, int j) const -> immutable_value
 {
-  return (L::value == row_major_c)
-    ? this->m_data[i][j] : this->m_data[j][i];
+  return get(*this, i, j, layout_tag());
 }
 
 template<class E, int R, int C, typename BO, typename L>

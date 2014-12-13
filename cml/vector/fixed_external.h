@@ -28,8 +28,10 @@ struct vector_traits< vector<Element, external<Size>> >
   typedef typename element_traits::const_reference	const_reference;
   typedef typename element_traits::mutable_value	mutable_value;
   typedef typename element_traits::immutable_value	immutable_value;
-  typedef fixed_size_tag				size_tag;
-  typedef vector<Element, fixed<Size>>			temporary_type;
+
+  typedef external<Size>				storage_type;
+  typedef storage_traits<storage_type>			storage_traits;
+  typedef typename storage_traits::size_tag		size_tag;
 };
 
 /** Fixed-length wrapped array pointer as a vector. */
@@ -50,14 +52,17 @@ class vector<Element, external<Size>>
     typedef typename traits_type::const_reference	const_reference;
     typedef typename traits_type::mutable_value		mutable_value;
     typedef typename traits_type::immutable_value	immutable_value;
+
+    typedef typename traits_type::storage_type		storage_type;
+    typedef typename traits_type::storage_traits	storage_traits;
     typedef typename traits_type::size_tag		size_tag;
-    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:
 
-#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
     /* Include methods from writable_type: */
+    using writable_type::operator[];
+#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
     using writable_type::operator=;
 #endif
 

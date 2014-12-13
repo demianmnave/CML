@@ -15,10 +15,9 @@ namespace cml {
 
 template<class Sub1, class Sub2> auto
 dot(const readable_vector<Sub1>& left, const readable_vector<Sub2>& right)
--> value_type_promote_t<vector_traits<Sub1>, vector_traits<Sub2>>
+-> dot_promote_t<Sub1,Sub2>
 {
-  typedef value_type_promote_t<
-    vector_traits<Sub1>, vector_traits<Sub2>> result_type;
+  typedef dot_promote_t<Sub1,Sub2> result_type;
   cml::check_minimum_size(left, cml::int_c<1>());
   cml::check_minimum_size(right, cml::int_c<1>());
   cml::check_same_size(left, right);

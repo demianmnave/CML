@@ -12,7 +12,6 @@
 #include <cml/common/scalar_traits.h>
 #include <cml/vector/readable_vector.h>
 #include <cml/vector/vector.h>
-#include <cml/vector/promotion.h>
 
 namespace cml {
 
@@ -28,11 +27,8 @@ struct vector_traits< vector_binary_node<Sub1,Sub2,Op> >
   typedef cml::unqualified_type_t<Sub2>			right_type;
   typedef scalar_traits<typename Op::result_type>	element_traits;
   typedef typename element_traits::value_type		value_type;
-  typedef typename element_traits::immutable_value	immutable_value;
-  typedef vector_size_tag_promote_t<
-    left_type, right_type>				size_tag;
-  typedef vector_temporary_promote_t<
-    left_type, right_type, value_type>			temporary_type;
+  typedef value_type					immutable_value;
+  typedef size_tag_trait_promote_t<left_type, right_type> size_tag;
 };
 
 /** Represents a binary vector operation in an expression tree. */
@@ -52,7 +48,6 @@ class vector_binary_node
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
     typedef typename traits_type::size_tag		size_tag;
-    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:

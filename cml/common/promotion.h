@@ -11,6 +11,8 @@
 
 #include <cml/common/mpl/if_t.h>
 #include <cml/common/size_tags.h>
+#include <cml/common/basis_tags.h>
+#include <cml/common/layout_tags.h>
 
 namespace cml {
 
@@ -93,6 +95,97 @@ template<class Tag1, class Tag2> struct size_tag_promote
 /** Convenience alias for size_tag_promote. */
 template<class Tag1, class Tag2>
   using size_tag_promote_t = typename size_tag_promote<Tag1,Tag2>::type;
+
+/** Deduce the default size tag needed to promote the result of combining
+ * two expressions @c T1 and @c T2 with traits that define the size_tag
+ * type.
+ */
+template<class T1, class T2> struct size_tag_trait_promote {
+  typedef size_tag_promote_t<
+    size_tag_trait_of_t<T1>, size_tag_trait_of_t<T2>>	type;
+};
+
+/** Convenience alias for size_tag_trait_promote. */
+template<class T1, class T2> using size_tag_trait_promote_t
+  = typename size_tag_trait_promote<T1,T2>::type;
+
+
+/** Deduce the default basis tag needed to promote the result of combining
+ * two expressions having basis tags @c Tag1 and @c Tag2.  By default:
+ *
+ * - both row_basis: row_basis
+ * - both col_basis: col_basis
+ * - otherwise: any_basis
+ *
+ * @note This can be specialized to change the default promotion strategy.
+ */
+template<class Tag1, class Tag2> struct basis_tag_promote
+{
+  static_assert(cml::is_basis_tag<Tag1>::value, "invalid basis tag");
+  static_assert(cml::is_basis_tag<Tag2>::value, "invalid basis tag");
+
+  /* True if the bases are the same: */
+  static const bool is_matched = std::is_same<Tag1,Tag2>::value;
+
+  /* Promote to the common basis, or any_basis otherwise: */
+  typedef cml::if_t<is_matched, Tag1, any_basis>	type;
+};
+
+/** Convenience alias for basis_tag_promote. */
+template<class Tag1, class Tag2>
+  using basis_tag_promote_t = typename basis_tag_promote<Tag1,Tag2>::type;
+
+/** Deduce the default basis tag needed to promote the result of combining
+ * two expressions @c T1 and @c T2 with traits that define the basis_tag
+ * type.
+ */
+template<class T1, class T2> struct basis_tag_trait_promote {
+  typedef basis_tag_promote_t<
+    basis_tag_trait_of_t<T1>, basis_tag_trait_of_t<T2>> type;
+};
+
+/** Convenience alias for basis_tag_trait_promote. */
+template<class T1, class T2> using basis_tag_trait_promote_t
+  = typename basis_tag_trait_promote<T1,T2>::type;
+
+
+/** Deduce the default layout tag needed to promote the result of combining
+ * two expressions having layout tags @c Tag1 and @c Tag2.  By default:
+ *
+ * - both row_major: row_major
+ * - both col_major: col_major
+ * - otherwise: any_major
+ *
+ * @note This can be specialized to change the default promotion strategy.
+ */
+template<class Tag1, class Tag2> struct layout_tag_promote
+{
+  static_assert(cml::is_layout_tag<Tag1>::value, "invalid layout tag");
+  static_assert(cml::is_layout_tag<Tag2>::value, "invalid layout tag");
+
+  /* True if the tags are the same: */
+  static const bool is_matched = std::is_same<Tag1,Tag2>::value;
+
+  /* Promote to the common layout, or any_basis otherwise: */
+  typedef cml::if_t<is_matched, Tag1, any_basis>	type;
+};
+
+/** Convenience alias for layout_tag_promote. */
+template<class Tag1, class Tag2>
+  using layout_tag_promote_t = typename layout_tag_promote<Tag1,Tag2>::type;
+
+/** Deduce the default layout tag needed to promote the result of combining
+ * two expressions @c T1 and @c T2 with traits that define the layout_tag
+ * type.
+ */
+template<class T1, class T2> struct layout_tag_trait_promote {
+  typedef layout_tag_promote_t<
+    layout_tag_trait_of_t<T1>, layout_tag_trait_of_t<T2>> type;
+};
+
+/** Convenience alias for layout_tag_trait_promote. */
+template<class T1, class T2> using layout_tag_trait_promote_t
+  = typename layout_tag_trait_promote<T1,T2>::type;
 
 } // namespace cml
 

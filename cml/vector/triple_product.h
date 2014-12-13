@@ -21,8 +21,7 @@ template<class DerivedT> class readable_vector;
  * cml::triple_product.
  */
 template<class Sub1, class Sub2, class Sub3>
-  using triple_product_promote_t = value_type_promote_t<
-    vector_traits<Sub1>, vector_traits<Sub2>, vector_traits<Sub3>>;
+  using triple_product_promote_t = value_type_trait_promote_t<Sub1,Sub2,Sub3>;
 
 /** Compute the scalar triple product ("box product") of 3 3D vectors, and
  * return the scalar result.

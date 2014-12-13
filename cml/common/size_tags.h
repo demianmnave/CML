@@ -9,7 +9,7 @@
 #ifndef	cml_common_size_tags_h
 #define	cml_common_size_tags_h
 
-#include <cml/common/type_util.h>
+#include <cml/common/traits.h>
 
 namespace cml {
 
@@ -37,12 +37,22 @@ template<class Tag> struct is_size_tag {
  * defines the size_tag type.
  */
 template<class T> struct size_tag_of {
-  typedef typename cml::unqualified_type<T>::type::size_tag type;
+  typedef typename T::size_tag type;
   static_assert(cml::is_size_tag<type>::value, "invalid size tag");
 };
 
 /** Convenience alias for size_tag_of. */
 template<class T> using size_tag_of_t = typename size_tag_of<T>::type;
+
+/** Retrieve the size_tag of @c T via traits. */
+template<class T> struct size_tag_trait_of {
+  typedef typename traits_of<T>::type::size_tag type;
+  static_assert(cml::is_size_tag<type>::value, "invalid size tag");
+};
+
+/** Convenience alias for size_tag_trait_of. */
+template<class T>
+  using size_tag_trait_of_t = typename size_tag_trait_of<T>::type;
 
 } // namespace cml
 

@@ -61,6 +61,15 @@ struct incompatible_matrix_col_size_error : std::runtime_error {
     : std::runtime_error("incompatible matrix column sizes") {}
 };
 
+/** Exception thrown when run-time size checking is enabled, and the
+ * column size of a matrix operand does not match the row size of a second
+ * operand.
+ */
+struct incompatible_matrix_inner_size_error : std::runtime_error {
+  incompatible_matrix_inner_size_error()
+    : std::runtime_error("incompatible matrix inner product size") {}
+};
+
 
 
 /** Front-end for both compile-time and run-time matrix binary expression
@@ -86,7 +95,7 @@ struct incompatible_matrix_col_size_error : std::runtime_error {
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_MATRIX_SIZE_CHECKS at compile time.
  */
-template<class Sub1, class Sub2> void check_same_linar_size(
+template<class Sub1, class Sub2> void check_same_linear_size(
   const readable_matrix<Sub1>& left, const readable_matrix<Sub2>& right);
 
 /** Front-end for both compile-time and run-time matrix binary expression
@@ -209,12 +218,12 @@ template<class Sub, class Other, int Rows, int Cols> void check_same_size(
  * @tparam Sub2 the actual type of the vector expression.
  *
  * @param left Matrix expression.
- * @param left Vector expression.
+ * @param right Vector expression.
  *
- * @throws incompatible_matrix_row_size_error at run-time if left is a
- * dynamically-sized expression and does not have the same number of rows
- * as @c right has elements.  If left is a fixed-size expression, then the
- * sizes are checked at compile time.
+ * @throws incompatible_matrix_row_size_error at run-time if @c left or @c
+ * right is dynamically-sized, and @c left does not have the same number of
+ * rows as @c right has elements.  If both are fixed-size expressions, then
+ * the sizes are checked at compile time.
  *
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_MATRIX_SIZE_CHECKS at compile time.
@@ -230,18 +239,99 @@ template<class Sub1, class Sub2> void check_same_row_size(
  * @tparam Sub2 the actual type of the vector expression.
  *
  * @param left Matrix expression.
- * @param left Vector expression.
+ * @param right Vector expression.
  *
- * @throws incompatible_matrix_col_size_error at run-time if left is a
- * dynamically-sized expression and does not have the same number of columns
- * as @c right has elements.  If left is a fixed-size expression, then the
- * sizes are checked at compile time.
+ * @throws incompatible_matrix_col_size_error at run-time if @c left or @c
+ * right is dynamically-sized, and @c left does not have the same number
+ * of columns as @c right has elements.  If both are fixed-size expressions,
+ * then the sizes are checked at compile time.
  *
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_MATRIX_SIZE_CHECKS at compile time.
  */
 template<class Sub1, class Sub2> void check_same_col_size(
   const readable_matrix<Sub1>& left, const readable_vector<Sub2>& right);
+
+/** Front-end for both compile-time and run-time compatible inner product
+ * size checking.  @c left and @c right must derive from readable_matrix.
+ *
+ * @tparam Sub1 the actual type of the first matrix expression.
+ * @tparam Sub2 the actual type of the second matrix expression.
+ *
+ * @param left First matrix expression.
+ * @param right Second matrix expression.
+ *
+ * @throws incompatible_matrix_inner_size_error at run-time if @c left or @c
+ * right is dynamically-sized, and @c left does not have the same number
+ * of columns as @c right has rows.  If both are fixed-size expressions,
+ * then the sizes are checked at compile time.
+ */
+template<class Sub1, class Sub2> void check_same_inner_size(
+  const readable_matrix<Sub1>& left, const readable_matrix<Sub2>& right);
+
+
+/** Front-end for both compile-time and run-time compatible inner product
+ * size checking.  @c left must derive from readable_matrix, and @c right
+ * must derive from readable_vector.
+ *
+ * @tparam Sub1 the actual type of the matrix expression.
+ * @tparam Sub2 the actual type of the vector expression.
+ *
+ * @param left Matrix expression.
+ * @param right Vector expression.
+ *
+ * @throws incompatible_matrix_inner_size_error at run-time if @c left or @c
+ * right is dynamically-sized, and @c left does not have the same number
+ * of columns as @c right has elements.  If both are fixed-size expressions,
+ * then the sizes are checked at compile time.
+ */
+template<class Sub1, class Sub2> void check_same_inner_size(
+  const readable_matrix<Sub1>& left, const readable_vector<Sub2>& right);
+
+
+/** Front-end for both compile-time and run-time compatible inner product
+ * size checking.  @c left must derive from readable_vector, and @c right
+ * must derive from readable_vector.
+ *
+ * @tparam Sub1 the actual type of the vector expression.
+ * @tparam Sub2 the actual type of the matrix expression.
+ *
+ * @param left Vector expression.
+ * @param right Matrix expression.
+ *
+ * @throws incompatible_matrix_inner_size_error at run-time if @c left or
+ * @c right is dynamically-sized, and @c left does not have the same number
+ * of elements as @c right has rows.  If both are fixed-size expressions,
+ * then the sizes are checked at compile time.
+ */
+template<class Sub1, class Sub2> void check_same_inner_size(
+  const readable_vector<Sub1>& left, const readable_matrix<Sub2>& right);
+
+
+/** Front-end for vector expression length checking against a run-time
+ * size.  The expression must derive from readable_vector.
+ *
+ * @throws vector_size_error if left.size() != N.
+ *
+ * @note Run-time checking can be disabled by defining
+ * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
+ */
+template<class Sub>
+void check_size(const readable_vector<Sub>& left, int N);
+
+/** Front-end for compile-time and run-time vector expression length
+ * checking against an integer constant via int_c<N>.  The expression must
+ * derive from readable_vector.
+ *
+ * @throws vector_size_error at run-time if left is a dynamically-sized
+ * expression and left.size() != N. If left is a fixed-size expression,
+ * then the size is checked at compile time.
+ *
+ * @note Run-time checking can be disabled by defining
+ * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
+ */
+template<class Sub, int N>
+void check_size(const readable_vector<Sub>& left, cml::int_c<N>);
 
 } // namespace cml
 

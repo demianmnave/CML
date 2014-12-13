@@ -9,7 +9,7 @@
 #ifndef	cml_common_fixed_selector_h
 #define	cml_common_fixed_selector_h
 
-#include <cml/common/size_tags.h>
+#include <cml/common/storage_traits.h>
 
 namespace cml {
 
@@ -25,6 +25,19 @@ namespace cml {
  * array_cols, containing the number of rows and columns.
  */
 template<int Size1, int Size2 = -1> struct fixed;
+
+/** storage_traits for fixed<>. */
+template<int Size1, int Size2> struct storage_traits<fixed<Size1,Size2>>
+{
+  typedef fixed<Size1,Size2>				storage_type;
+  typedef fixed<Size1,Size2>				solid_type;
+  typedef fixed_size_tag				size_tag;
+};
+
+/** traits_of for fixed<>. */
+template<int Size1, int Size2> struct traits_of<fixed<Size1,Size2>, void> {
+  typedef storage_traits<fixed<Size1,Size2>>		type;
+};
 
 } // namespace cml
 

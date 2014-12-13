@@ -9,6 +9,9 @@
 #ifndef	cml_vector_traits_h
 #define	cml_vector_traits_h
 
+#include <cml/common/traits.h>
+#include <cml/vector/type_util.h>
+
 namespace cml {
 
 /** Specializable class wrapping traits for cml::vector<> types. This class
@@ -18,6 +21,12 @@ namespace cml {
  * @tparam Vector The vector<> type the traits correspond to.
  */
 template<class Vector> struct vector_traits;
+
+/** traits_of for vector types. */
+template<class Vector>
+struct traits_of<Vector, cml::enable_if_vector_t<Vector>> {
+  typedef vector_traits<Vector>				type;
+};
 
 } // namespace cml
 

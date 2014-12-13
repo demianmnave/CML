@@ -10,22 +10,24 @@
 
 namespace cml {
 
-template<class DT> auto length_squared(const readable_vector<DT>& v)
--> typename vector_traits<DT>::value_type
+template<class DT> auto
+length_squared(const readable_vector<DT>& v) -> value_type_trait_of_t<DT>
 {
   return v.length_squared();
 }
 
-template<class DT> auto length(const readable_vector<DT>& v)
--> typename vector_traits<DT>::value_type
+template<class DT> auto
+length(const readable_vector<DT>& v) -> value_type_trait_of_t<DT>
 {
   return v.length();
 }
 
 template<class DT> auto normalize(const readable_vector<DT>& v)
--> typename vector_traits<DT>::temporary_type
+-> cml::vector<value_type_trait_of_t<DT>,
+  typename vector_traits<DT>::storage_traits::solid_type>
 {
-  return typename vector_traits<DT>::temporary_type(v).normalize();
+  return cml::vector<value_type_trait_of_t<DT>,
+  typename vector_traits<DT>::storage_traits::solid_type>(v).normalize();
 }
 
 template<class DT> auto normalize(writable_vector<DT>&& v) -> DT&&

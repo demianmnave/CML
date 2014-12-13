@@ -6,10 +6,10 @@
 
 #pragma once
 
-#ifndef	cml_matrix_layout_tags_h
-#define	cml_matrix_layout_tags_h
+#ifndef	cml_common_layout_tags_h
+#define	cml_common_layout_tags_h
 
-#include <cml/common/type_util.h>
+#include <cml/common/traits.h>
 
 namespace cml {
 
@@ -44,12 +44,22 @@ template<class Tag> struct is_layout_tag {
  * defines the layout_tag type.
  */
 template<class T> struct layout_tag_of {
-  typedef typename cml::unqualified_type<T>::type::layout_tag type;
+  typedef typename T::layout_tag type;
   static_assert(cml::is_layout_tag<type>::value, "invalid layout tag");
 };
 
 /** Convenience alias for layout_tag_of. */
 template<class T> using layout_tag_of_t = typename layout_tag_of<T>::type;
+
+/** Retrieve the layout_tag of @c T via traits. */
+template<class T> struct layout_tag_trait_of {
+  typedef typename traits_of<T>::type::layout_tag type;
+  static_assert(cml::is_layout_tag<type>::value, "invalid size tag");
+};
+
+/** Convenience alias for layout_tag_trait_of. */
+template<class T>
+  using layout_tag_trait_of_t = typename layout_tag_trait_of<T>::type;
 
 } // namespace cml
 

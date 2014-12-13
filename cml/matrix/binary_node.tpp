@@ -19,6 +19,9 @@ matrix_binary_node<Sub1,Sub2,Op>::matrix_binary_node(Sub1 left, Sub2 right)
 : m_left(std::move(left)), m_right(std::move(right))
 {
   cml::check_same_size(this->m_left, this->m_right);
+  /* Note: this seems to be exception-safe since temporaries are stored by
+   * value and references by reference.
+   */
 }
 
 template<class Sub1, class Sub2, class Op>

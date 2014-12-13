@@ -30,11 +30,12 @@ struct matrix_traits<
   typedef typename element_traits::const_reference	const_reference;
   typedef typename element_traits::mutable_value	mutable_value;
   typedef typename element_traits::immutable_value	immutable_value;
-  typedef fixed_size_tag				size_tag;
+
+  typedef external<Rows,Cols>				storage_type;
+  typedef storage_traits<storage_type>			storage_traits;
+  typedef typename storage_traits::size_tag		size_tag;
   typedef BasisOrient					basis_tag;
   typedef Layout					layout_tag;
-  typedef matrix<Element,
-	  fixed<Rows,Cols>, BasisOrient, Layout>	temporary_type;
 };
 
 /** Fixed-size matrix. */
@@ -68,10 +69,12 @@ class matrix<Element, external<Rows,Cols>, BasisOrient, Layout>
     typedef typename traits_type::const_reference	const_reference;
     typedef typename traits_type::mutable_value		mutable_value;
     typedef typename traits_type::immutable_value	immutable_value;
+
+    typedef typename traits_type::storage_type		storage_type;
+    typedef typename traits_type::storage_traits	storage_traits;
     typedef typename traits_type::size_tag		size_tag;
     typedef typename traits_type::basis_tag		basis_tag;
     typedef typename traits_type::layout_tag		layout_tag;
-    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:
@@ -84,8 +87,9 @@ class matrix<Element, external<Rows,Cols>, BasisOrient, Layout>
 
   public:
 
-#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
     /* Include methods from writable_type: */
+    using writable_type::operator();
+#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
     using writable_type::operator=;
 #endif
 

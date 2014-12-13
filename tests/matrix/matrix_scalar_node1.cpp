@@ -274,7 +274,9 @@ BOOST_AUTO_TEST_CASE(scalar_multiply_assign2)
   BOOST_CHECK_EQUAL(M(1,0), 6.);
   BOOST_CHECK_EQUAL(M(1,1), 8.);
 #else
-  BOOST_ERROR("Assignment to temporary external matrices not supported");
+  BOOST_WARN_MESSAGE(
+    BOOST_IS_DEFINED(CML_HAS_RVALUE_REFERENCE_FROM_THIS),
+    "Assignment to temporary external vectors not supported");
 #endif
 }
 
@@ -356,7 +358,9 @@ BOOST_AUTO_TEST_CASE(scalar_multiply_assign2)
   BOOST_CHECK_EQUAL(M(1,0), 6.);
   BOOST_CHECK_EQUAL(M(1,1), 8.);
 #else
-  BOOST_ERROR("Assignment to temporary external matrices not supported");
+  BOOST_WARN_MESSAGE(
+    BOOST_IS_DEFINED(CML_HAS_RVALUE_REFERENCE_FROM_THIS),
+    "Assignment to temporary external vectors not supported");
 #endif
 }
 

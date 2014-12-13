@@ -10,6 +10,8 @@
 #define	cml_common_scalar_traits_h
 
 #include <cmath>
+#include <cml/common/traits.h>
+#include <cml/common/mpl/enable_if_arithmetic.h>
 
 namespace cml {
 
@@ -68,6 +70,11 @@ template<typename Scalar> struct scalar_traits
   }
 
   /*@}*/
+};
+
+/** traits_of for arithmetic scalars. */
+template<class T> struct traits_of<T, cml::enable_if_arithmetic_t<T>> {
+  typedef scalar_traits<T>				type;
 };
 
 } // namespace cml

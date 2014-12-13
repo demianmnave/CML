@@ -80,7 +80,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 option(CML_BUILD_TESTING "Build CML tests" ON)
 if(CML_BUILD_TESTING)
   include(CMLTestMacros)
-  ENABLE_TESTING()
+  enable_testing()
 endif()
 
 

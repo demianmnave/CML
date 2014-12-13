@@ -56,20 +56,19 @@ readable_vector<DT>::length() const -> value_type
 template<class DT> auto
 readable_vector<DT>::subvector(int i) const & -> subvector_node<const DT&>
 {
-  return std::move(subvector_node<const DT&>((const DT&) *this, i));
+  return subvector_node<const DT&>((const DT&) *this, i);
 }
 
 template<class DT> auto
 readable_vector<DT>::subvector(int i) const && -> subvector_node<DT&&>
 {
-  return std::move(subvector_node<DT&&>((DT&&) *this, i));
+  return subvector_node<DT&&>((DT&&) *this, i);
 }
 #else
 template<class DT> auto
-readable_vector<DT>::subvector(int i) const
--> subvector_node<temporary_type&&>
+readable_vector<DT>::subvector(int i) const -> subvector_node<DT&&>
 {
-  return std::move(subvector_node<temporary_type&&>(temporary_type(*this), i));
+  return subvector_node<DT&&>((DT&&) *this, i);
 }
 #endif
 

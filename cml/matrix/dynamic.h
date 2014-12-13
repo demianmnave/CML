@@ -28,11 +28,12 @@ struct matrix_traits< matrix<Element, dynamic<Allocator>, BasisOrient, Layout> >
   typedef typename element_traits::const_reference	const_reference;
   typedef typename element_traits::mutable_value	mutable_value;
   typedef typename element_traits::immutable_value	immutable_value;
-  typedef dynamic_size_tag				size_tag;
+
+  typedef dynamic<Allocator>				storage_type;
+  typedef storage_traits<storage_type>			storage_traits;
+  typedef typename storage_traits::size_tag		size_tag;
   typedef BasisOrient					basis_tag;
   typedef Layout					layout_tag;
-  typedef matrix<Element,
-	  dynamic<Allocator>, BasisOrient, Layout>	temporary_type;
 };
 
 /** Fixed-size matrix. */
@@ -74,16 +75,19 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
     typedef typename traits_type::const_reference	const_reference;
     typedef typename traits_type::mutable_value		mutable_value;
     typedef typename traits_type::immutable_value	immutable_value;
+
+    typedef typename traits_type::storage_type		storage_type;
+    typedef typename traits_type::storage_traits	storage_traits;
     typedef typename traits_type::size_tag		size_tag;
     typedef typename traits_type::basis_tag		basis_tag;
     typedef typename traits_type::layout_tag		layout_tag;
-    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:
 
-#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
     /* Include methods from writable_type: */
+    using writable_type::operator();
+#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
     using writable_type::operator=;
 #endif
 
@@ -249,6 +253,23 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
      * data.
      */
     void destruct(pointer data, int n, std::false_type);
+
+
+  protected:
+
+    /** Row-major access to const or non-const @c M. */
+    template<class Matrix> inline static auto get(
+      Matrix& M, int i, int j, row_major) -> decltype(M.m_data[0])
+    {
+      return M.m_data[i*M.m_cols + j];
+    }
+
+    /** Column-major access to const or non-const @c M. */
+    template<class Matrix> inline static auto get(
+      Matrix& M, int i, int j, col_major) -> decltype(M.m_data[0])
+    {
+      return M.m_data[j*M.m_rows + i];
+    }
 
 
   protected:

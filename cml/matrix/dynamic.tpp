@@ -111,17 +111,13 @@ matrix<E, dynamic<A>, BO, L>::cols() const
 template<class E, class A, typename BO, typename L> auto
 matrix<E, dynamic<A>, BO, L>::get(int i, int j) -> mutable_value
 {
-  return this->m_data[
-    (L::value == row_major_c) ? (i*this->m_cols + j) : (j*this->m_rows + i)
-    ];
+  return get(*this, i, j, layout_tag());
 }
 
 template<class E, class A, typename BO, typename L> auto
 matrix<E, dynamic<A>, BO, L>::get(int i, int j) const -> immutable_value
 {
-  return this->m_data[
-    (L::value == row_major_c) ? (i*this->m_cols + j) : (j*this->m_rows + i)
-    ];
+  return get(*this, i, j, layout_tag());
 }
 
 template<class E, class A, typename BO, typename L>

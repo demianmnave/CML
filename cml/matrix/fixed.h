@@ -21,9 +21,6 @@ template<class Element,
   int Rows, int Cols, typename BasisOrient, typename Layout>
 struct matrix_traits< matrix<Element, fixed<Rows,Cols>, BasisOrient, Layout> >
 {
-  typedef matrix<Element,
-	    fixed<Rows,Cols>, BasisOrient, Layout>	matrix_type;
-  typedef matrix_traits<matrix_type>			traits_type;
   typedef scalar_traits<Element>			element_traits;
   typedef typename element_traits::value_type		value_type;
   typedef typename element_traits::pointer		pointer;
@@ -32,11 +29,12 @@ struct matrix_traits< matrix<Element, fixed<Rows,Cols>, BasisOrient, Layout> >
   typedef typename element_traits::const_reference	const_reference;
   typedef typename element_traits::mutable_value	mutable_value;
   typedef typename element_traits::immutable_value	immutable_value;
-  typedef fixed_size_tag				size_tag;
+
+  typedef fixed<Rows,Cols>				storage_type;
+  typedef storage_traits<storage_type>			storage_traits;
+  typedef typename storage_traits::size_tag		size_tag;
   typedef BasisOrient					basis_tag;
   typedef Layout					layout_tag;
-  typedef matrix<Element,
-	  fixed<Rows,Cols>, BasisOrient, Layout>	temporary_type;
 };
 
 /** Fixed-size matrix. */
@@ -60,6 +58,7 @@ class matrix<Element, fixed<Rows,Cols>, BasisOrient, Layout>
 
     typedef matrix<Element,
 	    fixed<Rows,Cols>, BasisOrient, Layout>	matrix_type;
+    typedef writable_matrix<matrix_type>		writable_type;
     typedef matrix_traits<matrix_type>			traits_type;
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
@@ -69,17 +68,20 @@ class matrix<Element, fixed<Rows,Cols>, BasisOrient, Layout>
     typedef typename traits_type::const_reference	const_reference;
     typedef typename traits_type::mutable_value		mutable_value;
     typedef typename traits_type::immutable_value	immutable_value;
+
+    typedef typename traits_type::storage_type		storage_type;
+    typedef typename traits_type::storage_traits	storage_traits;
     typedef typename traits_type::size_tag		size_tag;
     typedef typename traits_type::basis_tag		basis_tag;
     typedef typename traits_type::layout_tag		layout_tag;
-    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:
 
-    /* Include methods from writable_type: */
+    /* Include methods from writable_matrix: */
+    using writable_type::operator();
 #ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
-    using writable_matrix<matrix_type>::operator=;
+    using writable_type::operator=;
 #endif
 
 
@@ -212,6 +214,23 @@ class matrix<Element, fixed<Rows,Cols>, BasisOrient, Layout>
 	return this->assign(l);
       }
 #endif
+
+
+  protected:
+
+    /** Row-major access to const or non-const @c M. */
+    template<class Matrix> inline static auto get(
+      Matrix& M, int i, int j, row_major) -> decltype(M.m_data[0][0])
+    {
+      return M.m_data[i][j];
+    }
+
+    /** Column-major access to const or non-const @c M. */
+    template<class Matrix> inline static auto get(
+      Matrix& M, int i, int j, col_major) -> decltype(M.m_data[0][0])
+    {
+      return M.m_data[j][i];
+    }
 
 
   protected:

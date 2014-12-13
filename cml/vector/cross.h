@@ -22,8 +22,8 @@ template<class DerivedT> class readable_vector;
 /** Convenience alias to determine the fixed-length vector type to return
  * from cml::cross.
  */
-template<class Sub1, class Sub2> using cross_promote_t = vector<
-  value_type_promote_t<vector_traits<Sub1>, vector_traits<Sub2>>, fixed<3>>;
+template<class Sub1, class Sub2> using cross_promote_t
+  = vector<value_type_trait_promote_t<Sub1,Sub2>, fixed<3>>;
 
 /** Compute the cross-product of two 3D vectors, and return the result as a
  * fixed-length vector (cml::fixed<3>).

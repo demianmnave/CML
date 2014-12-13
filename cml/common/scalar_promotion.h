@@ -9,7 +9,8 @@
 #ifndef	cml_common_scalar_promotion_h
 #define	cml_common_scalar_promotion_h
 
-#include <type_traits>
+#include <cml/common/traits.h>
+#include <cml/common/type_util.h>
 
 namespace cml {
 
@@ -25,15 +26,18 @@ template<class... Scalars> using
 template<class... Scalars> using scalar_promote_t
   = typename scalar_promote<Scalars...>::type;
 
-/** Alias to simplify scalar promotion from objects that implement a
- * value_type typedef.
+/** Helper to simplify scalar promotion from objects that implement a
+ * traits class with a value_type typedef.
  */
-template<class... Subs> using value_type_promote
-  = scalar_promote<typename Subs::value_type...>;
+template<class... Subs> struct value_type_trait_promote {
+  typedef typename scalar_promote<value_type_trait_of_t<Subs>...>::type type;
+};
+// XXX This could be a template alias, except VC++12 can't grok it.
+// Moreover, without value_type_of_t<Subs>, even this fails to compile...
 
-/** Convenience alias for value_type_promote<>::type. */
-template<class... Subs> using value_type_promote_t
-  = scalar_promote_t<typename Subs::value_type...>;
+/** Convenience alias for value_type_trait_promote<>::type. */
+template<class... Subs> using value_type_trait_promote_t
+  = typename value_type_trait_promote<Subs...>::type;
 
 } // namespace cml
 

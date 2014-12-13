@@ -22,8 +22,6 @@ template<class Sub, class Scalar, class Op> class matrix_scalar_node;
 template<class Sub, class Scalar, class Op>
 struct matrix_traits< matrix_scalar_node<Sub,Scalar,Op> >
 {
-  typedef matrix_scalar_node<Sub,Scalar,Op>		node_type;
-  typedef matrix_traits<node_type>			traits_type;
   typedef Sub						left_arg_type;
   typedef Scalar 					right_arg_type;
   typedef cml::unqualified_type_t<Sub>			left_type;
@@ -31,11 +29,10 @@ struct matrix_traits< matrix_scalar_node<Sub,Scalar,Op> >
   typedef cml::unqualified_type_t<Scalar>		right_type;
   typedef scalar_traits<typename Op::result_type>	element_traits;
   typedef typename element_traits::value_type		value_type;
-  typedef typename element_traits::immutable_value	immutable_value;
+  typedef value_type					immutable_value;
   typedef typename left_traits::size_tag		size_tag;
   typedef typename left_traits::basis_tag		basis_tag;
   typedef typename left_traits::layout_tag		layout_tag;
-  typedef typename left_traits::temporary_type		temporary_type;
 };
 
 /** Represents a binary matrix operation, where one operand is a scalar
@@ -57,7 +54,6 @@ class matrix_scalar_node
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
     typedef typename traits_type::size_tag		size_tag;
-    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:

@@ -10,9 +10,11 @@
 #define	cml_vector_type_util_h
 
 #include <cml/common/type_util.h>
-#include <cml/vector/readable_vector.h>
 
 namespace cml {
+
+/* Forward declarations: */
+template<class Sub> class readable_vector;
 
 /** Defines typedef @c type as std::true_type if @c T is statically
  * polymorphic and derived from @c readable_vector, or std::false_type
@@ -40,26 +42,6 @@ template<class T> struct is_vector {
   /* True or false, depending upon 'type': */
   static const bool value = type::value;
 };
-
-/** Defines @c type to be the vector_traits of the actual type of @c Sub. */
-template<class Sub> struct vector_traits_of {
-  typedef vector_traits<actual_type_of_t<Sub>> type;
-};
-
-/** Convenience alias for vector_traits_of. */
-template<class Sub> using vector_traits_of_t
-  = typename vector_traits_of<Sub>::type;
-
-/** Defines @c type to be the element type of the vector expression. */
-template<class Sub> struct vector_element_type_of {
-  typedef vector_traits_of_t<Sub> traits_type;
-  typedef typename traits_type::value_type type;
-};
-
-/** Convenience alias for vector_element_type_of. */
-template<class Sub> using vector_element_type_of_t
-  = typename vector_element_type_of<Sub>::type;
-
 
 /** Wrapper for enable_if to detect vector types (derived from
  * readable_vector).

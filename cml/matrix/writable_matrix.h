@@ -53,7 +53,6 @@ class writable_matrix
     typedef typename traits_type::mutable_value		mutable_value;
     typedef typename traits_type::basis_tag		basis_tag;
     typedef typename traits_type::layout_tag		layout_tag;
-    typedef typename traits_type::temporary_type	temporary_type;
 
 
   public:

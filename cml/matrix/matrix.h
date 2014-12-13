@@ -9,8 +9,8 @@
 #ifndef	cml_matrix_matrix_h
 #define	cml_matrix_matrix_h
 
-#include <cml/matrix/basis_tags.h>
-#include <cml/matrix/layout_tags.h>
+#include <cml/common/basis_tags.h>
+#include <cml/common/layout_tags.h>
 
 namespace cml {
 

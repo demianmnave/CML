@@ -16,11 +16,9 @@
 #include <cml/matrix/binary_ops.h>
 
 namespace cml {
-
-/* Local functions: */
 namespace detail {
 
-/** check_or_resize for a read-only matrix @c left that just forwards to
+/* check_or_resize for a read-only matrix @c left that just forwards to
  * check_same_size.
  */
 template<class Sub, class Other> inline void
@@ -29,7 +27,7 @@ check_or_resize(const readable_matrix<Sub>& left, const Other& right)
   cml::check_same_size(left, right);
 }
 
-/** check_or_resize for a read-write matrix @c left that resizes the matrix
+/* check_or_resize for a read-write matrix @c left that resizes the matrix
  * to ensure it has the same size as @c right.
  */
 template<class Sub1, class Sub2> inline auto check_or_resize(
@@ -40,7 +38,7 @@ template<class Sub1, class Sub2> inline auto check_or_resize(
   left.actual().resize(right.rows(),right.cols());
 }
 
-/** check_or_resize for a read-write matrix @c left that resizes the matrix
+/* check_or_resize for a read-write matrix @c left that resizes the matrix
  * to ensure it has the same size as array @c right.
  */
 template<class Sub1, class Other, int Rows, int Cols>
@@ -53,14 +51,14 @@ inline auto check_or_resize(
 }
 
 
-/** Terminate the assignment recursion at the final element. */
+/* Terminate the assignment recursion at the final element. */
 template<int I, class Sub, class E0> inline void
 assign_elements(writable_matrix<Sub>& sub, const E0& e0)
 {
   sub.set(I / sub.cols(), I % sub.cols(), e0);
 }
 
-/** Set element (I/cols(),I%cols()) of sub to e0, then assign the remainder
+/* Set element (I/cols(),I%cols()) of sub to e0, then assign the remainder
  * of the elements starting from I+1.
  */
 template<int I, class Sub, class E0, class... Es>
@@ -72,7 +70,7 @@ inline void assign_elements(
   assign_elements<I+1>(sub, eN...);
 }
 
-/** Assign elements of @c sub from @c eN, assuming @c eN is given in
+/* Assign elements of @c sub from @c eN, assuming @c eN is given in
  * row-major order.
  */
 template<class Sub, class... Es> inline void
@@ -83,14 +81,14 @@ assign_elements(writable_matrix<Sub>& sub, const Es&... eN)
 
 
 
-/** Helper for copy() to return element @c (i,j) of @c array. */
+/* Helper for copy() to return element @c (i,j) of @c array. */
 template<class Other, int Rows, int Cols> inline const Other&
 get(Other const (&array)[Rows][Cols], int i, int j)
 {
   return array[i][j];
 }
 
-/** Helper for copy() to return element @c (i,j) of @c sub. */
+/* Helper for copy() to return element @c (i,j) of @c sub. */
 template<class Sub> inline auto get(
   const readable_matrix<Sub>& sub, int i, int j
   ) -> typename matrix_traits<Sub>::immutable_value
@@ -98,7 +96,7 @@ template<class Sub> inline auto get(
   return sub.get(i,j);
 }
 
-/** Assign @c left from the elements of @c right, where @c left is assumed
+/* Assign @c left from the elements of @c right, where @c left is assumed
  * to have a row-major layout.
  */
 template<class Sub, class Other> inline void copy(
@@ -110,7 +108,7 @@ template<class Sub, class Other> inline void copy(
       left.set(i,j, get(right, i,j));
 }
 
-/** Assign @c left from the elements of @c right, where @c left is assumed
+/* Assign @c left from the elements of @c right, where @c left is assumed
  * to have a column-major layout.
  */
 template<class Sub, class Other> inline void copy(
@@ -124,7 +122,7 @@ template<class Sub, class Other> inline void copy(
 
 
 
-/** Assign the value of @c f(i,j) to the element @c (i,j) of row-major
+/* Assign the value of @c f(i,j) to the element @c (i,j) of row-major
  * matrix @c left.
  */
 template<class Sub, class F> inline void generate(
@@ -136,7 +134,7 @@ template<class Sub, class F> inline void generate(
       left.set(i,j, (std::forward<F>(f))(i,j));
 }
 
-/** Assign the value of @c f(i,j) to the element @c (i,j) of column-major
+/* Assign the value of @c f(i,j) to the element @c (i,j) of column-major
  * matrix @c left.
  */
 template<class Sub, class F> inline void generate(
