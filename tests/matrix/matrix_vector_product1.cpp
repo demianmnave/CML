@@ -34,6 +34,8 @@ BOOST_AUTO_TEST_CASE(product1)
     );
 
   auto v = M*v1;
+  BOOST_REQUIRE((std::is_same<
+      decltype(v), cml::vector<double, cml::fixed<2>>>::value));
   BOOST_REQUIRE_EQUAL(v.size(), 2);
   BOOST_CHECK_EQUAL(v[0], 17.);
   BOOST_CHECK_EQUAL(v[1], 39.);
@@ -50,6 +52,8 @@ BOOST_AUTO_TEST_CASE(product2)
     );
 
   auto v = v1*M;
+  BOOST_REQUIRE((std::is_same<
+      decltype(v), cml::vector<double, cml::fixed<2>>>::value));
   BOOST_REQUIRE_EQUAL(v.size(), 2);
   BOOST_CHECK_EQUAL(v[0], 23.);
   BOOST_CHECK_EQUAL(v[1], 34.);
@@ -69,6 +73,8 @@ BOOST_AUTO_TEST_CASE(product1)
   cml::vector<double, cml::external<2>> v1(av1);
 
   auto v = M*v1;
+  BOOST_REQUIRE((std::is_same<
+      decltype(v), cml::vector<double, cml::fixed<2>>>::value));
   BOOST_REQUIRE_EQUAL(v.size(), 2);
   BOOST_CHECK_EQUAL(v[0], 17.);
   BOOST_CHECK_EQUAL(v[1], 39.);
@@ -83,6 +89,8 @@ BOOST_AUTO_TEST_CASE(product2)
   cml::vector<double, cml::external<2>> v1(av1);
 
   auto v = v1*M;
+  BOOST_REQUIRE((std::is_same<
+      decltype(v), cml::vector<double, cml::fixed<2>>>::value));
   BOOST_REQUIRE_EQUAL(v.size(), 2);
   BOOST_CHECK_EQUAL(v[0], 23.);
   BOOST_CHECK_EQUAL(v[1], 34.);
@@ -102,6 +110,8 @@ BOOST_AUTO_TEST_CASE(product1)
   cml::vector<double, cml::external<>> v1(av1, 2);
 
   auto v = M*v1;
+  BOOST_REQUIRE((std::is_same<
+      decltype(v), cml::vector<double, cml::dynamic<>>>::value));
   BOOST_REQUIRE_EQUAL(v.size(), 2);
   BOOST_CHECK_EQUAL(v[0], 17.);
   BOOST_CHECK_EQUAL(v[1], 39.);
@@ -116,6 +126,8 @@ BOOST_AUTO_TEST_CASE(product2)
   cml::vector<double, cml::external<>> v1(av1, 2);
 
   auto v = v1*M;
+  BOOST_REQUIRE((std::is_same<
+      decltype(v), cml::vector<double, cml::dynamic<>>>::value));
   BOOST_REQUIRE_EQUAL(v.size(), 2);
   BOOST_CHECK_EQUAL(v[0], 23.);
   BOOST_CHECK_EQUAL(v[1], 34.);
@@ -156,6 +168,8 @@ BOOST_AUTO_TEST_CASE(product1)
     );
 
   auto v = M*v1;
+  BOOST_REQUIRE((std::is_same<
+      decltype(v), cml::vector<double, cml::dynamic<>>>::value));
   BOOST_REQUIRE_EQUAL(v.size(), 2);
   BOOST_CHECK_EQUAL(v[0], 17.);
   BOOST_CHECK_EQUAL(v[1], 39.);
@@ -173,6 +187,8 @@ BOOST_AUTO_TEST_CASE(product2)
     );
 
   auto v = v1*M;
+  BOOST_REQUIRE((std::is_same<
+      decltype(v), cml::vector<double, cml::dynamic<>>>::value));
   BOOST_REQUIRE_EQUAL(v.size(), 2);
   BOOST_CHECK_EQUAL(v[0], 23.);
   BOOST_CHECK_EQUAL(v[1], 34.);
