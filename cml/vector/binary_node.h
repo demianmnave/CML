@@ -11,7 +11,7 @@
 
 #include <cml/common/scalar_traits.h>
 #include <cml/vector/readable_vector.h>
-#include <cml/vector/vector.h>
+#include <cml/vector/promotion.h>
 
 namespace cml {
 
@@ -21,14 +21,31 @@ template<class Sub1, class Sub2, class Op> class vector_binary_node;
 template<class Sub1, class Sub2, class Op>
 struct vector_traits< vector_binary_node<Sub1,Sub2,Op> >
 {
+  /* Derive the node types from its subexpressions: */
+  typedef vector_binary_node<Sub1,Sub2,Op>		vector_type;
   typedef Sub1						left_arg_type;
   typedef Sub2						right_arg_type;
   typedef cml::unqualified_type_t<Sub1>			left_type;
   typedef cml::unqualified_type_t<Sub2>			right_type;
+  typedef vector_traits<left_type>			left_traits;
+  typedef vector_traits<right_type>			right_traits;
   typedef scalar_traits<typename Op::result_type>	element_traits;
   typedef typename element_traits::value_type		value_type;
   typedef value_type					immutable_value;
-  typedef size_tag_trait_promote_t<left_type, right_type> size_tag;
+
+  /* Determine the common storage type for the node, based on the storage
+   * types of its subexpressions:
+   */
+  typedef vector_binary_storage_promote_t<
+    value_type,
+    storage_type_of_t<left_traits>,
+    storage_type_of_t<right_traits>>			storage_type;
+
+  /* Traits and types for the storage: */
+  typedef typename storage_type::size_tag		size_tag;
+
+  /* Array size: */
+  static const int array_size = storage_type::array_size;
 };
 
 /** Represents a binary vector operation in an expression tree. */
@@ -44,6 +61,7 @@ class vector_binary_node
     typedef typename traits_type::right_arg_type	right_arg_type;
     typedef typename traits_type::left_type		left_type;
     typedef typename traits_type::right_type		right_type;
+    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
@@ -52,12 +70,8 @@ class vector_binary_node
 
   public:
 
-    /** Deduce the array size constant from the larger of the subexpression
-     * sizes.
-     */
-    static const int array_size
-      = left_type::array_size > right_type::array_size
-      ? left_type::array_size : right_type::array_size;
+    /** Constant containing the array size. */
+    static const int array_size = traits_type::array_size;
 
 
   public:

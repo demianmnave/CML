@@ -21,13 +21,18 @@ template<class Sub, class Op>
 struct vector_traits< vector_unary_node<Sub,Op> >
 {
   /* Figure out the basic type of Sub: */
+  typedef vector_unary_node<Sub,Op>			vector_type;
   typedef Sub						sub_arg_type;
   typedef cml::unqualified_type_t<Sub>			sub_type;
   typedef vector_traits<sub_type>			sub_traits;
   typedef scalar_traits<typename Op::result_type>	element_traits;
   typedef typename element_traits::value_type		value_type;
   typedef value_type					immutable_value;
+  typedef typename sub_traits::storage_type		storage_type;
   typedef typename sub_traits::size_tag			size_tag;
+
+  /* Propagate the array size from the subexpression: */
+  static const int array_size = sub_traits::array_size;
 };
 
 /** Represents a unary vector operation in an expression tree. */
@@ -41,6 +46,7 @@ class vector_unary_node
     typedef vector_traits<node_type>			traits_type;
     typedef typename traits_type::sub_arg_type		sub_arg_type;
     typedef typename traits_type::sub_type		sub_type;
+    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
@@ -50,7 +56,7 @@ class vector_unary_node
   public:
 
     /** The array size constant is the same as the subexpression. */
-    static const int array_size = sub_type::array_size;
+    static const int array_size = traits_type::array_size;
 
 
   public:

@@ -8,7 +8,10 @@
 #ifndef	cml_subvector_node_h
 #define	cml_subvector_node_h
 
+#include <cml/common/scalar_traits.h>
+#include <cml/storage/resize.h>
 #include <cml/vector/readable_vector.h>
+#include <cml/vector/promotion.h>
 
 namespace cml {
 
@@ -19,13 +22,33 @@ template<class Sub>
 struct vector_traits< subvector_node<Sub> >
 {
   /* Figure out the basic type of Sub: */
+  typedef subvector_node<Sub>				vector_type;
   typedef Sub						sub_arg_type;
   typedef cml::unqualified_type_t<Sub>			sub_type;
   typedef vector_traits<sub_type>			sub_traits;
   typedef typename sub_traits::element_traits		element_traits;
   typedef typename sub_traits::value_type		value_type;
   typedef typename sub_traits::immutable_value		immutable_value;
-  typedef typename sub_traits::size_tag			size_tag;
+
+  /* Compute the new storage size: */
+  private:
+  static const int old_array_size = sub_traits::array_size;
+  static const int new_array_size = old_array_size - 1;
+  static const int N = new_array_size > 0 ? new_array_size : -1;
+  public:
+
+  /* Resize the storage type of the subexpression: */
+  typedef resize_storage_t<
+    storage_type_of_t<sub_traits>, N>			resized_type;
+
+  /* Rebind to vector storage: */
+  typedef rebind_t<resized_type, vector_storage_tag>	storage_type;
+
+  /* Traits and types for the new storage: */
+  typedef typename storage_type::size_tag		size_tag;
+
+  /* Array size: */
+  static const int array_size = storage_type::array_size;
 };
 
 /** Represents an N-1 subvector operation in an expression tree, where N is
@@ -41,6 +64,7 @@ class subvector_node
     typedef vector_traits<node_type>			traits_type;
     typedef typename traits_type::sub_arg_type		sub_arg_type;
     typedef typename traits_type::sub_type		sub_type;
+    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
@@ -50,8 +74,7 @@ class subvector_node
   public:
 
     /** The array size constant depends upon the subexpression size. */
-    static const int array_size
-      = (sub_type::array_size > 0) ? (sub_type::array_size - 1) : -1;
+    static const int array_size = traits_type::array_size;
 
 
   public:

@@ -20,8 +20,8 @@ namespace cml {
  * (i.e. derived from readable_vector<>) and a scalar type.
  */
 template<class Op, class Sub, class Scalar,
-  cml::enable_if_vector_t<Sub>* = nullptr,
-  cml::enable_if_arithmetic_t<Scalar>* = nullptr
+  enable_if_vector_t<Sub>* = nullptr,
+  enable_if_arithmetic_t<cml::unqualified_type_t<Scalar>>* = nullptr
 > inline auto
 make_vector_scalar_node(Sub&& sub, Scalar&& v)
 -> vector_scalar_node<
@@ -47,8 +47,8 @@ Op
 }
 
 template<class Sub, class Scalar,
-  cml::enable_if_vector_t<Sub>* = nullptr,
-  cml::enable_if_arithmetic_t<Scalar>* = nullptr
+  enable_if_vector_t<Sub>* = nullptr,
+  enable_if_arithmetic_t<cml::unqualified_type_t<Scalar>>* = nullptr
 >
 inline auto operator*(Sub&& sub, Scalar&& v)
 -> decltype(make_vector_scalar_node<binary_multiply_t<Sub,Scalar>>(
@@ -59,8 +59,8 @@ inline auto operator*(Sub&& sub, Scalar&& v)
 }
 
 template<class Scalar, class Sub,
-  cml::enable_if_arithmetic_t<Scalar>* = nullptr,
-  cml::enable_if_vector_t<Sub>* = nullptr
+  enable_if_arithmetic_t<cml::unqualified_type_t<Scalar>>* = nullptr,
+  enable_if_vector_t<Sub>* = nullptr
 >
 inline auto operator*(Scalar&& v, Sub&& sub)
 -> decltype(make_vector_scalar_node<binary_multiply_t<Sub,Scalar>>(
@@ -71,8 +71,8 @@ inline auto operator*(Scalar&& v, Sub&& sub)
 }
 
 template<class Sub, class Scalar,
-  cml::enable_if_vector_t<Sub>* = nullptr,
-  cml::enable_if_arithmetic_t<Scalar>* = nullptr
+  enable_if_vector_t<Sub>* = nullptr,
+  enable_if_arithmetic_t<cml::unqualified_type_t<Scalar>>* = nullptr
 >
 inline auto operator/(Sub&& sub, Scalar&& v)
 -> decltype(make_vector_scalar_node<binary_divide_t<Sub,Scalar>>(

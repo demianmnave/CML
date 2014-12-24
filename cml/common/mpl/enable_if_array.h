@@ -23,7 +23,7 @@ template<class Array> using enable_if_array
  * the boolean value.
  */
 template<class Array> using enable_if_array_t
-  = typename cml::enable_if_array<Array>::type;
+  = typename enable_if_array<Array>::type;
 
 } // namespace cml
 

@@ -9,6 +9,7 @@
 
 #include <cml/vector/fixed.h>
 #include <cml/vector/dynamic.h>
+#include <cml/vector/types.h>
 
 /* Testing headers: */
 #define BOOST_TEST_MODULE cross1
@@ -16,8 +17,8 @@
 
 BOOST_AUTO_TEST_CASE(cross1)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 1., 1. };
-  cml::vector<double, cml::fixed<3>> v2 = { 2., 2., 2. };
+  cml::vector3d v1 = { 1., 1., 1. };
+  cml::vector3d v2 = { 2., 2., 2. };
 
   typedef decltype(cml::cross(v1,v2)) cross_type;
   static_assert(
@@ -33,8 +34,8 @@ BOOST_AUTO_TEST_CASE(cross1)
 
 BOOST_AUTO_TEST_CASE(cross2)
 {
-  cml::vector<double, cml::dynamic<>> v1(1., 2., 3.);
-  cml::vector<double, cml::fixed<3>> v2 (3., 2., 1.);
+  cml::vectord v1(1., 2., 3.);
+  cml::vector3d v2 (3., 2., 1.);
 
   typedef decltype(cml::cross(v1,v2)) cross_type;
   static_assert(
@@ -50,21 +51,21 @@ BOOST_AUTO_TEST_CASE(cross2)
 
 BOOST_AUTO_TEST_CASE(size_check1)
 {
-  cml::vector<double, cml::dynamic<>> v1(2);
+  cml::vectord v1(2);
   BOOST_CHECK_THROW(cml::cross(v1,v1), cml::vector_size_error);
 }
 
 BOOST_AUTO_TEST_CASE(size_check2)
 {
-  cml::vector<double, cml::dynamic<>> v1(2,3);
-  cml::vector<double, cml::fixed<3>> v2(2,3,3);
+  cml::vectord v1(2,3);
+  cml::vector3d v2(2,3,3);
   BOOST_CHECK_THROW(cml::cross(v1,v2), cml::vector_size_error);
 }
 
 BOOST_AUTO_TEST_CASE(size_check3)
 {
-  cml::vector<double, cml::fixed<3>> v1(2,3,3);
-  cml::vector<double, cml::dynamic<>> v2(2,3);
+  cml::vector3d v1(2,3,3);
+  cml::vectord v2(2,3);
   BOOST_CHECK_THROW(cml::cross(v1,v2), cml::vector_size_error);
 }
 

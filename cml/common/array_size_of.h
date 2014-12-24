@@ -12,6 +12,18 @@
 #include <type_traits>
 
 namespace cml {
+namespace detail {
+
+/** Helper defining a typedef @c type that is int if @c T is an integral
+ * type, or @c T otherwise.
+ */
+template<class T> struct int_if_integral {
+  typedef typename std::conditional<
+    std::is_integral<T>::value, int, T>::type type;
+};
+
+} // namespace detail
+
 
 /** Specializable compile-time array size. */
 template<class Array, class Enable = void> struct array_size_of_c;
@@ -21,7 +33,6 @@ template<class Array, class Enable = void> struct array_rows_of_c;
 
 /** Specializable compile-time array row count. */
 template<class Array, class Enable = void> struct array_cols_of_c;
-
 
 /** Compile-time size of an array. */
 template<class Array> struct array_size_of_c<
@@ -36,20 +47,24 @@ template<class Array> struct array_size_of_c<
 template<class Array> struct array_size_of_c<Array
 , typename std::enable_if<Array::array_size == Array::array_size>::type>
 {
-  static const int value = int(Array::array_size);
+  static const int value = Array::array_size;
 };
 
 /** Return the size of @c array if it implements the size() method. */
 template<class Array> inline auto
-array_size_of(const Array& array) -> decltype(array.size()) {
-  return array.size();
+array_size_of(const Array& array)
+-> typename detail::int_if_integral<decltype(array.size())>::type
+{
+  typedef typename detail::int_if_integral<
+    decltype(array.size())>::type result_type;
+  return result_type(array.size());
 }
 
 /** Return the size of a fixed-length array. */
 template<class Array> inline int array_size_of(const Array&,
   typename std::enable_if<std::is_array<Array>::value>::type* = 0)
 {
-  return cml::array_size_of_c<Array>::value;
+  return int(array_size_of_c<Array>::value);
 }
 
 

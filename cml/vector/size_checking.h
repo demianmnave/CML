@@ -84,7 +84,7 @@ template<class Sub1, class Sub2> void check_same_size(
  */
 template<class Sub1, class Sub2> void
 check_same_size(const readable_vector<Sub1>& left, const Sub2& right,
-  cml::enable_if_array_t<Sub2>* = 0);
+  enable_if_array_t<Sub2>* = 0);
 
 /** Front-end for run-time vector binary expression length checking.  The
  * first expression must derive from readable_vector, and the second must

@@ -23,16 +23,10 @@ length(const readable_vector<DT>& v) -> value_type_trait_of_t<DT>
 }
 
 template<class DT> auto normalize(const readable_vector<DT>& v)
--> cml::vector<value_type_trait_of_t<DT>,
-  typename vector_traits<DT>::storage_traits::solid_type>
+-> typename temporary_of<DT>::type
 {
-  return cml::vector<value_type_trait_of_t<DT>,
-  typename vector_traits<DT>::storage_traits::solid_type>(v).normalize();
-}
-
-template<class DT> auto normalize(writable_vector<DT>&& v) -> DT&&
-{
-  return (DT&&) v.normalize();
+  typedef typename temporary_of<DT>::type temporary_type;
+  return temporary_type(v).normalize();
 }
 
 } // namespace cml

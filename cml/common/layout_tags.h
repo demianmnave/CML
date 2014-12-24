@@ -40,12 +40,12 @@ template<class Tag> struct is_layout_tag {
     || std::is_same<Tag, any_major>::value;
 };
 
-/** Templated helper to determine the size tag of an expression that
+/** Templated helper to determine the layout tag of an expression that
  * defines the layout_tag type.
  */
 template<class T> struct layout_tag_of {
   typedef typename T::layout_tag type;
-  static_assert(cml::is_layout_tag<type>::value, "invalid layout tag");
+  static_assert(is_layout_tag<type>::value, "invalid layout tag");
 };
 
 /** Convenience alias for layout_tag_of. */
@@ -54,7 +54,7 @@ template<class T> using layout_tag_of_t = typename layout_tag_of<T>::type;
 /** Retrieve the layout_tag of @c T via traits. */
 template<class T> struct layout_tag_trait_of {
   typedef typename traits_of<T>::type::layout_tag type;
-  static_assert(cml::is_layout_tag<type>::value, "invalid size tag");
+  static_assert(is_layout_tag<type>::value, "invalid layout tag");
 };
 
 /** Convenience alias for layout_tag_trait_of. */

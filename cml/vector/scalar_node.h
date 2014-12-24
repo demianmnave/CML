@@ -21,15 +21,20 @@ template<class Sub, class Scalar, class Op>
 struct vector_traits< vector_scalar_node<Sub,Scalar,Op> >
 {
   /* Figure out the basic types of Sub and Scalar: */
+  typedef vector_scalar_node<Sub,Scalar,Op>		vector_type;
   typedef Sub						left_arg_type;
   typedef Scalar 					right_arg_type;
   typedef cml::unqualified_type_t<Sub>			left_type;
-  typedef vector_traits<left_type>			left_traits;
   typedef cml::unqualified_type_t<Scalar>		right_type;
+  typedef vector_traits<left_type>			left_traits;
   typedef scalar_traits<typename Op::result_type>	element_traits;
   typedef typename element_traits::value_type		value_type;
   typedef value_type					immutable_value;
+  typedef typename left_traits::storage_type		storage_type;
   typedef typename left_traits::size_tag		size_tag;
+
+  /* Propagate the array size from the subexpression: */
+  static const int array_size = left_traits::array_size;
 };
 
 /** Represents a binary vector operation, where one operand is a scalar
@@ -47,6 +52,7 @@ class vector_scalar_node
     typedef typename traits_type::right_arg_type	right_arg_type;
     typedef typename traits_type::left_type		left_type;
     typedef typename traits_type::right_type		right_type;
+    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
@@ -56,7 +62,7 @@ class vector_scalar_node
   public:
 
     /** The array size constant is the same as the subexpression. */
-    static const int array_size = left_type::array_size;
+    static const int array_size = traits_type::array_size;
 
 
   public:

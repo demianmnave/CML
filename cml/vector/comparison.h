@@ -13,26 +13,22 @@
 
 namespace cml {
 
-/** Returns true if @c left is lexicographically less than @c right under a
- * total order.
- */
+/** Returns true if @c left is lexicographically less than @c right. */
 template<class Sub1, class Sub2> bool operator<(
   const readable_vector<Sub1>& left, const readable_vector<Sub2>& right);
 
 /** Returns true if @c left is lexicographically less than or equal to @c
- * right under a total order.
+ * right.
  */
 template<class Sub1, class Sub2> bool operator<=(
   const readable_vector<Sub1>& left, const readable_vector<Sub2>& right);
 
-/** Returns true if @c left is lexicographically greater than @c right
- * under a total order.
- */
+/** Returns true if @c left is lexicographically greater than @c right. */
 template<class Sub1, class Sub2> bool operator>(
   const readable_vector<Sub1>& left, const readable_vector<Sub2>& right);
 
 /** Returns true if @c left is lexicographically greater than or equal to
- * @c right under a total order.
+ * @c right.
  */
 template<class Sub1, class Sub2> bool operator>=(
   const readable_vector<Sub1>& left, const readable_vector<Sub2>& right);

@@ -11,6 +11,7 @@
 #include <cml/vector/fixed.h>
 #include <cml/vector/external.h>
 #include <cml/vector/dynamic.h>
+#include <cml/vector/types.h>
 
 /* Testing headers: */
 #define BOOST_TEST_MODULE vector_binary_node1
@@ -18,7 +19,7 @@
 
 BOOST_AUTO_TEST_CASE(binary_types1)
 {
-  typedef cml::vector<double, cml::fixed<3>> vector_type;
+  typedef cml::vector3d vector_type;
   {
     BOOST_CHECK(cml::is_statically_polymorphic<vector_type>::value);
   }
@@ -114,9 +115,9 @@ BOOST_AUTO_TEST_SUITE(fixed)
 
 BOOST_AUTO_TEST_CASE(binary_minus1)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::fixed<3>> v2 = { 4., 5., 6. };
-  cml::vector<double, cml::fixed<3>> w;
+  cml::vector3d v1 = { 1., 2., 3. };
+  cml::vector3d v2 = { 4., 5., 6. };
+  cml::vector3d w;
   w = v1 - v2;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], -3.);
@@ -126,9 +127,9 @@ BOOST_AUTO_TEST_CASE(binary_minus1)
 
 BOOST_AUTO_TEST_CASE(binary_minus2)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::fixed<3>> v2 = { 4., 5., 6. };
-  cml::vector<double, cml::fixed<3>> w = v1 - v2;
+  cml::vector3d v1 = { 1., 2., 3. };
+  cml::vector3d v2 = { 4., 5., 6. };
+  cml::vector3d w = v1 - v2;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], -3.);
   BOOST_CHECK_EQUAL(w[1], -3.);
@@ -137,9 +138,9 @@ BOOST_AUTO_TEST_CASE(binary_minus2)
 
 BOOST_AUTO_TEST_CASE(binary_plus1)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::fixed<3>> v2 = { 4., 5., 6. };
-  cml::vector<double, cml::fixed<3>> w;
+  cml::vector3d v1 = { 1., 2., 3. };
+  cml::vector3d v2 = { 4., 5., 6. };
+  cml::vector3d w;
   w = v1 + v2;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 5.);
@@ -149,9 +150,9 @@ BOOST_AUTO_TEST_CASE(binary_plus1)
 
 BOOST_AUTO_TEST_CASE(binary_plus2)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::fixed<3>> v2 = { 4., 5., 6. };
-  cml::vector<double, cml::fixed<3>> w = v1 + v2;
+  cml::vector3d v1 = { 1., 2., 3. };
+  cml::vector3d v2 = { 4., 5., 6. };
+  cml::vector3d w = v1 + v2;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 5.);
   BOOST_CHECK_EQUAL(w[1], 7.);
@@ -160,10 +161,10 @@ BOOST_AUTO_TEST_CASE(binary_plus2)
 
 BOOST_AUTO_TEST_CASE(multiple_plus1)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::fixed<3>> v2 = { 4., 5., 6. };
-  cml::vector<double, cml::fixed<3>> v3 = { 7., 8., 9. };
-  cml::vector<double, cml::fixed<3>> w;
+  cml::vector3d v1 = { 1., 2., 3. };
+  cml::vector3d v2 = { 4., 5., 6. };
+  cml::vector3d v3 = { 7., 8., 9. };
+  cml::vector3d w;
   w = v1 + (v2 + v3);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 12.);
@@ -173,10 +174,10 @@ BOOST_AUTO_TEST_CASE(multiple_plus1)
 
 BOOST_AUTO_TEST_CASE(multiple_plus2)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::fixed<3>> v2 = { 4., 5., 6. };
-  cml::vector<double, cml::fixed<3>> v3 = { 7., 8., 9. };
-  cml::vector<double, cml::fixed<3>> w = v1 + (v2 + v3);
+  cml::vector3d v1 = { 1., 2., 3. };
+  cml::vector3d v2 = { 4., 5., 6. };
+  cml::vector3d v3 = { 7., 8., 9. };
+  cml::vector3d w = v1 + (v2 + v3);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 12.);
   BOOST_CHECK_EQUAL(w[1], 15.);
@@ -185,10 +186,10 @@ BOOST_AUTO_TEST_CASE(multiple_plus2)
 
 BOOST_AUTO_TEST_CASE(mixed_op1)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::fixed<3>> v2 = { 4., 5., 6. };
-  cml::vector<double, cml::fixed<3>> v3 = { 7., 8., 9. };
-  cml::vector<double, cml::fixed<3>> w;
+  cml::vector3d v1 = { 1., 2., 3. };
+  cml::vector3d v2 = { 4., 5., 6. };
+  cml::vector3d v3 = { 7., 8., 9. };
+  cml::vector3d w;
   w = v2 - (v1 + v3);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], -4.);
@@ -198,10 +199,10 @@ BOOST_AUTO_TEST_CASE(mixed_op1)
 
 BOOST_AUTO_TEST_CASE(mixed_op2)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::fixed<3>> v2 = { 4., 5., 6. };
-  cml::vector<double, cml::fixed<3>> v3 = { 7., 8., 9. };
-  cml::vector<double, cml::fixed<3>> w = v2 - (v1 + v3);
+  cml::vector3d v1 = { 1., 2., 3. };
+  cml::vector3d v2 = { 4., 5., 6. };
+  cml::vector3d v3 = { 7., 8., 9. };
+  cml::vector3d w = v2 - (v1 + v3);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], -4.);
   BOOST_CHECK_EQUAL(w[1], -5.);
@@ -210,8 +211,8 @@ BOOST_AUTO_TEST_CASE(mixed_op2)
 
 BOOST_AUTO_TEST_CASE(assign_minus1)
 {
-  cml::vector<double, cml::fixed<3>> w = { 1., 2., 3. };
-  cml::vector<double, cml::fixed<3>> v = { 4., 5., 6. };
+  cml::vector3d w = { 1., 2., 3. };
+  cml::vector3d v = { 4., 5., 6. };
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   w -= v;
   BOOST_CHECK_EQUAL(w[0], -3.);
@@ -221,8 +222,8 @@ BOOST_AUTO_TEST_CASE(assign_minus1)
 
 BOOST_AUTO_TEST_CASE(assign_plus1)
 {
-  cml::vector<double, cml::fixed<3>> w = { 1., 2., 3. };
-  cml::vector<double, cml::fixed<3>> v = { 4., 5., 6. };
+  cml::vector3d w = { 1., 2., 3. };
+  cml::vector3d v = { 4., 5., 6. };
   w += v;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 5.);
@@ -240,9 +241,9 @@ BOOST_AUTO_TEST_CASE(binary_minus1)
   double av1[] = { 1., 2., 3. };
   double av2[] = { 4., 5., 6. };
   double aw[3];
-  cml::vector<double, cml::external<3>> v1(av1);
-  cml::vector<double, cml::external<3>> v2(av2);
-  cml::vector<double, cml::external<3>> w(aw);
+  cml::external3d v1(av1);
+  cml::external3d v2(av2);
+  cml::external3d w(aw);
   w = v1 - v2;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], -3.);
@@ -255,9 +256,9 @@ BOOST_AUTO_TEST_CASE(binary_plus1)
   double av1[] = { 1., 2., 3. };
   double av2[] = { 4., 5., 6. };
   double aw[3];
-  cml::vector<double, cml::external<3>> v1(av1);
-  cml::vector<double, cml::external<3>> v2(av2);
-  cml::vector<double, cml::external<3>> w(aw);
+  cml::external3d v1(av1);
+  cml::external3d v2(av2);
+  cml::external3d w(aw);
   w = v1 + v2;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 5.);
@@ -271,10 +272,10 @@ BOOST_AUTO_TEST_CASE(multiple_plus1)
   double av2[] = { 4., 5., 6. };
   double av3[] = { 7., 8., 9. };
   double aw[3];
-  cml::vector<double, cml::external<3>> v1(av1);
-  cml::vector<double, cml::external<3>> v2(av2);
-  cml::vector<double, cml::external<3>> v3(av3);
-  cml::vector<double, cml::external<3>> w(aw);
+  cml::external3d v1(av1);
+  cml::external3d v2(av2);
+  cml::external3d v3(av3);
+  cml::external3d w(aw);
   w = v1 + (v2 + v3);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 12.);
@@ -288,10 +289,10 @@ BOOST_AUTO_TEST_CASE(mixed_op1)
   double av2[] = { 4., 5., 6. };
   double av3[] = { 7., 8., 9. };
   double aw[3];
-  cml::vector<double, cml::external<3>> v1(av1);
-  cml::vector<double, cml::external<3>> v2(av2);
-  cml::vector<double, cml::external<3>> v3(av3);
-  cml::vector<double, cml::external<3>> w(aw);
+  cml::external3d v1(av1);
+  cml::external3d v2(av2);
+  cml::external3d v3(av3);
+  cml::external3d w(aw);
   w = v2 - (v1 + v3);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], -4.);
@@ -309,9 +310,9 @@ BOOST_AUTO_TEST_CASE(binary_minus1)
   double av1[] = { 1., 2., 3. };
   double av2[] = { 4., 5., 6. };
   double aw[3];
-  cml::vector<double, cml::external<>> v1(av1,3);
-  cml::vector<double, cml::external<>> v2(av2,3);
-  cml::vector<double, cml::external<>> w(aw,3);
+  cml::externald v1(av1,3);
+  cml::externald v2(av2,3);
+  cml::externald w(aw,3);
   w = v1 - v2;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], -3.);
@@ -324,9 +325,9 @@ BOOST_AUTO_TEST_CASE(binary_plus1)
   double av1[] = { 1., 2., 3. };
   double av2[] = { 4., 5., 6. };
   double aw[3];
-  cml::vector<double, cml::external<>> v1(av1,3);
-  cml::vector<double, cml::external<>> v2(av2,3);
-  cml::vector<double, cml::external<>> w(aw,3);
+  cml::externald v1(av1,3);
+  cml::externald v2(av2,3);
+  cml::externald w(aw,3);
   w = v1 + v2;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 5.);
@@ -340,10 +341,10 @@ BOOST_AUTO_TEST_CASE(multiple_plus1)
   double av2[] = { 4., 5., 6. };
   double av3[] = { 7., 8., 9. };
   double aw[3];
-  cml::vector<double, cml::external<>> v1(av1,3);
-  cml::vector<double, cml::external<>> v2(av2,3);
-  cml::vector<double, cml::external<>> v3(av3,3);
-  cml::vector<double, cml::external<>> w(aw,3);
+  cml::externald v1(av1,3);
+  cml::externald v2(av2,3);
+  cml::externald v3(av3,3);
+  cml::externald w(aw,3);
   w = v1 + (v2 + v3);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 12.);
@@ -357,10 +358,10 @@ BOOST_AUTO_TEST_CASE(mixed_op1)
   double av2[] = { 4., 5., 6. };
   double av3[] = { 7., 8., 9. };
   double aw[3];
-  cml::vector<double, cml::external<>> v1(av1,3);
-  cml::vector<double, cml::external<>> v2(av2,3);
-  cml::vector<double, cml::external<>> v3(av3,3);
-  cml::vector<double, cml::external<>> w(aw,3);
+  cml::externald v1(av1,3);
+  cml::externald v2(av2,3);
+  cml::externald v3(av3,3);
+  cml::externald w(aw,3);
   w = v2 - (v1 + v3);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], -4.);
@@ -375,9 +376,9 @@ BOOST_AUTO_TEST_SUITE(dynamic)
 
 BOOST_AUTO_TEST_CASE(binary_minus1)
 {
-  cml::vector<double, cml::dynamic<>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::dynamic<>> v2 = { 4., 5., 6. };
-  cml::vector<double, cml::dynamic<>> w;
+  cml::vectord v1 = { 1., 2., 3. };
+  cml::vectord v2 = { 4., 5., 6. };
+  cml::vectord w;
   w = v1 - v2;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], -3.);
@@ -387,9 +388,9 @@ BOOST_AUTO_TEST_CASE(binary_minus1)
 
 BOOST_AUTO_TEST_CASE(binary_minus2)
 {
-  cml::vector<double, cml::dynamic<>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::dynamic<>> v2 = { 4., 5., 6. };
-  cml::vector<double, cml::dynamic<>> w = v1 - v2;
+  cml::vectord v1 = { 1., 2., 3. };
+  cml::vectord v2 = { 4., 5., 6. };
+  cml::vectord w = v1 - v2;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], -3.);
   BOOST_CHECK_EQUAL(w[1], -3.);
@@ -398,9 +399,9 @@ BOOST_AUTO_TEST_CASE(binary_minus2)
 
 BOOST_AUTO_TEST_CASE(binary_plus1)
 {
-  cml::vector<double, cml::dynamic<>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::dynamic<>> v2 = { 4., 5., 6. };
-  cml::vector<double, cml::dynamic<>> w;
+  cml::vectord v1 = { 1., 2., 3. };
+  cml::vectord v2 = { 4., 5., 6. };
+  cml::vectord w;
   w = v1 + v2;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 5.);
@@ -410,9 +411,9 @@ BOOST_AUTO_TEST_CASE(binary_plus1)
 
 BOOST_AUTO_TEST_CASE(binary_plus2)
 {
-  cml::vector<double, cml::dynamic<>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::dynamic<>> v2 = { 4., 5., 6. };
-  cml::vector<double, cml::dynamic<>> w = v1 + v2;
+  cml::vectord v1 = { 1., 2., 3. };
+  cml::vectord v2 = { 4., 5., 6. };
+  cml::vectord w = v1 + v2;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 5.);
   BOOST_CHECK_EQUAL(w[1], 7.);
@@ -421,10 +422,10 @@ BOOST_AUTO_TEST_CASE(binary_plus2)
 
 BOOST_AUTO_TEST_CASE(multiple_plus1)
 {
-  cml::vector<double, cml::dynamic<>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::dynamic<>> v2 = { 4., 5., 6. };
-  cml::vector<double, cml::dynamic<>> v3 = { 7., 8., 9. };
-  cml::vector<double, cml::dynamic<>> w;
+  cml::vectord v1 = { 1., 2., 3. };
+  cml::vectord v2 = { 4., 5., 6. };
+  cml::vectord v3 = { 7., 8., 9. };
+  cml::vectord w;
   w = v1 + (v2 + v3);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 12.);
@@ -434,10 +435,10 @@ BOOST_AUTO_TEST_CASE(multiple_plus1)
 
 BOOST_AUTO_TEST_CASE(multiple_plus2)
 {
-  cml::vector<double, cml::dynamic<>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::dynamic<>> v2 = { 4., 5., 6. };
-  cml::vector<double, cml::dynamic<>> v3 = { 7., 8., 9. };
-  cml::vector<double, cml::dynamic<>> w = v1 + (v2 + v3);
+  cml::vectord v1 = { 1., 2., 3. };
+  cml::vectord v2 = { 4., 5., 6. };
+  cml::vectord v3 = { 7., 8., 9. };
+  cml::vectord w = v1 + (v2 + v3);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 12.);
   BOOST_CHECK_EQUAL(w[1], 15.);
@@ -446,10 +447,10 @@ BOOST_AUTO_TEST_CASE(multiple_plus2)
 
 BOOST_AUTO_TEST_CASE(mixed_op1)
 {
-  cml::vector<double, cml::dynamic<>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::dynamic<>> v2 = { 4., 5., 6. };
-  cml::vector<double, cml::dynamic<>> v3 = { 7., 8., 9. };
-  cml::vector<double, cml::dynamic<>> w;
+  cml::vectord v1 = { 1., 2., 3. };
+  cml::vectord v2 = { 4., 5., 6. };
+  cml::vectord v3 = { 7., 8., 9. };
+  cml::vectord w;
   w = v2 - (v1 + v3);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], -4.);
@@ -459,10 +460,10 @@ BOOST_AUTO_TEST_CASE(mixed_op1)
 
 BOOST_AUTO_TEST_CASE(mixed_op2)
 {
-  cml::vector<double, cml::dynamic<>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::dynamic<>> v2 = { 4., 5., 6. };
-  cml::vector<double, cml::dynamic<>> v3 = { 7., 8., 9. };
-  cml::vector<double, cml::dynamic<>> w = v2 - (v1 + v3);
+  cml::vectord v1 = { 1., 2., 3. };
+  cml::vectord v2 = { 4., 5., 6. };
+  cml::vectord v3 = { 7., 8., 9. };
+  cml::vectord w = v2 - (v1 + v3);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], -4.);
   BOOST_CHECK_EQUAL(w[1], -5.);
@@ -471,8 +472,8 @@ BOOST_AUTO_TEST_CASE(mixed_op2)
 
 BOOST_AUTO_TEST_CASE(assign_minus1)
 {
-  cml::vector<double, cml::dynamic<>> w = { 1., 2., 3. };
-  cml::vector<double, cml::dynamic<>> v = { 4., 5., 6. };
+  cml::vectord w = { 1., 2., 3. };
+  cml::vectord v = { 4., 5., 6. };
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   w -= v;
   BOOST_CHECK_EQUAL(w[0], -3.);
@@ -482,8 +483,8 @@ BOOST_AUTO_TEST_CASE(assign_minus1)
 
 BOOST_AUTO_TEST_CASE(assign_plus1)
 {
-  cml::vector<double, cml::dynamic<>> w = { 1., 2., 3. };
-  cml::vector<double, cml::dynamic<>> v = { 4., 5., 6. };
+  cml::vectord w = { 1., 2., 3. };
+  cml::vectord v = { 4., 5., 6. };
   w += v;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 5.);
@@ -498,15 +499,15 @@ BOOST_AUTO_TEST_SUITE(mixed_fixed_storage)
 
 BOOST_AUTO_TEST_CASE(construct_xpr)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
+  cml::vector3d v1 = { 1., 2., 3. };
   double av2[] = {  7.,  8.,  9. };
-  cml::vector<double, cml::external<3>> v2(av2);
+  cml::external3d v2(av2);
 
-  cml::vector<double, cml::fixed<3>> v3 = { 4., 5., 6. };
+  cml::vector3d v3 = { 4., 5., 6. };
   double av4[] = { 10., 11., 12. };
-  cml::vector<double, cml::external<3>> v4(av4);
+  cml::external3d v4(av4);
 
-  cml::vector<double, cml::fixed<3>> w = v1 + v2 - v3 + v4;
+  cml::vector3d w = v1 + v2 - v3 + v4;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 14.);
   BOOST_CHECK_EQUAL(w[1], 16.);
@@ -515,15 +516,15 @@ BOOST_AUTO_TEST_CASE(construct_xpr)
 
 BOOST_AUTO_TEST_CASE(assign_xpr)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
+  cml::vector3d v1 = { 1., 2., 3. };
   double av2[] = {  7.,  8.,  9. };
-  cml::vector<double, cml::external<3>> v2(av2);
+  cml::external3d v2(av2);
 
-  cml::vector<double, cml::fixed<3>> v3 = { 4., 5., 6. };
+  cml::vector3d v3 = { 4., 5., 6. };
   double av4[] = { 10., 11., 12. };
-  cml::vector<double, cml::external<3>> v4(av4);
+  cml::external3d v4(av4);
 
-  cml::vector<double, cml::fixed<3>> w;
+  cml::vector3d w;
   w = v1 + v2 - v3 + v4;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 14.);
@@ -533,18 +534,18 @@ BOOST_AUTO_TEST_CASE(assign_xpr)
 
 BOOST_AUTO_TEST_CASE(assign_temp_xpr)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
+  cml::vector3d v1 = { 1., 2., 3. };
   double av2[] = {  7.,  8.,  9. };
-  cml::vector<double, cml::external<3>> v2(av2);
+  cml::external3d v2(av2);
 
-  cml::vector<double, cml::fixed<3>> v3 = { 4., 5., 6. };
+  cml::vector3d v3 = { 4., 5., 6. };
   double av4[] = { 10., 11., 12. };
-  cml::vector<double, cml::external<3>> v4(av4);
+  cml::external3d v4(av4);
 
   auto xpr = v1 + v2 - v3 + v4;
   BOOST_CHECK_EQUAL(sizeof(xpr), 32U);
 
-  cml::vector<double, cml::fixed<3>> w;
+  cml::vector3d w;
   w = xpr;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 14.);
@@ -559,15 +560,15 @@ BOOST_AUTO_TEST_SUITE(mixed_storage)
 
 BOOST_AUTO_TEST_CASE(construct_xpr)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
+  cml::vector3d v1 = { 1., 2., 3. };
   double av2[] = {  7.,  8.,  9. };
-  cml::vector<double, cml::external<3>> v2(av2);
+  cml::external3d v2(av2);
 
-  cml::vector<double, cml::dynamic<>> v3 = { 4., 5., 6. };
+  cml::vectord v3 = { 4., 5., 6. };
   double av4[] = { 10., 11., 12. };
-  cml::vector<double, cml::external<>> v4(av4, 3);
+  cml::externald v4(av4, 3);
 
-  cml::vector<double, cml::fixed<3>> w = v1 + v2 - v3 + v4;
+  cml::vector3d w = v1 + v2 - v3 + v4;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 14.);
   BOOST_CHECK_EQUAL(w[1], 16.);
@@ -576,15 +577,15 @@ BOOST_AUTO_TEST_CASE(construct_xpr)
 
 BOOST_AUTO_TEST_CASE(assign_xpr)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
+  cml::vector3d v1 = { 1., 2., 3. };
   double av2[] = {  7.,  8.,  9. };
-  cml::vector<double, cml::external<3>> v2(av2);
+  cml::external3d v2(av2);
 
-  cml::vector<double, cml::dynamic<>> v3 = { 4., 5., 6. };
+  cml::vectord v3 = { 4., 5., 6. };
   double av4[] = { 10., 11., 12. };
-  cml::vector<double, cml::external<>> v4(av4, 3);
+  cml::externald v4(av4, 3);
 
-  cml::vector<double, cml::dynamic<>> w;
+  cml::vectord w;
   w = v1 + v2 - v3 + v4;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 14.);
@@ -594,19 +595,19 @@ BOOST_AUTO_TEST_CASE(assign_xpr)
 
 BOOST_AUTO_TEST_CASE(assign_temp_xpr)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
+  cml::vector3d v1 = { 1., 2., 3. };
   double av2[] = {  7.,  8.,  9. };
-  cml::vector<double, cml::external<3>> v2(av2);
+  cml::external3d v2(av2);
 
-  cml::vector<double, cml::dynamic<>> v3 = { 4., 5., 6. };
+  cml::vectord v3 = { 4., 5., 6. };
   double av4[] = { 10., 11., 12. };
-  cml::vector<double, cml::external<>> v4(av4, 3);
+  cml::externald v4(av4, 3);
 
   auto xpr = v1 + v2 - v3 + v4;
   BOOST_CHECK_EQUAL(sizeof(xpr), 32U);
 
   double aw[3];
-  cml::vector<double, cml::external<>> w(aw, 3);
+  cml::externald w(aw, 3);
   w = xpr;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 14.);

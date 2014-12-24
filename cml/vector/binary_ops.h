@@ -19,9 +19,8 @@ namespace cml {
  * (i.e. derived from readable_vector<>).
  */
 template<class Op, class Sub1, class Sub2,
-  cml::enable_if_vector_t<Sub1>* = nullptr,
-  cml::enable_if_vector_t<Sub2>* = nullptr
-> inline auto
+  enable_if_vector_t<Sub1>* = nullptr, enable_if_vector_t<Sub2>* = nullptr>
+inline auto
 make_vector_binary_node(Sub1&& sub1, Sub2&& sub2)
 -> vector_binary_node<
 actual_operand_type_of_t<decltype(sub1)>,
@@ -44,9 +43,7 @@ Op
 }
 
 template<class Sub1, class Sub2,
-  cml::enable_if_vector_t<Sub1>* = nullptr,
-  cml::enable_if_vector_t<Sub2>* = nullptr
->
+  enable_if_vector_t<Sub1>* = nullptr, enable_if_vector_t<Sub2>* = nullptr>
 inline auto operator-(Sub1&& sub1, Sub2&& sub2)
 -> decltype(make_vector_binary_node<binary_minus_t<Sub1,Sub2>>(
     std::forward<Sub1>(sub1), std::forward<Sub2>(sub2)))
@@ -56,9 +53,7 @@ inline auto operator-(Sub1&& sub1, Sub2&& sub2)
 }
 
 template<class Sub1, class Sub2,
-  cml::enable_if_vector_t<Sub1>* = nullptr,
-  cml::enable_if_vector_t<Sub2>* = nullptr
->
+  enable_if_vector_t<Sub1>* = nullptr, enable_if_vector_t<Sub2>* = nullptr>
 inline auto operator+(Sub1&& sub1, Sub2&& sub2)
 -> decltype(make_vector_binary_node<binary_plus_t<Sub1,Sub2>>(
     std::forward<Sub1>(sub1), std::forward<Sub2>(sub2)))

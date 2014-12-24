@@ -37,12 +37,12 @@ template<class Tag> struct is_basis_tag {
     || std::is_same<Tag, any_basis>::value;
 };
 
-/** Templated helper to determine the size tag of an expression that
+/** Templated helper to determine the basis tag of an expression that
  * defines the basis_tag type.
  */
 template<class T> struct basis_tag_of {
   typedef typename T::basis_tag type;
-  static_assert(cml::is_basis_tag<type>::value, "invalid basis tag");
+  static_assert(is_basis_tag<type>::value, "invalid basis tag");
 };
 
 /** Convenience alias for basis_tag_of. */
@@ -51,7 +51,7 @@ template<class T> using basis_tag_of_t = typename basis_tag_of<T>::type;
 /** Retrieve the basis_tag of @c T via traits. */
 template<class T> struct basis_tag_trait_of {
   typedef typename traits_of<T>::type::basis_tag type;
-  static_assert(cml::is_basis_tag<type>::value, "invalid size tag");
+  static_assert(is_basis_tag<type>::value, "invalid basis tag");
 };
 
 /** Convenience alias for basis_tag_trait_of. */

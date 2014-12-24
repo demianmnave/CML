@@ -207,7 +207,7 @@ writable_vector<DT>::operator=(const readable_vector<ODT>& other) &&
 #endif
 
 template<class DT>
-template<class Array, typename cml::enable_if_array_t<Array>*> DT&
+template<class Array, enable_if_array_t<Array>*> DT&
 writable_vector<DT>::operator=(const Array& array) __CML_REF
 {
   return this->assign(array);
@@ -215,7 +215,7 @@ writable_vector<DT>::operator=(const Array& array) __CML_REF
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
-template<class Array, typename cml::enable_if_array_t<Array>*> DT&&
+template<class Array, enable_if_array_t<Array>*> DT&&
 writable_vector<DT>::operator=(const Array& array) &&
 {
   this->operator=(array);
@@ -310,10 +310,10 @@ writable_vector<DT>::assign(const readable_vector<ODT>& other)
 }
 
 template<class DT>
-template<class Array, typename cml::enable_if_array_t<Array>*> DT&
+template<class Array, enable_if_array_t<Array>*> DT&
 writable_vector<DT>::assign(const Array& array)
 {
-  static const int N = cml::array_size_of_c<Array>::value;
+  static const int N = array_size_of_c<Array>::value;
   detail::check_or_resize(*this, N);
   for(int i = 0; i < N; ++ i) this->set(i, array[i]);
   return this->actual();

@@ -22,13 +22,11 @@ namespace cml {
  * - any_size_tag with any other tag: any_size_tag
  * - fixed_size_tag with fixed_size_tag: fixed_size_tag
  * - otherwise: dynamic_size_tag
- *
- * @note This can be specialized for user-defined size tags.
  */
 template<class Tag1, class Tag2> struct size_check_promote
 {
-  static_assert(cml::is_size_tag<Tag1>::value, "invalid size tag");
-  static_assert(cml::is_size_tag<Tag2>::value, "invalid size tag");
+  static_assert(is_size_tag<Tag1>::value, "invalid size tag");
+  static_assert(is_size_tag<Tag2>::value, "invalid size tag");
 
   /* Promote to any_size_tag when combined with any other tag: */
   static const bool is_any
@@ -43,9 +41,10 @@ template<class Tag1, class Tag2> struct size_check_promote
   /* Promote to dynamic_size_tag by default if not promoting to
    * any_size_tag or fixed_size_tag:
    */
-  typedef cml::if_t<
-    is_any, any_size_tag, cml::if_t<
-    is_fixed, fixed_size_tag, dynamic_size_tag>>	type;
+  typedef
+    cml::if_t< is_any, any_size_tag,
+    cml::if_t< is_fixed, fixed_size_tag,
+    /* else */ dynamic_size_tag>>			type;
 };
 
 /** Convenience alias for size_check_promote. */
@@ -59,13 +58,11 @@ template<class Tag1, class Tag2> using size_check_promote_t
  * - fixed_size_tag with any other tag: fixed_size_tag
  * - dynamic_size_tag with any other tag: dynamic_size_tag
  * - any_size_tag with any_size_tag: any_size_tag
- *
- * @note This can be specialized for user-defined size tags.
  */
 template<class Tag1, class Tag2> struct size_tag_promote
 {
-  static_assert(cml::is_size_tag<Tag1>::value, "invalid size tag");
-  static_assert(cml::is_size_tag<Tag2>::value, "invalid size tag");
+  static_assert(is_size_tag<Tag1>::value, "invalid size tag");
+  static_assert(is_size_tag<Tag2>::value, "invalid size tag");
 
   /* Fixed-size with any other tag promotes to fixed-size: */
   static const bool is_fixed
@@ -88,8 +85,9 @@ template<class Tag1, class Tag2> struct size_tag_promote
   static_assert(is_fixed || is_dynamic || is_any, "unexpected size tag type");
 
   /* Promote to the selected tag: */
-  typedef cml::if_t<is_fixed, fixed_size_tag,
-	  cml::if_t<is_dynamic, dynamic_size_tag, any_size_tag>> type;
+  typedef cml::if_t< is_fixed, fixed_size_tag,
+	  cml::if_t< is_dynamic, dynamic_size_tag,
+	  /* else */ any_size_tag>>			type;
 };
 
 /** Convenience alias for size_tag_promote. */
@@ -113,22 +111,41 @@ template<class T1, class T2> using size_tag_trait_promote_t
 /** Deduce the default basis tag needed to promote the result of combining
  * two expressions having basis tags @c Tag1 and @c Tag2.  By default:
  *
- * - both row_basis: row_basis
- * - both col_basis: col_basis
+ * - both row_basis, or row_basis with any_basis: row_basis
+ * - both col_basis, or col_basis with any_basis: col_basis
  * - otherwise: any_basis
- *
- * @note This can be specialized to change the default promotion strategy.
  */
 template<class Tag1, class Tag2> struct basis_tag_promote
 {
-  static_assert(cml::is_basis_tag<Tag1>::value, "invalid basis tag");
-  static_assert(cml::is_basis_tag<Tag2>::value, "invalid basis tag");
+  static_assert(is_basis_tag<Tag1>::value, "invalid basis tag");
+  static_assert(is_basis_tag<Tag2>::value, "invalid basis tag");
 
-  /* True if the bases are the same: */
-  static const bool is_matched = std::is_same<Tag1,Tag2>::value;
+  /* True if possible to promote to row_basis: */
+  static const bool is_row_basis
+    =  (std::is_same<Tag1, row_basis>::value
+      && std::is_same<Tag2, row_basis>::value)
+    || (std::is_same<Tag1, row_basis>::value
+      && std::is_same<Tag2, any_basis>::value)
+    || (std::is_same<Tag1, any_basis>::value
+      && std::is_same<Tag2, row_basis>::value);
 
-  /* Promote to the common basis, or any_basis otherwise: */
-  typedef cml::if_t<is_matched, Tag1, any_basis>	type;
+  /* True if possible to promote to col_basis: */
+  static const bool is_col_basis
+    =  (std::is_same<Tag1, col_basis>::value
+      && std::is_same<Tag2, col_basis>::value)
+    || (std::is_same<Tag1, col_basis>::value
+      && std::is_same<Tag2, any_basis>::value)
+    || (std::is_same<Tag1, any_basis>::value
+      && std::is_same<Tag2, col_basis>::value);
+
+  /* At least one has to be false: */
+  static_assert(!is_row_basis || !is_col_basis, "invalid basis promotion");
+
+  /* Promote to the selected basis, or any_basis otherwise: */
+  typedef
+    cml::if_t< is_row_basis, row_basis,
+    cml::if_t< is_col_basis, col_basis,
+    /* else */ any_basis>>				type;
 };
 
 /** Convenience alias for basis_tag_promote. */
@@ -155,13 +172,11 @@ template<class T1, class T2> using basis_tag_trait_promote_t
  * - both row_major: row_major
  * - both col_major: col_major
  * - otherwise: any_major
- *
- * @note This can be specialized to change the default promotion strategy.
  */
 template<class Tag1, class Tag2> struct layout_tag_promote
 {
-  static_assert(cml::is_layout_tag<Tag1>::value, "invalid layout tag");
-  static_assert(cml::is_layout_tag<Tag2>::value, "invalid layout tag");
+  static_assert(is_layout_tag<Tag1>::value, "invalid layout tag");
+  static_assert(is_layout_tag<Tag2>::value, "invalid layout tag");
 
   /* True if the tags are the same: */
   static const bool is_matched = std::is_same<Tag1,Tag2>::value;

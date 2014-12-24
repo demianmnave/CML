@@ -185,22 +185,22 @@ class writable_vector
     /** Assign from a fixed-length array type.
      *
      * @throws incompatible_vector_size_error at run-time if the vector is not
-     * resizable, and if @c cml::array_size_of_c<value>::value !=
+     * resizable, and if @c array_size_of_c<value>::value !=
      * this->size().  If both are fixed-size, then the size is checked at
      * compile time.
      */
-    template<class Array, typename cml::enable_if_array_t<Array>* = nullptr>
+    template<class Array, enable_if_array_t<Array>* = nullptr>
 	DerivedT& operator=(const Array& array) __CML_REF;
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
     /** Assign a temporary from a fixed-length array type.
      *
      * @throws incompatible_vector_size_error at run-time if the vector is not
-     * resizable, and if @c cml::array_size_of_c<value>::value !=
+     * resizable, and if @c array_size_of_c<value>::value !=
      * this->size().  If both are fixed-size, then the size is checked at
      * compile time.
      */
-    template<class Array, typename cml::enable_if_array_t<Array>* = nullptr>
+    template<class Array, enable_if_array_t<Array>* = nullptr>
 	DerivedT&& operator=(const Array& array) &&;
 #endif
 

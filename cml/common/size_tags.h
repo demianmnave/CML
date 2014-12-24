@@ -9,17 +9,34 @@
 #ifndef	cml_common_size_tags_h
 #define	cml_common_size_tags_h
 
+#include <type_traits>
 #include <cml/common/traits.h>
 
 namespace cml {
 
-/** Indicates a fixed-sized operand. */
+/** Indicates a fixed-sized operand.
+ *
+ * @note Fixed-size vector types define a constant, @c array_size,
+ * containing the array length.
+ *
+ * @note Fixed-size matrix types define two constants, @c array_rows and @c
+ * array_cols, containing the number of rows and columns.
+ */
 struct fixed_size_tag {};
 
-/** Indicates a runtime-sized operand. */
+/** Indicates a runtime-sized operand.
+ *
+ * @note Dynamic-size vector types define a constant, @c array_size, set to
+ * -1.
+ *
+ * @note Dynamic-size matrices define two constants, @c array_rows and @c
+ * array_cols, both set to -1.
+ */
 struct dynamic_size_tag {};
 
-/** Indicates that the operand can take any required size. */
+/** Indicates that the vector or matrix type has an unspecified or
+ * arbitrary size tag.
+ */
 struct any_size_tag {};
 
 /** Detect valid size tags.
@@ -38,7 +55,7 @@ template<class Tag> struct is_size_tag {
  */
 template<class T> struct size_tag_of {
   typedef typename T::size_tag type;
-  static_assert(cml::is_size_tag<type>::value, "invalid size tag");
+  static_assert(is_size_tag<type>::value, "invalid size tag");
 };
 
 /** Convenience alias for size_tag_of. */
@@ -47,12 +64,30 @@ template<class T> using size_tag_of_t = typename size_tag_of<T>::type;
 /** Retrieve the size_tag of @c T via traits. */
 template<class T> struct size_tag_trait_of {
   typedef typename traits_of<T>::type::size_tag type;
-  static_assert(cml::is_size_tag<type>::value, "invalid size tag");
+  static_assert(is_size_tag<type>::value, "invalid size tag");
 };
 
 /** Convenience alias for size_tag_trait_of. */
 template<class T>
   using size_tag_trait_of_t = typename size_tag_trait_of<T>::type;
+
+/** Helper to detect fixed-size types. */
+template<class T> struct is_fixed_size {
+  static const bool value =
+    std::is_same<size_tag_of_t<T>, fixed_size_tag>::value;
+};
+
+/** Helper to detect dynamic-size types. */
+template<class T> struct is_dynamic_size {
+  static const bool value =
+    std::is_same<size_tag_of_t<T>, dynamic_size_tag>::value;
+};
+
+/** Helper to detect any-size types. */
+template<class T> struct is_any_size {
+  static const bool value =
+    std::is_same<size_tag_of_t<T>, any_size_tag>::value;
+};
 
 } // namespace cml
 

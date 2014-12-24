@@ -10,6 +10,7 @@
 #define	cml_vector_functions_h
 
 #include <cml/vector/writable_vector.h>
+#include <cml/vector/promotion.h>
 
 namespace cml {
 
@@ -26,12 +27,7 @@ length(const readable_vector<DerivedT>& v)
 /** Return a normalized copy of a vector. */
 template<class DerivedT> inline auto
 normalize(const readable_vector<DerivedT>& v)
--> cml::vector<value_type_trait_of_t<DerivedT>,
-  typename vector_traits<DerivedT>::storage_traits::solid_type>;
-
-/** Normalize a writable temporary and return it. */
-template<class DerivedT> inline auto
-normalize(writable_vector<DerivedT>&& v) -> DerivedT&&;
+-> typename temporary_of<DerivedT>::type;
 
 } // namespace cml
 

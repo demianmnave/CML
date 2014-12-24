@@ -9,7 +9,7 @@
 #ifndef	cml_common_mpl_enable_if_arithmetic_h
 #define	cml_common_mpl_enable_if_arithmetic_h
 
-#include <cml/common/type_util.h>
+#include <utility>
 
 namespace cml {
 
@@ -17,7 +17,7 @@ namespace cml {
  * removing const, volatile, and reference qualifiers.
  */
 template<class T> struct enable_if_arithmetic
-  : std::enable_if<std::is_arithmetic<cml::unqualified_type_t<T>>::value> {};
+  : std::enable_if<std::is_arithmetic<T>::value> {};
 
 /** Convenience alias for enable_if_arithmetic. */
 template<class T> using enable_if_arithmetic_t

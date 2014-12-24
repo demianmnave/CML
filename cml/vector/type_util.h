@@ -47,7 +47,7 @@ template<class T> struct is_vector {
  * readable_vector).
  */
 template<class Sub> struct enable_if_vector
-: std::enable_if<cml::is_vector<Sub>::value> {};
+: std::enable_if<is_vector<Sub>::value> {};
 
 /** Convenience alias for enable_if_vector. */
 template<class Sub> using enable_if_vector_t

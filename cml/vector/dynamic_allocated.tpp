@@ -4,8 +4,8 @@
 /** @file
  */
 
-#ifndef __CML_VECTOR_DYNAMIC_TPP
-#error "vector/dynamic.tpp not included correctly"
+#ifndef __CML_VECTOR_DYNAMIC_ALLOCATED_TPP
+#error "vector/dynamic_allocated.tpp not included correctly"
 #endif
 
 #include <cml/common/exception.h>
@@ -52,8 +52,7 @@ vector<E, dynamic<A>>::vector(const readable_vector<Sub>& sub)
 // XXX Should be here, but VC++12 has brain-dead out-of-line template
 // argument matching...
 template<class E, class A>
-template<class E0, class... Es,
-  typename cml::enable_if_convertible<
+template<class E0, class... Es, enable_if_convertible<
   typename scalar_traits<E>::value_type, E0, Es...>::type*
 >
 vector<E, dynamic<A>>::vector(const E0& e0, const Es&... eN)
@@ -64,9 +63,7 @@ vector<E, dynamic<A>>::vector(const E0& e0, const Es&... eN)
 #endif
 
 template<class E, class A> template<class Array>
-vector<E, dynamic<A>>::vector(
-  const Array& array, cml::enable_if_array_t<Array>*
-  )
+vector<E, dynamic<A>>::vector(const Array& array, enable_if_array_t<Array>*)
 : m_data(0), m_size(0)
 {
   this->assign(array);

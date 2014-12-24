@@ -73,7 +73,7 @@ template<typename Scalar> struct scalar_traits
 };
 
 /** traits_of for arithmetic scalars. */
-template<class T> struct traits_of<T, cml::enable_if_arithmetic_t<T>> {
+template<class T> struct traits_of<T, enable_if_arithmetic_t<T>> {
   typedef scalar_traits<T>				type;
 };
 

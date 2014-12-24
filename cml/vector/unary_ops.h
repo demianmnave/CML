@@ -18,7 +18,7 @@ namespace cml {
 /** Helper function to generate a vector_unary_node from a vector type
  * (i.e. derived from readable_vector<>).
  */
-template<class Op, class Sub, cml::enable_if_vector_t<Sub>* = nullptr>
+template<class Op, class Sub, enable_if_vector_t<Sub>* = nullptr>
 inline auto make_vector_unary_node(Sub&& sub)
 -> vector_unary_node<actual_operand_type_of_t<decltype(sub)>, Op>
 {
@@ -31,14 +31,14 @@ inline auto make_vector_unary_node(Sub&& sub)
   return vector_unary_node<sub_type, Op>((sub_type) sub);
 }
 
-template<class Sub, cml::enable_if_vector_t<Sub>* = nullptr>
+template<class Sub, enable_if_vector_t<Sub>* = nullptr>
 inline auto operator-(Sub&& sub)
 -> decltype(make_vector_unary_node<unary_minus_t<Sub>>(std::forward<Sub>(sub)))
 {
   return make_vector_unary_node<unary_minus_t<Sub>>(std::forward<Sub>(sub));
 }
 
-template<class Sub, cml::enable_if_vector_t<Sub>* = nullptr>
+template<class Sub, enable_if_vector_t<Sub>* = nullptr>
 inline auto operator+(Sub&& sub)
 -> decltype(make_vector_unary_node<unary_plus_t<Sub>>(std::forward<Sub>(sub)))
 {

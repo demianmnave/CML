@@ -13,6 +13,9 @@ link_directories(${Boost_LIBRARY_DIR})
 # Common functionality tests:
 add_subdirectory(common)
 
+# Storage tests:
+add_subdirectory(storage)
+
 # cml::vector<> tests:
 add_subdirectory(vector)
 

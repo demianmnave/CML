@@ -75,7 +75,7 @@ template<typename T> inline T inv_sqrt(T value) {
 
 /** Convert radians to degrees. */
 template<typename T> inline T deg(T theta) {
-  return theta * cml::constants<T>::deg_per_rad();
+  return theta * constants<T>::deg_per_rad();
 }
 
 /** Convert degrees to radians. */

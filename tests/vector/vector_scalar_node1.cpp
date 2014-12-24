@@ -13,6 +13,7 @@
 #include <cml/vector/fixed.h>
 #include <cml/vector/external.h>
 #include <cml/vector/dynamic.h>
+#include <cml/vector/types.h>
 
 /* Testing headers: */
 #define BOOST_TEST_MODULE vector_scalar_node1
@@ -20,7 +21,7 @@
 
 BOOST_AUTO_TEST_CASE(scalar_types1)
 {
-  typedef cml::vector<double, cml::fixed<3>> vector_type;
+  typedef cml::vector3d vector_type;
   {
     auto xpr = vector_type()*int();
     typedef decltype(xpr) xpr_type;
@@ -108,8 +109,8 @@ BOOST_AUTO_TEST_SUITE(fixed)
 
 BOOST_AUTO_TEST_CASE(scalar_multiply1)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::fixed<3>> w;
+  cml::vector3d v1 = { 1., 2., 3. };
+  cml::vector3d w;
   w = 2.*v1;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 2.);
@@ -119,8 +120,8 @@ BOOST_AUTO_TEST_CASE(scalar_multiply1)
 
 BOOST_AUTO_TEST_CASE(scalar_multiply2)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::fixed<3>> w = 2.*v1;
+  cml::vector3d v1 = { 1., 2., 3. };
+  cml::vector3d w = 2.*v1;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 2.);
   BOOST_CHECK_EQUAL(w[1], 4.);
@@ -129,8 +130,8 @@ BOOST_AUTO_TEST_CASE(scalar_multiply2)
 
 BOOST_AUTO_TEST_CASE(scalar_divide1)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 2., 4., 6. };
-  cml::vector<double, cml::fixed<3>> w;
+  cml::vector3d v1 = { 2., 4., 6. };
+  cml::vector3d w;
   w = v1/2.;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 1.);
@@ -140,8 +141,8 @@ BOOST_AUTO_TEST_CASE(scalar_divide1)
 
 BOOST_AUTO_TEST_CASE(scalar_divide2)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 2., 4., 6. };
-  cml::vector<double, cml::fixed<3>> w = v1/2.;
+  cml::vector3d v1 = { 2., 4., 6. };
+  cml::vector3d w = v1/2.;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 1.);
   BOOST_CHECK_EQUAL(w[1], 2.);
@@ -150,7 +151,7 @@ BOOST_AUTO_TEST_CASE(scalar_divide2)
 
 BOOST_AUTO_TEST_CASE(scalar_multiply_assign1)
 {
-  cml::vector<double, cml::fixed<3>> v1 = { 1., 2., 3. };
+  cml::vector3d v1 = { 1., 2., 3. };
   v1 *= 2;
   BOOST_REQUIRE_EQUAL(v1.size(), 3);
   BOOST_CHECK_EQUAL(v1[0], 2.);
@@ -160,8 +161,8 @@ BOOST_AUTO_TEST_CASE(scalar_multiply_assign1)
 
 BOOST_AUTO_TEST_CASE(scalar_multiply_assign2)
 {
-  cml::vector<double, cml::fixed<3>> w;
-  w = (cml::vector<double,cml::fixed<3>>(1.,2.,3.) *= 2);
+  cml::vector3d w;
+  w = (cml::vector3d(1.,2.,3.) *= 2);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 2.);
   BOOST_CHECK_EQUAL(w[1], 4.);
@@ -177,8 +178,8 @@ BOOST_AUTO_TEST_CASE(scalar_multiply1)
 {
   double av1[] = { 1., 2., 3. };
   double aw[3];
-  cml::vector<double, cml::external<3>> v1(av1);
-  cml::vector<double, cml::external<3>> w(aw);
+  cml::external3d v1(av1);
+  cml::external3d w(aw);
   w = 2.*v1;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 2.);
@@ -190,8 +191,8 @@ BOOST_AUTO_TEST_CASE(scalar_divide1)
 {
   double av1[] = { 2., 4., 6. };
   double aw[3];
-  cml::vector<double, cml::external<3>> v1(av1);
-  cml::vector<double, cml::external<3>> w(aw);
+  cml::external3d v1(av1);
+  cml::external3d w(aw);
   w = v1/2.;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 1.);
@@ -202,7 +203,7 @@ BOOST_AUTO_TEST_CASE(scalar_divide1)
 BOOST_AUTO_TEST_CASE(scalar_multiply_assign1)
 {
   double av1[] = { 1., 2., 3. };
-  cml::vector<double, cml::external<3>> v1(av1);
+  cml::external3d v1(av1);
   v1 *= 2;
   BOOST_REQUIRE_EQUAL(v1.size(), 3);
   BOOST_CHECK_EQUAL(v1[0], 2.);
@@ -214,8 +215,8 @@ BOOST_AUTO_TEST_CASE(scalar_multiply_assign2)
 {
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   double av1[] = { 1., 2., 3. };
-  cml::vector<double, cml::external<3>> w;
-  w = (cml::vector<double,cml::external<3>>(av1) *= 2);
+  cml::external3d w;
+  w = (cml::external3d(av1) *= 2);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w.data(), &av1[0]);
   BOOST_CHECK_EQUAL(w[0], 2.);
@@ -237,8 +238,8 @@ BOOST_AUTO_TEST_CASE(scalar_multiply1)
 {
   double av1[] = { 1., 2., 3. };
   double aw[3];
-  cml::vector<double, cml::external<>> v1(av1,3);
-  cml::vector<double, cml::external<>> w(aw,3);
+  cml::externald v1(av1,3);
+  cml::externald w(aw,3);
   w = 2.*v1;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 2.);
@@ -250,8 +251,8 @@ BOOST_AUTO_TEST_CASE(scalar_divide1)
 {
   double av1[] = { 2., 4., 6. };
   double aw[3];
-  cml::vector<double, cml::external<>> v1(av1,3);
-  cml::vector<double, cml::external<>> w(aw,3);
+  cml::externald v1(av1,3);
+  cml::externald w(aw,3);
   w = v1/2.;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 1.);
@@ -262,7 +263,7 @@ BOOST_AUTO_TEST_CASE(scalar_divide1)
 BOOST_AUTO_TEST_CASE(scalar_multiply_assign1)
 {
   double av1[] = { 1., 2., 3. };
-  cml::vector<double, cml::external<>> v1(av1,3);
+  cml::externald v1(av1,3);
   v1 *= 2;
   BOOST_REQUIRE_EQUAL(v1.size(), 3);
   BOOST_CHECK_EQUAL(v1[0], 2.);
@@ -274,8 +275,8 @@ BOOST_AUTO_TEST_CASE(scalar_multiply_assign2)
 {
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   double av1[] = { 1., 2., 3. };
-  cml::vector<double, cml::external<>> w;
-  w = (cml::vector<double,cml::external<>>(av1,3) *= 2);
+  cml::externald w;
+  w = (cml::externald(av1,3) *= 2);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w.data(), &av1[0]);
   BOOST_CHECK_EQUAL(w[0], 2.);
@@ -295,8 +296,8 @@ BOOST_AUTO_TEST_SUITE(dynamic)
 
 BOOST_AUTO_TEST_CASE(scalar_multiply1)
 {
-  cml::vector<double, cml::dynamic<>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::dynamic<>> w;
+  cml::vectord v1 = { 1., 2., 3. };
+  cml::vectord w;
   w = 2.*v1;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 2.);
@@ -306,8 +307,8 @@ BOOST_AUTO_TEST_CASE(scalar_multiply1)
 
 BOOST_AUTO_TEST_CASE(scalar_multiply2)
 {
-  cml::vector<double, cml::dynamic<>> v1 = { 1., 2., 3. };
-  cml::vector<double, cml::dynamic<>> w = 2.*v1;
+  cml::vectord v1 = { 1., 2., 3. };
+  cml::vectord w = 2.*v1;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 2.);
   BOOST_CHECK_EQUAL(w[1], 4.);
@@ -316,8 +317,8 @@ BOOST_AUTO_TEST_CASE(scalar_multiply2)
 
 BOOST_AUTO_TEST_CASE(scalar_divide1)
 {
-  cml::vector<double, cml::dynamic<>> v1 = { 2., 4., 6. };
-  cml::vector<double, cml::dynamic<>> w;
+  cml::vectord v1 = { 2., 4., 6. };
+  cml::vectord w;
   w = v1/2.;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 1.);
@@ -327,8 +328,8 @@ BOOST_AUTO_TEST_CASE(scalar_divide1)
 
 BOOST_AUTO_TEST_CASE(scalar_divide2)
 {
-  cml::vector<double, cml::dynamic<>> v1 = { 2., 4., 6. };
-  cml::vector<double, cml::dynamic<>> w = v1/2.;
+  cml::vectord v1 = { 2., 4., 6. };
+  cml::vectord w = v1/2.;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 1.);
   BOOST_CHECK_EQUAL(w[1], 2.);
@@ -337,7 +338,7 @@ BOOST_AUTO_TEST_CASE(scalar_divide2)
 
 BOOST_AUTO_TEST_CASE(scalar_multiply_assign1)
 {
-  cml::vector<double, cml::dynamic<>> v1 = { 1., 2., 3. };
+  cml::vectord v1 = { 1., 2., 3. };
   v1 *= 2;
   BOOST_REQUIRE_EQUAL(v1.size(), 3);
   BOOST_CHECK_EQUAL(v1[0], 2.);
@@ -347,8 +348,8 @@ BOOST_AUTO_TEST_CASE(scalar_multiply_assign1)
 
 BOOST_AUTO_TEST_CASE(scalar_multiply_assign2)
 {
-  cml::vector<double, cml::dynamic<>> w;
-  w = (cml::vector<double,cml::dynamic<>>(1.,2.,3.) *= 2);
+  cml::vectord w;
+  w = (cml::vector<double, cml::dynamic<>>(1.,2.,3.) *= 2);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 2.);
   BOOST_CHECK_EQUAL(w[1], 4.);

@@ -4,8 +4,8 @@
 /** @file
  */
 
-#ifndef __CML_VECTOR_FIXED_TPP
-#error "vector/fixed.tpp not included correctly"
+#ifndef __CML_VECTOR_FIXED_COMPILED_TPP
+#error "vector/fixed_compiled.tpp not included correctly"
 #endif
 
 namespace cml {
@@ -22,8 +22,7 @@ vector<E, fixed<S>>::vector(const readable_vector<Sub>& sub)
 // XXX Should be here, but VC++12 has brain-dead out-of-line template
 // argument matching...
 template<class E, int S>
-template<class E0, class... Es,
-  typename cml::enable_if_convertible<
+template<class E0, class... Es, enable_if_convertible<
   typename scalar_traits<E>::value_type, E0, Es...>::type*
 >
 vector<E, fixed<S>>::vector(const E0& e0, const Es&... eN)
@@ -33,9 +32,7 @@ vector<E, fixed<S>>::vector(const E0& e0, const Es&... eN)
 #endif
 
 template<class E, int S> template<class Array>
-vector<E, fixed<S>>::vector(
-  const Array& array, cml::enable_if_array_t<Array>*
-  )
+vector<E, fixed<S>>::vector(const Array& array, enable_if_array_t<Array>*)
 {
   this->assign(array);
 }

@@ -10,6 +10,7 @@
 #define	cml_vector_readable_vector_h
 
 #include <cml/common/compiler.h>
+#include <cml/common/scalar_traits.h>
 #include <cml/vector/traits.h>
 #include <cml/vector/vector.h>
 
@@ -40,7 +41,6 @@ class readable_vector
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
-    typedef typename traits_type::size_tag		size_tag;
 
 
   public:

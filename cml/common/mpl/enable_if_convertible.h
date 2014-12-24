@@ -17,7 +17,7 @@ namespace cml {
  * convertible to @c To.
  */
 template<class To, class... Froms> struct enable_if_convertible
-  : std::enable_if<cml::are_convertible<To, Froms...>::value> {};
+  : std::enable_if<are_convertible<To, Froms...>::value> {};
 
 /** Convenience alias for enable_if_convertible. */
 template<class To, class... Froms> using enable_if_convertible_t
