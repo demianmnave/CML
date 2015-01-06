@@ -6,10 +6,11 @@
 
 #pragma once
 
-#ifndef	cml_matrix_fixed_external_h
-#define	cml_matrix_fixed_external_h
+#ifndef	cml_matrix_fixed_compiled_h
+#define	cml_matrix_fixed_compiled_h
 
-#include <cml/storage/external_selector.h>
+#include <cml/common/mpl/enable_if_convertible.h>
+#include <cml/storage/compiled_selector.h>
 #include <cml/matrix/writable_matrix.h>
 #include <cml/matrix/matrix.h>
 
@@ -17,8 +18,7 @@ namespace cml {
 
 template<class Element,
   int Rows, int Cols, typename BasisOrient, typename Layout>
-struct matrix_traits<
-  matrix<Element, external<Rows,Cols>, BasisOrient, Layout> >
+struct matrix_traits< matrix<Element, fixed<Rows,Cols>, BasisOrient, Layout> >
 {
   /* The basis must be col_basis or row_basis: */
   static_assert(std::is_same<BasisOrient,row_basis>::value
@@ -35,7 +35,7 @@ struct matrix_traits<
   typedef typename element_traits::immutable_value	immutable_value;
 
   /* The matrix storage type: */
-  typedef rebind_t<external<Rows,Cols>, matrix_storage_tag> storage_type;
+  typedef rebind_t<compiled<Rows,Cols>, matrix_storage_tag> storage_type;
   typedef typename storage_type::size_tag		size_tag;
   static_assert(std::is_same<size_tag, fixed_size_tag>::value,
     "invalid size tag");
@@ -64,16 +64,17 @@ struct matrix_traits<
 /** Fixed-size matrix. */
 template<class Element,
   int Rows, int Cols, typename BasisOrient, typename Layout>
-class matrix<Element, external<Rows,Cols>, BasisOrient, Layout>
+class matrix<Element, fixed<Rows,Cols>, BasisOrient, Layout>
 : public writable_matrix<
-  matrix<Element, external<Rows,Cols>, BasisOrient, Layout>>
+  matrix<Element, fixed<Rows,Cols>, BasisOrient, Layout>>
 {
   public:
 
     typedef matrix<Element,
-	    external<Rows,Cols>, BasisOrient, Layout>	matrix_type;
+	    fixed<Rows,Cols>, BasisOrient, Layout>	matrix_type;
     typedef writable_matrix<matrix_type>		writable_type;
     typedef matrix_traits<matrix_type>			traits_type;
+    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::pointer		pointer;
@@ -82,7 +83,6 @@ class matrix<Element, external<Rows,Cols>, BasisOrient, Layout>
     typedef typename traits_type::const_reference	const_reference;
     typedef typename traits_type::mutable_value		mutable_value;
     typedef typename traits_type::immutable_value	immutable_value;
-    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::size_tag		size_tag;
     typedef typename traits_type::basis_tag		basis_tag;
     typedef typename traits_type::layout_tag		layout_tag;
@@ -90,15 +90,7 @@ class matrix<Element, external<Rows,Cols>, BasisOrient, Layout>
 
   public:
 
-    /** The matrix data type, depending upon the layout. */
-    typedef if_t<layout_tag::value == row_major_c
-      , value_type[Rows][Cols]
-      , value_type[Cols][Rows]>				matrix_data_type;
-
-
-  public:
-
-    /* Include methods from writable_type: */
+    /* Include methods from writable_matrix: */
     using writable_type::operator();
 #ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
     using writable_type::operator=;
@@ -122,31 +114,52 @@ class matrix<Element, external<Rows,Cols>, BasisOrient, Layout>
 
   public:
 
-    /** Default construct with a null pointer.
+    /** Compiler-default constructor.
      *
-     * @warning The default constructor is enabled only if the compiler
-     * supports rvalue references from *this.
+     * @note The matrix elements are uninitialized.
      */
-    matrix();
+    matrix() = default;
 
-    /** Construct from the wrapped pointer.
+    /** Compiler-default destructor. */
+    ~matrix() = default;
+
+    /** Compiler-default copy constructor. */
+    matrix(const matrix_type& other) = default;
+
+#ifdef CML_HAS_DEFAULTED_MOVE_CONSTRUCTOR
+    /** Compiler-default move constructor. */
+    matrix(matrix_type&& other) = default;
+#endif
+
+    /** Construct from a readable_matrix. */
+    template<class Sub> matrix(const readable_matrix<Sub>& sub);
+
+    /** Construct from at least 1 value.
      *
-     * @note @c data will be referenced using the assigned matrix layout.
+     * @note This overload is enabled only if all of the arguments are
+     * convertible to value_type.
      */
-    explicit matrix(pointer data);
+    template<class E0, class... Elements,
+      // XXX This could be enable_if_convertible_t, but VC++12 ICEs:
+      typename enable_if_convertible<
+	value_type, E0, Elements...>::type* = nullptr>
+	matrix(const E0& e0, const Elements&... eN)
+	// XXX Should be in matrix/fixed.tpp, but VC++12 has brain-dead
+	// out-of-line template argument matching...
+	{
+	  this->assign_elements(e0, eN...);
+	}
 
-    /** Construct from a wrapped pointer to a 2D array of values.
-     *
-     * @note The dimensions of @c array must match those of the matrix,
-     * taking the matrix layout into account.  For example, the C-array
-     * initializer for a 3x2 external matrix in row-major layout will have
-     * dimensions [3][2], but the initializer for a column-major matrix
-     * will have dimensions [2][3].
-     */
-    matrix(matrix_data_type& array);
+    /** Construct from an array type. */
+    template<class Array, enable_if_array_t<Array>* = nullptr>
+      matrix(const Array& array);
 
-    /** Move constructor. */
-    matrix(matrix_type&& other);
+    /** Construct from a C-array type. */
+    template<class Other, int Rows2, int Cols2>
+      matrix(Other const (&array)[Rows2][Cols2]);
+
+    /** Construct from std::initializer_list. */
+    template<class Other> matrix(std::initializer_list<Other> l);
 
 
   public:
@@ -199,7 +212,7 @@ class matrix<Element, external<Rows,Cols>, BasisOrient, Layout>
 	return this->assign(other);
       }
 
-    template<class Array, enable_if_array_t<Array>* = nullptr>
+    template<class Array, typename enable_if_array_t<Array>* = nullptr>
       inline matrix_type& operator=(const Array& array) {
 	return this->assign(array);
       }
@@ -218,15 +231,37 @@ class matrix<Element, external<Rows,Cols>, BasisOrient, Layout>
 
   protected:
 
-    /** Wrapped pointer. */
-    matrix_data_type*		m_data;
+    /** Row-major access to const or non-const @c M. */
+    template<class Matrix> inline static auto get(
+      Matrix& M, int i, int j, row_major) -> decltype(M.m_data[0][0])
+    {
+      return M.m_data[i][j];
+    }
+
+    /** Column-major access to const or non-const @c M. */
+    template<class Matrix> inline static auto get(
+      Matrix& M, int i, int j, col_major) -> decltype(M.m_data[0][0])
+    {
+      return M.m_data[j][i];
+    }
+
+
+  protected:
+
+    /** The matrix data type, depending upon the layout. */
+    typedef if_t<array_layout == row_major_c
+      , value_type[Rows][Cols]
+      , value_type[Cols][Rows]>				matrix_data_type;
+
+    /** Fixed-size array, based on the layout. */
+    matrix_data_type		m_data;
 };
 
 } // namespace cml
 
-#define __CML_MATRIX_FIXED_EXTERNAL_TPP
-#include <cml/matrix/fixed_external.tpp>
-#undef __CML_MATRIX_FIXED_EXTERNAL_TPP
+#define __CML_MATRIX_FIXED_COMPILED_TPP
+#include <cml/matrix/fixed_compiled.tpp>
+#undef __CML_MATRIX_FIXED_COMPILED_TPP
 
 #endif
 

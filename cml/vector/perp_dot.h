@@ -9,7 +9,7 @@
 #ifndef	cml_vector_perp_dot_h
 #define	cml_vector_perp_dot_h
 
-#include <cml/common/scalar_promotion.h>
+#include <cml/scalar/promotion.h>
 #include <cml/vector/traits.h>
 
 namespace cml {

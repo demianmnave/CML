@@ -47,7 +47,7 @@ template<class T> struct is_matrix {
  * readable_matrix).
  */
 template<class Sub> struct enable_if_matrix
-: std::enable_if<cml::is_matrix<Sub>::value> {};
+: std::enable_if<is_matrix<Sub>::value> {};
 
 /** Convenience alias for enable_if_matrix. */
 template<class Sub> using enable_if_matrix_t

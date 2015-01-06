@@ -14,7 +14,7 @@
 
 namespace cml {
 
-/** Specializable class wrapping traits for cml::matrix<> types. This class
+/** Specializable class wrapping traits for matrix<> types. This class
  * is used to simplify static polymorphism by providing a polymorphic base
  * class the types used by a particular derived class.
  *
@@ -24,7 +24,7 @@ template<class Matrix> struct matrix_traits;
 
 /** traits_of for matrix types. */
 template<class Matrix>
-struct traits_of<Matrix, cml::enable_if_matrix_t<Matrix>> {
+struct traits_of<Matrix, enable_if_matrix_t<Matrix>> {
   typedef matrix_traits<Matrix>				type;
 };
 

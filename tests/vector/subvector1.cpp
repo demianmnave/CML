@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_SUITE(dynamic_external)
 BOOST_AUTO_TEST_CASE(sub1)
 {
   double av1[] = { 1., 2., 3. };
-  cml::externald v1(av1, 3);
+  cml::externalnd v1(av1, 3);
   auto xpr = cml::subvector(v1,0);
   BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, -1);
   BOOST_REQUIRE_EQUAL(xpr.size(), 2);
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(sub1)
 BOOST_AUTO_TEST_CASE(sub2)
 {
   double av1[] = { 1., 2., 3. };
-  cml::externald v1(av1, 3);
+  cml::externalnd v1(av1, 3);
   auto xpr = v1.subvector(0);
   BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, -1);
   BOOST_REQUIRE_EQUAL(xpr.size(), 2);

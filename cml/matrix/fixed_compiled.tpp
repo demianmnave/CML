@@ -4,8 +4,8 @@
 /** @file
  */
 
-#ifndef __CML_MATRIX_FIXED_TPP
-#error "matrix/fixed.tpp not included correctly"
+#ifndef __CML_MATRIX_FIXED_COMPILED_TPP
+#error "matrix/fixed_compiled.tpp not included correctly"
 #endif
 
 namespace cml {
@@ -18,26 +18,9 @@ matrix<E, fixed<R,C>, BO, L>::matrix(const readable_matrix<Sub>& sub)
   this->assign(sub);
 }
 
-#if 0
-// XXX Should be here, but VC++12 has brain-dead out-of-line template
-// argument matching...
 template<class E, int R, int C, typename BO, typename L>
-template<class E0, class... Es,
-  typename cml::enable_if_convertible<
-  typename scalar_traits<E>::value_type, E0, Es...>::type*
-  >
-matrix<E, fixed<R,C>, BO, L>::matrix(
-  const E0& e0, const Es&... eN
-  )
-{
-  this->assign_elements(e0, eN...);
-}
-#endif
-
-template<class E, int R, int C, typename BO, typename L> template<class Array>
-matrix<E, fixed<R,C>, BO, L>::matrix(
-  const Array& array, cml::enable_if_array_t<Array>*
-  )
+template<class Array, enable_if_array_t<Array>*>
+matrix<E, fixed<R,C>, BO, L>::matrix(const Array& array)
 {
   this->assign(array);
 }

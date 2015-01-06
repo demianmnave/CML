@@ -6,14 +6,14 @@
 
 #pragma once
 
-#ifndef	cml_util_vector_promotion_h
-#define	cml_util_vector_promotion_h
+#ifndef	cml_vector_promotion_h
+#define	cml_vector_promotion_h
 
-#include <cml/common/scalar_promotion.h>
 #include <cml/common/promotion.h>
 #include <cml/common/temporary.h>
 #include <cml/storage/resize.h>
 #include <cml/storage/promotion.h>
+#include <cml/scalar/promotion.h>
 #include <cml/vector/type_util.h>
 #include <cml/vector/traits.h>
 #include <cml/vector/vector.h>
@@ -21,11 +21,11 @@
 namespace cml {
 
 /** Determine an appropriate storage type to use when combining vector
- * expressions via a non-product binary operator.
+ * expressions via a pairwise binary operator.
  *
  * @note This can be specialized to accomodate user-defined storage types.
  */
-template<class Element, class Storage1, class Storage2>
+template<class Storage1, class Storage2>
 struct vector_binary_storage_promote
 {
   static_assert(
@@ -33,7 +33,7 @@ struct vector_binary_storage_promote
     is_vector_storage<Storage2>::value,
     "expected vector storage types for binary promotion");
 
-  /* Determine the promoted unbound storage type: */
+  /* Determine the common unbound storage type: */
   typedef storage_promote_t<Storage1, Storage2>		unbound_type;
 
   /* Determine the new vector size: */
@@ -49,9 +49,9 @@ struct vector_binary_storage_promote
 };
 
 /** Convenience alias for vector_binary_storage_promote. */
-template<class Element, class Storage1, class Storage2>
+template<class Storage1, class Storage2>
   using vector_binary_storage_promote_t =
-    typename vector_binary_storage_promote<Element, Storage1, Storage2>::type;
+    typename vector_binary_storage_promote<Storage1, Storage2>::type;
 
 
 /** Deduce a temporary for a vector expression. */
@@ -62,8 +62,8 @@ struct temporary_of<Vector, enable_if_vector_t<Vector>>
 
   /* Propagate the element type of the original vector: */
   typedef vector_traits<vector_type>			traits_type;
-  typedef typename traits_type::storage_type		storage_type;
   typedef typename traits_type::value_type		value_type;
+  typedef typename traits_type::storage_type		storage_type;
 
   /* Need the proxy for the storage type: */
   typedef typename storage_type::proxy_type		proxy_type;
@@ -123,7 +123,6 @@ template<class Sub1, class Sub2> struct vector_promote<
 
   /* Determine the new storage type: */
   typedef vector_binary_storage_promote_t<
-    value_type,
     storage_type_of_t<left_traits>,
     storage_type_of_t<right_traits>>			storage_type;
 

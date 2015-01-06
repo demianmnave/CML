@@ -119,7 +119,7 @@ template<class Sub1, class Sub2> void check_same_linear_size(
  */
 template<class Sub1, class Sub2> void
 check_same_linear_size(const readable_matrix<Sub1>& left, const Sub2& right,
-  cml::enable_if_array_t<Sub2>* = 0);
+  enable_if_array_t<Sub2>* = 0);
 
 /** Front-end for run-time matrix binary expression length checking.  The
  * first expression must derive from readable_matrix, and the second must

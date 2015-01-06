@@ -310,9 +310,9 @@ BOOST_AUTO_TEST_CASE(binary_minus1)
   double av1[] = { 1., 2., 3. };
   double av2[] = { 4., 5., 6. };
   double aw[3];
-  cml::externald v1(av1,3);
-  cml::externald v2(av2,3);
-  cml::externald w(aw,3);
+  cml::externalnd v1(av1,3);
+  cml::externalnd v2(av2,3);
+  cml::externalnd w(aw,3);
   w = v1 - v2;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], -3.);
@@ -325,9 +325,9 @@ BOOST_AUTO_TEST_CASE(binary_plus1)
   double av1[] = { 1., 2., 3. };
   double av2[] = { 4., 5., 6. };
   double aw[3];
-  cml::externald v1(av1,3);
-  cml::externald v2(av2,3);
-  cml::externald w(aw,3);
+  cml::externalnd v1(av1,3);
+  cml::externalnd v2(av2,3);
+  cml::externalnd w(aw,3);
   w = v1 + v2;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 5.);
@@ -341,10 +341,10 @@ BOOST_AUTO_TEST_CASE(multiple_plus1)
   double av2[] = { 4., 5., 6. };
   double av3[] = { 7., 8., 9. };
   double aw[3];
-  cml::externald v1(av1,3);
-  cml::externald v2(av2,3);
-  cml::externald v3(av3,3);
-  cml::externald w(aw,3);
+  cml::externalnd v1(av1,3);
+  cml::externalnd v2(av2,3);
+  cml::externalnd v3(av3,3);
+  cml::externalnd w(aw,3);
   w = v1 + (v2 + v3);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 12.);
@@ -358,10 +358,10 @@ BOOST_AUTO_TEST_CASE(mixed_op1)
   double av2[] = { 4., 5., 6. };
   double av3[] = { 7., 8., 9. };
   double aw[3];
-  cml::externald v1(av1,3);
-  cml::externald v2(av2,3);
-  cml::externald v3(av3,3);
-  cml::externald w(aw,3);
+  cml::externalnd v1(av1,3);
+  cml::externalnd v2(av2,3);
+  cml::externalnd v3(av3,3);
+  cml::externalnd w(aw,3);
   w = v2 - (v1 + v3);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], -4.);
@@ -566,7 +566,7 @@ BOOST_AUTO_TEST_CASE(construct_xpr)
 
   cml::vectord v3 = { 4., 5., 6. };
   double av4[] = { 10., 11., 12. };
-  cml::externald v4(av4, 3);
+  cml::externalnd v4(av4, 3);
 
   cml::vector3d w = v1 + v2 - v3 + v4;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
@@ -583,7 +583,7 @@ BOOST_AUTO_TEST_CASE(assign_xpr)
 
   cml::vectord v3 = { 4., 5., 6. };
   double av4[] = { 10., 11., 12. };
-  cml::externald v4(av4, 3);
+  cml::externalnd v4(av4, 3);
 
   cml::vectord w;
   w = v1 + v2 - v3 + v4;
@@ -601,13 +601,13 @@ BOOST_AUTO_TEST_CASE(assign_temp_xpr)
 
   cml::vectord v3 = { 4., 5., 6. };
   double av4[] = { 10., 11., 12. };
-  cml::externald v4(av4, 3);
+  cml::externalnd v4(av4, 3);
 
   auto xpr = v1 + v2 - v3 + v4;
   BOOST_CHECK_EQUAL(sizeof(xpr), 32U);
 
   double aw[3];
-  cml::externald w(aw, 3);
+  cml::externalnd w(aw, 3);
   w = xpr;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 14.);

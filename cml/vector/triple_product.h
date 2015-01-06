@@ -9,7 +9,7 @@
 #ifndef	cml_vector_triple_product_h
 #define	cml_vector_triple_product_h
 
-#include <cml/common/scalar_promotion.h>
+#include <cml/scalar/promotion.h>
 #include <cml/vector/traits.h>
 
 namespace cml {

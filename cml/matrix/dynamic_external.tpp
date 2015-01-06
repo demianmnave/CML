@@ -25,6 +25,16 @@ template<class E, typename BO, typename L>
 matrix<E, external<>, BO, L>::matrix(pointer data, int rows, int cols)
 : m_data(data), m_rows(rows), m_cols(cols)
 {
+  cml_require(rows >= 0, std::invalid_argument, "rows < 0");
+  cml_require(cols >= 0, std::invalid_argument, "cols < 0");
+}
+
+template<class E, typename BO, typename L>
+matrix<E, external<>, BO, L>::matrix(int rows, int cols, pointer data)
+: m_data(data), m_rows(rows), m_cols(cols)
+{
+  cml_require(rows >= 0, std::invalid_argument, "rows < 0");
+  cml_require(cols >= 0, std::invalid_argument, "cols < 0");
 }
 
 template<class E, typename BO, typename L>

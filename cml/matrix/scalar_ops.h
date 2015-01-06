@@ -10,9 +10,8 @@
 #define	cml_matrix_scalar_ops_h
 
 #include <cml/common/mpl/enable_if_arithmetic.h>
-#include <cml/common/scalar_binary_ops.h>
+#include <cml/scalar/binary_ops.h>
 #include <cml/matrix/scalar_node.h>
-#include <cml/matrix/type_util.h>
 
 namespace cml {
 
@@ -20,8 +19,8 @@ namespace cml {
  * (i.e. derived from readable_matrix<>) and a scalar type.
  */
 template<class Op, class Sub, class Scalar,
-  cml::enable_if_matrix_t<Sub>* = nullptr,
-  cml::enable_if_arithmetic_t<Scalar>* = nullptr
+  enable_if_matrix_t<Sub>* = nullptr,
+  enable_if_arithmetic_t<cml::unqualified_type_t<Scalar>>* = nullptr
 > inline auto
 make_matrix_scalar_node(Sub&& sub, Scalar&& v)
 -> matrix_scalar_node<
@@ -47,8 +46,8 @@ Op
 }
 
 template<class Sub, class Scalar,
-  cml::enable_if_matrix_t<Sub>* = nullptr,
-  cml::enable_if_arithmetic_t<Scalar>* = nullptr
+  enable_if_matrix_t<Sub>* = nullptr,
+  enable_if_arithmetic_t<cml::unqualified_type_t<Scalar>>* = nullptr
 >
 inline auto operator*(Sub&& sub, Scalar&& v)
 -> decltype(make_matrix_scalar_node<binary_multiply_t<Sub,Scalar>>(
@@ -59,8 +58,8 @@ inline auto operator*(Sub&& sub, Scalar&& v)
 }
 
 template<class Scalar, class Sub,
-  cml::enable_if_arithmetic_t<Scalar>* = nullptr,
-  cml::enable_if_matrix_t<Sub>* = nullptr
+  enable_if_arithmetic_t<cml::unqualified_type_t<Scalar>>* = nullptr,
+  enable_if_matrix_t<Sub>* = nullptr
 >
 inline auto operator*(Scalar&& v, Sub&& sub)
 -> decltype(make_matrix_scalar_node<binary_multiply_t<Sub,Scalar>>(
@@ -71,8 +70,8 @@ inline auto operator*(Scalar&& v, Sub&& sub)
 }
 
 template<class Sub, class Scalar,
-  cml::enable_if_matrix_t<Sub>* = nullptr,
-  cml::enable_if_arithmetic_t<Scalar>* = nullptr
+  enable_if_matrix_t<Sub>* = nullptr,
+  enable_if_arithmetic_t<cml::unqualified_type_t<Scalar>>* = nullptr
 >
 inline auto operator/(Sub&& sub, Scalar&& v)
 -> decltype(make_matrix_scalar_node<binary_divide_t<Sub,Scalar>>(

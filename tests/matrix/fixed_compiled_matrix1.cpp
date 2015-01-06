@@ -4,76 +4,27 @@
 /** @file
  */
 
-#include <iostream>
-#include <typeinfo>
-#include <cml/matrix/dynamic.h>
+#include <cml/matrix/fixed.h>
+#include <cml/matrix/types.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE dynamic_matrix1
+#define BOOST_TEST_MODULE fixed_compiled_matrix1
 #include <boost/test/unit_test.hpp>
-
-// For future reference...
-#if 0
-  for(int i = 0; i < M.rows(); ++ i) {
-    std::clog << "... row " << i << std::endl;
-    for(int j = 0; j < M.cols(); ++ j) {
-      std::clog << " = " << M(i,j) << std::endl;
-    }
-  }
-#endif
-
-typedef cml::matrix<double, cml::dynamic<>> matrix1_t;
-typedef cml::matrix<double, cml::dynamic<>,
-	cml::col_basis, cml::col_major> matrix2_t;
 
 BOOST_AUTO_TEST_CASE(typecheck)
 {
   BOOST_CHECK_EQUAL(
-    (std::is_same<matrix1_t::basis_tag,cml::col_basis>::value),
+    (std::is_same<cml::matrix34d::basis_tag,cml::col_basis>::value),
     true);
   BOOST_CHECK_EQUAL(
-    (std::is_same<matrix1_t::layout_tag,cml::row_major>::value),
+    (std::is_same<cml::matrix34d::layout_tag,cml::row_major>::value),
     true);
   BOOST_CHECK_EQUAL(
-    (std::is_same<matrix2_t::basis_tag,cml::col_basis>::value),
+    (std::is_same<cml::matrix34d_c::basis_tag,cml::col_basis>::value),
     true);
   BOOST_CHECK_EQUAL(
-    (std::is_same<matrix2_t::layout_tag,cml::col_major>::value),
+    (std::is_same<cml::matrix34d_c::layout_tag,cml::col_major>::value),
     true);
-}
-
-BOOST_AUTO_TEST_CASE(alloc1)
-{
-  matrix1_t M(3,4);
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-}
-
-BOOST_AUTO_TEST_CASE(alloc2)
-{
-  matrix2_t M(3,4);
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-}
-
-BOOST_AUTO_TEST_CASE(resize1)
-{
-  matrix1_t M(2,2);
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  M.resize(3,4);
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-}
-
-BOOST_AUTO_TEST_CASE(resize2)
-{
-  matrix2_t M(2,2);
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  M.resize(3,4);
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
 }
 
 BOOST_AUTO_TEST_CASE(array_construct1)
@@ -83,7 +34,7 @@ BOOST_AUTO_TEST_CASE(array_construct1)
     5.,  6.,  7.,  8.,
     9.,  0.,  0.,  0.
   };
-  matrix1_t M(3,4, aM);
+  cml::matrix34d M(aM);
 
   BOOST_REQUIRE_EQUAL(M.rows(), 3);
   BOOST_REQUIRE_EQUAL(M.cols(), 4);
@@ -102,7 +53,45 @@ BOOST_AUTO_TEST_CASE(array_construct2)
     5.,  6.,  7.,  8.,
     9.,  0.,  0.,  0.
   };
-  matrix2_t M(3,4, aM);
+  cml::matrix34d_c M(aM);
+
+  BOOST_REQUIRE_EQUAL(M.rows(), 3);
+  BOOST_REQUIRE_EQUAL(M.cols(), 4);
+  BOOST_CHECK_EQUAL(M.data()[0], 1.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(2,0), 9.);
+  BOOST_CHECK_EQUAL(M(2,1), 0.);
+  BOOST_CHECK_EQUAL(M(2,2), 0.);
+  BOOST_CHECK_EQUAL(M(2,3), 0.);
+}
+
+BOOST_AUTO_TEST_CASE(array_temp_construct1)
+{
+  double aM[] = {
+    1.,  2.,  3.,  4.,
+    5.,  6.,  7.,  8.,
+    9.,  0.,  0.,  0.
+  };
+  cml::matrix34d M = aM;
+
+  BOOST_REQUIRE_EQUAL(M.rows(), 3);
+  BOOST_REQUIRE_EQUAL(M.cols(), 4);
+  BOOST_CHECK_EQUAL(M.data()[0], 1.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(2,0), 9.);
+  BOOST_CHECK_EQUAL(M(2,1), 0.);
+  BOOST_CHECK_EQUAL(M(2,2), 0.);
+  BOOST_CHECK_EQUAL(M(2,3), 0.);
+}
+
+BOOST_AUTO_TEST_CASE(array_temp_construct2)
+{
+  double aM[] = {
+    1.,  2.,  3.,  4.,
+    5.,  6.,  7.,  8.,
+    9.,  0.,  0.,  0.
+  };
+  cml::matrix34d_c M = aM;
 
   BOOST_REQUIRE_EQUAL(M.rows(), 3);
   BOOST_REQUIRE_EQUAL(M.cols(), 4);
@@ -121,7 +110,7 @@ BOOST_AUTO_TEST_CASE(array_assign1)
     5.,  6.,  7.,  8.,
     9.,  0.,  0.,  0.
   };
-  matrix1_t M(3,4);
+  cml::matrix34d M;
   M = aM;
 
   BOOST_REQUIRE_EQUAL(M.rows(), 3);
@@ -141,7 +130,7 @@ BOOST_AUTO_TEST_CASE(array_assign2)
     5.,  6.,  7.,  8.,
     9.,  0.,  0.,  0.
   };
-  matrix2_t M(3,4);
+  cml::matrix34d_c M;
   M = aM;
 
   BOOST_REQUIRE_EQUAL(M.rows(), 3);
@@ -161,7 +150,7 @@ BOOST_AUTO_TEST_CASE(array2_construct1)
     { 5.,  6.,  7.,  8. },
     { 9.,  0.,  0.,  0. }
   };
-  matrix1_t M(aM);
+  cml::matrix34d M(aM);
 
   BOOST_REQUIRE_EQUAL(M.rows(), 3);
   BOOST_REQUIRE_EQUAL(M.cols(), 4);
@@ -180,7 +169,7 @@ BOOST_AUTO_TEST_CASE(array2_construct2)
     { 5.,  6.,  7.,  8. },
     { 9.,  0.,  0.,  0. }
   };
-  matrix2_t M(aM);
+  cml::matrix34d_c M(aM);
 
   BOOST_REQUIRE_EQUAL(M.rows(), 3);
   BOOST_REQUIRE_EQUAL(M.cols(), 4);
@@ -199,7 +188,7 @@ BOOST_AUTO_TEST_CASE(array2_temp_construct1)
     { 5.,  6.,  7.,  8. },
     { 9.,  0.,  0.,  0. }
   };
-  matrix1_t M = aM;
+  cml::matrix34d M = aM;
 
   BOOST_REQUIRE_EQUAL(M.rows(), 3);
   BOOST_REQUIRE_EQUAL(M.cols(), 4);
@@ -218,7 +207,7 @@ BOOST_AUTO_TEST_CASE(array2_temp_construct2)
     { 5.,  6.,  7.,  8. },
     { 9.,  0.,  0.,  0. }
   };
-  matrix2_t M = aM;
+  cml::matrix34d_c M = aM;
 
   BOOST_REQUIRE_EQUAL(M.rows(), 3);
   BOOST_REQUIRE_EQUAL(M.cols(), 4);
@@ -237,7 +226,7 @@ BOOST_AUTO_TEST_CASE(array2_assign1)
     { 5.,  6.,  7.,  8. },
     { 9.,  0.,  0.,  0. }
   };
-  matrix1_t M;
+  cml::matrix34d M;
   M = aM;
 
   BOOST_REQUIRE_EQUAL(M.rows(), 3);
@@ -257,7 +246,7 @@ BOOST_AUTO_TEST_CASE(array2_assign2)
     { 5.,  6.,  7.,  8. },
     { 9.,  0.,  0.,  0. }
   };
-  matrix2_t M;
+  cml::matrix34d_c M;
   M = aM;
 
   BOOST_REQUIRE_EQUAL(M.rows(), 3);
@@ -270,10 +259,9 @@ BOOST_AUTO_TEST_CASE(array2_assign2)
   BOOST_CHECK_EQUAL(M(2,3), 0.);
 }
 
-BOOST_AUTO_TEST_CASE(element_construct1)
+BOOST_AUTO_TEST_CASE(elements_construct1)
 {
-  matrix1_t M(
-    3, 4,
+  cml::matrix34d M(
     1.,  2.,  3.,  4.,
     5.,  6.,  7.,  8.,
     9.,  0.,  0.,  0.
@@ -291,8 +279,7 @@ BOOST_AUTO_TEST_CASE(element_construct1)
 
 BOOST_AUTO_TEST_CASE(element_construct2)
 {
-  matrix2_t M(
-    3, 4,
+  cml::matrix34d_c M(
     1.,  2.,  3.,  4.,
     5.,  6.,  7.,  8.,
     9.,  0.,  0.,  0.
@@ -308,9 +295,81 @@ BOOST_AUTO_TEST_CASE(element_construct2)
   BOOST_CHECK_EQUAL(M(2,3), 0.);
 }
 
+BOOST_AUTO_TEST_CASE(list_construct1)
+{
+  cml::matrix34d M {
+    1.,  2.,  3.,  4.,
+    5.,  6.,  7.,  8.,
+    9.,  0.,  0.,  0.
+  };
+
+  BOOST_REQUIRE_EQUAL(M.rows(), 3);
+  BOOST_REQUIRE_EQUAL(M.cols(), 4);
+  BOOST_CHECK_EQUAL(M.data()[0], 1.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(2,0), 9.);
+  BOOST_CHECK_EQUAL(M(2,1), 0.);
+  BOOST_CHECK_EQUAL(M(2,2), 0.);
+  BOOST_CHECK_EQUAL(M(2,3), 0.);
+}
+
+BOOST_AUTO_TEST_CASE(list_construct2)
+{
+  cml::matrix34d_c M {
+    1.,  2.,  3.,  4.,
+    5.,  6.,  7.,  8.,
+    9.,  0.,  0.,  0.
+  };
+
+  BOOST_REQUIRE_EQUAL(M.rows(), 3);
+  BOOST_REQUIRE_EQUAL(M.cols(), 4);
+  BOOST_CHECK_EQUAL(M.data()[0], 1.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(2,0), 9.);
+  BOOST_CHECK_EQUAL(M(2,1), 0.);
+  BOOST_CHECK_EQUAL(M(2,2), 0.);
+  BOOST_CHECK_EQUAL(M(2,3), 0.);
+}
+
+BOOST_AUTO_TEST_CASE(list_temp_construct1)
+{
+  cml::matrix34d M = {
+    1.,  2.,  3.,  4.,
+    5.,  6.,  7.,  8.,
+    9.,  0.,  0.,  0.
+  };
+
+  BOOST_REQUIRE_EQUAL(M.rows(), 3);
+  BOOST_REQUIRE_EQUAL(M.cols(), 4);
+  BOOST_CHECK_EQUAL(M.data()[0], 1.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(2,0), 9.);
+  BOOST_CHECK_EQUAL(M(2,1), 0.);
+  BOOST_CHECK_EQUAL(M(2,2), 0.);
+  BOOST_CHECK_EQUAL(M(2,3), 0.);
+}
+
+BOOST_AUTO_TEST_CASE(list_temp_construct2)
+{
+  cml::matrix34d_c M = {
+    1.,  2.,  3.,  4.,
+    5.,  6.,  7.,  8.,
+    9.,  0.,  0.,  0.
+  };
+
+  BOOST_REQUIRE_EQUAL(M.rows(), 3);
+  BOOST_REQUIRE_EQUAL(M.cols(), 4);
+  BOOST_CHECK_EQUAL(M.data()[0], 1.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(2,0), 9.);
+  BOOST_CHECK_EQUAL(M(2,1), 0.);
+  BOOST_CHECK_EQUAL(M(2,2), 0.);
+  BOOST_CHECK_EQUAL(M(2,3), 0.);
+}
+
 BOOST_AUTO_TEST_CASE(list_assign1)
 {
-  matrix1_t M(3,4);
+  cml::matrix34d M;
   M = {
     1.,  2.,  3.,  4.,
     5.,  6.,  7.,  8.,
@@ -329,7 +388,7 @@ BOOST_AUTO_TEST_CASE(list_assign1)
 
 BOOST_AUTO_TEST_CASE(list_assign2)
 {
-  matrix2_t M(3,4);
+  cml::matrix34d_c M;
   M = {
     1.,  2.,  3.,  4.,
     5.,  6.,  7.,  8.,
@@ -348,7 +407,7 @@ BOOST_AUTO_TEST_CASE(list_assign2)
 
 BOOST_AUTO_TEST_CASE(size_check1)
 {
-  matrix1_t M(3,4);
+  cml::matrix34d M;
   BOOST_REQUIRE_EQUAL(M.rows(), 3);
   BOOST_REQUIRE_EQUAL(M.cols(), 4);
   BOOST_REQUIRE_THROW(
@@ -361,7 +420,7 @@ BOOST_AUTO_TEST_CASE(size_check1)
 
 BOOST_AUTO_TEST_CASE(size_check2)
 {
-  matrix2_t M(3,4);
+  cml::matrix34d_c M;
   BOOST_REQUIRE_EQUAL(M.rows(), 3);
   BOOST_REQUIRE_EQUAL(M.cols(), 4);
   BOOST_REQUIRE_THROW(

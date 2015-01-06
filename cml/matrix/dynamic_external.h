@@ -9,10 +9,7 @@
 #ifndef	cml_matrix_dynamic_external_h
 #define	cml_matrix_dynamic_external_h
 
-#include <cml/common/scalar_traits.h>
-#include <cml/common/dynamic_selector.h>
-#include <cml/common/external_selector.h>
-#include <cml/common/size_tags.h>
+#include <cml/storage/external_selector.h>
 #include <cml/matrix/writable_matrix.h>
 #include <cml/matrix/matrix.h>
 
@@ -22,6 +19,11 @@ template<class Element, typename BasisOrient, typename Layout>
 struct matrix_traits<
   matrix<Element, external<>, BasisOrient, Layout> >
 {
+  /* The basis must be col_basis or row_basis: */
+  static_assert(std::is_same<BasisOrient,row_basis>::value
+    || std::is_same<BasisOrient,col_basis>::value, "invalid basis");
+
+  /* Traits and types for the matrix element: */
   typedef scalar_traits<Element>			element_traits;
   typedef typename element_traits::value_type		value_type;
   typedef typename element_traits::pointer		pointer;
@@ -31,11 +33,31 @@ struct matrix_traits<
   typedef typename element_traits::mutable_value	mutable_value;
   typedef typename element_traits::immutable_value	immutable_value;
 
-  typedef external<>					storage_type;
-  typedef storage_traits<storage_type>			storage_traits;
-  typedef typename storage_traits::size_tag		size_tag;
+  /* The matrix storage type: */
+  typedef rebind_t<external<>, matrix_storage_tag>	storage_type;
+  typedef typename storage_type::size_tag		size_tag;
+  static_assert(std::is_same<size_tag, dynamic_size_tag>::value,
+    "invalid size tag");
+
+  /* Array rows (should be -1): */
+  static const int array_rows = storage_type::array_rows;
+  static_assert(array_rows == -1, "invalid row size");
+
+  /* Array rows (should be -1): */
+  static const int array_cols = storage_type::array_cols;
+  static_assert(array_cols == -1, "invalid column size");
+
+  /* Basis orientation: */
   typedef BasisOrient					basis_tag;
+
+  /* Layout: */
   typedef Layout					layout_tag;
+
+  /** Constant containing the array layout enumeration value. */
+  static const layout_kind array_layout = layout_tag::value;
+
+  /** Constant containing the matrix basis enumeration value. */
+  static const basis_kind matrix_basis = basis_tag::value;
 };
 
 /** Fixed-size matrix. */
@@ -66,6 +88,7 @@ class matrix<Element, external<>, BasisOrient, Layout>
     typedef typename traits_type::const_reference	const_reference;
     typedef typename traits_type::mutable_value		mutable_value;
     typedef typename traits_type::immutable_value	immutable_value;
+    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::size_tag		size_tag;
     typedef typename traits_type::basis_tag		basis_tag;
     typedef typename traits_type::layout_tag		layout_tag;
@@ -83,16 +106,16 @@ class matrix<Element, external<>, BasisOrient, Layout>
   public:
 
     /** Constant containing the number of rows. */
-    static const int array_rows = -1;
+    static const int array_rows = traits_type::array_rows;
 
     /** Constant containing the number of columns. */
-    static const int array_cols = -1;
+    static const int array_cols = traits_type::array_cols;
 
     /** Constant containing the matrix basis enumeration value. */
-    static const basis_kind matrix_basis = basis_tag::value;
+    static const basis_kind matrix_basis = traits_type::matrix_basis;
 
     /** Constant containing the array layout enumeration value. */
-    static const layout_kind array_layout = layout_tag::value;
+    static const layout_kind array_layout = traits_type::array_layout;
 
 
   public:
@@ -107,8 +130,16 @@ class matrix<Element, external<>, BasisOrient, Layout>
     /** Construct from the wrapped pointer and the dimensions.
      *
      * @note @c data will be referenced using the assigned matrix layout.
+     *
+     * @note This is for compatibility with CML1.
      */
     matrix(pointer data, int rows, int cols);
+
+    /** Construct from the wrapped pointer and the dimensions.
+     *
+     * @note @c data will be referenced using the assigned matrix layout.
+     */
+    matrix(int rows, int cols, pointer data);
 
     /** Construct from a wrapped pointer to a 2D array of values with
      * dimensions N1xN2.
@@ -175,7 +206,7 @@ class matrix<Element, external<>, BasisOrient, Layout>
 	return this->assign(other);
       }
 
-    template<class Array, typename cml::enable_if_array_t<Array>* = nullptr>
+    template<class Array, enable_if_array_t<Array>* = nullptr>
       inline matrix_type& operator=(const Array& array) {
 	return this->assign(array);
       }

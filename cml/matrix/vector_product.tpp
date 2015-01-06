@@ -14,12 +14,11 @@
 namespace cml {
 
 template<class Sub1, class Sub2,
-  cml::enable_if_matrix_t<Sub1>*, cml::enable_if_vector_t<Sub2>*
-  >
+  enable_if_matrix_t<Sub1>*, enable_if_vector_t<Sub2>*>
 inline auto operator*(Sub1&& sub1, Sub2&& sub2)
--> matrix_vector_product_temporary_t<Sub1, Sub2>
+-> matrix_inner_product_promote_t<Sub1, Sub2>
 {
-  typedef matrix_vector_product_temporary_t<Sub1, Sub2> result_type;
+  typedef matrix_inner_product_promote_t<Sub1, Sub2> result_type;
   cml::check_same_inner_size(sub1, sub2);
 
   result_type v;
@@ -33,11 +32,11 @@ inline auto operator*(Sub1&& sub1, Sub2&& sub2)
 }
 
 template<class Sub1, class Sub2,
-  cml::enable_if_vector_t<Sub1>*, cml::enable_if_matrix_t<Sub2>*>
+  enable_if_vector_t<Sub1>*, enable_if_matrix_t<Sub2>*>
 inline auto operator*(Sub1&& sub1, Sub2&& sub2)
--> matrix_vector_product_temporary_t<Sub1, Sub2>
+-> matrix_inner_product_promote_t<Sub1, Sub2>
 {
-  typedef matrix_vector_product_temporary_t<Sub1, Sub2> result_type;
+  typedef matrix_inner_product_promote_t<Sub1, Sub2> result_type;
   cml::check_same_inner_size(sub1, sub2);
 
   result_type v;

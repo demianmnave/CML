@@ -6,5 +6,9 @@
 #include <cml/common/constants.h>
 #include <cml/common/scalar_functions.h>
 #include <cml/vector.h>
+#include <cml/matrix.h>
+#include <cml/types.h>
+#include <cml/util/vector_print.h>
+#include <cml/util/matrix_print.h>
 
 #endif

@@ -5,11 +5,9 @@
 
 #pragma once
 
-#ifndef	cml_subvector_node_h
-#define	cml_subvector_node_h
+#ifndef	cml_vector_subvector_node_h
+#define	cml_vector_subvector_node_h
 
-#include <cml/common/scalar_traits.h>
-#include <cml/storage/resize.h>
 #include <cml/vector/readable_vector.h>
 #include <cml/vector/promotion.h>
 
@@ -64,10 +62,10 @@ class subvector_node
     typedef vector_traits<node_type>			traits_type;
     typedef typename traits_type::sub_arg_type		sub_arg_type;
     typedef typename traits_type::sub_type		sub_type;
-    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
+    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::size_tag		size_tag;
 
 

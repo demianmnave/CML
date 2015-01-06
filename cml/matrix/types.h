@@ -9,7 +9,7 @@
 #ifndef	cml_matrix_types_h
 #define	cml_matrix_types_h
 
-#include <cml/common/storage_tags.h>
+#include <cml/storage/selectors.h>
 #include <cml/matrix/matrix.h>
 
 namespace cml {
@@ -21,29 +21,41 @@ namespace cml {
 typedef matrix<int,    fixed<2,2>>    matrix22i;
 typedef matrix<int,    fixed<3,3>>    matrix33i;
 typedef matrix<int,    fixed<4,4>>    matrix44i;
+typedef matrix<int,    fixed<2,3>>    matrix23i;
+typedef matrix<int,    fixed<3,4>>    matrix34i;
 typedef matrix<int,    dynamic<>>     matrixi;
 typedef matrix<int,    external<2,2>> external22i;
 typedef matrix<int,    external<3,3>> external33i;
 typedef matrix<int,    external<4,4>> external44i;
+typedef matrix<int,    external<2,3>> external23i;
+typedef matrix<int,    external<3,4>> external34i;
 typedef matrix<int,    external<>>    externalmni;
 
 typedef matrix<float,  fixed<2,2>>    matrix22f;
 typedef matrix<float,  fixed<3,3>>    matrix33f;
 typedef matrix<float,  fixed<4,4>>    matrix44f;
+typedef matrix<float,  fixed<2,3>>    matrix32f;
+typedef matrix<float,  fixed<3,4>>    matrix34f;
 typedef matrix<float,  dynamic<>>     matrixf;
 typedef matrix<float,  external<2,2>> external22f;
 typedef matrix<float,  external<3,3>> external33f;
 typedef matrix<float,  external<4,4>> external44f;
+typedef matrix<float,  external<2,3>> external23f;
+typedef matrix<float,  external<3,4>> external34f;
 typedef matrix<float,  external<>>    externalmnf;
 
 typedef matrix<double, fixed<2,2>>    matrix22d;
 typedef matrix<double, fixed<3,3>>    matrix33d;
 typedef matrix<double, fixed<4,4>>    matrix44d;
+typedef matrix<double, fixed<2,3>>    matrix23d;
+typedef matrix<double, fixed<3,4>>    matrix34d;
 typedef matrix<double, dynamic<>>     matrixd;
 typedef matrix<double, external<2,2>> external22d;
 typedef matrix<double, external<3,3>> external33d;
 typedef matrix<double, external<4,4>> external44d;
-typedef matrix<double, dynamic<>>     externalmnd;
+typedef matrix<double, external<2,3>> external23d;
+typedef matrix<double, external<3,4>> external34d;
+typedef matrix<double, external<>>    externalmnd;
 
 
 // Row-basis, row-major:

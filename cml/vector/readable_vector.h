@@ -10,9 +10,8 @@
 #define	cml_vector_readable_vector_h
 
 #include <cml/common/compiler.h>
-#include <cml/common/scalar_traits.h>
-#include <cml/vector/traits.h>
 #include <cml/vector/vector.h>
+#include <cml/vector/traits.h>
 
 namespace cml {
 

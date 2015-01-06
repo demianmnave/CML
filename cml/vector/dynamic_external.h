@@ -9,10 +9,9 @@
 #ifndef	cml_vector_dynamic_external_h
 #define	cml_vector_dynamic_external_h
 
-#include <cml/common/scalar_traits.h>
 #include <cml/storage/external_selector.h>
-#include <cml/vector/vector.h>
 #include <cml/vector/writable_vector.h>
+#include <cml/vector/vector.h>
 
 namespace cml {
 
@@ -33,11 +32,11 @@ struct vector_traits< vector<Element, external<>> >
   typedef rebind_t<external<>, vector_storage_tag>	storage_type;
   typedef typename storage_type::size_tag		size_tag;
   static_assert(std::is_same<size_tag, dynamic_size_tag>::value,
-    "invalid dynamic external vector size tag");
+    "invalid size tag");
 
   /* Array size (should be -1): */
   static const int array_size = storage_type::array_size;
-  static_assert(array_size == -1, "invalid dynamic external vector size");
+  static_assert(array_size == -1, "invalid vector size");
 };
 
 /** Runtime-length wrapped array pointer as a vector. */
@@ -50,7 +49,6 @@ class vector<Element, external<>>
     typedef vector<Element, external<>>			vector_type;
     typedef writable_vector<vector_type>		writable_type;
     typedef vector_traits<vector_type>			traits_type;
-    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::pointer		pointer;
@@ -59,6 +57,7 @@ class vector<Element, external<>>
     typedef typename traits_type::const_reference	const_reference;
     typedef typename traits_type::mutable_value		mutable_value;
     typedef typename traits_type::immutable_value	immutable_value;
+    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::size_tag		size_tag;
 
 
@@ -86,8 +85,14 @@ class vector<Element, external<>>
      */
     vector();
 
-    /** Construct from the wrapped pointer and size. */
+    /** Construct from the wrapped pointer and size.
+     *
+     * @note This is for CML1 compatibility.
+     */
     vector(pointer data, int size);
+
+    /** Construct from the wrapped pointer and size. */
+    vector(int size, pointer data);
 
     /** Move constructor. */
     vector(vector_type&& other);

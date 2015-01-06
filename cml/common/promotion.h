@@ -10,6 +10,7 @@
 #define	cml_common_promotion_h
 
 #include <cml/common/mpl/if_t.h>
+#include <cml/common/mpl/is_same_pair.h>
 #include <cml/common/size_tags.h>
 #include <cml/common/basis_tags.h>
 #include <cml/common/layout_tags.h>
@@ -122,21 +123,13 @@ template<class Tag1, class Tag2> struct basis_tag_promote
 
   /* True if possible to promote to row_basis: */
   static const bool is_row_basis
-    =  (std::is_same<Tag1, row_basis>::value
-      && std::is_same<Tag2, row_basis>::value)
-    || (std::is_same<Tag1, row_basis>::value
-      && std::is_same<Tag2, any_basis>::value)
-    || (std::is_same<Tag1, any_basis>::value
-      && std::is_same<Tag2, row_basis>::value);
+    =  is_same_pair<Tag1, Tag2, row_basis>::value
+    || is_same_pair<Tag1, Tag2, row_basis, any_basis>::value;
 
   /* True if possible to promote to col_basis: */
   static const bool is_col_basis
-    =  (std::is_same<Tag1, col_basis>::value
-      && std::is_same<Tag2, col_basis>::value)
-    || (std::is_same<Tag1, col_basis>::value
-      && std::is_same<Tag2, any_basis>::value)
-    || (std::is_same<Tag1, any_basis>::value
-      && std::is_same<Tag2, col_basis>::value);
+    =  is_same_pair<Tag1, Tag2, col_basis>::value
+    || is_same_pair<Tag1, Tag2, col_basis, any_basis>::value;
 
   /* At least one has to be false: */
   static_assert(!is_row_basis || !is_col_basis, "invalid basis promotion");
@@ -169,8 +162,8 @@ template<class T1, class T2> using basis_tag_trait_promote_t
 /** Deduce the default layout tag needed to promote the result of combining
  * two expressions having layout tags @c Tag1 and @c Tag2.  By default:
  *
- * - both row_major: row_major
- * - both col_major: col_major
+ * - both row_major, or row_major with any_major: row_major
+ * - both col_major, or col_major with any_major: col_major
  * - otherwise: any_major
  */
 template<class Tag1, class Tag2> struct layout_tag_promote
@@ -178,11 +171,24 @@ template<class Tag1, class Tag2> struct layout_tag_promote
   static_assert(is_layout_tag<Tag1>::value, "invalid layout tag");
   static_assert(is_layout_tag<Tag2>::value, "invalid layout tag");
 
-  /* True if the tags are the same: */
-  static const bool is_matched = std::is_same<Tag1,Tag2>::value;
+  /* True if possible to promote to row_major: */
+  static const bool is_row_major
+    =  is_same_pair<Tag1, Tag2, row_major>::value
+    || is_same_pair<Tag1, Tag2, row_major, any_major>::value;
 
-  /* Promote to the common layout, or any_basis otherwise: */
-  typedef cml::if_t<is_matched, Tag1, any_basis>	type;
+  /* True if possible to promote to col_major: */
+  static const bool is_col_major
+    =  is_same_pair<Tag1, Tag2, col_major>::value
+    || is_same_pair<Tag1, Tag2, col_major, any_major>::value;
+
+  /* At least one has to be false: */
+  static_assert(!is_row_major || !is_col_major, "invalid layout promotion");
+
+  /* Promote to the selected layout, or any_major otherwise: */
+  typedef
+    cml::if_t< is_row_major, row_major,
+    cml::if_t< is_col_major, col_major,
+    /* else */ any_major>>				type;
 };
 
 /** Convenience alias for layout_tag_promote. */

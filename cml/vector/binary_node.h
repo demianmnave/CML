@@ -9,7 +9,6 @@
 #ifndef	cml_vector_binary_node_h
 #define	cml_vector_binary_node_h
 
-#include <cml/common/scalar_traits.h>
 #include <cml/vector/readable_vector.h>
 #include <cml/vector/promotion.h>
 
@@ -21,7 +20,6 @@ template<class Sub1, class Sub2, class Op> class vector_binary_node;
 template<class Sub1, class Sub2, class Op>
 struct vector_traits< vector_binary_node<Sub1,Sub2,Op> >
 {
-  /* Derive the node types from its subexpressions: */
   typedef vector_binary_node<Sub1,Sub2,Op>		vector_type;
   typedef Sub1						left_arg_type;
   typedef Sub2						right_arg_type;
@@ -37,7 +35,6 @@ struct vector_traits< vector_binary_node<Sub1,Sub2,Op> >
    * types of its subexpressions:
    */
   typedef vector_binary_storage_promote_t<
-    value_type,
     storage_type_of_t<left_traits>,
     storage_type_of_t<right_traits>>			storage_type;
 
@@ -61,10 +58,10 @@ class vector_binary_node
     typedef typename traits_type::right_arg_type	right_arg_type;
     typedef typename traits_type::left_type		left_type;
     typedef typename traits_type::right_type		right_type;
-    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
+    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::size_tag		size_tag;
 
 

@@ -4,40 +4,26 @@
 /** @file
  */
 
-#include <typeinfo>
 #include <cml/matrix/dynamic_external.h>
+#include <cml/matrix/types.h>
 
 /* Testing headers: */
 #define BOOST_TEST_MODULE dynamic_external_matrix1
 #include <boost/test/unit_test.hpp>
 
-// For future reference...
-#if 0
-  for(int i = 0; i < M.rows(); ++ i) {
-    std::clog << "... row " << i << std::endl;
-    for(int j = 0; j < M.cols(); ++ j) {
-      std::clog << " = " << M(i,j) << std::endl;
-    }
-  }
-#endif
-
-typedef cml::matrix<double, cml::external<>> matrix1_t;
-typedef cml::matrix<double, cml::external<>,
-	cml::col_basis, cml::col_major> matrix2_t;
-
 BOOST_AUTO_TEST_CASE(typecheck)
 {
   BOOST_CHECK_EQUAL(
-    (std::is_same<matrix1_t::basis_tag,cml::col_basis>::value),
+    (std::is_same<cml::externalmnd::basis_tag,cml::col_basis>::value),
     true);
   BOOST_CHECK_EQUAL(
-    (std::is_same<matrix1_t::layout_tag,cml::row_major>::value),
+    (std::is_same<cml::externalmnd::layout_tag,cml::row_major>::value),
     true);
   BOOST_CHECK_EQUAL(
-    (std::is_same<matrix2_t::basis_tag,cml::col_basis>::value),
+    (std::is_same<cml::externalmnd_c::basis_tag,cml::col_basis>::value),
     true);
   BOOST_CHECK_EQUAL(
-    (std::is_same<matrix2_t::layout_tag,cml::col_major>::value),
+    (std::is_same<cml::externalmnd_c::layout_tag,cml::col_major>::value),
     true);
 }
 
@@ -48,7 +34,7 @@ BOOST_AUTO_TEST_CASE(array_construct1)
     5.,  6.,  7.,  8.,
     9.,  0.,  0.,  0.
   };
-  matrix1_t M(data, 3,4);
+  cml::externalmnd M(data, 3,4);
   // Note: external<> refers to the wrapped data in the layout assigned to
   // the matrix.
 
@@ -71,7 +57,7 @@ BOOST_AUTO_TEST_CASE(array_construct2)
     3., 7., 0.,
     4., 8., 0.
   };
-  matrix2_t M(data, 3,4);
+  cml::externalmnd_c M(data, 3,4);
   // Note: external<> refers to the wrapped data in the layout assigned to
   // the matrix.
 
@@ -94,7 +80,7 @@ BOOST_AUTO_TEST_CASE(array_assign1)
     5.,  6.,  7.,  8.,
     9.,  0.,  0.,  0.
   };
-  matrix1_t M(data, 3,4);
+  cml::externalmnd_c M(data, 3,4);
   M = aM;
   // Note: external<> copies arrays using row-major layout.
 
@@ -117,7 +103,7 @@ BOOST_AUTO_TEST_CASE(array_assign2)
     5.,  6.,  7.,  8.,
     9.,  0.,  0.,  0.
   };
-  matrix2_t M(data, 3,4);
+  cml::externalmnd_c M(data, 3,4);
   M = aM;
   // Note: external<> copies arrays using row-major layout.
 
@@ -139,7 +125,7 @@ BOOST_AUTO_TEST_CASE(array2_construct1)
     { 5.,  6.,  7.,  8. },
     { 9.,  0.,  0.,  0. }
   };
-  matrix1_t M(data);
+  cml::externalmnd M(data);
   // Note: external<> refers to the wrapped data in the layout assigned to
   // the matrix.
 
@@ -162,7 +148,7 @@ BOOST_AUTO_TEST_CASE(array2_construct2)
     { 3., 7., 0. },
     { 4., 8., 0. }
   };
-  matrix2_t M(data);
+  cml::externalmnd_c M(data);
   // Note: external<> refers to the wrapped data in the layout assigned to
   // the matrix.
 
@@ -185,7 +171,7 @@ BOOST_AUTO_TEST_CASE(array2_assign1)
     { 5.,  6.,  7.,  8. },
     { 9.,  0.,  0.,  0. }
   };
-  matrix1_t M(data, 3,4);
+  cml::externalmnd_c M(data, 3,4);
   M = aM;
   // Note: external<> copies arrays using row-major layout.
 
@@ -208,7 +194,7 @@ BOOST_AUTO_TEST_CASE(array2_assign2)
     { 5.,  6.,  7.,  8. },
     { 9.,  0.,  0.,  0. }
   };
-  matrix2_t M(data, 3,4);
+  cml::externalmnd_c M(data, 3,4);
   M = aM;
   // Note: external<> copies arrays using row-major layout.
 
@@ -226,7 +212,7 @@ BOOST_AUTO_TEST_CASE(array2_assign2)
 BOOST_AUTO_TEST_CASE(list_assign1)
 {
   double data[3*4];
-  matrix1_t M(data, 3,4);
+  cml::externalmnd_c M(data, 3,4);
   M = {
     1.,  2.,  3.,  4.,
     5.,  6.,  7.,  8.,
@@ -248,7 +234,7 @@ BOOST_AUTO_TEST_CASE(list_assign1)
 BOOST_AUTO_TEST_CASE(list_assign2)
 {
   double data[3*4];
-  matrix2_t M(data, 3,4);
+  cml::externalmnd_c M(data, 3,4);
   M = {
     1.,  2.,  3.,  4.,
     5.,  6.,  7.,  8.,
@@ -270,7 +256,7 @@ BOOST_AUTO_TEST_CASE(list_assign2)
 BOOST_AUTO_TEST_CASE(size_check1)
 {
   double data[3*4];
-  matrix1_t M(data, 3,4);
+  cml::externalmnd_c M(data, 3,4);
   BOOST_REQUIRE_EQUAL(M.rows(), 3);
   BOOST_REQUIRE_EQUAL(M.cols(), 4);
   BOOST_REQUIRE_EQUAL(M.data(), &data[0]);
@@ -285,7 +271,7 @@ BOOST_AUTO_TEST_CASE(size_check1)
 BOOST_AUTO_TEST_CASE(size_check2)
 {
   double data[3*4];
-  matrix2_t M(data, 3,4);
+  cml::externalmnd_c M(data, 3,4);
   BOOST_REQUIRE_EQUAL(M.rows(), 3);
   BOOST_REQUIRE_EQUAL(M.cols(), 4);
   BOOST_REQUIRE_EQUAL(M.data(), &data[0]);

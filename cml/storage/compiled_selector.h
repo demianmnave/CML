@@ -68,7 +68,7 @@ struct compiled<Size, -1, vector_storage_tag>
   };
 };
 
-/** Specialized selector for compiled matrices. */
+/** Specialized selector for fixed-size compiled matrices. */
 template<int Size1, int Size2>
 struct compiled<Size1, Size2, matrix_storage_tag>
 {

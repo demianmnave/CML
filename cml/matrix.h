@@ -12,13 +12,11 @@
 #include <cml/matrix/fixed.h>
 #include <cml/matrix/external.h>
 #include <cml/matrix/dynamic.h>
-//#include <cml/matrix/comparison.h>
 #include <cml/matrix/unary_ops.h>
 #include <cml/matrix/binary_ops.h>
 #include <cml/matrix/scalar_ops.h>
-//#include <cml/matrix/products.h>
-//#include <cml/matrix/submatrix.h>
-//#include <cml/matrix/functions.h>
+#include <cml/matrix/vector_product.h>
+#include <cml/matrix/matrix_product.h>
 
 #endif
 

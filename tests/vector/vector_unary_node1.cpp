@@ -158,10 +158,10 @@ BOOST_AUTO_TEST_SUITE(dynamic_external)
 BOOST_AUTO_TEST_CASE(unary_minus1)
 {
   double av[3] = { 1., 2., 3. };
-  cml::externald v(av,3);
+  cml::externalnd v(av,3);
 
   double aw[3];
-  cml::externald w(aw,3);
+  cml::externalnd w(aw,3);
 
   w = - v;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
@@ -171,10 +171,10 @@ BOOST_AUTO_TEST_CASE(unary_minus1)
 BOOST_AUTO_TEST_CASE(unary_plus1)
 {
   double av[3] = { 1., 2., 3. };
-  cml::externald v(av,3);
+  cml::externalnd v(av,3);
 
   double aw[3];
-  cml::externald w(aw,3);
+  cml::externalnd w(aw,3);
 
   w = + v;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
@@ -184,11 +184,11 @@ BOOST_AUTO_TEST_CASE(unary_plus1)
 BOOST_AUTO_TEST_CASE(double_negate1)
 {
   double av[3] = { 1., 2., 3. };
-  cml::externald v(av,3);
+  cml::externalnd v(av,3);
   BOOST_REQUIRE_EQUAL(v.size(), 3);
 
   double aw[3];
-  cml::externald w(aw,3);
+  cml::externalnd w(aw,3);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
 
   auto xpr = - (-v);

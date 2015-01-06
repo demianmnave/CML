@@ -11,7 +11,6 @@
 
 #include <cml/common/mpl/enable_if_convertible.h>
 #include <cml/common/mpl/rebind.h>
-#include <cml/common/scalar_traits.h>
 #include <cml/storage/allocated_selector.h>
 #include <cml/vector/writable_vector.h>
 #include <cml/vector/vector.h>
@@ -36,11 +35,11 @@ struct vector_traits< vector<Element, dynamic<Allocator>> >
     allocated<Allocator>, vector_storage_tag>		storage_type;
   typedef typename storage_type::size_tag		size_tag;
   static_assert(std::is_same<size_tag, dynamic_size_tag>::value,
-    "invalid dynamic vector size tag");
+    "invalid size tag");
 
   /* Array size (should be -1): */
   static const int array_size = storage_type::array_size;
-  static_assert(array_size == -1, "invalid dynamic vector size");
+  static_assert(array_size == -1, "invalid vector size");
 };
 
 /** Resizable vector. */
@@ -63,7 +62,6 @@ class vector<Element, dynamic<Allocator>>
     typedef vector<Element, dynamic<Allocator>>		vector_type;
     typedef writable_vector<vector_type>		writable_type;
     typedef vector_traits<vector_type>			traits_type;
-    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::pointer		pointer;
@@ -72,6 +70,7 @@ class vector<Element, dynamic<Allocator>>
     typedef typename traits_type::const_reference	const_reference;
     typedef typename traits_type::mutable_value		mutable_value;
     typedef typename traits_type::immutable_value	immutable_value;
+    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::size_tag		size_tag;
 
 
@@ -124,16 +123,16 @@ class vector<Element, dynamic<Allocator>>
       typename enable_if_convertible<
 	value_type, E0, Elements...>::type* = nullptr>
 	vector(const E0& e0, const Elements&... eN)
-	// XXX Should be in vector/dynamic.tpp, but VC++12 has brain-dead
-	// out-of-line template argument matching...
+	// XXX Should be in vector/dynamic_allocated.tpp, but VC++12 has
+	// brain-dead out-of-line template argument matching...
 	: m_data(0), m_size(0)
 	{
 	  this->assign_elements(e0, eN...);
 	}
 
     /** Construct from an array type. */
-    template<class Array> vector(
-      const Array& array, enable_if_array_t<Array>* = 0);
+    template<class Array, enable_if_array_t<Array>* = nullptr>
+      vector(const Array& array);
 
     /** Construct from std::initializer_list. */
     template<class Other> vector(std::initializer_list<Other> l);

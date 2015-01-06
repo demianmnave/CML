@@ -18,21 +18,9 @@ vector<E, fixed<S>>::vector(const readable_vector<Sub>& sub)
   this->assign(sub);
 }
 
-#if 0
-// XXX Should be here, but VC++12 has brain-dead out-of-line template
-// argument matching...
 template<class E, int S>
-template<class E0, class... Es, enable_if_convertible<
-  typename scalar_traits<E>::value_type, E0, Es...>::type*
->
-vector<E, fixed<S>>::vector(const E0& e0, const Es&... eN)
-{
-  this->assign_elements(e0, eN...);
-}
-#endif
-
-template<class E, int S> template<class Array>
-vector<E, fixed<S>>::vector(const Array& array, enable_if_array_t<Array>*)
+template<class Array, enable_if_array_t<Array>*>
+vector<E, fixed<S>>::vector(const Array& array)
 {
   this->assign(array);
 }

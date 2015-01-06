@@ -6,11 +6,11 @@
 
 #pragma once
 
-#ifndef	cml_common_scalar_unary_ops_h
-#define	cml_common_scalar_unary_ops_h
+#ifndef	cml_scalar_unary_ops_h
+#define	cml_scalar_unary_ops_h
 
-#include <cml/common/scalar_traits.h>
 #include <cml/common/type_util.h>
+#include <cml/scalar/traits.h>
 
 namespace cml {
 namespace op {

@@ -6,12 +6,12 @@
 
 #pragma once
 
-#ifndef	cml_common_scalar_traits_h
-#define	cml_common_scalar_traits_h
+#ifndef	cml_scalar_traits_h
+#define	cml_scalar_traits_h
 
 #include <cmath>
-#include <cml/common/traits.h>
 #include <cml/common/mpl/enable_if_arithmetic.h>
+#include <cml/common/traits.h>
 
 namespace cml {
 

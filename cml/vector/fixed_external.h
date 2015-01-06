@@ -9,10 +9,9 @@
 #ifndef	cml_vector_fixed_external_h
 #define	cml_vector_fixed_external_h
 
-#include <cml/common/scalar_traits.h>
 #include <cml/storage/external_selector.h>
-#include <cml/vector/vector.h>
 #include <cml/vector/writable_vector.h>
+#include <cml/vector/vector.h>
 
 namespace cml {
 
@@ -33,11 +32,11 @@ struct vector_traits< vector<Element, external<Size>> >
   typedef rebind_t<external<Size>, vector_storage_tag>	storage_type;
   typedef typename storage_type::size_tag		size_tag;
   static_assert(std::is_same<size_tag, fixed_size_tag>::value,
-    "invalid fixed external vector size tag");
+    "invalid size tag");
 
   /* Array size (should be positive): */
   static const int array_size = storage_type::array_size;
-  static_assert(array_size > 0, "invalid fixed external vector size");
+  static_assert(array_size > 0, "invalid vector size");
 };
 
 /** Fixed-length wrapped array pointer as a vector. */
@@ -50,7 +49,6 @@ class vector<Element, external<Size>>
     typedef vector<Element, external<Size>>		vector_type;
     typedef writable_vector<vector_type>		writable_type;
     typedef vector_traits<vector_type>			traits_type;
-    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::pointer		pointer;
@@ -59,6 +57,7 @@ class vector<Element, external<Size>>
     typedef typename traits_type::const_reference	const_reference;
     typedef typename traits_type::mutable_value		mutable_value;
     typedef typename traits_type::immutable_value	immutable_value;
+    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::size_tag		size_tag;
 
 

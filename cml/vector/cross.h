@@ -9,11 +9,7 @@
 #ifndef	cml_vector_cross_h
 #define	cml_vector_cross_h
 
-#include <cml/common/scalar_promotion.h>
-#include <cml/storage/resize.h>
-#include <cml/storage/promotion.h>
-#include <cml/vector/traits.h>
-#include <cml/vector/vector.h>
+#include <cml/vector/promotion.h>
 
 namespace cml {
 

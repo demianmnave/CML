@@ -9,9 +9,7 @@
 #ifndef	cml_matrix_unary_node_h
 #define	cml_matrix_unary_node_h
 
-#include <cml/common/mpl/if_t.h>
-#include <cml/common/type_util.h>
-#include <cml/common/scalar_traits.h>
+#include <cml/scalar/traits.h>
 #include <cml/matrix/readable_matrix.h>
 
 namespace cml {
@@ -22,15 +20,29 @@ template<class Sub, class Op> class matrix_unary_node;
 template<class Sub, class Op>
 struct matrix_traits< matrix_unary_node<Sub,Op> >
 {
+  typedef matrix_unary_node<Sub,Op>			matrix_type;
   typedef Sub						sub_arg_type;
   typedef cml::unqualified_type_t<Sub>			sub_type;
   typedef matrix_traits<sub_type>			sub_traits;
   typedef scalar_traits<typename Op::result_type>	element_traits;
   typedef typename element_traits::value_type		value_type;
   typedef value_type					immutable_value;
+  typedef typename sub_traits::storage_type		storage_type;
   typedef typename sub_traits::size_tag			size_tag;
   typedef typename sub_traits::basis_tag		basis_tag;
   typedef typename sub_traits::layout_tag		layout_tag;
+
+  /* Propagate the rows from the subexpression: */
+  static const int array_rows = sub_traits::array_rows;
+
+  /* Propagate the columns from the subexpression: */
+  static const int array_cols = sub_traits::array_cols;
+
+  /** Constant containing the matrix basis enumeration value. */
+  static const basis_kind matrix_basis = basis_tag::value;
+
+  /** Constant containing the array layout enumeration value. */
+  static const layout_kind array_layout = layout_tag::value;
 };
 
 /** Represents a unary matrix operation in an expression tree. */
@@ -47,6 +59,7 @@ class matrix_unary_node
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
+    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::size_tag		size_tag;
     typedef typename traits_type::basis_tag		basis_tag;
     typedef typename traits_type::layout_tag		layout_tag;
@@ -54,11 +67,17 @@ class matrix_unary_node
 
   public:
 
-    /** Take the array row size from the subexpression. */
-    static const int array_rows = sub_type::array_rows;
+    /** Constant containing the number of rows. */
+    static const int array_rows = traits_type::array_rows;
 
-    /** Take the array column size from the subexpression. */
-    static const int array_cols = sub_type::array_cols;
+    /** Constant containing the number of columns. */
+    static const int array_cols = traits_type::array_cols;
+
+    /** Constant containing the matrix basis enumeration value. */
+    static const basis_kind matrix_basis = traits_type::matrix_basis;
+
+    /** Constant containing the array layout enumeration value. */
+    static const layout_kind array_layout = traits_type::array_layout;
 
 
   public:

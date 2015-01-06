@@ -31,6 +31,13 @@ vector<E, external<>>::vector(pointer data, int size)
 }
 
 template<class E>
+vector<E, external<>>::vector(int size, pointer data)
+: m_data(data), m_size(size)
+{
+  cml_require(size >= 0, std::invalid_argument, "size < 0");
+}
+
+template<class E>
 vector<E, external<>>::vector(vector_type&& other)
 {
   this->operator=(std::move(other));

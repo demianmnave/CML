@@ -9,7 +9,7 @@
 #ifndef	cml_vector_types_h
 #define	cml_vector_types_h
 
-#include <cml/common/storage_tags.h>
+#include <cml/storage/selectors.h>
 #include <cml/vector/vector.h>
 
 namespace cml {
@@ -24,7 +24,7 @@ typedef vector<int,    dynamic<>>    vectori;
 typedef vector<int,    external<2>>  external2i;
 typedef vector<int,    external<3>>  external3i;
 typedef vector<int,    external<4>>  external4i;
-typedef vector<int,    external<>>   externali;
+typedef vector<int,    external<>>   externalni;
 
 typedef vector<float,  fixed<2>>     vector2f;
 typedef vector<float,  fixed<3>>     vector3f;
@@ -33,7 +33,7 @@ typedef vector<float,  dynamic<>>    vectorf;
 typedef vector<float,  external<2>>  external2f;
 typedef vector<float,  external<3>>  external3f;
 typedef vector<float,  external<4>>  external4f;
-typedef vector<float,  external<>>   externalf;
+typedef vector<float,  external<>>   externalnf;
 
 typedef vector<double, fixed<2>>     vector2d;
 typedef vector<double, fixed<3>>     vector3d;
@@ -42,7 +42,7 @@ typedef vector<double, dynamic<>>    vectord;
 typedef vector<double, external<2>>  external2d;
 typedef vector<double, external<3>>  external3d;
 typedef vector<double, external<4>>  external4d;
-typedef vector<double, external<>>   externald;
+typedef vector<double, external<>>   externalnd;
 
 /*@}*/
 

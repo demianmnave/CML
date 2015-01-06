@@ -316,16 +316,14 @@ writable_matrix<DT>::operator=(const readable_matrix<ODT>& other) &&
 }
 #endif
 
-template<class DT>
-template<class Array, typename cml::enable_if_array_t<Array>*> DT&
+template<class DT> template<class Array, enable_if_array_t<Array>*> DT&
 writable_matrix<DT>::operator=(const Array& array) __CML_REF
 {
   return this->assign(array);
 }
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-template<class DT>
-template<class Array, typename cml::enable_if_array_t<Array>*> DT&&
+template<class DT> template<class Array, enable_if_array_t<Array>*> DT&&
 writable_matrix<DT>::operator=(const Array& array) &&
 {
   this->operator=(array);
@@ -437,13 +435,12 @@ writable_matrix<DT>::assign(const readable_matrix<ODT>& other)
   return this->actual();
 }
 
-template<class DT>
-template<class Array, typename cml::enable_if_array_t<Array>*> DT&
+template<class DT> template<class Array, enable_if_array_t<Array>*> DT&
 writable_matrix<DT>::assign(const Array& array)
 {
   cml::check_same_linear_size(*this, array);
   int cols = this->cols();
-  for(int i = 0; i < cml::array_size_of_c<Array>::value; ++ i) {
+  for(int i = 0; i < array_size_of_c<Array>::value; ++ i) {
     this->set(i/cols, i%cols, array[i]);
   }
   return this->actual();

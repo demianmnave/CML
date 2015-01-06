@@ -6,11 +6,11 @@
 
 #pragma once
 
-#ifndef	cml_common_scalar_promotion_h
-#define	cml_common_scalar_promotion_h
+#ifndef	cml_scalar_promotion_h
+#define	cml_scalar_promotion_h
 
-#include <cml/common/traits.h>
 #include <cml/common/type_util.h>
+#include <cml/scalar/traits.h>
 
 namespace cml {
 

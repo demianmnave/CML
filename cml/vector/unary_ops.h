@@ -9,9 +9,8 @@
 #ifndef	cml_vector_unary_ops_h
 #define	cml_vector_unary_ops_h
 
-#include <cml/common/scalar_unary_ops.h>
+#include <cml/scalar/unary_ops.h>
 #include <cml/vector/unary_node.h>
-#include <cml/vector/type_util.h>
 
 namespace cml {
 

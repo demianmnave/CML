@@ -6,11 +6,11 @@
 
 #pragma once
 
-#ifndef	cml_common_scalar_binary_ops_h
-#define	cml_common_scalar_binary_ops_h
+#ifndef	cml_scalar_binary_ops_h
+#define	cml_scalar_binary_ops_h
 
-#include <cml/common/scalar_traits.h>
-#include <cml/common/scalar_promotion.h>
+#include <cml/scalar/traits.h>
+#include <cml/scalar/promotion.h>
 
 namespace cml {
 namespace op {

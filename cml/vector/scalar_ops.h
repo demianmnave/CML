@@ -10,9 +10,8 @@
 #define	cml_vector_scalar_ops_h
 
 #include <cml/common/mpl/enable_if_arithmetic.h>
-#include <cml/common/scalar_binary_ops.h>
+#include <cml/scalar/binary_ops.h>
 #include <cml/vector/scalar_node.h>
-#include <cml/vector/type_util.h>
 
 namespace cml {
 

@@ -9,7 +9,6 @@
 #ifndef	cml_vector_unary_node_h
 #define	cml_vector_unary_node_h
 
-#include <cml/common/scalar_traits.h>
 #include <cml/vector/readable_vector.h>
 
 namespace cml {
@@ -20,7 +19,6 @@ template<class Sub, class Op> class vector_unary_node;
 template<class Sub, class Op>
 struct vector_traits< vector_unary_node<Sub,Op> >
 {
-  /* Figure out the basic type of Sub: */
   typedef vector_unary_node<Sub,Op>			vector_type;
   typedef Sub						sub_arg_type;
   typedef cml::unqualified_type_t<Sub>			sub_type;
@@ -46,10 +44,10 @@ class vector_unary_node
     typedef vector_traits<node_type>			traits_type;
     typedef typename traits_type::sub_arg_type		sub_arg_type;
     typedef typename traits_type::sub_type		sub_type;
-    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
+    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::size_tag		size_tag;
 
 

@@ -9,9 +9,7 @@
 #ifndef	cml_matrix_scalar_node_h
 #define	cml_matrix_scalar_node_h
 
-#include <cml/common/mpl/if_t.h>
-#include <cml/common/type_util.h>
-#include <cml/common/scalar_traits.h>
+#include <cml/scalar/traits.h>
 #include <cml/matrix/readable_matrix.h>
 
 namespace cml {
@@ -22,17 +20,31 @@ template<class Sub, class Scalar, class Op> class matrix_scalar_node;
 template<class Sub, class Scalar, class Op>
 struct matrix_traits< matrix_scalar_node<Sub,Scalar,Op> >
 {
+  typedef matrix_scalar_node<Sub,Scalar,Op>		matrix_type;
   typedef Sub						left_arg_type;
   typedef Scalar 					right_arg_type;
   typedef cml::unqualified_type_t<Sub>			left_type;
-  typedef matrix_traits<left_type>			left_traits;
   typedef cml::unqualified_type_t<Scalar>		right_type;
+  typedef matrix_traits<left_type>			left_traits;
   typedef scalar_traits<typename Op::result_type>	element_traits;
   typedef typename element_traits::value_type		value_type;
   typedef value_type					immutable_value;
+  typedef typename left_traits::storage_type		storage_type;
   typedef typename left_traits::size_tag		size_tag;
   typedef typename left_traits::basis_tag		basis_tag;
   typedef typename left_traits::layout_tag		layout_tag;
+
+  /* Propagate the rows from the subexpression: */
+  static const int array_rows = left_traits::array_rows;
+
+  /* Propagate the columns from the subexpression: */
+  static const int array_cols = left_traits::array_cols;
+
+  /** Constant containing the matrix basis enumeration value. */
+  static const basis_kind matrix_basis = basis_tag::value;
+
+  /** Constant containing the array layout enumeration value. */
+  static const layout_kind array_layout = layout_tag::value;
 };
 
 /** Represents a binary matrix operation, where one operand is a scalar
@@ -53,7 +65,10 @@ class matrix_scalar_node
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
+    typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::size_tag		size_tag;
+    typedef typename traits_type::basis_tag		basis_tag;
+    typedef typename traits_type::layout_tag		layout_tag;
 
 
   public:
@@ -63,6 +78,12 @@ class matrix_scalar_node
 
     /** Take the array column size from the subexpression. */
     static const int array_cols = left_type::array_cols;
+
+    /** Constant containing the matrix basis enumeration value. */
+    static const basis_kind matrix_basis = traits_type::matrix_basis;
+
+    /** Constant containing the array layout enumeration value. */
+    static const layout_kind array_layout = traits_type::array_layout;
 
 
   public:

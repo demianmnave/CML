@@ -238,8 +238,8 @@ BOOST_AUTO_TEST_CASE(scalar_multiply1)
 {
   double av1[] = { 1., 2., 3. };
   double aw[3];
-  cml::externald v1(av1,3);
-  cml::externald w(aw,3);
+  cml::externalnd v1(av1,3);
+  cml::externalnd w(aw,3);
   w = 2.*v1;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 2.);
@@ -251,8 +251,8 @@ BOOST_AUTO_TEST_CASE(scalar_divide1)
 {
   double av1[] = { 2., 4., 6. };
   double aw[3];
-  cml::externald v1(av1,3);
-  cml::externald w(aw,3);
+  cml::externalnd v1(av1,3);
+  cml::externalnd w(aw,3);
   w = v1/2.;
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 1.);
@@ -263,7 +263,7 @@ BOOST_AUTO_TEST_CASE(scalar_divide1)
 BOOST_AUTO_TEST_CASE(scalar_multiply_assign1)
 {
   double av1[] = { 1., 2., 3. };
-  cml::externald v1(av1,3);
+  cml::externalnd v1(av1,3);
   v1 *= 2;
   BOOST_REQUIRE_EQUAL(v1.size(), 3);
   BOOST_CHECK_EQUAL(v1[0], 2.);
@@ -275,8 +275,8 @@ BOOST_AUTO_TEST_CASE(scalar_multiply_assign2)
 {
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   double av1[] = { 1., 2., 3. };
-  cml::externald w;
-  w = (cml::externald(av1,3) *= 2);
+  cml::externalnd w;
+  w = (cml::externalnd(av1,3) *= 2);
   BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w.data(), &av1[0]);
   BOOST_CHECK_EQUAL(w[0], 2.);

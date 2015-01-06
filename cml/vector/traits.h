@@ -9,7 +9,7 @@
 #ifndef	cml_vector_traits_h
 #define	cml_vector_traits_h
 
-#include <cml/common/traits.h>
+#include <cml/scalar/traits.h>
 #include <cml/vector/type_util.h>
 
 namespace cml {

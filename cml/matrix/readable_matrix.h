@@ -47,7 +47,6 @@ class readable_matrix
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
-    typedef typename traits_type::size_tag		size_tag;
     typedef typename traits_type::basis_tag		basis_tag;
     typedef typename traits_type::layout_tag		layout_tag;
 

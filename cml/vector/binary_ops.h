@@ -9,9 +9,8 @@
 #ifndef	cml_vector_binary_ops_h
 #define	cml_vector_binary_ops_h
 
-#include <cml/common/scalar_binary_ops.h>
+#include <cml/scalar/binary_ops.h>
 #include <cml/vector/binary_node.h>
-#include <cml/vector/type_util.h>
 
 namespace cml {
 

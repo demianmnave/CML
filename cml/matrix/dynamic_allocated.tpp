@@ -4,8 +4,13 @@
 /** @file
  */
 
-#ifndef __CML_MATRIX_DYNAMIC_TPP
-#error "matrix/dynamic.tpp not included correctly"
+#pragma once
+
+#ifndef	cml_matrix_dynamic_allocated_tpp
+#define	cml_matrix_dynamic_allocated_tpp
+
+#ifndef __CML_MATRIX_DYNAMIC_ALLOCATED_TPP
+#error "matrix/dynamic_allocated.tpp not included correctly"
 #endif
 
 #include <cml/common/exception.h>
@@ -48,25 +53,10 @@ matrix<E, dynamic<A>, BO, L>::matrix(const readable_matrix<Sub>& sub)
   this->assign(sub);
 }
 
-#if 0
 template<class E, class A, typename BO, typename L>
-template<class E0, class... Es,
-  typename cml::enable_if_convertible<
-  typename scalar_traits<E>::value_type, E0, Es...>::type*
-  >
+template<class Array, enable_if_array_t<Array>*>
 matrix<E, dynamic<A>, BO, L>::matrix(
-  int rows, int cols, const E0& e0, const Es&... eN
-  )
-: m_data(0), m_rows(0), m_cols(0)
-{
-  this->resize_fast(rows,cols);
-  this->assign_elements(e0, eN...);
-}
-#endif
-
-template<class E, class A, typename BO, typename L> template<class Array>
-matrix<E, dynamic<A>, BO, L>::matrix(
-  int rows, int cols, const Array& array, cml::enable_if_array_t<Array>*
+  int rows, int cols, const Array& array
   )
 : m_data(0), m_rows(0), m_cols(0)
 {
@@ -288,6 +278,8 @@ matrix<E, dynamic<A>, BO, L>::destruct(pointer data, int n, std::false_type)
 }
 
 } // namespace cml
+
+#endif
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

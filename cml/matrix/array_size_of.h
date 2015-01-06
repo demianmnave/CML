@@ -16,13 +16,13 @@ namespace cml {
 
 /** Specialize array_rows_of_c for vectors to return 1. */
 template<class Sub>
-struct array_rows_of_c<Sub, cml::enable_if_vector_t<Sub>> {
+struct array_rows_of_c<Sub, enable_if_vector_t<Sub>> {
   static const int value = 1;
 };
 
 /** Specialize array_cols_of_c for vectors to return 1. */
 template<class Sub>
-struct array_cols_of_c<Sub, cml::enable_if_vector_t<Sub>> {
+struct array_cols_of_c<Sub, enable_if_vector_t<Sub>> {
   static const int value = 1;
 };
 

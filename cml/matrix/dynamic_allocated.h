@@ -6,19 +6,19 @@
 
 #pragma once
 
-#ifndef	cml_matrix_fixed_external_h
-#define	cml_matrix_fixed_external_h
+#ifndef	cml_matrix_dynamic_allocated_h
+#define	cml_matrix_dynamic_allocated_h
 
-#include <cml/storage/external_selector.h>
+#include <cml/common/mpl/are_convertible.h>
+#include <cml/common/mpl/rebind.h>
+#include <cml/storage/allocated_selector.h>
 #include <cml/matrix/writable_matrix.h>
 #include <cml/matrix/matrix.h>
 
 namespace cml {
 
-template<class Element,
-  int Rows, int Cols, typename BasisOrient, typename Layout>
-struct matrix_traits<
-  matrix<Element, external<Rows,Cols>, BasisOrient, Layout> >
+template<class Element, class Allocator, typename BasisOrient, typename Layout>
+struct matrix_traits< matrix<Element, dynamic<Allocator>, BasisOrient, Layout> >
 {
   /* The basis must be col_basis or row_basis: */
   static_assert(std::is_same<BasisOrient,row_basis>::value
@@ -35,18 +35,19 @@ struct matrix_traits<
   typedef typename element_traits::immutable_value	immutable_value;
 
   /* The matrix storage type: */
-  typedef rebind_t<external<Rows,Cols>, matrix_storage_tag> storage_type;
+  typedef rebind_t<
+    allocated<Allocator>, matrix_storage_tag>		storage_type;
   typedef typename storage_type::size_tag		size_tag;
-  static_assert(std::is_same<size_tag, fixed_size_tag>::value,
+  static_assert(std::is_same<size_tag, dynamic_size_tag>::value,
     "invalid size tag");
 
-  /* Array rows (should be positive): */
+  /* Array rows (should be -1): */
   static const int array_rows = storage_type::array_rows;
-  static_assert(array_rows > 0, "invalid row size");
+  static_assert(array_rows == -1, "invalid row size");
 
-  /* Array columns (should be positive): */
+  /* Array columns (should be -1): */
   static const int array_cols = storage_type::array_cols;
-  static_assert(array_cols > 0, "invalid column size");
+  static_assert(array_cols == -1, "invalid column size");
 
   /* Basis orientation: */
   typedef BasisOrient					basis_tag;
@@ -62,16 +63,25 @@ struct matrix_traits<
 };
 
 /** Fixed-size matrix. */
-template<class Element,
-  int Rows, int Cols, typename BasisOrient, typename Layout>
-class matrix<Element, external<Rows,Cols>, BasisOrient, Layout>
+template<class Element, class Allocator, typename BasisOrient, typename Layout>
+class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
 : public writable_matrix<
-  matrix<Element, external<Rows,Cols>, BasisOrient, Layout>>
+  matrix<Element, dynamic<Allocator>, BasisOrient, Layout>>
 {
+  protected:
+
+    /** The real allocator type. */
+    typedef rebind_t<Allocator, Element>		allocator_type;
+
+    /** Require a stateless allocator. */
+    static_assert(std::is_empty<allocator_type>::value,
+      "cannot use a stateful allocator for dynamic<> matrices");
+
+
   public:
 
     typedef matrix<Element,
-	    external<Rows,Cols>, BasisOrient, Layout>	matrix_type;
+	    dynamic<Allocator>, BasisOrient, Layout>	matrix_type;
     typedef writable_matrix<matrix_type>		writable_type;
     typedef matrix_traits<matrix_type>			traits_type;
     typedef typename traits_type::element_traits	element_traits;
@@ -86,14 +96,6 @@ class matrix<Element, external<Rows,Cols>, BasisOrient, Layout>
     typedef typename traits_type::size_tag		size_tag;
     typedef typename traits_type::basis_tag		basis_tag;
     typedef typename traits_type::layout_tag		layout_tag;
-
-
-  public:
-
-    /** The matrix data type, depending upon the layout. */
-    typedef if_t<layout_tag::value == row_major_c
-      , value_type[Rows][Cols]
-      , value_type[Cols][Rows]>				matrix_data_type;
 
 
   public:
@@ -122,31 +124,61 @@ class matrix<Element, external<Rows,Cols>, BasisOrient, Layout>
 
   public:
 
-    /** Default construct with a null pointer.
+    /** Default constructor.
      *
-     * @warning The default constructor is enabled only if the compiler
-     * supports rvalue references from *this.
+     * @note The matrix has no elements.
      */
     matrix();
 
-    /** Construct from the wrapped pointer.
+    /** Construct given a size.
      *
-     * @note @c data will be referenced using the assigned matrix layout.
+     * @throws std::invalid_argument if  @c ros < 0 or @c cols < 0.
      */
-    explicit matrix(pointer data);
+    matrix(int rows, int cols);
 
-    /** Construct from a wrapped pointer to a 2D array of values.
-     *
-     * @note The dimensions of @c array must match those of the matrix,
-     * taking the matrix layout into account.  For example, the C-array
-     * initializer for a 3x2 external matrix in row-major layout will have
-     * dimensions [3][2], but the initializer for a column-major matrix
-     * will have dimensions [2][3].
-     */
-    matrix(matrix_data_type& array);
+    /** Copy constructor. */
+    matrix(const matrix_type& other);
 
     /** Move constructor. */
     matrix(matrix_type&& other);
+
+    /** Construct from a readable_matrix. */
+    template<class Sub> matrix(const readable_matrix<Sub>& sub);
+
+    /** Construct from at least 1 value.
+     *
+     * @note This overload is enabled only if all of the arguments are
+     * convertible to value_type.
+     */
+    template<typename RowsT, typename ColsT, class E0, class... Elements,
+      typename std::enable_if<
+	/* Avoid implicit conversions, for example, from double: */
+	/**/ std::is_integral<RowsT>::value
+       	&&   std::is_integral<ColsT>::value
+
+	/* Require compatible values: */
+	&&   cml::are_convertible<value_type, E0, Elements...>::value
+	>::type* = nullptr>
+
+	matrix(RowsT rows, ColsT cols, const E0& e0, const Elements&... eN)
+	// XXX Should be in matrix/dynamic_allocated.tpp, but VC++12 has
+	// brain-dead out-of-line template argument matching...
+	: m_data(0), m_rows(0), m_cols(0)
+	{
+	  this->resize_fast(rows,cols);
+	  this->assign_elements(e0, eN...);
+	}
+
+    /** Construct from an array type. */
+    template<class Array, enable_if_array_t<Array>* = nullptr>
+      matrix(int rows, int cols, const Array& array);
+
+    /** Construct from a C-array type. */
+    template<class Other, int Rows, int Cols>
+      matrix(Other const (&array)[Rows][Cols]);
+
+    /** Destructor. */
+    ~matrix();
 
 
   public:
@@ -184,6 +216,22 @@ class matrix<Element, external<Rows,Cols>, BasisOrient, Layout>
     /** Read-only iterator over the elements as a 1D array. */
     const_pointer end() const;
 
+    /** Resize the matrix to the specified size.
+     *
+     * @note This will reallocate the array and copy existing elements, if
+     * any.
+     *
+     * @throws std::invalid_argument if @c rows or @c cols is negative.
+     */
+    void resize(int rows, int cols);
+
+    /** Resize the matrix to the specified size without copying the old
+     * elements.
+     *
+     * @throws std::invalid_argument if @c rows or @c cols is negative.
+     */
+    void resize_fast(int rows, int cols);
+
 
   public:
 
@@ -218,15 +266,51 @@ class matrix<Element, external<Rows,Cols>, BasisOrient, Layout>
 
   protected:
 
-    /** Wrapped pointer. */
-    matrix_data_type*		m_data;
+    /** No-op for trivially destructible elements
+     * (is_trivially_destructible).
+     */
+    void destruct(pointer, int, std::true_type);
+
+    /** Invoke non-trivial destructors for @c n elements starting at @c
+     * data.
+     */
+    void destruct(pointer data, int n, std::false_type);
+
+
+  protected:
+
+    /** Row-major access to const or non-const @c M. */
+    template<class Matrix> inline static auto get(
+      Matrix& M, int i, int j, row_major) -> decltype(M.m_data[0])
+    {
+      return M.m_data[i*M.m_cols + j];
+    }
+
+    /** Column-major access to const or non-const @c M. */
+    template<class Matrix> inline static auto get(
+      Matrix& M, int i, int j, col_major) -> decltype(M.m_data[0])
+    {
+      return M.m_data[j*M.m_rows + i];
+    }
+
+
+  protected:
+
+    /** Dynamic storage. */
+    pointer			m_data;
+
+    /** Matrix rows. */
+    int				m_rows;
+
+    /** Matrix columns. */
+    int				m_cols;
 };
 
 } // namespace cml
 
-#define __CML_MATRIX_FIXED_EXTERNAL_TPP
-#include <cml/matrix/fixed_external.tpp>
-#undef __CML_MATRIX_FIXED_EXTERNAL_TPP
+#define __CML_MATRIX_DYNAMIC_ALLOCATED_TPP
+#include <cml/matrix/dynamic_allocated.tpp>
+#undef __CML_MATRIX_DYNAMIC_ALLOCATED_TPP
 
 #endif
 

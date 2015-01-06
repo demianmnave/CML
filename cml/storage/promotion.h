@@ -20,31 +20,59 @@ namespace cml {
  * @note This only supports built-in CML storage types, but can be
  * specialized for user-defined storage types.
  */
-template<class Storage1, class Storage2>
+template<class Storage1, class Storage2, bool PreferDynamic = false>
 struct storage_promote
 {
   /* Map selector types to the preferred selector: */
   template<class S1, class S2, class S>
     using selector_map = type_table_item<S1, S2, S>;
 
-  /* Build the symmetric type table for the built-in types: */
+  /* True if PreferDynamic is false, or if both Storage1 and Storage2 are
+   * fixed-size types:
+   */
+  static const bool is_fixed
+    = !PreferDynamic
+    || (is_fixed_size<Storage1>::value && is_fixed_size<Storage2>::value);
+
+  /* Build the symmetric type table for the built-in types, giving
+   * preference to dynamic-size types if PreferDynamic is true:
+   */
   typedef cml::type_table<
     /**/  selector_map< compiled<>,	compiled<>,	compiled<>	>
-    ,     selector_map< compiled<>,	allocated<>,	compiled<>	>
-    ,     selector_map< compiled<>,	external<>,	compiled<>	>
+
+    /* Override and select allocated<> if PreferDynamic is true and the
+     * original storage types are not both fixed-size:
+     */
+    ,     selector_map< compiled<>,	allocated<>,
+    			cml::if_t<is_fixed, compiled<>, allocated<>>
+			>
+
+    /* Override and select external<> if PreferDynamic is true and the
+     * original storage types are not both fixed-size:
+     */
+    ,     selector_map< compiled<>,	external<>,
+    			cml::if_t<is_fixed, compiled<>, external<>>
+			>
+
     ,     selector_map< compiled<>,	any_storage<>,	compiled<>	>
+
     ,     selector_map< allocated<>,	allocated<>,	allocated<>	>
+
     ,     selector_map< allocated<>,	external<>,	allocated<>	>
+
     ,     selector_map< allocated<>,	any_storage<>,	allocated<>	>
+
     ,     selector_map< external<>,	external<>,	external<>	>
+
     ,     selector_map< external<>,	any_storage<>,	external<>	>
+
     ,     selector_map< any_storage<>,	any_storage<>,	any_storage<>	>
     >							selector_table;
 
   /* Lookup the storage selector for the passed-in types: */
   typedef typename Storage1::selector_type		left_selector;
   typedef typename Storage2::selector_type		right_selector;
-  typedef typename selector_table::find<
+  typedef typename selector_table::template find<
     left_selector, right_selector>::type		result;
   typedef typename result::type				selector_type;
   static_assert(result::value, "no common storage selector found");
@@ -69,8 +97,9 @@ struct storage_promote
 };
 
 /** Convenience alias for storage_selector_promote. */
-template<class Storage1, class Storage2>
-  using storage_promote_t = typename storage_promote<Storage1, Storage2>::type;
+template<class Storage1, class Storage2, bool PreferDynamic = false>
+  using storage_promote_t
+    = typename storage_promote<Storage1, Storage2, PreferDynamic>::type;
 
 } // namespace cml
 

@@ -6,11 +6,11 @@
 
 #pragma once
 
-#ifndef	cml_common_scalar_functions_h
-#define	cml_common_scalar_functions_h
+#ifndef	cml_scalar_functions_h
+#define	cml_scalar_functions_h
 
-#include <cml/common/scalar_traits.h>
 #include <cml/common/constants.h>
+#include <cml/scalar/traits.h>
 
 namespace cml {
 
