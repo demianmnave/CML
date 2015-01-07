@@ -227,11 +227,11 @@ check_same_inner_size(const Sub1&, const Sub2&, any_size_tag) {}
 template<class Sub1, class Sub2> inline void
 check_same_inner_size(const Sub1&, const Sub2&, fixed_size_tag)
 {
-  typedef actual_type_of_t<Sub1> left_type;
-  typedef actual_type_of_t<Sub2> right_type;
+  typedef traits_of_t<Sub1> left_traits;
+  typedef traits_of_t<Sub2> right_traits;
   static_assert(
-    (inner_cols_of_c<left_type>::value
-     == inner_rows_of_c<right_type>::value),
+    (inner_cols_of_c<left_traits>::value
+     == inner_rows_of_c<right_traits>::value),
     "incompatible matrix inner product size");
 }
 
@@ -256,7 +256,7 @@ template<class Sub, int R, int C> inline void check_size(
   )
 {
   static_assert(
-    (array_rows_of_c<Sub>::value == R) && (array_rows_of_c<Sub>::value == C),
+    (array_rows_of_c<Sub>::value == R) && (array_cols_of_c<Sub>::value == C),
     "incorrect matrix expression size");
 }
 
@@ -264,10 +264,35 @@ template<class Sub, int R, int C> inline void check_size(
 template<class Sub, class SizeTag> inline void check_size(
   const readable_matrix<Sub>& sub, int R, int C, SizeTag)
 {
-#ifndef CML_NO_RUNTIME_VECTOR_SIZE_CHECKS
+#ifndef CML_NO_RUNTIME_MATRIX_SIZE_CHECKS
   cml_require(
     (array_rows_of(sub) == R) && (array_cols_of(sub) == C),
-    vector_size_error, /**/);
+    matrix_size_error, /**/);
+#endif
+}
+
+
+/* No-op square matrix checking. */
+template<class Sub> inline void
+check_square(const readable_matrix<Sub>&, any_size_tag) {}
+
+/* Compile-time square matrix checking. */
+template<class Sub> inline void
+check_square(const readable_matrix<Sub>&, fixed_size_tag)
+{
+  static_assert(
+    (array_rows_of_c<Sub>::value == array_cols_of_c<Sub>::value),
+    "non-square matrix");
+}
+
+/* Run-time square matrix checking. */
+template<class Sub, class SizeTag> inline void
+check_square(const readable_matrix<Sub>& sub, SizeTag)
+{
+#ifndef CML_NO_RUNTIME_MATRIX_SIZE_CHECKS
+  cml_require(
+    (array_rows_of(sub) == array_cols_of(sub)),
+    non_square_matrix_error, /**/);
 #endif
 }
 
@@ -276,7 +301,7 @@ template<class Sub, class SizeTag> inline void check_size(
 
 /* check_same_linear_size: */
 
-template<class Sub1, class Sub2> void
+template<class Sub1, class Sub2> inline void
 check_same_linear_size(
   const readable_matrix<Sub1>& left, const readable_matrix<Sub1>& right
   )
@@ -287,7 +312,7 @@ check_same_linear_size(
     left, right.actual(), size_check_promote_t<tag1,tag2>());
 }
 
-template<class Sub1, class Sub2> void
+template<class Sub1, class Sub2> inline void
 check_same_linear_size(
   const readable_matrix<Sub1>& left, const Sub2& right,
   enable_if_array_t<Sub2>*
@@ -299,7 +324,7 @@ check_same_linear_size(
     left, right, size_check_promote_t<tag1,tag2>());
 }
 
-template<class Sub1, class Sub2> auto
+template<class Sub1, class Sub2> inline auto
 check_same_linear_size(const readable_matrix<Sub1>& left, const Sub2& right)
 -> decltype(right.size(), void())
 {
@@ -312,14 +337,14 @@ check_same_linear_size(const readable_matrix<Sub1>& left, const Sub2& right)
 
 /* check_linear_size: */
 
-template<class Sub> void
+template<class Sub> inline void
 check_linear_size(const readable_matrix<Sub>& left, int n)
 {
   typedef size_tag_of_t<Sub> tag;
   detail::check_linear_size(left, n, tag());
 }
 
-template<class Sub, int N> void
+template<class Sub, int N> inline void
 check_linear_size(const readable_matrix<Sub>& left, cml::int_c<N>)
 {
   typedef size_tag_of_t<Sub> tag;
@@ -329,7 +354,7 @@ check_linear_size(const readable_matrix<Sub>& left, cml::int_c<N>)
 
 /* check_same_size: */
 
-template<class Sub1, class Sub2> void
+template<class Sub1, class Sub2> inline void
 check_same_size(
   const readable_matrix<Sub1>& left, const readable_matrix<Sub2>& right
   )
@@ -340,7 +365,7 @@ check_same_size(
     left, right.actual(), size_check_promote_t<tag1,tag2>());
 }
 
-template<class Sub, class Other, int R, int C> void
+template<class Sub, class Other, int R, int C> inline void
 check_same_size(
   const readable_matrix<Sub>& left, Other const (&array)[R][C]
   )
@@ -353,7 +378,7 @@ check_same_size(
 
 /* check_same_row_size: */
 
-template<class Sub1, class Sub2> void
+template<class Sub1, class Sub2> inline void
 check_same_row_size(
   const readable_matrix<Sub1>& left, const readable_vector<Sub2>& right
   )
@@ -367,7 +392,7 @@ check_same_row_size(
 
 /* check_same_col_size: */
 
-template<class Sub1, class Sub2> void
+template<class Sub1, class Sub2> inline void
 check_same_col_size(
   const readable_matrix<Sub1>& left, const readable_vector<Sub2>& right
   )
@@ -381,7 +406,7 @@ check_same_col_size(
 
 /* check_same_inner_size: */
 
-template<class Sub1, class Sub2> void
+template<class Sub1, class Sub2> inline void
 check_same_inner_size(
   const readable_matrix<Sub1>& left, const readable_matrix<Sub2>& right
   )
@@ -392,7 +417,7 @@ check_same_inner_size(
     left, right, size_check_promote_t<tag1,tag2>());
 }
 
-template<class Sub1, class Sub2> void
+template<class Sub1, class Sub2> inline void
 check_same_inner_size(
   const readable_matrix<Sub1>& left, const readable_vector<Sub2>& right
   )
@@ -403,7 +428,7 @@ check_same_inner_size(
     left, right, size_check_promote_t<tag1,tag2>());
 }
 
-template<class Sub1, class Sub2> void
+template<class Sub1, class Sub2> inline void
 check_same_inner_size(
   const readable_vector<Sub1>& left, const readable_matrix<Sub2>& right
   )
@@ -417,18 +442,25 @@ check_same_inner_size(
 
 /* check_size: */
 
-template<class Sub> void
+template<class Sub> inline void
 check_size(const readable_matrix<Sub>& left, int R, int C)
 {
   typedef size_tag_of_t<Sub> tag;
   detail::check_size(left, R, C, tag());
 }
 
-template<class Sub, int R, int C> void
+template<class Sub, int R, int C> inline void
 check_size(const readable_matrix<Sub>& left, cml::int_c<R>, cml::int_c<C>)
 {
   typedef size_tag_of_t<Sub> tag;
   detail::check_size(left, cml::int_c<R>(), cml::int_c<C>(), tag());
+}
+
+template<class Sub> inline void
+check_square(const readable_matrix<Sub>& left)
+{
+  typedef size_tag_of_t<Sub> tag;
+  detail::check_square(left, tag());
 }
 
 } // namespace cml

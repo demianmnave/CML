@@ -11,43 +11,14 @@
 #include <random>
 #include <cml/scalar/binary_ops.h>
 #include <cml/vector/readable_vector.h>
-#include <cml/matrix/size_checking.h>
+#include <cml/matrix/detail/copy.h>
+#include <cml/matrix/detail/apply.h>
+#include <cml/matrix/detail/generate.h>
+#include <cml/matrix/detail/inverse.h>
+#include <cml/matrix/detail/check_or_resize.h>
 
 namespace cml {
 namespace detail {
-
-/* check_or_resize for a read-only matrix @c left that just forwards to
- * check_same_size.
- */
-template<class Sub, class Other> inline void
-check_or_resize(const readable_matrix<Sub>& left, const Other& right)
-{
-  cml::check_same_size(left, right);
-}
-
-/* check_or_resize for a read-write matrix @c left that resizes the matrix
- * to ensure it has the same size as @c right.
- */
-template<class Sub1, class Sub2> inline auto check_or_resize(
-  writable_matrix<Sub1>& left, const readable_matrix<Sub2>& right
-  )
--> decltype(left.actual().resize(0,0), void())
-{
-  left.actual().resize(right.rows(),right.cols());
-}
-
-/* check_or_resize for a read-write matrix @c left that resizes the matrix
- * to ensure it has the same size as array @c right.
- */
-template<class Sub1, class Other, int Rows, int Cols>
-inline auto check_or_resize(
-  writable_matrix<Sub1>& left, Other const (&)[Rows][Cols]
-  )
--> decltype(left.actual().resize(0,0), void())
-{
-  left.actual().resize(Rows, Cols);
-}
-
 
 /* Terminate the assignment recursion at the final element. */
 template<int I, class Sub, class E0> inline void
@@ -75,105 +46,6 @@ template<class Sub, class... Es> inline void
 assign_elements(writable_matrix<Sub>& sub, const Es&... eN)
 {
   assign_elements<0>(sub, eN...);
-}
-
-
-
-/* Helper for copy() and apply() to return the passed-in value. */
-template<class Other>
-inline auto get(const Other& v, int, int) -> const Other&
-{
-  return v;
-}
-
-/* Helper for copy() and apply() to return element @c (i,j) of @c array. */
-template<class Other, int Rows, int Cols> inline const Other&
-get(Other const (&array)[Rows][Cols], int i, int j)
-{
-  return array[i][j];
-}
-
-/* Helper for copy() and apply() to return element @c (i,j) of @c sub. */
-template<class Sub> inline auto get(
-  const readable_matrix<Sub>& sub, int i, int j
-  ) -> typename matrix_traits<Sub>::immutable_value
-{
-  return sub.get(i,j);
-}
-
-/* Assign @c left from the elements of @c right, where @c left is assumed
- * to have a row-major layout.
- */
-template<class Sub, class Other> inline void copy(
-  writable_matrix<Sub>& left, const Other& right, row_major
-  )
-{
-  for(int i = 0; i < left.rows(); ++ i)
-    for(int j = 0; j < left.cols(); ++ j)
-      left.set(i,j, get(right, i,j));
-}
-
-/* Assign @c left from the elements of @c right, where @c left is assumed
- * to have a column-major layout.
- */
-template<class Sub, class Other> inline void copy(
-  writable_matrix<Sub>& left, const Other& right, col_major
-  )
-{
-  for(int j = 0; j < left.cols(); ++ j)
-    for(int i = 0; i < left.rows(); ++ i)
-      left.set(i,j, get(right, i,j));
-}
-
-
-/* Apply @c Op pairwise to @c left and @c right and assign the result to @c
- * left, where @c left is assumed to have a row-major layout.
- */
-template<class Op, class Sub, class Other> inline void apply(
-  writable_matrix<Sub>& left, const Other& right, row_major
-  )
-{
-  for(int i = 0; i < left.rows(); ++ i)
-    for(int j = 0; j < left.cols(); ++ j)
-      left.set(i,j, Op().apply(left.get(i,j), get(right, i,j)));
-}
-
-/* Apply @c Op pairwise to @c left and @c right and assign the result to @c
- * left, where @c left is assumed to have a column-major layout.
- */
-template<class Op, class Sub, class Other> inline void apply(
-  writable_matrix<Sub>& left, const Other& right, col_major
-  )
-{
-  for(int j = 0; j < left.cols(); ++ j)
-    for(int i = 0; i < left.rows(); ++ i)
-      left.set(i,j, Op().apply(left.get(i,j), get(right, i,j)));
-}
-
-
-
-/* Assign the value of @c f(i,j) to the element @c (i,j) of row-major
- * matrix @c left.
- */
-template<class Sub, class F> inline void generate(
-  writable_matrix<Sub>& left, F&& f, row_major
-  )
-{
-  for(int i = 0; i < left.rows(); ++ i)
-    for(int j = 0; j < left.cols(); ++ j)
-      left.set(i,j, (std::forward<F>(f))(i,j));
-}
-
-/* Assign the value of @c f(i,j) to the element @c (i,j) of column-major
- * matrix @c left.
- */
-template<class Sub, class F> inline void generate(
-  writable_matrix<Sub>& left, F&& f, col_major
-  )
-{
-  for(int j = 0; j < left.cols(); ++ j)
-    for(int i = 0; i < left.rows(); ++ i)
-      left.set(i,j, (std::forward<F>(f))(i,j));
 }
 
 } // namespace detail
@@ -326,6 +198,23 @@ template<class DT> DT&&
 writable_matrix<DT>::random(const_reference low, const_reference high) &&
 {
   this->random(low, high);
+  return (DT&&) *this;
+}
+#endif
+
+template<class DT> DT&
+writable_matrix<DT>::inverse() __CML_REF
+{
+  cml::check_square(*this);
+  detail::inverse(*this, cml::int_c<traits_type::array_rows>());
+  return this->actual();
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> DT&&
+writable_matrix<DT>::inverse() &&
+{
+  this->inverse();
   return (DT&&) *this;
 }
 #endif

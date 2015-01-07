@@ -16,6 +16,7 @@ ADD_CML_TEST(matrix_binary_node1)
 ADD_CML_TEST(matrix_functions1)
 ADD_CML_TEST(matrix_matrix_product1)
 ADD_CML_TEST(matrix_vector_product1)
+ADD_CML_TEST(matrix_inverse1)
 
 # --------------------------------------------------------------------------
 # vim:ft=cmake

@@ -70,6 +70,14 @@ struct incompatible_matrix_inner_size_error : std::runtime_error {
     : std::runtime_error("incompatible matrix inner product size") {}
 };
 
+/** Exception thrown when run-time size checking is enabled, and a matrix
+ * operand is not square.
+ */
+struct non_square_matrix_error : std::runtime_error {
+  non_square_matrix_error()
+    : std::runtime_error("non-square matrix") {}
+};
+
 
 
 /** Front-end for both compile-time and run-time matrix binary expression
@@ -82,15 +90,16 @@ struct incompatible_matrix_inner_size_error : std::runtime_error {
  * @param left First matrix expression.
  * @param right Second matrix expression.
  *
- * @throws incompatible_matrix_size_error at run-time if either left or
- * right is a dynamically-sized expression, and left.size() !=
- * right.size().  If both are fixed-size expressions, then the sizes are
+ * @throws incompatible_matrix_size_error at run-time if either @c left or
+ * @c right is a dynamically-sized expression, and @c left.size() !=
+ * @c right.size().  If both are fixed-size expressions, then the sizes are
  * checked at compile time.
  *
- * @throws incompatible_matrix_size_error at run-time if either left or
- * right is a dynamically-sized expression, and left.rows()*left.cols() !=
- * right.rows()*right.cols().  If left and right are fixed-size
- * expressions, then the sizes are checked at compile time.
+ * @throws incompatible_matrix_size_error at run-time if either @c left or
+ * @c right is a dynamically-sized expression, and @c left.rows() * @c
+ * left.cols() != @c right.rows() * @c right.cols().  If @c left and @c
+ * right are fixed-size expressions, then the sizes are checked at compile
+ * time.
  *
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_MATRIX_SIZE_CHECKS at compile time.
@@ -109,9 +118,9 @@ template<class Sub1, class Sub2> void check_same_linear_size(
  * @param left Matrix expression.
  * @param right Fixed-length array.
  *
- * @throws incompatible_matrix_size_error at run-time if left is a
- * dynamically-sized expression, and left.rows()*left.cols() !=
- * array_size_of(right).  If left is a fixed-size expression, then the
+ * @throws incompatible_matrix_size_error at run-time if @c left is a
+ * dynamically-sized expression, and @c left.rows() * @c left.cols() !=
+ * array_size_of(@c right).  If @c left is a fixed-size expression, then the
  * sizes are checked at compile time.
  *
  * @note Run-time checking can be disabled by defining
@@ -131,8 +140,8 @@ check_same_linear_size(const readable_matrix<Sub1>& left, const Sub2& right,
  * @param left First matrix expression.
  * @param right Second expression.
  *
- * @throws incompatible_matrix_size_error if left.rows()*left.cols() !=
- * right.size().
+ * @throws incompatible_matrix_size_error if @c left.rows() * @c
+ * left.cols() != @c right.size().
  *
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_MATRIX_SIZE_CHECKS at compile time.
@@ -145,7 +154,10 @@ check_same_linear_size(const readable_matrix<Sub1>& left, const Sub2& right)
 /** Front-end for matrix expression size checking against a run-time linear
  * size.  The expression must derive from readable_matrix.
  *
- * @throws matrix_size_error if left.rows()*left.cols() != N.
+ * @param left Matrix expression.
+ * @param N The linear size to check.
+ *
+ * @throws matrix_size_error if @c left.rows() * @c left.cols() != @c N.
  *
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_MATRIX_SIZE_CHECKS at compile time.
@@ -157,9 +169,12 @@ template<class Sub> void check_linear_size(
  * checking against an integer constant via int_c<N>.  The expression
  * must derive from readable_matrix.
  *
- * @throws minimum_matrix_size_error at run-time if left is a
- * dynamically-sized expression and left.rows()*left.cols() != N. If left
- * is a fixed-size expression, then the size is checked at compile time.
+ * @param left Matrix expression.
+ *
+ * @throws minimum_matrix_size_error at run-time if @c left is a
+ * dynamically-sized expression and @c left.rows() * @c left.cols() != @c
+ * N. If @c left is a fixed-size expression, then the size is checked at
+ * compile time.
  *
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_MATRIX_SIZE_CHECKS at compile time.
@@ -176,9 +191,9 @@ template<class Sub, int N> void check_linear_size(
  * @param left First matrix expression.
  * @param right Second matrix expression.
  *
- * @throws incompatible_matrix_size_error at run-time if either left or
- * right is a dynamically-sized expression, and left.size() !=
- * right.size().  If both are fixed-size expressions, then the sizes are
+ * @throws incompatible_matrix_size_error at run-time if either @c left or
+ * @c right is a dynamically-sized expression, and @c left.size() !=
+ * @c right.size().  If both are fixed-size expressions, then the sizes are
  * checked at compile time.
  *
  * @note Run-time checking can be disabled by defining
@@ -199,9 +214,9 @@ template<class Sub1, class Sub2> void check_same_size(
  * @param left First matrix expression.
  * @param right The 2D C-array.
  *
- * @throws incompatible_matrix_size_error at run-time if left is a
+ * @throws incompatible_matrix_size_error at run-time if @c left is a
  * dynamically-sized expression and does not have the same number of rows
- * and columns as the array.  If left is a fixed-size expression, then the
+ * and columns as the array.  If @c left is a fixed-size expression, then the
  * sizes are checked at compile time.
  *
  * @note Run-time checking can be disabled by defining
@@ -308,30 +323,48 @@ template<class Sub1, class Sub2> void check_same_inner_size(
   const readable_vector<Sub1>& left, const readable_matrix<Sub2>& right);
 
 
-/** Front-end for vector expression length checking against a run-time
- * size.  The expression must derive from readable_vector.
+/** Front-end for matrix expression size checking against a run-time
+ * size.  The expression must derive from readable_matrix.
  *
- * @throws vector_size_error if left.size() != N.
+ * @param left Matrix expression.
+ * @param R Row count to check.
+ * @param C Column count to check.
+ *
+ * @throws matrix_size_error if left.rows() != @c R or left.cols() != @c C.
  *
  * @note Run-time checking can be disabled by defining
- * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
+ * CML_NO_RUNTIME_MATRIX_SIZE_CHECKS at compile time.
  */
-template<class Sub>
-void check_size(const readable_vector<Sub>& left, int N);
+template<class Sub> void check_size(
+  const readable_matrix<Sub>& left, int R, int C);
 
-/** Front-end for compile-time and run-time vector expression length
- * checking against an integer constant via int_c<N>.  The expression must
- * derive from readable_vector.
+/** Front-end for compile-time and run-time matrix expression length
+ * checking against integer constants via int_c<R> and int_c<C>.  The
+ * expression must derive from readable_matrix.
  *
- * @throws vector_size_error at run-time if left is a dynamically-sized
- * expression and left.size() != N. If left is a fixed-size expression,
- * then the size is checked at compile time.
+ * @param left Matrix expression.
+ *
+ * @throws matrix_size_error if left.rows() != @c R or left.cols() != @c C.
+ * If @c left is a fixed-size expression, then the size is checked at compile
+ * time.
  *
  * @note Run-time checking can be disabled by defining
- * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
+ * CML_NO_RUNTIME_MATRIX_SIZE_CHECKS at compile time.
  */
-template<class Sub, int N>
-void check_size(const readable_vector<Sub>& left, cml::int_c<N>);
+template<class Sub, int R, int C> void check_size(
+  const readable_matrix<Sub>& left, cml::int_c<R>, cml::int_c<C>);
+
+/** Front-end to check for a square matrix.
+ *
+ * @throws non_square_matrix_error at run-time if @c left is a
+ * dynamically-sized expression and @c left.rows() != @c left.cols().  If
+ * @c left is a fixed-size expression, then the size is checked at compile
+ * time.
+ *
+ * @note Run-time checking can be disabled by defining
+ * CML_NO_RUNTIME_MATRIX_SIZE_CHECKS at compile time.
+ */
+template<class Sub> void check_square(const readable_matrix<Sub>& left);
 
 } // namespace cml
 

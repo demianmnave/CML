@@ -52,9 +52,9 @@ struct vector_size_error : std::runtime_error {
  * @param left First vector expression.
  * @param right Second vector expression.
  *
- * @throws incompatible_vector_size_error at run-time if either left or
- * right is a dynamically-sized expression, and left.size() !=
- * right.size().  If both are fixed-size expressions, then the sizes are
+ * @throws incompatible_vector_size_error at run-time if either @c left or
+ * @c right is a dynamically-sized expression, and @c left.size() !=
+ * @c right.size().  If both are fixed-size expressions, then the sizes are
  * checked at compile time.
  *
  * @note Run-time checking can be disabled by defining
@@ -74,9 +74,9 @@ template<class Sub1, class Sub2> void check_same_size(
  * @param left Vector expression.
  * @param right Fixed-length array.
  *
- * @throws incompatible_vector_size_error at run-time if left is a
- * dynamically-sized expression, and left.size() != array_size_of(right).
- * If left is a fixed-size expression, then the sizes are checked at
+ * @throws incompatible_vector_size_error at run-time if @c left is a
+ * dynamically-sized expression, and @c left.size() != array_size_of(@c right).
+ * If @c left is a fixed-size expression, then the sizes are checked at
  * compile time.
  *
  * @note Run-time checking can be disabled by defining
@@ -96,7 +96,7 @@ check_same_size(const readable_vector<Sub1>& left, const Sub2& right,
  * @param left First vector expression.
  * @param right Second expression.
  *
- * @throws incompatible_vector_size_error if left.size() != right.size().
+ * @throws incompatible_vector_size_error if @c left.size() != @c right.size().
  *
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
@@ -109,7 +109,10 @@ auto check_same_size(const readable_vector<Sub1>& left, const Sub2& right)
 /** Front-end for minimum vector expression length checking against a
  * run-time size.  The expression must derive from readable_vector.
  *
- * @throws minimum_vector_size_error if left.size() < N.
+ * @param left Vector expression.
+ * @param N Size to check.
+ *
+ * @throws minimum_vector_size_error if @c left.size() < @c N.
  *
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
@@ -121,8 +124,10 @@ void check_minimum_size(const readable_vector<Sub>& left, int N);
  * length checking against an integer constant via cml::int_c<N>.  The
  * expression must derive from readable_vector.
  *
- * @throws minimum_vector_size_error at run-time if left is a
- * dynamically-sized expression and left.size() < N. If left is a
+ * @param left Vector expression.
+ *
+ * @throws minimum_vector_size_error at run-time if @c left is a
+ * dynamically-sized expression and @c left.size() < @c N. If @c left is a
  * fixed-size expression, then the size is checked at compile time.
  *
  * @note Run-time checking can be disabled by defining
@@ -135,7 +140,10 @@ void check_minimum_size(const readable_vector<Sub>& left, cml::int_c<N>);
 /** Front-end for vector expression length checking against a run-time
  * size.  The expression must derive from readable_vector.
  *
- * @throws vector_size_error if left.size() != N.
+ * @param left Vector expression.
+ * @param N Size to check.
+ *
+ * @throws vector_size_error if @c left.size() != @c N.
  *
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
@@ -147,8 +155,10 @@ void check_size(const readable_vector<Sub>& left, int N);
  * checking against an integer constant via int_c<N>.  The expression must
  * derive from readable_vector.
  *
- * @throws vector_size_error at run-time if left is a dynamically-sized
- * expression and left.size() != N. If left is a fixed-size expression,
+ * @param left Vector expression.
+ *
+ * @throws vector_size_error at run-time if @c left is a dynamically-sized
+ * expression and @c left.size() != N. If @c left is a fixed-size expression,
  * then the size is checked at compile time.
  *
  * @note Run-time checking can be disabled by defining
