@@ -11,6 +11,7 @@
 
 #include <initializer_list>
 #include <cml/common/mpl/enable_if_array.h>
+#include <cml/common/mpl/enable_if_convertible.h>
 #include <cml/vector/readable_vector.h>
 
 namespace cml {
@@ -266,36 +267,32 @@ class writable_vector
       operator-=(const readable_vector<OtherDerivedT>& other) &&;
 #endif
 
-    /** Multiply the vector by a scalar.
-     *
-     * @note This depends upon implicit conversion of @c v to the
-     * vector value_type.
-     */
-    DerivedT& operator*=(const_reference v) __CML_REF;
+    /** Multiply the vector by a scalar convertible to its value_type. */
+    template<class ScalarT,
+      typename enable_if_convertible<value_type, ScalarT>::type* = nullptr>
+	DerivedT& operator*=(const ScalarT& v) __CML_REF;
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-    /** Multiply a temporary vector by a scalar.
-     *
-     * @note This depends upon implicit conversion of @c v to the
-     * vector value_type.
+    /** Multiply the temporary vector by a scalar convertible to its
+     * value_type.
      */
-    DerivedT&& operator*=(const_reference v) &&;
+    template<class ScalarT,
+      typename enable_if_convertible<value_type, ScalarT>::type* = nullptr>
+	DerivedT&& operator*=(const ScalarT& v) &&;
 #endif
 
-    /** Divide the vector by a scalar.
-     *
-     * @note This depends upon implicit conversion of @c v to the
-     * vector value_type.
-     */
-    DerivedT& operator/=(const_reference v) __CML_REF;
+    /** Divide the vector by a scalar convertible to its value_type. */
+    template<class ScalarT,
+      typename enable_if_convertible<value_type, ScalarT>::type* = nullptr>
+	DerivedT& operator/=(const ScalarT& v) __CML_REF;
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-    /** Divide a temporary vector by a scalar.
-     *
-     * @note This depends upon implicit conversion of @c v to the
-     * vector value_type.
+    /** Divide the vector temporary by a scalar convertible to its
+     * value_type.
      */
-    DerivedT&& operator/=(const_reference v) &&;
+    template<class ScalarT,
+      typename enable_if_convertible<value_type, ScalarT>::type* = nullptr>
+	DerivedT&& operator/=(const ScalarT& v) &&;
 #endif
 
 

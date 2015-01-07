@@ -9,7 +9,6 @@
 #ifndef	cml_vector_fixed_compiled_h
 #define	cml_vector_fixed_compiled_h
 
-#include <cml/common/mpl/enable_if_convertible.h>
 #include <cml/storage/compiled_selector.h>
 #include <cml/vector/writable_vector.h>
 #include <cml/vector/vector.h>

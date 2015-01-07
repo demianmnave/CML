@@ -6,16 +6,12 @@
 
 #pragma once
 
-#ifndef	cml_matrix_h
-#define	cml_matrix_h
+#ifndef	cml_vector_ops_h
+#define	cml_vector_ops_h
 
-#include <cml/matrix/fixed.h>
-#include <cml/matrix/external.h>
-#include <cml/matrix/dynamic.h>
-#include <cml/matrix/ops.h>
-#include <cml/matrix/vector_product.h>
-#include <cml/matrix/matrix_product.h>
-#include <cml/matrix/types.h>
+#include <cml/vector/unary_ops.h>
+#include <cml/vector/binary_ops.h>
+#include <cml/vector/scalar_ops.h>
 
 #endif
 

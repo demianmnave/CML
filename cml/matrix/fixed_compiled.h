@@ -9,7 +9,6 @@
 #ifndef	cml_matrix_fixed_compiled_h
 #define	cml_matrix_fixed_compiled_h
 
-#include <cml/common/mpl/enable_if_convertible.h>
 #include <cml/storage/compiled_selector.h>
 #include <cml/matrix/writable_matrix.h>
 #include <cml/matrix/matrix.h>

@@ -9,9 +9,7 @@
 #endif
 
 #include <random>
-#include <cml/vector/scalar_ops.h>
-#include <cml/vector/unary_ops.h>
-#include <cml/vector/binary_ops.h>
+#include <cml/scalar/binary_ops.h>
 #include <cml/vector/detail/check_or_resize.h>
 
 namespace cml {
@@ -240,7 +238,11 @@ writable_vector<DT>::operator=(std::initializer_list<Other> l) &&
 template<class DT> template<class ODT> DT&
 writable_vector<DT>::operator+=(const readable_vector<ODT>& other) __CML_REF
 {
-  return this->assign(*this + other);
+  typedef binary_plus_t<DT, ODT> op_type;
+  detail::check_or_resize(*this, other);
+  for(int i = 0; i < this->size(); ++ i)
+    this->set(i, op_type().apply(this->get(i), other.get(i)));
+  return this->actual();
 }
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
@@ -255,7 +257,11 @@ writable_vector<DT>::operator+=(const readable_vector<ODT>& other) &&
 template<class DT> template<class ODT> DT&
 writable_vector<DT>::operator-=(const readable_vector<ODT>& other) __CML_REF
 {
-  return this->assign(*this - other);
+  typedef binary_minus_t<DT, ODT> op_type;
+  detail::check_or_resize(*this, other);
+  for(int i = 0; i < this->size(); ++ i)
+    this->set(i, op_type().apply(this->get(i), other.get(i)));
+  return this->actual();
 }
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
@@ -267,30 +273,48 @@ writable_vector<DT>::operator-=(const readable_vector<ODT>& other) &&
 }
 #endif
 
-template<class DT> DT&
-writable_vector<DT>::operator*=(const_reference v) __CML_REF
+template<class DT>
+template<class ScalarT, typename enable_if_convertible<
+    typename vector_traits<DT>::value_type, ScalarT>::type*>
+DT&
+writable_vector<DT>::operator*=(const ScalarT& v) __CML_REF
 {
-  return this->assign((*this)*v);
+  typedef binary_multiply_t<DT, ScalarT> op_type;
+  for(int i = 0; i < this->size(); ++ i)
+    this->set(i, op_type().apply(this->get(i), v));
+  return this->actual();
 }
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-template<class DT> DT&&
-writable_vector<DT>::operator*=(const_reference v) &&
+template<class DT>
+template<class ScalarT, typename enable_if_convertible<
+    typename vector_traits<DT>::value_type, ScalarT>::type*>
+DT&&
+writable_vector<DT>::operator*=(const ScalarT& v) &&
 {
   this->operator*=(v);
   return (DT&&) *this;
 }
 #endif
 
-template<class DT> DT&
-writable_vector<DT>::operator/=(const_reference v) __CML_REF
+template<class DT>
+template<class ScalarT, typename enable_if_convertible<
+    typename vector_traits<DT>::value_type, ScalarT>::type*>
+DT&
+writable_vector<DT>::operator/=(const ScalarT& v) __CML_REF
 {
-  return this->assign((*this)/v);
+  typedef binary_divide_t<DT, ScalarT> op_type;
+  for(int i = 0; i < this->size(); ++ i)
+    this->set(i, op_type().apply(this->get(i), v));
+  return this->actual();
 }
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-template<class DT> DT&&
-writable_vector<DT>::operator/=(const_reference v) &&
+template<class DT>
+template<class ScalarT, typename enable_if_convertible<
+    typename vector_traits<DT>::value_type, ScalarT>::type*>
+DT&&
+writable_vector<DT>::operator/=(const ScalarT& v) &&
 {
   this->operator/=(v);
   return (DT&&) *this;

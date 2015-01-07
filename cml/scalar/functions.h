@@ -9,6 +9,7 @@
 #ifndef	cml_scalar_functions_h
 #define	cml_scalar_functions_h
 
+#include <algorithm>
 #include <cml/common/constants.h>
 #include <cml/scalar/traits.h>
 

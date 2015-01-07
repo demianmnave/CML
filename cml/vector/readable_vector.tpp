@@ -8,8 +8,9 @@
 #error "vector/readable_vector.tpp not included correctly"
 #endif
 
-#include <cml/vector/dot.h>
+#include <cml/scalar/functions.h>
 #include <cml/vector/subvector_node.h>
+#include <cml/vector/size_checking.h>
 
 namespace cml {
 
@@ -43,7 +44,10 @@ readable_vector<DT>::operator[](int i) const -> immutable_value
 template<class DT> auto
 readable_vector<DT>::length_squared() const -> value_type
 {
-  return cml::dot(this->actual(),this->actual());
+  cml::check_minimum_size(*this, cml::int_c<1>());
+  value_type accum = cml::sqr(this->get(0));
+  for(int i = 1; i < this->size(); ++ i) accum += cml::sqr(this->get(i));
+  return accum;
 }
 
 template<class DT> auto

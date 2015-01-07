@@ -9,7 +9,6 @@
 #ifndef	cml_vector_dynamic_allocated_h
 #define	cml_vector_dynamic_allocated_h
 
-#include <cml/common/mpl/enable_if_convertible.h>
 #include <cml/common/mpl/rebind.h>
 #include <cml/storage/allocated_selector.h>
 #include <cml/vector/writable_vector.h>

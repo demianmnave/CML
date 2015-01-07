@@ -9,11 +9,9 @@
 #endif
 
 #include <random>
+#include <cml/scalar/binary_ops.h>
 #include <cml/vector/readable_vector.h>
 #include <cml/matrix/size_checking.h>
-#include <cml/matrix/scalar_ops.h>
-#include <cml/matrix/unary_ops.h>
-#include <cml/matrix/binary_ops.h>
 
 namespace cml {
 namespace detail {
@@ -81,14 +79,21 @@ assign_elements(writable_matrix<Sub>& sub, const Es&... eN)
 
 
 
-/* Helper for copy() to return element @c (i,j) of @c array. */
+/* Helper for copy() and apply() to return the passed-in value. */
+template<class Other>
+inline auto get(const Other& v, int, int) -> const Other&
+{
+  return v;
+}
+
+/* Helper for copy() and apply() to return element @c (i,j) of @c array. */
 template<class Other, int Rows, int Cols> inline const Other&
 get(Other const (&array)[Rows][Cols], int i, int j)
 {
   return array[i][j];
 }
 
-/* Helper for copy() to return element @c (i,j) of @c sub. */
+/* Helper for copy() and apply() to return element @c (i,j) of @c sub. */
 template<class Sub> inline auto get(
   const readable_matrix<Sub>& sub, int i, int j
   ) -> typename matrix_traits<Sub>::immutable_value
@@ -118,6 +123,31 @@ template<class Sub, class Other> inline void copy(
   for(int j = 0; j < left.cols(); ++ j)
     for(int i = 0; i < left.rows(); ++ i)
       left.set(i,j, get(right, i,j));
+}
+
+
+/* Apply @c Op pairwise to @c left and @c right and assign the result to @c
+ * left, where @c left is assumed to have a row-major layout.
+ */
+template<class Op, class Sub, class Other> inline void apply(
+  writable_matrix<Sub>& left, const Other& right, row_major
+  )
+{
+  for(int i = 0; i < left.rows(); ++ i)
+    for(int j = 0; j < left.cols(); ++ j)
+      left.set(i,j, Op().apply(left.get(i,j), get(right, i,j)));
+}
+
+/* Apply @c Op pairwise to @c left and @c right and assign the result to @c
+ * left, where @c left is assumed to have a column-major layout.
+ */
+template<class Op, class Sub, class Other> inline void apply(
+  writable_matrix<Sub>& left, const Other& right, col_major
+  )
+{
+  for(int j = 0; j < left.cols(); ++ j)
+    for(int i = 0; i < left.rows(); ++ i)
+      left.set(i,j, Op().apply(left.get(i,j), get(right, i,j)));
 }
 
 
@@ -365,7 +395,9 @@ writable_matrix<DT>::operator=(std::initializer_list<Other> l) &&
 template<class DT> template<class ODT> DT&
 writable_matrix<DT>::operator+=(const readable_matrix<ODT>& other) __CML_REF
 {
-  return this->assign(*this + other);
+  detail::check_or_resize(*this, other);
+  detail::apply< binary_plus_t<DT, ODT> >(*this, other, layout_tag());
+  return this->actual();
 }
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
@@ -380,7 +412,9 @@ writable_matrix<DT>::operator+=(const readable_matrix<ODT>& other) &&
 template<class DT> template<class ODT> DT&
 writable_matrix<DT>::operator-=(const readable_matrix<ODT>& other) __CML_REF
 {
-  return this->assign(*this - other);
+  detail::check_or_resize(*this, other);
+  detail::apply< binary_minus_t<DT, ODT> >(*this, other, layout_tag());
+  return this->actual();
 }
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
@@ -393,30 +427,44 @@ writable_matrix<DT>::operator-=(const readable_matrix<ODT>& other) &&
 #endif
 
 
-template<class DT> DT&
-writable_matrix<DT>::operator*=(const_reference v) __CML_REF
+template<class DT>
+template<class ScalarT, typename enable_if_convertible<
+    typename matrix_traits<DT>::value_type, ScalarT>::type*>
+DT&
+writable_matrix<DT>::operator*=(const ScalarT& v) __CML_REF
 {
-  return this->assign((*this)*v);
+  detail::apply< binary_multiply_t<DT, ScalarT> >(*this, v, layout_tag());
+  return this->actual();
 }
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-template<class DT> DT&&
-writable_matrix<DT>::operator*=(const_reference v) &&
+template<class DT>
+template<class ScalarT, typename enable_if_convertible<
+    typename matrix_traits<DT>::value_type, ScalarT>::type*>
+DT&&
+writable_matrix<DT>::operator*=(const ScalarT& v) &&
 {
   this->operator*=(v);
   return (DT&&) *this;
 }
 #endif
 
-template<class DT> DT&
-writable_matrix<DT>::operator/=(const_reference v) __CML_REF
+template<class DT>
+template<class ScalarT, typename enable_if_convertible<
+    typename matrix_traits<DT>::value_type, ScalarT>::type*>
+DT&
+writable_matrix<DT>::operator/=(const ScalarT& v) __CML_REF
 {
-  return this->assign((*this)/v);
+  detail::apply< binary_divide_t<DT, ScalarT> >(*this, v, layout_tag());
+  return this->actual();
 }
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-template<class DT> DT&&
-writable_matrix<DT>::operator/=(const_reference v) &&
+template<class DT>
+template<class ScalarT, typename enable_if_convertible<
+    typename matrix_traits<DT>::value_type, ScalarT>::type*>
+DT&&
+writable_matrix<DT>::operator/=(const ScalarT& v) &&
 {
   this->operator/=(v);
   return (DT&&) *this;

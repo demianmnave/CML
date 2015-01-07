@@ -9,10 +9,13 @@
 #ifndef	cml_vector_functions_h
 #define	cml_vector_functions_h
 
-#include <cml/vector/writable_vector.h>
-#include <cml/vector/promotion.h>
+#include <cml/scalar/promotion.h>
+#include <cml/vector/temporary.h>
 
 namespace cml {
+
+/* Forward declarations: */
+template<class DerivedT> class readable_vector;
 
 /** Return the squared length of a vector. */
 template<class DerivedT> inline auto

@@ -8,6 +8,8 @@
 #error "vector/functions.tpp not included correctly"
 #endif
 
+#include <cml/vector/readable_vector.h>
+
 namespace cml {
 
 template<class DT> auto
