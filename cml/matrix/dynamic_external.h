@@ -191,6 +191,17 @@ class matrix<Element, external<>, BasisOrient, Layout>
     /** Read-only iterator over the elements as a 1D array. */
     const_pointer end() const;
 
+    /** Resize (reshape) the matrix to the specified size.
+     *
+     * @note The existing elements are not changed.
+     *
+     * @throws std::invalid_argument if @c rows or @c cols is negative.
+     *
+     * @throws matrix_size_error if the number of elements in the resized
+     * matrix would be different from the original.
+     */
+    void resize(int rows, int cols);
+
 
   public:
 

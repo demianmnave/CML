@@ -11,11 +11,12 @@
 #include <random>
 #include <cml/scalar/binary_ops.h>
 #include <cml/vector/readable_vector.h>
+#include <cml/matrix/detail/check_or_resize.h>
 #include <cml/matrix/detail/copy.h>
 #include <cml/matrix/detail/apply.h>
 #include <cml/matrix/detail/generate.h>
+#include <cml/matrix/detail/transpose.h>
 #include <cml/matrix/detail/inverse.h>
-#include <cml/matrix/detail/check_or_resize.h>
 
 namespace cml {
 namespace detail {
@@ -215,6 +216,23 @@ template<class DT> DT&&
 writable_matrix<DT>::inverse() &&
 {
   this->inverse();
+  return (DT&&) *this;
+}
+#endif
+
+template<class DT> DT&
+writable_matrix<DT>::transpose() __CML_REF
+{
+  typedef size_tag_of_t<traits_type> tag;
+  detail::transpose(*this, tag());
+  return this->actual();
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> DT&&
+writable_matrix<DT>::transpose() &&
+{
+  this->transpose();
   return (DT&&) *this;
 }
 #endif

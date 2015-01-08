@@ -129,6 +129,16 @@ matrix<E, external<>, BO, L>::end() const -> const_pointer
   return this->m_data + this->m_rows*this->m_cols;
 }
 
+template<class E, typename BO, typename L> void
+matrix<E, external<>, BO, L>::resize(int rows, int cols)
+{
+  cml_require(rows >= 0, std::invalid_argument, "rows < 0");
+  cml_require(cols >= 0, std::invalid_argument, "cols < 0");
+  cml::check_linear_size(*this, rows*cols);
+  this->m_rows = rows;
+  this->m_cols = cols;
+}
+
 
 template<class E, typename BO, typename L> auto
 matrix<E, external<>, BO, L>::operator=(const matrix_type& other)

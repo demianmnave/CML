@@ -253,6 +253,26 @@ BOOST_AUTO_TEST_CASE(list_assign2)
   BOOST_CHECK_EQUAL(M(2,3), 0.);
 }
 
+BOOST_AUTO_TEST_CASE(resize1)
+{
+  double data[3*4];
+  cml::externalmnd_c M(3,4, data);
+  BOOST_REQUIRE_EQUAL(M.rows(), 3);
+  BOOST_REQUIRE_EQUAL(M.cols(), 4);
+  BOOST_REQUIRE_EQUAL(M.data(), &data[0]);
+  BOOST_REQUIRE_NO_THROW(M.resize(4,3));
+}
+
+BOOST_AUTO_TEST_CASE(resize2)
+{
+  double data[3*4];
+  cml::externalmnd_c M(3,4, data);
+  BOOST_REQUIRE_EQUAL(M.rows(), 3);
+  BOOST_REQUIRE_EQUAL(M.cols(), 4);
+  BOOST_REQUIRE_EQUAL(M.data(), &data[0]);
+  BOOST_REQUIRE_THROW(M.resize(3,3), cml::matrix_size_error);
+}
+
 BOOST_AUTO_TEST_CASE(size_check1)
 {
   double data[3*4];

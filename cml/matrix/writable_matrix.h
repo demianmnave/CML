@@ -180,6 +180,24 @@ class writable_matrix
     DerivedT&& inverse() &&;
 #endif
 
+    /** Set the matrix to its transpose.
+     *
+     * @note This will raise a compile time error if the matrix is
+     * fixed-size and non-square.  Dynamic-size matrices will be assigned
+     * from a temporary.
+     */
+    DerivedT& transpose() __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set a temporary matrix to its inverse.
+     *
+     * @note This will raise a compile time error if the matrix is
+     * fixed-size and non-square.  Dynamic-size matrices will be assigned
+     * from a temporary.
+     */
+    DerivedT&& transpose() &&;
+#endif
+
 
   public:
 

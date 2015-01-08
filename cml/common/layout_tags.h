@@ -13,6 +13,11 @@
 
 namespace cml {
 
+/* Forward declarations: */
+struct row_major;
+struct col_major;
+struct any_major;
+
 enum layout_kind {
   row_major_c = 1,
   col_major_c = 2,
@@ -21,13 +26,35 @@ enum layout_kind {
 };
 
 /** Row major tag. */
-struct row_major { static const layout_kind value = row_major_c; };
+struct row_major {
+
+  /** row_major transposes to col_major. */
+  typedef col_major					transposed_tag;
+
+  /** Integral identifier. */
+  static const layout_kind value = row_major_c;
+};
 
 /** Column major tag. */
-struct col_major { static const layout_kind value = col_major_c; };
+struct col_major {
 
-/** Arbitrary layout tag. */
-struct any_major { static const layout_kind value = any_major_c; };
+  /** col_major transposes to row_major. */
+  typedef row_major					transposed_tag;
+
+  /** Integral identifier. */
+  static const layout_kind value = col_major_c;
+};
+
+/** Arbitrary or unspecified major tag. */
+struct any_major {
+
+  /** any_major transposes to itself. */
+  typedef any_major					transposed_tag;
+
+  /** Integral identifier. */
+  static const layout_kind value = any_major_c;
+};
+
 
 /** Detect valid layout tags.
  *

@@ -17,6 +17,7 @@ namespace cml {
 template<class Sub> inline temporary_of_t<Sub>
 inverse(const readable_matrix<Sub>& M)
 {
+  cml::check_square(M);
   return temporary_of_t<Sub>(M).inverse();
 }
 
