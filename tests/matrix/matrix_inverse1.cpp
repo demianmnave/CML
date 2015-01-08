@@ -4,6 +4,9 @@
 /** @file
  */
 
+// Make sure the main header compiles cleanly:
+#include <cml/matrix/inverse.h>
+
 #include <cml/matrix/fixed.h>
 #include <cml/matrix/dynamic.h>
 #include <cml/matrix/external.h>
@@ -72,6 +75,20 @@ BOOST_AUTO_TEST_CASE(inverse_assign_4x4)
       BOOST_CHECK_CLOSE(M(i,j), expected(i,j), .001);
 }
 
+BOOST_AUTO_TEST_CASE(inverse_2x2)
+{
+  auto M = cml::inverse(
+    cml::matrix22d(
+      1., 2.,
+      3., 4.
+      )
+    );
+  BOOST_CHECK_CLOSE(M(0,0), -2.0, .001);
+  BOOST_CHECK_CLOSE(M(0,1),  1.0, .001);
+  BOOST_CHECK_CLOSE(M(1,0),  1.5, .001);
+  BOOST_CHECK_CLOSE(M(1,1), -0.5, .001);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -137,6 +154,19 @@ BOOST_AUTO_TEST_CASE(inverse_assign_4x4)
       BOOST_CHECK_CLOSE(M(i,j), expected(i,j), .001);
 }
 
+BOOST_AUTO_TEST_CASE(inverse_2x2)
+{
+  double avM[] = {
+    1., 2.,
+    3., 4.
+  };
+  auto M = cml::inverse(cml::external22d(avM));
+  BOOST_CHECK_CLOSE(M(0,0), -2.0, .001);
+  BOOST_CHECK_CLOSE(M(0,1),  1.0, .001);
+  BOOST_CHECK_CLOSE(M(1,0),  1.5, .001);
+  BOOST_CHECK_CLOSE(M(1,1), -0.5, .001);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -200,6 +230,19 @@ BOOST_AUTO_TEST_CASE(inverse_assign_4x4)
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
       BOOST_CHECK_CLOSE(M(i,j), expected(i,j), .001);
+}
+
+BOOST_AUTO_TEST_CASE(inverse_2x2)
+{
+  double avM[] = {
+    1., 2.,
+    3., 4.
+  };
+  auto M = cml::inverse(cml::externalmnd(2,2, avM));
+  BOOST_CHECK_CLOSE(M(0,0), -2.0, .001);
+  BOOST_CHECK_CLOSE(M(0,1),  1.0, .001);
+  BOOST_CHECK_CLOSE(M(1,0),  1.5, .001);
+  BOOST_CHECK_CLOSE(M(1,1), -0.5, .001);
 }
 
 BOOST_AUTO_TEST_CASE(size_check1)
@@ -274,6 +317,21 @@ BOOST_AUTO_TEST_CASE(inverse_assign_4x4)
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
       BOOST_CHECK_CLOSE(M(i,j), expected(i,j), .001);
+}
+
+BOOST_AUTO_TEST_CASE(inverse_2x2)
+{
+  auto M = cml::inverse(
+    cml::matrixd(
+      2,2,
+      1., 2.,
+      3., 4.
+      )
+    );
+  BOOST_CHECK_CLOSE(M(0,0), -2.0, .001);
+  BOOST_CHECK_CLOSE(M(0,1),  1.0, .001);
+  BOOST_CHECK_CLOSE(M(1,0),  1.5, .001);
+  BOOST_CHECK_CLOSE(M(1,1), -0.5, .001);
 }
 
 BOOST_AUTO_TEST_CASE(size_check1)

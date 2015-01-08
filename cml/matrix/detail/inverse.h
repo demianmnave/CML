@@ -21,8 +21,7 @@ namespace detail {
 template<class Sub> inline void
 inverse(writable_matrix<Sub>& M, int_c<2>)
 {
-  typedef actual_type_of_t<Sub>				sub_type;
-  typedef value_type_trait_of_t<sub_type>		value_type;
+  typedef value_type_trait_of_t<Sub>			value_type;
 
   /* Compute determinant and inverse: */
   value_type M00 = M(0,0), M01 = M(0,1);
@@ -40,8 +39,7 @@ inverse(writable_matrix<Sub>& M, int_c<2>)
 template<class Sub> inline void
 inverse(writable_matrix<Sub>& M, int_c<3>)
 {
-  typedef actual_type_of_t<Sub>				sub_type;
-  typedef value_type_trait_of_t<sub_type>		value_type;
+  typedef value_type_trait_of_t<Sub>			value_type;
 
   /* Compute cofactors for each entry: */
   value_type m_00 = M(1,1)*M(2,2) - M(1,2)*M(2,1);
@@ -70,8 +68,7 @@ inverse(writable_matrix<Sub>& M, int_c<3>)
 template<class Sub> inline void
 inverse(writable_matrix<Sub>& M, int_c<4>)
 {
-  typedef actual_type_of_t<Sub>				sub_type;
-  typedef value_type_trait_of_t<sub_type>		value_type;
+  typedef value_type_trait_of_t<Sub>			value_type;
 
   /* Common cofactors, rows 0,1: */
   value_type m_22_33_23_32 = M(2,2)*M(3,3) - M(2,3)*M(3,2);
@@ -166,8 +163,7 @@ inline void inverse_pivot(writable_matrix<Sub>& M,
   RowIndexArray& row_index, ColIndexArray& col_index, Markers& pivoted
   )
 {
-  typedef actual_type_of_t<Sub>				sub_type;
-  typedef value_type_trait_of_t<sub_type>		value_type;
+  typedef value_type_trait_of_t<Sub>			value_type;
   typedef traits_of_t<value_type>			value_traits;
 
   int N = M.rows();

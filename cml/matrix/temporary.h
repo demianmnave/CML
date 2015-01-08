@@ -12,8 +12,8 @@
 #include <cml/common/temporary.h>
 #include <cml/storage/resize.h>
 #include <cml/storage/promotion.h>
-#include <cml/vector/traits.h>
-#include <cml/vector/vector.h>
+#include <cml/matrix/traits.h>
+#include <cml/matrix/matrix.h>
 
 namespace cml {
 

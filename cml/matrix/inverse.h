@@ -1,0 +1,28 @@
+/* -*- C++ -*- ------------------------------------------------------------
+ @@COPYRIGHT@@
+ *-----------------------------------------------------------------------*/
+/** @file
+ */
+
+#pragma once
+
+#ifndef	cml_matrix_inverse_h
+#define	cml_matrix_inverse_h
+
+#include <cml/matrix/temporary.h>
+
+namespace cml {
+
+/** Compute the inverse of @c M and return the result in a temporary. */
+template<class Sub> inline temporary_of_t<Sub>
+inverse(const readable_matrix<Sub>& M)
+{
+  return temporary_of_t<Sub>(M).inverse();
+}
+
+} // namespace cml
+
+#endif
+
+// -------------------------------------------------------------------------
+// vim:ft=cpp:sw=2
