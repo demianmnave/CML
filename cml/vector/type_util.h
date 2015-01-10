@@ -10,11 +10,9 @@
 #define	cml_vector_type_util_h
 
 #include <cml/common/type_util.h>
+#include <cml/vector/fwd.h>
 
 namespace cml {
-
-/* Forward declarations: */
-template<class Sub> class readable_vector;
 
 /** Defines typedef @c type as std::true_type if @c T is statically
  * polymorphic and derived from @c readable_vector, or std::false_type

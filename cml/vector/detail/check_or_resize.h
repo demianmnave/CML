@@ -2,6 +2,8 @@
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 /** @file
+ *
+ * @note This file must be included after cml/vector/writable_vector.h.
  */
 
 #pragma once
@@ -10,7 +12,6 @@
 #define	cml_vector_detail_check_or_resize_h
 
 #include <cml/common/mpl/int_c.h>
-#include <cml/vector/writable_vector.h>
 #include <cml/vector/size_checking.h>
 
 namespace cml {

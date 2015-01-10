@@ -12,12 +12,10 @@
 #include <initializer_list>
 #include <cml/common/mpl/enable_if_array.h>
 #include <cml/common/mpl/enable_if_convertible.h>
+#include <cml/vector/fwd.h>
 #include <cml/matrix/readable_matrix.h>
 
 namespace cml {
-
-/* Forward declarations: */
-template<class DerivedT> class readable_vector;
 
 /** Base class for writable matrix types.  Writable matrices support
  * non-const read-write access to its elements, in addition to read-only

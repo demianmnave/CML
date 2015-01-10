@@ -4,9 +4,6 @@
 /** @file
  */
 
-#include <typeinfo>
-#include <iostream>
-
 // Make sure the main header compiles cleanly:
 #include <cml/matrix/transpose.h>
 
@@ -30,7 +27,7 @@ BOOST_AUTO_TEST_CASE(transpose_assign_3x3)
     );
 
   M.transpose();
-  cml::matrix33d expected(
+  auto expected = cml::matrix33d(
     1., 1.,  1.,
     2., 4., 16.,
     3., 9., 25.
@@ -50,7 +47,7 @@ BOOST_AUTO_TEST_CASE(transpose_3x3_1)
     );
 
   auto T = cml::transpose(M);
-  cml::matrix33d expected(
+  auto expected = cml::matrix33d(
     1., 1.,  1.,
     2., 4., 16.,
     3., 9., 25.
@@ -71,7 +68,7 @@ BOOST_AUTO_TEST_CASE(transpose_3x3_2)
       )
     );
 
-  cml::matrix33d expected(
+  auto expected = cml::matrix33d(
     1., 1.,  1.,
     2., 4., 16.,
     3., 9., 25.
@@ -97,7 +94,7 @@ BOOST_AUTO_TEST_CASE(transpose_assign_3x3)
   cml::external33d M(avM);
 
   M.transpose();
-  cml::matrix33d expected(
+  auto expected = cml::matrix33d(
     1., 1.,  1.,
     2., 4., 16.,
     3., 9., 25.
@@ -118,7 +115,7 @@ BOOST_AUTO_TEST_CASE(transpose_3x3_1)
   cml::external33d M(avM);
 
   auto T = cml::transpose(M);
-  cml::matrix33d expected(
+  auto expected = cml::matrix33d(
     1., 1.,  1.,
     2., 4., 16.,
     3., 9., 25.
@@ -138,7 +135,7 @@ BOOST_AUTO_TEST_CASE(transpose_3x3_2)
   };
 
   auto T = cml::transpose(cml::external33d(avM));
-  cml::matrix33d expected(
+  auto expected = cml::matrix33d(
     1., 1.,  1.,
     2., 4., 16.,
     3., 9., 25.
@@ -164,7 +161,7 @@ BOOST_AUTO_TEST_CASE(transpose_assign_3x3)
   cml::externalmnd M(3,3, avM);
 
   M.transpose();
-  cml::matrix33d expected(
+  auto expected = cml::matrix33d(
     1., 1.,  1.,
     2., 4., 16.,
     3., 9., 25.
@@ -185,7 +182,7 @@ BOOST_AUTO_TEST_CASE(transpose_3x3_1)
   cml::externalmnd M(3,3, avM);
 
   auto T = cml::transpose(M);
-  cml::matrix33d expected(
+  auto expected = cml::matrix33d(
     1., 1.,  1.,
     2., 4., 16.,
     3., 9., 25.
@@ -205,7 +202,7 @@ BOOST_AUTO_TEST_CASE(transpose_3x3_2)
   };
 
   auto T = cml::transpose(cml::externalmnd(3,3, avM));
-  cml::matrix33d expected(
+  auto expected = cml::matrix33d(
     1., 1.,  1.,
     2., 4., 16.,
     3., 9., 25.
@@ -231,7 +228,7 @@ BOOST_AUTO_TEST_CASE(transpose_assign_3x3)
     );
 
   M.transpose();
-  cml::matrix33d expected(
+  auto expected = cml::matrix33d(
     1., 1.,  1.,
     2., 4., 16.,
     3., 9., 25.
@@ -252,7 +249,7 @@ BOOST_AUTO_TEST_CASE(transpose_3x3_1)
     );
 
   auto T = cml::transpose(M);
-  cml::matrix33d expected(
+  auto expected = cml::matrix33d(
     1., 1.,  1.,
     2., 4., 16.,
     3., 9., 25.
@@ -274,7 +271,7 @@ BOOST_AUTO_TEST_CASE(transpose_3x3_2)
       )
     );
 
-  cml::matrix33d expected(
+  auto expected = cml::matrix33d(
     1., 1.,  1.,
     2., 4., 16.,
     3., 9., 25.

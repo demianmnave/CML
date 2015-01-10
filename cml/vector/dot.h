@@ -14,9 +14,6 @@
 
 namespace cml {
 
-/* Forward declarations: */
-template<class DerivedT> class readable_vector;
-
 /** Convenience alias to determine the scalar type to return from cml::dot. */
 template<class Sub1, class Sub2>
   using dot_promote_t = value_type_trait_promote_t<Sub1, Sub2>;

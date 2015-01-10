@@ -21,23 +21,31 @@ template<class Sub, class Enable = void> struct inner_rows_of_c;
 template<class Sub, class Enable = void> struct inner_cols_of_c;
 
 /* Use the matrix row size for inner products: */
-template<class Sub> struct inner_rows_of_c<Sub, enable_if_matrix_t<Sub>> {
+template<class Sub> struct inner_rows_of_c<Sub,
+  typename std::enable_if<array_rows_of_c<Sub>::value != 0>::type>
+{
   static const int value = array_rows_of_c<Sub>::value;
 };
 
 /* Use the matrix column size for inner products: */
-template<class Sub> struct inner_cols_of_c<Sub, enable_if_matrix_t<Sub>> {
+template<class Sub> struct inner_cols_of_c<Sub,
+  typename std::enable_if<array_cols_of_c<Sub>::value != 0>::type>
+{
   static const int value = array_cols_of_c<Sub>::value;
 };
 
 /* The inner product row size for vectors is just the vector size: */
 template<class Sub>
-struct inner_rows_of_c<Sub, enable_if_vector_t<Sub>> {
+struct inner_rows_of_c<Sub,
+  typename std::enable_if<array_size_of_c<Sub>::value != 0>::type>
+{
   static const int value = array_size_of_c<Sub>::value;
 };
 
 /* The inner product column size for vectors is just the vector size: */
-template<class Sub> struct inner_cols_of_c<Sub, enable_if_vector_t<Sub>> {
+template<class Sub> struct inner_cols_of_c<Sub,
+  typename std::enable_if<array_size_of_c<Sub>::value != 0>::type>
+{
   static const int value = array_size_of_c<Sub>::value;
 };
 
@@ -386,7 +394,7 @@ check_same_row_size(
   typedef size_tag_of_t<Sub1> tag1;
   typedef size_tag_of_t<Sub2> tag2;
   detail::check_same_row_size(
-    left, right, size_check_promote_t<tag1,tag2>());
+    left, right.actual(), size_check_promote_t<tag1,tag2>());
 }
 
 
@@ -400,7 +408,7 @@ check_same_col_size(
   typedef size_tag_of_t<Sub1> tag1;
   typedef size_tag_of_t<Sub2> tag2;
   detail::check_same_col_size(
-    left, right, size_check_promote_t<tag1,tag2>());
+    left, right.actual(), size_check_promote_t<tag1,tag2>());
 }
 
 
@@ -414,7 +422,7 @@ check_same_inner_size(
   typedef size_tag_of_t<Sub1> tag1;
   typedef size_tag_of_t<Sub2> tag2;
   detail::check_same_inner_size(
-    left, right, size_check_promote_t<tag1,tag2>());
+    left.actual(), right.actual(), size_check_promote_t<tag1,tag2>());
 }
 
 template<class Sub1, class Sub2> inline void
@@ -425,7 +433,7 @@ check_same_inner_size(
   typedef size_tag_of_t<Sub1> tag1;
   typedef size_tag_of_t<Sub2> tag2;
   detail::check_same_inner_size(
-    left, right, size_check_promote_t<tag1,tag2>());
+    left.actual(), right.actual(), size_check_promote_t<tag1,tag2>());
 }
 
 template<class Sub1, class Sub2> inline void
@@ -436,7 +444,7 @@ check_same_inner_size(
   typedef size_tag_of_t<Sub1> tag1;
   typedef size_tag_of_t<Sub2> tag2;
   detail::check_same_inner_size(
-    left, right, size_check_promote_t<tag1,tag2>());
+    left.actual(), right.actual(), size_check_promote_t<tag1,tag2>());
 }
 
 

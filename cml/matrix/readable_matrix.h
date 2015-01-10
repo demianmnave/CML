@@ -76,6 +76,9 @@ class readable_matrix
      */
     immutable_value basis_element(int i, int j) const;
 
+    /** Compute the determinant of the matrix. */
+    value_type determinant() const;
+
 
   protected:
 

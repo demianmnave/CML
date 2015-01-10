@@ -8,6 +8,9 @@
 #error "matrix/readable_matrix.tpp not included correctly"
 #endif
 
+#include <cml/matrix/size_checking.h>
+#include <cml/matrix/detail/determinant.h>
+
 namespace cml {
 
 /* Public methods: */
@@ -54,6 +57,12 @@ readable_matrix<DT>::basis_element(int i, int j) const -> immutable_value
   return this->basis_element(i,j, basis_tag());
 }
 
+template<class DT> auto
+readable_matrix<DT>::determinant() const -> value_type
+{
+  cml::check_square(*this);
+  return detail::determinant(*this, cml::int_c<traits_type::array_rows>());
+}
 
 
 /* Internal methods: */

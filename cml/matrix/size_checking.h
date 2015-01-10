@@ -12,12 +12,10 @@
 #include <cml/common/mpl/int_c.h>
 #include <cml/common/mpl/enable_if_array.h>
 #include <cml/common/exception.h>
+#include <cml/vector/fwd.h>
+#include <cml/matrix/fwd.h>
 
 namespace cml {
-
-/* Forward declarations: */
-template<class Sub> class readable_vector;
-template<class Sub> class readable_matrix;
 
 /** Exception thrown when run-time size checking is enabled, and the
  * operands of a matrix expression have incompatible sizes.
@@ -267,6 +265,7 @@ template<class Sub1, class Sub2> void check_same_row_size(
 template<class Sub1, class Sub2> void check_same_col_size(
   const readable_matrix<Sub1>& left, const readable_vector<Sub2>& right);
 
+
 /** Front-end for both compile-time and run-time compatible inner product
  * size checking.  @c left and @c right must derive from readable_matrix.
  *
@@ -283,7 +282,6 @@ template<class Sub1, class Sub2> void check_same_col_size(
  */
 template<class Sub1, class Sub2> void check_same_inner_size(
   const readable_matrix<Sub1>& left, const readable_matrix<Sub2>& right);
-
 
 /** Front-end for both compile-time and run-time compatible inner product
  * size checking.  @c left must derive from readable_matrix, and @c right
@@ -302,7 +300,6 @@ template<class Sub1, class Sub2> void check_same_inner_size(
  */
 template<class Sub1, class Sub2> void check_same_inner_size(
   const readable_matrix<Sub1>& left, const readable_vector<Sub2>& right);
-
 
 /** Front-end for both compile-time and run-time compatible inner product
  * size checking.  @c left must derive from readable_vector, and @c right

@@ -12,11 +12,9 @@
 #include <cml/common/mpl/int_c.h>
 #include <cml/common/mpl/enable_if_array.h>
 #include <cml/common/exception.h>
+#include <cml/vector/fwd.h>
 
 namespace cml {
-
-/* Forward declarations: */
-template<class Sub> class readable_vector;
 
 /** Exception thrown when run-time size checking is enabled, and the
  * operands of a vector expression have incompatible sizes.

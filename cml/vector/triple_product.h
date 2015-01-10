@@ -14,9 +14,6 @@
 
 namespace cml {
 
-/* Forward declarations: */
-template<class DerivedT> class readable_vector;
-
 /** Convenience alias to determine the scalar type to return from
  * cml::triple_product.
  */

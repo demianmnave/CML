@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(inverse_assign_3x3)
     );
   M.inverse();
 
-  cml::matrix33d expected(
+  auto expected = cml::matrix33d(
     22.,   1., -3.,
      8., -11.,  3.,
     -6.,   7., -1.
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(inverse_assign_4x4)
     );
   M.inverse();
 
-  cml::matrix44d expected(
+  auto expected = cml::matrix44d(
     242.,  20., -33., -1.,
      12., -48.,  45., -9.,
      46., -32., -27., 13.,
@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(inverse_assign_3x3)
   cml::external33d M(avM);
   M.inverse();
 
-  cml::matrix33d expected(
+  auto expected = cml::matrix33d(
     22.,   1., -3.,
      8., -11.,  3.,
     -6.,   7., -1.
@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE(inverse_assign_4x4)
   cml::external44d M(avM);
   M.inverse();
 
-  cml::matrix44d expected(
+  auto expected = cml::matrix44d(
     242.,  20., -33., -1.,
      12., -48.,  45., -9.,
      46., -32., -27., 13.,
@@ -196,7 +196,7 @@ BOOST_AUTO_TEST_CASE(inverse_assign_3x3)
   cml::externalmnd M(3,3, avM);
   M.inverse();
 
-  cml::matrix33d expected(
+  auto expected = cml::matrix33d(
     22.,   1., -3.,
      8., -11.,  3.,
     -6.,   7., -1.
@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE(inverse_assign_4x4)
   cml::externalmnd M(4,4, avM);
   M.inverse();
 
-  cml::matrix44d expected(
+  auto expected = cml::matrix44d(
     242.,  20., -33., -1.,
      12., -48.,  45., -9.,
      46., -32., -27., 13.,
@@ -283,7 +283,7 @@ BOOST_AUTO_TEST_CASE(inverse_assign_3x3)
     );
   M.inverse();
 
-  cml::matrix33d expected(
+  auto expected = cml::matrix33d(
     22.,   1., -3.,
      8., -11.,  3.,
     -6.,   7., -1.
@@ -306,7 +306,7 @@ BOOST_AUTO_TEST_CASE(inverse_assign_4x4)
     );
   M.inverse();
 
-  cml::matrix44d expected(
+  auto expected = cml::matrix44d(
     242.,  20., -33., -1.,
      12., -48.,  45., -9.,
      46., -32., -27., 13.,

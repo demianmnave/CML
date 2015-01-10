@@ -14,9 +14,6 @@
 
 namespace cml {
 
-/* Forward declarations: */
-template<class DerivedT> class readable_vector;
-
 /** Return the squared length of a vector. */
 template<class DerivedT> inline auto
 length_squared(const readable_vector<DerivedT>& v)

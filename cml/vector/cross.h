@@ -13,9 +13,6 @@
 
 namespace cml {
 
-/* Forward declarations: */
-template<class DerivedT> class readable_vector;
-
 /** Determine the vector type to return from cml::cross. */
 template<class Sub1, class Sub2> struct cross_promote
 {

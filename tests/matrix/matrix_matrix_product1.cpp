@@ -4,9 +4,6 @@
 /** @file
  */
 
-#include <typeinfo>
-#include <iostream>
-
 // Make sure the main header compiles cleanly:
 #include <cml/matrix/matrix_product.h>
 

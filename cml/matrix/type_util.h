@@ -10,11 +10,9 @@
 #define	cml_matrix_type_util_h
 
 #include <cml/common/type_util.h>
+#include <cml/matrix/fwd.h>
 
 namespace cml {
-
-/* Forward declarations: */
-template<class Sub> class readable_matrix;
 
 /** Defines typedef @c type as std::true_type if @c T is statically
  * polymorphic and derived from @c readable_matrix, or std::false_type

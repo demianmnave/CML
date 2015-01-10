@@ -10,6 +10,7 @@
 #define	cml_matrix_inverse_h
 
 #include <cml/matrix/temporary.h>
+#include <cml/matrix/size_checking.h>
 
 namespace cml {
 
