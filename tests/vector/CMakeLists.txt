@@ -20,6 +20,7 @@ ADD_CML_TEST(perp_dot1)
 ADD_CML_TEST(cross1)
 ADD_CML_TEST(triple_product1)
 ADD_CML_TEST(subvector1)
+ADD_CML_TEST(outer_product1)
 
 # --------------------------------------------------------------------------
 # vim:ft=cmake
