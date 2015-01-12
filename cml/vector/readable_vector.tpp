@@ -9,6 +9,8 @@
 #endif
 
 #include <cml/scalar/functions.h>
+#include <cml/scalar/binary_ops.h>
+#include <cml/vector/scalar_node.h>
 #include <cml/vector/subvector_node.h>
 #include <cml/vector/size_checking.h>
 
@@ -55,6 +57,35 @@ readable_vector<DT>::length() const -> value_type
 {
   return element_traits::sqrt(this->length_squared());
 }
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> auto
+readable_vector<DT>::normalize() const & -> vector_scalar_node<
+	const DT&, value_type, op::binary_divide<value_type,value_type>>
+{
+  return vector_scalar_node<
+    const DT&, value_type, op::binary_divide<value_type,value_type>>
+    (this->actual(), this->length());
+}
+
+template<class DT> auto
+readable_vector<DT>::normalize() const && -> vector_scalar_node<
+	DT&&, value_type, op::binary_divide<value_type,value_type>>
+{
+  return vector_scalar_node<
+    DT&&, value_type, op::binary_divide<value_type,value_type>>
+    ((DT&&) this->actual(), this->length());
+}
+#else
+template<class DT> auto
+readable_vector<DT>::normalize() const -> vector_scalar_node<
+	DT&&, value_type, op::binary_divide<value_type,value_type>>
+{
+  return vector_scalar_node<
+    DT&&, value_type, op::binary_divide<value_type,value_type>>
+    ((DT&&) this->actual(), this->length());
+}
+#endif
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT> auto

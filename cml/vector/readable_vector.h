@@ -10,12 +10,13 @@
 #define	cml_vector_readable_vector_h
 
 #include <cml/common/compiler.h>
-#include <cml/vector/vector.h>
+#include <cml/scalar/binary_ops.h>
 #include <cml/vector/traits.h>
 
 namespace cml {
 
 /* Forward declarations: */
+template<class Sub, class Scalar, class Op> class vector_scalar_node;
 template<class Sub> class subvector_node;
 
 /** Base class for readable vector types.  Readable vectors support const
@@ -64,6 +65,26 @@ class readable_vector
 
     /** Return the length of the vector. */
     value_type length() const;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Return the normalized vector as an expression node, storing a
+     * reference of the source vector in the node.
+     */
+    vector_scalar_node<const DerivedT&, value_type,
+      op::binary_divide<value_type,value_type>> normalize() const &;
+
+    /** Return the normalized vector as an expression node, storing a copy
+     * of the vector in the node.
+     */
+    vector_scalar_node<DerivedT&&, value_type,
+      op::binary_divide<value_type,value_type>> normalize() const &&;
+#else
+    /** Return the normalized vector as an expression node, storing a copy
+     * of the vector in the node.
+     */
+    vector_scalar_node<DerivedT&&, value_type,
+      op::binary_divide<value_type,value_type>> normalize() const;
+#endif
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
     /** Return subvector @c i as an expression node, storing a reference of

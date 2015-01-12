@@ -27,7 +27,7 @@ length(const readable_vector<DerivedT>& v)
 /** Return a normalized copy of a vector. */
 template<class DerivedT> inline auto
 normalize(const readable_vector<DerivedT>& v)
--> typename temporary_of<DerivedT>::type;
+-> temporary_of_t<DerivedT>;
 
 } // namespace cml
 
