@@ -132,7 +132,7 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
 
     /** Construct given a size.
      *
-     * @throws std::invalid_argument if  @c ros < 0 or @c cols < 0.
+     * @throws std::invalid_argument if  @c rows < 0 or @c cols < 0.
      */
     matrix(int rows, int cols);
 

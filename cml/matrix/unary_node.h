@@ -85,7 +85,7 @@ class matrix_unary_node
     /** Construct from the wrapped sub-expression.  @c sub must be an
      * lvalue reference or rvalue reference type.
      */
-    matrix_unary_node(Sub sub);
+    explicit matrix_unary_node(Sub sub);
 
     /** Move constructor. */
     matrix_unary_node(node_type&& other);

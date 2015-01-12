@@ -9,6 +9,8 @@
 #ifndef	cml_common_storage_tags_h
 #define	cml_common_storage_tags_h
 
+#include <type_traits>
+
 namespace cml {
 
 /** Specify vector storage types. */
