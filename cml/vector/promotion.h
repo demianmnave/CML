@@ -44,7 +44,7 @@ struct vector_binary_storage_promote
   typedef resize_storage_t<unbound_type, array_size>	resized_type;
 
   /* Rebind to a vector storage type: */
-  typedef rebind_t<resized_type, vector_storage_tag>	type;
+  typedef rebind_vector_storage_t<resized_type>		type;
 };
 
 /** Convenience alias for vector_binary_storage_promote. */
@@ -75,8 +75,11 @@ template<class Sub1, class Sub2> struct vector_promote<
     storage_type_of_t<left_traits>,
     storage_type_of_t<right_traits>>			storage_type;
 
+  /* Use the proxy type for the temporary: */
+  typedef proxy_type_of_t<storage_type>			proxy_type;
+
   /* Build the vector type: */
-  typedef vector<value_type, storage_type>		type;
+  typedef vector<value_type, proxy_type>		type;
 };
 
 /** Convenience alias for vector_promote<>. */

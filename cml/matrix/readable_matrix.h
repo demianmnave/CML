@@ -76,8 +76,21 @@ class readable_matrix
      */
     immutable_value basis_element(int i, int j) const;
 
-    /** Compute the determinant of the matrix. */
+    /** Compute the determinant of the matrix.
+     *
+     * @throws non_square_matrix_error at run-time if the matrix is
+     * dynamically-sized and not square.  Fixed-size matrices are checked
+     * at compile-time.
+     */
     value_type determinant() const;
+
+    /** Compute the trace of the matrix.
+     *
+     * @throws non_square_matrix_error at run-time if the matrix is
+     * dynamically-sized and not square.  Fixed-size matrices are checked
+     * at compile-time.
+     */
+    value_type trace() const;
 
 
   protected:

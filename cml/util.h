@@ -9,7 +9,7 @@
 #ifndef	cml_util_h
 #define	cml_util_h
 
-#include <cml/common/scalar_functions.h>
+#include <cml/scalar/functions.h>
 
 namespace cml {
 

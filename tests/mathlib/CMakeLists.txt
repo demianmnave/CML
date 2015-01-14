@@ -2,20 +2,12 @@
 # @@COPYRIGHT@@
 #*-------------------------------------------------------------------------
 
-# Common functionality tests:
-add_subdirectory(common)
+project(CML_Testing_Mathlib)
+set(CML_CURRENT_TEST_GROUP "Mathlib")
 
-# Storage tests:
-add_subdirectory(storage)
-
-# cml::vector<> tests:
-add_subdirectory(vector)
-
-# cml::matrix<> tests:
-add_subdirectory(matrix)
-
-# mathlib tests:
-add_subdirectory(mathlib)
+ADD_CML_TEST(vector_angle1)
+ADD_CML_TEST(vector_misc1)
+ADD_CML_TEST(matrix_basis1)
 
 # --------------------------------------------------------------------------
 # vim:ft=cmake

@@ -17,9 +17,6 @@ set(CML_ROOT "${CML_SOURCE_DIR}")
 # Path to project-specific configuration files:
 list(APPEND CMAKE_MODULE_PATH ${CML_ROOT}/CMake)
 
-# Search for a Boost installation:
-find_package(Boost 1.56 REQUIRED)
-
 # Include project macros:
 include(CMLBuildMacros)
 

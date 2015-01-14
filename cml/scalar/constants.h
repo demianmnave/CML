@@ -6,8 +6,8 @@
 
 #pragma once
 
-#ifndef	cml_common_constants_h
-#define	cml_common_constants_h
+#ifndef	cml_scalar_constants_h
+#define	cml_scalar_constants_h
 
 #include <cmath>
 

@@ -172,8 +172,7 @@ writable_vector<DT>::random(
     , std::uniform_int_distribution<value_type>
     , std::uniform_real_distribution<value_type>>	distribution_type;
 
-  std::random_device rd;	// Non-deterministic seed, if supported.
-  std::default_random_engine gen(rd());
+  std::default_random_engine gen(std::rand());
   distribution_type d(low, high);
   for(int i = 0; i < this->size(); ++ i) this->set(i, d(gen));
   return this->actual();

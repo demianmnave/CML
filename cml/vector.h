@@ -18,6 +18,7 @@
 #include <cml/vector/subvector.h>
 #include <cml/vector/functions.h>
 #include <cml/vector/types.h>
+#include <cml/util/vector_print.h>
 
 #endif
 

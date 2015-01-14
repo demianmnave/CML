@@ -29,7 +29,7 @@ template<class Vector> struct temporary_of<Vector,
   typedef typename traits_type::storage_type		storage_type;
 
   /* Need the proxy for the storage type: */
-  typedef typename storage_type::proxy_type		proxy_type;
+  typedef proxy_type_of_t<storage_type>			proxy_type;
 
   /* Build the temporary: */
   typedef vector<value_type, proxy_type>		type;
@@ -58,7 +58,7 @@ struct subvector_of
   /* Determine the new storage type: */
   typedef resize_storage_t<storage_type, N>		resized_type;
   typedef rebind_t<resized_type, vector_storage_tag>	rebound_type;
-  typedef typename rebound_type::proxy_type		proxy_type;
+  typedef proxy_type_of_t<rebound_type>			proxy_type;
 
   /* Build the subvector from the new storage type: */
   typedef vector<value_type, proxy_type>		type;

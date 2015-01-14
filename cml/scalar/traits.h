@@ -69,6 +69,10 @@ template<typename Scalar> struct scalar_traits
     return std::atan(v);
   }
 
+  static inline value_type atan2(const value_type& x, const value_type& y) {
+    return std::atan2(x,y);
+  }
+
   /*@}*/
 };
 

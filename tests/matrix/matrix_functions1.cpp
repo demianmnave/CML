@@ -107,6 +107,18 @@ BOOST_AUTO_TEST_CASE(set_col1)
   BOOST_CHECK_EQUAL(M(2,0), 7.);
 }
 
+BOOST_AUTO_TEST_CASE(trace1)
+{
+  auto M = cml::matrix44d(
+    242.,  20., -33., -1.,
+     12., -48.,  45., -9.,
+     46., -32., -27., 13.,
+    -44.,  43.,   6., -5.
+    );
+  double expected = 242. - 48. - 27. - 5.;
+  BOOST_CHECK_CLOSE(M.trace(), expected, .001);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 // -------------------------------------------------------------------------

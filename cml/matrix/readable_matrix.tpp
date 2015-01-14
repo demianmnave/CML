@@ -64,6 +64,15 @@ readable_matrix<DT>::determinant() const -> value_type
   return detail::determinant(*this, cml::int_c<traits_type::array_rows>());
 }
 
+template<class DT> auto
+readable_matrix<DT>::trace() const -> value_type
+{
+  cml::check_square(*this);
+  auto result = this->get(0,0);
+  for(int i = 1; i < this->rows(); ++ i) result += this->get(i,i);
+  return result;
+}
+
 
 /* Internal methods: */
 

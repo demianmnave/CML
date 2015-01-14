@@ -76,9 +76,9 @@ class vector_binary_node
     /** Construct from the wrapped sub-expressions.  Sub1 and Sub2 must be
      * lvalue reference or rvalue reference types.
      *
-     * @throws incompatible_vector_sizes at run-time if either Sub1 or Sub2
-     * is a dynamically-sized vector, and sub1.size() != sub2.size().  If
-     * both Sub1 and Sub2 are fixed-size expressions, then the sizes are
+     * @throws incompatible_vector_size_error at run-time if either Sub1 or
+     * Sub2 is a dynamically-sized vector, and sub1.size() != sub2.size().
+     * If both Sub1 and Sub2 are fixed-size expressions, then the sizes are
      * checked at compile time.
      */
     vector_binary_node(Sub1 left, Sub2 right);
