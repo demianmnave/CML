@@ -13,6 +13,7 @@
 
 #include <cml/common/mpl/int_c.h>
 #include <cml/vector/size_checking.h>
+#include <cml/vector/detail/combined_size_of.h>
 
 namespace cml {
 namespace detail {
@@ -26,8 +27,8 @@ check_or_resize(const readable_vector<Sub>& left, const Other& right)
   cml::check_same_size(left, right);
 }
 
-/* check_or_resize for a read-write vector, left, that resizes the vector
- * to ensure it has the same size as right.
+/* check_or_resize for a resizable vector, left, that resizes the vector to
+ * ensure it has the same size as right.
  */
 template<class Sub, class Other> inline auto
 check_or_resize(writable_vector<Sub>& left, const Other& right)
@@ -54,8 +55,8 @@ check_or_resize(const readable_vector<Sub>& sub, int N)
   cml::check_size(sub, N);
 }
 
-/* check_or_resize for a read-write vector left and compile-time size N
- * that resizes the vector to N.
+/* check_or_resize for a resizable vector left and compile-time size N that
+ * resizes the vector to N.
  */
 template<class Sub, int N> inline auto
 check_or_resize(writable_vector<Sub>& sub, int_c<N>)
@@ -64,14 +65,38 @@ check_or_resize(writable_vector<Sub>& sub, int_c<N>)
   sub.actual().resize(N);
 }
 
-/* check_or_resize for a read-write vector left and run-time size N
- * that resizes the vector to N.
+/* check_or_resize for a resizable vector left and run-time size N that
+ * resizes the vector to N.
  */
 template<class Sub> inline auto
 check_or_resize(writable_vector<Sub>& sub, int N)
 -> decltype(sub.actual().resize(0), void())
 {
   sub.actual().resize(N);
+}
+
+
+/* check_or_resize for a read-only vector that verifies the size is
+ * other.size() + sizeof(eN):
+ */
+template<class Sub, class Other, class... Elements> inline void
+check_or_resize(const readable_vector<Sub>& sub,
+  const readable_vector<Other>& other, const Elements&... eN
+  )
+{
+  cml::check_size(sub, combined_size_of(other, eN...));
+}
+
+/* check_or_resize for a resizable vector that resizes the vector to
+ * other.size() + sizeof(eN):
+ */
+template<class Sub, class Other, class... Elements> inline auto
+check_or_resize(writable_vector<Sub>& sub,
+  const readable_vector<Other>& other, const Elements&... eN
+  )
+-> decltype(sub.actual().resize(0), void())
+{
+  sub.actual().resize(other.size() + sizeof...(eN));
 }
 
 } // namespace detail

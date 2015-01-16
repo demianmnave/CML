@@ -9,9 +9,9 @@
 #ifndef	cml_mathlib_matrix_basis_h
 #define	cml_mathlib_matrix_basis_h
 
-#include <cml/matrix/fwd.h>
 #include <cml/vector/fwd.h>
-#include <cml/mathlib/temporary.h>
+#include <cml/matrix/fwd.h>
+#include <cml/mathlib/matrix/temporary.h>
 
 /** @defgroup mathlib_matrix_basis Matrix Basis Functions */
 
@@ -235,12 +235,22 @@ matrix_get_transposed_basis_vectors(
 
 /*@}*/ // mathlib_matrix_basis_3D
 
+
+/** @defgroup mathlib_matrix_basis_nD nD Matrix Basis Functions */
+/*@{*/
+
+template<class Sub> auto
+matrix_get_basis_vector_nD(const readable_matrix<Sub>& m, int i)
+-> basis_vector_of_t<Sub>;
+
+/*@}*/ // mathlib_matrix_basis_nD
+
 /*@}*/ // mathlib_matrix_basis
 
 } // namespace cml
 
 #define __CML_MATHLIB_MATRIX_BASIS_TPP
-#include <cml/mathlib/matrix_basis.tpp>
+#include <cml/mathlib/matrix/basis.tpp>
 #undef __CML_MATHLIB_MATRIX_BASIS_TPP
 
 #endif

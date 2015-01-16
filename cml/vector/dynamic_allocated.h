@@ -129,6 +129,24 @@ class vector<Element, dynamic<Allocator>>
 	  this->assign_elements(e0, eN...);
 	}
 
+    /** Construct from a readable_vector and at least one
+     * additional element.  The vector is resized to accomodate the total
+     * number of elements passed.
+     *
+     * @note This overload is enabled only if the value_type of @c sub and
+     * all of the scalar arguments are convertible to value_type.
+     */
+    template<class Sub, class E0, class... Elements,
+      typename enable_if_convertible<value_type, value_type_trait_of_t<Sub>,
+      	E0, Elements...>::type* = nullptr> vector(
+	  const readable_vector<Sub>& sub, const E0& e0, const Elements&... eN
+	  )
+	// XXX Should be in vector/fixed_compiled.tpp, but VC++12 has
+	// brain-dead out-of-line template argument matching...
+	{
+	  this->assign(sub, e0, eN...);
+	}
+
     /** Construct from an array type. */
     template<class Array, enable_if_array_t<Array>* = nullptr>
       vector(const Array& array);

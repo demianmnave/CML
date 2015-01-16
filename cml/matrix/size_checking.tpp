@@ -101,7 +101,7 @@ template<class Sub> inline void
 check_linear_size(const readable_matrix<Sub>&, int, any_size_tag) {}
 
 /* Compile-time matrix linear size checking. */
-template<class Sub, int N> void
+template<class Sub, int N> inline void
 check_linear_size(const readable_matrix<Sub>&, cml::int_c<N>, fixed_size_tag)
 {
   static_assert(array_rows_of_c<Sub>::value*array_cols_of_c<Sub>::value == N,
@@ -109,7 +109,7 @@ check_linear_size(const readable_matrix<Sub>&, cml::int_c<N>, fixed_size_tag)
 }
 
 /* Run-time matrix linear size checking. */
-template<class Sub, class SizeTag> void
+template<class Sub, class SizeTag> inline void
 check_linear_size(const readable_matrix<Sub>& sub, int N, SizeTag)
 {
 #ifndef CML_NO_RUNTIME_MATRIX_SIZE_CHECKS

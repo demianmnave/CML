@@ -333,6 +333,10 @@ class writable_vector
     template<class Other>
       DerivedT& assign(const std::initializer_list<Other>& l);
 
+    template<class OtherDerivedT, class... Elements>
+      DerivedT& assign(
+	const readable_vector<OtherDerivedT>& other, const Elements&... eN);
+
     /** Construct from a variable list of values. If the vector is
      * resizable, it is resized to exactly accomodate the elements of @c
      * eN.  If the vector is fixed-size, it must have the same length as @c

@@ -30,7 +30,7 @@ struct vector_traits< matrix_col_node<Sub,Row> >
   typedef typename sub_traits::immutable_value		immutable_value;
 
   /* Propagate the column count from the subexpression: */
-  static const int array_size = sub_traits::array_cols;
+  static const int array_size = sub_traits::array_rows;
 
   /* Deduce the vector storage type: */
   typedef typename sub_traits::storage_type		sub_storage_type;

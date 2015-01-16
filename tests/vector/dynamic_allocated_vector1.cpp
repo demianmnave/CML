@@ -88,6 +88,26 @@ BOOST_AUTO_TEST_CASE(element_construct4)
   BOOST_CHECK_EQUAL(v[0], 1.);
 }
 
+BOOST_AUTO_TEST_CASE(combine_construct1)
+{
+  cml::vectord v(cml::vectord(1., 2., 3.), 4.);
+  BOOST_REQUIRE_EQUAL(v.size(), 4);
+  BOOST_CHECK_EQUAL(v[0], 1.);
+  BOOST_CHECK_EQUAL(v[1], 2.);
+  BOOST_CHECK_EQUAL(v[2], 3.);
+  BOOST_CHECK_EQUAL(v[3], 4.);
+}
+
+BOOST_AUTO_TEST_CASE(combine_construct2)
+{
+  cml::vectord v(cml::vectord(1., 2.), 3., 4.);
+  BOOST_REQUIRE_EQUAL(v.size(), 4);
+  BOOST_CHECK_EQUAL(v[0], 1.);
+  BOOST_CHECK_EQUAL(v[1], 2.);
+  BOOST_CHECK_EQUAL(v[2], 3.);
+  BOOST_CHECK_EQUAL(v[3], 4.);
+}
+
 BOOST_AUTO_TEST_CASE(list_construct)
 {
   cml::vectord v { 1., 2., 3. };

@@ -5,9 +5,10 @@
  */
 
 #ifndef __CML_MATHLIB_MATRIX_BASIS_TPP
-#error "mathlib/matrix_basis.tpp not included correctly"
+#error "mathlib/matrix/basis.tpp not included correctly"
 #endif
 
+#include <cml/matrix/row_col.h>
 #include <cml/matrix/writable_matrix.h>
 
 namespace cml {
@@ -361,6 +362,36 @@ matrix_get_transposed_basis_vectors(
   x = matrix_get_transposed_x_basis_vector(m);
   y = matrix_get_transposed_y_basis_vector(m);
   z = matrix_get_transposed_z_basis_vector(m);
+}
+
+
+
+/* nD basis functions: */
+
+namespace detail {
+
+template<class Sub> inline auto
+matrix_get_basis_vector(const readable_matrix<Sub>& m, int i, row_basis)
+-> basis_vector_of_t<Sub>
+{
+  return cml::row(m,i);
+}
+
+template<class Sub> inline auto
+matrix_get_basis_vector(const readable_matrix<Sub>& m, int i, col_basis)
+-> basis_vector_of_t<Sub>
+{
+  return cml::col(m,i);
+}
+
+} // namespace detail
+
+template<class Sub> auto
+matrix_get_basis_vector_nD(const readable_matrix<Sub>& m, int i)
+-> basis_vector_of_t<Sub>
+{
+  typedef basis_tag_of_t<Sub> tag;
+  return detail::matrix_get_basis_vector(m, i, tag());
 }
 
 } // namespace cml

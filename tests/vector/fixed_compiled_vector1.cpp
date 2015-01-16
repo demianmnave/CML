@@ -75,6 +75,26 @@ BOOST_AUTO_TEST_CASE(element_construct5)
   BOOST_CHECK_EQUAL(v[0], 1.);
 }
 
+BOOST_AUTO_TEST_CASE(combine_construct1)
+{
+  cml::vector4d v(cml::vector3d(1., 2., 3.), 4.);
+  BOOST_REQUIRE_EQUAL(v.size(), 4);
+  BOOST_CHECK_EQUAL(v[0], 1.);
+  BOOST_CHECK_EQUAL(v[1], 2.);
+  BOOST_CHECK_EQUAL(v[2], 3.);
+  BOOST_CHECK_EQUAL(v[3], 4.);
+}
+
+BOOST_AUTO_TEST_CASE(combine_construct2)
+{
+  cml::vector4d v(cml::vector2d(1., 2.), 3., 4.);
+  BOOST_REQUIRE_EQUAL(v.size(), 4);
+  BOOST_CHECK_EQUAL(v[0], 1.);
+  BOOST_CHECK_EQUAL(v[1], 2.);
+  BOOST_CHECK_EQUAL(v[2], 3.);
+  BOOST_CHECK_EQUAL(v[3], 4.);
+}
+
 BOOST_AUTO_TEST_CASE(array_assign)
 {
   double data[] = { 1., 2., 3. };

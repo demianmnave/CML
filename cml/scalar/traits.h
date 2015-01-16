@@ -27,8 +27,8 @@ template<typename Scalar> struct scalar_traits
   typedef value_type&					reference;
   typedef value_type const*				const_pointer;
   typedef value_type const&				const_reference;
-  typedef value_type&					mutable_value;
-  typedef value_type const				immutable_value;
+  typedef reference&					mutable_value;
+  typedef const_reference				immutable_value;
 
   /** @name Basic Functions */
   /*@{*/

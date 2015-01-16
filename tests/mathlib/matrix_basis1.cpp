@@ -4,10 +4,8 @@
 /** @file
  */
 
-#include <iostream>
-
 // Make sure the main header compiles cleanly:
-#include <cml/mathlib/matrix_basis.h>
+#include <cml/mathlib/matrix/basis.h>
 
 #include <cml/vector.h>
 #include <cml/matrix.h>
@@ -181,6 +179,38 @@ BOOST_AUTO_TEST_CASE(basis4)
   BOOST_CHECK_EQUAL(b3[0], 7.);
   BOOST_CHECK_EQUAL(b3[1], 8.);
   BOOST_CHECK_EQUAL(b3[2], 9.);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_AUTO_TEST_SUITE(basis_nD)
+
+BOOST_AUTO_TEST_CASE(basis1)
+{
+  auto M = cml::matrix34d_c(
+    1., 0., 0., 3.,
+    0., 1., 0., 2.,
+    0., 0., 1., 1.
+    );
+  auto T = cml::matrix_get_basis_vector_nD(M, 3);
+  BOOST_CHECK_EQUAL(T[0], 3.);
+  BOOST_CHECK_EQUAL(T[1], 2.);
+  BOOST_CHECK_EQUAL(T[2], 1.);
+}
+
+BOOST_AUTO_TEST_CASE(basis2)
+{
+  auto M = cml::matrix43d_r(
+    1., 0., 0.,
+    0., 1., 0.,
+    0., 0., 1.,
+    3., 2., 1.
+    );
+  auto T = cml::matrix_get_basis_vector_nD(M, 3);
+  BOOST_CHECK_EQUAL(T[0], 3.);
+  BOOST_CHECK_EQUAL(T[1], 2.);
+  BOOST_CHECK_EQUAL(T[2], 1.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

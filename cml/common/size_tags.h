@@ -78,12 +78,12 @@ template<class T> struct is_fixed_size {
 };
 
 /** Wrapper for enable_if to detect types tagged with fixed_size_tag. */
-template<class Sub> struct enable_if_fixed_size
-: std::enable_if<is_fixed_size<Sub>::value> {};
+template<class Sub, class T = void> struct enable_if_fixed_size
+: std::enable_if<is_fixed_size<Sub>::value, T> {};
 
 /** Convenience alias for enable_if_fixed_size. */
-template<class Sub> using enable_if_fixed_size_t
-  = typename enable_if_fixed_size<Sub>::type;
+template<class Sub, class T = void> using enable_if_fixed_size_t
+  = typename enable_if_fixed_size<Sub, T>::type;
 
 
 /** Helper to detect dynamic-size types. */
@@ -93,12 +93,12 @@ template<class T> struct is_dynamic_size {
 };
 
 /** Wrapper for enable_if to detect types tagged with dynamic_size_tag. */
-template<class Sub> struct enable_if_dynamic_size
-: std::enable_if<is_dynamic_size<Sub>::value> {};
+template<class Sub, class T = void> struct enable_if_dynamic_size
+: std::enable_if<is_dynamic_size<Sub>::value, T> {};
 
 /** Convenience alias for enable_if_dynamic_size. */
-template<class Sub> using enable_if_dynamic_size_t
-  = typename enable_if_dynamic_size<Sub>::type;
+template<class Sub, class T = void> using enable_if_dynamic_size_t
+  = typename enable_if_dynamic_size<Sub, T>::type;
 
 
 /** Helper to detect any-size types. */
@@ -108,12 +108,12 @@ template<class T> struct is_any_size {
 };
 
 /** Wrapper for enable_if to detect types tagged with any_size_tag. */
-template<class Sub> struct enable_if_any_size
-: std::enable_if<is_any_size<Sub>::value> {};
+template<class Sub, class T = void> struct enable_if_any_size
+: std::enable_if<is_any_size<Sub>::value, T> {};
 
 /** Convenience alias for enable_if_any_size. */
-template<class Sub> using enable_if_any_size_t
-  = typename enable_if_any_size<Sub>::type;
+template<class Sub, class T = void> using enable_if_any_size_t
+  = typename enable_if_any_size<Sub, T>::type;
 
 } // namespace cml
 

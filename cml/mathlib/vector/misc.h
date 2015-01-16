@@ -12,7 +12,6 @@
 #include <cml/scalar/promotion.h>
 #include <cml/vector/promotion.h>
 #include <cml/vector/temporary.h>
-#include <cml/mathlib/random_unit.h>
 
 /** @defgroup mathlib_vector_misc Miscellaneous Vector Functions */
 
@@ -65,7 +64,7 @@ template<class Sub1, class Sub2> auto manhattan_distance(
 } // namespace cml
 
 #define __CML_MATHLIB_VECTOR_MISC_TPP
-#include <cml/mathlib/vector_misc.tpp>
+#include <cml/mathlib/vector/misc.tpp>
 #undef __CML_MATHLIB_VECTOR_MISC_TPP
 
 #endif

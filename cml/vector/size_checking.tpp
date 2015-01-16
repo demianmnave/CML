@@ -15,6 +15,10 @@
 namespace cml {
 namespace detail {
 
+/* No-op binary vector expression size checking: */
+template<class Sub1, class Sub2> inline void
+check_same_size(const readable_vector<Sub1>&, const Sub2&, any_size_tag) {}
+
 /* Compile-time binary vector expression size checking: */
 template<class Sub1, class Sub2> inline void
 check_same_size(const readable_vector<Sub1>&, const Sub2&, fixed_size_tag)
@@ -35,55 +39,63 @@ check_same_size(
 #endif
 }
 
-/* No-op binary vector expression size checking: */
-template<class Sub1, class Sub2> inline void
-check_same_size(const readable_vector<Sub1>&, const Sub2&, any_size_tag) {}
 
 
+/* No-op minimum vector size checking. */
+template<class Sub> inline void
+check_minimum_size(
+  const readable_vector<Sub>&, int, enable_if_any_size_t<Sub>* = nullptr
+  )
+{
+}
 
 /* Compile-time minimum size checking against a constant. */
 template<class Sub, int N> inline void
-check_minimum_size(const readable_vector<Sub>&, cml::int_c<N>, fixed_size_tag)
+check_minimum_size(const readable_vector<Sub>&,
+  cml::int_c<N>, enable_if_fixed_size_t<Sub>* = nullptr
+  )
 {
   static_assert(
     array_size_of_c<Sub>::value >= N, "vector expression too short");
 }
 
 /* Run-time minimum vector size checking. */
-template<class Sub, class SizeTag> inline void
-check_minimum_size(const readable_vector<Sub>& sub, int N, SizeTag)
+template<class Sub> inline void
+check_minimum_size(const readable_vector<Sub>& sub, int N)
 {
 #ifndef CML_NO_RUNTIME_VECTOR_SIZE_CHECKS
   cml_require(array_size_of(sub) >= N, minimum_vector_size_error, /**/);
 #endif
 }
 
-/* No-op minimum vector size checking. */
+
+
+/* No-op vector size checking. */
 template<class Sub> inline void
-check_minimum_size(const readable_vector<Sub>&, int, any_size_tag) {}
-
-
+check_size(
+  const readable_vector<Sub>&, int, enable_if_any_size_t<Sub>* = nullptr
+  )
+{
+}
 
 /* Compile-time size checking against a constant. */
 template<class Sub, int N> inline void
-check_size(const readable_vector<Sub>&, cml::int_c<N>, fixed_size_tag)
+check_size(const readable_vector<Sub>&,
+  cml::int_c<N>, enable_if_fixed_size_t<Sub>* = nullptr
+  )
 {
   static_assert(
     array_size_of_c<Sub>::value == N, "incorrect vector expression size");
 }
 
 /* Run-time vector size checking. */
-template<class Sub, class SizeTag> inline void
-check_size(const readable_vector<Sub>& sub, int N, SizeTag)
+template<class Sub> inline void
+check_size(const readable_vector<Sub>& sub, int N)
 {
 #ifndef CML_NO_RUNTIME_VECTOR_SIZE_CHECKS
   cml_require(array_size_of(sub) == N, vector_size_error, /**/);
 #endif
 }
-
-/* No-op vector size checking. */
-template<class Sub> inline void
-check_size(const readable_vector<Sub>&, int, any_size_tag) {}
 
 } // namespace detail
 
@@ -127,15 +139,13 @@ check_same_size(const readable_vector<Sub1>& left, const Sub2& right)
 template<class Sub> void
 check_minimum_size(const readable_vector<Sub>& left, int N)
 {
-  typedef size_tag_of_t<Sub> tag;
-  detail::check_minimum_size(left, N, tag());
+  detail::check_minimum_size(left, N);
 }
 
 template<class Sub, int N> void
 check_minimum_size(const readable_vector<Sub>& left, cml::int_c<N>)
 {
-  typedef size_tag_of_t<Sub> tag;
-  detail::check_minimum_size(left, cml::int_c<N>(), tag());
+  detail::check_minimum_size(left, cml::int_c<N>());
 }
 
 
@@ -144,15 +154,13 @@ check_minimum_size(const readable_vector<Sub>& left, cml::int_c<N>)
 template<class Sub> void
 check_size(const readable_vector<Sub>& left, int N)
 {
-  typedef size_tag_of_t<Sub> tag;
-  detail::check_size(left, N, tag());
+  detail::check_size(left, N);
 }
 
 template<class Sub, int N> void
 check_size(const readable_vector<Sub>& left, cml::int_c<N>)
 {
-  typedef size_tag_of_t<Sub> tag;
-  detail::check_size(left, cml::int_c<N>(), tag());
+  detail::check_size(left, cml::int_c<N>());
 }
 
 } // namespace cml

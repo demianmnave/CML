@@ -9,6 +9,7 @@
 #ifndef	cml_common_basis_tags_h
 #define	cml_common_basis_tags_h
 
+#include <type_traits>
 #include <cml/common/traits.h>
 
 namespace cml {
@@ -57,6 +58,48 @@ template<class T> struct basis_tag_trait_of {
 /** Convenience alias for basis_tag_trait_of. */
 template<class T>
   using basis_tag_trait_of_t = typename basis_tag_trait_of<T>::type;
+
+
+/** Helper to detect row basis types. */
+template<class T> struct is_row_basis {
+  static const bool value = std::is_same<basis_tag_of_t<T>, row_basis>::value;
+};
+
+/** Wrapper for enable_if to detect types tagged with row_basis. */
+template<class Sub, class T = void> struct enable_if_row_basis
+: std::enable_if<is_row_basis<Sub>::value, T> {};
+
+/** Convenience alias for enable_if_row_basis. */
+template<class Sub, class T = void> using enable_if_row_basis_t
+  = typename enable_if_row_basis<Sub, T>::type;
+
+
+/** Helper to detect column basis types. */
+template<class T> struct is_col_basis {
+  static const bool value = std::is_same<basis_tag_of_t<T>, col_basis>::value;
+};
+
+/** Wrapper for enable_if to detect types tagged with col_basis. */
+template<class Sub, class T = void> struct enable_if_col_basis
+: std::enable_if<is_col_basis<Sub>::value, T> {};
+
+/** Convenience alias for enable_if_col_basis. */
+template<class Sub, class T = void> using enable_if_col_basis_t
+  = typename enable_if_col_basis<Sub, T>::type;
+
+
+/** Helper to detect arbitrary basis types. */
+template<class T> struct is_any_basis {
+  static const bool value = std::is_same<basis_tag_of_t<T>, any_basis>::value;
+};
+
+/** Wrapper for enable_if to detect types tagged with any_basis. */
+template<class Sub, class T = void> struct enable_if_any_basis
+: std::enable_if<is_any_basis<Sub>::value, T> {};
+
+/** Convenience alias for enable_if_any_basis. */
+template<class Sub, class T = void> using enable_if_any_basis_t
+  = typename enable_if_any_basis<Sub, T>::type;
 
 } // namespace cml
 

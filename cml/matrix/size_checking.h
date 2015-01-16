@@ -89,11 +89,6 @@ struct non_square_matrix_error : std::runtime_error {
  * @param right Second matrix expression.
  *
  * @throws incompatible_matrix_size_error at run-time if either @c left or
- * @c right is a dynamically-sized expression, and @c left.size() !=
- * @c right.size().  If both are fixed-size expressions, then the sizes are
- * checked at compile time.
- *
- * @throws incompatible_matrix_size_error at run-time if either @c left or
  * @c right is a dynamically-sized expression, and @c left.rows() * @c
  * left.cols() != @c right.rows() * @c right.cols().  If @c left and @c
  * right are fixed-size expressions, then the sizes are checked at compile
@@ -383,7 +378,7 @@ template<class Sub> void check_minimum_size(
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_MATRIX_SIZE_CHECKS at compile time.
  */
-template<class Sub, int R, int C> void check_size(
+template<class Sub, int R, int C> void check_minimum_size(
   const readable_matrix<Sub>& left, cml::int_c<R>, cml::int_c<C>);
 
 

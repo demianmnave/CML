@@ -11,7 +11,7 @@
 
 #include <cml/common/compiler.h>
 #include <cml/scalar/binary_ops.h>
-#include <cml/vector/traits.h>
+#include <cml/vector/temporary.h>
 
 namespace cml {
 
@@ -41,6 +41,17 @@ class readable_vector
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
+
+
+  public:
+
+    /** @name CML1 Types */
+    /*@{*/
+
+    typedef subvector_of_t<DerivedT>			subvector_type;
+    typedef supervector_of_t<DerivedT>			supervector_type;
+
+    /*@}*/
 
 
   public:

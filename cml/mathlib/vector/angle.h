@@ -47,7 +47,7 @@ template<class Sub1, class Sub2> inline auto unsigned_angle(
 } // namespace cml
 
 #define __CML_MATHLIB_VECTOR_ANGLE_TPP
-#include <cml/mathlib/vector_angle.tpp>
+#include <cml/mathlib/vector/angle.tpp>
 #undef __CML_MATHLIB_VECTOR_ANGLE_TPP
 
 #endif

@@ -17,7 +17,7 @@ namespace detail {
 
 /* Terminate the assignment recursion at the final element. */
 template<int I, class Sub, class E0> inline void
-assign_elements(writable_vector<Sub>& sub, const E0& e0)
+assign_elements(writable_vector<Sub>& sub, cml::int_c<I>, const E0& e0)
 {
   sub.set(I,e0);
 }
@@ -26,17 +26,31 @@ assign_elements(writable_vector<Sub>& sub, const E0& e0)
  * starting from I+1.
  */
 template<int I, class Sub, class E0, class... Es> inline void
-assign_elements(writable_vector<Sub>& sub, const E0& e0, const Es&... eN)
+assign_elements(
+  writable_vector<Sub>& sub, cml::int_c<I>, const E0& e0, const Es&... eN
+  )
 {
   sub.set(I,e0);
-  assign_elements<I+1>(sub, eN...);
+  assign_elements(sub, cml::int_c<I+1>(), eN...);
 }
 
-/* Assign the elements of sub from eN, starting from index 0. */
-template<class Sub, class... Es> inline void
-assign_elements(writable_vector<Sub>& sub, const Es&... eN)
+
+
+/* Set sub(i) to e0: */
+template<class Sub, class E0> inline void
+assign_elements(writable_vector<Sub>& sub, int i, const E0& e0)
 {
-  assign_elements<0>(sub, eN...);
+  sub.set(i, e0);
+}
+
+/* Assign the elements of sub from eN starting from index i. */
+template<class Sub, class E0, class... Es> inline void
+assign_elements(
+  writable_vector<Sub>& sub, int i, const E0& e0, const Es&... eN
+  )
+{
+  sub.set(i, e0);
+  assign_elements(sub, i+1, eN...);
 }
 
 } // namespace detail
@@ -350,12 +364,23 @@ writable_vector<DT>::assign(const std::initializer_list<Other>& l)
   return this->actual();
 }
 
+template<class DT> template<class ODT, class... Es> DT&
+writable_vector<DT>::assign(
+  const readable_vector<ODT>& other, const Es&... eN
+  )
+{
+  detail::check_or_resize(*this, other, eN...);
+  for(int i = 0; i < other.size(); ++ i) this->set(i, other.get(i));
+  detail::assign_elements(*this, other.size(), eN...);
+  return this->actual();
+}
+
 template<class DT> template<class... Es> DT&
 writable_vector<DT>::assign_elements(const Es&... eN)
 {
   static const int N = int(sizeof...(eN));
   detail::check_or_resize(*this, int_c<N>());
-  detail::assign_elements(*this, eN...);
+  detail::assign_elements(*this, int_c<0>(), eN...);
   return this->actual();
 }
 

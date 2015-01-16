@@ -5,7 +5,7 @@
  */
 
 // Make sure the main header compiles cleanly:
-#include <cml/mathlib/vector_angle.h>
+#include <cml/mathlib/vector/angle.h>
 
 #include <cml/scalar/functions.h>
 #include <cml/vector.h>

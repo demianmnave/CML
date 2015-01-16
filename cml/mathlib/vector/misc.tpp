@@ -5,7 +5,7 @@
  */
 
 #ifndef __CML_MATHLIB_VECTOR_MISC_TPP
-#error "mathlib/vector_misc.tpp not included correctly"
+#error "mathlib/vector/misc.tpp not included correctly"
 #endif
 
 #include <type_traits>
@@ -20,7 +20,7 @@ project_to_hplane(
   )
 -> vector_promote_t<Sub1, Sub2>
 {
-  return v - cml::dot(v,n)*n;
+  return v - dot(v,n)*n;
 }
 
 template<class Sub> inline auto

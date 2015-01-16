@@ -5,7 +5,7 @@
  */
 
 #ifndef __CML_MATHLIB_VECTOR_ANGLE_TPP
-#error "mathlib/vector_angle.tpp not included correctly"
+#error "mathlib/vector/angle.tpp not included correctly"
 #endif
 
 #include <cml/vector/dot.h>
@@ -23,7 +23,7 @@ signed_angle_2D(
 {
   typedef value_type_trait_promote_t<Sub1,Sub2>		value_type;
   typedef scalar_traits<value_type>			value_traits;
-  return value_traits::atan2(cml::perp_dot(v1,v2), cml::dot(v1, v2));
+  return value_traits::atan2(perp_dot(v1,v2), dot(v1, v2));
 }
 
 template<class Sub1, class Sub2> inline auto
@@ -49,9 +49,9 @@ signed_angle(
   typedef value_type_trait_promote_t<Sub1,Sub2,Sub3>	value_type;
   typedef scalar_traits<value_type>			value_traits;
 
-  auto c = cml::cross(v1, v2);
-  auto angle = value_traits::atan2(c.length(), cml::dot(v1, v2));
-  return (cml::dot(c, reference) < value_type(0)) ? -angle : angle;
+  auto c = cross(v1, v2);
+  auto angle = value_traits::atan2(c.length(), dot(v1, v2));
+  return (dot(c, reference) < value_type(0)) ? -angle : angle;
 }
 
 template<class Sub1, class Sub2> inline auto
@@ -63,7 +63,7 @@ unsigned_angle(
 {
   typedef value_type_trait_promote_t<Sub1,Sub2>		value_type;
   typedef scalar_traits<value_type>			value_traits;
-  return value_traits::atan2(cml::cross(v1,v2).length(), cml::dot(v1, v2));
+  return value_traits::atan2(cross(v1,v2).length(), dot(v1, v2));
 }
 
 } // namespace cml
