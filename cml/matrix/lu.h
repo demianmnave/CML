@@ -50,6 +50,8 @@ struct lu_pivot_result<Matrix, enable_if_dynamic_size_t<matrix_traits<Matrix>>>
 
 /** Compute the LU decomposition of M, with partial pivoting.  The result
  * is returned in an lu_pivot_result.
+ *
+ * @note if @c result.sign is 0, the input matrix is singular.
  */
 template<class Sub> inline auto
 lu_pivot(const readable_matrix<Sub>& M)
@@ -57,6 +59,8 @@ lu_pivot(const readable_matrix<Sub>& M)
 
 /** In-place computation of the partial-pivoting LU decomposition of @c
  * result.lu.
+ *
+ * @note if @c result.sign is 0, the input matrix is singular.
  */
 template<class Matrix> inline void
 lu_pivot(lu_pivot_result<Matrix>& result);
@@ -83,18 +87,20 @@ template<class LUSub, class BSub> inline auto
 lu_solve(const readable_matrix<LUSub>& LU, const readable_vector<BSub>& y)
 -> temporary_of_t<BSub>;
 
-/** Solve @c LUx = @c y for @c x.  @c LU must be a square LU
+/** Solve @c LUx = @c b for @c x.  @c LU must be a square LU
  * decomposition, and @c y and @c x must have the same number of elements
  * as @c LU has rows.
  */
 template<class LUSub, class XSub, class BSub> inline void
 lu_solve(const readable_matrix<LUSub>& LU,
-  writable_vector<XSub>& x, const readable_vector<BSub>& y);
+  writable_vector<XSub>& x, const readable_vector<BSub>& b);
 
 /** Solve @c LUx = @c Pb for @c x, where the partial-pivot LU
  * decomposition is provided as lu_pivot_result, and @c x is returned as a
  * vector temporary.  @c b must have the same number of elements as @c
  * lup.lu has rows.
+ *
+ * @throws std::invalid_argument @c lup.sign is 0.
  */
 template<class Matrix, class BSub> inline auto
 lu_solve(const lu_pivot_result<Matrix>& lup, const readable_vector<BSub>& b)
@@ -103,10 +109,14 @@ lu_solve(const lu_pivot_result<Matrix>& lup, const readable_vector<BSub>& b)
 /** Solve @c LUx = @c Pb for @c x, where the partial-pivot LU
  * decomposition is provided as lu_pivot_result.  @c b and @c x must have
  * the same number of elements as @c lup.lu has rows.
+ *
+ * @note @c x can be the same vector as @c b.
+ *
+ * @throws std::invalid_argument @c lup.sign is 0.
  */
 template<class Matrix, class XSub, class BSub> inline void
 lu_solve(const lu_pivot_result<Matrix>& lup,
-  writable_vector<XSub>& x, const readable_vector<BSub>& y);
+  writable_vector<XSub>& x, const readable_vector<BSub>& b);
 
 } // namespace cml
 

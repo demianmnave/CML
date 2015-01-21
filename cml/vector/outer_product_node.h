@@ -35,24 +35,12 @@ struct matrix_traits< outer_product_node<Sub1,Sub2> >
   typedef typename element_traits::value_type		value_type;
   typedef value_type					immutable_value;
 
-  /* Deduce the left matrix storage type from the vector storage: */
-  static const int left_size = array_size_of_c<left_traits>::value;
-  typedef storage_type_of_t<left_traits>		left_bound_type;
-  typedef reshape_storage_t<typename left_bound_type::unbound_type,
-	  left_size, -1>				left_unbound_type;
-  typedef rebind_matrix_storage_t<left_unbound_type>	left_storage_type;
-
-  /* Deduce the right matrix storage type from the vector storage: */
-  static const int right_size = array_size_of_c<right_traits>::value;
-  typedef storage_type_of_t<right_traits>		right_bound_type;
-  typedef reshape_storage_t<typename right_bound_type::unbound_type,
-	  -1, right_size>				right_unbound_type;
-  typedef rebind_matrix_storage_t<right_unbound_type>	right_storage_type;
-
   /* Determine the common storage type for the node, based on the storage
    * types of its subexpressions:
    */
-  typedef matrix_binary_storage_promote_t<
+  typedef storage_type_of_t<left_traits>		left_storage_type;
+  typedef storage_type_of_t<right_traits>		right_storage_type;
+  typedef matrix_outer_product_storage_promote_t<
     left_storage_type, right_storage_type>		storage_type;
 
   /* Traits and types for the storage: */

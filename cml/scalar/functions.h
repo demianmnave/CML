@@ -86,7 +86,7 @@ template<typename T> inline T rad(T theta) {
 
 
 /** Random binary (0,1) value. */
-inline size_t random_binary() { return std::rand() % 2; }
+inline int random_binary() { return std::rand() % 2; }
 
 /** Random polar (-1,1) value. */
 inline int random_polar() { return random_binary() ? 1 : -1; }
@@ -124,35 +124,35 @@ template<typename T> inline T length(T x, T y, T z) {
   return scalar_traits<T>::sqrt(length_squared(x,y,z));
 }
 
-/** @addtogroup cml_indexing
+/** @defgroup cml_scalar_indexing Indexing Functions
  *
  * The next few functions deal with indexing. next() and prev() are useful
  * for operations involving the vertices of a polygon or other cyclic set,
  * and cyclic_permutation() is used by various functions that deal with
  * axes or basis vectors in a generic way. As these functions are only
- * relevant for unsigned integer types, I've just used size_t, but there
+ * relevant for unsigned integer types, I've just used int, but there
  * may be reasons I haven't thought of that they should be templated.
  */
 /*@{*/
 
 /** Return next, with cycling, in a series of N non-negative integers. */
-inline size_t next(size_t i, size_t N) {
+inline int next(int i, int N) {
   return (i + 1) % N;
 }
 
 /** Return previous, with cycling, in a series of N non-negative integers. */
-inline size_t prev(size_t i, size_t N) {
+inline int prev(int i, int N) {
   return i ? (i - 1) : (N - 1);
 }
 
 /** Cyclic permutation of the set { 0, 1 }, starting with 'first'. */
-inline void cyclic_permutation(size_t first, size_t& i, size_t& j) {
+inline void cyclic_permutation(int first, int& i, int& j) {
   i = first;
   j = next(i, 2);
 }
 
 /** Cyclic permutation of the set { 0, 1, 2 }, starting with 'first'. */
-inline void cyclic_permutation(size_t first, size_t& i, size_t& j, size_t& k)
+inline void cyclic_permutation(int first, int& i, int& j, int& k)
 {
   i = first;
   j = next(i, 3);
@@ -161,7 +161,7 @@ inline void cyclic_permutation(size_t first, size_t& i, size_t& j, size_t& k)
 
 /** Cyclic permutation of the set { 0, 1, 2, 3 }, starting with 'first'. */
 inline void cyclic_permutation(
-  size_t first, size_t& i, size_t& j, size_t& k, size_t& l)
+  int first, int& i, int& j, int& k, int& l)
 {
   i = first;
   j = next(i, 4);
@@ -173,51 +173,51 @@ inline void cyclic_permutation(
 
 
 /** Index of maximum of 2 values. */
-template<typename T> inline size_t index_of_max(T a, T b) {
+template<typename T> inline int index_of_max(T a, T b) {
   return a > b ? 0 : 1;
 }
 
 /** Index of maximum of 2 values by magnitude. */
-template<typename T> inline size_t index_of_max_abs(T a, T b) {
+template<typename T> inline int index_of_max_abs(T a, T b) {
   auto fabs = &scalar_traits<T>::fabs;
   return index_of_max(fabs(a), fabs(b));
 }
 
 /** Index of minimum of 2 values. */
-template<typename T> inline size_t index_of_min(T a, T b) {
+template<typename T> inline int index_of_min(T a, T b) {
   return a < b ? 0 : 1;
 }
 
 /** Index of minimum of 2 values by magnitude. */
-template<typename T> inline size_t index_of_min_abs(T a, T b) {
+template<typename T> inline int index_of_min_abs(T a, T b) {
   auto fabs = &scalar_traits<T>::fabs;
   return index_of_min(fabs(a), fabs(b));
 }
 
 /** Index of maximum of 3 values. */
-template<typename T> inline size_t index_of_max(T a, T b, T c) {
+template<typename T> inline int index_of_max(T a, T b, T c) {
   return a > b ? (c > a ? 2 : 0) : (b > c ? 1 : 2);
 }
 
 /** Index of maximum of 3 values by magnitude. */
-template<typename T> inline size_t index_of_max_abs(T a, T b, T c) {
+template<typename T> inline int index_of_max_abs(T a, T b, T c) {
   auto fabs = &scalar_traits<T>::fabs;
   return index_of_max(fabs(a), fabs(b), fabs(c));
 }
 
 /** Index of minimum of 3 values. */
-template<typename T> inline size_t index_of_min(T a, T b, T c) {
+template<typename T> inline int index_of_min(T a, T b, T c) {
   return a < b ? (c < a ? 2 : 0) : (b < c ? 1 : 2);
 }
 
 /** Index of minimum of 3 values by magnitude. */
-template<typename T> inline size_t index_of_min_abs(T a, T b, T c) {
+template<typename T> inline int index_of_min_abs(T a, T b, T c) {
   auto fabs = &scalar_traits<T>::fabs;
   return index_of_min(fabs(a), fabs(b), fabs(c));
 }
 
 /** Index of maximum of 4 values. */
-template<typename T> inline size_t index_of_max(T a, T b, T c, T d) {
+template<typename T> inline int index_of_max(T a, T b, T c, T d) {
   if(a > b) {
     return (c > d) ? ((a > c) ? 0 : 2) : ((a > d) ? 0 : 3);
   } else {
@@ -226,13 +226,13 @@ template<typename T> inline size_t index_of_max(T a, T b, T c, T d) {
 }
 
 /** Index of maximum of 4 values by magnitude. */
-template<typename T> inline size_t index_of_max_abs(T a, T b, T c, T d) {
+template<typename T> inline int index_of_max_abs(T a, T b, T c, T d) {
   auto fabs = &scalar_traits<T>::fabs;
   return index_of_max(fabs(a), fabs(b), fabs(c), fabs(d));
 }
 
 /** Index of minimum of 3 values. */
-template<typename T> inline size_t index_of_min(T a, T b, T c, T d) {
+template<typename T> inline int index_of_min(T a, T b, T c, T d) {
   if(a < b) {
     return (c < d) ? ((a < c) ? 0 : 2) : ((a < d) ? 0 : 3);
   } else {
@@ -241,7 +241,7 @@ template<typename T> inline size_t index_of_min(T a, T b, T c, T d) {
 }
 
 /** Index of minimum of 4 values by magnitude. */
-template<typename T> inline size_t index_of_min_abs(T a, T b, T c, T d) {
+template<typename T> inline int index_of_min_abs(T a, T b, T c, T d) {
   auto fabs = &scalar_traits<T>::fabs;
   return index_of_min(fabs(a), fabs(b), fabs(c), fabs(d));
 }

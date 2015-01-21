@@ -60,6 +60,7 @@ template<class Storage1, class Storage2>
   using matrix_binary_storage_promote_t =
     typename matrix_binary_storage_promote<Storage1,Storage2>::type;
 
+
 /** Specializable class to determine a temporary type that can store the
  * result of matrix/matrix or matrix/vector products.
  */
@@ -126,7 +127,6 @@ struct matrix_inner_product_promote<Sub1, Sub2,
   typedef matrix<value_type,
 	  proxy_type, basis_tag, layout_tag>		type;
 };
-
 
 /** Determine a matrix temporary type that can hold the result of
  * multiplying two matrix expressions @c Sub1 and @c Sub2.
@@ -205,6 +205,83 @@ struct matrix_inner_product_promote<Sub1, Sub2,
 /** Convenience alias for matrix_inner_product_promote. */
 template<class Sub1, class Sub2> using matrix_inner_product_promote_t
   = typename matrix_inner_product_promote<Sub1,Sub2>::type;
+
+
+template<class Storage1, class Storage2>
+struct matrix_outer_product_storage_promote
+{
+  static_assert(
+    is_vector_storage<Storage1>::value &&
+    is_vector_storage<Storage2>::value,
+    "expected vector storage types for outer product promotion");
+
+  /* Deduce the left matrix storage type from the vector storage: */
+  static const int left_size = Storage1::array_size;
+  typedef reshape_storage_t<typename Storage1::unbound_type,
+	  left_size, -1>				left_unbound_type;
+  typedef rebind_matrix_storage_t<left_unbound_type>	left_storage_type;
+
+  /* Deduce the right matrix storage type from the vector storage: */
+  static const int right_size = Storage2::array_size;
+  typedef reshape_storage_t<typename Storage2::unbound_type,
+	  -1, right_size>				right_unbound_type;
+  typedef rebind_matrix_storage_t<right_unbound_type>	right_storage_type;
+
+  /* Determine the common storage type, based on the storage types of its
+   * subexpressions:
+   */
+  typedef matrix_binary_storage_promote_t<
+    left_storage_type, right_storage_type>		type;
+};
+
+/** Convenience alias for matrix_outer_product_promote. */
+template<class Storage1, class Storage2>
+using matrix_outer_product_storage_promote_t
+  = typename matrix_outer_product_storage_promote<Storage1,Storage2>::type;
+
+
+/** Specializable class to determine a temporary type that can store the
+ * result of vector outer products.
+ */
+template<class Sub1, class Sub2, class Basis, class Layout,
+  class Enable = void> struct matrix_outer_product_promote;
+
+/** Determine a matrix temporary type that can hold the result of the outer
+ * product of two vector expressions @c Sub1 and @c Sub2.
+ *
+ * @note The temporary will
+ */
+template<class Sub1, class Sub2, class Basis, class Layout>
+struct matrix_outer_product_promote<Sub1, Sub2, Basis, Layout,
+  typename std::enable_if<
+     (is_vector<Sub1>::value && is_vector<Sub2>::value)>::type
+  >
+{
+  typedef cml::unqualified_type_t<Sub1>			left_type;
+  typedef cml::unqualified_type_t<Sub2>			right_type;
+  typedef vector_traits<left_type>			left_traits;
+  typedef vector_traits<right_type>			right_traits;
+
+  /* Deduce the element type: */
+  typedef value_type_promote_t<left_traits,right_traits> value_type;
+
+  /* Determine the common storage type for the temporary, based on the
+   * storage types of its subexpressions:
+   */
+  typedef storage_type_of_t<left_traits>		left_storage_type;
+  typedef storage_type_of_t<right_traits>		right_storage_type;
+  typedef matrix_outer_product_storage_promote_t<
+    left_storage_type, right_storage_type>		storage_type;
+  typedef proxy_type_of_t<storage_type>			proxy_type;
+
+  /* Build the temporary: */
+  typedef matrix<value_type, proxy_type, Basis, Layout>	type;
+};
+
+/** Convenience alias for matrix_outer_product_promote. */
+template<class Sub1, class Sub2, class Basis, class Layout>
+  using matrix_outer_product_promote_t
+    = typename matrix_outer_product_promote<Sub1,Sub2,Basis,Layout>::type;
 
 } // namespace cml
 

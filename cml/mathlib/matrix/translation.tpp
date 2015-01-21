@@ -81,7 +81,7 @@ matrix_get_translation_2D(
   e1 = m.basis_element(2,1);
 }
 
-template<class Sub> auto
+template<class Sub> inline auto
 matrix_get_translation_2D(const readable_matrix<Sub>& m)
 -> n_basis_vector_of_t<Sub,2>
 {
@@ -125,7 +125,7 @@ matrix_get_translation(
   e2 = m.basis_element(3,2);
 }
 
-template<class Sub> auto
+template<class Sub> inline auto
 matrix_get_translation(const readable_matrix<Sub>& m)
 -> n_basis_vector_of_t<Sub,3>
 {
@@ -134,6 +134,29 @@ matrix_get_translation(const readable_matrix<Sub>& m)
 }
 
 } // namespace cml
+
+
+
+#if 0
+// XXX INCOMPLETE XXX
+
+//////////////////////////////////////////////////////////////////////////////
+// Function for getting the translation of a 3D view matrix
+//////////////////////////////////////////////////////////////////////////////
+
+/** Get the translation of a 3D affine transform */
+template < class MatT > vector< typename MatT::value_type, fixed<3> >
+matrix_get_view_translation(const MatT& m)
+{
+    typedef typename MatT::value_type value_type;
+    typedef vector< value_type, fixed<3> > vector_type;
+    
+    vector_type x, y, z;
+    matrix_get_basis_vectors(m,x,y,z);
+    vector_type p = matrix_get_translation(m);
+    return vector_type(-dot(p,x),-dot(p,y),-dot(p,z));
+}
+#endif
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

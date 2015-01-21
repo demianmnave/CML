@@ -4,8 +4,6 @@
 /** @file
  */
 
-#include <iostream>
-
 // Make sure the main header compiles cleanly:
 #include <cml/mathlib/matrix/translation.h>
 

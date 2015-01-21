@@ -23,7 +23,8 @@ check_or_resize(const readable_matrix<Sub>& left, const Other& right)
 }
 
 /** Ensure resizable matrix @c left is the same size as @c right. */
-template<class Sub1, class Sub2> inline auto check_or_resize(
+template<class Sub1, class Sub2> inline auto
+check_or_resize(
   writable_matrix<Sub1>& left, const readable_matrix<Sub2>& right
   )
 -> decltype(left.actual().resize(0,0), void())
@@ -32,8 +33,8 @@ template<class Sub1, class Sub2> inline auto check_or_resize(
 }
 
 /** Ensure resizable matrix @c left is the same size as array @c right. */
-template<class Sub1, class Other, int Rows, int Cols>
-inline auto check_or_resize(
+template<class Sub1, class Other, int Rows, int Cols> inline auto
+check_or_resize(
   writable_matrix<Sub1>& left, Other const (&)[Rows][Cols]
   )
 -> decltype(left.actual().resize(0,0), void())

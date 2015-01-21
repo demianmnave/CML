@@ -102,6 +102,8 @@ lu_solve(const lu_pivot_result<Matrix>& lup,
 
   cml::check_same_inner_size(lup.lu, x);
   cml::check_same_inner_size(lup.lu, b);
+  cml_require(lup.sign != 0,
+    std::invalid_argument, "lup.sign == 0 (singular matrix?)");
 
   int N = b.size();
   const auto& LU = lup.lu;

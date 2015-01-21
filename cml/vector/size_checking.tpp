@@ -102,7 +102,7 @@ check_size(const readable_vector<Sub>& sub, int N)
 
 /* check_same_size: */
 
-template<class Sub1, class Sub2> void
+template<class Sub1, class Sub2> inline void
 check_same_size(
   const readable_vector<Sub1>& left, const readable_vector<Sub2>& right
   )
@@ -113,7 +113,7 @@ check_same_size(
     left, right.actual(), size_check_promote_t<tag1,tag2>());
 }
 
-template<class Sub1, class Sub2> void
+template<class Sub1, class Sub2> inline void
 check_same_size(
   const readable_vector<Sub1>& left, const Sub2& right,
   enable_if_array_t<Sub2>*
@@ -136,13 +136,13 @@ check_same_size(const readable_vector<Sub1>& left, const Sub2& right)
 
 /* check_minimum_size: */
 
-template<class Sub> void
+template<class Sub> inline void
 check_minimum_size(const readable_vector<Sub>& left, int N)
 {
   detail::check_minimum_size(left, N);
 }
 
-template<class Sub, int N> void
+template<class Sub, int N> inline void
 check_minimum_size(const readable_vector<Sub>& left, cml::int_c<N>)
 {
   detail::check_minimum_size(left, cml::int_c<N>());
@@ -151,13 +151,13 @@ check_minimum_size(const readable_vector<Sub>& left, cml::int_c<N>)
 
 /* check_size: */
 
-template<class Sub> void
+template<class Sub> inline void
 check_size(const readable_vector<Sub>& left, int N)
 {
   detail::check_size(left, N);
 }
 
-template<class Sub, int N> void
+template<class Sub, int N> inline void
 check_size(const readable_vector<Sub>& left, cml::int_c<N>)
 {
   detail::check_size(left, cml::int_c<N>());

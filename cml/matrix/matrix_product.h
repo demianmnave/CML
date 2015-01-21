@@ -25,7 +25,7 @@ inline auto operator*(Sub1&& sub1, Sub2&& sub2)
 
 #define __CML_MATRIX_MATRIX_PRODUCT_TPP
 #include <cml/matrix/matrix_product.tpp>
-#undef __CML_MATRIX_MATRIX_PRPDUCT_TPP
+#undef __CML_MATRIX_MATRIX_PRODUCT_TPP
 
 #endif
 

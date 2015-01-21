@@ -13,7 +13,7 @@
 #include <cml/matrix/fwd.h>
 #include <cml/mathlib/matrix/temporary.h>
 
-/** @defgroup mathlib_matrix_translation */
+/** @defgroup mathlib_matrix_translation Matrix Translation Functions */
 
 namespace cml {
 
@@ -116,7 +116,6 @@ template<class Sub> auto matrix_get_translation(
   const readable_matrix<Sub>& m) -> n_basis_vector_of_t<Sub,3>;
 
 /*@}*/
-
 
 /*@}*/
 

@@ -135,7 +135,7 @@ inline void inverse_pivot(writable_matrix<Sub>& M,
 
     /* Find the pivot */
     int row = 0, col = 0;
-    value_type max(0);
+    auto pivot = value_traits::fabs(M(0,0));
     for(int j = 0; j < N; ++ j) {
       if(pivoted[j]) continue;
 
@@ -143,16 +143,16 @@ inline void inverse_pivot(writable_matrix<Sub>& M,
 	if(pivoted[k]) continue;
 
 	value_type mag = value_traits::fabs(M(j,k));
-	if(mag > max) {
-	  max = mag;
+	if(mag > pivot) {
+	  pivot = mag;
 	  row = j;
 	  col = k;
 	}
       }
     }
 
-    /* TODO: Check max against epsilon here to catch singularity */
-    // cml_require(max >= epsilon, singular_matrix_error, /**/);
+    /* TODO: Check pivot against epsilon here to catch singularity */
+    // cml_require(pivot >= epsilon, singular_matrix_error, /**/);
 
     row_index[i] = row;
     col_index[i] = col;
@@ -165,11 +165,10 @@ inline void inverse_pivot(writable_matrix<Sub>& M,
 
     /* Process pivot row */
     pivoted[col] = true;
-    value_type pivot = M(col,col);
+    pivot = M(col,col);
     M(col,col) = value_type(1);
     value_type k = value_type(1) / pivot;
     for(int j = 0; j < N; ++ j) M(col,j) *= k;
-    /*M.row_op_mult(col,value_type(1)/pivot);*/
 
     /* Process other rows */
     for(int j = 0; j < N; ++ j) {
@@ -178,7 +177,6 @@ inline void inverse_pivot(writable_matrix<Sub>& M,
       value_type mult = -M(j,col);
       M(j,col) = value_type(0);
       for(int k = 0; k < N; ++ k) M(j,k) += mult * M(col,k);
-      /*M.row_op_add_mult(col,j,mult);*/
     }
   }
 
@@ -188,7 +186,6 @@ inline void inverse_pivot(writable_matrix<Sub>& M,
 
     for(int j = 0; j < N; ++ j)
       std::swap(M(j,row_index[i]), M(j,col_index[i]));
-    /*M.col_op_swap(row_index[i],col_index[i]);*/
   }
 }
 

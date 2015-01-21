@@ -62,8 +62,9 @@ lu_pivot_inplace(writable_matrix<Sub>& M, OrderArray& order)
       }
     }
 
-    /* TODO: Check max against epsilon here to catch singularity */
-    // cml_require(max >= epsilon, singular_matrix_error, /**/);
+    /* Check for a singular matrix: */
+    if(max < value_traits::epsilon()) return 0;
+    // XXX should be configurable?
 
     /* Update order and swap rows: */
     if(row != k) {

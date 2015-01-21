@@ -16,6 +16,7 @@
 #include <cml/matrix/vector_product.h>
 #include <cml/matrix/matrix_product.h>
 #include <cml/matrix/functions.h>
+#include <cml/matrix/inverse.h>
 #include <cml/matrix/types.h>
 #include <cml/util/matrix_print.h>
 

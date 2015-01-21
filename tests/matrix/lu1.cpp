@@ -165,6 +165,24 @@ BOOST_AUTO_TEST_CASE(lu_pivot_solve2)
   for(int i = 0; i < 4; ++ i) BOOST_CHECK_CLOSE(Ax[i], b[i], .001);
 }
 
+BOOST_AUTO_TEST_CASE(lu_pivot_solve3)
+{
+  auto A = cml::matrix44d(
+     2.,  0.,  2.,  .6,
+     3.,  3.,  4.,  -2.,
+     5.,  5.,  4.,   2.,
+    -1., -2., 3.4,  -1.
+    );
+  auto lup = cml::lu_pivot(A);
+  BOOST_CHECK_EQUAL(lup.sign, -1);
+
+  auto b = cml::vector4d(5., 1., 8., 3.);
+  auto x = b;
+  cml::lu_solve(lup, x, x);
+  auto Ax = A*x;
+  for(int i = 0; i < 4; ++ i) BOOST_CHECK_CLOSE(Ax[i], b[i], .001);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -331,6 +349,29 @@ BOOST_AUTO_TEST_CASE(lu_pivot_solve2)
   auto x = cml::external4d(avx);
 
   cml::lu_solve(lup, x, b);
+  auto Ax = A*x;
+  for(int i = 0; i < 4; ++ i) BOOST_CHECK_CLOSE(Ax[i], b[i], .001);
+}
+
+BOOST_AUTO_TEST_CASE(lu_pivot_solve3)
+{
+  double avM[] = {
+     2.,  0.,  2.,  .6,
+     3.,  3.,  4.,  -2.,
+     5.,  5.,  4.,   2.,
+    -1., -2., 3.4,  -1.
+  };
+  auto A = cml::external44d(avM);
+  auto lup = cml::lu_pivot(A);
+  BOOST_CHECK_EQUAL(lup.sign, -1);
+
+  double avb[] = { 5., 1., 8., 3. };
+  auto b = cml::external4d(avb);
+
+  double avx[4] = { 5., 1., 8., 3. };
+  auto x = cml::external4d(avx);
+
+  cml::lu_solve(lup, x, x);
   auto Ax = A*x;
   for(int i = 0; i < 4; ++ i) BOOST_CHECK_CLOSE(Ax[i], b[i], .001);
 }
@@ -507,6 +548,29 @@ BOOST_AUTO_TEST_CASE(lu_pivot_solve2)
   for(int i = 0; i < 4; ++ i) BOOST_CHECK_CLOSE(Ax[i], b[i], .001);
 }
 
+BOOST_AUTO_TEST_CASE(lu_pivot_solve3)
+{
+  double avM[] = {
+     2.,  0.,  2.,  .6,
+     3.,  3.,  4.,  -2.,
+     5.,  5.,  4.,   2.,
+    -1., -2., 3.4,  -1.
+  };
+  auto A = cml::external44d(avM);
+  auto lup = cml::lu_pivot(A);
+  BOOST_CHECK_EQUAL(lup.sign, -1);
+
+  double avb[] = { 5., 1., 8., 3. };
+  auto b = cml::externalnd(4, avb);
+
+  double avx[] = { 5., 1., 8., 3. };
+  auto x = cml::externalnd(4, avx);
+
+  cml::lu_solve(lup, x, x);
+  auto Ax = A*x;
+  for(int i = 0; i < 4; ++ i) BOOST_CHECK_CLOSE(Ax[i], b[i], .001);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -661,6 +725,25 @@ BOOST_AUTO_TEST_CASE(lu_pivot_solve2)
   auto b = cml::vectord(5., 1., 8., 3.);
   auto x = cml::vectord(4);
   cml::lu_solve(lup, x, b);
+  auto Ax = A*x;
+  for(int i = 0; i < 4; ++ i) BOOST_CHECK_CLOSE(Ax[i], b[i], .001);
+}
+
+BOOST_AUTO_TEST_CASE(lu_pivot_solve3)
+{
+  auto A = cml::matrixd(
+    4,4,
+     2.,  0.,  2.,  .6,
+     3.,  3.,  4.,  -2.,
+     5.,  5.,  4.,   2.,
+    -1., -2., 3.4,  -1.
+    );
+  auto lup = cml::lu_pivot(A);
+  BOOST_CHECK_EQUAL(lup.sign, -1);
+
+  auto b = cml::vectord(5., 1., 8., 3.);
+  auto x = b;
+  cml::lu_solve(lup, x, x);
   auto Ax = A*x;
   for(int i = 0; i < 4; ++ i) BOOST_CHECK_CLOSE(Ax[i], b[i], .001);
 }
