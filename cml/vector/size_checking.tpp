@@ -97,6 +97,39 @@ check_size(const readable_vector<Sub>& sub, int N)
 #endif
 }
 
+
+
+/* No-op vector size range checking. */
+template<class Sub> inline void
+check_size_range(
+  const readable_vector<Sub>&, int, int, enable_if_any_size_t<Sub>* = nullptr
+  )
+{
+}
+
+/* Compile-time size range checking against constants. */
+template<class Sub, int Low, int High> inline void
+check_size_range(const readable_vector<Sub>&,
+  cml::int_c<Low>, cml::int_c<High>,
+  enable_if_fixed_size_t<Sub>* = nullptr
+  )
+{
+  static_assert(
+    array_size_of_c<Sub>::value >= Low && array_size_of_c<Sub>::value <= High,
+    "vector expression size out of range");
+}
+
+/* Run-time vector size checking. */
+template<class Sub> inline void
+check_size_range(const readable_vector<Sub>& sub, int Low, int High)
+{
+#ifndef CML_NO_RUNTIME_VECTOR_SIZE_CHECKS
+  cml_require(
+    array_size_of(sub) >= Low && array_size_of(sub) <= High,
+    vector_size_range_error, /**/);
+#endif
+}
+
 } // namespace detail
 
 
@@ -161,6 +194,23 @@ template<class Sub, int N> inline void
 check_size(const readable_vector<Sub>& left, cml::int_c<N>)
 {
   detail::check_size(left, cml::int_c<N>());
+}
+
+
+/* check_size_range: */
+
+template<class Sub> inline void
+check_size_range(const readable_vector<Sub>& left, int Low, int High)
+{
+  detail::check_size_range(left, Low, High);
+}
+
+template<class Sub, int Low, int High> inline void
+check_size_range(
+  const readable_vector<Sub>& left, cml::int_c<Low>, cml::int_c<High>
+  )
+{
+  detail::check_size_range(left, cml::int_c<Low>(), cml::int_c<High>());
 }
 
 } // namespace cml

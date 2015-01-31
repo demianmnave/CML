@@ -105,6 +105,15 @@ BOOST_AUTO_TEST_CASE(array_assign)
   BOOST_CHECK_EQUAL(v[0], 1.);
 }
 
+BOOST_AUTO_TEST_CASE(pointer_construct)
+{
+  double data[] = { 1., 2., 3. };
+  cml::vector3d v(&data[0]);
+  BOOST_REQUIRE_EQUAL(v.size(), 3);
+  BOOST_CHECK_EQUAL(v.data()[0], 1.);
+  BOOST_CHECK_EQUAL(v[0], 1.);
+}
+
 BOOST_AUTO_TEST_CASE(list_construct)
 {
   cml::vector3d v { 1., 2., 3. };

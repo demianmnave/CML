@@ -10,6 +10,7 @@
 #define	cml_vector_writable_vector_h
 
 #include <initializer_list>
+#include <cml/common/mpl/enable_if_pointer.h>
 #include <cml/common/mpl/enable_if_array.h>
 #include <cml/common/mpl/enable_if_convertible.h>
 #include <cml/vector/readable_vector.h>
@@ -320,8 +321,19 @@ class writable_vector
      * @note This depends upon implicit conversions of the elements to the
      * vector value_type.
      */
-    template<class Array, typename cml::enable_if_array_t<Array>* = nullptr>
+    template<class Array, cml::enable_if_array_t<Array>* = nullptr>
       DerivedT& assign(const Array& array);
+
+    /** Assign from a pointer to an array.
+     *
+     * @note This depends upon implicit conversion of the array elements to
+     * the vector value_type.
+     *
+     * @note The number of elements read from @c array depends upon the
+     * current size of the vector.
+     */
+    template<class Pointer, cml::enable_if_pointer_t<Pointer>* = nullptr>
+      DerivedT& assign(const Pointer& array);
 
     /** Construct from an initializer_list. If the vector is resizable, it
      * is resized to exactly accomodate the elements of @c l. If the vector
@@ -333,6 +345,9 @@ class writable_vector
     template<class Other>
       DerivedT& assign(const std::initializer_list<Other>& l);
 
+    /** Assign from a subvector and 1 or more additional elements to
+     * append.
+     */
     template<class OtherDerivedT, class... Elements>
       DerivedT& assign(
 	const readable_vector<OtherDerivedT>& other, const Elements&... eN);

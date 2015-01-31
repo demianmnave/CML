@@ -14,6 +14,7 @@
 #include <cml/storage/promotion.h>
 #include <cml/scalar/promotion.h>
 #include <cml/vector/vector.h>
+#include <cml/vector/traits.h>
 #include <cml/vector/type_util.h>
 #include <cml/matrix/type_util.h>
 #include <cml/matrix/traits.h>

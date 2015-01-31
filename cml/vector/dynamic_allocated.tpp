@@ -56,6 +56,22 @@ vector<E, dynamic<A>>::vector(const Array& array)
   this->assign(array);
 }
 
+template<class E, class A>
+vector<E, dynamic<A>>::vector(int size, const_pointer array)
+: m_data(0), m_size(0)
+{
+  this->resize_fast(size);
+  this->assign(array);
+}
+
+template<class E, class A>
+vector<E, dynamic<A>>::vector(const_pointer array, int size)
+: m_data(0), m_size(0)
+{
+  this->resize_fast(size);
+  this->assign(array);
+}
+
 template<class E, class A> template<class Other>
 vector<E, dynamic<A>>::vector(std::initializer_list<Other> l)
 : m_data(0), m_size(0)

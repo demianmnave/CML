@@ -4,6 +4,8 @@
 /** @file
  */
 
+#include <iostream>
+
 #include <cml/vector/dynamic_allocated.h>
 #include <cml/vector/types.h>
 
@@ -106,6 +108,24 @@ BOOST_AUTO_TEST_CASE(combine_construct2)
   BOOST_CHECK_EQUAL(v[1], 2.);
   BOOST_CHECK_EQUAL(v[2], 3.);
   BOOST_CHECK_EQUAL(v[3], 4.);
+}
+
+BOOST_AUTO_TEST_CASE(pointer_construct1)
+{
+  double data[] = { 1., 2., 3. };
+  cml::vectord v(3, &data[0]);
+  BOOST_REQUIRE_EQUAL(v.size(), 3);
+  BOOST_CHECK_EQUAL(v.data()[0], 1.);
+  BOOST_CHECK_EQUAL(v[0], 1.);
+}
+
+BOOST_AUTO_TEST_CASE(pointer_construct2)
+{
+  double data[] = { 1., 2., 3. };
+  cml::vectord v(&data[0], 3);
+  BOOST_REQUIRE_EQUAL(v.size(), 3);
+  BOOST_CHECK_EQUAL(v.data()[0], 1.);
+  BOOST_CHECK_EQUAL(v[0], 1.);
 }
 
 BOOST_AUTO_TEST_CASE(list_construct)

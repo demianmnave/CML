@@ -149,7 +149,7 @@ cartesian_to_cylindrical(const readable_vector<Sub>& v,
 template<class Sub, class E> void
 cartesian_to_cylindrical(const readable_vector<Sub>& v,
   E& radius, E& theta, E& height, int axis,
-  E tolerance = scalar_traits<E>::sqrt_epsilon());
+  E tolerance = cml::sqrt_epsilon<E>());
 
 
 /** Convert 3D Cartesian coordinates to spherical coordinates.
@@ -185,7 +185,7 @@ cartesian_to_spherical(const readable_vector<Sub>& v,
 template<class Sub, class E> void
 cartesian_to_spherical(const readable_vector<Sub>& v,
   E& radius, E& theta, E& phi, int axis, LatitudeType type,
-  E tolerance = scalar_traits<E>::sqrt_epsilon());
+  E tolerance = cml::sqrt_epsilon<E>());
 
 /*@}*/
 

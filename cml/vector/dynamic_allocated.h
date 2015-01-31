@@ -143,6 +143,7 @@ class vector<Element, dynamic<Allocator>>
 	  )
 	// XXX Should be in vector/fixed_compiled.tpp, but VC++12 has
 	// brain-dead out-of-line template argument matching...
+	: m_data(0), m_size(0)
 	{
 	  this->assign(sub, e0, eN...);
 	}
@@ -150,6 +151,12 @@ class vector<Element, dynamic<Allocator>>
     /** Construct from an array type. */
     template<class Array, enable_if_array_t<Array>* = nullptr>
       vector(const Array& array);
+
+    /** Construct from a pointer to an array. */
+    vector(const_pointer array, int size);
+
+    /** Construct from a pointer to an array. */
+    vector(int size, const_pointer array);
 
     /** Construct from std::initializer_list. */
     template<class Other> vector(std::initializer_list<Other> l);

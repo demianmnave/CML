@@ -40,6 +40,14 @@ struct vector_size_error : std::runtime_error {
     : std::runtime_error("incorrect vector expression size") {}
 };
 
+/** Exception thrown when run-time size checking is enabled, and the
+ * size of a vector expression operand is outside the required range.
+ */
+struct vector_size_range_error : std::runtime_error {
+  vector_size_range_error()
+    : std::runtime_error("vector expression size out of range") {}
+};
+
 
 /** Front-end for both compile-time and run-time vector binary expression
  * length checking.  Both expressions must derive from readable_vector.
@@ -164,6 +172,41 @@ void check_size(const readable_vector<Sub>& left, int N);
  */
 template<class Sub, int N>
 void check_size(const readable_vector<Sub>& left, cml::int_c<N>);
+
+
+/** Front-end for vector expression length checking against a run-time
+ * inclusive size range.  The expression must derive from readable_vector.
+ *
+ * @param left Vector expression.
+ * @param Low Minimum size to check.
+ * @param High Maximum size to check.
+ *
+ * @throws vector_size_range_error if @c left.size() < @c Low or @c
+ * left.size() > @c High.
+ *
+ * @note Run-time checking can be disabled by defining
+ * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
+ */
+template<class Sub>
+void check_size_range(const readable_vector<Sub>& left, int Low, int High);
+
+/** Front-end for compile-time and run-time vector expression length
+ * checking against an integer constant inclusive range via int_c<N>.  The
+ * expression must derive from readable_vector.
+ *
+ * @param left Vector expression.
+ *
+ * @throws vector_size_range_error at run-time if @c left is a
+ * dynamically-sized expression and @c left.size() < @c Low or @c
+ * left.size() > @c High. If @c left is a fixed-size expression, then the
+ * size is checked at compile time.
+ *
+ * @note Run-time checking can be disabled by defining
+ * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
+ */
+template<class Sub, int Low, int High>
+void check_size_range(
+  const readable_vector<Sub>& left, cml::int_c<Low>, cml::int_c<High>);
 
 } // namespace cml
 

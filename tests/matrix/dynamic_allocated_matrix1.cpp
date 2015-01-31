@@ -293,6 +293,44 @@ BOOST_AUTO_TEST_CASE(element_construct2)
   BOOST_CHECK_EQUAL(M(2,3), 0.);
 }
 
+BOOST_AUTO_TEST_CASE(pointer_construct1)
+{
+  double aM[3][4] = {
+    { 1.,  2.,  3.,  4. },
+    { 5.,  6.,  7.,  8. },
+    { 9.,  0.,  0.,  0. }
+  };
+  cml::matrixd M(3,4, &aM[0][0]);
+
+  BOOST_REQUIRE_EQUAL(M.rows(), 3);
+  BOOST_REQUIRE_EQUAL(M.cols(), 4);
+  BOOST_CHECK_EQUAL(M.data()[0], 1.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(2,0), 9.);
+  BOOST_CHECK_EQUAL(M(2,1), 0.);
+  BOOST_CHECK_EQUAL(M(2,2), 0.);
+  BOOST_CHECK_EQUAL(M(2,3), 0.);
+}
+
+BOOST_AUTO_TEST_CASE(pointer_construct2)
+{
+  double aM[3][4] = {
+    { 1.,  2.,  3.,  4. },
+    { 5.,  6.,  7.,  8. },
+    { 9.,  0.,  0.,  0. }
+  };
+  cml::matrixd_c M(&aM[0][0], 3,4);
+
+  BOOST_REQUIRE_EQUAL(M.rows(), 3);
+  BOOST_REQUIRE_EQUAL(M.cols(), 4);
+  BOOST_CHECK_EQUAL(M.data()[0], 1.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(2,0), 9.);
+  BOOST_CHECK_EQUAL(M(2,1), 0.);
+  BOOST_CHECK_EQUAL(M(2,2), 0.);
+  BOOST_CHECK_EQUAL(M(2,3), 0.);
+}
+
 BOOST_AUTO_TEST_CASE(list_assign1)
 {
   cml::matrixd M(3,4);

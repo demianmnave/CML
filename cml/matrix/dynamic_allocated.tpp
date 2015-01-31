@@ -73,6 +73,26 @@ matrix<E, dynamic<A>, BO, L>::matrix(Other const (&array)[R][C])
 }
 
 template<class E, class A, typename BO, typename L>
+matrix<E, dynamic<A>, BO, L>::matrix(
+  int rows, int cols, const_pointer array
+  )
+: m_data(0), m_rows(0), m_cols(0)
+{
+  this->resize_fast(rows,cols);
+  this->assign(array);
+}
+
+template<class E, class A, typename BO, typename L>
+matrix<E, dynamic<A>, BO, L>::matrix(
+  const_pointer array, int rows, int cols
+  )
+: m_data(0), m_rows(0), m_cols(0)
+{
+  this->resize_fast(rows,cols);
+  this->assign(array);
+}
+
+template<class E, class A, typename BO, typename L>
 matrix<E, dynamic<A>, BO, L>::~matrix()
 {
   typedef typename allocator_type::size_type size_type;

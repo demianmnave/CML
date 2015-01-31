@@ -409,6 +409,16 @@ writable_matrix<DT>::assign(Other const (&array)[R][C])
   return this->actual();
 }
 
+template<class DT>
+template<class Pointer, enable_if_pointer_t<Pointer>*> DT&
+writable_matrix<DT>::assign(const Pointer& array)
+{
+  int rows = this->rows(), cols = this->cols();
+  for(int i = 0; i < rows*cols; ++ i)
+    this->set(i/cols, i%cols, array[i]);
+  return this->actual();
+}
+
 template<class DT> template<class Other> DT&
 writable_matrix<DT>::assign(const std::initializer_list<Other>& l)
 {

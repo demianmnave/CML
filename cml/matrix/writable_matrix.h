@@ -10,6 +10,7 @@
 #define	cml_matrix_writable_matrix_h
 
 #include <initializer_list>
+#include <cml/common/mpl/enable_if_pointer.h>
 #include <cml/common/mpl/enable_if_array.h>
 #include <cml/common/mpl/enable_if_convertible.h>
 #include <cml/vector/fwd.h>
@@ -393,6 +394,17 @@ class writable_matrix
      */
     template<class Other, int Rows, int Cols>
       DerivedT& assign(Other const (&array)[Rows][Cols]);
+
+    /** Assign from a pointer to an array.
+     *
+     * @note This depends upon implicit conversion of the array elements to
+     * the matrix value_type.
+     *
+     * @note The number of elements read from @c array depends upon the
+     * current size of the matrix.
+     */
+    template<class Pointer, cml::enable_if_pointer_t<Pointer>* = nullptr>
+      DerivedT& assign(const Pointer& array);
 
     /** Assign from an initializer_list.
      *

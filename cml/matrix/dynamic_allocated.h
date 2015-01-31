@@ -177,6 +177,12 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
     template<class Other, int Rows, int Cols>
       matrix(Other const (&array)[Rows][Cols]);
 
+    /** Construct from a pointer to an array. */
+    matrix(int rows, int cols, const_pointer array);
+
+    /** Construct from a pointer to an array. */
+    matrix(const_pointer array, int rows, int cols);
+
     /** Destructor. */
     ~matrix();
 

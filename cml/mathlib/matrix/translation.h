@@ -66,14 +66,36 @@ template<class Sub, class E0, class E1> void matrix_get_translation_2D(
 template<class Sub> auto matrix_get_translation_2D(
   const readable_matrix<Sub>& m) -> n_basis_vector_of_t<Sub,2>;
 
+
+/** Initialize a 2D translation matrix, @c m, from @c e0 and @c e1.
+ *
+ * @throws minimum_matrix_size_error at run-time if @c m is
+ * dynamically-sized, and is not sized for a 2D affine transformation.  If
+ * @c m is fixed-size, the size is checked at compile-time.
+ */
+template<class Sub, class E0, class E1> void matrix_translation_2D(
+  writable_matrix<Sub>& m, const E0& e0, const E1& e1);
+
+/** Initialize a 2D translation matrix, @c m, from the 2D vector @c v.
+ *
+ * @throws minimum_matrix_size_error at run-time if @c m is
+ * dynamically-sized, and is not sized for a 2D affine transformation.  If
+ * @c m is fixed-size, the size is checked at compile-time.
+ *
+ * @throws vector_size_error at run-time if @c v is dynamically-sized, and
+ * is not 2D.  If @c v is fixed-size, the size is checked at compile-time.
+ */
+template<class Sub1, class Sub2> void matrix_translation_2D(
+  writable_matrix<Sub1>& m, const readable_vector<Sub2>& v);
+
 /*@}*/
 
 
 /** @defgroup mathlib_matrix_translation_3D 3D Matrix Translation Functions */
 /*@{*/
 
-/** Set the translation of a 3D affine transformation, @c m, to @c e0 and
- * @c e1.
+/** Set the translation of a 3D affine transformation, @c m, to @c e0, @c
+ * e1, and @c e2.
  *
  * @throws minimum_matrix_size_error at run-time if @c m is
  * dynamically-sized, and is not sized for a 3D affine transformation.  If
@@ -82,15 +104,26 @@ template<class Sub> auto matrix_get_translation_2D(
 template<class Sub, class E0, class E1, class E2> void matrix_set_translation(
   writable_matrix<Sub>& m, const E0& e0, const E1& e1, const E2& e2);
 
-/** Set the translation of a 3D affine transformation, @c m, to the 3D
- * vector @c v.
+/** Set the translation of a 3D affine transformation, @c m, to @c e0, @c
+ * e1, and 0.
+ *
+ * @throws minimum_matrix_size_error at run-time if @c m is
+ * dynamically-sized, and is not sized for a 3D affine transformation.  If
+ * @c m is fixed-size, the size is checked at compile-time.
+ */
+template<class Sub, class E0, class E1> void matrix_set_translation(
+  writable_matrix<Sub>& m, const E0& e0, const E1& e1);
+
+/** Set the translation of a 3D affine transformation, @c m, to the
+ * 2D or 3D vector @c v (if @c v is 2D the last element is 0).
  *
  * @throws minimum_matrix_size_error at run-time if @c m is
  * dynamically-sized, and is not sized for a 3D affine transformation.  If
  * @c m is fixed-size, the size is checked at compile-time.
  *
  * @throws vector_size_error at run-time if @c v is dynamically-sized, and
- * is not 3D.  If @c v is fixed-size, the size is checked at compile-time.
+ * is not 2D or 3D.  If @c v is fixed-size, the size is checked at
+ * compile-time.
  */
 template<class Sub1, class Sub2> void matrix_set_translation(
   writable_matrix<Sub1>& m, const readable_vector<Sub2>& v);
@@ -114,6 +147,37 @@ template<class Sub, class E0, class E1, class E2> void matrix_get_translation(
  */
 template<class Sub> auto matrix_get_translation(
   const readable_matrix<Sub>& m) -> n_basis_vector_of_t<Sub,3>;
+
+
+/** Initialize a 3D translation matrix, @c m, from @c e0, @c e1, and @c e2.
+ *
+ * @throws minimum_matrix_size_error at run-time if @c m is
+ * dynamically-sized, and is not sized for a 3D affine transformation.  If
+ * @c m is fixed-size, the size is checked at compile-time.
+ */
+template<class Sub, class E0, class E1, class E2> void matrix_translation(
+  writable_matrix<Sub>& m, const E0& e0, const E1& e1, const E2& e2);
+
+/** Initialize a 3D translation matrix, @c m, from @c e0, @c e1, and 0.
+ *
+ * @throws minimum_matrix_size_error at run-time if @c m is
+ * dynamically-sized, and is not sized for a 3D affine transformation.  If
+ * @c m is fixed-size, the size is checked at compile-time.
+ */
+template<class Sub, class E0, class E1> void matrix_translation(
+  writable_matrix<Sub>& m, const E0& e0, const E1& e1);
+
+/** Initialize a 3D translation matrix, @c m, from the 3D vector @c v.
+ *
+ * @throws minimum_matrix_size_error at run-time if @c m is
+ * dynamically-sized, and is not sized for a 3D affine transformation.  If
+ * @c m is fixed-size, the size is checked at compile-time.
+ *
+ * @throws vector_size_error at run-time if @c v is dynamically-sized, and
+ * is not 3D.  If @c v is fixed-size, the size is checked at compile-time.
+ */
+template<class Sub1, class Sub2> void matrix_translation(
+  writable_matrix<Sub1>& m, const readable_vector<Sub2>& v);
 
 /*@}*/
 

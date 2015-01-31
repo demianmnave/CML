@@ -25,6 +25,12 @@ vector<E, fixed<S>>::vector(const Array& array)
   this->assign(array);
 }
 
+template<class E, int S>
+vector<E, fixed<S>>::vector(const_pointer array)
+{
+  this->assign(array);
+}
+
 template<class E, int S> template<class Other>
 vector<E, fixed<S>>::vector(std::initializer_list<Other> l)
 {

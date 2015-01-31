@@ -6,25 +6,25 @@
 
 #pragma once
 
-#ifndef	cml_common_mpl_enable_if_array_h
-#define	cml_common_mpl_enable_if_array_h
+#ifndef	cml_common_mpl_enable_if_pointer_h
+#define	cml_common_mpl_enable_if_pointer_h
 
 #include <type_traits>
 
 namespace cml {
 
-/** Alias for std::enable_if<T> using std::is_array<T> to determine the
+/** Alias for std::enable_if<T> using std::is_pointer<T> to determine the
  * boolean value.
  */
-template<class Array> using enable_if_array
+template<class Pointer> using enable_if_pointer
   = typename std::enable_if<
-  std::is_array<Array>::value && !std::is_pointer<Array>::value>;
+  std::is_pointer<Pointer>::value && !std::is_array<Pointer>::value>;
 
-/** Alias for std::enable_if<T>::type using std::is_array<T> to determine
+/** Alias for std::enable_if<T>::type using std::is_pointer<T> to determine
  * the boolean value.
  */
-template<class Array> using enable_if_array_t
-  = typename enable_if_array<Array>::type;
+template<class Pointer> using enable_if_pointer_t
+  = typename enable_if_pointer<Pointer>::type;
 
 } // namespace cml
 

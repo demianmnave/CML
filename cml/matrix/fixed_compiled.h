@@ -157,6 +157,9 @@ class matrix<Element, fixed<Rows,Cols>, BasisOrient, Layout>
     template<class Other, int Rows2, int Cols2>
       matrix(Other const (&array)[Rows2][Cols2]);
 
+    /** Construct from a pointer to an array. */
+    matrix(const_pointer array);
+
     /** Construct from std::initializer_list. */
     template<class Other> matrix(std::initializer_list<Other> l);
 

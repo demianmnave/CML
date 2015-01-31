@@ -15,6 +15,7 @@
 #include <cml/mathlib/matrix/basis.h>
 #include <cml/mathlib/matrix/translation.h>
 #include <cml/mathlib/matrix/rotation.h>
+#include <cml/mathlib/matrix/scale.h>
 #include <cml/mathlib/matrix/projection.h>
 #include <cml/mathlib/matrix/misc.h>
 #include <cml/mathlib/coordinate_conversion.h>

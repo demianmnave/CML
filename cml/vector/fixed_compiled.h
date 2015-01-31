@@ -139,6 +139,9 @@ class vector<Element, fixed<Size>>
     template<class Array, enable_if_array_t<Array>* = nullptr>
       vector(const Array& array);
 
+    /** Construct from a pointer to an array. */
+    vector(const_pointer array);
+
     /** Construct from std::initializer_list. */
     template<class Other> vector(std::initializer_list<Other> l);
 

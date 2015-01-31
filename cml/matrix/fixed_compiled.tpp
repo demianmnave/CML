@@ -32,6 +32,12 @@ matrix<E, fixed<R,C>, BO, L>::matrix(Other const (&array)[R2][C2])
   this->assign(array);
 }
 
+template<class E, int R, int C, typename BO, typename L>
+matrix<E, fixed<R,C>, BO, L>::matrix(const_pointer array)
+{
+  this->assign(array);
+}
+
 template<class E, int R, int C, typename BO, typename L> template<class Other>
 matrix<E, fixed<R,C>, BO, L>::matrix(std::initializer_list<Other> l)
 {

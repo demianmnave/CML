@@ -356,6 +356,14 @@ writable_vector<DT>::assign(const Array& array)
   return this->actual();
 }
 
+template<class DT>
+template<class Pointer, enable_if_pointer_t<Pointer>*> DT&
+writable_vector<DT>::assign(const Pointer& array)
+{
+  for(int i = 0; i < this->size(); ++ i) this->set(i, array[i]);
+  return this->actual();
+}
+
 template<class DT> template<class Other> DT&
 writable_vector<DT>::assign(const std::initializer_list<Other>& l)
 {

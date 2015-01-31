@@ -47,6 +47,8 @@ matrix_set_basis(writable_matrix<Sub>& m, const Es&... es)
 } // namespace detail
 
 
+/* 2D translation: */
+
 template<class Sub, class E0, class E1> inline void
 matrix_set_translation_2D(
   writable_matrix<Sub>& m, const E0& e0, const E1& e1
@@ -90,6 +92,27 @@ matrix_get_translation_2D(const readable_matrix<Sub>& m)
 }
 
 
+template<class Sub, class E0, class E1> inline void
+matrix_translation_2D(
+  writable_matrix<Sub>& m, const E0& e0, const E1& e1
+  )
+{
+  m.identity();
+  matrix_set_translation_2D(m, e0, e1);
+}
+
+template<class Sub1, class Sub2> inline void
+matrix_translation_2D(
+  writable_matrix<Sub1>& m, const readable_vector<Sub2>& v
+  )
+{
+  m.identity();
+  matrix_set_translation_2D(m, v);
+}
+
+
+/* 3D translation: */
+
 template<class Sub, class E0, class E1, class E2> inline void
 matrix_set_translation(
   writable_matrix<Sub>& m, const E0& e0, const E1& e1, const E2& e2
@@ -99,14 +122,26 @@ matrix_set_translation(
   detail::matrix_set_basis<3>(m, e0, e1, e2);
 }
 
+template<class Sub, class E0, class E1> inline void
+matrix_set_translation(
+  writable_matrix<Sub>& m, const E0& e0, const E1& e1
+  )
+{
+  typedef scalar_promote_t<E0,E1> zero_type;
+  cml::check_affine_3D(m);
+  detail::matrix_set_basis<3>(m, e0, e1, zero_type(0));
+}
+
 template<class Sub1, class Sub2> inline void
 matrix_set_translation(
   writable_matrix<Sub1>& m, const readable_vector<Sub2>& v
   )
 {
-  cml::check_size(v, cml::int_c<3>());
+  typedef value_type_trait_of_t<Sub2> zero_type;
+  cml::check_size_range(v, cml::int_c<2>(), cml::int_c<3>());
   cml::check_affine_3D(m);
-  detail::matrix_set_basis<3>(m, v[0], v[1], v[2]);
+  detail::matrix_set_basis<3>(
+    m, v[0], v[1], ((v.size() == 3) ? v[2] : zero_type(0)));
 }
 
 
@@ -133,6 +168,34 @@ matrix_get_translation(const readable_matrix<Sub>& m)
   return { m.basis_element(3,0), m.basis_element(3,1), m.basis_element(3,2) };
 }
 
+
+template<class Sub, class E0, class E1, class E2> inline void
+matrix_translation(
+  writable_matrix<Sub>& m, const E0& e0, const E1& e1, const E2& e2
+  )
+{
+  m.identity();
+  matrix_set_translation(m, e0, e1, e2);
+}
+
+template<class Sub1, class Sub2> inline void
+matrix_translation(
+  writable_matrix<Sub1>& m, const readable_vector<Sub2>& v
+  )
+{
+  m.identity();
+  matrix_set_translation(m, v);
+}
+
+template<class Sub, class E0, class E1> inline void
+matrix_translation(
+  writable_matrix<Sub>& m, const E0& e0, const E1& e1
+  )
+{
+  m.identity();
+  matrix_set_translation(m, e0, e1);
+}
+
 } // namespace cml
 
 
@@ -156,6 +219,7 @@ matrix_get_view_translation(const MatT& m)
     vector_type p = matrix_get_translation(m);
     return vector_type(-dot(p,x),-dot(p,y),-dot(p,z));
 }
+
 #endif
 
 // -------------------------------------------------------------------------

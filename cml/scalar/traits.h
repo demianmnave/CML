@@ -108,6 +108,15 @@ Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
   }
 };
 
+/** Returns sqrt(eps) for type S.
+ *
+ * @note This is mostly a hack for VC++ 2013, which can't seem to handle
+ * traits access for defaulted template function arguments.
+ */
+template<class S> inline S sqrt_epsilon() {
+  return scalar_traits<S>::sqrt_epsilon();
+}
+
 
 /** traits_of for arithmetic scalars. */
 template<class T> struct traits_of<T, enable_if_arithmetic_t<T>> {

@@ -48,6 +48,51 @@ BOOST_AUTO_TEST_CASE(set4)
   BOOST_CHECK_EQUAL(M(2,1), -3.);
 }
 
+
+BOOST_AUTO_TEST_CASE(make1)
+{
+  cml::matrix33d M;
+  cml::matrix_translation_2D(M, 2., -3.);
+  BOOST_CHECK_EQUAL(M(0,2), 2.);
+  BOOST_CHECK_EQUAL(M(1,2), -3.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(1,1), 1.);
+  BOOST_CHECK_EQUAL(M(2,2), 1.);
+}
+
+BOOST_AUTO_TEST_CASE(make2)
+{
+  cml::matrix33d_r M;
+  cml::matrix_translation_2D(M, 2., -3.);
+  BOOST_CHECK_EQUAL(M(2,0), 2.);
+  BOOST_CHECK_EQUAL(M(2,1), -3.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(1,1), 1.);
+  BOOST_CHECK_EQUAL(M(2,2), 1.);
+}
+
+BOOST_AUTO_TEST_CASE(make3)
+{
+  cml::matrix33d M;
+  cml::matrix_translation_2D(M, cml::vector2d(2.,-3.));
+  BOOST_CHECK_EQUAL(M(0,2), 2.);
+  BOOST_CHECK_EQUAL(M(1,2), -3.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(1,1), 1.);
+  BOOST_CHECK_EQUAL(M(2,2), 1.);
+}
+
+BOOST_AUTO_TEST_CASE(make4)
+{
+  cml::matrix33d_r M;
+  cml::matrix_translation_2D(M, cml::vector2d(2., -3.));
+  BOOST_CHECK_EQUAL(M(2,0), 2.);
+  BOOST_CHECK_EQUAL(M(2,1), -3.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(1,1), 1.);
+  BOOST_CHECK_EQUAL(M(2,2), 1.);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -133,6 +178,149 @@ BOOST_AUTO_TEST_CASE(set4)
   BOOST_CHECK_EQUAL(M(3,0), 2.);
   BOOST_CHECK_EQUAL(M(3,1), -3.);
   BOOST_CHECK_EQUAL(M(3,2), 1.);
+}
+
+
+BOOST_AUTO_TEST_CASE(set2D_1)
+{
+  cml::matrix44d M;
+  cml::matrix_set_translation(M.identity(), 2., -3.);
+  BOOST_CHECK_EQUAL(M(0,3), 2.);
+  BOOST_CHECK_EQUAL(M(1,3), -3.);
+  BOOST_CHECK_EQUAL(M(2,3), 0.);
+}
+
+BOOST_AUTO_TEST_CASE(set2D_2)
+{
+  cml::matrix44d_r M;
+  cml::matrix_set_translation(M.identity(), 2., -3.);
+  BOOST_CHECK_EQUAL(M(3,0), 2.);
+  BOOST_CHECK_EQUAL(M(3,1), -3.);
+  BOOST_CHECK_EQUAL(M(3,2), 0.);
+}
+
+BOOST_AUTO_TEST_CASE(set2D_3)
+{
+  cml::matrix44d M;
+  cml::matrix_set_translation(M.identity(), cml::vector2d(2.,-3.));
+  BOOST_CHECK_EQUAL(M(0,3), 2.);
+  BOOST_CHECK_EQUAL(M(1,3), -3.);
+  BOOST_CHECK_EQUAL(M(2,3), 0.);
+}
+
+BOOST_AUTO_TEST_CASE(set2D_4)
+{
+  cml::matrix44d_r M;
+  cml::matrix_set_translation(M.identity(), cml::vector2d(2., -3.));
+  BOOST_CHECK_EQUAL(M(3,0), 2.);
+  BOOST_CHECK_EQUAL(M(3,1), -3.);
+  BOOST_CHECK_EQUAL(M(3,2), 0.);
+}
+
+
+BOOST_AUTO_TEST_CASE(make1)
+{
+  cml::matrix44d M;
+  cml::matrix_translation(M, 2., -3., 1.);
+  BOOST_CHECK_EQUAL(M(0,3), 2.);
+  BOOST_CHECK_EQUAL(M(1,3), -3.);
+  BOOST_CHECK_EQUAL(M(2,3), 1.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(1,1), 1.);
+  BOOST_CHECK_EQUAL(M(2,2), 1.);
+  BOOST_CHECK_EQUAL(M(3,3), 1.);
+}
+
+BOOST_AUTO_TEST_CASE(make2)
+{
+  cml::matrix44d_r M;
+  cml::matrix_translation(M, 2., -3., 1.);
+  BOOST_CHECK_EQUAL(M(3,0), 2.);
+  BOOST_CHECK_EQUAL(M(3,1), -3.);
+  BOOST_CHECK_EQUAL(M(3,2), 1.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(1,1), 1.);
+  BOOST_CHECK_EQUAL(M(2,2), 1.);
+  BOOST_CHECK_EQUAL(M(3,3), 1.);
+}
+
+BOOST_AUTO_TEST_CASE(make3)
+{
+  cml::matrix44d M;
+  cml::matrix_translation(M, cml::vector3d(2.,-3., 1.));
+  BOOST_CHECK_EQUAL(M(0,3), 2.);
+  BOOST_CHECK_EQUAL(M(1,3), -3.);
+  BOOST_CHECK_EQUAL(M(2,3), 1.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(1,1), 1.);
+  BOOST_CHECK_EQUAL(M(2,2), 1.);
+  BOOST_CHECK_EQUAL(M(3,3), 1.);
+}
+
+BOOST_AUTO_TEST_CASE(make4)
+{
+  cml::matrix44d_r M;
+  cml::matrix_translation(M, cml::vector3d(2., -3., 1.));
+  BOOST_CHECK_EQUAL(M(3,0), 2.);
+  BOOST_CHECK_EQUAL(M(3,1), -3.);
+  BOOST_CHECK_EQUAL(M(3,2), 1.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(1,1), 1.);
+  BOOST_CHECK_EQUAL(M(2,2), 1.);
+  BOOST_CHECK_EQUAL(M(3,3), 1.);
+}
+
+
+BOOST_AUTO_TEST_CASE(make2D_1)
+{
+  cml::matrix44d M;
+  cml::matrix_translation(M, 2., -3.);
+  BOOST_CHECK_EQUAL(M(0,3), 2.);
+  BOOST_CHECK_EQUAL(M(1,3), -3.);
+  BOOST_CHECK_EQUAL(M(2,3), 0.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(1,1), 1.);
+  BOOST_CHECK_EQUAL(M(2,2), 1.);
+  BOOST_CHECK_EQUAL(M(3,3), 1.);
+}
+
+BOOST_AUTO_TEST_CASE(make2D_2)
+{
+  cml::matrix44d_r M;
+  cml::matrix_translation(M, 2., -3.);
+  BOOST_CHECK_EQUAL(M(3,0), 2.);
+  BOOST_CHECK_EQUAL(M(3,1), -3.);
+  BOOST_CHECK_EQUAL(M(3,2), 0.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(1,1), 1.);
+  BOOST_CHECK_EQUAL(M(2,2), 1.);
+  BOOST_CHECK_EQUAL(M(3,3), 1.);
+}
+
+BOOST_AUTO_TEST_CASE(make2D_3)
+{
+  cml::matrix44d M;
+  cml::matrix_translation(M, cml::vector2d(2.,-3.));
+  BOOST_CHECK_EQUAL(M(0,3), 2.);
+  BOOST_CHECK_EQUAL(M(1,3), -3.);
+  BOOST_CHECK_EQUAL(M(2,3), 0.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(1,1), 1.);
+  BOOST_CHECK_EQUAL(M(2,2), 1.);
+  BOOST_CHECK_EQUAL(M(3,3), 1.);
+}
+
+BOOST_AUTO_TEST_CASE(make2D_4)
+{
+  cml::matrix44d_r M;
+  cml::matrix_translation(M, cml::vector2d(2., -3.));
+  BOOST_CHECK_EQUAL(M(3,0), 2.);
+  BOOST_CHECK_EQUAL(M(3,1), -3.);
+  BOOST_CHECK_EQUAL(M(3,2), 0.);
+  BOOST_CHECK_EQUAL(M(0,0), 1.);
+  BOOST_CHECK_EQUAL(M(1,1), 1.);
+  BOOST_CHECK_EQUAL(M(2,2), 1.);
+  BOOST_CHECK_EQUAL(M(3,3), 1.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
