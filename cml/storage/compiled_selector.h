@@ -106,7 +106,7 @@ struct storage_disambiguate<compiled<R1, C1, Tag1>, compiled<R2, C2, Tag2>>
 
 
 /** For compatibility with CML1. */
-template<int Size1, int Size2 = -1> using fixed = compiled<Size1, Size2>;
+template<int Size1 = -1, int Size2 = -1> using fixed = compiled<Size1, Size2>;
 
 } // namespace cml
 
