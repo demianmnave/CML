@@ -91,6 +91,27 @@ struct compiled<Size1, Size2, matrix_storage_tag>
   };
 };
 
+/** Specialized selector for quaternions. */
+template<>
+struct compiled<4, -1, quaternion_storage_tag>
+{
+  typedef compiled<>					selector_type;
+  typedef compiled<>					unbound_type;
+  typedef compiled<4>					proxy_type;
+  typedef quaternion_storage_tag			storage_tag;
+  typedef fixed_size_tag				size_tag;
+  typedef compiled_memory_tag				memory_tag;
+
+  /** Constant for the array size. */
+  static const int array_size = 4;
+
+  /** Make a partially bound selector with size @c N. */
+  template<int N> struct resize {
+    static_assert(N == 4, "invalid quaternion storage size");
+    typedef compiled<4>					type;
+  };
+};
+
 /** is_storage_selector for compiled<>. */
 template<int Size1, int Size2, class Tag>
 struct is_storage_selector<compiled<Size1, Size2, Tag>> {

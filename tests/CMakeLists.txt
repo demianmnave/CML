@@ -14,6 +14,9 @@ add_subdirectory(vector)
 # cml::matrix<> tests:
 add_subdirectory(matrix)
 
+# cml::quaternion<> tests:
+add_subdirectory(quaternion)
+
 # mathlib tests:
 add_subdirectory(mathlib)
 

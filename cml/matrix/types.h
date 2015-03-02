@@ -100,7 +100,7 @@ typedef matrix<double, external<4,3>, row_basis, row_major> external43d_r;
 typedef matrix<double, external<>,  row_basis, row_major>   externalmnd_r;
 
 
-// Col-basis, col-major:
+// Column-basis, column-major:
 typedef matrix<int,    fixed<2,2>, col_basis, col_major>    matrix22i_c;
 typedef matrix<int,    fixed<3,3>, col_basis, col_major>    matrix33i_c;
 typedef matrix<int,    fixed<4,4>, col_basis, col_major>    matrix44i_c;

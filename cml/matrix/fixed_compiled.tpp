@@ -33,7 +33,8 @@ matrix<E, fixed<R,C>, BO, L>::matrix(Other const (&array)[R2][C2])
 }
 
 template<class E, int R, int C, typename BO, typename L>
-matrix<E, fixed<R,C>, BO, L>::matrix(const_pointer array)
+template<class Pointer, enable_if_pointer_t<Pointer>*>
+matrix<E, fixed<R,C>, BO, L>::matrix(const Pointer& array)
 {
   this->assign(array);
 }

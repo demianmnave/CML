@@ -19,11 +19,15 @@ struct vector_storage_tag {};
 /** Specify matrix storage types. */
 struct matrix_storage_tag {};
 
+/** Specify quaternion storage types. */
+struct quaternion_storage_tag {};
+
 /** Detect valid storage tags. */
 template<class Tag> struct is_storage_tag {
   static const bool value
     =  std::is_same<Tag, vector_storage_tag>::value
     || std::is_same<Tag, matrix_storage_tag>::value
+    || std::is_same<Tag, quaternion_storage_tag>::value
     ;
 };
 
@@ -48,6 +52,12 @@ template<class Storage> struct is_vector_storage {
 template<class Storage> struct is_matrix_storage {
   static const bool value =
     std::is_same<storage_tag_of_t<Storage>, matrix_storage_tag>::value;
+};
+
+/** Helper to detect quaternion storage types. */
+template<class Storage> struct is_quaternion_storage {
+  static const bool value =
+    std::is_same<storage_tag_of_t<Storage>, quaternion_storage_tag>::value;
 };
 
 } // namespace cml

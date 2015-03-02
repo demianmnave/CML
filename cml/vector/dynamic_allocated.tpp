@@ -57,7 +57,8 @@ vector<E, dynamic<A>>::vector(const Array& array)
 }
 
 template<class E, class A>
-vector<E, dynamic<A>>::vector(int size, const_pointer array)
+template<class Pointer, enable_if_pointer_t<Pointer>*>
+vector<E, dynamic<A>>::vector(const Pointer& array, int size)
 : m_data(0), m_size(0)
 {
   this->resize_fast(size);
@@ -65,7 +66,8 @@ vector<E, dynamic<A>>::vector(int size, const_pointer array)
 }
 
 template<class E, class A>
-vector<E, dynamic<A>>::vector(const_pointer array, int size)
+template<class Pointer, enable_if_pointer_t<Pointer>*>
+vector<E, dynamic<A>>::vector(int size, const Pointer& array)
 : m_data(0), m_size(0)
 {
   this->resize_fast(size);

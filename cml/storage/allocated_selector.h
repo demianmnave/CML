@@ -154,6 +154,32 @@ struct allocated<Allocator, Size1, Size2, matrix_storage_tag>
   };
 };
 
+/** Specialized selector for dynamically-allocated quaternions.
+ *
+ * @todo Fixed-size allocated types are not actually implemented by CML, so
+ * the proxy_type is set to compiled<Size>.
+ */
+template<class Allocator>
+struct allocated<Allocator, 4, -1, quaternion_storage_tag>
+{
+  typedef allocated<>					selector_type;
+  typedef allocated<Allocator>				unbound_type;
+  //XXX typedef allocated<Allocator,4>			proxy_type;
+  typedef compiled<4>					proxy_type;
+  typedef quaternion_storage_tag			storage_tag;
+  typedef fixed_size_tag				size_tag;
+  typedef allocated_memory_tag				memory_tag;
+
+  /** Constant for the array size. */
+  static const int array_size = 4;
+
+  /** Make a partially bound selector with size @c N. */
+  template<int N> struct resize {
+    static_assert(N == 4, "invalid quaternion storage size");
+    typedef allocated<Allocator, 4>			type;
+  };
+};
+
 /** is_storage_selector for allocated<>. */
 template<class Allocator, int Size1, int Size2, class Tag>
 struct is_storage_selector<allocated<Allocator, Size1, Size2, Tag>> {

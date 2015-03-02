@@ -6,12 +6,18 @@
 
 #pragma once
 
-#ifndef	cml_types_h
-#define	cml_types_h
+#ifndef	cml_quaternion_cross_type_h
+#define	cml_quaternion_cross_type_h
 
-#include <cml/vector/types.h>
-#include <cml/matrix/types.h>
-#include <cml/quaternion/types.h>
+namespace cml {
+
+/** Helper to specify v1^v2 multiplication order. */
+struct positive_cross {};
+
+/** Helper to specify v2^v1 multiplication order. */
+struct negative_cross {};
+
+} // namespace cml
 
 #endif
 

@@ -153,10 +153,12 @@ class vector<Element, dynamic<Allocator>>
       vector(const Array& array);
 
     /** Construct from a pointer to an array. */
-    vector(const_pointer array, int size);
+    template<class Pointer, enable_if_pointer_t<Pointer>* = nullptr>
+      vector(const Pointer& array, int size);
 
     /** Construct from a pointer to an array. */
-    vector(int size, const_pointer array);
+    template<class Pointer, enable_if_pointer_t<Pointer>* = nullptr>
+      vector(int size, const Pointer& array);
 
     /** Construct from std::initializer_list. */
     template<class Other> vector(std::initializer_list<Other> l);

@@ -6,12 +6,10 @@
 
 #pragma once
 
-#ifndef	cml_types_h
-#define	cml_types_h
+#ifndef	cml_quaternion_fixed_h
+#define	cml_quaternion_fixed_h
 
-#include <cml/vector/types.h>
-#include <cml/matrix/types.h>
-#include <cml/quaternion/types.h>
+#include <cml/quaternion/fixed_compiled.h>
 
 #endif
 

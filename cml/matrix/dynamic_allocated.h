@@ -178,10 +178,12 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
       matrix(Other const (&array)[Rows][Cols]);
 
     /** Construct from a pointer to an array. */
-    matrix(int rows, int cols, const_pointer array);
+    template<class Pointer, enable_if_pointer_t<Pointer>* = nullptr>
+      matrix(int rows, int cols, const Pointer& array);
 
     /** Construct from a pointer to an array. */
-    matrix(const_pointer array, int rows, int cols);
+    template<class Pointer, enable_if_pointer_t<Pointer>* = nullptr>
+      matrix(const Pointer& array, int rows, int cols);
 
     /** Destructor. */
     ~matrix();

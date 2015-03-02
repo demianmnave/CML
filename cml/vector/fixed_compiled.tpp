@@ -26,7 +26,8 @@ vector<E, fixed<S>>::vector(const Array& array)
 }
 
 template<class E, int S>
-vector<E, fixed<S>>::vector(const_pointer array)
+template<class Pointer, enable_if_pointer_t<Pointer>*>
+vector<E, fixed<S>>::vector(const Pointer& array)
 {
   this->assign(array);
 }

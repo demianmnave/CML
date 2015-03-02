@@ -6,12 +6,15 @@
 
 #pragma once
 
-#ifndef	cml_types_h
-#define	cml_types_h
+#ifndef	cml_quaternion_fwd_h
+#define	cml_quaternion_fwd_h
 
-#include <cml/vector/types.h>
-#include <cml/matrix/types.h>
-#include <cml/quaternion/types.h>
+namespace cml {
+
+template<class DerivedT> class readable_quaternion;
+template<class DerivedT> class writable_quaternion;
+
+} // namespace cml
 
 #endif
 

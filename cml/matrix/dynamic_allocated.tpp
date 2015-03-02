@@ -73,8 +73,9 @@ matrix<E, dynamic<A>, BO, L>::matrix(Other const (&array)[R][C])
 }
 
 template<class E, class A, typename BO, typename L>
+template<class Pointer, enable_if_pointer_t<Pointer>*>
 matrix<E, dynamic<A>, BO, L>::matrix(
-  int rows, int cols, const_pointer array
+  int rows, int cols, const Pointer& array
   )
 : m_data(0), m_rows(0), m_cols(0)
 {
@@ -83,8 +84,9 @@ matrix<E, dynamic<A>, BO, L>::matrix(
 }
 
 template<class E, class A, typename BO, typename L>
+template<class Pointer, enable_if_pointer_t<Pointer>*>
 matrix<E, dynamic<A>, BO, L>::matrix(
-  const_pointer array, int rows, int cols
+  const Pointer& array, int rows, int cols
   )
 : m_data(0), m_rows(0), m_cols(0)
 {

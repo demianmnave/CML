@@ -18,8 +18,8 @@ namespace cml {
  * @tparam Element The scalar type for vector elements, with the following
  * operators defined: +, -, *, /, <, >, ==, = (assign).
  *
- * @tparam StorageType Used to select the type of array to be used as
- * internal storage for an array of type Element.
+ * @tparam StorageType Storage type to use for holding the array of vector
+ * elements.
  *
  * @sa scalar_traits
  */

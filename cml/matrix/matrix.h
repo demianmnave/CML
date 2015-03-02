@@ -21,8 +21,8 @@ namespace cml {
  * @tparam Element The scalar type for matrix elements, with the following
  * operators defined: +, -, *, /, <, >, ==, = (assign).
  *
- * @tparam StorageType Used to select the type of array to be used as
- * internal storage for a 2D array of type Element.
+ * @tparam StorageType Storage type to use for holding the 2D array of
+ * matrix elements.
  *
  * @tparam BasisOrient Encodes whether basis vectors for the matrix type
  * lie along rows or columns.  The default is col_basis, which is typical

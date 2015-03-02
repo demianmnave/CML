@@ -81,6 +81,19 @@ template<class T> using rebind_matrix_storage_t
   = typename rebind_matrix_storage<T>::type;
 
 
+/** Templated helper to rebind a storage type as vector storage. */
+template<class Storage, typename std::enable_if<
+is_storage_selector<Storage>::value>::type* = nullptr>
+struct rebind_quaternion_storage
+{
+  typedef rebind_t<Storage, quaternion_storage_tag>	type;
+};
+
+/** Convenience alias for rebind_quaternion_storage. */
+template<class T> using rebind_quaternion_storage_t
+  = typename rebind_quaternion_storage<T>::type;
+
+
 /** Specializable class used to disambiguate configurable storage types @c
  * Storage1 and @c Storage2 that have matching storage selectors.
  *

@@ -140,7 +140,8 @@ class vector<Element, fixed<Size>>
       vector(const Array& array);
 
     /** Construct from a pointer to an array. */
-    vector(const_pointer array);
+    template<class Pointer, enable_if_pointer_t<Pointer>* = nullptr>
+      vector(const Pointer& array);
 
     /** Construct from std::initializer_list. */
     template<class Other> vector(std::initializer_list<Other> l);

@@ -131,6 +131,27 @@ struct external<Size1, Size2, matrix_storage_tag>
   };
 };
 
+/** Specialized selector for external quaternions. */
+template<>
+struct external<4, -1, quaternion_storage_tag>
+{
+  typedef external<>					selector_type;
+  typedef external<>					unbound_type;
+  typedef compiled<4>					proxy_type;
+  typedef quaternion_storage_tag			storage_tag;
+  typedef fixed_size_tag				size_tag;
+  typedef external_memory_tag				memory_tag;
+
+  /** Constant for the array size. */
+  static const int array_size = 4;
+
+  /** Make a partially bound selector with size @c N. */
+  template<int N> struct resize {
+    static_assert(N == 4, "invalid quaternion storage size");
+    typedef external<4>					type;
+  };
+};
+
 /** is_storage_selector for external<>. */
 template<int Size1, int Size2, class Tag>
 struct is_storage_selector<external<Size1, Size2, Tag>> {
