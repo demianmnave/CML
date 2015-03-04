@@ -19,7 +19,8 @@ namespace cml {
 
 /** Deduce a temporary for a matrix expression. */
 template<class Matrix> struct temporary_of<Matrix,
-  typename std::enable_if<matrix_traits<Matrix>::array_rows != 0>::type>
+  typename std::enable_if<
+    matrix_traits<Matrix>::array_rows != 0>::type>
 {
   typedef cml::unqualified_type_t<Matrix>		matrix_type;
 

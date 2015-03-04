@@ -113,6 +113,61 @@ class writable_quaternion
     DerivedT&& identity() &&;
 #endif
 
+    /** Set the quaternion to its conjugate. */
+    DerivedT& conjugate() __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set a temporary to its conjugate. */
+    DerivedT&& conjugate() &&;
+#endif
+
+    /** Set the quaternion to its inverse. */
+    DerivedT& inverse() __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set a temporary to its inverse. */
+    DerivedT&& inverse() &&;
+#endif
+
+    /** Set the quaternion to its natural logarithm.
+     *
+     * @note It is up to the caller to ensure the quaternion has a usable
+     * non-zero length.
+     *
+     * @breaking In CML1, this function returns a temporary. Use cml::log()
+     * as a replacement.
+     */
+    DerivedT& log() __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set a temporary to its natural logarithm.
+     *
+     * @note It is up to the caller to ensure the quaternion has a usable
+     * non-zero length.
+     *
+     * @breaking In CML1, this function returns a temporary. Use cml::log()
+     * as a replacement.
+     */
+    DerivedT&& log() &&;
+#endif
+
+    /** Set the quaternion to its exponential.
+     *
+     * @breaking In CML1, this function returns a temporary. Use cml::exp()
+     * as a replacement.
+     */
+    DerivedT& exp() __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set a temporary to its exponential.
+     *
+     * @breaking In CML1, this function returns a temporary. Use cml::exp()
+     * as a replacement.
+     */
+    DerivedT&& exp() &&;
+#endif
+
+
 #if 0
     /** Set elements to random values in the range @c[low,high].
      *

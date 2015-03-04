@@ -13,7 +13,7 @@
 
 namespace cml {
 
-template<class Sub1, class Sub2> auto
+template<class Sub1, class Sub2> inline auto
 cross(const readable_vector<Sub1>& left, const readable_vector<Sub2>& right)
 -> cross_promote_t<Sub1,Sub2>
 {

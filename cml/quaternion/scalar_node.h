@@ -6,47 +6,55 @@
 
 #pragma once
 
-#ifndef	cml_vector_scalar_node_h
-#define	cml_vector_scalar_node_h
+#ifndef	cml_quaternion_scalar_node_h
+#define	cml_quaternion_scalar_node_h
 
-#include <cml/vector/readable_vector.h>
+#include <cml/common/size_tags.h>
+#include <cml/quaternion/readable_quaternion.h>
 
 namespace cml {
 
-template<class Sub, class Scalar, class Op> class vector_scalar_node;
+template<class Sub, class Scalar, class Op> class quaternion_scalar_node;
 
-/** vector_scalar_node<> traits. */
+/** quaternion_scalar_node<> traits. */
 template<class Sub, class Scalar, class Op>
-struct vector_traits< vector_scalar_node<Sub,Scalar,Op> >
+struct quaternion_traits< quaternion_scalar_node<Sub,Scalar,Op> >
 {
   /* Figure out the basic types of Sub and Scalar: */
-  typedef vector_scalar_node<Sub,Scalar,Op>		vector_type;
+  typedef quaternion_scalar_node<Sub,Scalar,Op>		quaternion_type;
   typedef Sub						left_arg_type;
   typedef Scalar 					right_arg_type;
   typedef cml::unqualified_type_t<Sub>			left_type;
   typedef cml::unqualified_type_t<Scalar>		right_type;
-  typedef vector_traits<left_type>			left_traits;
+  typedef quaternion_traits<left_type>			left_traits;
   typedef scalar_traits<typename Op::result_type>	element_traits;
   typedef typename element_traits::value_type		value_type;
   typedef value_type					immutable_value;
   typedef typename left_traits::storage_type		storage_type;
-  typedef typename left_traits::size_tag		size_tag;
 
-  /* Propagate the array size from the subexpression: */
-  static const int array_size = left_traits::array_size;
+  typedef typename left_traits::size_tag		size_tag;
+  static_assert(cml::is_fixed_size<storage_type>::value, "invalid size tag");
+
+  /* Array size: */
+  static const int array_size = storage_type::array_size;
+  static_assert(array_size == 4, "invalid quaternion size");
+
+  /* Order and cross taken from the sub-expression: */
+  typedef typename left_traits::order_type		order_type;
+  typedef typename left_traits::cross_type		cross_type;
 };
 
-/** Represents a binary vector operation, where one operand is a scalar
- * value, and the other is a vector.
+/** Represents a binary quaternion operation, where one operand is a scalar
+ * value, and the other is a quaternion.
  */
 template<class Sub, class Scalar, class Op>
-class vector_scalar_node
-: public readable_vector< vector_scalar_node<Sub,Scalar,Op> >
+class quaternion_scalar_node
+: public readable_quaternion< quaternion_scalar_node<Sub,Scalar,Op> >
 {
   public:
 
-    typedef vector_scalar_node<Sub,Scalar,Op>		node_type;
-    typedef vector_traits<node_type>			traits_type;
+    typedef quaternion_scalar_node<Sub,Scalar,Op>	node_type;
+    typedef quaternion_traits<node_type>		traits_type;
     typedef typename traits_type::left_arg_type		left_arg_type;
     typedef typename traits_type::right_arg_type	right_arg_type;
     typedef typename traits_type::left_type		left_type;
@@ -56,6 +64,8 @@ class vector_scalar_node
     typedef typename traits_type::immutable_value	immutable_value;
     typedef typename traits_type::storage_type		storage_type;
     typedef typename traits_type::size_tag		size_tag;
+    typedef typename traits_type::order_type		order_type;
+    typedef typename traits_type::cross_type		cross_type;
 
 
   public:
@@ -69,15 +79,15 @@ class vector_scalar_node
     /** Construct from the wrapped sub-expression and the scalar to apply.
      * @c left must be an lvalue reference or rvalue reference.
      */
-    vector_scalar_node(Sub left, const right_type& right);
+    quaternion_scalar_node(Sub left, const right_type& right);
 
     /** Move constructor. */
-    vector_scalar_node(node_type&& other);
+    quaternion_scalar_node(node_type&& other);
 
 
   public:
 
-    /** Return the size of the vector expression. */
+    /** Return the size of the quaternion expression. */
     int size() const;
 
     /** Apply the scalar operator to element @c i of the subexpression and
@@ -98,7 +108,7 @@ class vector_scalar_node
 
   protected:
 
-    /** The vector operand. */
+    /** The quaternion operand. */
     left_wrap_type		m_left;
 
     /** The scalar operand. */
@@ -108,7 +118,7 @@ class vector_scalar_node
   private:
 
     // Not copy constructible.
-    vector_scalar_node(const node_type&);
+    quaternion_scalar_node(const node_type&);
 
     // Not assignable.
     node_type& operator=(const node_type&);
@@ -116,9 +126,9 @@ class vector_scalar_node
 
 } // namespace cml
 
-#define __CML_VECTOR_SCALAR_NODE_TPP
-#include <cml/vector/scalar_node.tpp>
-#undef __CML_VECTOR_SCALAR_NODE_TPP
+#define __CML_QUATERNION_SCALAR_NODE_TPP
+#include <cml/quaternion/scalar_node.tpp>
+#undef __CML_QUATERNION_SCALAR_NODE_TPP
 
 #endif
 

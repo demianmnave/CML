@@ -39,6 +39,15 @@ BOOST_AUTO_TEST_CASE(sub2)
   BOOST_CHECK_EQUAL(xpr[1], 3.);
 }
 
+BOOST_AUTO_TEST_CASE(sub3)
+{
+  auto xpr = cml::subvector(cml::vector3d(1., 2., 3.), 0);
+  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
+  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
+  BOOST_CHECK_EQUAL(xpr[0], 2.);
+  BOOST_CHECK_EQUAL(xpr[1], 3.);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -47,7 +56,7 @@ BOOST_AUTO_TEST_SUITE(fixed_external)
 BOOST_AUTO_TEST_CASE(sub1)
 {
   double av1[] = { 1., 2., 3. };
-  cml::vector3d v1(av1);
+  cml::external3d v1(av1);
   auto xpr = cml::subvector(v1,0);
   BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
   BOOST_REQUIRE_EQUAL(xpr.size(), 2);
@@ -58,8 +67,18 @@ BOOST_AUTO_TEST_CASE(sub1)
 BOOST_AUTO_TEST_CASE(sub2)
 {
   double av1[] = { 1., 2., 3. };
-  cml::vector3d v1(av1);
+  cml::external3d v1(av1);
   auto xpr = v1.subvector(0);
+  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
+  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
+  BOOST_CHECK_EQUAL(xpr[0], 2.);
+  BOOST_CHECK_EQUAL(xpr[1], 3.);
+}
+
+BOOST_AUTO_TEST_CASE(sub3)
+{
+  double av1[] = { 1., 2., 3. };
+  auto xpr = cml::subvector(cml::external3d(av1), 0);
   BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
   BOOST_REQUIRE_EQUAL(xpr.size(), 2);
   BOOST_CHECK_EQUAL(xpr[0], 2.);
@@ -91,6 +110,15 @@ BOOST_AUTO_TEST_CASE(sub2)
   BOOST_CHECK_EQUAL(xpr[1], 3.);
 }
 
+BOOST_AUTO_TEST_CASE(sub3)
+{
+  auto xpr = cml::subvector(cml::vectord(1., 2., 3.), 0);
+  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, -1);
+  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
+  BOOST_CHECK_EQUAL(xpr[0], 2.);
+  BOOST_CHECK_EQUAL(xpr[1], 3.);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -112,6 +140,16 @@ BOOST_AUTO_TEST_CASE(sub2)
   double av1[] = { 1., 2., 3. };
   cml::externalnd v1(av1, 3);
   auto xpr = v1.subvector(0);
+  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, -1);
+  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
+  BOOST_CHECK_EQUAL(xpr[0], 2.);
+  BOOST_CHECK_EQUAL(xpr[1], 3.);
+}
+
+BOOST_AUTO_TEST_CASE(sub3)
+{
+  double av1[] = { 1., 2., 3. };
+  auto xpr = cml::subvector(cml::externalnd(av1, 3), 0);
   BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, -1);
   BOOST_REQUIRE_EQUAL(xpr.size(), 2);
   BOOST_CHECK_EQUAL(xpr[0], 2.);

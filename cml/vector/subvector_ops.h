@@ -20,7 +20,7 @@ template<class Sub> auto subvector(const readable_vector<Sub>& sub, int i)
 -> subvector_node<const Sub&>;
 
 /** Return an expression node for subvector @c i of the temporary
- * subexpression @c sub. @c sub @c sub is stored by value in the node (via
+ * subexpression @c sub. @c sub is stored by value in the node (via
  * std::move).
  */
 template<class Sub> auto subvector(readable_vector<Sub>&& sub)

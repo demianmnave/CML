@@ -89,7 +89,7 @@ class matrix_scalar_node
   public:
 
     /** Construct from the wrapped sub-expression and the scalar to apply.
-     * @c sub and @c right must be lvalue or rvalue references.
+     * @c left and @c right must be lvalue or rvalue references.
      */
     matrix_scalar_node(Sub left, Scalar right);
 

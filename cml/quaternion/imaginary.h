@@ -6,18 +6,11 @@
 
 #pragma once
 
-#ifndef	cml_quaternion_cross_type_h
-#define	cml_quaternion_cross_type_h
+#ifndef	cml_quaternion_imaginary_h
+#define	cml_quaternion_imaginary_h
 
-namespace cml {
-
-/** Helper to specify v1^v2 multiplication order. */
-struct positive_cross {};
-
-/** Helper to specify v2^v1 multiplication order. */
-struct negative_cross {};
-
-} // namespace cml
+#include <cml/quaternion/imaginary_node.h>
+#include <cml/quaternion/imaginary_ops.h>
 
 #endif
 

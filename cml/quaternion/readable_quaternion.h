@@ -10,20 +10,15 @@
 #define	cml_quaternion_readable_quaternion_h
 
 #include <cml/common/compiler.h>
+#include <cml/common/size_tags.h>
 #include <cml/scalar/binary_ops.h>
-#include <cml/quaternion/cross_type.h>
-#include <cml/quaternion/order.h>
 #include <cml/quaternion/traits.h>
-
-// #include <cml/quaternion/temporary.h>
 
 namespace cml {
 
-#if 0
 /* Forward declarations: */
 template<class Sub, class Scalar, class Op> class quaternion_scalar_node;
 template<class Sub> class imaginary_node;
-#endif
 
 /** Base class for readable quaternion types.  Readable quaternions support
  * const access to its elements.
@@ -76,16 +71,6 @@ class readable_quaternion
     /** Return the real part of the quaternion. */
     immutable_value real() const;
 
-    /** Return the squared length of the quaternion. */
-    value_type length_squared() const;
-
-    /** Return the length of the quaternion. */
-    value_type length() const;
-
-    /** Return the Cayley norm of the quaternion. */
-    value_type norm() const;
-
-#if 0
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
     /** Return the imaginary part of the quaternion as a vector expression,
      * storing a reference of the source quaternion in the node.
@@ -102,9 +87,16 @@ class readable_quaternion
      */
     imaginary_node<DerivedT&&> imaginary() const;
 #endif
-#endif
 
-#if 0
+    /** Return the squared length of the quaternion. */
+    value_type length_squared() const;
+
+    /** Return the length of the quaternion. */
+    value_type length() const;
+
+    /** Return the Cayley norm of the quaternion. */
+    value_type norm() const;
+
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
     /** Return the normalized quaternion as an expression node, storing a
      * reference of the source quaternion in the node.
@@ -123,7 +115,6 @@ class readable_quaternion
      */
     quaternion_scalar_node<DerivedT&&, value_type,
       op::binary_divide<value_type,value_type>> normalize() const;
-#endif
 #endif
 
 

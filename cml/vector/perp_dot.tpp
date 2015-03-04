@@ -13,7 +13,7 @@
 
 namespace cml {
 
-template<class Sub1, class Sub2> auto perp_dot(
+template<class Sub1, class Sub2> inline auto perp_dot(
   const readable_vector<Sub1>& left, const readable_vector<Sub2>& right
   ) -> perp_dot_promote_t<Sub1,Sub2>
 {

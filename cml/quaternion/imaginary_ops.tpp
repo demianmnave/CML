@@ -4,24 +4,25 @@
 /** @file
  */
 
-#ifndef __CML_VECTOR_SUBVECTOR_OPS_TPP
-#error "vector/subvector_ops.tpp not included correctly"
+
+#ifndef __CML_QUATERNION_IMAGINARY_OPS_TPP
+#error "quaternion/imaginary_ops.tpp not included correctly"
 #endif
 
 namespace cml {
 
 template<class Sub> inline auto
-subvector(const readable_vector<Sub>& sub, int i)
--> subvector_node<const Sub&>
+imaginary(const readable_quaternion<Sub>& q)
+-> imaginary_node<const Sub&>
 {
-  return subvector_node<const Sub&>(sub.actual(), i);
+  return imaginary_node<const Sub&>(q.actual());
 }
 
 template<class Sub> inline auto
-subvector(readable_vector<Sub>&& sub, int i)
--> subvector_node<Sub&&>
+subvector(readable_quaternion<Sub>&& q)
+-> imaginary_node<Sub&&>
 {
-  return subvector_node<Sub&&>((Sub&&) sub, i);
+  return imaginary_node<Sub&&>((Sub&&) q);
 }
 
 } // namespace cml

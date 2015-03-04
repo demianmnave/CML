@@ -9,8 +9,8 @@
 #ifndef	cml_quaternion_quaternion_h
 #define	cml_quaternion_quaternion_h
 
-#include <cml/quaternion/cross_type.h>
-#include <cml/quaternion/order.h>
+#include <cml/quaternion/cross_tags.h>
+#include <cml/quaternion/order_tags.h>
 
 namespace cml {
 

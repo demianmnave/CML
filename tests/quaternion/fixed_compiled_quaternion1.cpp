@@ -4,10 +4,11 @@
 /** @file
  */
 
-#include <iostream>
+// Make sure the main header compiles cleanly:
+#include <cml/quaternion/fixed.h>
+
 #include <cml/vector/fixed.h>
 #include <cml/vector/types.h>
-#include <cml/quaternion/fixed.h>
 #include <cml/quaternion/types.h>
 
 /* Testing headers: */

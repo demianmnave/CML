@@ -97,7 +97,7 @@ struct compiled<4, -1, quaternion_storage_tag>
 {
   typedef compiled<>					selector_type;
   typedef compiled<>					unbound_type;
-  typedef compiled<4>					proxy_type;
+  typedef compiled<>					proxy_type;
   typedef quaternion_storage_tag			storage_tag;
   typedef fixed_size_tag				size_tag;
   typedef compiled_memory_tag				memory_tag;

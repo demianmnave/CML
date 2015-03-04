@@ -1,64 +1,63 @@
-/* -*- C++ -*- ------------------------------------------------------------ @@COPYRIGHT@@
+/* -*- C++ -*- ------------------------------------------------------------
+ @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 /** @file
  */
 
 #pragma once
 
-#ifndef	cml_vector_subvector_node_h
-#define	cml_vector_subvector_node_h
+#ifndef	cml_quaternion_imaginary_node_h
+#define	cml_quaternion_imaginary_node_h
 
 #include <cml/vector/readable_vector.h>
-#include <cml/vector/promotion.h>
+#include <cml/quaternion/readable_quaternion.h>
 
 namespace cml {
 
-template<class Sub> class subvector_node;
+template<class Sub> class imaginary_node;
 
-/** subvector_node<> traits. */
+/** imaginary_node<> traits. */
 template<class Sub>
-struct vector_traits< subvector_node<Sub> >
+struct vector_traits< imaginary_node<Sub> >
 {
   /* Figure out the basic type of Sub: */
-  typedef subvector_node<Sub>				vector_type;
+  typedef imaginary_node<Sub>				vector_type;
   typedef Sub						sub_arg_type;
   typedef cml::unqualified_type_t<Sub>			sub_type;
-  typedef vector_traits<sub_type>			sub_traits;
+  typedef quaternion_traits<sub_type>			sub_traits;
   typedef typename sub_traits::element_traits		element_traits;
   typedef typename sub_traits::value_type		value_type;
   typedef typename sub_traits::immutable_value		immutable_value;
 
-  /* Compute the new storage size: */
-  private:
-  static const int old_array_size = sub_traits::array_size;
-  static const int new_array_size = old_array_size - 1;
-  static const int N = new_array_size > 0 ? new_array_size : -1;
-  public:
-
-  /* Resize the storage type of the subexpression: */
-  typedef resize_storage_t<
-    storage_type_of_t<sub_traits>, N>			resized_type;
+  /* Resize the *unbound* storage type of the quaternion subexpression to a
+   * vector storage type:
+   */
+  typedef typename sub_traits::storage_type		bound_storage_type;
+  typedef typename bound_storage_type::unbound_type	unbound_storage_type;
+  typedef resize_storage_t<unbound_storage_type, 3>	resized_type;
 
   /* Rebind to vector storage: */
   typedef rebind_t<resized_type, vector_storage_tag>	storage_type;
 
   /* Traits and types for the new storage: */
   typedef typename storage_type::size_tag		size_tag;
+  static_assert(cml::is_fixed_size<storage_type>::value, "invalid size tag");
 
   /* Array size: */
   static const int array_size = storage_type::array_size;
+  static_assert(array_size == 3, "invalid imaginary vector size");
 };
 
-/** Represents an N-1 subvector operation in an expression tree, where N is
- * the length of the wrapped subexpression.
+/** Represents the imaginary part of a quaternion subexpression as a
+ * 3-element vector expression.
  */
 template<class Sub>
-class subvector_node
-: public readable_vector< subvector_node<Sub> >
+class imaginary_node
+: public readable_vector< imaginary_node<Sub> >
 {
   public:
 
-    typedef subvector_node<Sub>				node_type;
+    typedef imaginary_node<Sub>				node_type;
     typedef vector_traits<node_type>			traits_type;
     typedef typename traits_type::sub_arg_type		sub_arg_type;
     typedef typename traits_type::sub_type		sub_type;
@@ -77,13 +76,13 @@ class subvector_node
 
   public:
 
-    /** Construct from the wrapped sub-expression and the element to drop.
-     * @c sub must be an lvalue reference or rvalue reference.
+    /** Construct from the wrapped quaternion expression.  @c sub must be
+     * an lvalue reference or rvalue reference.
      */
-    subvector_node(Sub sub, int skip);
+    explicit imaginary_node(Sub sub);
 
     /** Move constructor. */
-    subvector_node(node_type&& other);
+    imaginary_node(node_type&& other);
 
 
   public:
@@ -107,14 +106,11 @@ class subvector_node
     /** The wrapped subexpression. */
     wrap_type			m_sub;
 
-    /** The element to skip. */
-    int				m_skip;
-
 
   private:
 
     // Not copy constructible.
-    subvector_node(const node_type&);
+    imaginary_node(const node_type&);
 
     // Not assignable.
     node_type& operator=(const node_type&);
@@ -122,9 +118,9 @@ class subvector_node
 
 } // namespace cml
 
-#define __CML_VECTOR_SUBVECTOR_NODE_TPP
-#include <cml/vector/subvector_node.tpp>
-#undef __CML_VECTOR_SUBVECTOR_NODE_TPP
+#define __CML_QUATERNION_IMAGINARY_NODE_TPP
+#include <cml/quaternion/imaginary_node.tpp>
+#undef __CML_QUATERNION_IMAGINARY_NODE_TPP
 
 #endif
 

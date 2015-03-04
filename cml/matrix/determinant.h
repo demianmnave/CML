@@ -23,7 +23,7 @@ namespace cml {
  * dynamically-sized and not square.  Fixed-size matrices are checked at
  * compile-time.
  */
-template<class Sub> inline auto
+template<class Sub> auto
 determinant(const readable_matrix<Sub>& M) -> value_type_trait_of_t<Sub>;
 
 } // namespace cml

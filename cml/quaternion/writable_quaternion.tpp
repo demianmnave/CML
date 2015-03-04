@@ -8,12 +8,13 @@
 #error "quaternion/writable_quaternion.tpp not included correctly"
 #endif
 
+#include <cml/common/mpl/item_at.h>
 #include <cml/vector/readable_vector.h>
+#include <cml/vector/scalar_ops.h>
 #include <cml/quaternion/size_checking.h>
 #if 0
 #include <random>
 #include <cml/scalar/binary_ops.h>
-#include <cml/quaternion/detail/check_or_resize.h>
 #endif
 
 namespace cml {
@@ -72,7 +73,7 @@ writable_quaternion<DT>::normalize() &&
 template<class DT> DT&
 writable_quaternion<DT>::zero() __CML_REF
 {
-  for(int i = 0; i < this->size(); ++ i) this->set(i, value_type(0));
+  for(int i = 0; i < 4; ++ i) this->set(i, value_type(0));
   return this->actual();
 }
 
@@ -88,7 +89,11 @@ writable_quaternion<DT>::zero() &&
 template<class DT> DT&
 writable_quaternion<DT>::identity() __CML_REF
 {
-  return this->zero().set(W, value_type(1));
+  this->set(W, value_type(1));
+  this->set(X, value_type(0));
+  this->set(Y, value_type(0));
+  this->set(Z, value_type(0));
+  return this->actual();
 }
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
@@ -99,6 +104,107 @@ writable_quaternion<DT>::identity() &&
   return (DT&&) *this;
 }
 #endif
+
+template<class DT> DT&
+writable_quaternion<DT>::conjugate() __CML_REF
+{
+  this->set(W,   this->get(W));
+  this->set(X, - this->get(X));
+  this->set(Y, - this->get(Y));
+  this->set(Z, - this->get(Z));
+  return this->actual();
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> DT&&
+writable_quaternion<DT>::conjugate() &&
+{
+  this->conjugate();		// Forward to conjugate &
+  return (DT&&) *this;
+}
+#endif
+
+template<class DT> DT&
+writable_quaternion<DT>::inverse() __CML_REF
+{
+  /* Cayley norm (squared length). */
+  auto n = this->norm();
+
+  /* The inverse is conjugate() / norm(): */
+  this->set(W,   this->get(W) / n);
+  this->set(X, - this->get(X) / n);
+  this->set(Y, - this->get(Y) / n);
+  this->set(Z, - this->get(Z) / n);
+  return this->actual();
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> DT&&
+writable_quaternion<DT>::inverse() &&
+{
+  this->inverse();		// Forward to inverse &
+  return (DT&&) *this;
+}
+#endif
+
+template<class DT> DT&
+writable_quaternion<DT>::log() __CML_REF
+{
+  /* Shorthand: */
+  typedef cml::scalar_traits<value_type>		element_traits;
+
+  /* The natural log of q is:
+   *
+   *   ln(|q|) + v/|v| * arccos(w / |q|)
+   *
+   * where v is the imaginary part of q and w is the real part:
+   */
+  auto lq = this->length();
+  auto v = this->imaginary();
+  auto lv = v.length();
+  auto c = element_traits::acos(this->real() / lq) / lv;
+  this->assign(c*v, element_traits::log(lq));
+  return this->actual();
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> DT&&
+writable_quaternion<DT>::log() &&
+{
+  this->log();			// Forward to log &
+  return (DT&&) *this;
+}
+#endif
+
+template<class DT> DT&
+writable_quaternion<DT>::exp() __CML_REF
+{
+  /* Shorthand: */
+  typedef cml::scalar_traits<value_type>		element_traits;
+
+  /* The exponential of q is:
+   *
+   *   exp(w) * (cos(|v|) + v/|v|*sin(|v|))
+   *
+   * where v is the imaginary part of q and w is the real part:
+   */
+  auto v = this->imaginary();
+  auto lv = v.length();
+  auto x = element_traits::exp(this->real());
+  auto c = element_traits::sin(lv) / lv;
+  this->assign(x*c*v, x*element_traits::cos(lv));
+  return this->actual();
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> DT&&
+writable_quaternion<DT>::exp() &&
+{
+  this->exp();			// Forward to exp &
+  return (DT&&) *this;
+}
+#endif
+
 
 #if 0
 template<class DT> DT&
@@ -339,16 +445,6 @@ writable_quaternion<DT>::assign(const std::initializer_list<Other>& l)
   this->set(Y, array[Y]);
   this->set(Z, array[Z]);
   return this->actual();
-}
-
-namespace {
-
-template<int N, class... Args> inline auto item_at(Args&&... args)
--> decltype(std::get<N>(std::forward_as_tuple(std::forward<Args>(args)...)))
-{
-  return std::get<N>(std::forward_as_tuple(std::forward<Args>(args)...));
-}
-
 }
 
 template<class DT>

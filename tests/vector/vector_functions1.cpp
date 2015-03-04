@@ -48,7 +48,8 @@ BOOST_AUTO_TEST_CASE(length2)
 BOOST_AUTO_TEST_CASE(normalize1)
 {
   cml::vector3d v1 = { 1., 1., 1. };
-  double l2 = v1.normalize().length_squared();
+  v1.normalize();
+  double l2 = v1.length_squared();
   BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
 }
 

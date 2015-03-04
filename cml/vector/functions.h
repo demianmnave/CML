@@ -14,18 +14,18 @@
 
 namespace cml {
 
-/** Return the squared length of a vector. */
-template<class DerivedT> inline auto
+/** Return the squared length of @c v. */
+template<class DerivedT> auto
 length_squared(const readable_vector<DerivedT>& v)
 -> value_type_trait_of_t<DerivedT>;
 
-/** Return the length of a vector. */
-template<class DerivedT> inline auto
+/** Return the length of @c v. */
+template<class DerivedT> auto
 length(const readable_vector<DerivedT>& v)
 -> value_type_trait_of_t<DerivedT>;
 
-/** Return a normalized copy of a vector. */
-template<class DerivedT> inline auto
+/** Return a normalized copy of @c v. */
+template<class DerivedT> auto
 normalize(const readable_vector<DerivedT>& v)
 -> temporary_of_t<DerivedT>;
 

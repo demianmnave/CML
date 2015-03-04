@@ -12,20 +12,20 @@
 
 namespace cml {
 
-template<class DT> auto
+template<class DT> inline auto
 length_squared(const readable_vector<DT>& v) -> value_type_trait_of_t<DT>
 {
   return v.length_squared();
 }
 
-template<class DT> auto
+template<class DT> inline auto
 length(const readable_vector<DT>& v) -> value_type_trait_of_t<DT>
 {
   return v.length();
 }
 
-template<class DT> auto normalize(const readable_vector<DT>& v)
--> temporary_of_t<DT>
+template<class DT> inline auto
+normalize(const readable_vector<DT>& v) -> temporary_of_t<DT>
 {
   return v.normalize();
 }

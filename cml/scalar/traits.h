@@ -80,6 +80,14 @@ template<typename Scalar> struct default_integral_traits
     return (value_type) std::atan2(double(x),double(y));
   }
 
+  static inline value_type log(const value_type& v) {
+    return (value_type) std::log(double(v));
+  }
+
+  static inline value_type exp(const value_type& v) {
+    return (value_type) std::exp(double(v));
+  }
+
   /*@}*/
 };
 
@@ -141,6 +149,14 @@ template<typename Scalar> struct default_floating_point_traits
 
   static inline value_type atan2(const value_type& x, const value_type& y) {
     return std::atan2(x,y);
+  }
+
+  static inline value_type log(const value_type& v) {
+    return std::log(v);
+  }
+
+  static inline value_type exp(const value_type& v) {
+    return std::exp(v);
   }
 
   /*@}*/

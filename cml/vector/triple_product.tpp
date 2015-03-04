@@ -13,7 +13,7 @@
 
 namespace cml {
 
-template<class Sub1, class Sub2, class Sub3> auto
+template<class Sub1, class Sub2, class Sub3> inline auto
 triple_product(const readable_vector<Sub1>& a,
   const readable_vector<Sub2>& b, const readable_vector<Sub3>& c
   ) -> triple_product_promote_t<Sub1,Sub2,Sub3>
