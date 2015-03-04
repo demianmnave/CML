@@ -9,7 +9,6 @@
 #endif
 
 #include <cml/scalar/functions.h>
-#include <cml/scalar/binary_ops.h>
 #include <cml/quaternion/scalar_node.h>
 #include <cml/quaternion/imaginary_node.h>
 #include <cml/quaternion/conjugate_node.h>

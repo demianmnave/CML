@@ -10,7 +10,6 @@
 #define	cml_quaternion_readable_quaternion_h
 
 #include <cml/common/compiler.h>
-#include <cml/common/size_tags.h>
 #include <cml/scalar/binary_ops.h>
 #include <cml/quaternion/traits.h>
 
