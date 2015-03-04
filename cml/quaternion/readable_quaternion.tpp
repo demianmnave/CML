@@ -12,6 +12,7 @@
 #include <cml/scalar/binary_ops.h>
 #include <cml/quaternion/scalar_node.h>
 #include <cml/quaternion/imaginary_node.h>
+#include <cml/quaternion/conjugate_node.h>
 
 namespace cml {
 
@@ -107,6 +108,46 @@ readable_quaternion<DT>::normalize() const -> quaternion_scalar_node<
   return quaternion_scalar_node<
     DT&&, value_type, op::binary_divide<value_type,value_type>>
     ((DT&&) this->actual(), this->length());
+}
+#endif
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> auto
+readable_quaternion<DT>::conjugate() const & -> conjugate_node<const DT&>
+{
+  return conjugate_node<const DT&>(this->actual());
+}
+
+template<class DT> auto
+readable_quaternion<DT>::conjugate() const && -> conjugate_node<DT&&>
+{
+  return conjugate_node<DT&&>((DT&&) this->actual());
+}
+#else
+template<class DT> auto
+readable_quaternion<DT>::conjugate() const -> conjugate_node<DT&&>
+{
+  return conjugate_node<DT&&>((DT&&) this->actual());
+}
+#endif
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> auto
+readable_quaternion<DT>::inverse() const & -> inverse_node<const DT&>
+{
+  return inverse_node<const DT&>(this->actual());
+}
+
+template<class DT> auto
+readable_quaternion<DT>::inverse() const && -> inverse_node<DT&&>
+{
+  return inverse_node<DT&&>((DT&&) this->actual());
+}
+#else
+template<class DT> auto
+readable_quaternion<DT>::inverse() const -> inverse_node<DT&&>
+{
+  return inverse_node<DT&&>((DT&&) this->actual());
 }
 #endif
 

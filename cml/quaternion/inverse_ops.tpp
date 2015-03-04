@@ -5,24 +5,24 @@
  */
 
 
-#ifndef __CML_QUATERNION_IMAGINARY_OPS_TPP
-#error "quaternion/imaginary_ops.tpp not included correctly"
+#ifndef __CML_QUATERNION_INVERSE_OPS_TPP
+#error "quaternion/inverse_ops.tpp not included correctly"
 #endif
 
 namespace cml {
 
 template<class Sub> inline auto
-imaginary(const readable_quaternion<Sub>& q)
--> imaginary_node<const Sub&>
+inverse(const readable_quaternion<Sub>& q)
+-> inverse_node<const Sub&>
 {
-  return imaginary_node<const Sub&>(q.actual());
+  return inverse_node<const Sub&>(q.actual());
 }
 
 template<class Sub> inline auto
-imaginary(readable_quaternion<Sub>&& q)
--> imaginary_node<Sub&&>
+inverse(readable_quaternion<Sub>&& q)
+-> inverse_node<Sub&&>
 {
-  return imaginary_node<Sub&&>((Sub&&) q);
+  return inverse_node<Sub&&>((Sub&&) q);
 }
 
 } // namespace cml

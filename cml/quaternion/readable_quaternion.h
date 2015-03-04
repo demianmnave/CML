@@ -19,6 +19,8 @@ namespace cml {
 /* Forward declarations: */
 template<class Sub, class Scalar, class Op> class quaternion_scalar_node;
 template<class Sub> class imaginary_node;
+template<class Sub> class conjugate_node;
+template<class Sub> class inverse_node;
 
 /** Base class for readable quaternion types.  Readable quaternions support
  * const access to its elements.
@@ -115,6 +117,40 @@ class readable_quaternion
      */
     quaternion_scalar_node<DerivedT&&, value_type,
       op::binary_divide<value_type,value_type>> normalize() const;
+#endif
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Return the conjugate as an expression node, storing a reference of
+     * the source quaternion in the node.
+     */
+    conjugate_node<const DerivedT&> conjugate() const &;
+
+    /** Return the conjugate as an expression node, storing a copy of the
+     * quaternion in the node.
+     */
+    conjugate_node<DerivedT&&> conjugate() const &&;
+#else
+    /** Return the conjugate as an expression node, storing a copy of the
+     * quaternion in the node.
+     */
+    conjugate_node<DerivedT&&> conjugate() const;
+#endif
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Return the inverse as an expression node, storing a reference of
+     * the source quaternion in the node.
+     */
+    inverse_node<const DerivedT&> inverse() const &;
+
+    /** Return the inverse as an expression node, storing a copy of the
+     * quaternion in the node.
+     */
+    inverse_node<DerivedT&&> inverse() const &&;
+#else
+    /** Return the inverse as an expression node, storing a copy of the
+     * quaternion in the node.
+     */
+    inverse_node<DerivedT&&> inverse() const;
 #endif
 
 

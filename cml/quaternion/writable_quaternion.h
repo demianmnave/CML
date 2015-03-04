@@ -56,12 +56,14 @@ class writable_quaternion
   public:
 
     /* Disambiguate readable_quaternion<> methods: */
-    using readable_type::actual;
-    using readable_type::get;
     using readable_type::W;
     using readable_type::X;
     using readable_type::Y;
     using readable_type::Z;
+    using readable_type::actual;
+    using readable_type::get;
+    using readable_type::conjugate;
+    using readable_type::inverse;
     using readable_type::operator[];
 
 

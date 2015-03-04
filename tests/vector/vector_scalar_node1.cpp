@@ -4,8 +4,6 @@
 /** @file
  */
 
-#include <iostream>
-
 // Make sure the main header compiles cleanly:
 #include <cml/vector/scalar_node.h>
 #include <cml/vector/scalar_ops.h>
@@ -169,6 +167,26 @@ BOOST_AUTO_TEST_CASE(scalar_multiply_assign2)
   BOOST_CHECK_EQUAL(w[2], 6.);
 }
 
+BOOST_AUTO_TEST_CASE(scalar_divide_assign1)
+{
+  cml::vector3d v1 = { 2., 4., 6. };
+  v1 /= 2;
+  BOOST_REQUIRE_EQUAL(v1.size(), 3);
+  BOOST_CHECK_EQUAL(v1[0], 1.);
+  BOOST_CHECK_EQUAL(v1[1], 2.);
+  BOOST_CHECK_EQUAL(v1[2], 3.);
+}
+
+BOOST_AUTO_TEST_CASE(scalar_divide_assign2)
+{
+  cml::vector3d w;
+  w = (cml::vector3d(2.,4.,6.) /= 2);
+  BOOST_REQUIRE_EQUAL(w.size(), 3);
+  BOOST_CHECK_EQUAL(w[0], 1.);
+  BOOST_CHECK_EQUAL(w[1], 2.);
+  BOOST_CHECK_EQUAL(w[2], 3.);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -229,6 +247,35 @@ BOOST_AUTO_TEST_CASE(scalar_multiply_assign2)
 #endif
 }
 
+BOOST_AUTO_TEST_CASE(scalar_divide_assign1)
+{
+  double av1[] = { 2., 4., 6. };
+  cml::external3d v1(av1);
+  v1 /= 2;
+  BOOST_REQUIRE_EQUAL(v1.size(), 3);
+  BOOST_CHECK_EQUAL(v1[0], 1.);
+  BOOST_CHECK_EQUAL(v1[1], 2.);
+  BOOST_CHECK_EQUAL(v1[2], 3.);
+}
+
+BOOST_AUTO_TEST_CASE(scalar_divide_assign2)
+{
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+  double av1[] = { 2., 4., 6. };
+  cml::external3d w;
+  w = (cml::external3d(av1) /= 2);
+  BOOST_REQUIRE_EQUAL(w.size(), 3);
+  BOOST_CHECK_EQUAL(w.data(), &av1[0]);
+  BOOST_CHECK_EQUAL(w[0], 1.);
+  BOOST_CHECK_EQUAL(w[1], 2.);
+  BOOST_CHECK_EQUAL(w[2], 3.);
+#else
+  BOOST_WARN_MESSAGE(
+    BOOST_IS_DEFINED(CML_HAS_RVALUE_REFERENCE_FROM_THIS),
+    "Assignment to temporary external vectors not supported");
+#endif
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
@@ -282,6 +329,35 @@ BOOST_AUTO_TEST_CASE(scalar_multiply_assign2)
   BOOST_CHECK_EQUAL(w[0], 2.);
   BOOST_CHECK_EQUAL(w[1], 4.);
   BOOST_CHECK_EQUAL(w[2], 6.);
+#else
+  BOOST_WARN_MESSAGE(
+    BOOST_IS_DEFINED(CML_HAS_RVALUE_REFERENCE_FROM_THIS),
+    "Assignment to temporary external vectors not supported");
+#endif
+}
+
+BOOST_AUTO_TEST_CASE(scalar_divide_assign1)
+{
+  double av1[] = { 2., 4., 6. };
+  cml::externalnd v1(av1,3);
+  v1 /= 2;
+  BOOST_REQUIRE_EQUAL(v1.size(), 3);
+  BOOST_CHECK_EQUAL(v1[0], 1.);
+  BOOST_CHECK_EQUAL(v1[1], 2.);
+  BOOST_CHECK_EQUAL(v1[2], 3.);
+}
+
+BOOST_AUTO_TEST_CASE(scalar_divide_assign2)
+{
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+  double av1[] = { 2., 4., 6. };
+  cml::externalnd w;
+  w = (cml::externalnd(av1,3) /= 2);
+  BOOST_REQUIRE_EQUAL(w.size(), 3);
+  BOOST_CHECK_EQUAL(w.data(), &av1[0]);
+  BOOST_CHECK_EQUAL(w[0], 1.);
+  BOOST_CHECK_EQUAL(w[1], 2.);
+  BOOST_CHECK_EQUAL(w[2], 3.);
 #else
   BOOST_WARN_MESSAGE(
     BOOST_IS_DEFINED(CML_HAS_RVALUE_REFERENCE_FROM_THIS),
@@ -354,6 +430,26 @@ BOOST_AUTO_TEST_CASE(scalar_multiply_assign2)
   BOOST_CHECK_EQUAL(w[0], 2.);
   BOOST_CHECK_EQUAL(w[1], 4.);
   BOOST_CHECK_EQUAL(w[2], 6.);
+}
+
+BOOST_AUTO_TEST_CASE(scalar_divide_assign1)
+{
+  cml::vectord v1 = { 2., 4., 6. };
+  v1 /= 2;
+  BOOST_REQUIRE_EQUAL(v1.size(), 3);
+  BOOST_CHECK_EQUAL(v1[0], 1.);
+  BOOST_CHECK_EQUAL(v1[1], 2.);
+  BOOST_CHECK_EQUAL(v1[2], 3.);
+}
+
+BOOST_AUTO_TEST_CASE(scalar_divide_assign2)
+{
+  cml::vectord w;
+  w = (cml::vectord(2.,4.,6.) /= 2);
+  BOOST_REQUIRE_EQUAL(w.size(), 3);
+  BOOST_CHECK_EQUAL(w[0], 1.);
+  BOOST_CHECK_EQUAL(w[1], 2.);
+  BOOST_CHECK_EQUAL(w[2], 3.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
