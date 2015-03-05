@@ -14,10 +14,6 @@
 
 namespace cml {
 
-/** Convenience alias to determine the scalar type to return from cml::dot. */
-template<class Sub1, class Sub2>
-  using dot_promote_t = value_type_trait_promote_t<Sub1, Sub2>;
-
 /** Compute the dot-product of two vectors.
  *
  * @note Currently, the result is computed immediately, even if it appears
@@ -30,7 +26,7 @@ template<class Sub1, class Sub2>
  */
 template<class Sub1, class Sub2> auto
 dot(const readable_vector<Sub1>& left, const readable_vector<Sub2>& right)
--> dot_promote_t<Sub1,Sub2>;
+-> value_type_trait_promote_t<Sub1,Sub2>;
 
 } // namespace cml
 

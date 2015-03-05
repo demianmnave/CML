@@ -13,6 +13,8 @@
 #include <cml/storage/resize.h>
 #include <cml/storage/promotion.h>
 #include <cml/scalar/promotion.h>
+#include <cml/quaternion/order_tags.h>
+#include <cml/quaternion/cross_tags.h>
 #include <cml/quaternion/type_util.h>
 #include <cml/quaternion/traits.h>
 #include <cml/quaternion/quaternion.h>
@@ -39,7 +41,7 @@ struct quaternion_binary_storage_promote
   typedef resize_storage_t<unbound_type,4>		resized_type;
 
   /* Rebind to a quaternion storage type: */
-  typedef rebind_quaternion_storage_t<resized_type>		type;
+  typedef rebind_quaternion_storage_t<resized_type>	type;
 };
 
 /** Convenience alias for quaternion_binary_storage_promote. */
@@ -74,8 +76,19 @@ template<class Sub1, class Sub2> struct quaternion_promote<
   /* Use the proxy type for the temporary: */
   typedef proxy_type_of_t<storage_type>			proxy_type;
 
+  /* Determine the common order type: */
+  typedef order_type_promote_t<
+    order_type_of_t<left_traits>,
+    order_type_of_t<right_traits>>			order_type;
+
+  /* Determine the common cross type: */
+  typedef cross_type_promote_t<
+    cross_type_of_t<left_traits>,
+    cross_type_of_t<right_traits>>			cross_type;
+
   /* Build the quaternion type: */
-  typedef quaternion<value_type, proxy_type>		type;
+  typedef quaternion<value_type,
+	  proxy_type, order_type, cross_type>		type;
 };
 
 /** Convenience alias for quaternion_promote<>. */

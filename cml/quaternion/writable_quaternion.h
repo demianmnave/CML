@@ -252,6 +252,18 @@ class writable_quaternion
       operator-=(const readable_quaternion<OtherDerivedT>& other) &&;
 #endif
 
+    /** Modify the quaternion by multiplication of another quaternion. */
+    template<class OtherDerivedT> DerivedT&
+      operator*=(const readable_quaternion<OtherDerivedT>& other) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Modify a temporary quaternion by multiplication of another
+     * quaternion.
+     */
+    template<class OtherDerivedT> DerivedT&&
+      operator*=(const readable_quaternion<OtherDerivedT>& other) &&;
+#endif
+
     /** Multiply the quaternion by a scalar convertible to its value_type. */
     template<class ScalarT,
       typename enable_if_convertible<value_type, ScalarT>::type* = nullptr>

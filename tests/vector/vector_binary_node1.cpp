@@ -213,7 +213,6 @@ BOOST_AUTO_TEST_CASE(assign_minus1)
 {
   cml::vector3d w = { 1., 2., 3. };
   cml::vector3d v = { 4., 5., 6. };
-  BOOST_REQUIRE_EQUAL(w.size(), 3);
   w -= v;
   BOOST_CHECK_EQUAL(w[0], -3.);
   BOOST_CHECK_EQUAL(w[1], -3.);
@@ -225,7 +224,6 @@ BOOST_AUTO_TEST_CASE(assign_plus1)
   cml::vector3d w = { 1., 2., 3. };
   cml::vector3d v = { 4., 5., 6. };
   w += v;
-  BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 5.);
   BOOST_CHECK_EQUAL(w[1], 7.);
   BOOST_CHECK_EQUAL(w[2], 9.);
@@ -474,7 +472,6 @@ BOOST_AUTO_TEST_CASE(assign_minus1)
 {
   cml::vectord w = { 1., 2., 3. };
   cml::vectord v = { 4., 5., 6. };
-  BOOST_REQUIRE_EQUAL(w.size(), 3);
   w -= v;
   BOOST_CHECK_EQUAL(w[0], -3.);
   BOOST_CHECK_EQUAL(w[1], -3.);
@@ -486,7 +483,6 @@ BOOST_AUTO_TEST_CASE(assign_plus1)
   cml::vectord w = { 1., 2., 3. };
   cml::vectord v = { 4., 5., 6. };
   w += v;
-  BOOST_REQUIRE_EQUAL(w.size(), 3);
   BOOST_CHECK_EQUAL(w[0], 5.);
   BOOST_CHECK_EQUAL(w[1], 7.);
   BOOST_CHECK_EQUAL(w[2], 9.);

@@ -5,10 +5,11 @@
  */
 
 // Make sure the main header compiles cleanly:
-#include <cml/vector/cross.h>
+#include <cml/vector/cross_node.h>
 
 #include <cml/vector/fixed.h>
 #include <cml/vector/dynamic.h>
+#include <cml/vector/cross.h>
 #include <cml/vector/types.h>
 
 /* Testing headers: */

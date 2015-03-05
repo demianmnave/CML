@@ -10,12 +10,8 @@
 
 #include <cml/common/mpl/item_at.h>
 #include <cml/vector/readable_vector.h>
-#include <cml/vector/scalar_ops.h>
+#include <cml/quaternion/product.h>
 #include <cml/quaternion/size_checking.h>
-#if 0
-#include <random>
-#include <cml/scalar/binary_ops.h>
-#endif
 
 namespace cml {
 
@@ -317,6 +313,24 @@ template<class DT> template<class ODT> DT&&
 writable_quaternion<DT>::operator-=(const readable_quaternion<ODT>& other) &&
 {
   this->operator-=(other);
+  return (DT&&) *this;
+}
+#endif
+
+template<class DT> template<class ODT> DT&
+writable_quaternion<DT>::operator*=(
+  const readable_quaternion<ODT>& other
+  ) __CML_REF
+{
+  return this->assign((*this) * other);
+  /* Note: operator*() returns a temporary here. */
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> template<class ODT> DT&&
+writable_quaternion<DT>::operator*=(const readable_quaternion<ODT>& other) &&
+{
+  this->operator*=(other);
   return (DT&&) *this;
 }
 #endif

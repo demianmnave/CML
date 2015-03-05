@@ -46,6 +46,31 @@ template<class T> struct cross_type_trait_of {
 template<class T>
   using cross_type_trait_of_t = typename cross_type_trait_of<T>::type;
 
+
+/** Deduce the default cross tag needed to promote the result of combining
+ * two expressions having crosss @c Tag1 and @c Tag2.  By default:
+ *
+ * - both imaginary_first: imaginary_first
+ * - both real_first: real_first
+ * - otherwise: compile-time error
+ */
+template<class Tag1, class Tag2> struct cross_type_promote
+{
+  static_assert(is_cross_type<Tag1>::value,
+    "invalid quaternion cross type");
+  static_assert(is_cross_type<Tag2>::value,
+    "invalid quaternion cross type");
+  static_assert(std::is_same<Tag1,Tag2>::value,
+    "mismatched quaternion cross types");
+
+  /* The tags are the same, so use the common type: */
+  typedef Tag1						type;
+};
+
+/** Convenience alias for cross_type_promote. */
+template<class Tag1, class Tag2>
+  using cross_type_promote_t = typename cross_type_promote<Tag1,Tag2>::type;
+
 } // namespace cml
 
 #endif
