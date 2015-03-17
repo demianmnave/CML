@@ -30,16 +30,12 @@ quaternion_scalar_node<Sub,Scalar,Op>::quaternion_scalar_node(
 
 
 
-/* Public methods: */
+/* Internal methods: */
 
-template<class Sub, class Scalar, class Op> int
-quaternion_scalar_node<Sub,Scalar,Op>::size() const
-{
-  return 4;
-}
+/* readable_quaternion interface: */
 
 template<class Sub, class Scalar, class Op> auto
-quaternion_scalar_node<Sub,Scalar,Op>::get(int i) const -> immutable_value
+quaternion_scalar_node<Sub,Scalar,Op>::i_get(int i) const -> immutable_value
 {
   return Op().apply(this->m_left.get(i), this->m_right);
 }

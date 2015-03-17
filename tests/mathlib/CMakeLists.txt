@@ -14,6 +14,10 @@ ADD_CML_TEST(matrix_scale1)
 ADD_CML_TEST(matrix_invert1)
 ADD_CML_TEST(matrix_rotation1)
 ADD_CML_TEST(matrix_projection1)
+
+ADD_CML_TEST(quaternion_basis1)
+ADD_CML_TEST(quaternion_rotation1)
+
 ADD_CML_TEST(coordinate_conversion1)
 ADD_CML_TEST(random_unit1)
 ADD_CML_TEST(frustum1)

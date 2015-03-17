@@ -24,12 +24,12 @@ template<class Sub> class subvector_node;
  *
  * DerivedT must implement:
  *
- * - int size() const, returning the number of vector elements (even if
+ * - int i_size() const, returning the number of vector elements (even if
  * static); and
  *
- * - <X> get(int i) const, where <X> is the immutable_value type defined by
- * vector_traits<DerivedT>.  Note that immutable_value is not necessarily a
- * reference or const type.
+ * - <X> i_get(int i) const, where <X> is the immutable_value type defined
+ * by vector_traits<DerivedT>.  Note that immutable_value is not
+ * necessarily a reference or const type.
  */
 template<class DerivedT>
 class readable_vector

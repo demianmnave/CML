@@ -26,13 +26,19 @@ readable_quaternion<DT>::actual() const
 template<class DT> auto
 readable_quaternion<DT>::get(int i) const -> immutable_value
 {
-  return this->actual().get(i);
+  return this->actual().i_get(i);
 }
 
 template<class DT> auto
 readable_quaternion<DT>::operator[](int i) const -> immutable_value
 {
   return this->get(i);
+}
+
+template<class DT> int
+readable_quaternion<DT>::size() const
+{
+  return 4;
 }
 
 template<class DT> auto

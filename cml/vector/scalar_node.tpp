@@ -28,16 +28,18 @@ vector_scalar_node<Sub,Scalar,Op>::vector_scalar_node(node_type&& other)
 
 
 
-/* Public methods: */
+/* Internal methods: */
+
+/* readable_vector interface: */
 
 template<class Sub, class Scalar, class Op> int
-vector_scalar_node<Sub,Scalar,Op>::size() const
+vector_scalar_node<Sub,Scalar,Op>::i_size() const
 {
   return this->m_left.size();
 }
 
 template<class Sub, class Scalar, class Op> auto
-vector_scalar_node<Sub,Scalar,Op>::get(int i) const -> immutable_value
+vector_scalar_node<Sub,Scalar,Op>::i_get(int i) const -> immutable_value
 {
   return Op().apply(this->m_left.get(i), this->m_right);
 }

@@ -26,16 +26,12 @@ quaternion_binary_node<Sub1,Sub2,Op>::quaternion_binary_node(node_type&& other)
 
 
 
-/* Public methods: */
+/* Internal methods: */
 
-template<class Sub1, class Sub2, class Op> int
-quaternion_binary_node<Sub1,Sub2,Op>::size() const
-{
-  return 4;
-}
+/* readable_quaternion interface: */
 
 template<class Sub1, class Sub2, class Op> auto
-quaternion_binary_node<Sub1,Sub2,Op>::get(int i) const -> immutable_value
+quaternion_binary_node<Sub1,Sub2,Op>::i_get(int i) const -> immutable_value
 {
   return Op().apply(this->m_left.get(i), this->m_right.get(i));
 }

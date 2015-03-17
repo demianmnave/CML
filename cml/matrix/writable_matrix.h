@@ -25,15 +25,15 @@ namespace cml {
  * In addition to the requirements of readable_matrix, DerivedT must
  * implement:
  *
- * - <X> get(int i, int j) returning element @c (i,j) as a mutable value,
+ * - <X> i_get(int i, int j) returning element @c (i,j) as a mutable value,
  * where <X> is the mutable_value type defined by matrix_traits<DerivedT>
  *
- * - template<class T> DerivedT& set(int i, int j, const T&)
+ * - template<class T> DerivedT& i_put(int i, int j, const T&)
  *
  *   for compilers without support for rvalue reference from *this; and
  *
- *   template<class T> DerivedT& set(int i, int j, const T&) &
- *   template<class T> DerivedT&& set(int i, int j, const T&) &&
+ *   template<class T> DerivedT& i_put(int i, int j, const T&) &
+ *   template<class T> DerivedT&& i_put(int i, int j, const T&) &&
  *
  *   for compilers with support for rvalue reference from this.
  *
@@ -70,12 +70,12 @@ class writable_matrix
 
     /** Set element @c (i,j). */
     template<class Other> DerivedT&
-      set(int i, int j, const Other& v) __CML_REF;
+      put(int i, int j, const Other& v) __CML_REF;
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
     /** Set element @c (i,j) on a temporary. */
     template<class Other> DerivedT&&
-      set(int i, int j, const Other& v) &&;
+      put(int i, int j, const Other& v) &&;
 #endif
 
     /** Return mutable element @c (i,j). */

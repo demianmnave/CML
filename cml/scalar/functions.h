@@ -15,9 +15,9 @@
 
 namespace cml {
 
-/** Sign of input value as double. */
-template<typename T> inline double sign(T value) {
-  return value < T(0) ? T(-1) : (value > T(0) ? T(1) : T(0));
+/** Sign (-1, 0, 1) of @c value as type @c T. */
+template<typename T> inline T sign(T value) {
+  return value < T(0) ? (-T(1)) : (value > T(0) ? T(1) : T(0));
 }
 
 /** Clamp input value to the range [min, max]. */

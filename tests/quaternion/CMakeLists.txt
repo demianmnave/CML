@@ -6,7 +6,7 @@ project(CML_Testing_Quaternion)
 set(CML_CURRENT_TEST_GROUP "Quaternion")
 
 ADD_CML_TEST(fixed_compiled_quaternion1)
-#ADD_CML_TEST(vector_copy1)
+#ADD_CML_TEST(quaternion_copy1)  ## Not implemented yet.
 ADD_CML_TEST(quaternion_unary_node1)
 ADD_CML_TEST(quaternion_binary_node1)
 ADD_CML_TEST(quaternion_scalar_node1)

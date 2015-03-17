@@ -37,40 +37,6 @@ vector<E, external<S>>::vector(vector_type&& other)
 
 /* Public methods: */
 
-template<class E, int S> int
-vector<E, external<S>>::size() const
-{
-  return S;
-}
-
-template<class E, int S> auto
-vector<E, external<S>>::get(int i) -> mutable_value
-{
-  return this->m_data[i];
-}
-
-template<class E, int S> auto
-vector<E, external<S>>::get(int i) const -> immutable_value
-{
-  return this->m_data[i];
-}
-
-template<class E, int S> template<class Other> auto
-vector<E, external<S>>::set(int i, const Other& v) __CML_REF -> vector_type&
-{
-  this->m_data[i] = v;
-  return *this;
-}
-
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-template<class E, int S> template<class Other> auto
-vector<E, external<S>>::set(int i, const Other& v) && -> vector_type&&
-{
-  this->set(i,v);
-  return (vector_type&&) *this;
-}
-#endif
-
 template<class E, int S> auto
 vector<E, external<S>>::data() -> pointer
 {
@@ -109,6 +75,49 @@ vector<E, external<S>>::operator=(vector_type&& other) -> vector_type&
   other.m_data = nullptr;
   return *this;
 }
+
+
+
+/* Internal methods: */
+
+/* readable_vector interface: */
+
+template<class E, int S> int
+vector<E, external<S>>::i_size() const
+{
+  return S;
+}
+
+template<class E, int S> auto
+vector<E, external<S>>::i_get(int i) const -> immutable_value
+{
+  return this->m_data[i];
+}
+
+
+/* writable_vector interface: */
+
+template<class E, int S> auto
+vector<E, external<S>>::i_get(int i) -> mutable_value
+{
+  return this->m_data[i];
+}
+
+template<class E, int S> template<class Other> auto
+vector<E, external<S>>::i_put(int i, const Other& v) __CML_REF -> vector_type&
+{
+  this->m_data[i] = v;
+  return *this;
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class E, int S> template<class Other> auto
+vector<E, external<S>>::i_put(int i, const Other& v) && -> vector_type&&
+{
+  this->m_data[i] = v;
+  return *this;
+}
+#endif
 
 } // namespace cml
 

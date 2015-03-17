@@ -19,6 +19,24 @@ BOOST_AUTO_TEST_CASE(alloc1)
   BOOST_REQUIRE_EQUAL(v.size(), 3);
 }
 
+BOOST_AUTO_TEST_CASE(alloc2)
+{
+  cml::vectord v(3U);
+  BOOST_REQUIRE_EQUAL(v.size(), 3);
+}
+
+BOOST_AUTO_TEST_CASE(alloc3)
+{
+  cml::vectord v(3L);
+  BOOST_REQUIRE_EQUAL(v.size(), 3);
+}
+
+BOOST_AUTO_TEST_CASE(alloc4)
+{
+  cml::vectord v(3UL);
+  BOOST_REQUIRE_EQUAL(v.size(), 3);
+}
+
 BOOST_AUTO_TEST_CASE(resize1)
 {
   cml::vectord v(3);
@@ -88,6 +106,9 @@ BOOST_AUTO_TEST_CASE(element_construct4)
   BOOST_REQUIRE_EQUAL(v.size(), 4);
   BOOST_CHECK_EQUAL(v.data()[0], 1.);
   BOOST_CHECK_EQUAL(v[0], 1.);
+  BOOST_CHECK_EQUAL(v[1], 2.);
+  BOOST_CHECK_EQUAL(v[2], 3.);
+  BOOST_CHECK_EQUAL(v[3], 4.);
 }
 
 BOOST_AUTO_TEST_CASE(combine_construct1)

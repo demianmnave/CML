@@ -28,16 +28,18 @@ imaginary_node<Sub>::imaginary_node(node_type&& other)
 
 
 
-/* Public methods: */
+/* Internal methods: */
+
+/* readable_vector interface: */
 
 template<class Sub> int
-imaginary_node<Sub>::size() const
+imaginary_node<Sub>::i_size() const
 {
   return 3;
 }
 
 template<class Sub> auto
-imaginary_node<Sub>::get(int i) const -> immutable_value
+imaginary_node<Sub>::i_get(int i) const -> immutable_value
 {
   typedef order_type_trait_of_t<sub_type> order_type;
   return this->m_sub.get(order_type::X + i);

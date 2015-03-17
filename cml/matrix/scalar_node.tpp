@@ -28,22 +28,24 @@ matrix_scalar_node<Sub,Scalar,Op>::matrix_scalar_node(node_type&& other)
 
 
 
-/* Public methods: */
+/* Internal methods: */
+
+/* readable_matrix interface: */
 
 template<class Sub, class Scalar, class Op> int
-matrix_scalar_node<Sub,Scalar,Op>::rows() const
+matrix_scalar_node<Sub,Scalar,Op>::i_rows() const
 {
   return this->m_left.rows();
 }
 
 template<class Sub, class Scalar, class Op> int
-matrix_scalar_node<Sub,Scalar,Op>::cols() const
+matrix_scalar_node<Sub,Scalar,Op>::i_cols() const
 {
   return this->m_left.cols();
 }
 
 template<class Sub, class Scalar, class Op> auto
-matrix_scalar_node<Sub,Scalar,Op>::get(int i, int j) const -> immutable_value
+matrix_scalar_node<Sub,Scalar,Op>::i_get(int i, int j) const -> immutable_value
 {
   return Op().apply(this->m_left.get(i,j), this->m_right);
 }

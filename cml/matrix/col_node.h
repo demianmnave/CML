@@ -53,6 +53,7 @@ class matrix_col_node<Sub,-1>
   public:
 
     typedef matrix_col_node<Sub,-1>			node_type;
+    typedef readable_vector<node_type>			readable_type;
     typedef vector_traits<node_type>			traits_type;
     typedef typename traits_type::sub_arg_type		sub_arg_type;
     typedef typename traits_type::sub_type		sub_type;
@@ -82,13 +83,20 @@ class matrix_col_node<Sub,-1>
     matrix_col_node(node_type&& other);
 
 
-  public:
+  protected:
+
+    /** @name readable_vector Interface */
+    /*@{*/
+
+    friend readable_type;
 
     /** Return the size of the vector expression. */
-    int size() const;
+    int i_size() const;
 
     /** Return element @c (i,col) of the matrix. */
-    immutable_value get(int i) const;
+    immutable_value i_get(int i) const;
+
+    /*@}*/
 
 
   protected:

@@ -9,7 +9,12 @@
 #endif
 
 #include <cml/common/mpl/are_convertible.h>
-#include <cml/vector/size_checking.h>
+#include <cml/scalar/functions.h>
+#include <cml/vector/detail/check_or_resize.h>
+#include <cml/quaternion/readable_quaternion.h>
+#include <cml/mathlib/vector/orthonormal.h>
+#include <cml/mathlib/matrix/basis.h>
+#include <cml/mathlib/matrix/misc.h>
 #include <cml/mathlib/matrix/size_checking.h>
 
 namespace cml {
@@ -42,6 +47,50 @@ matrix_rotation_2D(writable_matrix<Sub>& m, E angle)
 
 
 /* 3D rotations: */
+
+template<class Sub, class E> inline void
+matrix_rotation_world_axis(writable_matrix<Sub>& m, int axis, const E& angle)
+{
+  static_assert(cml::are_convertible<
+    value_type_trait_of_t<Sub>, E>::value, "incompatible scalar types");
+
+  typedef traits_of_t<E>				scalar_traits;
+
+  cml::check_minimum_size(m, int_c<3>(), int_c<3>());
+  cml_require(0 <= axis && axis <= 2, std::invalid_argument, "invalid axis");
+ 
+  /* Setup sin() and cos() for the chosen axis: */
+  int i, j, k; cml::cyclic_permutation(axis, i, j, k);
+  auto s = scalar_traits::sin(angle);
+  auto c = scalar_traits::cos(angle);
+
+  /* Clear the matrix: */
+  m.identity();
+
+  /* Set elements: */
+  m.set_basis_element(j,j, c);
+  m.set_basis_element(j,k, s);
+  m.set_basis_element(k,j,-s);
+  m.set_basis_element(k,k, c);
+}
+
+template<class Sub, class E> inline void
+matrix_rotation_world_x(writable_matrix<Sub>& m, const E& angle)
+{
+  matrix_rotation_world_axis(m, 0, angle);
+}
+
+template<class Sub, class E> inline void
+matrix_rotation_world_y(writable_matrix<Sub>& m, const E& angle)
+{
+  matrix_rotation_world_axis(m, 1, angle);
+}
+
+template<class Sub, class E> inline void
+matrix_rotation_world_z(writable_matrix<Sub>& m, const E& angle)
+{
+  matrix_rotation_world_axis(m, 2, angle);
+}
 
 template<class Sub1, class Sub2, class E> inline void
 matrix_rotation_axis_angle(
@@ -229,6 +278,248 @@ matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
   }
 }
 
+template<class Sub1, class Sub2> inline void
+matrix_rotation_quaternion(
+  writable_matrix<Sub1>& m, const readable_quaternion<Sub2>& q
+  )
+{
+  static_assert(cml::are_convertible<
+    value_type_trait_of_t<Sub1>, value_type_trait_of_t<Sub2>>::value,
+    "incompatible scalar types");
+
+  typedef order_type_trait_of_t<Sub2>			order_type;
+  typedef value_type_trait_of_t<Sub1>			value_type;
+
+  cml::check_minimum_size(m, int_c<3>(), int_c<3>());
+
+  /* Local version of the quaternion ordering: */
+  enum {
+    W = order_type::W,
+    X = order_type::X,
+    Y = order_type::Y,
+    Z = order_type::Z
+  };
+
+  auto x2 = q[X] + q[X];
+  auto y2 = q[Y] + q[Y];
+  auto z2 = q[Z] + q[Z];    
+
+  auto xx2 = q[X] * x2;
+  auto yy2 = q[Y] * y2;
+  auto zz2 = q[Z] * z2;
+  auto xy2 = q[X] * y2;
+  auto yz2 = q[Y] * z2;
+  auto zx2 = q[Z] * x2;
+  auto xw2 = q[W] * x2;
+  auto yw2 = q[W] * y2;
+  auto zw2 = q[W] * z2;
+
+  m.identity();
+  m.set_basis_element(0,0, value_type(1) - yy2 - zz2);
+  m.set_basis_element(0,1,                 xy2 + zw2);
+  m.set_basis_element(0,2,                 zx2 - yw2);
+  m.set_basis_element(1,0,                 xy2 - zw2);
+  m.set_basis_element(1,1, value_type(1) - zz2 - xx2);
+  m.set_basis_element(1,2,                 yz2 + xw2);
+  m.set_basis_element(2,0,                 zx2 + yw2);
+  m.set_basis_element(2,1,                 yz2 - xw2);
+  m.set_basis_element(2,2, value_type(1) - xx2 - yy2);
+}
+
+
+/* Alignment: */
+
+template<class Sub, class ASub, class RSub> inline void
+matrix_rotation_align(
+  writable_matrix<Sub>& m,
+  const readable_vector<ASub>& align, const readable_vector<RSub>& reference,
+  bool normalize, AxisOrder order
+  )
+{
+  static_assert(cml::are_convertible<value_type_trait_of_t<Sub>,
+    value_type_trait_of_t<ASub>, value_type_trait_of_t<RSub>>::value,
+    "incompatible scalar types");
+
+  typedef value_type_trait_of_t<Sub>			value_type;
+
+  m.identity();
+
+  vector<value_type, compiled<3>> x, y, z;
+  orthonormal_basis(align, reference, x, y, z, normalize, order);
+  matrix_set_basis_vectors(m, x, y, z);
+}
+
+
+/* Conversion: */
+
+template<class Sub1, class Sub2, class E, class Tol> inline void
+matrix_to_axis_angle(
+  const readable_matrix<Sub1>& m, writable_vector<Sub2>& axis,
+  E& angle, Tol tolerance
+  )
+{
+  static_assert(cml::are_convertible<
+    value_type_trait_of_t<Sub1>, value_type_trait_of_t<Sub2>, E, Tol>::value,
+    "incompatible scalar types");
+
+  typedef value_type_trait_of_t<Sub1>			value_type;
+  typedef scalar_traits<value_type>			value_traits;
+
+  cml::check_minimum_size(m, int_c<3>(), int_c<3>());
+  cml::detail::check_or_resize(axis, int_c<3>());
+
+  /* Assign the axis first: */
+  axis.set(
+    m.basis_element(1,2) - m.basis_element(2,1),
+    m.basis_element(2,0) - m.basis_element(0,2),
+    m.basis_element(0,1) - m.basis_element(1,0)
+    );
+
+  /* Compute the angle: */
+  auto l = axis.length();
+  auto tmo = trace_3x3(m) - value_type(1);
+
+  /* Normalize and compute the angle directly if possible: */
+  if(l > tolerance) {
+    axis /= l;
+    angle = value_traits::atan2(l, tmo);
+    /* Note: l = 2*sin(theta), tmo = 2*cos(theta) */
+  }
+
+  /* Near-zero axis: */
+  else if(tmo > value_type(0)) {
+    axis.zero();
+    angle = value_type(0);
+  }
+
+  /* Reflection: */
+  else {
+    auto largest_diagonal_element = cml::index_of_max(
+      m.basis_element(0,0), m.basis_element(1,1), m.basis_element(2,2));
+
+    int i, j, k;
+    cyclic_permutation(largest_diagonal_element, i, j, k);
+
+    axis[i] = value_traits::sqrt(
+	m.basis_element(i,i) - m.basis_element(j,j) -
+	m.basis_element(k,k) + value_type(1)) / value_type(2);
+
+    auto s = value_type(1) / (value_type(2) * axis[i]);
+    axis[j] = m.basis_element(i,j) * s;
+    axis[k] = m.basis_element(i,k) * s;
+
+    angle = constants<value_type>::pi();
+  }
+
+  /* Done. */
+}
+
+template<class Sub, class E0, class E1, class E2, class Tol>
+inline void
+matrix_to_euler(
+  const readable_matrix<Sub>& m,
+  E0& angle_0, E1& angle_1, E2& angle_2, euler_order order,
+  Tol tolerance,
+  enable_if_matrix_t<Sub>*
+  )
+{
+  static_assert(cml::are_convertible<
+    value_type_trait_of_t<Sub>, E0, E1, E2, Tol>::value,
+    "incompatible scalar types");
+
+  typedef value_type_trait_of_t<Sub>			value_type;
+  typedef scalar_traits<value_type>			value_traits;
+
+  cml::check_minimum_size(m, int_c<3>(), int_c<3>());
+
+  /* Unpack the order first: */
+  int i, j, k;
+  bool odd, repeat;
+  cml::unpack_euler_order(order, i, j, k, odd, repeat);
+
+  /* Detect repeated indices: */
+  if (repeat) {
+    auto s1 = cml::length(m.basis_element(j,i), m.basis_element(k,i));
+    auto c1 = m.basis_element(i,i);
+
+    angle_1 = value_traits::atan2(s1, c1);
+    if (s1 > tolerance) {
+      angle_0 = value_traits::atan2(
+	m.basis_element(j,i), m.basis_element(k,i));
+      angle_2 = value_traits::atan2(
+	m.basis_element(i,j), -m.basis_element(i,k));
+    } else {
+      angle_0 = value_type(0);
+      angle_2 = cml::sign(c1) *
+	value_traits::atan2(-m.basis_element(k,j),m.basis_element(j,j));
+    }
+  } else {
+    auto s1 = -m.basis_element(i,k);
+    auto c1 = cml::length(m.basis_element(i,i), m.basis_element(i,j));
+
+    angle_1 = value_traits::atan2(s1, c1);
+    if (c1 > tolerance) {
+      angle_0 = value_traits::atan2(
+	m.basis_element(j,k), m.basis_element(k,k));
+      angle_2 = value_traits::atan2(
+	m.basis_element(i,j), m.basis_element(i,i));
+    } else {
+      angle_0 = value_type(0);
+      angle_2 = -cml::sign(s1) *
+	value_traits::atan2(-m.basis_element(k,j), m.basis_element(j,j));
+    }
+  }
+
+  if(odd) {
+    angle_0 = -angle_0;
+    angle_1 = -angle_1;
+    angle_2 = -angle_2;
+  }
+
+  /* Done. */
+}
+
+
+namespace detail {
+
+/** Helper for the matrix_to_euler() overloads. */
+template<class VectorT, class Sub, class Tol> inline VectorT
+matrix_to_euler(
+  const readable_matrix<Sub>& m, euler_order order, Tol tolerance
+  )
+{
+  static_assert(cml::are_convertible<
+    value_type_trait_of_t<Sub>, value_type_trait_of_t<VectorT>, Tol>::value,
+    "incompatible scalar types");
+
+  VectorT v; cml::detail::check_or_resize(v, int_c<3>());
+  cml::matrix_to_euler(m, v[0], v[1], v[2], order, tolerance);
+  return std::move(v);
+}
+
+} // namespace detail
+
+template<class Sub, class Tol>
+inline vector<value_type_trait_of_t<Sub>, compiled<3>>
+matrix_to_euler(
+  const readable_matrix<Sub>& m, euler_order order, Tol tolerance,
+  enable_if_matrix_t<Sub>*
+  )
+{
+  typedef vector<value_type_trait_of_t<Sub>, compiled<3>> vector_type;
+  return detail::matrix_to_euler<vector_type, Sub, Tol>(m, order, tolerance);
+}
+
+template<class VectorT, class Sub, class Tol>
+inline VectorT
+matrix_to_euler(
+  const readable_matrix<Sub>& m, euler_order order, Tol tolerance,
+  enable_if_vector_t<VectorT>*, enable_if_matrix_t<Sub>*
+  )
+{
+  return detail::matrix_to_euler<VectorT, Sub, Tol>(m, order, tolerance);
+}
+
 } // namespace cml
 
 
@@ -236,125 +527,8 @@ matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
 // XXX INCOMPLETE XXX
 
 //////////////////////////////////////////////////////////////////////////////
-// 3D rotation about world axes
-//////////////////////////////////////////////////////////////////////////////
-
-/** Build a matrix representing a 3D rotation about the given world axis */
-template < typename E, class A, class B, class L > void
-matrix_rotation_world_axis( matrix<E,A,B,L>& m, size_t axis, E angle)
-{
-    typedef matrix<E,A,B,L> matrix_type;
-    typedef typename matrix_type::value_type value_type;
-
-    /* Checking */
-    detail::CheckMatLinear3D(m);
-    detail::CheckIndex3(axis);
-
-    size_t i, j, k;
-    cyclic_permutation(axis, i, j, k);
-    
-    value_type s = value_type(std::sin(angle));
-    value_type c = value_type(std::cos(angle));
-    
-    identity_transform(m);
-
-    m.set_basis_element(j,j, c);
-    m.set_basis_element(j,k, s);
-    m.set_basis_element(k,j,-s);
-    m.set_basis_element(k,k, c);
-}
-
-/** Build a matrix representing a 3D rotation about the world x axis */
-template < typename E, class A, class B, class L > void
-matrix_rotation_world_x(matrix<E,A,B,L>& m, E angle) {
-    matrix_rotation_world_axis(m,0,angle);
-}
-
-/** Build a matrix representing a 3D rotation about the world y axis */
-template < typename E, class A, class B, class L > void
-matrix_rotation_world_y(matrix<E,A,B,L>& m, E angle) {
-    matrix_rotation_world_axis(m,1,angle);
-}
-
-/** Build a matrix representing a 3D rotation about the world z axis */
-template < typename E, class A, class B, class L > void
-matrix_rotation_world_z(matrix<E,A,B,L>& m, E angle) {
-    matrix_rotation_world_axis(m,2,angle);
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// 3D rotation from a quaternion
-//////////////////////////////////////////////////////////////////////////////
-
-/** Build a rotation matrix from a quaternion */
-template < typename E, class A, class B, class L, class QuatT > void
-matrix_rotation_quaternion(matrix<E,A,B,L>& m, const QuatT& q)
-{
-    typedef matrix<E,A,B,L> matrix_type;
-    typedef QuatT quaternion_type;
-    typedef typename quaternion_type::order_type order_type;
-    typedef typename matrix_type::value_type value_type;
-
-    enum {
-        W = order_type::W,
-        X = order_type::X,
-        Y = order_type::Y,
-        Z = order_type::Z
-    };
-    
-    /* Checking */
-    detail::CheckMatLinear3D(m);
-    detail::CheckQuat(q);
-
-    identity_transform(m);
-    
-    value_type x2 = q[X] + q[X];
-    value_type y2 = q[Y] + q[Y];
-    value_type z2 = q[Z] + q[Z];    
-
-    value_type xx2 = q[X] * x2;
-    value_type yy2 = q[Y] * y2;
-    value_type zz2 = q[Z] * z2;
-    value_type xy2 = q[X] * y2;
-    value_type yz2 = q[Y] * z2;
-    value_type zx2 = q[Z] * x2;
-    value_type xw2 = q[W] * x2;
-    value_type yw2 = q[W] * y2;
-    value_type zw2 = q[W] * z2;
-    
-    m.set_basis_element(0,0, value_type(1) - yy2 - zz2);
-    m.set_basis_element(0,1,                 xy2 + zw2);
-    m.set_basis_element(0,2,                 zx2 - yw2);
-    m.set_basis_element(1,0,                 xy2 - zw2);
-    m.set_basis_element(1,1, value_type(1) - zz2 - xx2);
-    m.set_basis_element(1,2,                 yz2 + xw2);
-    m.set_basis_element(2,0,                 zx2 + yw2);
-    m.set_basis_element(2,1,                 yz2 - xw2);
-    m.set_basis_element(2,2, value_type(1) - xx2 - yy2);
-}
-
-//////////////////////////////////////////////////////////////////////////////
 // 3D rotation to align with a vector, multiple vectors, or the view plane
 //////////////////////////////////////////////////////////////////////////////
-
-/** See vector_ortho.h for details */
-template < typename E,class A,class B,class L,class VecT_1,class VecT_2 > void
-matrix_rotation_align(
-    matrix<E,A,B,L>& m,
-    const VecT_1& align,
-    const VecT_2& reference,
-    bool normalize = true,
-    AxisOrder order = axis_order_zyx)
-{
-    typedef vector< E,fixed<3> > vector_type;
-
-    identity_transform(m);
-    
-    vector_type x, y, z;
-
-    orthonormal_basis(align, reference, x, y, z, normalize, order);
-    matrix_set_basis_vectors(m, x, y, z);
-}
 
 /** See vector_ortho.h for details */
 template < typename E, class A, class B, class L, class VecT > void
@@ -467,31 +641,6 @@ matrix_rotation_aim_at_axial(
     AxisOrder order = axis_order_zyx)
 {
     matrix_rotation_align_axial(m, target - pos, axis, true, order);
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// 2D rotation
-//////////////////////////////////////////////////////////////////////////////
-
-/** Build a matrix representing a 2D rotation */
-template < typename E, class A, class B, class L > void
-matrix_rotation_2D( matrix<E,A,B,L>& m, E angle)
-{
-    typedef matrix<E,A,B,L> matrix_type;
-    typedef typename matrix_type::value_type value_type;
-
-    /* Checking */
-    detail::CheckMatLinear2D(m);
-
-    value_type s = value_type(std::sin(angle));
-    value_type c = value_type(std::cos(angle));
-    
-    identity_transform(m);
-
-    m.set_basis_element(0,0, c);
-    m.set_basis_element(0,1, s);
-    m.set_basis_element(1,0,-s);
-    m.set_basis_element(1,1, c);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -838,127 +987,6 @@ matrix_slerp_2D(const MatT_1& m1, const MatT_2& m2, E t,
 //////////////////////////////////////////////////////////////////////////////
 // Conversions
 //////////////////////////////////////////////////////////////////////////////
-
-/** Convert a 3D rotation matrix to an axis-angle pair */
-template < class MatT, typename E, class A > void
-matrix_to_axis_angle(
-    const MatT& m,
-    vector<E,A >& axis,
-    E& angle,
-    E tolerance = epsilon<E>::placeholder())
-{
-    typedef MatT matrix_type;
-    typedef typename matrix_type::value_type value_type;
-
-    /* Checking */
-    detail::CheckMatLinear3D(m);
-
-    axis.set(
-        m.basis_element(1,2) - m.basis_element(2,1),
-        m.basis_element(2,0) - m.basis_element(0,2),
-        m.basis_element(0,1) - m.basis_element(1,0)
-    );
-	value_type l = length(axis);
-    value_type tmo = trace_3x3(m) - value_type(1);
-
-	if (l > tolerance) {
-		axis /= l;
-        angle = std::atan2(l, tmo); // l=2sin(theta),tmo=2cos(theta)
-	} else if (tmo > value_type(0)) {
-		axis.zero();
-		angle = value_type(0);
-	} else {
-        size_t largest_diagonal_element =
-            index_of_max(
-                m.basis_element(0,0),
-                m.basis_element(1,1),
-                m.basis_element(2,2)
-            );
-        size_t i, j, k;
-        cyclic_permutation(largest_diagonal_element, i, j, k);
-		axis[i] =
-            std::sqrt(
-                m.basis_element(i,i) -
-                m.basis_element(j,j) -
-                m.basis_element(k,k) +
-                value_type(1)
-            ) * value_type(.5);
-		value_type s = value_type(.5) / axis[i];
-		axis[j] = m.basis_element(i,j) * s;
-		axis[k] = m.basis_element(i,k) * s;
-        angle = constants<value_type>::pi();
-	}
-}
-
-/** Convert a 3D rotation matrix to an Euler-angle triple */
-template < class MatT, typename Real >
-void matrix_to_euler(
-    const MatT& m,
-    Real& angle_0,
-    Real& angle_1,
-    Real& angle_2,
-    euler_order order,
-    Real tolerance = epsilon<Real>::placeholder())
-{
-    typedef MatT matrix_type;
-    typedef typename matrix_type::value_type value_type;
-
-    /* Checking */
-    detail::CheckMatLinear3D(m);
-
-    size_t i, j, k;
-    bool odd, repeat;
-    detail::unpack_euler_order(order, i, j, k, odd, repeat);
-
-    if (repeat) {
-        value_type s1 = length(m.basis_element(j,i),m.basis_element(k,i));
-        value_type c1 = m.basis_element(i,i);
-
-        angle_1 = std::atan2(s1, c1);
-        if (s1 > tolerance) {
-            angle_0 = std::atan2(m.basis_element(j,i),m.basis_element(k,i));
-            angle_2 = std::atan2(m.basis_element(i,j),-m.basis_element(i,k));
-        } else {
-            angle_0 = value_type(0);
-            angle_2 = sign(c1) *
-                std::atan2(-m.basis_element(k,j),m.basis_element(j,j));
-        }
-    } else {
-        value_type s1 = -m.basis_element(i,k);
-        value_type c1 = length(m.basis_element(i,i),m.basis_element(i,j));
-
-        angle_1 = std::atan2(s1, c1);
-        if (c1 > tolerance) {
-            angle_0 = std::atan2(m.basis_element(j,k),m.basis_element(k,k));
-            angle_2 = std::atan2(m.basis_element(i,j),m.basis_element(i,i));
-        } else {
-            angle_0 = value_type(0);
-            angle_2 = -sign(s1) *
-                std::atan2(-m.basis_element(k,j),m.basis_element(j,j));
-        }
-    }
-    
-    if (odd) {
-        angle_0 = -angle_0;
-        angle_1 = -angle_1;
-        angle_2 = -angle_2;
-    }
-}
-
-/** Convenience function to return a 3D vector containing the Euler angles
- * in the requested order.
- */
-template < class MatT > vector< typename MatT::value_type, fixed<3> >
-matrix_to_euler(
-    const MatT& m,
-    euler_order order,
-    const typename MatT::value_type&
-        tolerance = epsilon<typename MatT::value_type>::placeholder())
-{
-  typename MatT::value_type e0, e1, e2;
-  matrix_to_euler(m, e0, e1, e2, order, tolerance);
-  return vector< typename MatT::value_type, fixed<3> >(e0, e1, e2);
-}
 
 /** Convert a 2D rotation matrix to a rotation angle */
 template < class MatT > typename MatT::value_type

@@ -108,50 +108,6 @@ matrix<E, dynamic<A>, BO, L>::~matrix()
 
 /* Public methods: */
 
-template<class E, class A, typename BO, typename L> int
-matrix<E, dynamic<A>, BO, L>::rows() const
-{
-  return this->m_rows;
-}
-
-template<class E, class A, typename BO, typename L> int
-matrix<E, dynamic<A>, BO, L>::cols() const
-{
-  return this->m_cols;
-}
-
-template<class E, class A, typename BO, typename L> auto
-matrix<E, dynamic<A>, BO, L>::get(int i, int j) -> mutable_value
-{
-  return get(*this, i, j, layout_tag());
-}
-
-template<class E, class A, typename BO, typename L> auto
-matrix<E, dynamic<A>, BO, L>::get(int i, int j) const -> immutable_value
-{
-  return get(*this, i, j, layout_tag());
-}
-
-template<class E, class A, typename BO, typename L>
-template<class Other> auto matrix<E, dynamic<A>, BO, L>::set(
-  int i, int j, const Other& v
-  ) __CML_REF -> matrix_type&
-{
-  this->get(i,j) = v;
-  return *this;
-}
-
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-template<class E, class A, typename BO, typename L>
-template<class Other> auto matrix<E, dynamic<A>, BO, L>::set(
-  int i, int j, const Other& v
-  ) && -> matrix_type&&
-{
-  this->set(i,v);
-  return (matrix_type&&) *this;
-}
-#endif
-
 template<class E, class A, typename BO, typename L> auto
 matrix<E, dynamic<A>, BO, L>::data() -> pointer
 {
@@ -298,6 +254,56 @@ matrix<E, dynamic<A>, BO, L>::destruct(pointer data, int n, std::false_type)
   /* Destruct each element: */
   else for(pointer e = data; e < data + n; ++ e) allocator_type().destroy(e);
 }
+
+
+/* readable_matrix interface: */
+
+template<class E, class A, typename BO, typename L> int
+matrix<E, dynamic<A>, BO, L>::i_rows() const
+{
+  return this->m_rows;
+}
+
+template<class E, class A, typename BO, typename L> int
+matrix<E, dynamic<A>, BO, L>::i_cols() const
+{
+  return this->m_cols;
+}
+
+template<class E, class A, typename BO, typename L> auto
+matrix<E, dynamic<A>, BO, L>::i_get(int i, int j) const -> immutable_value
+{
+  return s_access(*this, i, j, layout_tag());
+}
+
+
+/* writable_matrix interface: */
+
+template<class E, class A, typename BO, typename L> auto
+matrix<E, dynamic<A>, BO, L>::i_get(int i, int j) -> mutable_value
+{
+  return s_access(*this, i, j, layout_tag());
+}
+
+template<class E, class A, typename BO, typename L>
+template<class Other> auto matrix<E, dynamic<A>, BO, L>::i_put(
+  int i, int j, const Other& v
+  ) __CML_REF -> matrix_type&
+{
+  s_access(*this, i, j, layout_tag()) = v;
+  return *this;
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class E, class A, typename BO, typename L>
+template<class Other> auto matrix<E, dynamic<A>, BO, L>::i_put(
+  int i, int j, const Other& v
+  ) && -> matrix_type&&
+{
+  s_access(*this, i, j, layout_tag()) = v;
+  return (matrix_type&&) *this;
+}
+#endif
 
 } // namespace cml
 

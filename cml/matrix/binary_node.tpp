@@ -32,22 +32,24 @@ matrix_binary_node<Sub1,Sub2,Op>::matrix_binary_node(node_type&& other)
 
 
 
-/* Public methods: */
+/* Internal methods: */
+
+/* readable_matrix interface: */
 
 template<class Sub1, class Sub2, class Op> int
-matrix_binary_node<Sub1,Sub2,Op>::rows() const
+matrix_binary_node<Sub1,Sub2,Op>::i_rows() const
 {
   return this->m_left.rows();
 }
 
 template<class Sub1, class Sub2, class Op> int
-matrix_binary_node<Sub1,Sub2,Op>::cols() const
+matrix_binary_node<Sub1,Sub2,Op>::i_cols() const
 {
   return this->m_left.cols();
 }
 
 template<class Sub1, class Sub2, class Op> auto
-matrix_binary_node<Sub1,Sub2,Op>::get(int i, int j) const -> immutable_value
+matrix_binary_node<Sub1,Sub2,Op>::i_get(int i, int j) const -> immutable_value
 {
   return Op().apply(this->m_left.get(i,j), this->m_right.get(i,j));
 }

@@ -25,7 +25,7 @@ namespace detail {
 template<int I, class Sub, class E0> inline void
 assign_elements(writable_matrix<Sub>& sub, const E0& e0)
 {
-  sub.set(I / sub.cols(), I % sub.cols(), e0);
+  sub.put(I / sub.cols(), I % sub.cols(), e0);
 }
 
 /* Set element (I/cols(),I%cols()) of sub to e0, then assign the remainder
@@ -36,7 +36,7 @@ inline void assign_elements(
   writable_matrix<Sub>& sub, const E0& e0, const Es&... eN
   )
 {
-  sub.set(I / sub.cols(), I % sub.cols(), e0);
+  sub.put(I / sub.cols(), I % sub.cols(), e0);
   assign_elements<I+1>(sub, eN...);
 }
 
@@ -64,20 +64,20 @@ writable_matrix<DT>::actual()
 template<class DT> auto
 writable_matrix<DT>::get(int i, int j) -> mutable_value
 {
-  return this->actual().get(i,j);
+  return this->actual().i_get(i,j);
 }
 
 template<class DT> template<class Other> DT&
-writable_matrix<DT>::set(int i, int j, const Other& v) __CML_REF
+writable_matrix<DT>::put(int i, int j, const Other& v) __CML_REF
 {
-  return this->actual().set(i,j,v);
+  return this->actual().i_put(i,j,v);
 }
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT> template<class Other> DT&&
-writable_matrix<DT>::set(int i, int j, const Other& v) &&
+writable_matrix<DT>::put(int i, int j, const Other& v) &&
 {
-  this->set(i,j,v);		// Forward to set(...) &
+  this->put(i,j,v);		// Forward to put(...) &
   return (DT&&) *this;
 }
 #endif
@@ -100,7 +100,7 @@ writable_matrix<DT>::set_basis_element(int i, int j, const Other& v) __CML_REF
 template<class DT> template<class Other> DT&&
 writable_matrix<DT>::set_basis_element(int i, int j, const Other& v) &&
 {
-  this->set_basis_element(i,j,v);	// Forward to set(...) &
+  this->set_basis_element(i,j,v);	// Forward to set_basis_element(...) &
   return (DT&&) *this;
 }
 #endif
@@ -110,7 +110,7 @@ template<class DT> template<class Sub> DT&
 writable_matrix<DT>::set_row(int i, const readable_vector<Sub>& v) __CML_REF
 {
   cml::check_same_col_size(*this, v);
-  for(int j = 0; j < this->cols(); ++ j) this->set(i,j, v.get(j));
+  for(int j = 0; j < this->cols(); ++ j) this->put(i,j, v.get(j));
   return this->actual();
 }
 
@@ -127,7 +127,7 @@ template<class DT> template<class Sub> DT&
 writable_matrix<DT>::set_col(int j, const readable_vector<Sub>& v)
 {
   cml::check_same_row_size(*this, v);
-  for(int i = 0; i < this->rows(); ++ i) this->set(i,j, v.get(i));
+  for(int i = 0; i < this->rows(); ++ i) this->put(i,j, v.get(i));
   return this->actual();
 }
 
@@ -396,7 +396,7 @@ writable_matrix<DT>::assign(const Array& array)
   cml::check_same_linear_size(*this, array);
   int cols = this->cols();
   for(int i = 0; i < array_size_of_c<Array>::value; ++ i) {
-    this->set(i/cols, i%cols, array[i]);
+    this->put(i/cols, i%cols, array[i]);
   }
   return this->actual();
 }
@@ -415,7 +415,7 @@ writable_matrix<DT>::assign(const Pointer& array)
 {
   int rows = this->rows(), cols = this->cols();
   for(int i = 0; i < rows*cols; ++ i)
-    this->set(i/cols, i%cols, array[i]);
+    this->put(i/cols, i%cols, array[i]);
   return this->actual();
 }
 
@@ -424,7 +424,7 @@ writable_matrix<DT>::assign(const std::initializer_list<Other>& l)
 {
   cml::check_same_linear_size(*this, l);
   int cols = this->cols(), i = 0;
-  for(Other v : l) { this->set(i/cols, i%cols, v); ++ i; }
+  for(Other v : l) { this->put(i/cols, i%cols, v); ++ i; }
   return this->actual();
 }
 
@@ -447,7 +447,7 @@ writable_matrix<DT>::set_basis_element(
   int i, int j, const Other& v, row_basis
   )
 {
-  this->set(i, j, v);
+  this->put(i, j, v);
 }
 
 template<class DT> template<class Other> void
@@ -455,7 +455,7 @@ writable_matrix<DT>::set_basis_element(
   int i, int j, const Other& v, col_basis
   )
 {
-  this->set(j, i, v);
+  this->put(j, i, v);
 }
 
 } // namespace cml

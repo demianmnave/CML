@@ -32,16 +32,18 @@ vector_binary_node<Sub1,Sub2,Op>::vector_binary_node(node_type&& other)
 
 
 
-/* Public methods: */
+/* Internal methods: */
+
+/* readable_vector interface: */
 
 template<class Sub1, class Sub2, class Op> int
-vector_binary_node<Sub1,Sub2,Op>::size() const
+vector_binary_node<Sub1,Sub2,Op>::i_size() const
 {
   return this->m_left.size();
 }
 
 template<class Sub1, class Sub2, class Op> auto
-vector_binary_node<Sub1,Sub2,Op>::get(int i) const -> immutable_value
+vector_binary_node<Sub1,Sub2,Op>::i_get(int i) const -> immutable_value
 {
   return Op().apply(this->m_left.get(i), this->m_right.get(i));
 }

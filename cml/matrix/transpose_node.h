@@ -30,10 +30,13 @@ struct matrix_traits< matrix_transpose_node<Sub> >
   typedef typename sub_traits::storage_type		storage_type;
   typedef typename sub_traits::size_tag			size_tag;
   typedef typename sub_traits::basis_tag		basis_tag;
+  typedef typename sub_traits::layout_tag		layout_tag;
 
+#if 0
   /* Flip the layout: */
   typedef typename sub_traits::layout_tag		sub_layout;
   typedef typename sub_layout::transposed_tag		layout_tag;
+#endif
 
   /* Propagate the rows from the subexpression: */
   static const int array_rows = sub_traits::array_cols;
@@ -56,6 +59,7 @@ class matrix_transpose_node
   public:
 
     typedef matrix_transpose_node<Sub>			node_type;
+    typedef readable_matrix<node_type>			readable_type;
     typedef matrix_traits<node_type>			traits_type;
     typedef typename traits_type::sub_arg_type		sub_arg_type;
     typedef typename traits_type::sub_type		sub_type;
@@ -94,16 +98,23 @@ class matrix_transpose_node
     matrix_transpose_node(node_type&& other);
 
 
-  public:
+  protected:
+
+    /** @name readable_matrix Interface */
+    /*@{*/
+
+    friend readable_type;
 
     /** Return the row size of the transposed matrix expression. */
-    int rows() const;
+    int i_rows() const;
 
     /** Return the column size of the transposed matrix expression. */
-    int cols() const;
+    int i_cols() const;
 
     /** Return element @c (j,i) of the subexpression. */
-    immutable_value get(int i, int j) const;
+    immutable_value i_get(int i, int j) const;
+
+    /*@}*/
 
 
   protected:

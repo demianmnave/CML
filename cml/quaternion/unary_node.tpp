@@ -26,16 +26,12 @@ quaternion_unary_node<Sub,Op>::quaternion_unary_node(node_type&& other)
 
 
 
-/* Public methods: */
+/* Internal methods: */
 
-template<class Sub, class Op> int
-quaternion_unary_node<Sub,Op>::size() const
-{
-  return 4;
-}
+/* readable_quaternion interface: */
 
 template<class Sub, class Op> auto
-quaternion_unary_node<Sub,Op>::get(int i) const -> immutable_value
+quaternion_unary_node<Sub,Op>::i_get(int i) const -> immutable_value
 {
   return Op().apply(this->m_sub.get(i));
 }

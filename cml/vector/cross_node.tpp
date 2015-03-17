@@ -33,16 +33,18 @@ vector_cross_node<Sub1,Sub2>::vector_cross_node(node_type&& other)
 
 
 
-/* Public methods: */
+/* Internal methods: */
+
+/* readable_vector interface: */
 
 template<class Sub1, class Sub2> int
-vector_cross_node<Sub1,Sub2>::size() const
+vector_cross_node<Sub1,Sub2>::i_size() const
 {
   return 3;
 }
 
 template<class Sub1, class Sub2> auto
-vector_cross_node<Sub1,Sub2>::get(int i) const -> immutable_value
+vector_cross_node<Sub1,Sub2>::i_get(int i) const -> immutable_value
 {
   int i0 = (i+1)%3, i1 = (i+2)%3;
   return   this->m_left.get(i0)*this->m_right.get(i1)	// 1,2; 2,0; 0,1

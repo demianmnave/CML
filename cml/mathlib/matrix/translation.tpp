@@ -71,7 +71,7 @@ matrix_set_translation_2D(
 
 template<class Sub, class E0, class E1> inline void
 matrix_get_translation_2D(
-  writable_matrix<Sub>& m, E0& e0, E1& e1
+  const readable_matrix<Sub>& m, E0& e0, E1& e1
   )
 {
   static_assert(
@@ -147,7 +147,7 @@ matrix_set_translation(
 
 template<class Sub, class E0, class E1, class E2> inline void
 matrix_get_translation(
-  writable_matrix<Sub>& m, E0& e0, E1& e1, E2& e2
+  const readable_matrix<Sub>& m, E0& e0, E1& e1, E2& e2
   )
 {
   static_assert(

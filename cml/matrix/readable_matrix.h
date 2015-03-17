@@ -24,11 +24,11 @@ typedef std::pair<int,int> matrix_size;
  *
  * DerivedT must implement:
  *
- * - int rows() const, returning the number of rows (even if static);
+ * - int i_rows() const, returning the number of rows (even if static);
  *
- * - int cols() const, returning the number of columns (even if static);
+ * - int i_cols() const, returning the number of columns (even if static);
  *
- * - <X> get(int i, int j) const returning matrix element @c (i,j), where
+ * - <X> i_get(int i, int j) const returning matrix element @c (i,j), where
  * <X> is the immutable_value type defined by matrix_traits<DerivedT>.
  * Note that immutable_value is not necessarily a reference or const type.
  *

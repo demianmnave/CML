@@ -10,6 +10,7 @@
 #define	cml_vector_writable_vector_h
 
 #include <initializer_list>
+#include <cml/common/mpl/enable_if_t.h>
 #include <cml/common/mpl/enable_if_pointer.h>
 #include <cml/common/mpl/enable_if_array.h>
 #include <cml/common/mpl/enable_if_convertible.h>
@@ -24,15 +25,15 @@ namespace cml {
  * In addition to the requirements of readable_vector, DerivedT must
  * implement:
  *
- * - <X> get(int i), where <X> is the mutable_value type defined by
+ * - <X> i_get(int i), where <X> is the mutable_value type defined by
  * vector_traits<DerivedT>
  *
- * - template<class T> DerivedT& set(int i, const T&)
+ * - template<class T> DerivedT& i_put(int i, const T&)
  *
  *   for compilers without support for rvalue reference from *this; and
  *
- *   template<class T> DerivedT& set(int i, const T&) &
- *   template<class T> DerivedT&& set(int i, const T&) &&
+ *   template<class T> DerivedT& i_put(int i, const T&) &
+ *   template<class T> DerivedT&& i_put(int i, const T&) &&
  *
  *   for compilers with support for rvalue reference from this.
  *
@@ -66,11 +67,11 @@ class writable_vector
     DerivedT& actual();
 
     /** Set element @c i. */
-    template<class Other> DerivedT& set(int i, const Other& v) __CML_REF;
+    template<class Other> DerivedT& put(int i, const Other& v) __CML_REF;
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
     /** Set element @c i on a temporary. */
-    template<class Other> DerivedT&& set(int i, const Other& v) &&;
+    template<class Other> DerivedT&& put(int i, const Other& v) &&;
 #endif
 
     /** Return mutable element @c i. */
@@ -166,6 +167,36 @@ class writable_vector
 
 
   public:
+
+    /** Assign from a variable list of at least one value. If the vector is
+     * resizable, it is resized to exactly accomodate the elements of @c
+     * eN.  If the vector is fixed-size, it must have the same length as @c
+     * eN.
+     *
+     * @note This overload is enabled only if all of the arguments are
+     * convertible to value_type.
+     */
+    template<class E0, class... Elements> auto
+      set(const E0& e0, const Elements&... eN) __CML_REF -> enable_if_t<
+	are_convertible<value_type, E0, Elements...>::value, DerivedT&>;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Assign a temporary from a variable list of at least one value. If
+     * the vector is resizable, it is resized to exactly accomodate the
+     * elements of @c eN.  If the vector is fixed-size, it must have the
+     * same length as @c eN.
+     *
+     * @note This overload is enabled only if all of the arguments are
+     * convertible to value_type.
+     */
+    template<class E0, class... Elements> auto
+      set(const E0& e0, const Elements&... eN) && -> enable_if_t<
+	are_convertible<value_type, E0, Elements...>::value, DerivedT&&>;
+#endif
+
+
+    /** Copy assignment. */
+    DerivedT& operator=(const writable_vector& other) __CML_REF;
 
     /** Assign from a readable_vector.
      *
@@ -273,7 +304,7 @@ class writable_vector
 
     /** Multiply the vector by a scalar convertible to its value_type. */
     template<class ScalarT,
-      typename enable_if_convertible<value_type, ScalarT>::type* = nullptr>
+      enable_if_convertible_t<value_type, ScalarT>* = nullptr>
 	DerivedT& operator*=(const ScalarT& v) __CML_REF;
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
@@ -281,13 +312,13 @@ class writable_vector
      * value_type.
      */
     template<class ScalarT,
-      typename enable_if_convertible<value_type, ScalarT>::type* = nullptr>
+      enable_if_convertible_t<value_type, ScalarT>* = nullptr>
 	DerivedT&& operator*=(const ScalarT& v) &&;
 #endif
 
     /** Divide the vector by a scalar convertible to its value_type. */
     template<class ScalarT,
-      typename enable_if_convertible<value_type, ScalarT>::type* = nullptr>
+      enable_if_convertible_t<value_type, ScalarT>* = nullptr>
 	DerivedT& operator/=(const ScalarT& v) __CML_REF;
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
@@ -295,7 +326,7 @@ class writable_vector
      * value_type.
      */
     template<class ScalarT,
-      typename enable_if_convertible<value_type, ScalarT>::type* = nullptr>
+      enable_if_convertible_t<value_type, ScalarT>* = nullptr>
 	DerivedT&& operator/=(const ScalarT& v) &&;
 #endif
 
@@ -376,9 +407,6 @@ class writable_vector
     // Use the compiler-generated move constructor:
     writable_vector(writable_vector&&) = default;
 #endif
-
-    // Force assignment through operator=(readable_vector<>):
-    writable_vector& operator=(const writable_vector&) = delete;
 };
 
 } // namespace cml

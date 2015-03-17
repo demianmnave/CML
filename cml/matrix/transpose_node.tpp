@@ -26,22 +26,24 @@ matrix_transpose_node<Sub>::matrix_transpose_node(node_type&& other)
 
 
 
-/* Public methods: */
+/* Internal methods: */
+
+/* readable_matrix interface: */
 
 template<class Sub> int
-matrix_transpose_node<Sub>::rows() const
+matrix_transpose_node<Sub>::i_rows() const
 {
   return this->m_sub.cols();
 }
 
 template<class Sub> int
-matrix_transpose_node<Sub>::cols() const
+matrix_transpose_node<Sub>::i_cols() const
 {
   return this->m_sub.rows();
 }
 
 template<class Sub> auto
-matrix_transpose_node<Sub>::get(int i, int j) const -> immutable_value
+matrix_transpose_node<Sub>::i_get(int i, int j) const -> immutable_value
 {
   return this->m_sub.get(j,i);
 }

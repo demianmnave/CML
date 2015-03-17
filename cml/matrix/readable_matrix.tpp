@@ -24,13 +24,13 @@ readable_matrix<DT>::actual() const
 template<class DT> int
 readable_matrix<DT>::rows() const
 {
-  return this->actual().rows();
+  return this->actual().i_rows();
 }
 
 template<class DT> int
 readable_matrix<DT>::cols() const
 {
-  return this->actual().cols();
+  return this->actual().i_cols();
 }
 
 template<class DT> std::pair<int,int>
@@ -42,7 +42,7 @@ readable_matrix<DT>::size() const
 template<class DT> auto
 readable_matrix<DT>::get(int i, int j) const -> immutable_value
 {
-  return this->actual().get(i,j);
+  return this->actual().i_get(i,j);
 }
 
 template<class DT> auto

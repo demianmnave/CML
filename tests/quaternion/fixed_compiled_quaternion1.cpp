@@ -207,6 +207,42 @@ BOOST_AUTO_TEST_CASE(list_assign2)
   BOOST_CHECK_EQUAL(q[cml::quaterniond_rp::W], 1.);
 }
 
+BOOST_AUTO_TEST_CASE(combine_set1)
+{
+  cml::quaterniond_ip q;
+  BOOST_REQUIRE_EQUAL(q.size(), 4);
+  q.set(cml::vector3d(1., 2., 3.), 4.);
+  BOOST_CHECK_EQUAL(q[cml::quaterniond_ip::X], 1.);
+  BOOST_CHECK_EQUAL(q[cml::quaterniond_ip::W], 4.);
+}
+
+BOOST_AUTO_TEST_CASE(combine_set2)
+{
+  cml::quaterniond_rp q;
+  BOOST_REQUIRE_EQUAL(q.size(), 4);
+  q.set(cml::vector3d(1., 2., 3.), 4.);
+  BOOST_CHECK_EQUAL(q[cml::quaterniond_rp::X], 1.);
+  BOOST_CHECK_EQUAL(q[cml::quaterniond_rp::W], 4.);
+}
+
+BOOST_AUTO_TEST_CASE(combine_set3)
+{
+  cml::quaterniond_ip q;
+  BOOST_REQUIRE_EQUAL(q.size(), 4);
+  q.set(4., cml::vector3d(1., 2., 3.));
+  BOOST_CHECK_EQUAL(q[cml::quaterniond_ip::X], 1.);
+  BOOST_CHECK_EQUAL(q[cml::quaterniond_ip::W], 4.);
+}
+
+BOOST_AUTO_TEST_CASE(combine_set4)
+{
+  cml::quaterniond_rp q;
+  BOOST_REQUIRE_EQUAL(q.size(), 4);
+  q.set(4., cml::vector3d(1., 2., 3.));
+  BOOST_CHECK_EQUAL(q[cml::quaterniond_rp::X], 1.);
+  BOOST_CHECK_EQUAL(q[cml::quaterniond_rp::W], 4.);
+}
+
 BOOST_AUTO_TEST_CASE(size_check1)
 {
   cml::quaterniond_rp q;

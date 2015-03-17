@@ -26,22 +26,24 @@ matrix_unary_node<Sub,Op>::matrix_unary_node(node_type&& other)
 
 
 
-/* Public methods: */
+/* Internal methods: */
+
+/* readable_matrix interface: */
 
 template<class Sub, class Op> int
-matrix_unary_node<Sub,Op>::rows() const
+matrix_unary_node<Sub,Op>::i_rows() const
 {
   return this->m_sub.rows();
 }
 
 template<class Sub, class Op> int
-matrix_unary_node<Sub,Op>::cols() const
+matrix_unary_node<Sub,Op>::i_cols() const
 {
   return this->m_sub.cols();
 }
 
 template<class Sub, class Op> auto
-matrix_unary_node<Sub,Op>::get(int i, int j) const -> immutable_value
+matrix_unary_node<Sub,Op>::i_get(int i, int j) const -> immutable_value
 {
   return Op().apply(this->m_sub.get(i,j));
 }

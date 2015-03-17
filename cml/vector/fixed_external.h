@@ -47,6 +47,7 @@ class vector<Element, external<Size>>
   public:
 
     typedef vector<Element, external<Size>>		vector_type;
+    typedef readable_vector<vector_type>		readable_type;
     typedef writable_vector<vector_type>		writable_type;
     typedef vector_traits<vector_type>			traits_type;
     typedef typename traits_type::element_traits	element_traits;
@@ -97,23 +98,6 @@ class vector<Element, external<Size>>
 
   public:
 
-    /** Return the length of the vector. */
-    int size() const;
-
-    /** Return vector element @c i. */
-    mutable_value get(int i);
-
-    /** Return vector const element @c i. */
-    immutable_value get(int i) const;
-
-    /** Set element @c i. */
-    template<class Other> vector_type& set(int i, const Other& v) __CML_REF;
-
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-    /** Set element @c i on a temporary. */
-    template<class Other> vector_type&& set(int i, const Other& v) &&;
-#endif
-
     /** Return access to the vector data as a raw pointer. */
     pointer data();
 
@@ -151,6 +135,43 @@ class vector<Element, external<Size>>
 	return this->assign(l);
       }
 #endif
+
+
+  protected:
+
+    /** @name readable_vector Interface */
+    /*@{*/
+
+    friend readable_type;
+
+    /** Return the length of the vector. */
+    int i_size() const;
+
+    /** Return vector const element @c i. */
+    immutable_value i_get(int i) const;
+
+    /*@}*/
+
+
+  protected:
+
+    /** @name writable_vector Interface */
+    /*@{*/
+
+    friend writable_type;
+
+    /** Return vector element @c i. */
+    mutable_value i_get(int i);
+
+    /** Set element @c i. */
+    template<class Other> vector_type& i_put(int i, const Other& v) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set element @c i on a temporary. */
+    template<class Other> vector_type&& i_put(int i, const Other& v) &&;
+#endif
+
+    /*@}*/
 
 
   protected:

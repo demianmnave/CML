@@ -73,6 +73,7 @@ class outer_product_node
   public:
 
     typedef outer_product_node<Sub1,Sub2>		node_type;
+    typedef readable_matrix<node_type>			readable_type;
     typedef matrix_traits<node_type>			traits_type;
     typedef typename traits_type::left_arg_type		left_arg_type;
     typedef typename traits_type::right_arg_type	right_arg_type;
@@ -118,18 +119,25 @@ class outer_product_node
     outer_product_node(node_type&& other);
 
 
-  public:
+  protected:
+
+    /** @name readable_matrix Interface */
+    /*@{*/
+
+    friend readable_type;
 
     /** Return the row size of the matrix expression. */
-    int rows() const;
+    int i_rows() const;
 
     /** Return the column size of the matrix expression. */
-    int cols() const;
+    int i_cols() const;
 
     /** Apply the operator to element @c (i,j) of the subexpressions and
      * return the result.
      */
-    immutable_value get(int i, int j) const;
+    immutable_value i_get(int i, int j) const;
+
+    /*@}*/
 
 
   protected:

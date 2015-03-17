@@ -26,16 +26,18 @@ vector_unary_node<Sub,Op>::vector_unary_node(node_type&& other)
 
 
 
-/* Public methods: */
+/* Internal methods: */
+
+/* readable_vector interface: */
 
 template<class Sub, class Op> int
-vector_unary_node<Sub,Op>::size() const
+vector_unary_node<Sub,Op>::i_size() const
 {
   return this->m_sub.size();
 }
 
 template<class Sub, class Op> auto
-vector_unary_node<Sub,Op>::get(int i) const -> immutable_value
+vector_unary_node<Sub,Op>::i_get(int i) const -> immutable_value
 {
   return Op().apply(this->m_sub.get(i));
 }

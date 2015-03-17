@@ -21,10 +21,11 @@ vector<E, dynamic<A>>::vector()
 }
 
 template<class E, class A>
-vector<E, dynamic<A>>::vector(int size)
+template<class Int, enable_if_t<std::is_integral<Int>::value>*>
+vector<E, dynamic<A>>::vector(Int size)
 : m_data(0), m_size(0)
 {
-  this->resize_fast(size);
+  this->resize_fast(int(size));
 }
 
 template<class E, class A>
@@ -93,40 +94,6 @@ vector<E, dynamic<A>>::~vector()
 
 
 /* Public methods: */
-
-template<class E, class A> int
-vector<E, dynamic<A>>::size() const
-{
-  return this->m_size;
-}
-
-template<class E, class A> auto
-vector<E, dynamic<A>>::get(int i) -> mutable_value
-{
-  return this->m_data[i];
-}
-
-template<class E, class A> auto
-vector<E, dynamic<A>>::get(int i) const -> immutable_value
-{
-  return this->m_data[i];
-}
-
-template<class E, class A> template<class Other> auto
-vector<E, dynamic<A>>::set(int i, const Other& v) __CML_REF -> vector_type&
-{
-  this->m_data[i] = v;
-  return *this;
-}
-
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-template<class E, class A> template<class Other> auto
-vector<E, dynamic<A>>::set(int i, const Other& v) && -> vector_type&&
-{
-  this->set(i,v);
-  return (vector_type&&) *this;
-}
-#endif
 
 template<class E, class A> auto
 vector<E, dynamic<A>>::data() -> pointer
@@ -263,6 +230,46 @@ vector<E, dynamic<A>>::destruct(pointer data, int n, std::false_type)
   /* Destruct each element: */
   else for(pointer e = data; e < data + n; ++ e) allocator_type().destroy(e);
 }
+
+
+/* readable_vector interface: */
+
+template<class E, class A> int
+vector<E, dynamic<A>>::i_size() const
+{
+  return this->m_size;
+}
+
+template<class E, class A> auto
+vector<E, dynamic<A>>::i_get(int i) const -> immutable_value
+{
+  return this->m_data[i];
+}
+
+
+/* writable_vector interface: */
+
+template<class E, class A> auto
+vector<E, dynamic<A>>::i_get(int i) -> mutable_value
+{
+  return this->m_data[i];
+}
+
+template<class E, class A> template<class Other> auto
+vector<E, dynamic<A>>::i_put(int i, const Other& v) __CML_REF -> vector_type&
+{
+  this->m_data[i] = v;
+  return *this;
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class E, class A> template<class Other> auto
+vector<E, dynamic<A>>::i_put(int i, const Other& v) && -> vector_type&&
+{
+  this->m_data[i] = v;
+  return *this;
+}
+#endif
 
 } // namespace cml
 

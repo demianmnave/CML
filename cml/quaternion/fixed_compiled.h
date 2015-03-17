@@ -53,6 +53,7 @@ class quaternion<Element, fixed<>, Order, Cross>
   public:
 
     typedef quaternion<Element, fixed<>, Order, Cross>	quaternion_type;
+    typedef readable_quaternion<quaternion_type>	readable_type;
     typedef writable_quaternion<quaternion_type>	writable_type;
     typedef quaternion_traits<quaternion_type>		traits_type;
     typedef typename traits_type::element_traits	element_traits;
@@ -76,7 +77,6 @@ class quaternion<Element, fixed<>, Order, Cross>
     using writable_type::X;
     using writable_type::Y;
     using writable_type::Z;
-    using writable_type::operator[];
 #ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
     using writable_type::operator=;
 #endif
@@ -119,9 +119,7 @@ class quaternion<Element, fixed<>, Order, Cross>
      * convertible to value_type.
      */
     template<class E0, class E1, class E2, class E3,
-      // XXX This could be enable_if_convertible_t, but VC++12 ICEs:
-      typename enable_if_convertible<
-	value_type, E0, E1, E2, E3>::type* = nullptr>
+      enable_if_convertible_t<value_type, E0, E1, E2, E3>* = nullptr>
        	quaternion(const E0& e0, const E1& e1, const E2& e2, const E3& e3)
 	// XXX Should be in quaternion/fixed_compiled.tpp, but VC++12 has
 	// brain-dead out-of-line template argument matching...
@@ -137,9 +135,8 @@ class quaternion<Element, fixed<>, Order, Cross>
      * @note This overload is enabled only if the value_type of @c sub and
      * the scalar argument are convertible to value_type.
      */
-    template<class Sub, class E0,
-      typename enable_if_convertible<value_type,
-      value_type_trait_of_t<Sub>, E0>::type* = nullptr>
+    template<class Sub, class E0, enable_if_convertible_t<
+      value_type, value_type_trait_of_t<Sub>, E0>* = nullptr>
        	quaternion(const readable_vector<Sub>& sub, const E0& e0)
 	// XXX Should be in quaternion/fixed_compiled.tpp, but VC++12 has
 	// brain-dead out-of-line template argument matching...
@@ -155,9 +152,8 @@ class quaternion<Element, fixed<>, Order, Cross>
      * @note This overload is enabled only if the value_type of @c sub and
      * the scalar argument are convertible to value_type.
      */
-    template<class E0, class Sub,
-      typename enable_if_convertible<value_type,
-      value_type_trait_of_t<Sub>, E0>::type* = nullptr>
+    template<class E0, class Sub, enable_if_convertible_t<
+      value_type, value_type_trait_of_t<Sub>, E0>* = nullptr>
        	quaternion(const E0& e0, const readable_vector<Sub>& sub)
 	// XXX Should be in quaternion/fixed_compiled.tpp, but VC++12 has
 	// brain-dead out-of-line template argument matching...
@@ -198,20 +194,6 @@ class quaternion<Element, fixed<>, Order, Cross>
     /** Return the length of the quaternion. */
     int size() const;
 
-    /** Return quaternion element @c i. */
-    mutable_value get(int i);
-
-    /** Return quaternion const element @c i. */
-    immutable_value get(int i) const;
-
-    /** Set element @c i. */
-    template<class Other> quaternion_type& set(int i, const Other& v) __CML_REF;
-
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-    /** Set element @c i on a temporary. */
-    template<class Other> quaternion_type&& set(int i, const Other& v) &&;
-#endif
-
     /** Return access to the quaternion data as a raw pointer. */
     pointer data();
 
@@ -235,20 +217,59 @@ class quaternion<Element, fixed<>, Order, Cross>
 
 #ifdef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
     template<class Other>
-      inline quaternion_type& operator=(const readable_quaternion<Other>& other) {
+      quaternion_type& operator=(const readable_quaternion<Other>& other)
+      {
 	return this->assign(other);
       }
 
     template<class Array, enable_if_array_t<Array>* = nullptr>
-      inline quaternion_type& operator=(const Array& array) {
+      quaternion_type& operator=(const Array& array)
+      {
 	return this->assign(array);
       }
 
     template<class Other>
-      inline quaternion_type& operator=(std::initializer_list<Other> l) {
+      quaternion_type& operator=(std::initializer_list<Other> l)
+      {
 	return this->assign(l);
       }
 #endif
+
+
+  protected:
+
+    /** @name readable_quaternion Interface */
+    /*@{*/
+
+    friend readable_type;
+
+    /** Return quaternion const element @c i. */
+    immutable_value i_get(int i) const;
+
+    /*@}*/
+
+
+  protected:
+
+    /** @name writable_quaternion Interface */
+    /*@{*/
+
+    friend writable_type;
+
+    /** Return quaternion element @c i. */
+    mutable_value i_get(int i);
+
+    /** Set element @c i. */
+    template<class Other>
+      quaternion_type& i_put(int i, const Other& v) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set element @c i on a temporary. */
+    template<class Other>
+      quaternion_type&& i_put(int i, const Other& v) &&;
+#endif
+
+    /*@}*/
 
 
   protected:

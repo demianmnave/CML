@@ -63,6 +63,7 @@ class quaternion_binary_node
   public:
 
     typedef quaternion_binary_node<Sub1,Sub2,Op>	node_type;
+    typedef readable_quaternion<node_type>		readable_type;
     typedef quaternion_traits<node_type>		traits_type;
     typedef typename traits_type::left_arg_type		left_arg_type;
     typedef typename traits_type::right_arg_type	right_arg_type;
@@ -99,15 +100,19 @@ class quaternion_binary_node
     quaternion_binary_node(node_type&& other);
 
 
-  public:
+  protected:
 
-    /** Return the size of the quaternion expression. */
-    int size() const;
+    /** @name readable_quaternion Interface */
+    /*@{*/
+
+    friend readable_type;
 
     /** Apply the operator to element @c i of the subexpressions and return
      * the result.
      */
-    immutable_value get(int i) const;
+    immutable_value i_get(int i) const;
+
+    /*@}*/
 
 
   protected:

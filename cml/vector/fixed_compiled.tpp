@@ -42,40 +42,6 @@ vector<E, fixed<S>>::vector(std::initializer_list<Other> l)
 
 /* Public methods: */
 
-template<class E, int S> int
-vector<E, fixed<S>>::size() const
-{
-  return S;
-}
-
-template<class E, int S> auto
-vector<E, fixed<S>>::get(int i) -> mutable_value
-{
-  return this->m_data[i];
-}
-
-template<class E, int S> auto
-vector<E, fixed<S>>::get(int i) const -> immutable_value
-{
-  return this->m_data[i];
-}
-
-template<class E, int S> template<class Other> auto
-vector<E, fixed<S>>::set(int i, const Other& v) __CML_REF -> vector_type&
-{
-  this->m_data[i] = v;
-  return *this;
-}
-
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-template<class E, int S> template<class Other> auto
-vector<E, fixed<S>>::set(int i, const Other& v) && -> vector_type&&
-{
-  this->set(i,v);
-  return (vector_type&&) *this;
-}
-#endif
-
 template<class E, int S> auto
 vector<E, fixed<S>>::data() -> pointer
 {
@@ -114,6 +80,49 @@ vector<E, fixed<S>>::operator=(vector_type&& other)
   for(int i = 0; i < S; ++ i) this->m_data[i] = std::move(other.m_data[i]);
   return *this;
 }
+
+
+
+/* Internal methods: */
+
+/* readable_vector interface: */
+
+template<class E, int S> int
+vector<E, fixed<S>>::i_size() const
+{
+  return S;
+}
+
+template<class E, int S> auto
+vector<E, fixed<S>>::i_get(int i) const -> immutable_value
+{
+  return this->m_data[i];
+}
+
+
+/* writable_vector interface: */
+
+template<class E, int S> auto
+vector<E, fixed<S>>::i_get(int i) -> mutable_value
+{
+  return this->m_data[i];
+}
+
+template<class E, int S> template<class Other> auto
+vector<E, fixed<S>>::i_put(int i, const Other& v) __CML_REF -> vector_type&
+{
+  this->m_data[i] = v;
+  return *this;
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class E, int S> template<class Other> auto
+vector<E, fixed<S>>::i_put(int i, const Other& v) && -> vector_type&&
+{
+  this->m_data[i] = v;
+  return *this;
+}
+#endif
 
 } // namespace cml
 

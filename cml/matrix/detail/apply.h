@@ -23,7 +23,7 @@ template<class Op, class Sub, class Other> inline void apply(
 {
   for(int i = 0; i < left.rows(); ++ i)
     for(int j = 0; j < left.cols(); ++ j)
-      left.set(i,j, Op().apply(left.get(i,j), get(right, i,j)));
+      left.put(i,j, Op().apply(left.get(i,j), get(right, i,j)));
 }
 
 /** Apply @c Op pairwise to @c left and @c right and assign the result to
@@ -35,7 +35,7 @@ template<class Op, class Sub, class Other> inline void apply(
 {
   for(int j = 0; j < left.cols(); ++ j)
     for(int i = 0; i < left.rows(); ++ i)
-      left.set(i,j, Op().apply(left.get(i,j), get(right, i,j)));
+      left.put(i,j, Op().apply(left.get(i,j), get(right, i,j)));
 }
 
 } // namespace detail

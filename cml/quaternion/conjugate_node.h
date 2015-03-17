@@ -49,6 +49,7 @@ class conjugate_node
   public:
 
     typedef conjugate_node<Sub>				node_type;
+    typedef readable_quaternion<node_type>		readable_type;
     typedef quaternion_traits<node_type>		traits_type;
     typedef typename traits_type::sub_arg_type		sub_arg_type;
     typedef typename traits_type::sub_type		sub_type;
@@ -76,13 +77,17 @@ class conjugate_node
     conjugate_node(node_type&& other);
 
 
-  public:
+  protected:
 
-    /** Return the size of the expression. */
-    int size() const;
+    /** @name readable_quaternion Interface */
+    /*@{*/
+
+    friend readable_type;
 
     /** Apply the operator to element @c i and return the result. */
-    immutable_value get(int i) const;
+    immutable_value i_get(int i) const;
+
+    /*@}*/
 
 
   protected:

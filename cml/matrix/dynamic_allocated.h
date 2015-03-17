@@ -9,6 +9,7 @@
 #ifndef	cml_matrix_dynamic_allocated_h
 #define	cml_matrix_dynamic_allocated_h
 
+#include <cml/common/mpl/enable_if_t.h>
 #include <cml/common/mpl/are_convertible.h>
 #include <cml/common/mpl/rebind.h>
 #include <cml/storage/allocated_selector.h>
@@ -82,6 +83,7 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
 
     typedef matrix<Element,
 	    dynamic<Allocator>, BasisOrient, Layout>	matrix_type;
+    typedef readable_matrix<matrix_type>		readable_type;
     typedef writable_matrix<matrix_type>		writable_type;
     typedef matrix_traits<matrix_type>			traits_type;
     typedef typename traits_type::element_traits	element_traits;
@@ -151,14 +153,15 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
      * convertible to value_type.
      */
     template<typename RowsT, typename ColsT, class E0, class... Elements,
-      typename std::enable_if<
+      enable_if_t<
+
 	/* Avoid implicit conversions, for example, from double: */
 	/**/ std::is_integral<RowsT>::value
        	&&   std::is_integral<ColsT>::value
 
 	/* Require compatible values: */
 	&&   cml::are_convertible<value_type, E0, Elements...>::value
-	>::type* = nullptr>
+	>* = nullptr>
 
 	matrix(RowsT rows, ColsT cols, const E0& e0, const Elements&... eN)
 	// XXX Should be in matrix/dynamic_allocated.tpp, but VC++12 has
@@ -190,27 +193,6 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
 
 
   public:
-
-    /** Return the number of rows. */
-    int rows() const;
-
-    /** Return the number of columns. */
-    int cols() const;
-
-    /** Return matrix element @c (i,j). */
-    mutable_value get(int i, int j);
-
-    /** Return matrix const element @c (i,j). */
-    immutable_value get(int i, int j) const;
-
-    /** Set element @c i. */
-    template<class Other> matrix_type&
-      set(int i, int j, const Other& v) __CML_REF;
-
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-    /** Set element @c i on a temporary. */
-    template<class Other> matrix_type&& set(int i, int j, const Other& v) &&;
-#endif
 
     /** Return access to the matrix data as a raw pointer. */
     pointer data();
@@ -287,15 +269,57 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
 
   protected:
 
+    /** @name readable_matrix Interface */
+    /*@{*/
+
+    friend readable_type;
+
+    /** Return the number of rows. */
+    int i_rows() const;
+
+    /** Return the number of columns. */
+    int i_cols() const;
+
+    /** Return matrix const element @c (i,j). */
+    immutable_value i_get(int i, int j) const;
+
+    /*@}*/
+
+
+  protected:
+
+    /** @name writeable_matrix Interface */
+    /*@{*/
+
+    friend writable_type;
+
+    /** Return matrix element @c (i,j). */
+    mutable_value i_get(int i, int j);
+
+    /** Set element @c i. */
+    template<class Other> matrix_type&
+      i_put(int i, int j, const Other& v) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set element @c i on a temporary. */
+    template<class Other> matrix_type&&
+      i_put(int i, int j, const Other& v) &&;
+#endif
+
+    /*@}*/
+
+
+  protected:
+
     /** Row-major access to const or non-const @c M. */
-    template<class Matrix> inline static auto get(
+    template<class Matrix> inline static auto s_access(
       Matrix& M, int i, int j, row_major) -> decltype(M.m_data[0])
     {
       return M.m_data[i*M.m_cols + j];
     }
 
     /** Column-major access to const or non-const @c M. */
-    template<class Matrix> inline static auto get(
+    template<class Matrix> inline static auto s_access(
       Matrix& M, int i, int j, col_major) -> decltype(M.m_data[0])
     {
       return M.m_data[j*M.m_rows + i];

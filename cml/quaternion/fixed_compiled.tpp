@@ -65,38 +65,6 @@ quaternion<E, fixed<>, O, C>::size() const
 }
 
 template<class E, class O, class C> auto
-quaternion<E, fixed<>, O, C>::get(int i) -> mutable_value
-{
-  return this->m_data[i];
-}
-
-template<class E, class O, class C> auto
-quaternion<E, fixed<>, O, C>::get(int i) const -> immutable_value
-{
-  return this->m_data[i];
-}
-
-template<class E, class O, class C> template<class Other> auto
-quaternion<E, fixed<>, O, C>::set(
-  int i, const Other& v
-  ) __CML_REF -> quaternion_type&
-{
-  this->m_data[i] = v;
-  return *this;
-}
-
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-template<class E, class O, class C> template<class Other> auto
-quaternion<E, fixed<>, O, C>::set(
-  int i, const Other& v
-  ) && -> quaternion_type&&
-{
-  this->set(i,v);
-  return (quaternion_type&&) *this;
-}
-#endif
-
-template<class E, class O, class C> auto
 quaternion<E, fixed<>, O, C>::data() -> pointer
 {
   return &this->m_data[0];
@@ -137,6 +105,47 @@ quaternion<E, fixed<>, O, C>::operator=(quaternion_type&& other)
   this->m_data[Z] = std::move(other.m_data[Z]);
   return *this;
 }
+
+
+
+/* Internal methods: */
+
+/* readable_quaternion interface: */
+
+template<class E, class O, class C> auto
+quaternion<E, fixed<>, O, C>::i_get(int i) const -> immutable_value
+{
+  return this->m_data[i];
+}
+
+
+/* writable_quaternion interface: */
+
+template<class E, class O, class C> auto
+quaternion<E, fixed<>, O, C>::i_get(int i) -> mutable_value
+{
+  return this->m_data[i];
+}
+
+template<class E, class O, class C> template<class Other> auto
+quaternion<E, fixed<>, O, C>::i_put(
+  int i, const Other& v
+  ) __CML_REF -> quaternion_type&
+{
+  this->m_data[i] = v;
+  return *this;
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class E, class O, class C> template<class Other> auto
+quaternion<E, fixed<>, O, C>::i_put(
+  int i, const Other& v
+  ) && -> quaternion_type&&
+{
+  this->m_data[i] = v;
+  return *this;
+}
+#endif
 
 } // namespace cml
 

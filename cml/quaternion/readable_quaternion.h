@@ -26,8 +26,8 @@ template<class Sub> class inverse_node;
  *
  * DerivedT must implement:
  *
- * - <X> get(int i) const, where <X> is the immutable_value type defined by
- * quaternion_traits<DerivedT>.  Note that immutable_value is not
+ * - <X> i_get(int i) const, where <X> is the immutable_value type defined
+ * by quaternion_traits<DerivedT>.  Note that immutable_value is not
  * necessarily a reference or const type.
  */
 template<class DerivedT>
@@ -68,6 +68,9 @@ class readable_quaternion
 
 
   public:
+
+    /** Return the array size.  This is always 4. */
+    int size() const;
 
     /** Return the real part of the quaternion. */
     immutable_value real() const;

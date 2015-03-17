@@ -27,13 +27,13 @@ readable_vector<DT>::actual() const
 template<class DT> int
 readable_vector<DT>::size() const
 {
-  return this->actual().size();
+  return this->actual().i_size();
 }
 
 template<class DT> auto
 readable_vector<DT>::get(int i) const -> immutable_value
 {
-  return this->actual().get(i);
+  return this->actual().i_get(i);
 }
 
 template<class DT> auto

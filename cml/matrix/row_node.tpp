@@ -27,16 +27,18 @@ matrix_row_node<Sub,-1>::matrix_row_node(node_type&& other)
 
 
 
-/* Public methods: */
+/* Internal methods: */
+
+/* readable_vector interface: */
 
 template<class Sub> int
-matrix_row_node<Sub,-1>::size() const
+matrix_row_node<Sub,-1>::i_size() const
 {
   return this->m_sub.cols();
 }
 
 template<class Sub> auto
-matrix_row_node<Sub,-1>::get(int j) const -> immutable_value
+matrix_row_node<Sub,-1>::i_get(int j) const -> immutable_value
 {
   return this->m_sub.get(this->m_row,j);
 }

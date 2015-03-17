@@ -55,6 +55,7 @@ class vector_cross_node
   public:
 
     typedef vector_cross_node<Sub1,Sub2>		node_type;
+    typedef readable_vector<node_type>			readable_type;
     typedef vector_traits<node_type>			traits_type;
     typedef typename traits_type::left_arg_type		left_arg_type;
     typedef typename traits_type::right_arg_type	right_arg_type;
@@ -89,15 +90,22 @@ class vector_cross_node
     vector_cross_node(node_type&& other);
 
 
-  public:
+  protected:
+
+    /** @name readable_vector Interface */
+    /*@{*/
+
+    friend readable_type;
 
     /** Return the size of the vector expression. */
-    int size() const;
+    int i_size() const;
 
     /** Apply the operator to element @c i of the subexpressions and return
      * the result.
      */
-    immutable_value get(int i) const;
+    immutable_value i_get(int i) const;
+
+    /*@}*/
 
 
   protected:

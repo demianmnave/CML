@@ -23,7 +23,7 @@ template<class Sub, class F> inline void generate(
 {
   for(int i = 0; i < left.rows(); ++ i)
     for(int j = 0; j < left.cols(); ++ j)
-      left.set(i,j, (std::forward<F>(f))(i,j));
+      left.put(i,j, (std::forward<F>(f))(i,j));
 }
 
 /** Assign the value of @c f(i,j) to the element @c (i,j) of column-major
@@ -35,7 +35,7 @@ template<class Sub, class F> inline void generate(
 {
   for(int j = 0; j < left.cols(); ++ j)
     for(int i = 0; i < left.rows(); ++ i)
-      left.set(i,j, (std::forward<F>(f))(i,j));
+      left.put(i,j, (std::forward<F>(f))(i,j));
 }
 
 } // namespace detail

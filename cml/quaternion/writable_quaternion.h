@@ -10,6 +10,7 @@
 #define	cml_quaternion_writable_quaternion_h
 
 #include <initializer_list>
+#include <cml/common/mpl/enable_if_t.h>
 #include <cml/common/mpl/enable_if_pointer.h>
 #include <cml/common/mpl/enable_if_array.h>
 #include <cml/common/mpl/enable_if_convertible.h>
@@ -25,15 +26,15 @@ namespace cml {
  * In addition to the requirements of readable_quaternion, DerivedT must
  * implement:
  *
- * - <X> get(int i), where <X> is the mutable_value type defined by
+ * - <X> i_get(int i), where <X> is the mutable_value type defined by
  * quaternion_traits<DerivedT>
  *
- * - template<class T> DerivedT& set(int i, const T&)
+ * - template<class T> DerivedT& i_put(int i, const T&)
  *
  *   for compilers without support for rvalue reference from *this; and
  *
- *   template<class T> DerivedT& set(int i, const T&) &
- *   template<class T> DerivedT&& set(int i, const T&) &&
+ *   template<class T> DerivedT& i_put(int i, const T&) &
+ *   template<class T> DerivedT&& i_put(int i, const T&) &&
  *
  *   for compilers with support for rvalue reference from this.
  *
@@ -73,11 +74,11 @@ class writable_quaternion
     DerivedT& actual();
 
     /** Set element @c i. */
-    template<class Other> DerivedT& set(int i, const Other& v) __CML_REF;
+    template<class Other> DerivedT& put(int i, const Other& v) __CML_REF;
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
     /** Set element @c i on a temporary. */
-    template<class Other> DerivedT&& set(int i, const Other& v) &&;
+    template<class Other> DerivedT&& put(int i, const Other& v) &&;
 #endif
 
     /** Return mutable element @c i. */
@@ -85,6 +86,55 @@ class writable_quaternion
 
     /** Return a mutable reference to element @c i. */
     mutable_value operator[](int i);
+
+
+  public:
+
+    /** Set the scalar of the quaternion to @c s, and the imaginary
+     * vector to @c v.
+     *
+     * @note This functin is enabled only if the value_type of @c v and @c
+     * E are convertible to value_type.
+     */
+    template<class Sub, class E, enable_if_vector_t<Sub>* = nullptr> auto
+	set(const readable_vector<Sub>& v, const E& s) __CML_REF
+	-> enable_if_t<are_convertible<
+	  value_type, value_type_trait_of_t<Sub>, E>::value, DerivedT&>;
+
+    /** Set the scalar of the quaternion to @c s, and the imaginary
+     * vector to @c v.
+     *
+     * @note This functin is enabled only if the value_type of @c v and @c
+     * E are convertible to value_type.
+     */
+    template<class E, class Sub, enable_if_vector_t<Sub>* = nullptr> auto
+	set(const E& s, const readable_vector<Sub>& v) __CML_REF
+	-> enable_if_t<are_convertible<
+	  value_type, value_type_trait_of_t<Sub>, E>::value, DerivedT&>;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set the scalar of the temporary quaternion to @c s, and the
+     * imaginary vector to @c v.
+     *
+     * @note This functin is enabled only if the value_type of @c v and @c
+     * E are convertible to value_type.
+     */
+    template<class Sub, class E, enable_if_vector_t<Sub>* = nullptr> auto
+	set(const readable_vector<Sub>& v, const E& s) &&
+	-> enable_if_t<are_convertible<
+	  value_type, value_type_trait_of_t<Sub>, E>::value, DerivedT&&>;
+
+    /** Set the scalar of the temporary quaternion to @c s, and the
+     * imaginary vector to @c v.
+     *
+     * @note This functin is enabled only if the value_type of @c v and @c
+     * E are convertible to value_type.
+     */
+    template<class E, class Sub, enable_if_vector_t<Sub>* = nullptr> auto
+	set(const E& s, const readable_vector<Sub>& v) &&
+	-> enable_if_t<are_convertible<
+	  value_type, value_type_trait_of_t<Sub>, E>::value, DerivedT&&>;
+#endif
 
 
   public:
@@ -313,7 +363,7 @@ class writable_quaternion
      * @note This depends upon implicit conversions of the elements to the
      * quaternion value_type.
      */
-    template<class Array, cml::enable_if_array_t<Array>* = nullptr>
+    template<class Array, enable_if_array_t<Array>* = nullptr>
       DerivedT& assign(const Array& array);
 
     /** Assign from a pointer to an array.
@@ -321,7 +371,7 @@ class writable_quaternion
      * @note This depends upon implicit conversion of the array elements to
      * the quaternion value_type.
      */
-    template<class Pointer, cml::enable_if_pointer_t<Pointer>* = nullptr>
+    template<class Pointer, enable_if_pointer_t<Pointer>* = nullptr>
       DerivedT& assign(const Pointer& array);
 
     /** Construct from an array of 3 values and one additional element.
@@ -330,7 +380,7 @@ class writable_quaternion
      * @note This depends upon implicit conversions of the elements to the
      * quaternion value_type.
      */
-    template<class Array, class E0, cml::enable_if_array_t<Array>* = nullptr>
+    template<class Array, class E0, enable_if_array_t<Array>* = nullptr>
       DerivedT& assign(const Array& array, const E0& e0);
 
     /** Construct from an initializer_list.

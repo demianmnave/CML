@@ -19,7 +19,7 @@ namespace detail {
 template<int I, class Sub, class E0> inline void
 assign_elements(writable_vector<Sub>& sub, cml::int_c<I>, const E0& e0)
 {
-  sub.set(I,e0);
+  sub.put(I,e0);
 }
 
 /* Set element I of sub to e0, then assign the remainder of the elements
@@ -30,7 +30,7 @@ assign_elements(
   writable_vector<Sub>& sub, cml::int_c<I>, const E0& e0, const Es&... eN
   )
 {
-  sub.set(I,e0);
+  sub.put(I,e0);
   assign_elements(sub, cml::int_c<I+1>(), eN...);
 }
 
@@ -40,7 +40,7 @@ assign_elements(
 template<class Sub, class E0> inline void
 assign_elements(writable_vector<Sub>& sub, int i, const E0& e0)
 {
-  sub.set(i, e0);
+  sub.put(i, e0);
 }
 
 /* Assign the elements of sub from eN starting from index i. */
@@ -49,7 +49,7 @@ assign_elements(
   writable_vector<Sub>& sub, int i, const E0& e0, const Es&... eN
   )
 {
-  sub.set(i, e0);
+  sub.put(i, e0);
   assign_elements(sub, i+1, eN...);
 }
 
@@ -68,29 +68,29 @@ writable_vector<DT>::actual()
 template<class DT> auto
 writable_vector<DT>::get(int i) -> mutable_value
 {
-  return this->actual().get(i);
+  return this->actual().i_get(i);
 }
-
-template<class DT> template<class Other> DT&
-writable_vector<DT>::set(int i, const Other& v) __CML_REF
-{
-  return this->actual().set(i,v);
-}
-
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-template<class DT> template<class Other> DT&&
-writable_vector<DT>::set(int i, const Other& v) &&
-{
-  this->set(i,v);		// Forward to set(...) &
-  return (DT&&) *this;
-}
-#endif
 
 template<class DT> auto
 writable_vector<DT>::operator[](int i) -> mutable_value
 {
   return this->get(i);
 }
+
+template<class DT> template<class Other> DT&
+writable_vector<DT>::put(int i, const Other& v) __CML_REF
+{
+  return this->actual().i_put(i,v);
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> template<class Other> DT&&
+writable_vector<DT>::put(int i, const Other& v) &&
+{
+  this->put(i,v);		// Forward to put(...) &
+  return (DT&&) *this;
+}
+#endif
 
 
 template<class DT> DT&
@@ -111,7 +111,7 @@ writable_vector<DT>::normalize() &&
 template<class DT> DT&
 writable_vector<DT>::zero() __CML_REF
 {
-  for(int i = 0; i < this->size(); ++ i) this->set(i, value_type(0));
+  for(int i = 0; i < this->size(); ++ i) this->put(i, value_type(0));
   return this->actual();
 }
 
@@ -127,7 +127,7 @@ writable_vector<DT>::zero() &&
 template<class DT> DT&
 writable_vector<DT>::cardinal(int i) __CML_REF
 {
-  return this->zero().set(i, value_type(1));
+  return this->zero().put(i, value_type(1));
 }
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
@@ -144,7 +144,7 @@ writable_vector<DT>::minimize(const readable_vector<ODT>& other) __CML_REF
 {
   cml::check_same_size(*this, other);
   for(int i = 0; i < this->size(); ++ i) {
-    this->set(i, std::min(this->get(i), other.get(i)));
+    this->put(i, std::min(this->get(i), other.get(i)));
   }
   return this->actual();
 }
@@ -163,7 +163,7 @@ writable_vector<DT>::maximize(const readable_vector<ODT>& other) __CML_REF
 {
   cml::check_same_size(*this, other);
   for(int i = 0; i < this->size(); ++ i) {
-    this->set(i, std::max(this->get(i), other.get(i)));
+    this->put(i, std::max(this->get(i), other.get(i)));
   }
   return this->actual();
 }
@@ -188,7 +188,7 @@ writable_vector<DT>::random(
 
   std::default_random_engine gen(std::rand());
   distribution_type d(low, high);
-  for(int i = 0; i < this->size(); ++ i) this->set(i, d(gen));
+  for(int i = 0; i < this->size(); ++ i) this->put(i, d(gen));
   return this->actual();
 }
 
@@ -201,6 +201,28 @@ writable_vector<DT>::random(const_reference low, const_reference high) &&
 }
 #endif
 
+template<class DT> template<class E0, class... Es> auto
+writable_vector<DT>::set(const E0& e0, const Es&... eN) __CML_REF
+-> enable_if_t<are_convertible<value_type, E0, Es...>::value, DT&>
+{
+  return this->assign_elements(e0, eN...);
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> template<class E0, class... Es> auto
+writable_vector<DT>::set(const E0& e0, const Es&... eN) &&
+-> enable_if_t<are_convertible<value_type, E0, Es...>::value, DT&&>
+{
+  this->assign_elements(e0, eN...);
+  return (DT&&) *this;
+}
+#endif
+
+template<class DT> DT&
+writable_vector<DT>::operator=(const writable_vector& other) __CML_REF
+{
+  return this->assign(other);
+}
 
 template<class DT> template<class ODT> DT&
 writable_vector<DT>::operator=(const readable_vector<ODT>& other) __CML_REF
@@ -254,7 +276,7 @@ writable_vector<DT>::operator+=(const readable_vector<ODT>& other) __CML_REF
   typedef binary_plus_t<DT, ODT> op_type;
   detail::check_or_resize(*this, other);
   for(int i = 0; i < this->size(); ++ i)
-    this->set(i, op_type().apply(this->get(i), other.get(i)));
+    this->put(i, op_type().apply(this->get(i), other.get(i)));
   return this->actual();
 }
 
@@ -273,7 +295,7 @@ writable_vector<DT>::operator-=(const readable_vector<ODT>& other) __CML_REF
   typedef binary_minus_t<DT, ODT> op_type;
   detail::check_or_resize(*this, other);
   for(int i = 0; i < this->size(); ++ i)
-    this->set(i, op_type().apply(this->get(i), other.get(i)));
+    this->put(i, op_type().apply(this->get(i), other.get(i)));
   return this->actual();
 }
 
@@ -287,21 +309,21 @@ writable_vector<DT>::operator-=(const readable_vector<ODT>& other) &&
 #endif
 
 template<class DT>
-template<class ScalarT, typename enable_if_convertible<
-    typename vector_traits<DT>::value_type, ScalarT>::type*>
+template<class ScalarT, enable_if_convertible_t<
+    typename vector_traits<DT>::value_type, ScalarT>*>
 DT&
 writable_vector<DT>::operator*=(const ScalarT& v) __CML_REF
 {
   typedef binary_multiply_t<DT, ScalarT> op_type;
   for(int i = 0; i < this->size(); ++ i)
-    this->set(i, op_type().apply(this->get(i), v));
+    this->put(i, op_type().apply(this->get(i), v));
   return this->actual();
 }
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
-template<class ScalarT, typename enable_if_convertible<
-    typename vector_traits<DT>::value_type, ScalarT>::type*>
+template<class ScalarT, enable_if_convertible_t<
+    typename vector_traits<DT>::value_type, ScalarT>*>
 DT&&
 writable_vector<DT>::operator*=(const ScalarT& v) &&
 {
@@ -311,21 +333,21 @@ writable_vector<DT>::operator*=(const ScalarT& v) &&
 #endif
 
 template<class DT>
-template<class ScalarT, typename enable_if_convertible<
-    typename vector_traits<DT>::value_type, ScalarT>::type*>
+template<class ScalarT, enable_if_convertible_t<
+    typename vector_traits<DT>::value_type, ScalarT>*>
 DT&
 writable_vector<DT>::operator/=(const ScalarT& v) __CML_REF
 {
   typedef binary_divide_t<DT, ScalarT> op_type;
   for(int i = 0; i < this->size(); ++ i)
-    this->set(i, op_type().apply(this->get(i), v));
+    this->put(i, op_type().apply(this->get(i), v));
   return this->actual();
 }
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
-template<class ScalarT, typename enable_if_convertible<
-    typename vector_traits<DT>::value_type, ScalarT>::type*>
+template<class ScalarT, enable_if_convertible_t<
+    typename vector_traits<DT>::value_type, ScalarT>*>
 DT&&
 writable_vector<DT>::operator/=(const ScalarT& v) &&
 {
@@ -342,7 +364,7 @@ template<class DT> template<class ODT> DT&
 writable_vector<DT>::assign(const readable_vector<ODT>& other)
 {
   detail::check_or_resize(*this, other);
-  for(int i = 0; i < this->size(); ++ i) this->set(i, other.get(i));
+  for(int i = 0; i < this->size(); ++ i) this->put(i, other.get(i));
   return this->actual();
 }
 
@@ -352,7 +374,7 @@ writable_vector<DT>::assign(const Array& array)
 {
   static const int N = array_size_of_c<Array>::value;
   detail::check_or_resize(*this, N);
-  for(int i = 0; i < N; ++ i) this->set(i, array[i]);
+  for(int i = 0; i < N; ++ i) this->put(i, array[i]);
   return this->actual();
 }
 
@@ -360,7 +382,7 @@ template<class DT>
 template<class Pointer, enable_if_pointer_t<Pointer>*> DT&
 writable_vector<DT>::assign(const Pointer& array)
 {
-  for(int i = 0; i < this->size(); ++ i) this->set(i, array[i]);
+  for(int i = 0; i < this->size(); ++ i) this->put(i, array[i]);
   return this->actual();
 }
 
@@ -368,7 +390,7 @@ template<class DT> template<class Other> DT&
 writable_vector<DT>::assign(const std::initializer_list<Other>& l)
 {
   detail::check_or_resize(*this, l);
-  int i = 0; for(Other v : l) { this->set(i ++, v); }
+  int i = 0; for(Other v : l) { this->put(i ++, v); }
   return this->actual();
 }
 
@@ -378,7 +400,7 @@ writable_vector<DT>::assign(
   )
 {
   detail::check_or_resize(*this, other, eN...);
-  for(int i = 0; i < other.size(); ++ i) this->set(i, other.get(i));
+  for(int i = 0; i < other.size(); ++ i) this->put(i, other.get(i));
   detail::assign_elements(*this, other.size(), eN...);
   return this->actual();
 }

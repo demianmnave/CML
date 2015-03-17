@@ -23,7 +23,7 @@ template<class Sub, class Other> inline void copy(
 {
   for(int i = 0; i < left.rows(); ++ i)
     for(int j = 0; j < left.cols(); ++ j)
-      left.set(i,j, get(right, i,j));
+      left.put(i,j, get(right, i,j));
 }
 
 /** Assign @c left from the elements of @c right, where @c left is assumed
@@ -35,7 +35,7 @@ template<class Sub, class Other> inline void copy(
 {
   for(int j = 0; j < left.cols(); ++ j)
     for(int i = 0; i < left.rows(); ++ i)
-      left.set(i,j, get(right, i,j));
+      left.put(i,j, get(right, i,j));
 }
 
 } // namespace detail
