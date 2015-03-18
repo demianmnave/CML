@@ -93,8 +93,8 @@ matrix_rotation_world_z(writable_matrix<Sub>& m, const E& angle);
  * @throws vector_size_error at run-time if @c v is dynamically-sized, and
  * is not 3D.  If @c v is fixed-size, the size is checked at compile-time.
  */
-template<class Sub1, class Sub2, class E> void matrix_rotation_axis_angle(
-  writable_matrix<Sub1>& m, const readable_vector<Sub2>& axis, const E& angle);
+template<class Sub, class QSub, class E> void matrix_rotation_axis_angle(
+  writable_matrix<Sub>& m, const readable_vector<QSub>& axis, const E& angle);
 
 /** Compute a rotation matrix given three Euler angles and the required
  * order.
@@ -126,7 +126,7 @@ template<class Sub1, class Sub2, class E> void matrix_rotation_axis_angle(
  */
 template<class Sub, class E0, class E1, class E2> void
 matrix_rotation_euler(writable_matrix<Sub>& m,
-  E0 angle_0, E1 angle_1, E2 angle_2, EulerOrder order);
+  E0 angle_0, E1 angle_1, E2 angle_2, euler_order order);
 
 /** Build a matrix of derivatives of Euler angles about the specified axis.
  *
@@ -159,7 +159,7 @@ matrix_rotation_euler(writable_matrix<Sub>& m,
  */
 template<class Sub, class E0, class E1, class E2> void
 matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
-  E0 angle_0, E1 angle_1, E2 angle_2, EulerOrder order);
+  E0 angle_0, E1 angle_1, E2 angle_2, euler_order order);
 
 /** Compute a rotation matrix from a quaternion.
  *
@@ -167,9 +167,9 @@ matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
  * dynamically-sized, and is not at least 3x3.  If @c m is fixed-size, the
  * size is checked at compile-time.
  */
-template<class Sub1, class Sub2> void
+template<class Sub, class QSub> void
 matrix_rotation_quaternion(
-  writable_matrix<Sub1>& m, const readable_quaternion<Sub2>& q);
+  writable_matrix<Sub>& m, const readable_quaternion<QSub>& q);
 
 /*@}*/
 
@@ -193,10 +193,10 @@ matrix_rotation_align(writable_matrix<Sub>& m,
  *
  * @note @c tolerance is used to detect a near-zero axis length.
  */
-template<class Sub1, class Sub2, class E,
-  class Tol = value_type_trait_of_t<Sub1>> void
+template<class Sub, class ASub, class E,
+  class Tol = value_type_trait_of_t<Sub>> void
 matrix_to_axis_angle(
-  const readable_matrix<Sub1>& m, writable_vector<Sub2>& axis,
+  const readable_matrix<Sub>& m, writable_vector<ASub>& axis,
   E& angle, Tol tolerance = cml::sqrt_epsilon<Tol>());
 
 /** Convert a 3D rotation matrix @c m to an Euler-angle triple.

@@ -8,8 +8,11 @@
 #error "mathlib/quaternion/rotation.tpp not included correctly"
 #endif
 
+#include <cml/common/mpl/are_convertible.h>
 #include <cml/scalar/traits.h>
 #include <cml/vector/size_checking.h>
+#include <cml/matrix/readable_matrix.h>
+#include <cml/mathlib/matrix/misc.h>
 
 namespace cml {
 
@@ -50,136 +53,126 @@ quaternion_rotation_world_z(writable_quaternion<Sub>& q, E angle)
 }
 
 
-template<class Sub, class Axis, class E, enable_if_vector_t<Axis>*>
+template<class Sub, class ASub, class E>
 inline void quaternion_rotation_axis_angle(
-  writable_quaternion<Sub>& q, const Axis& axis, E angle
+  writable_quaternion<Sub>& q, const readable_vector<ASub>& axis, E angle
   )
 {
+  static_assert(cml::are_convertible<
+    value_type_trait_of_t<Sub>, value_type_trait_of_t<ASub>, E>::value,
+    "incompatible scalar types");
+
   typedef traits_of_t<E>				scalar_traits;
+
   cml::check_size(axis, int_c<3>());
   q.set(
     scalar_traits::cos(angle / E(2)),
     scalar_traits::sin(angle / E(2)) * axis);
 }
 
+template<class Sub, class MSub>
+inline void quaternion_rotation_matrix(
+  writable_quaternion<Sub>& q, const readable_matrix<MSub>& m
+  )
+{
+  static_assert(cml::are_convertible<
+    value_type_trait_of_t<Sub>, value_type_trait_of_t<MSub>>::value,
+    "incompatible scalar types");
+
+  typedef order_type_trait_of_t<Sub>			order_type;
+  typedef value_type_trait_of_t<Sub>			value_type;
+  typedef traits_of_t<value_type>			value_traits;
+
+  cml::check_minimum_size(m, int_c<3>(), int_c<3>());
+
+  /* Local version of the quaternion ordering: */
+  enum {
+    W = order_type::W,
+    X = order_type::X,
+    Y = order_type::Y,
+    Z = order_type::Z
+  };
+
+  auto tr = trace_3x3(m);
+  if(tr >= value_type(0)) {
+    q[W] = value_traits::sqrt(tr + value_type(1)) / value_type(2);
+    value_type s = (value_type(1) / value_type(4)) / q[W];
+    q[X] = (m.basis_element(1,2) - m.basis_element(2,1)) * s;
+    q[Y] = (m.basis_element(2,0) - m.basis_element(0,2)) * s;
+    q[Z] = (m.basis_element(0,1) - m.basis_element(1,0)) * s;
+  } else {
+    int largest_diagonal_element = index_of_max(
+      m.basis_element(0,0), m.basis_element(1,1), m.basis_element(2,2));
+    int i, j, k;
+    cyclic_permutation(largest_diagonal_element, i, j, k);
+    const int I = X + i;
+    const int J = X + j;
+    const int K = X + k;
+    q[I] = value_traits::sqrt(
+      m.basis_element(i,i) - m.basis_element(j,j)
+      - m.basis_element(k,k) + value_type(1)) / value_type(2);
+    value_type s = (value_type(1) / value_type(4)) / q[I];
+    q[J] = (m.basis_element(i,j) + m.basis_element(j,i)) * s;
+    q[K] = (m.basis_element(i,k) + m.basis_element(k,i)) * s;
+    q[W] = (m.basis_element(j,k) - m.basis_element(k,j)) * s;
+  }
+}
+
+template<class Sub, class E0, class E1, class E2> void
+quaternion_rotation_euler(writable_quaternion<Sub>& q,
+  E0 angle_0, E1 angle_1, E2 angle_2, euler_order order
+  )
+{
+  typedef order_type_trait_of_t<Sub>			order_type;
+  typedef value_type_trait_of_t<Sub>			value_type;
+  typedef traits_of_t<value_type>			value_traits;
+
+  int i, j, k;
+  bool odd, repeat;
+  cml::unpack_euler_order(order, i, j, k, odd, repeat);
+
+  const int W = order_type::W;
+  const int I = order_type::X + i;
+  const int J = order_type::X + j;
+  const int K = order_type::X + k;
+
+  if(odd) angle_1 = -angle_1;
+
+  angle_0 /= value_type(2);
+  angle_1 /= value_type(2);
+  angle_2 /= value_type(2);
+
+  value_type s0 = value_traits::sin(angle_0);
+  value_type c0 = value_traits::cos(angle_0);
+  value_type s1 = value_traits::sin(angle_1);
+  value_type c1 = value_traits::cos(angle_1);
+  value_type s2 = value_traits::sin(angle_2);
+  value_type c2 = value_traits::cos(angle_2);
+
+  value_type s0s2 = s0 * s2;
+  value_type s0c2 = s0 * c2;
+  value_type c0s2 = c0 * s2;
+  value_type c0c2 = c0 * c2;
+
+  if(repeat) {
+    q[I] = c1 * (c0s2 + s0c2);
+    q[J] = s1 * (c0c2 + s0s2);
+    q[K] = s1 * (c0s2 - s0c2);
+    q[W] = c1 * (c0c2 - s0s2);
+  } else {
+    q[I] = c1 * s0c2 - s1 * c0s2;
+    q[J] = c1 * s0s2 + s1 * c0c2;
+    q[K] = c1 * c0s2 - s1 * s0c2;
+    q[W] = c1 * c0c2 + s1 * s0s2;
+  }
+
+  if(odd) q[J] = -q[J];
+}
+
 } // namespace cml
 
 #if 0
 // XXX INCOMPLETE XXX
-
-//////////////////////////////////////////////////////////////////////////////
-// Rotation from a matrix
-//////////////////////////////////////////////////////////////////////////////
-
-/** Build a quaternion from a rotation matrix */
-template < class E, class A, class O, class C, class MatT > void
-quaternion_rotation_matrix(quaternion<E,A,O,C>& q, const MatT& m)
-{
-    typedef quaternion<E,A,O,C> quaternion_type;
-    typedef typename quaternion_type::value_type value_type;
-    typedef typename quaternion_type::order_type order_type;
-
-    /* Checking */
-    detail::CheckMatLinear3D(m);
-
-    enum {
-        W = order_type::W,
-        X = order_type::X,
-        Y = order_type::Y,
-        Z = order_type::Z
-    };
-
-    value_type tr = trace_3x3(m);
-    if (tr >= value_type(0)) {
-        q[W] = std::sqrt(tr + value_type(1)) * value_type(.5);
-        value_type s = value_type(.25) / q[W];
-        q[X] = (m.basis_element(1,2) - m.basis_element(2,1)) * s;
-        q[Y] = (m.basis_element(2,0) - m.basis_element(0,2)) * s;
-        q[Z] = (m.basis_element(0,1) - m.basis_element(1,0)) * s;
-    } else {
-        size_t largest_diagonal_element =
-            index_of_max(
-                m.basis_element(0,0),
-                m.basis_element(1,1),
-                m.basis_element(2,2)
-            );
-        size_t i, j, k;
-        cyclic_permutation(largest_diagonal_element, i, j, k);
-        const size_t I = X + i;
-        const size_t J = X + j;
-        const size_t K = X + k;
-        q[I] =
-            std::sqrt(
-                m.basis_element(i,i) -
-                m.basis_element(j,j) -
-                m.basis_element(k,k) +
-                value_type(1)
-            ) * value_type(.5);
-        value_type s = value_type(.25) / q[I];
-        q[J] = (m.basis_element(i,j) + m.basis_element(j,i)) * s;
-        q[K] = (m.basis_element(i,k) + m.basis_element(k,i)) * s;
-        q[W] = (m.basis_element(j,k) - m.basis_element(k,j)) * s;
-    }
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// Rotation from Euler angles
-//////////////////////////////////////////////////////////////////////////////
-
-/** Build a quaternion from an Euler-angle triple */
-template < class E, class A, class O, class C > void
-quaternion_rotation_euler(
-    quaternion<E,A,O,C>& q, E angle_0, E angle_1, E angle_2,
-    EulerOrder order)
-{
-    typedef quaternion<E,A,O,C> quaternion_type;
-    typedef typename quaternion_type::value_type value_type;
-    typedef typename quaternion_type::order_type order_type;
-
-    size_t i, j, k;
-    bool odd, repeat;
-    detail::unpack_euler_order(order, i, j, k, odd, repeat);
-    
-    const size_t W = order_type::W;
-    const size_t I = order_type::X + i;
-    const size_t J = order_type::X + j;
-    const size_t K = order_type::X + k;
-
-    if (odd) {
-        angle_1 = -angle_1;
-    }
-
-    angle_0 *= value_type(.5);
-    angle_1 *= value_type(.5);
-    angle_2 *= value_type(.5);
-    
-    value_type s0 = std::sin(angle_0);
-    value_type c0 = std::cos(angle_0);
-    value_type s1 = std::sin(angle_1);
-    value_type c1 = std::cos(angle_1);
-    value_type s2 = std::sin(angle_2);
-    value_type c2 = std::cos(angle_2);
-    
-    value_type s0s2 = s0 * s2;
-    value_type s0c2 = s0 * c2;
-    value_type c0s2 = c0 * s2;
-    value_type c0c2 = c0 * c2;
-
-    if (repeat) {
-        q[I] = c1 * (c0s2 + s0c2);
-        q[J] = s1 * (c0c2 + s0s2);
-        q[K] = s1 * (c0s2 - s0c2);
-        q[W] = c1 * (c0c2 - s0s2);
-    } else {
-        q[I] = c1 * s0c2 - s1 * c0s2;
-        q[J] = c1 * s0s2 + s1 * c0c2;
-        q[K] = c1 * c0s2 - s1 * s0c2;
-        q[W] = c1 * c0c2 + s1 * s0s2;
-    }
-    if (odd) {
-        q[J] = -q[J];
-    }
-}
 
 //////////////////////////////////////////////////////////////////////////////
 // Rotation to align with a vector, multiple vectors, or the view plane

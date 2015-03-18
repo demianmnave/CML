@@ -10,7 +10,6 @@
 #define	cml_quaternion_h
 
 #include <cml/quaternion/fixed.h>
-// #include <cml/quaternion/external.h>
 #include <cml/quaternion/comparison.h>
 #include <cml/quaternion/ops.h>
 #include <cml/quaternion/product.h>

@@ -8,7 +8,9 @@
 #include <cml/mathlib/quaternion/rotation.h>
 
 #include <cml/vector.h>
+#include <cml/matrix.h>
 #include <cml/quaternion.h>
+#include <cml/mathlib/matrix/rotation.h>
 
 /* Testing headers: */
 #define BOOST_TEST_MODULE quaternion_rotation1
@@ -43,6 +45,29 @@ BOOST_AUTO_TEST_CASE(axis_angle1)
   BOOST_CHECK_CLOSE(q.imaginary()[0], 0.28867513459481287, .001);
   BOOST_CHECK_CLOSE(q.imaginary()[1], 0.28867513459481287, .001);
   BOOST_CHECK_CLOSE(q.imaginary()[2], 0.28867513459481287, .001);
+}
+
+BOOST_AUTO_TEST_CASE(matrix1)
+{
+  cml::matrix33d M; cml::matrix_rotation_axis_angle(
+    M, cml::vector3d(1.,1.,1.).normalize(), M_PI/3.);
+  cml::quaterniond q; cml::quaternion_rotation_matrix(q, M);
+
+  BOOST_CHECK_CLOSE(q.real(), 0.86602540378443871, .001);
+  BOOST_CHECK_CLOSE(q.imaginary()[0], 0.28867513459481287, .001);
+  BOOST_CHECK_CLOSE(q.imaginary()[1], 0.28867513459481287, .001);
+  BOOST_CHECK_CLOSE(q.imaginary()[2], 0.28867513459481287, .001);
+}
+
+BOOST_AUTO_TEST_CASE(euler1)
+{
+  cml::quaterniond q; cml::quaternion_rotation_euler(
+    q, cml::rad(90.), 0., 0., cml::euler_order_xyz);
+  cml::matrix33d M; cml::matrix_rotation_quaternion(M, q);
+  auto v = M*cml::vector3d(0., 1., 0.);	// 0,0,1
+  BOOST_CHECK_SMALL(v[0], 1e-7);
+  BOOST_CHECK_SMALL(v[1], 1e-7);
+  BOOST_CHECK_CLOSE(v[2], 1., .0001);
 }
 
 // -------------------------------------------------------------------------

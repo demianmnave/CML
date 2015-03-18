@@ -92,16 +92,16 @@ matrix_rotation_world_z(writable_matrix<Sub>& m, const E& angle)
   matrix_rotation_world_axis(m, 2, angle);
 }
 
-template<class Sub1, class Sub2, class E> inline void
+template<class Sub, class ASub, class E> inline void
 matrix_rotation_axis_angle(
-  writable_matrix<Sub1>& m, const readable_vector<Sub2>& axis, const E& angle
+  writable_matrix<Sub>& m, const readable_vector<ASub>& axis, const E& angle
   )
 {
   static_assert(cml::are_convertible<
-    value_type_trait_of_t<Sub1>, value_type_trait_of_t<Sub2>, E>::value,
+    value_type_trait_of_t<Sub>, value_type_trait_of_t<ASub>, E>::value,
     "incompatible scalar types");
 
-  typedef value_type_trait_of_t<Sub1>			value_type;
+  typedef value_type_trait_of_t<Sub>			value_type;
   typedef scalar_traits<value_type>			value_traits;
 
   cml::check_minimum_size(m, int_c<3>(), int_c<3>());
@@ -162,7 +162,7 @@ matrix_rotation_euler(writable_matrix<Sub>& m,
   bool odd, repeat;
   cml::unpack_euler_order(order, i, j, k, odd, repeat);
 
-  if (odd) {
+  if(odd) {
     angle_0 = -angle_0;
     angle_1 = -angle_1;
     angle_2 = -angle_2;
@@ -278,17 +278,17 @@ matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
   }
 }
 
-template<class Sub1, class Sub2> inline void
+template<class Sub, class QSub> inline void
 matrix_rotation_quaternion(
-  writable_matrix<Sub1>& m, const readable_quaternion<Sub2>& q
+  writable_matrix<Sub>& m, const readable_quaternion<QSub>& q
   )
 {
   static_assert(cml::are_convertible<
-    value_type_trait_of_t<Sub1>, value_type_trait_of_t<Sub2>>::value,
+    value_type_trait_of_t<Sub>, value_type_trait_of_t<QSub>>::value,
     "incompatible scalar types");
 
-  typedef order_type_trait_of_t<Sub2>			order_type;
-  typedef value_type_trait_of_t<Sub1>			value_type;
+  typedef order_type_trait_of_t<QSub>			order_type;
+  typedef value_type_trait_of_t<Sub>			value_type;
 
   cml::check_minimum_size(m, int_c<3>(), int_c<3>());
 
@@ -352,17 +352,17 @@ matrix_rotation_align(
 
 /* Conversion: */
 
-template<class Sub1, class Sub2, class E, class Tol> inline void
+template<class Sub, class ASub, class E, class Tol> inline void
 matrix_to_axis_angle(
-  const readable_matrix<Sub1>& m, writable_vector<Sub2>& axis,
+  const readable_matrix<Sub>& m, writable_vector<ASub>& axis,
   E& angle, Tol tolerance
   )
 {
   static_assert(cml::are_convertible<
-    value_type_trait_of_t<Sub1>, value_type_trait_of_t<Sub2>, E, Tol>::value,
+    value_type_trait_of_t<Sub>, value_type_trait_of_t<ASub>, E, Tol>::value,
     "incompatible scalar types");
 
-  typedef value_type_trait_of_t<Sub1>			value_type;
+  typedef value_type_trait_of_t<Sub>			value_type;
   typedef scalar_traits<value_type>			value_traits;
 
   cml::check_minimum_size(m, int_c<3>(), int_c<3>());
