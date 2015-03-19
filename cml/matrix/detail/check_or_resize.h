@@ -42,6 +42,45 @@ check_or_resize(
   left.actual().resize(Rows, Cols);
 }
 
+
+/* check_or_resize for a read-only matrix left and constant size RxC that
+ * just forwards to check_size.
+ */
+template<class Sub, int R, int C> inline void
+check_or_resize(const readable_matrix<Sub>& sub, int_c<R>, int_c<C>)
+{
+  cml::check_size(sub, int_c<R>(), int_c<C>());
+}
+
+/* check_or_resize for a read-only matrix left and run-time size RxC that
+ * just forwards to check_size.
+ */
+template<class Sub> inline void
+check_or_resize(const readable_matrix<Sub>& sub, int R, int C)
+{
+  cml::check_size(sub, R, C);
+}
+
+/* check_or_resize for a resizable matrix left and compile-time size that
+ * resizes the matrix to RxC.
+ */
+template<class Sub, int R, int C> inline auto
+check_or_resize(writable_matrix<Sub>& sub, int_c<R>, int_c<C>)
+-> decltype(sub.actual().resize(0,0), void())
+{
+  sub.actual().resize(R,C);
+}
+
+/* check_or_resize for a resizable matrix left and run-time size that
+ * resizes the matrix to RxC.
+ */
+template<class Sub> inline auto
+check_or_resize(writable_matrix<Sub>& sub, int R, int C)
+-> decltype(sub.actual().resize(0,0), void())
+{
+  sub.actual().resize(R,C);
+}
+
 } // namespace detail
 } // namespace cml
 
