@@ -61,6 +61,20 @@ BOOST_AUTO_TEST_CASE(invert_3D_1)
   BOOST_CHECK_EQUAL(M.basis_element(3,2), -1.);
 }
 
+BOOST_AUTO_TEST_CASE(invert_3D_2)
+{
+  auto M = cml::matrix44d_c(
+    1., 0., 0., 3.,
+    0., 1., 0., 2.,
+    0., 0., 1., 1.,
+    0., 0., 0., 1.
+    );
+  cml::matrix_invert_RT_only(M);
+  BOOST_CHECK_EQUAL(M.basis_element(3,0), -3.);
+  BOOST_CHECK_EQUAL(M.basis_element(3,1), -2.);
+  BOOST_CHECK_EQUAL(M.basis_element(3,2), -1.);
+}
+
 BOOST_AUTO_TEST_CASE(invert_nD_1)
 {
   auto M = cml::matrix44d_r(
