@@ -12,6 +12,7 @@
 #include <cmath>
 #include <limits>
 #include <cml/common/mpl/enable_if_arithmetic.h>
+#include <cml/common/temporary.h>
 #include <cml/common/traits.h>
 
 namespace cml {
@@ -219,10 +220,16 @@ template<class S> inline S sqrt_epsilon() {
   return scalar_traits<S>::sqrt_epsilon();
 }
 
-
 /** traits_of for arithmetic scalars. */
 template<class T> struct traits_of<T, enable_if_arithmetic_t<T>> {
   typedef scalar_traits<T>				type;
+};
+
+/** temporary_of for arithmetic scalars. */
+template<class Scalar> struct temporary_of<
+Scalar, cml::enable_if_arithmetic_t<Scalar>>
+{
+  typedef cml::value_type_trait_of_t<Scalar>		type;
 };
 
 } // namespace cml
