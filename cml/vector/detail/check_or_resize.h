@@ -96,7 +96,7 @@ check_or_resize(writable_vector<Sub>& sub,
   )
 -> decltype(sub.actual().resize(0), void())
 {
-  sub.actual().resize(other.size() + sizeof...(eN));
+  sub.actual().resize(combined_size_of(other, eN...));
 }
 
 } // namespace detail

@@ -22,9 +22,9 @@ combined_size_of(const readable_vector<Sub>&, const Elements&...)
 
 template<class Sub, class... Elements>
   enable_if_dynamic_size_t<Sub, int>
-combined_size_of(const readable_vector<Sub>& sub, const Elements&... eN)
+combined_size_of(const readable_vector<Sub>& sub, const Elements&...)
 {
-  return sub.size() + int(sizeof...(eN));
+  return sub.size() + int(sizeof...(Elements));
 }
 
 } // namespace detail
