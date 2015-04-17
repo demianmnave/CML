@@ -71,6 +71,13 @@ vector<E, external<>>::end() const -> const_pointer
   return this->m_data + this->m_size;
 }
 
+template<class E> void
+vector<E, external<>>::reset()
+{
+  this->m_size = 0;
+  this->m_data = nullptr;
+}
+
 
 template<class E> auto
 vector<E, external<>>::operator=(const vector_type& other) -> vector_type&

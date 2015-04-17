@@ -91,6 +91,13 @@ matrix<E, external<>, BO, L>::resize(int rows, int cols)
   this->m_cols = cols;
 }
 
+template<class E, typename BO, typename L> void
+matrix<E, external<>, BO, L>::reset()
+{
+  this->m_rows = this->m_cols = 0;
+  this->m_data = nullptr;
+}
+
 
 template<class E, typename BO, typename L> auto
 matrix<E, external<>, BO, L>::operator=(const matrix_type& other)

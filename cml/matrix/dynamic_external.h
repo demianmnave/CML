@@ -182,6 +182,9 @@ class matrix<Element, external<>, BasisOrient, Layout>
      */
     void resize(int rows, int cols);
 
+    /** Reset the matrix to have no elements and no external pointer. */
+    void reset();
+
 
   public:
 

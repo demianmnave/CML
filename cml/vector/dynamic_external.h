@@ -113,6 +113,9 @@ class vector<Element, external<>>
     /** Read-only iterator. */
     const_pointer end() const;
 
+    /** Reset the vector to have no elements and no external pointer. */
+    void reset();
+
 
   public:
 
