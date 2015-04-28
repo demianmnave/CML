@@ -13,6 +13,7 @@
 #include <cml/matrix/fwd.h>
 #include <cml/quaternion/writable_quaternion.h>
 #include <cml/mathlib/euler_order.h>
+#include <cml/mathlib/axis_order.h>
 
 /** @defgroup mathlib_quaternion_rotation Quaternion Rotation Functions
  *
@@ -28,6 +29,9 @@
 namespace cml {
 
 /** @addtogroup mathlib_quaternion_rotation */
+/*@{*/
+
+/** @defgroup mathlib_quaternion_rotation_builders Quaternion Rotation Builders  */
 /*@{*/
 
 /** Build a quaternion representing a rotation about world axis @c axis.
@@ -48,7 +52,6 @@ quaternion_rotation_world_y(writable_quaternion<Sub>& q, E angle);
 /** Build a quaternion representing a rotation about world z-axis. */
 template<class Sub, class E> void
 quaternion_rotation_world_z(writable_quaternion<Sub>& q, E angle);
-
 
 /** Build a quaternion from an axis-angle pair.
  *
@@ -73,6 +76,34 @@ quaternion_rotation_matrix(
 template<class Sub, class E0, class E1, class E2> void
 quaternion_rotation_euler(writable_quaternion<Sub>& q,
   E0 angle_0, E1 angle_1, E2 angle_2, euler_order order);
+
+/*@}*/
+
+
+/** @defgroup mathlib_quaternion_rotation_alignment Quaternion Alignment  */
+/*@{*/
+
+/** Compute a quaternion that aligns vector @c align to @c reference,
+ * using rotations in axis order @c order.
+ *
+ * @note This uses matrix_rotation_align internally.
+ */
+template<class Sub, class ASub, class RSub> void
+quaternion_rotation_align(writable_quaternion<Sub>& q,
+  const readable_vector<ASub>& align, const readable_vector<RSub>& reference,
+  bool normalize = true, AxisOrder order = axis_order_zyx);
+
+/** Compute a quaternion to align the vector from @c pos to @c target
+ * with @c reference.
+ *
+ * @note This uses matrix_rotation_aim_at internally.
+ */
+template<class Sub, class PSub, class TSub, class RSub> void
+quaternion_rotation_aim_at(writable_quaternion<Sub>& q,
+  const readable_vector<PSub>& pos, const readable_vector<TSub>& target,
+  const readable_vector<RSub>& reference, AxisOrder order = axis_order_zyx);
+
+/*@}*/
 
 /*@}*/
 

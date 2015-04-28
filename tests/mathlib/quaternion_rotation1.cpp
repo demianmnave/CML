@@ -59,6 +59,29 @@ BOOST_AUTO_TEST_CASE(matrix1)
   BOOST_CHECK_CLOSE(q.imaginary()[2], 0.28867513459481287, .001);
 }
 
+BOOST_AUTO_TEST_CASE(align_ref1)
+{
+  cml::quaterniond q; cml::quaternion_rotation_align(
+    q, cml::vector3d(0., 0., 1.), cml::vector3d(1., 0., 0.));
+  cml::matrix33d M; cml::matrix_rotation_quaternion(M, q);
+  auto v = M*cml::vector3d(0., 1., 0.);	// 0,0,1
+  BOOST_CHECK_CLOSE(v[0], 1., .0001);
+  BOOST_CHECK_SMALL(v[1], 1e-7);
+  BOOST_CHECK_SMALL(v[2], 1e-7);
+}
+
+BOOST_AUTO_TEST_CASE(aim_at_ref1)
+{
+  cml::quaterniond q; cml::quaternion_rotation_aim_at(
+    q, cml::vector3d(0.,0.,0.), cml::vector3d(0., 0., 1.),
+    cml::vector3d(1., 0., 0.));
+  cml::matrix33d M; cml::matrix_rotation_quaternion(M, q);
+  auto v = M*cml::vector3d(0., 1., 0.);	// 0,0,1
+  BOOST_CHECK_CLOSE(v[0], 1., .0001);
+  BOOST_CHECK_SMALL(v[1], 1e-7);
+  BOOST_CHECK_SMALL(v[2], 1e-7);
+}
+
 BOOST_AUTO_TEST_CASE(euler1)
 {
   cml::quaterniond q; cml::quaternion_rotation_euler(

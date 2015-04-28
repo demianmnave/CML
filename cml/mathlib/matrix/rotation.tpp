@@ -349,6 +349,17 @@ matrix_rotation_align(
   matrix_set_basis_vectors(m, x, y, z);
 }
 
+template<class Sub, class PSub, class TSub, class RSub> void
+matrix_rotation_aim_at(
+  writable_matrix<Sub>& m,
+  const readable_vector<PSub>& pos, const readable_vector<TSub>& target,
+  const readable_vector<RSub>& reference,
+  AxisOrder order
+  )
+{
+  matrix_rotation_align(m, target - pos, reference, true, order);
+}
+
 
 /* Conversion: */
 
@@ -604,19 +615,6 @@ matrix_rotation_align_viewplane_RH(
 //////////////////////////////////////////////////////////////////////////////
 // 3D rotation to aim at a target
 //////////////////////////////////////////////////////////////////////////////
-
-/** See vector_ortho.h for details */
-template < typename E, class A, class B, class L,
-    class VecT_1, class VecT_2, class VecT_3 > void
-matrix_rotation_aim_at(
-    matrix<E,A,B,L>& m,
-    const VecT_1& pos,
-    const VecT_2& target,
-    const VecT_3& reference,
-    AxisOrder order = axis_order_zyx)
-{
-    matrix_rotation_align(m, target - pos, reference, true, order);
-}
 
 /** See vector_ortho.h for details */
 template < typename E, class A, class B, class L,

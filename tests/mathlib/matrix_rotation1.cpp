@@ -109,6 +109,17 @@ BOOST_AUTO_TEST_CASE(align_ref1)
   BOOST_CHECK_SMALL(v[2], 1e-7);
 }
 
+BOOST_AUTO_TEST_CASE(aim_at_ref1)
+{
+  cml::matrix33d M; cml::matrix_rotation_aim_at(M,
+    cml::vector3d(0.,0.,0.), cml::vector3d(0., 0., 1.),
+    cml::vector3d(1., 0., 0.));
+  auto v = M*cml::vector3d(0., 1., 0.);	// 0,0,1
+  BOOST_CHECK_CLOSE(v[0], 1., .0001);
+  BOOST_CHECK_SMALL(v[1], 1e-7);
+  BOOST_CHECK_SMALL(v[2], 1e-7);
+}
+
 BOOST_AUTO_TEST_CASE(to_axis_angle1)
 {
   cml::matrix33d M;

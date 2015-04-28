@@ -184,6 +184,14 @@ matrix_rotation_align(writable_matrix<Sub>& m,
   const readable_vector<ASub>& align, const readable_vector<RSub>& reference,
   bool normalize = true, AxisOrder order = axis_order_zyx);
 
+/** Compute a rotation matrix to align the vector from @c pos to @c target
+ * with @c reference.
+ */
+template<class Sub, class PSub, class TSub, class RSub> void
+matrix_rotation_aim_at(writable_matrix<Sub>& m,
+  const readable_vector<PSub>& pos, const readable_vector<TSub>& target,
+  const readable_vector<RSub>& reference, AxisOrder order = axis_order_zyx);
+
 /*@}*/
 
 /** @defgroup mathlib_matrix_rotation_conversion Rotation Matrix Conversion  */

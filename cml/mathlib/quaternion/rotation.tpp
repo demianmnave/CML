@@ -11,10 +11,13 @@
 #include <cml/common/mpl/are_convertible.h>
 #include <cml/scalar/traits.h>
 #include <cml/vector/size_checking.h>
-#include <cml/matrix/readable_matrix.h>
+#include <cml/matrix/fixed_compiled.h>
+#include <cml/mathlib/matrix/rotation.h>
 #include <cml/mathlib/matrix/misc.h>
 
 namespace cml {
+
+/* Builders: */
 
 template<class Sub, class E> inline void
 quaternion_rotation_world_axis(
@@ -169,6 +172,40 @@ quaternion_rotation_euler(writable_quaternion<Sub>& q,
   if(odd) q[J] = -q[J];
 }
 
+
+/* Alignment: */
+
+template<class Sub, class ASub, class RSub> inline void
+quaternion_rotation_align(
+  writable_quaternion<Sub>& q,
+  const readable_vector<ASub>& align, const readable_vector<RSub>& reference,
+  bool normalize, AxisOrder order
+  )
+{
+  typedef value_type_trait_of_t<Sub>			value_type;
+  typedef matrix<value_type, compiled<3,3>>		temporary_type;
+
+  temporary_type m;
+  matrix_rotation_align(m, align, reference, normalize, order);
+  quaternion_rotation_matrix(q, m);
+}
+
+template<class Sub, class PSub, class TSub, class RSub> void
+quaternion_rotation_aim_at(
+  writable_quaternion<Sub>& q,
+  const readable_vector<PSub>& pos, const readable_vector<TSub>& target,
+  const readable_vector<RSub>& reference,
+  AxisOrder order
+  )
+{
+  typedef value_type_trait_of_t<Sub>			value_type;
+  typedef matrix<value_type, compiled<3,3>>		temporary_type;
+
+  temporary_type m;
+  matrix_rotation_aim_at(m, pos, target, reference, order);
+  quaternion_rotation_matrix(q, m);
+}
+
 } // namespace cml
 
 #if 0
@@ -177,22 +214,6 @@ quaternion_rotation_euler(writable_quaternion<Sub>& q,
 //////////////////////////////////////////////////////////////////////////////
 // Rotation to align with a vector, multiple vectors, or the view plane
 //////////////////////////////////////////////////////////////////////////////
-
-/** See vector_ortho.h for details */
-template < typename E,class A,class O,class C,class VecT_1,class VecT_2 > void
-quaternion_rotation_align(
-    quaternion<E,A,O,C>& q,
-    const VecT_1& align,
-    const VecT_2& reference,
-    bool normalize = true,
-    AxisOrder order = axis_order_zyx)
-{
-    typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
-    
-    matrix_type m;
-    matrix_rotation_align(m,align,reference,normalize,order);
-    quaternion_rotation_matrix(q,m);
-}
 
 /** See vector_ortho.h for details */
 template < typename E, class A, class O, class C, class VecT > void
@@ -265,23 +286,6 @@ quaternion_rotation_align_viewplane_RH(
 //////////////////////////////////////////////////////////////////////////////
 // Rotation to aim at a target
 //////////////////////////////////////////////////////////////////////////////
-
-/** See vector_ortho.h for details */
-template < typename E, class A, class O, class C,
-    class VecT_1, class VecT_2, class VecT_3 > void
-quaternion_rotation_aim_at(
-    quaternion<E,A,O,C>& q,
-    const VecT_1& pos,
-    const VecT_2& target,
-    const VecT_3& reference,
-    AxisOrder order = axis_order_zyx)
-{
-    typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
-    
-    matrix_type m;
-    matrix_rotation_aim_at(m,pos,target,reference,order);
-    quaternion_rotation_matrix(q,m);
-}
 
 /** See vector_ortho.h for details */
 template < typename E, class A, class O, class C,
