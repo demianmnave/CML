@@ -8,7 +8,6 @@
 #error "mathlib/vector/misc.tpp not included correctly"
 #endif
 
-#include <type_traits>
 #include <cml/vector/ops.h>
 #include <cml/vector/dot.h>
 

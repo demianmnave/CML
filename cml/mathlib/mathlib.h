@@ -11,6 +11,7 @@
 
 #include <cml/mathlib/vector/angle.h>
 #include <cml/mathlib/vector/transform.h>
+#include <cml/mathlib/vector/rotation.h>
 #include <cml/mathlib/vector/orthonormal.h>
 #include <cml/mathlib/vector/generators.h>
 #include <cml/mathlib/vector/misc.h>
