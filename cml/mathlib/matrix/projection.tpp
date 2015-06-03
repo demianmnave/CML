@@ -285,6 +285,49 @@ matrix_perspective_yfov_RH(
   matrix_perspective_yfov(m, yfov, aspect, n, f, right_handed, z_clip);
 }
 
+template<class Sub, class SubEye, class SubTarget, class SubUp> inline void
+matrix_look_at(writable_matrix<Sub>& m,
+    readable_vector<SubEye> const& position,
+    readable_vector<SubTarget> const& target,
+    readable_vector<SubUp> const up,
+    AxisOrientation handedness)
+{
+  typedef value_type_trait_of_t<Sub> value_type;
+
+    /* Checking */
+  check_affine_3D(m);
+
+  // Set matrix to identity.
+  m.identity();
+
+  value_type s = handedness == left_handed ?
+        static_cast<value_type>(1) : static_cast<value_type>(-1);
+  auto z = s * normalize(target - position);
+  auto x = normalize(cross(up, z));
+  auto y = cross(z, x);
+
+  matrix_set_basis_vectors(m,x,y,z);
+  matrix_set_translation(m,-dot(position,x),-dot(position,y),-dot(position,z));
+}
+
+template<class Sub, class SubEye, class SubTarget, class SubUp> inline void
+matrix_look_at_LH(writable_matrix<Sub>& m,
+    readable_vector<SubEye> const& position,
+    readable_vector<SubTarget> const& target,
+    readable_vector<SubUp> const up)
+{
+  matrix_look_at(m, position, target, up, left_handed);
+}
+
+template<class Sub, class SubEye, class SubTarget, class SubUp> inline void
+matrix_look_at_RH(writable_matrix<Sub>& m,
+    readable_vector<SubEye> const& position,
+    readable_vector<SubTarget> const& target,
+    readable_vector<SubUp> const up) 
+{
+  matrix_look_at(m, position, target, up, right_handed);
+}
+
 } // namespace cml
 
 #if 0

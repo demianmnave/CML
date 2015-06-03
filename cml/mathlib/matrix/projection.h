@@ -238,6 +238,34 @@ template<class Sub, class E> void
 matrix_perspective_yfov_RH(writable_matrix<Sub>& m,
   E yfov, E aspect, E n, E f, ZClip z_clip);
 
+/** Build a matrix representing a perspective projection given
+ * the z-clipping range, aspect ratio, vertical field of view, and near
+ * and far clip plane positions.
+ *
+ * @throws minimum_matrix_size_error at run-time if @c m is
+ * dynamically-sized, and is not at least 4x4.  If @c m is fixed-size, the
+ * size is checked at compile-time.
+ */
+template<class Sub, class SubEye, class SubTarget, class SubUp> void
+matrix_look_at(writable_matrix<Sub>& m,
+    const readable_vector<SubEye>& position,
+    const readable_vector<SubTarget>& target,
+    const readable_vector<SubUp>& up,
+    AxisOrientation handedness,
+    ZClip z_clip);
+
+template<class Sub, class SubEye, class SubTarget, class SubUp> void
+matrix_look_at_LH(writable_matrix<Sub>& m,
+    const readable_vector<SubEye>& position,
+    const readable_vector<SubTarget>& target,
+    const readable_vector<SubUp>& up);
+
+template<class Sub, class SubEye, class SubTarget, class SubUp> void
+matrix_look_at_RH(writable_matrix<Sub>& m,
+    const readable_vector<SubEye>& position,
+    const readable_vector<SubTarget>& target,
+    const readable_vector<SubUp>& up);
+
 /*@}*/
 
 /*@}*/

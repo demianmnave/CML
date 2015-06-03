@@ -20,6 +20,20 @@ namespace cml {
 /** @addtogroup mathlib_vector_misc */
 /*@{*/
 
+/** Project @c u onto another vector v.
+ *
+ * @throws minimum_vector_size_error at run-time if @c v or @c n has
+ * fewer than one element. If both vectors are fixed-size, the size is
+ * checked at compile-time.
+ *
+ * @throws incompatible_vector_size_error at run-time if @c v and @c n 
+ * are different sizes, and at least one is dynamically-sized.  If both
+ * vectors are fixed-size, the size is checked at compile-time.
+ */
+template<class Sub1, class Sub2> auto project_to_vector(
+  const readable_vector<Sub1>& u, const readable_vector<Sub2>& v)
+-> vector_promote_t<Sub1, Sub2>;
+
 /** Project @c v onto a hyperplane with normal @c n.
  *
  * @note @c n is assumed to be normalized.
