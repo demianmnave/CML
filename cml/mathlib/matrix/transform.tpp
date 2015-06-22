@@ -4,6 +4,63 @@
 /** @file
  */
 
+#ifndef __CML_MATHLIB_MATRIX_TRANSFORM_TPP
+#error "mathlib/matrix/transform.tpp not included correctly"
+#endif
+
+#include <cml/vector/dot.h>
+#include <cml/vector/cross.h>
+#include <cml/matrix/writable_matrix.h>
+#include <cml/mathlib/matrix/basis.h>
+#include <cml/mathlib/matrix/translation.h>
+#include <cml/mathlib/matrix/size_checking.h>
+
+namespace cml {
+
+template<class Sub, class SubEye, class SubTarget, class SubUp> inline void
+matrix_look_at(writable_matrix<Sub>& m,
+    const readable_vector<SubEye>& position,
+    const readable_vector<SubTarget>& target,
+    const readable_vector<SubUp>& up,
+    const AxisOrientation handedness
+    )
+{
+  typedef value_type_trait_of_t<Sub> value_type;
+
+  cml::check_affine_3D(m);
+
+  /* Initialize: */
+  m.identity();
+
+  auto s = value_type(handedness == left_handed ? 1 : -1);
+  auto z = s * normalize(target - position);
+  auto x = cross(up, z).normalize();
+  auto y = cross(z, x);
+
+  matrix_set_transposed_basis_vectors(m, x, y, z);
+  matrix_set_translation(m,
+    -dot(position, x), -dot(position, y), -dot(position, z));
+}
+
+template<class Sub, class SubEye, class SubTarget, class SubUp> inline void
+matrix_look_at_LH(writable_matrix<Sub>& m,
+    const readable_vector<SubEye>& position,
+    const readable_vector<SubTarget>& target,
+    const readable_vector<SubUp>& up)
+{
+  matrix_look_at(m, position, target, up, left_handed);
+}
+
+template<class Sub, class SubEye, class SubTarget, class SubUp> inline void
+matrix_look_at_RH(writable_matrix<Sub>& m,
+    const readable_vector<SubEye>& position,
+    const readable_vector<SubTarget>& target,
+    const readable_vector<SubUp>& up) 
+{
+  matrix_look_at(m, position, target, up, right_handed);
+}
+
+} // namespace cml
 
 
 #if 0
@@ -352,53 +409,6 @@ matrix_aim_at_2D(
 //////////////////////////////////////////////////////////////////////////////
 // 3D 'look at' view matrix
 //////////////////////////////////////////////////////////////////////////////
-
-/** Build a matrix representing a 'look at' view transform */
-template < typename E, class A, class B, class L,
-    class VecT_1, class VecT_2, class VecT_3 > void
-matrix_look_at(
-    matrix<E,A,B,L>& m,
-    const VecT_1& eye,
-    const VecT_2& target,
-    const VecT_3& up,
-    Handedness handedness)
-{
-    typedef matrix<E,A,B,L> matrix_type;
-    typedef vector< E,fixed<3> > vector_type;
-    typedef typename matrix_type::value_type value_type;
-
-    /* Checking */
-    detail::CheckMatAffine3D(m);
-
-    identity_transform(m);
-
-    value_type s = handedness == left_handed ?
-        static_cast<value_type>(1) : static_cast<value_type>(-1);
-    vector_type z = s * normalize(target - eye);
-    vector_type x = unit_cross(up,z);
-    vector_type y = cross(z,x);
-
-    matrix_set_transposed_basis_vectors(m,x,y,z);
-    matrix_set_translation(m,-dot(eye,x),-dot(eye,y),-dot(eye,z));
-}
-
-/** Build a matrix representing a left-handedness 'look at' view transform */
-template < typename E, class A, class B, class L,
-    class VecT_1, class VecT_2, class VecT_3 > void
-matrix_look_at_LH(matrix<E,A,B,L>& m, const VecT_1& eye,
-    const VecT_2& target, const VecT_3& up)
-{
-    matrix_look_at(m, eye, target, up, left_handed);
-}
-
-/** Build a matrix representing a right-handedness 'look at' view transform */
-template < typename E, class A, class B, class L,
-    class VecT_1, class VecT_2, class VecT_3 > void
-matrix_look_at_RH(matrix<E,A,B,L>& m, const VecT_1& eye,
-    const VecT_2& target, const VecT_3& up)
-{
-    matrix_look_at(m, eye, target, up, right_handed);
-}
 
 /** Build a matrix representing a 'look at' view transform */
 template < typename E, class A, class B, class L > void

@@ -18,23 +18,15 @@ namespace cml {
 /** @addtogroup mathlib_vector_generators */
 /*@{*/
 
-/** @defgroup mathlib_vector_generators_basic Basic Vector Generators */
-/*@{*/
-
-/** Return an double-precision N-d zero vector. */
-template<int N> inline vector<double, compiled<N>> zero() {
-  return vector<double, compiled<N>>().zero();
-}
-
-/** Return a double-precision N-d cardinal axis by index. */
-template<int N> inline vector<double, compiled<N>> axis(int i) {
-  return vector<double, compiled<N>>().cardinal(i);
-}
-
-/*@}*/
-
 /** @defgroup mathlib_vector_generators_zero Zero Vector Generators */
 /*@{*/
+
+/** Return a fixed-size double-precision N-d zero vector. */
+template<int N> inline auto zero()
+-> vector<double, compiled<N>>
+{
+  return vector<double, compiled<N>>().zero();
+}
 
 /** Return the 2D zero vector */
 inline auto zero_2D() -> decltype(zero<2>()) { return zero<2>(); }
@@ -49,6 +41,13 @@ inline auto zero_4D() -> decltype(zero<4>()) { return zero<4>(); }
 
 /** @defgroup mathlib_vector_generators_cardinal Cardinal Axis Generators */
 /*@{*/
+
+/** Return a fixed-size double-precision N-d cardinal axis by index. */
+template<int N> inline auto axis(int i)
+-> vector<double, compiled<N>>
+{
+  return vector<double, compiled<N>>().cardinal(i);
+}
 
 /** Return a 2D cardinal axis by index. */
 inline auto axis_2D(int i) -> decltype(axis<2>(i)) {

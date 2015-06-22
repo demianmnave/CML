@@ -14,6 +14,15 @@
 namespace cml {
 
 template<class Sub1, class Sub2> inline auto
+project_to_vector(
+  const readable_vector<Sub1>& u, const readable_vector<Sub2>& v
+  )
+-> vector_promote_t<Sub1, Sub2>
+{
+  return (dot(u,v) / length_squared(v)) * v;
+}  
+
+template<class Sub1, class Sub2> inline auto
 project_to_hplane(
   const readable_vector<Sub1>& v, const readable_vector<Sub2>& n
   )
