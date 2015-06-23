@@ -8,6 +8,7 @@
 #error "mathlib/vector/rotation.tpp not included correctly"
 #endif
 
+#include <cml/common/mpl/are_convertible.h>
 #include <cml/vector/dot.h>
 #include <cml/vector/cross.h>
 
