@@ -61,9 +61,9 @@ readable_quaternion<DT>::imaginary() const && -> imaginary_node<DT&&>
 }
 #else
 template<class DT> auto
-readable_quaternion<DT>::imaginary() const -> imaginary_node<DT&&>
+readable_quaternion<DT>::imaginary() const -> imaginary_node<DT>
 {
-  return imaginary_node<DT&&>((DT&&) *this);
+  return imaginary_node<DT>((const DT&) *this);
 }
 #endif
 
@@ -94,7 +94,7 @@ readable_quaternion<DT>::normalize() const & -> quaternion_scalar_node<
 {
   return quaternion_scalar_node<
     const DT&, value_type, op::binary_divide<value_type,value_type>>
-    (this->actual(), this->length());
+    ((const DT&) *this, this->length());
 }
 
 template<class DT> auto
@@ -103,16 +103,16 @@ readable_quaternion<DT>::normalize() const && -> quaternion_scalar_node<
 {
   return quaternion_scalar_node<
     DT&&, value_type, op::binary_divide<value_type,value_type>>
-    ((DT&&) this->actual(), this->length());
+    ((DT&&) *this, this->length());
 }
 #else
 template<class DT> auto
 readable_quaternion<DT>::normalize() const -> quaternion_scalar_node<
-	DT&&, value_type, op::binary_divide<value_type,value_type>>
+	DT, value_type, op::binary_divide<value_type,value_type>>
 {
   return quaternion_scalar_node<
-    DT&&, value_type, op::binary_divide<value_type,value_type>>
-    ((DT&&) this->actual(), this->length());
+    DT, value_type, op::binary_divide<value_type,value_type>>
+    ((const DT&) *this, this->length());
 }
 #endif
 
@@ -120,19 +120,19 @@ readable_quaternion<DT>::normalize() const -> quaternion_scalar_node<
 template<class DT> auto
 readable_quaternion<DT>::conjugate() const & -> conjugate_node<const DT&>
 {
-  return conjugate_node<const DT&>(this->actual());
+  return conjugate_node<const DT&>((const DT&) *this);
 }
 
 template<class DT> auto
 readable_quaternion<DT>::conjugate() const && -> conjugate_node<DT&&>
 {
-  return conjugate_node<DT&&>((DT&&) this->actual());
+  return conjugate_node<DT&&>((DT&&) *this);
 }
 #else
 template<class DT> auto
-readable_quaternion<DT>::conjugate() const -> conjugate_node<DT&&>
+readable_quaternion<DT>::conjugate() const -> conjugate_node<DT>
 {
-  return conjugate_node<DT&&>((DT&&) this->actual());
+  return conjugate_node<DT>((const DT&) *this);
 }
 #endif
 
@@ -140,19 +140,19 @@ readable_quaternion<DT>::conjugate() const -> conjugate_node<DT&&>
 template<class DT> auto
 readable_quaternion<DT>::inverse() const & -> inverse_node<const DT&>
 {
-  return inverse_node<const DT&>(this->actual());
+  return inverse_node<const DT&>((const DT&) *this);
 }
 
 template<class DT> auto
 readable_quaternion<DT>::inverse() const && -> inverse_node<DT&&>
 {
-  return inverse_node<DT&&>((DT&&) this->actual());
+  return inverse_node<DT&&>((DT&&) *this);
 }
 #else
 template<class DT> auto
-readable_quaternion<DT>::inverse() const -> inverse_node<DT&&>
+readable_quaternion<DT>::inverse() const -> inverse_node<DT>
 {
-  return inverse_node<DT&&>((DT&&) this->actual());
+  return inverse_node<DT>((const DT&) *this);
 }
 #endif
 

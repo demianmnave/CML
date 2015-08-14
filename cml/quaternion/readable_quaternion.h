@@ -76,20 +76,17 @@ class readable_quaternion
     immutable_value real() const;
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-    /** Return the imaginary part of the quaternion as a vector expression,
-     * storing a reference of the source quaternion in the node.
+    /** Return the imaginary part of the quaternion as a vector expression.
      */
     imaginary_node<const DerivedT&> imaginary() const &;
 
     /** Return the imaginary part of the quaternion as a vector expression,
-     * storing a copy of the source quaternion in the node.
+     * moving the source into the node.
      */
     imaginary_node<DerivedT&&> imaginary() const &&;
 #else
-    /** Return the imaginary part of the quaternion as a vector expression,
-     * storing a copy of the source quaternion in the node.
-     */
-    imaginary_node<DerivedT&&> imaginary() const;
+    /** Return the imaginary part of the quaternion as a vector expression. */
+    imaginary_node<DerivedT> imaginary() const;
 #endif
 
     /** Return the squared length of the quaternion. */
@@ -102,57 +99,45 @@ class readable_quaternion
     value_type norm() const;
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-    /** Return the normalized quaternion as an expression node, storing a
-     * reference of the source quaternion in the node.
-     */
+    /** Return the normalized quaternion as an expression node. */
     quaternion_scalar_node<const DerivedT&, value_type,
       op::binary_divide<value_type,value_type>> normalize() const &;
 
-    /** Return the normalized quaternion as an expression node, storing a
-     * copy of the quaternion in the node.
+    /** Return the normalized quaternion as an expression node, moving the
+     * source into the node.
      */
     quaternion_scalar_node<DerivedT&&, value_type,
       op::binary_divide<value_type,value_type>> normalize() const &&;
 #else
-    /** Return the normalized quaternion as an expression node, storing a
-     * copy of the quaternion in the node.
-     */
-    quaternion_scalar_node<DerivedT&&, value_type,
+    /** Return the normalized quaternion as an expression node. */
+    quaternion_scalar_node<DerivedT, value_type,
       op::binary_divide<value_type,value_type>> normalize() const;
 #endif
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-    /** Return the conjugate as an expression node, storing a reference of
-     * the source quaternion in the node.
-     */
+    /** Return the conjugate as an expression node. */
     conjugate_node<const DerivedT&> conjugate() const &;
 
-    /** Return the conjugate as an expression node, storing a copy of the
-     * quaternion in the node.
+    /** Return the conjugate as an expression node, moving the source into
+     * the node.
      */
     conjugate_node<DerivedT&&> conjugate() const &&;
 #else
-    /** Return the conjugate as an expression node, storing a copy of the
-     * quaternion in the node.
-     */
-    conjugate_node<DerivedT&&> conjugate() const;
+    /** Return the conjugate as an expression node. */
+    conjugate_node<DerivedT> conjugate() const;
 #endif
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-    /** Return the inverse as an expression node, storing a reference of
-     * the source quaternion in the node.
-     */
+    /** Return the inverse as an expression node. */
     inverse_node<const DerivedT&> inverse() const &;
 
-    /** Return the inverse as an expression node, storing a copy of the
-     * quaternion in the node.
+    /** Return the inverse as an expression node, moving the source into
+     * the node.
      */
     inverse_node<DerivedT&&> inverse() const &&;
 #else
-    /** Return the inverse as an expression node, storing a copy of the
-     * quaternion in the node.
-     */
-    inverse_node<DerivedT&&> inverse() const;
+    /** Return the inverse as an expression node. */
+    inverse_node<DerivedT> inverse() const;
 #endif
 
 

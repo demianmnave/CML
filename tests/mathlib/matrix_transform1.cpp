@@ -12,6 +12,8 @@
 #include <cml/mathlib/vector/transform.h>
 #include <cml/mathlib/matrix/generators.h>
 
+#include <cml/util.h>
+
 /* Testing headers: */
 #define BOOST_TEST_MODULE matrix_transform1
 #include <boost/test/unit_test.hpp>

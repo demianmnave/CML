@@ -58,6 +58,7 @@ class writable_vector
     /* Disambiguate readable_vector<> methods: */
     using readable_type::actual;
     using readable_type::get;
+    using readable_type::normalize;
     using readable_type::operator[];
 
 

@@ -25,6 +25,14 @@ matrix_row_node<Sub,-1>::matrix_row_node(node_type&& other)
 {
 }
 
+#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class Sub>
+matrix_row_node<Sub,-1>::matrix_row_node(const node_type& other)
+: m_sub(other.m_sub), m_row(other.m_row)
+{
+}
+#endif
+
 
 
 /* Internal methods: */

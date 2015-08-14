@@ -24,6 +24,14 @@ matrix_unary_node<Sub,Op>::matrix_unary_node(node_type&& other)
 {
 }
 
+#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class Sub, class Op>
+matrix_unary_node<Sub,Op>::matrix_unary_node(const node_type& other)
+: m_sub(other.m_sub)
+{
+}
+#endif
+
 
 
 /* Internal methods: */

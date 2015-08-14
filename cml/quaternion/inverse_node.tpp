@@ -26,6 +26,14 @@ inverse_node<Sub>::inverse_node(node_type&& other)
 {
 }
 
+#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class Sub>
+inverse_node<Sub>::inverse_node(const node_type& other)
+: m_sub(other.m_sub), m_inv_norm(other.m_inv_norm)
+{
+}
+#endif
+
 
 
 /* Internal methods: */

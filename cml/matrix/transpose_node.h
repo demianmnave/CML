@@ -97,6 +97,11 @@ class matrix_transpose_node
     /** Move constructor. */
     matrix_transpose_node(node_type&& other);
 
+#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Copy constructor. */
+    matrix_transpose_node(const node_type& other);
+#endif
+
 
   protected:
 
@@ -123,8 +128,8 @@ class matrix_transpose_node
      * as a copy if Sub is an rvalue reference (temporary), or by const
      * reference if Sub is an lvalue reference.
      */
-    typedef cml::if_t<std::is_rvalue_reference<Sub>::value,
-	    sub_type, const sub_type&>			sub_wrap_type;
+    typedef cml::if_t<std::is_lvalue_reference<Sub>::value,
+	    const sub_type&, sub_type>			sub_wrap_type;
 
 
   protected:
@@ -135,8 +140,10 @@ class matrix_transpose_node
 
   private:
 
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
     // Not copy constructible.
     matrix_transpose_node(const node_type&);
+#endif
 
     // Not assignable.
     node_type& operator=(const node_type&);

@@ -21,12 +21,20 @@ quaternion_scalar_node<Sub,Scalar,Op>::quaternion_scalar_node(
 }
 
 template<class Sub, class Scalar, class Op>
-quaternion_scalar_node<Sub,Scalar,Op>::quaternion_scalar_node(
-  node_type&& other
-  )
+quaternion_scalar_node<Sub,Scalar,Op>
+::quaternion_scalar_node(node_type&& other)
 : m_left(std::move(other.m_left)), m_right(std::move(other.m_right))
 {
 }
+
+#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class Sub, class Scalar, class Op>
+quaternion_scalar_node<Sub,Scalar,Op>
+::quaternion_scalar_node(const node_type& other)
+: m_left(other.m_left), m_right(other.m_right)
+{
+}
+#endif
 
 
 

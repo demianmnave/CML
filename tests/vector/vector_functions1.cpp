@@ -246,7 +246,8 @@ BOOST_AUTO_TEST_CASE(length1)
 BOOST_AUTO_TEST_CASE(normalize1)
 {
   cml::vectord v1 = { 1., 1., 1. };
-  double l2 = v1.normalize().length_squared();
+  v1.normalize();
+  double l2 = v1.length_squared();
   BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
 }
 
@@ -254,6 +255,15 @@ BOOST_AUTO_TEST_CASE(normalize2)
 {
   cml::vectord v1 = { 1., 1., 1. };
   double l2 = cml::normalize(v1).length_squared();
+  BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
+}
+
+BOOST_AUTO_TEST_CASE(normalize3)
+{
+  const cml::vectord v1 = { 1., 1., 1. };
+  auto xpr = v1.normalize();
+  double l2 = xpr.length_squared();
+  BOOST_REQUIRE_EQUAL(v1.size(), 3);
   BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
 }
 

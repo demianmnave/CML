@@ -24,6 +24,14 @@ matrix_transpose_node<Sub>::matrix_transpose_node(node_type&& other)
 {
 }
 
+#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class Sub>
+matrix_transpose_node<Sub>::matrix_transpose_node(const node_type& other)
+: m_sub(other.m_sub)
+{
+}
+#endif
+
 
 
 /* Internal methods: */

@@ -24,6 +24,14 @@ quaternion_binary_node<Sub1,Sub2,Op>::quaternion_binary_node(node_type&& other)
 {
 }
 
+#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class Sub1, class Sub2, class Op>
+quaternion_binary_node<Sub1,Sub2,Op>
+::quaternion_binary_node(const node_type& other)
+: m_left(other.m_left), m_right(other.m_right)
+{
+}
+#endif
 
 
 /* Internal methods: */

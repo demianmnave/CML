@@ -78,40 +78,32 @@ class readable_vector
     value_type length() const;
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-    /** Return the normalized vector as an expression node, storing a
-     * reference of the source vector in the node.
-     */
+    /** Return the normalized vector as an expression node. */
     vector_scalar_node<const DerivedT&, value_type,
       op::binary_divide<value_type,value_type>> normalize() const &;
 
-    /** Return the normalized vector as an expression node, storing a copy
-     * of the vector in the node.
+    /** Return the normalized vector as an expression node, moving the
+     * source into the node.
      */
     vector_scalar_node<DerivedT&&, value_type,
       op::binary_divide<value_type,value_type>> normalize() const &&;
 #else
-    /** Return the normalized vector as an expression node, storing a copy
-     * of the vector in the node.
-     */
-    vector_scalar_node<DerivedT&&, value_type,
+    /** Return the normalized vector as an expression node. */
+    vector_scalar_node<DerivedT, value_type,
       op::binary_divide<value_type,value_type>> normalize() const;
 #endif
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-    /** Return subvector @c i as an expression node, storing a reference of
-     * the source vector in the node.
-     */
+    /** Return subvector @c i as an expression node. */
     subvector_node<const DerivedT&> subvector(int i) const &;
 
-    /** Return subvector @c i as an expression node, storing a copy of the
-     * vector in the node.
+    /** Return subvector @c i as an expression node, moving the source
+     * into the node.
      */
     subvector_node<DerivedT&&> subvector(int i) const &&;
 #else
-    /** Return subvector @c i as an expression node, storing a copy of the
-     * source in the node.
-     */
-    subvector_node<DerivedT&&> subvector(int i) const;
+    /** Return subvector @c i as an expression node. */
+    subvector_node<DerivedT> subvector(int i) const;
 #endif
 
 

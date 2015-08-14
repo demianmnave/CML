@@ -4,6 +4,8 @@
 /** @file
  */
 
+#include <iostream>
+
 // Make sure the main header compiles cleanly:
 #include <cml/vector/subvector_node.h>
 
@@ -104,6 +106,7 @@ BOOST_AUTO_TEST_CASE(sub2)
 {
   cml::vectord v1 = { 1., 2., 3. };
   auto xpr = v1.subvector(0);
+  BOOST_REQUIRE_EQUAL(v1.size(), 3);
   BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, -1);
   BOOST_REQUIRE_EQUAL(xpr.size(), 2);
   BOOST_CHECK_EQUAL(xpr[0], 2.);
@@ -196,8 +199,6 @@ BOOST_AUTO_TEST_CASE(sub1)
   typedef cml::vector3d vector3_t;
   typedef decltype(vector3_t().subvector(0)) node_type;
 
-  BOOST_CHECK_EQUAL((std::is_rvalue_reference<
-      typename node_type::sub_arg_type>::value), true);
   BOOST_CHECK_EQUAL((std::is_same<
       typename node_type::sub_type, vector3_t>::value), true);
 
@@ -214,8 +215,6 @@ BOOST_AUTO_TEST_CASE(sub2)
   vector3_t v1 = { 1., 2., 3. };
   typedef decltype(v1.subvector(0)) node_type;
 
-  BOOST_CHECK_EQUAL((std::is_rvalue_reference<
-      typename node_type::sub_arg_type>::value), true);
   BOOST_CHECK_EQUAL((std::is_same<
       typename node_type::sub_type, vector3_t>::value), true);
 

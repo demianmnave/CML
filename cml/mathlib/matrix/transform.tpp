@@ -33,7 +33,7 @@ matrix_look_at(writable_matrix<Sub>& m,
   m.identity();
 
   auto s = value_type(handedness == left_handed ? 1 : -1);
-  auto z = s * normalize(target - position);
+  auto z = s * (target - position).normalize();
   auto x = cross(up, z).normalize();
   auto y = cross(z, x);
 

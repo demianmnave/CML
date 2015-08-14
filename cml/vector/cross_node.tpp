@@ -31,6 +31,12 @@ vector_cross_node<Sub1,Sub2>::vector_cross_node(node_type&& other)
 {
 }
 
+template<class Sub1, class Sub2>
+vector_cross_node<Sub1,Sub2>::vector_cross_node(const node_type& other)
+: m_left(other.m_left), m_right(other.m_right)
+{
+}
+
 
 
 /* Internal methods: */
