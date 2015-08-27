@@ -65,7 +65,7 @@ readable_vector<DT>::normalize() const & -> vector_scalar_node<
 {
   return vector_scalar_node<
     const DT&, value_type, op::binary_divide<value_type,value_type>>
-    ((DT&) *this, this->length());
+    ((const DT&) *this, this->length());
 }
 
 template<class DT> auto

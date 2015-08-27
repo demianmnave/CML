@@ -63,6 +63,7 @@ class writable_quaternion
     using readable_type::Z;
     using readable_type::actual;
     using readable_type::get;
+    using readable_type::normalize;
     using readable_type::conjugate;
     using readable_type::inverse;
     using readable_type::operator[];
