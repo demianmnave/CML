@@ -76,6 +76,29 @@ check_or_resize(writable_vector<Sub>& sub, int N)
 }
 
 
+/* check_or_resize for a read-only vector, left, that just forwards to
+ * check_same_size.
+ */
+template<class Sub, class Other> inline void
+check_or_resize(
+  const readable_vector<Sub>& left, const readable_vector<Other>& right
+  )
+{
+  cml::check_same_size(left, right);
+}
+
+/* check_or_resize for a resizable vector, left, that resizes the vector to
+ * ensure it has the same size as right.
+ */
+template<class Sub, class Other> inline auto
+check_or_resize(
+  writable_vector<Sub>& left, const readable_vector<Other>& right
+  )
+-> decltype(left.actual().resize(0), void())
+{
+  left.actual().resize(cml::array_size_of(right));
+}
+
 /* check_or_resize for a read-only vector that verifies the size is
  * other.size() + sizeof(eN):
  */

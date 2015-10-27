@@ -88,7 +88,12 @@ matrix_get_translation_2D(const readable_matrix<Sub>& m)
 -> n_basis_vector_of_t<Sub,2>
 {
   cml::check_affine_2D(m);
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+  return n_basis_vector_of_t<Sub,2>(
+    m.basis_element(2,0), m.basis_element(2,1));
+#else
   return { m.basis_element(2,0), m.basis_element(2,1) };
+#endif
 }
 
 
@@ -165,7 +170,12 @@ matrix_get_translation(const readable_matrix<Sub>& m)
 -> n_basis_vector_of_t<Sub,3>
 {
   cml::check_affine_3D(m);
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+  return n_basis_vector_of_t<Sub,3>(
+    m.basis_element(3,0), m.basis_element(3,1), m.basis_element(3,2));
+#else
   return { m.basis_element(3,0), m.basis_element(3,1), m.basis_element(3,2) };
+#endif
 }
 
 

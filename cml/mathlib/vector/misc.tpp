@@ -35,7 +35,11 @@ template<class Sub> inline auto
 perp(const readable_vector<Sub>& v) -> temporary_of_t<Sub>
 {
   cml::check_size(v, cml::int_c<2>());
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+  return temporary_of_t<Sub>(- v[1], v[0]);
+#else
   return { - v[1], v[0] };
+#endif
 }
 
 template<class Sub1, class Sub2> inline auto

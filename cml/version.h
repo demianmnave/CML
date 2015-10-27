@@ -10,10 +10,10 @@
 #define	cml_version_h
 
 /* Current CML version: */
-#define CML_VERSION			200000U
+#define CML_VERSION			200001U
 
 /* Current CML version as a string: */
-#define CML_VERSION_STRING		"2.0.0"
+#define CML_VERSION_STRING		"2.0.1"
 
 #endif
 

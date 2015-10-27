@@ -124,7 +124,7 @@ writable_matrix<DT>::set_row(int i, const readable_vector<Sub>& v) &&
 #endif
 
 template<class DT> template<class Sub> DT&
-writable_matrix<DT>::set_col(int j, const readable_vector<Sub>& v)
+writable_matrix<DT>::set_col(int j, const readable_vector<Sub>& v) __CML_REF
 {
   cml::check_same_row_size(*this, v);
   for(int i = 0; i < this->rows(); ++ i) this->put(i,j, v.get(i));

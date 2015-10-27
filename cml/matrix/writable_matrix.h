@@ -124,7 +124,7 @@ class writable_matrix
      * sizes are checked at compile time otherwise.
      */
     template<class Sub> DerivedT&
-      set_col(int j, const readable_vector<Sub>& v);
+      set_col(int j, const readable_vector<Sub>& v) __CML_REF;
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
     /** Copy @c v to column @c j of a temporary matrix.
