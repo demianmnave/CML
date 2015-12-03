@@ -22,6 +22,7 @@
 #include <cml/mathlib/matrix/translation.h>
 #include <cml/mathlib/matrix/rotation.h>
 #include <cml/mathlib/matrix/scale.h>
+#include <cml/mathlib/matrix/transform.h>
 #include <cml/mathlib/matrix/projection.h>
 #include <cml/mathlib/matrix/generators.h>
 #include <cml/mathlib/matrix/misc.h>
