@@ -20,5 +20,8 @@ add_subdirectory(quaternion)
 # mathlib tests:
 add_subdirectory(mathlib)
 
+# util tests:
+add_subdirectory(util)
+
 # --------------------------------------------------------------------------
 # vim:ft=cmake
