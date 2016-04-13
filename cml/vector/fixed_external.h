@@ -92,6 +92,13 @@ class vector<Element, external<Size>>
     /** Construct from the wrapped pointer. */
     explicit vector(pointer data);
 
+    /** Copy constructor.
+     *
+     * @warning This copy has the semantics of a raw pointer, and can lead
+     * to memory leaks if not used correctly.
+     */
+    vector(const vector_type& other);
+
     /** Move constructor. */
     vector(vector_type&& other);
 
@@ -113,7 +120,11 @@ class vector<Element, external<Size>>
 
   public:
 
-    /** Copy assignment. */
+    /** Copy assignment.
+     *
+     * @warning This assignment has the semantics of a raw pointer, and can
+     * lead to memory leaks if not used correctly.
+     */
     vector_type& operator=(const vector_type& other);
 
     /** Move assignment. */

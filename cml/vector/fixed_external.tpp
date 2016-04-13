@@ -28,9 +28,16 @@ vector<E, external<S>>::vector(pointer data)
 }
 
 template<class E, int S>
+vector<E, external<S>>::vector(const vector_type& other)
+{
+  this->m_data = other.m_data;
+}
+
+template<class E, int S>
 vector<E, external<S>>::vector(vector_type&& other)
 {
-  this->operator=(std::move(other));
+  this->m_data = other.m_data;
+  other.m_data = nullptr;
 }
 
 

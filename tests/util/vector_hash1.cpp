@@ -82,6 +82,5 @@ BOOST_AUTO_TEST_CASE(table1)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2
