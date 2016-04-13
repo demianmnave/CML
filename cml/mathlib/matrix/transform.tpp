@@ -13,9 +13,12 @@
 #include <cml/matrix/writable_matrix.h>
 #include <cml/mathlib/matrix/basis.h>
 #include <cml/mathlib/matrix/translation.h>
+#include <cml/mathlib/matrix/rotation.h>
 #include <cml/mathlib/matrix/size_checking.h>
 
 namespace cml {
+
+/* Look-at functions: */
 
 template<class Sub, class SubEye, class SubTarget, class SubUp> inline void
 matrix_look_at(writable_matrix<Sub>& m,
@@ -58,6 +61,59 @@ matrix_look_at_RH(writable_matrix<Sub>& m,
     const readable_vector<SubUp>& up) 
 {
   matrix_look_at(m, position, target, up, right_handed);
+}
+
+
+/* 3D Linear transform functions: */
+
+template<class Sub1, class Sub2> inline void
+matrix_linear_transform(
+  writable_matrix<Sub1>& m, const readable_matrix<Sub2>& l
+  )
+{
+  cml::check_linear_3D(m);
+  cml::check_linear_3D(l);
+
+  /* Initialize: */
+  m.identity();
+
+  /* Copy basis elements: */
+  for(int i = 0; i < 3; ++i) {
+    for(int j = 0; j < 3; ++j) {
+      m.set_basis_element(i,j, l.basis_element(i,j));
+    }
+  }
+}
+
+
+/* 3D Affine transform functions: */
+
+template<class Sub, class ASub, class E, class TSub> inline void
+matrix_affine_transform(
+  writable_matrix<Sub>& m,
+  const readable_vector<ASub>& axis, const E& angle,
+  const readable_vector<TSub>& translation, bool normalize
+  )
+{
+  cml::check_affine_3D(m);
+  if(normalize) {
+    cml::matrix_rotation_axis_angle(m, cml::normalize(axis), angle);
+  } else {
+    cml::matrix_rotation_axis_angle(m, axis, angle);
+  }
+  cml::matrix_set_translation(m, translation);
+}
+
+template<class Sub, class LSub, class TSub> inline void
+matrix_affine_transform(
+  writable_matrix<Sub>& m,
+  const readable_matrix<LSub>& linear,
+  const readable_vector<TSub>& translation
+  )
+{
+  cml::check_affine_3D(m);
+  cml::matrix_linear_transform(m, linear);
+  cml::matrix_set_translation(m, translation);
 }
 
 } // namespace cml
@@ -445,27 +501,6 @@ matrix_look_at_RH(matrix<E,A,B,L>& m, E eye_x, E eye_y, E eye_z,
 }
 
 //////////////////////////////////////////////////////////////////////////////
-// 3D linear transform
-//////////////////////////////////////////////////////////////////////////////
-
-/** Build a matrix from the 3x3 linear transform part of another matrix */
-template < typename E, class A, class B, class L, class MatT > void
-matrix_linear_transform(matrix<E,A,B,L>& m, const MatT& linear)
-{
-    /* Checking */
-    detail::CheckMatLinear3D(m);
-    detail::CheckMatLinear3D(linear);
-    
-    identity_transform(m);
-    
-    for(size_t i = 0; i < 3; ++i) {
-        for(size_t j = 0; j < 3; ++j) {
-            m.set_basis_element(i,j,linear.basis_element(i,j));
-        }
-    }
-}
-
-//////////////////////////////////////////////////////////////////////////////
 // 2D linear transform
 //////////////////////////////////////////////////////////////////////////////
 
@@ -513,53 +548,12 @@ matrix_affine_transform(
     matrix_set_translation(m,translation);
 }
 
-/** 3D affine transform from a quaternion expression and a translation */
-template < typename E,class A,class B,class L,class XprT,class VecT > void
-matrix_affine_transform(
-    matrix<E,A,B,L>& m, const et::QuaternionXpr<XprT>& q,
-    const VecT& translation)
-{
-    matrix_rotation_quaternion(m,q);
-    matrix_set_translation(m,translation);
-}
-
-/** 3D affine transform from an axis-angle pair and a translation */
-template <
-    typename E, class A, class B, class L, class VecT_1, class VecT_2 > void
-matrix_affine_transform(
-    matrix<E,A,B,L>& m,const VecT_1& axis,E angle,const VecT_2& translation)
-{
-    matrix_rotation_axis_angle(m,axis,angle);
-    matrix_set_translation(m,translation);
-}
-
 /** 3D affine transform from an Euler-angle triple and a translation */
 template < typename E, class A, class B, class L, class VecT > void
 matrix_affine_transform(matrix<E,A,B,L>& m, E angle_0, E angle_1,
     E angle_2, EulerOrder order, const VecT& translation)
 {
     matrix_rotation_euler(m,angle_0,angle_1,angle_2,order);
-    matrix_set_translation(m,translation);
-}
-
-/** 3D affine transform from a matrix and a translation */
-template <
-    typename E, class A, class B, class L,
-    typename ME, class MA, class MB, class ML, class VecT > void
-matrix_affine_transform(matrix<E,A,B,L>& m,
-    const matrix<ME,MA,MB,ML>& linear, const VecT& translation)
-{
-    matrix_linear_transform(m,linear);
-    matrix_set_translation(m,translation);
-}
-
-/** 3D affine transform from a matrix expression and a translation */
-template < typename E,class A,class B,class L,class XprT,class VecT > void
-matrix_affine_transform(
-    matrix<E,A,B,L>& m, const et::MatrixXpr<XprT>& linear,
-    const VecT& translation)
-{
-    matrix_linear_transform(m,linear);
     matrix_set_translation(m,translation);
 }
 

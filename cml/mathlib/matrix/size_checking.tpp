@@ -110,6 +110,18 @@ check_affine(const readable_matrix<Sub>& m)
   detail::check_affine(m, size_tag());
 }
 
+template<class Sub> inline void
+check_linear_2D(const readable_matrix<Sub>& m)
+{
+  cml::check_minimum_size(m, cml::int_c<2>(), cml::int_c<2>());
+}
+
+template<class Sub> inline void
+check_linear_3D(const readable_matrix<Sub>& m)
+{
+  cml::check_minimum_size(m, cml::int_c<3>(), cml::int_c<3>());
+}
+
 } // namespace cml
 
 // -------------------------------------------------------------------------

@@ -60,6 +60,28 @@ template<class Sub> void check_affine_3D(const readable_matrix<Sub>& m);
  */
 template<class Sub> void check_affine(const readable_matrix<Sub>& m);
 
+/** Front-end for both compile-time and run-time 2D linear matrix size
+ * checking.  A linear matrix must be at least 2x2.
+ *
+ * @tparam Sub the actual type of the matrix expression.
+ *
+ * @throws minimum_matrix_size_error at run-time if @c m is
+ * dynamically-sized, and is not sized for a 2D linear transformation.  If
+ * @c m is fixed-size, the size is checked at compile-time.
+ */
+template<class Sub> void check_linear_2D(const readable_matrix<Sub>& m);
+
+/** Front-end for both compile-time and run-time 3D linear matrix size
+ * checking.  A linear matrix must be at least 3x3.
+ *
+ * @tparam Sub the actual type of the matrix expression.
+ *
+ * @throws minimum_matrix_size_error at run-time if @c m is
+ * dynamically-sized, and is not sized for a 3D linear transformation.  If
+ * @c m is fixed-size, the size is checked at compile-time.
+ */
+template<class Sub> void check_linear_3D(const readable_matrix<Sub>& m);
+
 } // namespace cml
 
 #define __CML_MATHLIB_MATRIX_SIZE_CHECKING_TPP

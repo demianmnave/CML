@@ -10,20 +10,21 @@
 
 #include <cml/vector/readable_vector.h>
 #include <cml/matrix/writable_matrix.h>
+#include <cml/mathlib/matrix/size_checking.h>
 
 namespace cml {
 
 template<class Sub> inline auto
 trace_2x2(const readable_matrix<Sub>& m) -> value_type_trait_of_t<Sub>
 {
-  cml::check_minimum_size(m, cml::int_c<2>(), cml::int_c<2>());
+  cml::check_linear_2D(m);
   return m(0,0) + m(1,1);
 }
 
 template<class Sub> inline auto
 trace_3x3(const readable_matrix<Sub>& m) -> value_type_trait_of_t<Sub>
 {
-  cml::check_minimum_size(m, cml::int_c<3>(), cml::int_c<3>());
+  cml::check_linear_3D(m);
   return m(0,0) + m(1,1) + m(2,2);
 }
 
@@ -33,8 +34,8 @@ matrix_skew_symmetric(
   writable_matrix<Sub1>& m, const readable_vector<Sub2>& v
   )
 {
-  cml::check_minimum_size(m, cml::int_c<3>(), cml::int_c<3>());
-  cml::check_size(v, cml::int_c<3>());
+  cml::check_linear_3D(m);
+  cml::check_size(v, int_c<3>());
 
   m.zero();
 
@@ -51,7 +52,7 @@ matrix_skew_symmetric_2D(
   writable_matrix<Sub1>& m, const Scalar& s
   )
 {
-  cml::check_minimum_size(m, cml::int_c<2>(), cml::int_c<2>());
+  cml::check_linear_2D(m);
 
   m.zero();
   m.set_basis_element(0,1,  s);

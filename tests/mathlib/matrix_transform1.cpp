@@ -18,7 +18,7 @@
 #define BOOST_TEST_MODULE matrix_transform1
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_SUITE(transform_3D)
+BOOST_AUTO_TEST_SUITE(look_at_3D)
 
 BOOST_AUTO_TEST_CASE(look_at_rh_1)
 {
@@ -50,6 +50,28 @@ BOOST_AUTO_TEST_CASE(look_at_lh_1)
   BOOST_CHECK_CLOSE(w[0], -1., .0001);
   BOOST_CHECK_CLOSE(w[1],  1., .0001);
   BOOST_CHECK_SMALL(w[2],  1e-8);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_AUTO_TEST_SUITE(affine_3D)
+
+BOOST_AUTO_TEST_CASE(test1)
+{
+  cml::matrix44d M;
+  auto axis = cml::vector3d(1.,1.,1.).normalize();
+  cml::vector3d xlate(2.,2.,2.);
+  cml::matrix_affine_transform(M, axis, cml::rad(22.5), xlate);
+
+  BOOST_CHECK_EQUAL(M(0,3), 2.0);
+  BOOST_CHECK_EQUAL(M(1,3), 2.0);
+  BOOST_CHECK_EQUAL(M(2,3), 2.0);
+  BOOST_CHECK_EQUAL(M(3,3), 1.0);
+
+  BOOST_CHECK_CLOSE(M(0,0), 0.949253, .001);
+  BOOST_CHECK_CLOSE(M(1,1), 0.949253, .001);
+  BOOST_CHECK_CLOSE(M(2,2), 0.949253, .001);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

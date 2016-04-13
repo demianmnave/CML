@@ -36,7 +36,7 @@ matrix_scale_2D(
   writable_matrix<Sub1>& m, const readable_vector<Sub2>& v
   )
 {
-  cml::check_size(v, cml::int_c<2>());
+  cml::check_size(v, int_c<2>());
   matrix_scale_2D(m, v[0], v[1]);
 }
 
@@ -61,7 +61,7 @@ matrix_inverse_scale_2D(
   writable_matrix<Sub1>& m, const readable_vector<Sub2>& v
   )
 {
-  cml::check_size(v, cml::int_c<2>());
+  cml::check_size(v, int_c<2>());
   matrix_inverse_scale_2D(m, v[0], v[1]);
 }
 
@@ -89,7 +89,7 @@ matrix_scale(
   writable_matrix<Sub1>& m, const readable_vector<Sub2>& v
   )
 {
-  cml::check_size(v, cml::int_c<3>());
+  cml::check_size(v, int_c<3>());
   matrix_scale(m, v[0], v[1], v[2]);
 }
 
@@ -114,7 +114,7 @@ matrix_inverse_scale(
   writable_matrix<Sub1>& m, const readable_vector<Sub2>& v
   )
 {
-  cml::check_size(v, cml::int_c<3>());
+  cml::check_size(v, int_c<3>());
   matrix_inverse_scale(m, v[0], v[1], v[2]);
 }
 

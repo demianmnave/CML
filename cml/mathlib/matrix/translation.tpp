@@ -63,7 +63,7 @@ matrix_set_translation_2D(
   writable_matrix<Sub1>& m, const readable_vector<Sub2>& v
   )
 {
-  cml::check_size(v, cml::int_c<2>());
+  cml::check_size(v, int_c<2>());
   cml::check_affine_2D(m);
   detail::matrix_set_basis<2>(m, v[0], v[1]);
 }
@@ -143,7 +143,7 @@ matrix_set_translation(
   )
 {
   typedef value_type_trait_of_t<Sub2> zero_type;
-  cml::check_size_range(v, cml::int_c<2>(), cml::int_c<3>());
+  cml::check_size_range(v, int_c<2>(), int_c<3>());
   cml::check_affine_3D(m);
   detail::matrix_set_basis<3>(
     m, v[0], v[1], ((v.size() == 3) ? v[2] : zero_type(0)));

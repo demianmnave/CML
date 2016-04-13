@@ -31,7 +31,7 @@ matrix_rotation_2D(writable_matrix<Sub>& m, E angle)
   typedef value_type_trait_of_t<Sub>			value_type;
   typedef scalar_traits<value_type>			value_traits;
 
-  cml::check_minimum_size(m, int_c<2>(), int_c<2>());
+  cml::check_linear_2D(m);
 
   /* Initialize: */
   m.identity();
@@ -56,7 +56,7 @@ matrix_rotation_world_axis(writable_matrix<Sub>& m, int axis, const E& angle)
 
   typedef traits_of_t<E>				scalar_traits;
 
-  cml::check_minimum_size(m, int_c<3>(), int_c<3>());
+  cml::check_linear_3D(m);
   cml_require(0 <= axis && axis <= 2, std::invalid_argument, "invalid axis");
  
   /* Setup sin() and cos() for the chosen axis: */
@@ -104,7 +104,7 @@ matrix_rotation_axis_angle(
   typedef value_type_trait_of_t<Sub>			value_type;
   typedef scalar_traits<value_type>			value_traits;
 
-  cml::check_minimum_size(m, int_c<3>(), int_c<3>());
+  cml::check_linear_3D(m);
   cml::check_size(axis, int_c<3>());
 
   /* Initialize: */
@@ -153,7 +153,7 @@ matrix_rotation_euler(writable_matrix<Sub>& m,
   typedef value_type_trait_of_t<Sub>			value_type;
   typedef scalar_traits<value_type>			value_traits;
 
-  cml::check_minimum_size(m, int_c<3>(), int_c<3>());
+  cml::check_linear_3D(m);
 
   /* Initialize: */
   m.identity();
@@ -217,7 +217,7 @@ matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
 
   cml_require(0 <= axis && axis <= 2,
    std::invalid_argument, "axis must be 0, 1, or 2");
-  cml::check_minimum_size(m, int_c<3>(), int_c<3>());
+  cml::check_linear_3D(m);
 
   /* Initialize: */
   m.identity();
@@ -290,7 +290,7 @@ matrix_rotation_quaternion(
   typedef order_type_trait_of_t<QSub>			order_type;
   typedef value_type_trait_of_t<Sub>			value_type;
 
-  cml::check_minimum_size(m, int_c<3>(), int_c<3>());
+  cml::check_linear_3D(m);
 
   /* Local version of the quaternion ordering: */
   enum {
@@ -376,7 +376,7 @@ matrix_to_axis_angle(
   typedef value_type_trait_of_t<Sub>			value_type;
   typedef scalar_traits<value_type>			value_traits;
 
-  cml::check_minimum_size(m, int_c<3>(), int_c<3>());
+  cml::check_linear_3D(m);
   cml::detail::check_or_resize(axis, int_c<3>());
 
   /* Assign the axis first: */
@@ -441,7 +441,7 @@ matrix_to_euler(
   typedef value_type_trait_of_t<Sub>			value_type;
   typedef scalar_traits<value_type>			value_traits;
 
-  cml::check_minimum_size(m, int_c<3>(), int_c<3>());
+  cml::check_linear_3D(m);
 
   /* Unpack the order first: */
   int i, j, k;

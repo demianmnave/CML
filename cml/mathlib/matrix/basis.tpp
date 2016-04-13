@@ -10,6 +10,7 @@
 
 #include <cml/matrix/row_col.h>
 #include <cml/matrix/writable_matrix.h>
+#include <cml/mathlib/matrix/size_checking.h>
 
 namespace cml {
 
@@ -20,8 +21,8 @@ matrix_set_basis_vector_2D(
   writable_matrix<Sub1>& m, int i, const readable_vector<Sub2>& v
   )
 {
-  cml::check_minimum_size(m, cml::int_c<2>(), cml::int_c<2>());
-  cml::check_size(v, cml::int_c<2>());
+  cml::check_linear_2D(m);
+  cml::check_size(v, int_c<2>());
   cml_require(0 <= i && i <= 1, std::invalid_argument, "invalid 2D index");
 
   m.set_basis_element(i, 0, v[0]);
@@ -61,8 +62,8 @@ matrix_set_transposed_basis_vector_2D(
   writable_matrix<Sub1>& m, int i, const readable_vector<Sub2>& v
   )
 {
-  cml::check_minimum_size(m, cml::int_c<2>(), cml::int_c<2>());
-  cml::check_size(v, cml::int_c<2>());
+  cml::check_linear_2D(m);
+  cml::check_size(v, int_c<2>());
   cml_require(0 <= i && i <= 1, std::invalid_argument, "invalid 2D index");
 
   m.set_basis_element(0, i, v[0]);
@@ -101,7 +102,7 @@ template<class Sub> inline auto
 matrix_get_basis_vector_2D(const readable_matrix<Sub>& m, int i)
 -> n_basis_vector_of_t<Sub,2>
 {
-  cml::check_minimum_size(m, cml::int_c<2>(), cml::int_c<2>());
+  cml::check_linear_2D(m);
   cml_require(0 <= i && i <= 1, std::invalid_argument, "invalid 2D index");
   return n_basis_vector_of_t<Sub,2>(
     m.basis_element(i,0), m.basis_element(i,1));
@@ -137,7 +138,7 @@ template<class Sub> inline auto
 matrix_get_transposed_basis_vector_2D(const readable_matrix<Sub>& m, int i)
 -> n_basis_vector_of_t<Sub,2>
 {
-  cml::check_minimum_size(m, cml::int_c<2>(), cml::int_c<2>());
+  cml::check_linear_2D(m);
   cml_require(0 <= i && i <= 1, std::invalid_argument, "invalid 2D index");
   return n_basis_vector_of_t<Sub,2>(
     m.basis_element(0,i), m.basis_element(1,i));
@@ -177,8 +178,8 @@ matrix_set_basis_vector(
   writable_matrix<Sub1>& m, int i, const readable_vector<Sub2>& v
   )
 {
-  cml::check_minimum_size(m, cml::int_c<3>(), cml::int_c<3>());
-  cml::check_size(v, cml::int_c<3>());
+  cml::check_linear_3D(m);
+  cml::check_size(v, int_c<3>());
   cml_require(0 <= i && i <= 2, std::invalid_argument, "invalid 3D index");
 
   m.set_basis_element(i, 0, v[0]);
@@ -229,8 +230,8 @@ matrix_set_transposed_basis_vector(
   writable_matrix<Sub1>& m, int i, const readable_vector<Sub2>& v
   )
 {
-  cml::check_minimum_size(m, cml::int_c<3>(), cml::int_c<3>());
-  cml::check_size(v, cml::int_c<3>());
+  cml::check_linear_3D(m);
+  cml::check_size(v, int_c<3>());
   cml_require(0 <= i && i <= 2, std::invalid_argument, "invalid 3D index");
 
   m.set_basis_element(0, i, v[0]);
@@ -280,7 +281,7 @@ template<class Sub> inline auto
 matrix_get_basis_vector(const readable_matrix<Sub>& m, int i)
 -> n_basis_vector_of_t<Sub,3>
 {
-  cml::check_minimum_size(m, cml::int_c<3>(), cml::int_c<3>());
+  cml::check_linear_3D(m);
   cml_require(0 <= i && i <= 2, std::invalid_argument, "invalid 3D index");
   return n_basis_vector_of_t<Sub,3>(
     m.basis_element(i,0), m.basis_element(i,1), m.basis_element(i,2));
@@ -325,7 +326,7 @@ template<class Sub> inline auto
 matrix_get_transposed_basis_vector(const readable_matrix<Sub>& m, int i)
 -> n_basis_vector_of_t<Sub,3>
 {
-  cml::check_minimum_size(m, cml::int_c<3>(), cml::int_c<3>());
+  cml::check_linear_3D(m);
   cml_require(0 <= i && i <= 2, std::invalid_argument, "invalid 3D index");
   return n_basis_vector_of_t<Sub,3>(
     m.basis_element(0,i), m.basis_element(1,i), m.basis_element(2,i));
