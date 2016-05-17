@@ -1,4 +1,4 @@
-version: 2.0.1
+version: cml2-{branch}
 
 branches:
   only:
