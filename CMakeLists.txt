@@ -76,18 +76,11 @@ add_definitions(-D_UNICODE -DUNICODE)
 
 # Enable tests if requested:
 option(CML_BUILD_TESTING "Build CML tests" OFF)
-if(CML_BUILD_TESTING)
-  include(CMLTestMacros)
-  enable_testing()
-endif()
 
 
 ## PATH CONFIGURATION ##
 
 # Include directories:
-if(CML_BUILD_TESTING)
-  include_directories(${Boost_INCLUDE_DIRS})
-endif()
 include_directories(${CML_ROOT})
 
 # Output paths:
@@ -100,6 +93,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CML_BINARY_DIR}/lib)
 
 # Build tests if requested:
 if(CML_BUILD_TESTING)
+  enable_testing()
   add_subdirectory(tests)
 endif()
 

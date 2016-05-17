@@ -55,10 +55,7 @@ macro(ADD_CML_TEST
   # Setup the build target:
   add_executable(${ExecName} ${_Name}.cpp)
   set_target_properties(${ExecName} PROPERTIES FOLDER "${test_group}")
-
-  if(NOT MSVC)
-    target_link_libraries(${ExecName} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-  endif()
+  target_link_libraries(${ExecName} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 
   # Setup the test:
   add_test(NAME ${TestName} COMMAND ${ExecName} --log_level=warning)
