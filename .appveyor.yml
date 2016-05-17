@@ -1,4 +1,4 @@
-version: cml2-{branch}
+version: {branch}-build-{build}
 
 branches:
   only:
