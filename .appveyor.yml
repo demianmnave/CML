@@ -11,31 +11,6 @@ environment:
       BOOST_ROOT: "C:\\Libraries\\boost"
       BOOST_LIBRARYDIR: "C:\\Libraries\\boost\\lib32-msvc-12.0"
 
-    - GENERATOR: "Visual Studio 14 2015"
-      CONFIG: Release
-      BOOST_ROOT: "C:\\Libraries\\boost_1_59_0"
-      BOOST_LIBRARYDIR: "C:\\Libraries\\boost_1_59_0\\lib32-msvc-14.0"
-
-    - GENERATOR: "Visual Studio 14 2015 Win64"
-      CONFIG: Release
-      BOOST_ROOT: "C:\\Libraries\\boost_1_59_0"
-      BOOST_LIBRARYDIR: "C:\\Libraries\\boost_1_59_0\\lib64-msvc-14.0"
-
-    - GENERATOR: "Visual Studio 12 2013"
-      CONFIG: Debug
-      BOOST_ROOT: "C:\\Libraries\\boost"
-      BOOST_LIBRARYDIR: "C:\\Libraries\\boost\\lib32-msvc-12.0"
-
-    - GENERATOR: "Visual Studio 14 2015"
-      CONFIG: Debug
-      BOOST_ROOT: "C:\\Libraries\\boost_1_59_0"
-      BOOST_LIBRARYDIR: "C:\\Libraries\\boost_1_59_0\\lib32-msvc-14.0"
-
-    - GENERATOR: "Visual Studio 14 2015 Win64"
-      CONFIG: Debug
-      BOOST_ROOT: "C:\\Libraries\\boost_1_59_0"
-      BOOST_LIBRARYDIR: "C:\\Libraries\\boost_1_59_0\\lib64-msvc-14.0"
-
 build_script:
   - mkdir build
   - cd build
@@ -43,4 +18,4 @@ build_script:
   - cmake --build . --config "%CONFIG%"
 
 test_script:
-  - ctest --build-config "%CONFIG%"
+  - ctest -V --build-config "%CONFIG%"
