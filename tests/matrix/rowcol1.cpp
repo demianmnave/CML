@@ -198,9 +198,9 @@ BOOST_AUTO_TEST_CASE(row2)
     );
 
   auto M = M1 - M2;
-  auto row2 = cml::row(M,2);
+  auto row2 = cml::row(M,1);
   for(int j = 0; j < row2.size(); ++ j)
-    BOOST_CHECK_EQUAL(row2[j], M(2,j));
+    BOOST_CHECK_EQUAL(row2[j], M(1,j));
 }
 
 BOOST_AUTO_TEST_CASE(col2)
@@ -215,9 +215,9 @@ BOOST_AUTO_TEST_CASE(col2)
     );
 
   auto M = M1 - M2;
-  auto col2 = cml::col(M,2);
+  auto col2 = cml::col(M,1);
   for(int i = 0; i < col2.size(); ++ i)
-    BOOST_CHECK_EQUAL(col2[i], M(i,2));
+    BOOST_CHECK_EQUAL(col2[i], M(i,1));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

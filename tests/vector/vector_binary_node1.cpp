@@ -539,7 +539,7 @@ BOOST_AUTO_TEST_CASE(assign_temp_xpr)
   cml::external3d v4(av4);
 
   auto xpr = v1 + v2 - v3 + v4;
-  BOOST_CHECK_EQUAL(sizeof(xpr), 32U);
+  // BOOST_CHECK_EQUAL(sizeof(xpr), 32U);
 
   cml::vector3d w;
   w = xpr;
@@ -600,7 +600,7 @@ BOOST_AUTO_TEST_CASE(assign_temp_xpr)
   cml::externalnd v4(av4, 3);
 
   auto xpr = v1 + v2 - v3 + v4;
-  BOOST_CHECK_EQUAL(sizeof(xpr), 32U);
+  // BOOST_CHECK_EQUAL(sizeof(xpr), 32U);
 
   double aw[3];
   cml::externalnd w(aw, 3);
