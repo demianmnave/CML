@@ -203,6 +203,15 @@ matrix_rotation_euler(writable_matrix<Sub>& m,
   }
 }
 
+template<class Sub, class ESub> inline void
+matrix_rotation_euler(writable_matrix<Sub>& m,
+  const readable_vector<ESub>& euler, euler_order order
+  )
+{
+  cml::check_size(euler, cml::int_c<3>());
+  matrix_rotation_euler(m, euler[0], euler[1], euler[2], order);
+}
+
 template<class Sub, class E0, class E1, class E2> inline void
 matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
   E0 angle_0, E1 angle_1, E2 angle_2, euler_order order
@@ -276,6 +285,16 @@ matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
     m.set_basis_element(k,j, s1 * c0c2 + s0s2);
     m.set_basis_element(k,k, 0.              );
   }
+}
+
+template<class Sub, class ESub> inline void
+matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
+  const readable_vector<ESub>& euler, euler_order order
+  )
+{
+  cml::check_size(euler, cml::int_c<3>());
+  matrix_rotation_euler_derivatives(
+    m, axis, euler[0], euler[1], euler[2], order);
 }
 
 template<class Sub, class QSub> inline void

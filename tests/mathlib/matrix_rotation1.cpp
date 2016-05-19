@@ -88,6 +88,30 @@ BOOST_AUTO_TEST_CASE(euler_derivaties1)
   BOOST_CHECK_SMALL(v[2], 1e-7);
 }
 
+BOOST_AUTO_TEST_CASE(euler2)
+{
+  cml::matrix33d M;
+  cml::matrix_rotation_euler(
+    M, cml::vector3d(cml::rad(90.), 0., 0.), cml::euler_order_xyz);
+
+  auto v = M*cml::vector3d(0., 1., 0.);	// 0,0,1
+  BOOST_CHECK_SMALL(v[0], 1e-7);
+  BOOST_CHECK_SMALL(v[1], 1e-7);
+  BOOST_CHECK_CLOSE(v[2], 1., .0001);
+}
+
+BOOST_AUTO_TEST_CASE(euler_derivaties2)
+{
+  cml::matrix33d M;
+  cml::matrix_rotation_euler_derivatives(
+    M, 0, cml::vector3d(cml::rad(90.), 0., 0.), cml::euler_order_xyz);
+
+  auto v = M*cml::vector3d(0., 1., 0.);	// 0,0,1
+  BOOST_CHECK_SMALL(v[0], 1e-7);
+  BOOST_CHECK_CLOSE(v[1], -1., .0001);
+  BOOST_CHECK_SMALL(v[2], 1e-7);
+}
+
 BOOST_AUTO_TEST_CASE(quaternion1)
 {
   cml::quaterniond q; cml::quaternion_rotation_axis_angle(

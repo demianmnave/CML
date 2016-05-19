@@ -128,6 +128,15 @@ template<class Sub, class E0, class E1, class E2> void
 matrix_rotation_euler(writable_matrix<Sub>& m,
   E0 angle_0, E1 angle_1, E2 angle_2, euler_order order);
 
+/** Compute a rotation matrix given a vector containing the Euler angles.
+ *
+ * @throws vector_size_error at run-time if @c euler is dynamically-sized,
+ * and is not 3D.  If fixed-size, the sizs is checked at compile-time.
+ */
+template<class Sub, class ESub> void
+matrix_rotation_euler(writable_matrix<Sub>& m,
+  const readable_vector<ESub>& euler, euler_order order);
+
 /** Build a matrix of derivatives of Euler angles about the specified axis.
  *
  * The rotation derivatives are applied about the cardinal axes in the
@@ -160,6 +169,16 @@ matrix_rotation_euler(writable_matrix<Sub>& m,
 template<class Sub, class E0, class E1, class E2> void
 matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
   E0 angle_0, E1 angle_1, E2 angle_2, euler_order order);
+
+/** Build a matrix of derivatives of Euler angles about the specified axis,
+ * given the angles as a vector.
+ *
+ * @throws vector_size_error at run-time if @c euler is dynamically-sized,
+ * and is not 3D.  If fixed-size, the sizs is checked at compile-time.
+ */
+template<class Sub, class ESub> void
+matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
+  const readable_vector<ESub>& euler, euler_order order);
 
 /** Compute a rotation matrix from a quaternion.
  *
