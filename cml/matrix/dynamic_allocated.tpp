@@ -142,7 +142,11 @@ matrix<E, dynamic<A>, BO, L>::resize(int rows, int cols)
   int n_new = rows*cols;
 
   /* Short-circuit same size: */
-  if(n_new == n_old) return;
+  if(n_new == n_old) {
+    this->m_rows = rows;
+    this->m_cols = cols;
+    return;
+  }
 
   /* Allocator to use: */
   auto allocator = allocator_type();
@@ -187,7 +191,11 @@ matrix<E, dynamic<A>, BO, L>::resize_fast(int rows, int cols)
   int n_new = rows*cols;
 
   /* Short-circuit same size: */
-  if(n_new == n_old) return;
+  if(n_new == n_old) {
+    this->m_rows = rows;
+    this->m_cols = cols;
+    return;
+  }
 
   /* Allocator to use: */
   auto allocator = allocator_type();
