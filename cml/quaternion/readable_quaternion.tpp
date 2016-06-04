@@ -35,6 +35,31 @@ readable_quaternion<DT>::operator[](int i) const -> immutable_value
   return this->get(i);
 }
 
+template<class DT> auto
+readable_quaternion<DT>::w() const -> immutable_value
+{
+  return this->get(order_type::W);
+}
+
+template<class DT> auto
+readable_quaternion<DT>::x() const -> immutable_value
+{
+  return this->get(order_type::X);
+}
+
+template<class DT> auto
+readable_quaternion<DT>::y() const -> immutable_value
+{
+  return this->get(order_type::Y);
+}
+
+template<class DT> auto
+readable_quaternion<DT>::z() const -> immutable_value
+{
+  return this->get(order_type::Z);
+}
+
+
 template<class DT> int
 readable_quaternion<DT>::size() const
 {

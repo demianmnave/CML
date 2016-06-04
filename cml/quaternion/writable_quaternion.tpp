@@ -50,6 +50,30 @@ writable_quaternion<DT>::operator[](int i) -> mutable_value
   return this->get(i);
 }
 
+template<class DT> auto
+writable_quaternion<DT>::w() -> mutable_value
+{
+  return this->get(order_type::W);
+}
+
+template<class DT> auto
+writable_quaternion<DT>::x() -> mutable_value
+{
+  return this->get(order_type::X);
+}
+
+template<class DT> auto
+writable_quaternion<DT>::y() -> mutable_value
+{
+  return this->get(order_type::Y);
+}
+
+template<class DT> auto
+writable_quaternion<DT>::z() -> mutable_value
+{
+  return this->get(order_type::Z);
+}
+
 
 template<class DT> DT&
 writable_quaternion<DT>::normalize() __CML_REF

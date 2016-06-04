@@ -251,5 +251,55 @@ BOOST_AUTO_TEST_CASE(size_check1)
     (q = { 1., 2., 3. }), cml::quaternion_size_error);
 }
 
+BOOST_AUTO_TEST_CASE(coordinates1)
+{
+  double data[] = { 1., 2., 3., 4. };
+  const cml::quaterniond_ip q(data);
+  BOOST_REQUIRE_EQUAL(q.size(), 4);
+  BOOST_CHECK_EQUAL(q.x(), 1.);
+  BOOST_CHECK_EQUAL(q.y(), 2.);
+  BOOST_CHECK_EQUAL(q.z(), 3.);
+  BOOST_CHECK_EQUAL(q.w(), 4.);
+}
+
+BOOST_AUTO_TEST_CASE(coordinates2)
+{
+  double data[] = { 1., 2., 3., 4. };
+  const cml::quaterniond_rp q(data);
+  BOOST_REQUIRE_EQUAL(q.size(), 4);
+  BOOST_CHECK_EQUAL(q.x(), 2.);
+  BOOST_CHECK_EQUAL(q.y(), 3.);
+  BOOST_CHECK_EQUAL(q.z(), 4.);
+  BOOST_CHECK_EQUAL(q.w(), 1.);
+}
+
+BOOST_AUTO_TEST_CASE(coordinate_assign1)
+{
+  cml::quaterniond_ip q;
+  BOOST_REQUIRE_EQUAL(q.size(), 4);
+  q.x() = 1.;
+  q.y() = 2.;
+  q.z() = 3.;
+  q.w() = 4.;
+  BOOST_CHECK_EQUAL(q[cml::quaterniond_ip::X], 1.);
+  BOOST_CHECK_EQUAL(q[cml::quaterniond_ip::Y], 2.);
+  BOOST_CHECK_EQUAL(q[cml::quaterniond_ip::Z], 3.);
+  BOOST_CHECK_EQUAL(q[cml::quaterniond_ip::W], 4.);
+}
+
+BOOST_AUTO_TEST_CASE(coordinate_assign2)
+{
+  cml::quaterniond_rp q;
+  BOOST_REQUIRE_EQUAL(q.size(), 4);
+  q.w() = 1.;
+  q.x() = 2.;
+  q.y() = 3.;
+  q.z() = 4.;
+  BOOST_CHECK_EQUAL(q[cml::quaterniond_rp::W], 1.);
+  BOOST_CHECK_EQUAL(q[cml::quaterniond_rp::X], 2.);
+  BOOST_CHECK_EQUAL(q[cml::quaterniond_rp::Y], 3.);
+  BOOST_CHECK_EQUAL(q[cml::quaterniond_rp::Z], 4.);
+}
+
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

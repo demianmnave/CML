@@ -52,6 +52,7 @@ class writable_quaternion
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::const_reference	const_reference;
     typedef typename traits_type::mutable_value		mutable_value;
+    typedef typename traits_type::order_type		order_type;
 
 
   public:
@@ -67,6 +68,10 @@ class writable_quaternion
     using readable_type::conjugate;
     using readable_type::inverse;
     using readable_type::operator[];
+    using readable_type::x;
+    using readable_type::y;
+    using readable_type::z;
+    using readable_type::w;
 
 
   public:
@@ -87,6 +92,18 @@ class writable_quaternion
 
     /** Return a mutable reference to element @c i. */
     mutable_value operator[](int i);
+
+    /** Return a mutable reference to the real part of the quaternion. */
+    mutable_value w();
+
+    /** Return a mutable reference to the imaginary i coordinate. */
+    mutable_value x();
+
+    /** Return a mutable reference to the imaginary j coordinate. */
+    mutable_value y();
+
+    /** Return a mutable reference to the imaginary k coordinate. */
+    mutable_value z();
 
 
   public:

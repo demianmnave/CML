@@ -66,6 +66,18 @@ class readable_quaternion
     /** Return const element @c i. */
     immutable_value operator[](int i) const;
 
+    /** Return a const reference to the real part of the quaternion. */
+    immutable_value w() const;
+
+    /** Return a const reference to the imaginary i coordinate */
+    immutable_value x() const;
+
+    /** Return a const reference to the imaginary j coordinate */
+    immutable_value y() const;
+
+    /** Return a const reference to the imaginary k coordinate */
+    immutable_value z() const;
+
 
   public:
 
