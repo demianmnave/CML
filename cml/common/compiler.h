@@ -6,13 +6,11 @@
 
 #pragma once
 
-#ifndef	cml_common_compiler_h
-#define	cml_common_compiler_h
+#ifndef cml_common_compiler_h
+#define cml_common_compiler_h
 
 #if defined(__GNUC__) && ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 9))
-/* g++ support for C++11 features used by CML that may not be available to
- * ther compilers:
- */
+/* g++ support for C++11 features used by CML: */
 
 /* N2439 move semantics for *this, used, for example, to efficiently return
  * an expression node from a class method. Without this, a temporary is
@@ -29,9 +27,7 @@
 # define CML_HAS_DEFAULTED_MOVE_CONSTRUCTOR
 
 #elif defined(_MSC_VER)
-/* VC++ support for C++11 features used by CML that may not be available to
- * ther compilers:
- */
+/* VC++ support for C++11 features used by CML: */
 
 # if _MSC_VER < 1900
 /* VC++ (at least VS12) does not support move from *this, so no need to
