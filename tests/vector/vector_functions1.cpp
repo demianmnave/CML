@@ -227,6 +227,43 @@ BOOST_AUTO_TEST_CASE(random1)
 BOOST_AUTO_TEST_SUITE_END()
 
 
+BOOST_AUTO_TEST_SUITE(fixed_const_external)
+
+BOOST_AUTO_TEST_CASE(length_squared1)
+{
+  const double av1[] = { 1., 1., 1. };
+  cml::external3cd v1(av1);
+  double l2 = v1.length_squared();
+  BOOST_CHECK_EQUAL(l2, 3.);
+}
+
+BOOST_AUTO_TEST_CASE(length1)
+{
+  const double av1[] = { 1., 1., 1. };
+  cml::external3cd v1(av1);
+  double l = v1.length();
+  BOOST_CHECK_CLOSE(l, std::sqrt(3.), 1e-4);
+}
+
+BOOST_AUTO_TEST_CASE(normalize1)
+{
+  const double av1[] = { 1., 1., 1. };
+  cml::external3cd v1(av1);
+  double l2 = v1.normalize().length_squared();
+  BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
+}
+
+BOOST_AUTO_TEST_CASE(normalize2)
+{
+  const double av1[] = { 1., 1., 1. };
+  cml::external3cd v1(av1);
+  double l2 = cml::normalize(v1).length_squared();
+  BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
 BOOST_AUTO_TEST_SUITE(dynamic)
 
 BOOST_AUTO_TEST_CASE(length_squared1)
@@ -407,6 +444,43 @@ BOOST_AUTO_TEST_CASE(random1)
     BOOST_CHECK_GE(e, 0.);
     BOOST_CHECK_LT(e, 1.);
   }
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_AUTO_TEST_SUITE(dynamic_const_external)
+
+BOOST_AUTO_TEST_CASE(length_squared1)
+{
+  const double av1[] = { 1., 1., 1. };
+  cml::externalncd v1(av1, 3);
+  double l2 = v1.length_squared();
+  BOOST_CHECK_EQUAL(l2, 3.);
+}
+
+BOOST_AUTO_TEST_CASE(length1)
+{
+  const double av1[] = { 1., 1., 1. };
+  cml::externalncd v1(av1, 3);
+  double l = v1.length();
+  BOOST_CHECK_CLOSE(l, std::sqrt(3.), 1e-4);
+}
+
+BOOST_AUTO_TEST_CASE(normalize1)
+{
+  const double av1[] = { 1., 1., 1. };
+  cml::externalncd v1(av1, 3);
+  double l2 = v1.normalize().length_squared();
+  BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
+}
+
+BOOST_AUTO_TEST_CASE(normalize2)
+{
+  const double av1[] = { 1., 1., 1. };
+  cml::externalncd v1(av1, 3);
+  double l2 = cml::normalize(v1).length_squared();
+  BOOST_CHECK_CLOSE(l2, 1.0, 1e-12);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

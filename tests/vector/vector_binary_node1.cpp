@@ -370,6 +370,75 @@ BOOST_AUTO_TEST_CASE(mixed_op1)
 BOOST_AUTO_TEST_SUITE_END()
 
 
+BOOST_AUTO_TEST_SUITE(dynamic_const_external)
+
+BOOST_AUTO_TEST_CASE(binary_minus1)
+{
+  const double av1[] = { 1., 2., 3. };
+  const double av2[] = { 4., 5., 6. };
+  double aw[3];
+  cml::externalncd v1(av1,3);
+  cml::externalncd v2(av2,3);
+  cml::externalnd w(aw,3);
+  w = v1 - v2;
+  BOOST_REQUIRE_EQUAL(w.size(), 3);
+  BOOST_CHECK_EQUAL(w[0], -3.);
+  BOOST_CHECK_EQUAL(w[1], -3.);
+  BOOST_CHECK_EQUAL(w[2], -3.);
+}
+
+BOOST_AUTO_TEST_CASE(binary_plus1)
+{
+  const double av1[] = { 1., 2., 3. };
+  const double av2[] = { 4., 5., 6. };
+  double aw[3];
+  cml::externalncd v1(av1,3);
+  cml::externalncd v2(av2,3);
+  cml::externalnd w(aw,3);
+  w = v1 + v2;
+  BOOST_REQUIRE_EQUAL(w.size(), 3);
+  BOOST_CHECK_EQUAL(w[0], 5.);
+  BOOST_CHECK_EQUAL(w[1], 7.);
+  BOOST_CHECK_EQUAL(w[2], 9.);
+}
+
+BOOST_AUTO_TEST_CASE(multiple_plus1)
+{
+  const double av1[] = { 1., 2., 3. };
+  const double av2[] = { 4., 5., 6. };
+  double av3[] = { 7., 8., 9. };
+  double aw[3];
+  cml::externalncd v1(av1,3);
+  cml::externalncd v2(av2,3);
+  cml::externalnd v3(av3,3);
+  cml::externalnd w(aw,3);
+  w = v1 + (v2 + v3);
+  BOOST_REQUIRE_EQUAL(w.size(), 3);
+  BOOST_CHECK_EQUAL(w[0], 12.);
+  BOOST_CHECK_EQUAL(w[1], 15.);
+  BOOST_CHECK_EQUAL(w[2], 18.);
+}
+
+BOOST_AUTO_TEST_CASE(mixed_op1)
+{
+  const double av1[] = { 1., 2., 3. };
+  double av2[] = { 4., 5., 6. };
+  const double av3[] = { 7., 8., 9. };
+  double aw[3];
+  cml::externalncd v1(av1,3);
+  cml::externalnd v2(av2,3);
+  cml::externalncd v3(av3,3);
+  cml::externalnd w(aw,3);
+  w = v2 - (v1 + v3);
+  BOOST_REQUIRE_EQUAL(w.size(), 3);
+  BOOST_CHECK_EQUAL(w[0], -4.);
+  BOOST_CHECK_EQUAL(w[1], -5.);
+  BOOST_CHECK_EQUAL(w[2], -6.);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
 BOOST_AUTO_TEST_SUITE(dynamic)
 
 BOOST_AUTO_TEST_CASE(binary_minus1)

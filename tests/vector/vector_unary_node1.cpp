@@ -247,5 +247,51 @@ BOOST_AUTO_TEST_CASE(double_negate1)
 
 BOOST_AUTO_TEST_SUITE_END()
 
+
+BOOST_AUTO_TEST_SUITE(dynamic_const_external)
+
+BOOST_AUTO_TEST_CASE(unary_minus1)
+{
+  const double av[3] = { 1., 2., 3. };
+  cml::externalncd v(av,3);
+
+  double aw[3];
+  cml::externalnd w(aw,3);
+
+  w = - v;
+  BOOST_REQUIRE_EQUAL(w.size(), 3);
+  BOOST_CHECK_EQUAL(w[0], - 1.);
+}
+
+BOOST_AUTO_TEST_CASE(unary_plus1)
+{
+  const double av[3] = { 1., 2., 3. };
+  cml::externalncd v(av,3);
+
+  double aw[3];
+  cml::externalnd w(aw,3);
+
+  w = + v;
+  BOOST_REQUIRE_EQUAL(w.size(), 3);
+  BOOST_CHECK_EQUAL(w[0], 1.);
+}
+
+BOOST_AUTO_TEST_CASE(double_negate1)
+{
+  const double av[3] = { 1., 2., 3. };
+  cml::externalncd v(av,3);
+  BOOST_REQUIRE_EQUAL(v.size(), 3);
+
+  double aw[3];
+  cml::externalnd w(aw,3);
+  BOOST_REQUIRE_EQUAL(w.size(), 3);
+
+  auto xpr = - (-v);
+  w = xpr;
+  BOOST_CHECK_EQUAL(w[0], 1.);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

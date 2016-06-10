@@ -5,6 +5,7 @@
  */
 
 #include <cml/vector/fixed_external.h>
+#include <cml/vector/comparison.h>
 #include <cml/vector/types.h>
 
 /* Testing headers: */
@@ -59,6 +60,13 @@ BOOST_AUTO_TEST_CASE(size_check1)
   BOOST_REQUIRE_EQUAL(v.size(), 3);
   BOOST_CHECK_THROW(
     (v = { 1., 2., 3., 4. }), cml::incompatible_vector_size_error);
+}
+
+BOOST_AUTO_TEST_CASE(const1)
+{
+  const double av[] = { 1., 2., 3. };
+  cml::external3cd v(av);
+  BOOST_REQUIRE_EQUAL(v.size(), 3);
 }
 
 // -------------------------------------------------------------------------
