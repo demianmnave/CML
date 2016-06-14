@@ -18,10 +18,8 @@
 namespace cml {
 
 /** Deduce a temporary for a vector expression. */
-template<class Vector> struct temporary_of<Vector,
-  typename std::enable_if<
-    vector_traits<Vector>::array_size == vector_traits<Vector>::array_size
-    >::type>
+template<class Vector>
+struct temporary_of< Vector, cml::enable_if_vector_t<Vector> >
 {
   typedef cml::unqualified_type_t<Vector>		vector_type;
 

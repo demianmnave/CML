@@ -18,10 +18,8 @@
 namespace cml {
 
 /** Deduce a temporary for a quaternion expression. */
-template<class Quaternion> struct temporary_of<Quaternion,
-  typename std::enable_if<
-    quaternion_traits<Quaternion>::array_size
-    	== quaternion_traits<Quaternion>::array_size>::type>
+template<class Quaternion>
+struct temporary_of< Quaternion, cml::enable_if_quaternion_t<Quaternion> >
 {
   typedef cml::unqualified_type_t<Quaternion>		quaternion_type;
 
