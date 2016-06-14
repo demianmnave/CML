@@ -403,7 +403,7 @@ template < typename E, class A, class B, class L,
     class VecT_1, class VecT_2, class VecT_3 > void
 matrix_aim_at(matrix<E,A,B,L>& m, const VecT_1& pos, const VecT_2& target,
     const VecT_3& reference,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     matrix_rotation_aim_at(m, pos, target, reference, order);
     matrix_set_translation(m, pos);
@@ -413,7 +413,7 @@ matrix_aim_at(matrix<E,A,B,L>& m, const VecT_1& pos, const VecT_2& target,
 template < typename E, class A, class B, class L,
     class VecT_1, class VecT_2 > void
 matrix_aim_at(matrix<E,A,B,L>& m, const VecT_1& pos, const VecT_2& target,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     matrix_rotation_aim_at(m, pos, target, order);
     matrix_set_translation(m, pos);
@@ -427,7 +427,7 @@ matrix_aim_at_axial(
     const VecT_1& pos,
     const VecT_2& target,
     const VecT_3& axis,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     matrix_rotation_aim_at_axial(m, pos, target, axis, order);
     matrix_set_translation(m, pos);
@@ -440,7 +440,7 @@ matrix_aim_at_viewplane(
     const VecT& pos,
     const MatT& view_matrix,
     Handedness handedness,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     matrix_rotation_align_viewplane(m, view_matrix, handedness, order);
     matrix_set_translation(m, pos);
@@ -456,7 +456,7 @@ matrix_aim_at_2D(
     matrix<E,A,B,L>& m,
     const VecT_1& pos,
     const VecT_2& target,
-    AxisOrder2D order = axis_order_xy)
+    axis_order2D order = axis_order_xy)
 {
     matrix_rotation_align_2D(m, target - pos, true, order);
     matrix_set_translation_2D(m, pos);

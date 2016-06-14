@@ -91,7 +91,7 @@ quaternion_rotation_euler(writable_quaternion<Sub>& q,
 template<class Sub, class ASub, class RSub> void
 quaternion_rotation_align(writable_quaternion<Sub>& q,
   const readable_vector<ASub>& align, const readable_vector<RSub>& reference,
-  bool normalize = true, AxisOrder order = axis_order_zyx);
+  bool normalize = true, axis_order order = axis_order_zyx);
 
 /** Compute a quaternion to align the vector from @c pos to @c target
  * with @c reference.
@@ -101,7 +101,75 @@ quaternion_rotation_align(writable_quaternion<Sub>& q,
 template<class Sub, class PSub, class TSub, class RSub> void
 quaternion_rotation_aim_at(writable_quaternion<Sub>& q,
   const readable_vector<PSub>& pos, const readable_vector<TSub>& target,
-  const readable_vector<RSub>& reference, AxisOrder order = axis_order_zyx);
+  const readable_vector<RSub>& reference, axis_order order = axis_order_zyx);
+
+/*@}*/
+
+/** @defgroup mathlib_quaternion_rotation_conversion Quaternion Conversion  */
+/*@{*/
+
+/** Convert a quaternion @c q to an axis-angle pair.
+ *
+ * @note @c tolerance is used to detect a near-zero axis length.
+ */
+template<class Sub, class ASub, class E,
+  class Tol = value_type_trait_of_t<Sub>> void
+quaternion_to_axis_angle(
+  const readable_quaternion<Sub>& q, writable_vector<ASub>& axis,
+  E& angle, Tol tolerance = cml::sqrt_epsilon<Tol>());
+
+/** Convert a quaternion @c q to an axis-angle pair returned as a
+ * std::tuple.
+ *
+ * @note @c tolerance is used to detect a near-zero axis length.
+ */
+template<class Sub, class Tol = value_type_trait_of_t<Sub>>
+std::tuple<
+ vector<value_type_trait_of_t<Sub>, compiled<3>>, value_type_trait_of_t<Sub>
+ >
+quaternion_to_axis_angle(
+  const readable_quaternion<Sub>& q,
+  Tol tolerance = cml::sqrt_epsilon<Tol>());
+
+/** Convert a quaternion @c q to an Euler-angle triple.
+ *
+ * @note @c tolerance is used to detect degeneracies.
+ */
+template<class Sub, class E0, class E1, class E2,
+  class Tol = value_type_trait_of_t<Sub>> void
+quaternion_to_euler(
+  const readable_quaternion<Sub>& q, E0& angle_0, E1& angle_1, E2& angle_2,
+  euler_order order, Tol tolerance = cml::sqrt_epsilon<Tol>(),
+  enable_if_quaternion_t<Sub>* = nullptr);
+
+/** Convert a quaternion @c q to an Euler-angle triple, and return
+ * the result as a fixed-size 3D vector.
+ *
+ * @note @c tolerance is used to detect degeneracies.
+ */
+template<class Sub, class Tol = value_type_trait_of_t<Sub>>
+vector<value_type_trait_of_t<Sub>, compiled<3>>
+quaternion_to_euler(
+  const readable_quaternion<Sub>& q, euler_order order,
+  Tol tolerance = cml::sqrt_epsilon<Tol>(),
+  enable_if_quaternion_t<Sub>* = nullptr);
+
+/** Convert a quaternion @c q to an Euler-angle triple, and return
+ * the result as a user-specified vector type.
+ *
+ * @note @c tolerance is used to detect degeneracies.
+ *
+ * @note @c VectorT can be any vector type with 3 elements, having internal
+ * storage (e.g.  compiled<3> or allocated<>).  The default is vector<T,
+ * compiled<3>>, where T is the value_type of the matrix.
+ */
+template<class VectorT, class Sub,
+  class Tol = value_type_trait_of_t<Sub>> VectorT
+quaternion_to_euler(
+  const readable_quaternion<Sub>& q, euler_order order,
+  Tol tolerance = cml::sqrt_epsilon<Tol>(),
+  enable_if_vector_t<VectorT>* = nullptr,
+  enable_if_quaternion_t<Sub>* = nullptr);
 
 /*@}*/
 

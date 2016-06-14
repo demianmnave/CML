@@ -182,7 +182,7 @@ void orthonormal_basis(
     vector<E,A>& y,
     vector<E,A>& z,
     bool normalize_align = true,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     /* Checking (won't be necessary with index_of_min_abs() member function */
     detail::CheckVec3(align);
@@ -217,7 +217,7 @@ void orthonormal_basis_axial(
     vector<E,A>& y,
     vector<E,A>& z,
     bool normalize_align = true,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     orthonormal_basis(
         axis,
@@ -242,7 +242,7 @@ void orthonormal_basis_viewplane(
     vector<E,A>& y,
     vector<E,A>& z,
     Handedness handedness,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     typedef MatT matrix_type;
     typedef typename matrix_type::value_type value_type;
@@ -262,7 +262,7 @@ void orthonormal_basis_viewplane_LH(
     vector<E,A>& x,
     vector<E,A>& y,
     vector<E,A>& z,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     orthonormal_basis_viewplane(
         view_matrix,x,y,z,left_handed,order);
@@ -275,7 +275,7 @@ void orthonormal_basis_viewplane_RH(
     vector<E,A>& x,
     vector<E,A>& y,
     vector<E,A>& z,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     orthonormal_basis_viewplane(
         view_matrix,x,y,z,right_handed,order);
@@ -288,7 +288,7 @@ void orthonormal_basis_2D(
     vector<E,A>& x,
     vector<E,A>& y,
     bool normalize_align = true,
-    AxisOrder2D order = axis_order_xy)
+    axis_order2D order = axis_order_xy)
 {
     typedef vector< E,fixed<2> > vector_type;
 

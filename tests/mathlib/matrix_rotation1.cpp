@@ -159,6 +159,21 @@ BOOST_AUTO_TEST_CASE(to_axis_angle1)
   BOOST_CHECK_CLOSE(axis[2], 0.80178372573727308, .01);
 }
 
+BOOST_AUTO_TEST_CASE(to_axis_angle_tuple1)
+{
+  cml::matrix33d M;
+  cml::matrix_rotation_axis_angle(
+    M, cml::vector3d(1., 2., 3.).normalize(), cml::rad(23.));
+
+  cml::vector3d axis;
+  double angle;
+  std::tie(axis,angle) = cml::matrix_to_axis_angle(M);
+
+  BOOST_CHECK_CLOSE(axis[0], 0.2672612419124244, .01);
+  BOOST_CHECK_CLOSE(axis[1], 0.53452248382484879, .01);
+  BOOST_CHECK_CLOSE(axis[2], 0.80178372573727308, .01);
+}
+
 BOOST_AUTO_TEST_CASE(to_euler1)
 {
   cml::matrix33d M;

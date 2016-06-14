@@ -84,13 +84,96 @@ BOOST_AUTO_TEST_CASE(aim_at_ref1)
 
 BOOST_AUTO_TEST_CASE(euler1)
 {
-  cml::quaterniond q; cml::quaternion_rotation_euler(
+  cml::quaterniond q;
+  cml::quaternion_rotation_euler(
     q, cml::rad(90.), 0., 0., cml::euler_order_xyz);
   cml::matrix33d M; cml::matrix_rotation_quaternion(M, q);
   auto v = M*cml::vector3d(0., 1., 0.);	// 0,0,1
   BOOST_CHECK_SMALL(v[0], 1e-7);
   BOOST_CHECK_SMALL(v[1], 1e-7);
   BOOST_CHECK_CLOSE(v[2], 1., .0001);
+}
+
+BOOST_AUTO_TEST_CASE(to_axis_angle1)
+{
+  cml::quaterniond q;
+  cml::quaternion_rotation_axis_angle(
+    q, cml::vector3d(1., 2., 3.).normalize(), cml::rad(23.));
+
+  cml::vector3d axis;
+  double angle;
+  cml::quaternion_to_axis_angle(q, axis, angle);
+
+  BOOST_CHECK_CLOSE(axis[0], 0.2672612419124244, .01);
+  BOOST_CHECK_CLOSE(axis[1], 0.53452248382484879, .01);
+  BOOST_CHECK_CLOSE(axis[2], 0.80178372573727308, .01);
+}
+
+BOOST_AUTO_TEST_CASE(to_axis_angle_tuple1)
+{
+  cml::quaterniond q;
+  cml::quaternion_rotation_axis_angle(
+    q, cml::vector3d(1., 2., 3.).normalize(), cml::rad(23.));
+
+  cml::vector3d axis;
+  double angle;
+  std::tie(axis,angle) = cml::quaternion_to_axis_angle(q);
+
+  BOOST_CHECK_CLOSE(axis[0], 0.2672612419124244, .01);
+  BOOST_CHECK_CLOSE(axis[1], 0.53452248382484879, .01);
+  BOOST_CHECK_CLOSE(axis[2], 0.80178372573727308, .01);
+}
+
+BOOST_AUTO_TEST_CASE(to_euler1)
+{
+  cml::quaterniond q;
+  cml::quaternion_rotation_euler(
+    q, cml::rad(22.), cml::rad(10.), cml::rad(89.9), cml::euler_order_xyz);
+
+  cml::vector3d v;
+  cml::quaternion_to_euler(q, v[0], v[1], v[2], cml::euler_order_xyz);
+
+  BOOST_CHECK_CLOSE(v[0], cml::rad(22.), .01);
+  BOOST_CHECK_CLOSE(v[1], cml::rad(10.), .01);
+  BOOST_CHECK_CLOSE(v[2], cml::rad(89.9), .01);
+}
+
+BOOST_AUTO_TEST_CASE(to_euler2)
+{
+  cml::quaterniond q;
+  cml::quaternion_rotation_euler(
+    q, cml::rad(22.), cml::rad(10.), cml::rad(89.9), cml::euler_order_xyx);
+
+  cml::vector3d v;
+  cml::quaternion_to_euler(q, v[0], v[1], v[2], cml::euler_order_xyx);
+
+  BOOST_CHECK_CLOSE(v[0], cml::rad(22.), .01);
+  BOOST_CHECK_CLOSE(v[1], cml::rad(10.), .01);
+  BOOST_CHECK_CLOSE(v[2], cml::rad(89.9), .01);
+}
+
+BOOST_AUTO_TEST_CASE(to_euler_vector1)
+{
+  cml::quaterniond q;
+  cml::quaternion_rotation_euler(
+    q, cml::rad(22.), cml::rad(10.), cml::rad(89.9), cml::euler_order_xyz);
+
+  auto v = cml::quaternion_to_euler(q, cml::euler_order_xyz);
+  BOOST_CHECK_CLOSE(v[0], cml::rad(22.), .01);
+  BOOST_CHECK_CLOSE(v[1], cml::rad(10.), .01);
+  BOOST_CHECK_CLOSE(v[2], cml::rad(89.9), .01);
+}
+
+BOOST_AUTO_TEST_CASE(to_euler_vector2)
+{
+  cml::quaterniond q;
+  cml::quaternion_rotation_euler(
+    q, cml::rad(22.), cml::rad(10.), cml::rad(89.9), cml::euler_order_xyz);
+
+  auto v = cml::quaternion_to_euler<cml::vectord>(q, cml::euler_order_xyz);
+  BOOST_CHECK_CLOSE(v[0], cml::rad(22.), .01);
+  BOOST_CHECK_CLOSE(v[1], cml::rad(10.), .01);
+  BOOST_CHECK_CLOSE(v[2], cml::rad(89.9), .01);
 }
 
 // -------------------------------------------------------------------------

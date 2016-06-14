@@ -126,6 +126,10 @@ quaternion_rotation_euler(writable_quaternion<Sub>& q,
   E0 angle_0, E1 angle_1, E2 angle_2, euler_order order
   )
 {
+  static_assert(cml::are_convertible<
+    value_type_trait_of_t<Sub>, E0, E1, E2>::value,
+    "incompatible scalar types");
+
   typedef order_type_trait_of_t<Sub>			order_type;
   typedef value_type_trait_of_t<Sub>			value_type;
   typedef traits_of_t<value_type>			value_traits;
@@ -179,7 +183,7 @@ template<class Sub, class ASub, class RSub> inline void
 quaternion_rotation_align(
   writable_quaternion<Sub>& q,
   const readable_vector<ASub>& align, const readable_vector<RSub>& reference,
-  bool normalize, AxisOrder order
+  bool normalize, axis_order order
   )
 {
   typedef value_type_trait_of_t<Sub>			value_type;
@@ -195,7 +199,7 @@ quaternion_rotation_aim_at(
   writable_quaternion<Sub>& q,
   const readable_vector<PSub>& pos, const readable_vector<TSub>& target,
   const readable_vector<RSub>& reference,
-  AxisOrder order
+  axis_order order
   )
 {
   typedef value_type_trait_of_t<Sub>			value_type;
@@ -204,6 +208,120 @@ quaternion_rotation_aim_at(
   temporary_type m;
   matrix_rotation_aim_at(m, pos, target, reference, order);
   quaternion_rotation_matrix(q, m);
+}
+
+
+/* Conversion: */
+
+template<class Sub, class ASub, class E, class Tol> void
+quaternion_to_axis_angle(
+  const readable_quaternion<Sub>& q,
+  writable_vector<ASub>& axis, E& angle,
+  Tol tolerance
+  )
+{
+  static_assert(cml::are_convertible<
+    value_type_trait_of_t<Sub>, value_type_trait_of_t<ASub>, E, Tol>::value,
+    "incompatible scalar types");
+
+  typedef value_type_trait_of_t<Sub>			value_type;
+  typedef scalar_traits<value_type>			value_traits;
+
+  cml::detail::check_or_resize(axis, int_c<3>());
+
+  axis = q.imaginary();
+  value_type l = axis.length();
+  if (l > tolerance) {
+    axis /= l;
+    angle = value_type(2) * value_traits::atan2(l, q.real());
+  } else {
+    axis.zero();
+    angle = value_type(0);
+  }
+}
+
+namespace detail {
+
+/** Helper for the quaternion_to_axis_angle() overloads. */
+template<class VectorT, class Sub, class Tol> 
+inline std::tuple<VectorT, value_type_trait_of_t<Sub>>
+quaternion_to_axis_angle(const readable_quaternion<Sub>& q, Tol tolerance)
+{
+  static_assert(cml::are_convertible<
+    value_type_trait_of_t<Sub>, value_type_trait_of_t<VectorT>, Tol>::value,
+    "incompatible scalar types");
+
+  VectorT axis; cml::detail::check_or_resize(axis, int_c<3>());
+  value_type_trait_of_t<Sub> angle;
+  cml::quaternion_to_axis_angle(q, axis, angle, tolerance);
+  return std::make_tuple(axis, angle);
+}
+
+} // namespace detail
+
+template<class Sub, class Tol>
+inline std::tuple<
+ vector<value_type_trait_of_t<Sub>, compiled<3>>, value_type_trait_of_t<Sub>
+ >
+quaternion_to_axis_angle(
+  const readable_quaternion<Sub>& q, Tol tolerance
+  )
+{
+  typedef vector<value_type_trait_of_t<Sub>, compiled<3>> vector_type;
+  return detail::quaternion_to_axis_angle<vector_type, Sub, Tol>(q, tolerance);
+}
+
+template<class Sub, class E0, class E1, class E2, class Tol>
+inline void
+quaternion_to_euler(
+  const readable_quaternion<Sub>& q,
+  E0& angle_0, E1& angle_1, E2& angle_2, euler_order order,
+  Tol tolerance,
+  enable_if_quaternion_t<Sub>*
+  )
+{
+  static_assert(cml::are_convertible<
+    value_type_trait_of_t<Sub>, E0, E1, E2, Tol>::value,
+    "incompatible scalar types");
+
+  typedef value_type_trait_of_t<Sub>			value_type;
+  typedef matrix<value_type, compiled<3,3>>		temporary_type;
+
+  temporary_type m;
+  matrix_rotation_quaternion(m, q);
+  matrix_to_euler(m, angle_0, angle_1, angle_2, order, tolerance);
+}
+
+template<class Sub, class Tol>
+inline vector<value_type_trait_of_t<Sub>, compiled<3>>
+quaternion_to_euler(
+  const readable_quaternion<Sub>& q,
+  euler_order order,
+  Tol tolerance, enable_if_quaternion_t<Sub>*
+  )
+{
+  typedef value_type_trait_of_t<Sub>			value_type;
+  typedef matrix<value_type, compiled<3,3>>		temporary_type;
+
+  temporary_type m;
+  matrix_rotation_quaternion(m, q);
+  return matrix_to_euler(m, order, tolerance);
+}
+
+template<class VectorT, class Sub, class Tol>
+inline VectorT
+quaternion_to_euler(
+  const readable_quaternion<Sub>& q, euler_order order,
+  Tol tolerance,
+  enable_if_vector_t<VectorT>*, enable_if_quaternion_t<Sub>*
+  )
+{
+  typedef value_type_trait_of_t<Sub>			value_type;
+  typedef matrix<value_type, compiled<3,3>>		temporary_type;
+
+  temporary_type m;
+  matrix_rotation_quaternion(m, q);
+  return matrix_to_euler<VectorT>(m, order, tolerance);
 }
 
 } // namespace cml
@@ -218,7 +336,7 @@ quaternion_rotation_aim_at(
 /** See vector_ortho.h for details */
 template < typename E, class A, class O, class C, class VecT > void
 quaternion_rotation_align(quaternion<E,A,O,C>& q, const VecT& align,
-    bool normalize = true, AxisOrder order = axis_order_zyx)
+    bool normalize = true, axis_order order = axis_order_zyx)
 {
     typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
     
@@ -231,7 +349,7 @@ quaternion_rotation_align(quaternion<E,A,O,C>& q, const VecT& align,
 template < typename E,class A,class O,class C,class VecT_1,class VecT_2 > void
 quaternion_rotation_align_axial(quaternion<E,A,O,C>& q, const VecT_1& align,
     const VecT_2& axis, bool normalize = true,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
     
@@ -246,7 +364,7 @@ quaternion_rotation_align_viewplane(
     quaternion<E,A,O,C>& q,
     const MatT& view_matrix,
     Handedness handedness,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
     
@@ -260,7 +378,7 @@ template < typename E, class A, class O, class C, class MatT > void
 quaternion_rotation_align_viewplane_LH(
     quaternion<E,A,O,C>& q,
     const MatT& view_matrix,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
     
@@ -274,7 +392,7 @@ template < typename E, class A, class O, class C, class MatT > void
 quaternion_rotation_align_viewplane_RH(
     quaternion<E,A,O,C>& q,
     const MatT& view_matrix,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
     
@@ -294,7 +412,7 @@ quaternion_rotation_aim_at(
     quaternion<E,A,O,C>& q,
     const VecT_1& pos,
     const VecT_2& target,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
     
@@ -311,7 +429,7 @@ quaternion_rotation_aim_at_axial(
     const VecT_1& pos,
     const VecT_2& target,
     const VecT_3& axis,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     typedef matrix< E,fixed<3,3>,row_basis,row_major > matrix_type;
     
@@ -553,35 +671,6 @@ quaternion_to_axis_angle(
     }
 }
 
-/** Convert a quaternion to an Euler-angle triple
- *
- * Note: I've implemented direct quaternion-to-Euler conversion, but as far as
- * I can tell it more or less reduces to converting the quaternion to a matrix
- * as you go. The direct method is a little more efficient in that it doesn't
- * require a temporary and only the necessary matrix elements need be
- * computed. However, the implementation is complex and there's considerable
- * opportunity for error, so from a development and debugging standpoint I
- * think it's better to just perform the conversion via matrix_to_euler(),
- * which is already known to be correct.
-*/
-
-template < class QuatT, typename Real > void
-quaternion_to_euler(
-    const QuatT& q,
-    Real& angle_0,
-    Real& angle_1,
-    Real& angle_2,
-    EulerOrder order,
-    Real tolerance = epsilon<Real>::placeholder())
-{
-    typedef QuatT quaternion_type;
-    typedef typename quaternion_type::value_type value_type;
-    typedef matrix< value_type,fixed<3,3>,row_basis,row_major > matrix_type;
-
-    matrix_type m;
-    matrix_rotation_quaternion(m, q);
-    matrix_to_euler(m, angle_0, angle_1, angle_2, order, tolerance);
-}
 #endif
 
 // -------------------------------------------------------------------------

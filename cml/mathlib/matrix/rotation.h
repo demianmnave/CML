@@ -9,6 +9,7 @@
 #ifndef	cml_mathlib_matrix_rotation_h
 #define	cml_mathlib_matrix_rotation_h
 
+#include <tuple>
 #include <cml/scalar/traits.h>
 #include <cml/storage/compiled_selector.h>
 #include <cml/vector/vector.h>
@@ -201,7 +202,7 @@ matrix_rotation_quaternion(
 template<class Sub, class ASub, class RSub> void
 matrix_rotation_align(writable_matrix<Sub>& m,
   const readable_vector<ASub>& align, const readable_vector<RSub>& reference,
-  bool normalize = true, AxisOrder order = axis_order_zyx);
+  bool normalize = true, axis_order order = axis_order_zyx);
 
 /** Compute a rotation matrix to align the vector from @c pos to @c target
  * with @c reference.
@@ -209,7 +210,7 @@ matrix_rotation_align(writable_matrix<Sub>& m,
 template<class Sub, class PSub, class TSub, class RSub> void
 matrix_rotation_aim_at(writable_matrix<Sub>& m,
   const readable_vector<PSub>& pos, const readable_vector<TSub>& target,
-  const readable_vector<RSub>& reference, AxisOrder order = axis_order_zyx);
+  const readable_vector<RSub>& reference, axis_order order = axis_order_zyx);
 
 /*@}*/
 
@@ -226,13 +227,26 @@ matrix_to_axis_angle(
   const readable_matrix<Sub>& m, writable_vector<ASub>& axis,
   E& angle, Tol tolerance = cml::sqrt_epsilon<Tol>());
 
+/** Convert a 3D rotation matrix @c m to an axis-angle pair returned as a
+ * std::tuple.
+ *
+ * @note @c tolerance is used to detect a near-zero axis length.
+ */
+template<class Sub, class Tol = value_type_trait_of_t<Sub>>
+std::tuple<
+ vector<value_type_trait_of_t<Sub>, compiled<3>>, value_type_trait_of_t<Sub>
+ >
+matrix_to_axis_angle(
+  const readable_matrix<Sub>& m,
+  Tol tolerance = cml::sqrt_epsilon<Tol>());
+
 /** Convert a 3D rotation matrix @c m to an Euler-angle triple.
  *
  * @note @c tolerance is used to detect degeneracies.
  */
 template<class Sub, class E0, class E1, class E2,
-  class Tol = value_type_trait_of_t<Sub>>
-void matrix_to_euler(
+  class Tol = value_type_trait_of_t<Sub>> void
+matrix_to_euler(
   const readable_matrix<Sub>& m, E0& angle_0, E1& angle_1, E2& angle_2,
   euler_order order, Tol tolerance = cml::sqrt_epsilon<Tol>(),
   enable_if_matrix_t<Sub>* = nullptr);
@@ -257,8 +271,9 @@ matrix_to_euler(const readable_matrix<Sub>& m,
  * storage (e.g.  compiled<3> or allocated<>).  The default is vector<T,
  * compiled<3>>, where T is the value_type of the matrix.
  */
-template<class VectorT, class Sub, class Tol = value_type_trait_of_t<Sub>>
-VectorT matrix_to_euler(const readable_matrix<Sub>& m,
+template<class VectorT, class Sub,
+  class Tol = value_type_trait_of_t<Sub>> VectorT
+matrix_to_euler(const readable_matrix<Sub>& m,
   euler_order order, Tol tolerance = cml::sqrt_epsilon<Tol>(),
   enable_if_vector_t<VectorT>* = nullptr, enable_if_matrix_t<Sub>* = nullptr);
 

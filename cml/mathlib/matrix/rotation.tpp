@@ -352,7 +352,7 @@ template<class Sub, class ASub, class RSub> inline void
 matrix_rotation_align(
   writable_matrix<Sub>& m,
   const readable_vector<ASub>& align, const readable_vector<RSub>& reference,
-  bool normalize, AxisOrder order
+  bool normalize, axis_order order
   )
 {
   static_assert(cml::are_convertible<value_type_trait_of_t<Sub>,
@@ -373,7 +373,7 @@ matrix_rotation_aim_at(
   writable_matrix<Sub>& m,
   const readable_vector<PSub>& pos, const readable_vector<TSub>& target,
   const readable_vector<RSub>& reference,
-  AxisOrder order
+  axis_order order
   )
 {
   matrix_rotation_align(m, target - pos, reference, true, order);
@@ -442,6 +442,36 @@ matrix_to_axis_angle(
   }
 
   /* Done. */
+}
+
+
+namespace detail {
+
+/** Helper for the matrix_to_axis_angle() overloads. */
+template<class VectorT, class Sub, class Tol> 
+inline std::tuple<VectorT, value_type_trait_of_t<Sub>>
+matrix_to_axis_angle(const readable_matrix<Sub>& m, Tol tolerance)
+{
+  static_assert(cml::are_convertible<
+    value_type_trait_of_t<Sub>, value_type_trait_of_t<VectorT>, Tol>::value,
+    "incompatible scalar types");
+
+  VectorT axis; cml::detail::check_or_resize(axis, int_c<3>());
+  value_type_trait_of_t<Sub> angle;
+  cml::matrix_to_axis_angle(m, axis, angle, tolerance);
+  return std::make_tuple(axis, angle);
+}
+
+} // namespace detail
+
+template<class Sub, class Tol>
+inline std::tuple<
+ vector<value_type_trait_of_t<Sub>, compiled<3>>, value_type_trait_of_t<Sub>
+ >
+matrix_to_axis_angle(const readable_matrix<Sub>& m, Tol tolerance)
+{
+  typedef vector<value_type_trait_of_t<Sub>, compiled<3>> vector_type;
+  return detail::matrix_to_axis_angle<vector_type, Sub, Tol>(m, tolerance);
 }
 
 template<class Sub, class E0, class E1, class E2, class Tol>
@@ -563,7 +593,7 @@ matrix_to_euler(
 /** See vector_ortho.h for details */
 template < typename E, class A, class B, class L, class VecT > void
 matrix_rotation_align(matrix<E,A,B,L>& m, const VecT& align,
-    bool normalize = true, AxisOrder order = axis_order_zyx)
+    bool normalize = true, axis_order order = axis_order_zyx)
 {
     typedef vector< E,fixed<3> > vector_type;
 
@@ -579,7 +609,7 @@ matrix_rotation_align(matrix<E,A,B,L>& m, const VecT& align,
 template < typename E,class A,class B,class L,class VecT_1,class VecT_2 > void
 matrix_rotation_align_axial(matrix<E,A,B,L>& m, const VecT_1& align,
     const VecT_2& axis, bool normalize = true,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     typedef vector< E,fixed<3> > vector_type;
 
@@ -597,7 +627,7 @@ matrix_rotation_align_viewplane(
     matrix<E,A,B,L>& m,
     const MatT& view_matrix,
     Handedness handedness,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     typedef vector< E, fixed<3> > vector_type;
 
@@ -614,7 +644,7 @@ template < typename E, class A, class B, class L, class MatT > void
 matrix_rotation_align_viewplane_LH(
     matrix<E,A,B,L>& m,
     const MatT& view_matrix,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     matrix_rotation_align_viewplane(
         m,view_matrix,left_handed,order);
@@ -625,7 +655,7 @@ template < typename E, class A, class B, class L, class MatT > void
 matrix_rotation_align_viewplane_RH(
     matrix<E,A,B,L>& m,
     const MatT& view_matrix,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     matrix_rotation_align_viewplane(
         m,view_matrix,right_handed,order);
@@ -642,7 +672,7 @@ matrix_rotation_aim_at(
     matrix<E,A,B,L>& m,
     const VecT_1& pos,
     const VecT_2& target,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     matrix_rotation_align(m, target - pos, true, order);
 }
@@ -655,7 +685,7 @@ matrix_rotation_aim_at_axial(
     const VecT_1& pos,
     const VecT_2& target,
     const VecT_3& axis,
-    AxisOrder order = axis_order_zyx)
+    axis_order order = axis_order_zyx)
 {
     matrix_rotation_align_axial(m, target - pos, axis, true, order);
 }
@@ -667,7 +697,7 @@ matrix_rotation_aim_at_axial(
 /** See vector_ortho.h for details */
 template < typename E, class A, class B, class L, class VecT > void
 matrix_rotation_align_2D(matrix<E,A,B,L>& m, const VecT& align,
-    bool normalize = true, AxisOrder2D order = axis_order_xy)
+    bool normalize = true, axis_order2D order = axis_order_xy)
 {
     typedef vector< E, fixed<2> > vector_type;
 
