@@ -176,6 +176,16 @@ quaternion_rotation_euler(writable_quaternion<Sub>& q,
   if(odd) q[J] = -q[J];
 }
 
+template<class Sub, class ESub> void
+quaternion_rotation_euler(
+  writable_quaternion<Sub>& q,
+  const readable_vector<ESub>& euler, euler_order order
+  )
+{
+  cml::check_size(euler, cml::int_c<3>());
+  quaternion_rotation_euler(q, euler[0], euler[1], euler[2], order);
+}
+
 
 /* Alignment: */
 

@@ -73,9 +73,42 @@ template<class Sub, class MSub> void
 quaternion_rotation_matrix(
   writable_quaternion<Sub>& q, const readable_matrix<MSub>& m);
 
+/** Compute a quaternion given three Euler angles and the required
+ * order.
+ *
+ * The rotations are applied about the cardinal axes in the order specified
+ * by the 'order' argument, where 'order' is one of the following
+ * enumerants:
+ *
+ * euler_order_xyz
+ * euler_order_xzy
+ * euler_order_xyx
+ * euler_order_xzx
+ * euler_order_yzx
+ * euler_order_yxz
+ * euler_order_yzy
+ * euler_order_yxy
+ * euler_order_zxy
+ * euler_order_zyx
+ * euler_order_zxz
+ * euler_order_zyz
+ *
+ * e.g. euler_order_xyz means compute the quaternion equivalent to R_x *
+ * R_y * R_z, where R_i is the rotation matrix above axis i (the row-basis
+ * matrix would be R_z * R_y * R_x).
+ */
 template<class Sub, class E0, class E1, class E2> void
 quaternion_rotation_euler(writable_quaternion<Sub>& q,
   E0 angle_0, E1 angle_1, E2 angle_2, euler_order order);
+
+/** Compute a quaternion given a vector containing the Euler angles.
+ *
+ * @throws vector_size_error at run-time if @c euler is dynamically-sized,
+ * and is not 3D.  If fixed-size, the sizs is checked at compile-time.
+ */
+template<class Sub, class ESub> void
+quaternion_rotation_euler(writable_quaternion<Sub>& q,
+  const readable_vector<ESub>& euler, euler_order order);
 
 /*@}*/
 
