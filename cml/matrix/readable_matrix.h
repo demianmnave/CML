@@ -76,6 +76,12 @@ class readable_matrix
      */
     immutable_value basis_element(int i, int j) const;
 
+    /** Returns the number of basis vectors. */
+    int basis_count() const;
+
+    /** Returns the number of elements in a basis vector. */
+    int basis_size() const;
+
     /** Compute the determinant of the matrix.
      *
      * @throws non_square_matrix_error at run-time if the matrix is
@@ -100,6 +106,22 @@ class readable_matrix
 
     /** Return basis element @c (i,j) for a column-basis matrix. */
     immutable_value basis_element(int i, int j, col_basis) const;
+
+    /** Return the number of basis vectors for a row_basis matrix. */
+    int basis_count(row_basis) const;
+
+    /** Return the number of basis vectors for a col_basis matrix. */
+    int basis_count(col_basis) const;
+
+    /** Return the number of elements in a basis vector for a row_basis
+     * matrix.
+     */
+    int basis_size(row_basis) const;
+
+    /** Return the number of elements in a basis vectors for a col_basis
+     * matrix.
+     */
+    int basis_size(col_basis) const;
 
 
   protected:

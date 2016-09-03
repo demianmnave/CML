@@ -43,8 +43,8 @@ struct vector_traits< matrix_col_node<Sub,Row> >
   typedef typename storage_type::size_tag		size_tag;
 };
 
-/** Represents a matrix col, specified at run-time by its index, as a node
- * in an expression tree.
+/** Represents a read-only matrix column, specified at run-time by its
+ * index, as a node in an expression tree.
  */
 template<class Sub>
 class matrix_col_node<Sub,-1>

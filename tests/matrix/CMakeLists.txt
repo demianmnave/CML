@@ -19,6 +19,7 @@ ADD_CML_TEST(matrix_vector_product1)
 ADD_CML_TEST(matrix_transpose1)
 ADD_CML_TEST(matrix_inverse1)
 ADD_CML_TEST(rowcol1)
+ADD_CML_TEST(basis1)
 ADD_CML_TEST(lu1)
 ADD_CML_TEST(determinant1)
 

@@ -6,8 +6,8 @@
 
 #pragma once
 
-#ifndef	cml_matrix_row_node_h
-#define	cml_matrix_row_node_h
+#ifndef	cml_matrix_basis_node_h
+#define	cml_matrix_basis_node_h
 
 #include <cml/storage/type_util.h>
 #include <cml/vector/readable_vector.h>
@@ -15,13 +15,13 @@
 
 namespace cml {
 
-template<class Sub, int Row> class matrix_row_node;
+template<class Sub, int I> class matrix_basis_node;
 
-/** matrix_row_node<> traits. */
-template<class Sub, int Row>
-struct vector_traits< matrix_row_node<Sub,Row> >
+/** matrix_basis_node<> traits. */
+template<class Sub, int I>
+struct vector_traits< matrix_basis_node<Sub,I> >
 {
-  typedef matrix_row_node<Sub,Row>			vector_type;
+  typedef matrix_basis_node<Sub,I>			vector_type;
   typedef Sub						sub_arg_type;
   typedef cml::unqualified_type_t<Sub>			sub_type;
   typedef matrix_traits<sub_type>			sub_traits;
@@ -43,16 +43,16 @@ struct vector_traits< matrix_row_node<Sub,Row> >
   typedef typename storage_type::size_tag		size_tag;
 };
 
-/** Represents a read-only matrix row, specified at run-time by its index,
- * as a node in an expression tree.
+/** Represents a read-only matrix basis vector, specified at run-time by
+ * its index, as a node in an expression tree.
  */
 template<class Sub>
-class matrix_row_node<Sub,-1>
-: public readable_vector< matrix_row_node<Sub,-1> >
+class matrix_basis_node<Sub,-1>
+: public readable_vector< matrix_basis_node<Sub,-1> >
 {
   public:
 
-    typedef matrix_row_node<Sub,-1>			node_type;
+    typedef matrix_basis_node<Sub,-1>			node_type;
     typedef readable_vector<node_type>			readable_type;
     typedef vector_traits<node_type>			traits_type;
     typedef typename traits_type::sub_arg_type		sub_arg_type;
@@ -72,19 +72,19 @@ class matrix_row_node<Sub,-1>
 
   public:
 
-    /** Construct from the wrapped sub-expression and the row index.  @c
+    /** Construct from the wrapped sub-expression and the basis index.  @c
      * sub must be an lvalue reference or rvalue reference type.
      *
-     * @throws std::invalid_argument if @c row < 0.
+     * @throws std::invalid_argument if @c i < 0.
      */
-    explicit matrix_row_node(Sub sub, int row);
+    explicit matrix_basis_node(Sub sub, int i);
 
     /** Move constructor. */
-    matrix_row_node(node_type&& other);
+    matrix_basis_node(node_type&& other);
 
 #ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
     /** Copy constructor. */
-    matrix_row_node(const node_type& other);
+    matrix_basis_node(const node_type& other);
 #endif
 
 
@@ -98,7 +98,7 @@ class matrix_row_node<Sub,-1>
     /** Return the size of the vector expression. */
     int i_size() const;
 
-    /** Return element @c (row,j) of the matrix. */
+    /** Return element @c (<basis index>,j) of the matrix. */
     immutable_value i_get(int j) const;
 
     /*@}*/
@@ -119,15 +119,15 @@ class matrix_row_node<Sub,-1>
     /** The wrapped subexpression. */
     sub_wrap_type		m_sub;
 
-    /** The row index. */
-    int				m_row;
+    /** The basis index. */
+    int				m_i;
 
 
   private:
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
     // Not copy constructible.
-    matrix_row_node(const node_type&);
+    matrix_basis_node(const node_type&);
 #endif
 
     // Not assignable.
@@ -136,9 +136,9 @@ class matrix_row_node<Sub,-1>
 
 } // namespace cml
 
-#define __CML_MATRIX_ROW_NODE_TPP
-#include <cml/matrix/row_node.tpp>
-#undef __CML_MATRIX_ROW_NODE_TPP
+#define __CML_MATRIX_BASIS_NODE_TPP
+#include <cml/matrix/basis_node.tpp>
+#undef __CML_MATRIX_BASIS_NODE_TPP
 
 #endif
 

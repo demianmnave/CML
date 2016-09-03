@@ -57,6 +57,18 @@ readable_matrix<DT>::basis_element(int i, int j) const -> immutable_value
   return this->basis_element(i,j, basis_tag());
 }
 
+template<class DT> int
+readable_matrix<DT>::basis_count() const
+{
+  return this->basis_count(basis_tag());
+}
+
+template<class DT> int
+readable_matrix<DT>::basis_size() const
+{
+  return this->basis_size(basis_tag());
+}
+
 template<class DT> auto
 readable_matrix<DT>::determinant() const -> value_type
 {
@@ -88,6 +100,30 @@ readable_matrix<DT>::basis_element(int i, int j, col_basis) const
 -> immutable_value
 {
   return this->get(j,i);
+}
+
+template<class DT> int
+readable_matrix<DT>::basis_count(row_basis) const
+{
+  return this->rows();
+}
+
+template<class DT> int
+readable_matrix<DT>::basis_count(col_basis) const
+{
+  return this->cols();
+}
+
+template<class DT> int
+readable_matrix<DT>::basis_size(row_basis) const
+{
+  return this->cols();
+}
+
+template<class DT> int
+readable_matrix<DT>::basis_size(col_basis) const
+{
+  return this->rows();
 }
 
 } // namespace cml
