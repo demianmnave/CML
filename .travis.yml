@@ -1,14 +1,17 @@
 language: cpp
 
 matrix:
+  fast_finish: true
   include:
     - os: linux
-      dist: trusty
+      sudo: false
       compiler: clang
       addons:
         apt:
           packages:
           - libboost-test-dev
+    - os: osx
+      osx_image: xcode7
 
 before_script:
   - mkdir build 
@@ -16,3 +19,5 @@ before_script:
 
 script:
   - cmake -G "Unix Makefiles" -DCML_BUILD_TESTING:Bool=ON ..
+  - cmake --build . --config Release
+  - ctest -C Release
