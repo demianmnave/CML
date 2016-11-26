@@ -1,18 +1,14 @@
 language: cpp
 
-sudo: required
-dist: trusty
-
 matrix:
   include:
     - os: linux
+      dist: trusty
       compiler: clang
       addons:
-	apt:
-	  packages:
-	    - libboost-test-dev
-
-compiler: clang
+        apt:
+          packages:
+          - libboost-test-dev
 
 before_script:
   - mkdir build 
