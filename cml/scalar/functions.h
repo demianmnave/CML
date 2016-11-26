@@ -10,6 +10,7 @@
 #define	cml_scalar_functions_h
 
 #include <algorithm>
+#include <random>
 #include <cml/scalar/constants.h>
 #include <cml/scalar/traits.h>
 
@@ -85,24 +86,29 @@ template<typename T> inline T rad(T theta) {
 }
 
 
-/** Random binary (0,1) value. */
-inline int random_binary() { return std::rand() % 2; }
+/** Uniformly random integer in the range [min, max]. */
+template<typename T> inline T random_integer(T min, T max) {
+  std::default_random_engine gen(std::rand());
+  std::uniform_int_distribution<T> dis(min,max);
+  return dis(gen);
+}
 
-/** Random polar (-1,1) value. */
+/** Uniformly random binary (0,1) value. */
+inline int random_binary() { return random_integer<int>(0,1); }
+
+/** Uniformly random polar (-1,1) value. */
 inline int random_polar() { return random_binary() ? 1 : -1; }
 
-/** Random real in [0,1]. */
-inline double random_unit() { return double(std::rand()) / double(RAND_MAX); }
-
-/* Random integer in the range [min, max] */
-inline long random_integer(long min, long max) {
-  return min + std::rand() % (max - min + 1);
-}
-
-/* Random real number in the range [min, max] */
+/* Uniformly distributed random real number in the range [min, max] */
 template<typename T> inline T random_real(T min, T max) {
-  return min + static_cast<T>(random_unit()) * (max - min);
+  std::default_random_engine gen(std::rand());
+  std::uniform_real_distribution<T> dis(min,max);
+  return dis(gen);
 }
+
+/** Uniformly distributed random real in [0,1]. */
+inline double random_unit() { return random_real<double>(0., 1.); }
+
 
 /** Squared length in R2. */
 template<typename T> inline T length_squared(T x, T y) {

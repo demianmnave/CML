@@ -10,6 +10,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 if(MSVC)
   add_definitions(-DBOOST_ALL_NO_LIB)
 endif()
+add_definitions(-DBOOST_ALL_NO_LIB)
 
 # Common functionality tests:
 add_subdirectory(common)

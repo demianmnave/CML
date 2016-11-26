@@ -27,11 +27,8 @@ random_unit(writable_vector<Sub1>& n,
   typedef value_type_trait_of_t<Sub1>			value_type;
   typedef scalar_traits<value_type>			value_traits;
 
-  /* Use the default generator: */
-  std::default_random_engine gen(std::rand());
-
   /* Generate a uniformly random angle in [-a,a]: */
-  auto theta = (std::uniform_real_distribution<value_type>(-a, a))(gen);
+  auto theta = cml::random_real(-a, a);
 
   /* sin(theta) and cos(theta): */
   auto st = value_traits::sin(theta);

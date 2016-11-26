@@ -1,0 +1,18 @@
+language: cpp
+
+sudo: required
+dist: trusty
+
+matrix:
+  include:
+    - os: linux
+      compiler: clang
+
+compiler: clang
+
+before_script:
+  - mkdir build 
+  - cd build
+
+script:
+  - cmake -G "Unix Makefiles" -DCML_BUILD_TESTING:Bool=ON ..

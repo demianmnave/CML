@@ -8,6 +8,7 @@
 #error "mathlib/matrix/transform.tpp not included correctly"
 #endif
 
+#include <cml/vector/functions.h>
 #include <cml/vector/dot.h>
 #include <cml/vector/cross.h>
 #include <cml/matrix/writable_matrix.h>

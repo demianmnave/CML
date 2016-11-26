@@ -41,6 +41,7 @@ if(MINGW)
 
   # Enforce common compiler settings:
   list(APPEND CMAKE_CXX_FLAGS "-static -static-libgcc -static-libstdc++")
+
 elseif(MSVC)
 
   # Convert compiler command lines to lists for easier manipulation:
@@ -56,9 +57,19 @@ elseif(MSVC)
   # Enforce common compiler settings:
   list(APPEND CMAKE_CXX_FLAGS_DEBUG "/MTd")
   list(APPEND CMAKE_CXX_FLAGS_RELEASE "/MT")
+
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+
+  # Convert compiler command lines to lists for easier manipulation:
+  separate_arguments(CMAKE_CXX_FLAGS)
+
+  # Enforce common compiler settings:
+  list(APPEND CMAKE_CXX_FLAGS "-fexceptions -std=c++14")
+
 else()
   message(FATAL_ERROR "Unknown compiler")
 endif()
+
 list(REMOVE_DUPLICATES CMAKE_CXX_FLAGS)
 list(REMOVE_DUPLICATES CMAKE_CXX_FLAGS_DEBUG)
 list(REMOVE_DUPLICATES CMAKE_CXX_FLAGS_RELEASE)

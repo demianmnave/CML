@@ -56,6 +56,23 @@
 
 # endif
 
+#elif defined(__clang__) && ((__clang_major__ >= 3) && (__clang_minor__ >= 6))
+/* clang support for C++11 features used by CML: */
+
+/* N2439 move semantics for *this, used, for example, to efficiently return
+ * an expression node from a class method. Without this, a temporary is
+ * returned instead:
+ */
+# define CML_HAS_RVALUE_REFERENCE_FROM_THIS
+
+/* Trailing method type for ref from *this (to disambiguate overloads using
+ * rvalue reference from this):
+ */
+# define __CML_REF		&
+
+/* Defaulted move constructor supported: */
+# define CML_HAS_DEFAULTED_MOVE_CONSTRUCTOR
+
 #else
 #warning "Unrecognized compiler; using safe defaults"
 
