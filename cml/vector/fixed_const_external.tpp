@@ -12,14 +12,13 @@ namespace cml {
 
 /* fixed_external 'structors: */
 
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class E, int S>
 vector<const E, external<S>>::vector()
 : m_data(0)
 {
-#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-  static_assert(false, "external vector default constructor not supported");
-#endif
 }
+#endif
 
 template<class E, int S>
 vector<const E, external<S>>::vector(const_pointer data)
