@@ -4,7 +4,7 @@ matrix:
   fast_finish: true
   include:
     - os: linux
-      sudo: false
+      dist: trusty
       compiler: clang
       addons:
         apt:
