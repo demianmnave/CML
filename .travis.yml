@@ -7,6 +7,10 @@ matrix:
   include:
     - os: linux
       compiler: clang
+      addons:
+	apt:
+	  packages:
+	    - libboost-test-dev
 
 compiler: clang
 
