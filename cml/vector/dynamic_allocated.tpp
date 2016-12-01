@@ -258,7 +258,7 @@ vector<E, dynamic<A>>::i_get(int i) -> mutable_value
 template<class E, class A> template<class Other> auto
 vector<E, dynamic<A>>::i_put(int i, const Other& v) __CML_REF -> vector_type&
 {
-  this->m_data[i] = v;
+  this->m_data[i] = value_type(v);
   return *this;
 }
 
@@ -266,8 +266,8 @@ vector<E, dynamic<A>>::i_put(int i, const Other& v) __CML_REF -> vector_type&
 template<class E, class A> template<class Other> auto
 vector<E, dynamic<A>>::i_put(int i, const Other& v) && -> vector_type&&
 {
-  this->m_data[i] = v;
-  return *this;
+  this->m_data[i] = value_type(v);
+  return (vector_type&&) *this;
 }
 #endif
 

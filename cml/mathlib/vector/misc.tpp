@@ -19,7 +19,8 @@ project_to_vector(
   )
 -> vector_promote_t<Sub1, Sub2>
 {
-  return (dot(u,v) / length_squared(v)) * v;
+  typedef vector_promote_t<Sub1, Sub2>			result_type;
+  return result_type((dot(u,v) / length_squared(v)) * v);
 }  
 
 template<class Sub1, class Sub2> inline auto
@@ -28,7 +29,8 @@ project_to_hplane(
   )
 -> vector_promote_t<Sub1, Sub2>
 {
-  return v - dot(v,n)*n;
+  typedef vector_promote_t<Sub1, Sub2>			result_type;
+  return result_type(v - dot(v,n)*n);
 }
 
 template<class Sub> inline auto
@@ -56,8 +58,9 @@ manhattan_distance(
   cml::check_same_size(v1,v2);
 
   auto fabs = &value_traits::fabs;
-  auto sum = fabs(v1[0] - v2[0]);
-  for(int i = 1; i < v1.size(); ++ i) sum += fabs(v1[i] - v2[i]);
+  auto sum = fabs(value_type(v1[0] - v2[0]));
+  for(int i = 1; i < v1.size(); ++ i)
+    sum += fabs(value_type(v1[i] - v2[i]));
   return sum;
 }
 

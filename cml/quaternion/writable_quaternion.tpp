@@ -171,7 +171,7 @@ template<class DT> DT&
 writable_quaternion<DT>::log() __CML_REF
 {
   /* Shorthand: */
-  typedef cml::scalar_traits<value_type>		element_traits;
+  typedef typename traits_type::element_traits		element_traits;
 
   /* The natural log of q is:
    *
@@ -200,7 +200,7 @@ template<class DT> DT&
 writable_quaternion<DT>::exp() __CML_REF
 {
   /* Shorthand: */
-  typedef cml::scalar_traits<value_type>		element_traits;
+  typedef typename traits_type::element_traits		element_traits;
 
   /* The exponential of q is:
    *

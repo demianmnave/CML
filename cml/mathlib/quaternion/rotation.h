@@ -149,7 +149,7 @@ template<class Sub, class ASub, class E,
   class Tol = value_type_trait_of_t<Sub>> void
 quaternion_to_axis_angle(
   const readable_quaternion<Sub>& q, writable_vector<ASub>& axis,
-  E& angle, Tol tolerance = cml::sqrt_epsilon<Tol>());
+  E& angle, Tol tolerance = cml::epsilon<Tol>());
 
 /** Convert a quaternion @c q to an axis-angle pair returned as a
  * std::tuple.
@@ -162,7 +162,7 @@ std::tuple<
  >
 quaternion_to_axis_angle(
   const readable_quaternion<Sub>& q,
-  Tol tolerance = cml::sqrt_epsilon<Tol>());
+  Tol tolerance = cml::epsilon<Tol>());
 
 /** Convert a quaternion @c q to an Euler-angle triple.
  *
@@ -172,7 +172,7 @@ template<class Sub, class E0, class E1, class E2,
   class Tol = value_type_trait_of_t<Sub>> void
 quaternion_to_euler(
   const readable_quaternion<Sub>& q, E0& angle_0, E1& angle_1, E2& angle_2,
-  euler_order order, Tol tolerance = cml::sqrt_epsilon<Tol>(),
+  euler_order order, Tol tolerance = cml::epsilon<Tol>(),
   enable_if_quaternion_t<Sub>* = nullptr);
 
 /** Convert a quaternion @c q to an Euler-angle triple, and return
@@ -184,7 +184,7 @@ template<class Sub, class Tol = value_type_trait_of_t<Sub>>
 vector<value_type_trait_of_t<Sub>, compiled<3>>
 quaternion_to_euler(
   const readable_quaternion<Sub>& q, euler_order order,
-  Tol tolerance = cml::sqrt_epsilon<Tol>(),
+  Tol tolerance = cml::epsilon<Tol>(),
   enable_if_quaternion_t<Sub>* = nullptr);
 
 /** Convert a quaternion @c q to an Euler-angle triple, and return
@@ -200,7 +200,7 @@ template<class VectorT, class Sub,
   class Tol = value_type_trait_of_t<Sub>> VectorT
 quaternion_to_euler(
   const readable_quaternion<Sub>& q, euler_order order,
-  Tol tolerance = cml::sqrt_epsilon<Tol>(),
+  Tol tolerance = cml::epsilon<Tol>(),
   enable_if_vector_t<VectorT>* = nullptr,
   enable_if_quaternion_t<Sub>* = nullptr);
 

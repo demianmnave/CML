@@ -24,15 +24,14 @@ rotate_vector(
     value_type_trait_of_t<Sub1>, value_type_trait_of_t<Sub2>, E>::value,
     "incompatible scalar types");
 
-  typedef value_type_trait_promote_t<Sub1, Sub2, E>	value_type;
-  typedef scalar_traits<value_type>			value_traits;
+  typedef scalar_traits<E>				angle_traits;
 
   cml::check_size(v, cml::int_c<3>());
   cml::check_size(n, cml::int_c<3>());
 
   auto parallel = dot(v,n)*n;
-  auto sin_angle = value_traits::sin(angle);
-  auto cos_angle = value_traits::cos(angle);
+  auto sin_angle = angle_traits::sin(angle);
+  auto cos_angle = angle_traits::cos(angle);
   return cos_angle*(v - parallel) + sin_angle*cross(n,v) + parallel;
 }
 

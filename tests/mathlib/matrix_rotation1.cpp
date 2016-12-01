@@ -64,6 +64,17 @@ BOOST_AUTO_TEST_CASE(rotation1)
   BOOST_CHECK_CLOSE(v[2], 1., .0001);
 }
 
+BOOST_AUTO_TEST_CASE(int_rotation1)
+{
+  cml::matrix33i M;
+  cml::matrix_rotation_axis_angle(
+    M, cml::vector3d(1., 0., 0.), cml::rad(90.));
+
+  BOOST_CHECK_EQUAL(M(0,0),  1);
+  BOOST_CHECK_EQUAL(M(1,2), -1);
+  BOOST_CHECK_EQUAL(M(2,1),  1);
+}
+
 BOOST_AUTO_TEST_CASE(euler1)
 {
   cml::matrix33d M;

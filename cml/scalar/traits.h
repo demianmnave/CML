@@ -211,6 +211,15 @@ template<> struct scalar_traits<double>
   }
 };
 
+/** Returns eps for type S.
+ *
+ * @note This is mostly a hack for VC++ 2013, which can't seem to handle
+ * traits access for defaulted template function arguments.
+ */
+template<class S> inline S epsilon() {
+  return scalar_traits<S>::epsilon();
+}
+
 /** Returns sqrt(eps) for type S.
  *
  * @note This is mostly a hack for VC++ 2013, which can't seem to handle

@@ -45,38 +45,38 @@ extract_frustum_planes(
 
   /* Left:   [03+00, 13+10, 23+20, 33+30] */
 
-  planes[0][0] = m.basis_element(0,3) + m.basis_element(0,0);
-  planes[0][1] = m.basis_element(1,3) + m.basis_element(1,0);
-  planes[0][2] = m.basis_element(2,3) + m.basis_element(2,0);  
-  planes[0][3] = m.basis_element(3,3) + m.basis_element(3,0);
+  planes[0][0] = E(m.basis_element(0,3) + m.basis_element(0,0));
+  planes[0][1] = E(m.basis_element(1,3) + m.basis_element(1,0));
+  planes[0][2] = E(m.basis_element(2,3) + m.basis_element(2,0));  
+  planes[0][3] = E(m.basis_element(3,3) + m.basis_element(3,0));
 
   /* Right:  [03-00, 13-10, 23-20, 33-30] */
 
-  planes[1][0] = m.basis_element(0,3) - m.basis_element(0,0);
-  planes[1][1] = m.basis_element(1,3) - m.basis_element(1,0);
-  planes[1][2] = m.basis_element(2,3) - m.basis_element(2,0);  
-  planes[1][3] = m.basis_element(3,3) - m.basis_element(3,0);
+  planes[1][0] = E(m.basis_element(0,3) - m.basis_element(0,0));
+  planes[1][1] = E(m.basis_element(1,3) - m.basis_element(1,0));
+  planes[1][2] = E(m.basis_element(2,3) - m.basis_element(2,0));  
+  planes[1][3] = E(m.basis_element(3,3) - m.basis_element(3,0));
 
   /* Bottom: [03+01, 13+11, 23+21, 33+31] */
 
-  planes[2][0] = m.basis_element(0,3) + m.basis_element(0,1);
-  planes[2][1] = m.basis_element(1,3) + m.basis_element(1,1);
-  planes[2][2] = m.basis_element(2,3) + m.basis_element(2,1);  
-  planes[2][3] = m.basis_element(3,3) + m.basis_element(3,1);
+  planes[2][0] = E(m.basis_element(0,3) + m.basis_element(0,1));
+  planes[2][1] = E(m.basis_element(1,3) + m.basis_element(1,1));
+  planes[2][2] = E(m.basis_element(2,3) + m.basis_element(2,1));  
+  planes[2][3] = E(m.basis_element(3,3) + m.basis_element(3,1));
 
   /* Top:    [03-01, 13-11, 23-21, 33-31] */
 
-  planes[3][0] = m.basis_element(0,3) - m.basis_element(0,1);
-  planes[3][1] = m.basis_element(1,3) - m.basis_element(1,1);
-  planes[3][2] = m.basis_element(2,3) - m.basis_element(2,1);  
-  planes[3][3] = m.basis_element(3,3) - m.basis_element(3,1);
+  planes[3][0] = E(m.basis_element(0,3) - m.basis_element(0,1));
+  planes[3][1] = E(m.basis_element(1,3) - m.basis_element(1,1));
+  planes[3][2] = E(m.basis_element(2,3) - m.basis_element(2,1));  
+  planes[3][3] = E(m.basis_element(3,3) - m.basis_element(3,1));
 
   /* Far:    [03-02, 13-12, 23-22, 33-32] */
 
-  planes[5][0] = m.basis_element(0,3) - m.basis_element(0,2);
-  planes[5][1] = m.basis_element(1,3) - m.basis_element(1,2);
-  planes[5][2] = m.basis_element(2,3) - m.basis_element(2,2);  
-  planes[5][3] = m.basis_element(3,3) - m.basis_element(3,2);
+  planes[5][0] = E(m.basis_element(0,3) - m.basis_element(0,2));
+  planes[5][1] = E(m.basis_element(1,3) - m.basis_element(1,2));
+  planes[5][2] = E(m.basis_element(2,3) - m.basis_element(2,2));  
+  planes[5][3] = E(m.basis_element(3,3) - m.basis_element(3,2));
 
   /* Compute normalized planes: */
   if(normalize) {
@@ -96,6 +96,7 @@ extract_near_frustum_plane(
   )
 {
   cml::check_minimum_size(m, cml::int_c<4>(), cml::int_c<4>());
+  //XXX cml::check_minimum_size(plane, cml::int_c<4>());
 
   /* Near:   [03+02, 13+12, 23+22, 33+32] : [02, 12, 22, 32] */
   if (z_clip == z_clip_neg_one) {       

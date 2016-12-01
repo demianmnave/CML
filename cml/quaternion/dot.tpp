@@ -18,13 +18,15 @@ template<class Sub1, class Sub2> inline auto dot(
   )
 -> value_type_trait_promote_t<Sub1,Sub2>
 {
+  typedef value_type_trait_promote_t<Sub1,Sub2>		value_type;
+
   static_assert(std::is_same<order_type_trait_of_t<Sub1>,
     order_type_trait_of_t<Sub2>>::value, "mismatched quaternion order types");
-  return
+  return value_type(
     left.get(0)*right.get(0) +
     left.get(1)*right.get(1) +
     left.get(2)*right.get(2) +
-    left.get(3)*right.get(3)
+    left.get(3)*right.get(3))
     ;
 }
 

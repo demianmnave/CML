@@ -28,8 +28,7 @@ matrix_rotation_2D(writable_matrix<Sub>& m, E angle)
     cml::are_convertible<value_type_trait_of_t<Sub>, E>::value,
     "incompatible scalar types");
 
-  typedef value_type_trait_of_t<Sub>			value_type;
-  typedef scalar_traits<value_type>			value_traits;
+  typedef scalar_traits<E>				angle_traits;
 
   cml::check_linear_2D(m);
 
@@ -37,8 +36,8 @@ matrix_rotation_2D(writable_matrix<Sub>& m, E angle)
   m.identity();
 
   /* Initialize m: */
-  auto s = value_traits::sin(angle);
-  auto c = value_traits::cos(angle);
+  auto s = angle_traits::sin(angle);
+  auto c = angle_traits::cos(angle);
   m.set_basis_element(0,0, c);
   m.set_basis_element(0,1, s);
   m.set_basis_element(1,0,-s);
@@ -54,15 +53,15 @@ matrix_rotation_world_axis(writable_matrix<Sub>& m, int axis, const E& angle)
   static_assert(cml::are_convertible<
     value_type_trait_of_t<Sub>, E>::value, "incompatible scalar types");
 
-  typedef traits_of_t<E>				scalar_traits;
+  typedef traits_of_t<E>				angle_traits;
 
   cml::check_linear_3D(m);
   cml_require(0 <= axis && axis <= 2, std::invalid_argument, "invalid axis");
  
   /* Setup sin() and cos() for the chosen axis: */
   int i, j, k; cml::cyclic_permutation(axis, i, j, k);
-  auto s = scalar_traits::sin(angle);
-  auto c = scalar_traits::cos(angle);
+  auto s = angle_traits::sin(angle);
+  auto c = angle_traits::cos(angle);
 
   /* Clear the matrix: */
   m.identity();
@@ -101,8 +100,7 @@ matrix_rotation_axis_angle(
     value_type_trait_of_t<Sub>, value_type_trait_of_t<ASub>, E>::value,
     "incompatible scalar types");
 
-  typedef value_type_trait_of_t<Sub>			value_type;
-  typedef scalar_traits<value_type>			value_traits;
+  typedef scalar_traits<E>				angle_traits;
 
   cml::check_linear_3D(m);
   cml::check_size(axis, int_c<3>());
@@ -111,9 +109,9 @@ matrix_rotation_axis_angle(
   m.identity();
 
   /* Precompute values: */
-  auto s = value_traits::sin(angle);
-  auto c = value_traits::cos(angle);
-  auto omc = value_type(1) - c;
+  auto s = angle_traits::sin(angle);
+  auto c = angle_traits::cos(angle);
+  auto omc = E(1) - c;
 
   auto xomc = axis[0] * omc;
   auto yomc = axis[1] * omc;
@@ -150,8 +148,9 @@ matrix_rotation_euler(writable_matrix<Sub>& m,
     value_type_trait_of_t<Sub>, E0, E1, E2>::value,
     "incompatible scalar types");
 
-  typedef value_type_trait_of_t<Sub>			value_type;
-  typedef scalar_traits<value_type>			value_traits;
+  typedef scalar_traits<E0>				angle0_traits;
+  typedef scalar_traits<E1>				angle1_traits;
+  typedef scalar_traits<E2>				angle2_traits;
 
   cml::check_linear_3D(m);
 
@@ -168,12 +167,12 @@ matrix_rotation_euler(writable_matrix<Sub>& m,
     angle_2 = -angle_2;
   }
 
-  auto s0 = value_traits::sin(angle_0);
-  auto c0 = value_traits::cos(angle_0);
-  auto s1 = value_traits::sin(angle_1);
-  auto c1 = value_traits::cos(angle_1);
-  auto s2 = value_traits::sin(angle_2);
-  auto c2 = value_traits::cos(angle_2);
+  auto s0 = angle0_traits::sin(angle_0);
+  auto c0 = angle0_traits::cos(angle_0);
+  auto s1 = angle1_traits::sin(angle_1);
+  auto c1 = angle1_traits::cos(angle_1);
+  auto s2 = angle2_traits::sin(angle_2);
+  auto c2 = angle2_traits::cos(angle_2);
 
   auto s0s2 = s0 * s2;
   auto s0c2 = s0 * c2;
@@ -221,8 +220,9 @@ matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
     value_type_trait_of_t<Sub>, E0, E1, E2>::value,
     "incompatible scalar types");
 
-  typedef value_type_trait_of_t<Sub>			value_type;
-  typedef scalar_traits<value_type>			value_traits;
+  typedef scalar_traits<E0>				angle0_traits;
+  typedef scalar_traits<E1>				angle1_traits;
+  typedef scalar_traits<E2>				angle2_traits;
 
   cml_require(0 <= axis && axis <= 2,
    std::invalid_argument, "axis must be 0, 1, or 2");
@@ -242,12 +242,12 @@ matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
     angle_2 = -angle_2;
   }
 
-  auto s0 = value_traits::sin(angle_0);
-  auto c0 = value_traits::cos(angle_0);
-  auto s1 = value_traits::sin(angle_1);
-  auto c1 = value_traits::cos(angle_1);
-  auto s2 = value_traits::sin(angle_2);
-  auto c2 = value_traits::cos(angle_2);
+  auto s0 = angle0_traits::sin(angle_0);
+  auto c0 = angle0_traits::cos(angle_0);
+  auto s1 = angle1_traits::sin(angle_1);
+  auto c1 = angle1_traits::cos(angle_1);
+  auto s2 = angle2_traits::sin(angle_2);
+  auto c2 = angle2_traits::cos(angle_2);
 
   auto s0s2 = s0 * s2;
   auto s0c2 = s0 * c2;
@@ -307,7 +307,7 @@ matrix_rotation_quaternion(
     "incompatible scalar types");
 
   typedef order_type_trait_of_t<QSub>			order_type;
-  typedef value_type_trait_of_t<Sub>			value_type;
+  typedef value_type_trait_of_t<QSub>			q_type;
 
   cml::check_linear_3D(m);
 
@@ -334,15 +334,15 @@ matrix_rotation_quaternion(
   auto zw2 = q[W] * z2;
 
   m.identity();
-  m.set_basis_element(0,0, value_type(1) - yy2 - zz2);
-  m.set_basis_element(0,1,                 xy2 + zw2);
-  m.set_basis_element(0,2,                 zx2 - yw2);
-  m.set_basis_element(1,0,                 xy2 - zw2);
-  m.set_basis_element(1,1, value_type(1) - zz2 - xx2);
-  m.set_basis_element(1,2,                 yz2 + xw2);
-  m.set_basis_element(2,0,                 zx2 + yw2);
-  m.set_basis_element(2,1,                 yz2 - xw2);
-  m.set_basis_element(2,2, value_type(1) - xx2 - yy2);
+  m.set_basis_element(0,0, q_type(1) - yy2 - zz2);
+  m.set_basis_element(0,1,             xy2 + zw2);
+  m.set_basis_element(0,2,             zx2 - yw2);
+  m.set_basis_element(1,0,             xy2 - zw2);
+  m.set_basis_element(1,1, q_type(1) - zz2 - xx2);
+  m.set_basis_element(1,2,             yz2 + xw2);
+  m.set_basis_element(2,0,             zx2 + yw2);
+  m.set_basis_element(2,1,             yz2 - xw2);
+  m.set_basis_element(2,2, q_type(1) - xx2 - yy2);
 }
 
 
@@ -394,6 +394,8 @@ matrix_to_axis_angle(
 
   typedef value_type_trait_of_t<Sub>			value_type;
   typedef scalar_traits<value_type>			value_traits;
+  typedef value_type_trait_of_t<ASub>			asub_type;
+  typedef scalar_traits<asub_type>			asub_traits;
 
   cml::check_linear_3D(m);
   cml::detail::check_or_resize(axis, int_c<3>());
@@ -412,14 +414,14 @@ matrix_to_axis_angle(
   /* Normalize and compute the angle directly if possible: */
   if(l > tolerance) {
     axis /= l;
-    angle = value_traits::atan2(l, tmo);
+    angle = E(value_traits::atan2(l, tmo));
     /* Note: l = 2*sin(theta), tmo = 2*cos(theta) */
   }
 
   /* Near-zero axis: */
   else if(tmo > value_type(0)) {
     axis.zero();
-    angle = value_type(0);
+    angle = E(0);
   }
 
   /* Reflection: */
@@ -430,15 +432,15 @@ matrix_to_axis_angle(
     int i, j, k;
     cyclic_permutation(largest_diagonal_element, i, j, k);
 
-    axis[i] = value_traits::sqrt(
+    axis[i] = asub_type(value_traits::sqrt(
 	m.basis_element(i,i) - m.basis_element(j,j) -
-	m.basis_element(k,k) + value_type(1)) / value_type(2);
+	m.basis_element(k,k) + value_type(1)) / value_type(2));
 
     auto s = value_type(1) / (value_type(2) * axis[i]);
-    axis[j] = m.basis_element(i,j) * s;
-    axis[k] = m.basis_element(i,k) * s;
+    axis[j] = asub_type(m.basis_element(i,j) * s);
+    axis[k] = asub_type(m.basis_element(i,k) * s);
 
-    angle = constants<value_type>::pi();
+    angle = constants<E>::pi();
   }
 
   /* Done. */
@@ -456,10 +458,10 @@ matrix_to_axis_angle(const readable_matrix<Sub>& m, Tol tolerance)
     value_type_trait_of_t<Sub>, value_type_trait_of_t<VectorT>, Tol>::value,
     "incompatible scalar types");
 
-  VectorT axis; cml::detail::check_or_resize(axis, int_c<3>());
+  VectorT axis;
   value_type_trait_of_t<Sub> angle;
   cml::matrix_to_axis_angle(m, axis, angle, tolerance);
-  return std::make_tuple(axis, angle);
+  return std::make_tuple(std::move(axis), std::move(angle));
 }
 
 } // namespace detail
@@ -502,31 +504,31 @@ matrix_to_euler(
     auto s1 = cml::length(m.basis_element(j,i), m.basis_element(k,i));
     auto c1 = m.basis_element(i,i);
 
-    angle_1 = value_traits::atan2(s1, c1);
+    angle_1 = E1(value_traits::atan2(s1, c1));
     if (s1 > tolerance) {
-      angle_0 = value_traits::atan2(
-	m.basis_element(j,i), m.basis_element(k,i));
-      angle_2 = value_traits::atan2(
-	m.basis_element(i,j), -m.basis_element(i,k));
+      angle_0 = E0(value_traits::atan2(
+	m.basis_element(j,i), m.basis_element(k,i)));
+      angle_2 = E0(value_traits::atan2(
+	m.basis_element(i,j), -m.basis_element(i,k)));
     } else {
-      angle_0 = value_type(0);
-      angle_2 = cml::sign(c1) *
-	value_traits::atan2(-m.basis_element(k,j),m.basis_element(j,j));
+      angle_0 = E0(0);
+      angle_2 = E2(cml::sign(c1) *
+	value_traits::atan2(-m.basis_element(k,j),m.basis_element(j,j)));
     }
   } else {
     auto s1 = -m.basis_element(i,k);
     auto c1 = cml::length(m.basis_element(i,i), m.basis_element(i,j));
 
-    angle_1 = value_traits::atan2(s1, c1);
+    angle_1 = E1(value_traits::atan2(s1, c1));
     if (c1 > tolerance) {
-      angle_0 = value_traits::atan2(
-	m.basis_element(j,k), m.basis_element(k,k));
-      angle_2 = value_traits::atan2(
-	m.basis_element(i,j), m.basis_element(i,i));
+      angle_0 = E0(value_traits::atan2(
+	m.basis_element(j,k), m.basis_element(k,k)));
+      angle_2 = E2(value_traits::atan2(
+	m.basis_element(i,j), m.basis_element(i,i)));
     } else {
-      angle_0 = value_type(0);
-      angle_2 = -cml::sign(s1) *
-	value_traits::atan2(-m.basis_element(k,j), m.basis_element(j,j));
+      angle_0 = E0(0);
+      angle_2 = - E2(cml::sign(s1) *
+	value_traits::atan2(-m.basis_element(k,j), m.basis_element(j,j)));
     }
   }
 

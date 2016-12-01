@@ -157,7 +157,7 @@ template<class Other> auto matrix<E, external<>, BO, L>::i_put(
   int i, int j, const Other& v
   ) __CML_REF -> matrix_type&
 {
-  s_access(*this, i, j, layout_tag()) = v;
+  s_access(*this, i, j, layout_tag()) = value_type(v);
   return *this;
 }
 
@@ -167,7 +167,7 @@ template<class Other> auto matrix<E, external<>, BO, L>::i_put(
   int i, int j, const Other& v
   ) && -> matrix_type&&
 {
-  s_access(*this, i, j, layout_tag()) = v;
+  s_access(*this, i, j, layout_tag()) = value_type(v);
   return (matrix_type&&) *this;
 }
 #endif

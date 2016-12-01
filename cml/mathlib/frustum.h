@@ -71,7 +71,8 @@ extract_frustum_planes(
  * projection matrix @c m and the near z-clipping range. The plane is not
  * normalized.
  *
- * @note The plane is in ax+by+cz+d = 0 form.
+ * @note @c plane is in ax+by+cz+d = 0 form, and must have exactly 4
+ * elements.
  *
  * @throws minimum_matrix_size_error at run-time if @c m is dynamically-sized,
  * and is not at least 4x4.  The size is checked at compile-time for

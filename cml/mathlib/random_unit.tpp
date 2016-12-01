@@ -26,13 +26,14 @@ random_unit(writable_vector<Sub1>& n,
 {
   typedef value_type_trait_of_t<Sub1>			value_type;
   typedef scalar_traits<value_type>			value_traits;
+  typedef scalar_traits<Scalar>				theta_traits;
 
   /* Generate a uniformly random angle in [-a,a]: */
   auto theta = cml::random_real(-a, a);
 
   /* sin(theta) and cos(theta): */
-  auto st = value_traits::sin(theta);
-  auto ct = value_traits::cos(theta);
+  auto st = theta_traits::sin(theta);
+  auto ct = theta_traits::cos(theta);
 
   /* Compute n by rotating d by theta: */
   n[0] = ct * d[0] - st * d[1];
@@ -55,6 +56,7 @@ random_unit(writable_vector<Sub1>& n,
 {
   typedef value_type_trait_of_t<Sub1>			value_type;
   typedef scalar_traits<value_type>			value_traits;
+  typedef scalar_traits<Scalar>				a_traits;
 
   /* Generate a uniformly random vector on the unit sphere: */
   cml::random_unit(n);
@@ -68,21 +70,22 @@ random_unit(writable_vector<Sub1>& n,
 
   /* Compute the angle between d and n: */
   auto O = acos_safe(cos_O);
-
-  /* Needed below: */
-  auto sin = &value_traits::sin;
+  typedef decltype(O)					O_type;
+  typedef scalar_traits<O_type>				O_traits;
+  typedef scalar_traits<decltype(O-a)>			Oa_traits;
 
   /* Use slerp between d (t=0) and n (t=1) to find the unit vector n_a
    * (t=a/O) lying on the cone between d and n:
    */
-  auto n_a = (sin(O - a)*d + sin(a)*n) / sin(O);
+  auto n_a = (Oa_traits::sin(O - a)*d + a_traits::sin(a)*n) / O_traits::sin(O);
   /* Note: n_a is normalized by dividing by sin(O). */
 
   /* Use a second slerp to "scale" the cone with half-angle O to the cone
    * with half-angle a, taking the random vector n along with it:
    */
-  auto t = O / constants<value_type>::pi_over_2();
-  n = (sin((1 - t)*a)*d + sin(t*a)*n_a) / sin(a);
+  auto t = O / constants<O_type>::pi_over_2();
+  n = (Oa_traits::sin((O_type(1) - t)*a)*d + Oa_traits::sin(t*a)*n_a)
+    / a_traits::sin(a);
   /* Note: n is normalized by dividing by sin(a). */
 }
 
@@ -110,7 +113,7 @@ random_unit(writable_vector<Sub>& n, RNG& gen)
   } while(length == value_type(0));
 
   /* Normalize the vector: */
-  n /= scalar_traits<value_type>::sqrt(length);
+  n.normalize();
 }
 
 template<class Sub> inline void

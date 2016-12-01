@@ -222,10 +222,10 @@ matrix_rotation_aim_at(writable_matrix<Sub>& m,
  * @note @c tolerance is used to detect a near-zero axis length.
  */
 template<class Sub, class ASub, class E,
-  class Tol = value_type_trait_of_t<Sub>> void
+  class Tol = value_type_trait_of_t<ASub>> void
 matrix_to_axis_angle(
   const readable_matrix<Sub>& m, writable_vector<ASub>& axis,
-  E& angle, Tol tolerance = cml::sqrt_epsilon<Tol>());
+  E& angle, Tol tolerance = cml::epsilon<Tol>());
 
 /** Convert a 3D rotation matrix @c m to an axis-angle pair returned as a
  * std::tuple.
@@ -238,7 +238,7 @@ std::tuple<
  >
 matrix_to_axis_angle(
   const readable_matrix<Sub>& m,
-  Tol tolerance = cml::sqrt_epsilon<Tol>());
+  Tol tolerance = cml::epsilon<Tol>());
 
 /** Convert a 3D rotation matrix @c m to an Euler-angle triple.
  *
@@ -248,7 +248,7 @@ template<class Sub, class E0, class E1, class E2,
   class Tol = value_type_trait_of_t<Sub>> void
 matrix_to_euler(
   const readable_matrix<Sub>& m, E0& angle_0, E1& angle_1, E2& angle_2,
-  euler_order order, Tol tolerance = cml::sqrt_epsilon<Tol>(),
+  euler_order order, Tol tolerance = cml::epsilon<Tol>(),
   enable_if_matrix_t<Sub>* = nullptr);
 
 /** Convert a 3D rotation matrix @c m to an Euler-angle triple, and return
@@ -259,7 +259,7 @@ matrix_to_euler(
 template<class Sub, class Tol = value_type_trait_of_t<Sub>>
 vector<value_type_trait_of_t<Sub>, compiled<3>>
 matrix_to_euler(const readable_matrix<Sub>& m,
-  euler_order order, Tol tolerance = cml::sqrt_epsilon<Tol>(),
+  euler_order order, Tol tolerance = cml::epsilon<Tol>(),
   enable_if_matrix_t<Sub>* = nullptr);
 
 /** Convert a 3D rotation matrix @c m to an Euler-angle triple, and return
@@ -274,7 +274,7 @@ matrix_to_euler(const readable_matrix<Sub>& m,
 template<class VectorT, class Sub,
   class Tol = value_type_trait_of_t<Sub>> VectorT
 matrix_to_euler(const readable_matrix<Sub>& m,
-  euler_order order, Tol tolerance = cml::sqrt_epsilon<Tol>(),
+  euler_order order, Tol tolerance = cml::epsilon<Tol>(),
   enable_if_vector_t<VectorT>* = nullptr, enable_if_matrix_t<Sub>* = nullptr);
 
 /*@}*/

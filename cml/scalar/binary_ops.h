@@ -15,64 +15,56 @@
 namespace cml {
 namespace op {
 
+#define __cml_binary_op(_name_, _op_)					\
+template<class Scalar1, class Scalar2> struct _name_ {			\
+  typedef value_type_trait_promote_t<Scalar1,Scalar2> result_type;	\
+  result_type apply(const Scalar1& a, const Scalar2& b) const {		\
+    return result_type(a _op_ b); }					\
+}
+
 /** Binary minus (subtraction). */
-template<class Scalar1, class Scalar2> struct binary_minus {
-  typedef value_type_trait_promote_t<Scalar1,Scalar2> result_type;
-  result_type apply(const Scalar1& a, const Scalar2& b) const { return a-b; }
-};
+__cml_binary_op(binary_minus, -);
 
 /** Binary plus (addition). */
-template<class Scalar1, class Scalar2> struct binary_plus {
-  typedef value_type_trait_promote_t<Scalar1,Scalar2> result_type;
-  result_type apply(const Scalar1& a, const Scalar2& b) const { return a+b; }
-};
+__cml_binary_op(binary_plus, +);
 
 /** Binary multiply. */
-template<class Scalar1, class Scalar2> struct binary_multiply {
-  typedef value_type_trait_promote_t<Scalar1,Scalar2> result_type;
-  result_type apply(const Scalar1& a, const Scalar2& b) const { return a*b; }
-};
+__cml_binary_op(binary_multiply, *);
 
 /** Binary divide. */
-template<class Scalar1, class Scalar2> struct binary_divide {
-  typedef value_type_trait_promote_t<Scalar1,Scalar2> result_type;
-  result_type apply(const Scalar1& a, const Scalar2& b) const { return a/b; }
-};
+__cml_binary_op(binary_divide, /);
+
+#undef __cml_binary_op
 
 } // namespace op
+
+#define __cml_binary_op_alias(_name_)					\
+template<class Sub1, class Sub2>					\
+  using _name_ ## _t = op:: _name_ <					\
+    value_type_trait_of_t<actual_type_of_t<Sub1>>,			\
+    value_type_trait_of_t<actual_type_of_t<Sub2>>>
 
 /** Convenience alias to create binary_minus from the value_type traits of
  * @c Sub1 and @c Sub2 as unqualified types.
  */
-template<class Sub1, class Sub2>
-  using binary_minus_t = op::binary_minus<
-    value_type_trait_of_t<actual_type_of_t<Sub1>>,
-    value_type_trait_of_t<actual_type_of_t<Sub2>>>;
+__cml_binary_op_alias(binary_minus);
 
 /** Convenience alias to create binary_plus from the value_type traits of
  * @c Sub1 and @c Sub2 as unqualified types.
  */
-template<class Sub1, class Sub2>
-  using binary_plus_t = op::binary_plus<
-    value_type_trait_of_t<actual_type_of_t<Sub1>>,
-    value_type_trait_of_t<actual_type_of_t<Sub2>>>;
+__cml_binary_op_alias(binary_plus);
 
 /** Convenience alias to create binary_multiply from the value_type traits
  * of @c Sub1 and @c Sub2 as unqualified types.
  */
-template<class Sub1, class Sub2>
-  using binary_multiply_t = op::binary_multiply<
-    value_type_trait_of_t<actual_type_of_t<Sub1>>,
-    value_type_trait_of_t<actual_type_of_t<Sub2>>>;
+__cml_binary_op_alias(binary_multiply);
 
 /** Convenience alias to create binary_divide from the value_type traits
  * of @c Sub1 and @c Sub2 as unqualified types.
  */
-template<class Sub1, class Sub2>
-  using binary_divide_t = op::binary_divide<
-    value_type_trait_of_t<actual_type_of_t<Sub1>>,
-    value_type_trait_of_t<actual_type_of_t<Sub2>>>;
+__cml_binary_op_alias(binary_divide);
 
+#undef __cml_binary_op_alias
 } // namespace cml
 
 #endif

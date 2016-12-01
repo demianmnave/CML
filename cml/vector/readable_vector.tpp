@@ -47,7 +47,7 @@ template<class DT> auto
 readable_vector<DT>::length_squared() const -> value_type
 {
   cml::check_minimum_size(*this, cml::int_c<1>());
-  value_type accum = cml::sqr(this->get(0));
+  auto accum = cml::sqr(this->get(0));
   for(int i = 1; i < this->size(); ++ i) accum += cml::sqr(this->get(i));
   return accum;
 }

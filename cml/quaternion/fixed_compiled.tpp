@@ -132,7 +132,7 @@ quaternion<E, fixed<>, O, C>::i_put(
   int i, const Other& v
   ) __CML_REF -> quaternion_type&
 {
-  this->m_data[i] = v;
+  this->m_data[i] = value_type(v);
   return *this;
 }
 
@@ -142,8 +142,8 @@ quaternion<E, fixed<>, O, C>::i_put(
   int i, const Other& v
   ) && -> quaternion_type&&
 {
-  this->m_data[i] = v;
-  return *this;
+  this->m_data[i] = value_type(v);
+  return (quaternion_type&&) *this;
 }
 #endif
 

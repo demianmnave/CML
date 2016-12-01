@@ -79,8 +79,8 @@ matrix_get_translation_2D(
     "incompatible scalar types");
 
   cml::check_affine_2D(m);
-  e0 = m.basis_element(2,0);
-  e1 = m.basis_element(2,1);
+  e0 = E0(m.basis_element(2,0));
+  e1 = E1(m.basis_element(2,1));
 }
 
 template<class Sub> inline auto
@@ -132,7 +132,7 @@ matrix_set_translation(
   writable_matrix<Sub>& m, const E0& e0, const E1& e1
   )
 {
-  typedef scalar_promote_t<E0,E1> zero_type;
+  typedef value_type_trait_of_t<Sub> zero_type;
   cml::check_affine_3D(m);
   detail::matrix_set_basis<3>(m, e0, e1, zero_type(0));
 }
@@ -142,11 +142,11 @@ matrix_set_translation(
   writable_matrix<Sub1>& m, const readable_vector<Sub2>& v
   )
 {
-  typedef value_type_trait_of_t<Sub2> zero_type;
+  typedef value_type_trait_of_t<Sub1> zero_type;
   cml::check_size_range(v, int_c<2>(), int_c<3>());
   cml::check_affine_3D(m);
   detail::matrix_set_basis<3>(
-    m, v[0], v[1], ((v.size() == 3) ? v[2] : zero_type(0)));
+    m, v[0], v[1], ((v.size() == 3) ? zero_type(v[2]) : zero_type(0)));
 }
 
 
@@ -160,9 +160,9 @@ matrix_get_translation(
     "incompatible scalar types");
 
   cml::check_affine_3D(m);
-  e0 = m.basis_element(3,0);
-  e1 = m.basis_element(3,1);
-  e2 = m.basis_element(3,2);
+  e0 = E0(m.basis_element(3,0));
+  e1 = E1(m.basis_element(3,1));
+  e2 = E2(m.basis_element(3,2));
 }
 
 template<class Sub> inline auto

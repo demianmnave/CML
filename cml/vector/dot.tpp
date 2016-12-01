@@ -21,8 +21,9 @@ dot(const readable_vector<Sub1>& left, const readable_vector<Sub2>& right)
   cml::check_minimum_size(left, cml::int_c<1>());
   cml::check_minimum_size(right, cml::int_c<1>());
   cml::check_same_size(left, right);
-  result_type accum = left.get(0)*right.get(0);
-  for(int i = 1; i < left.size(); ++ i) accum += left.get(i)*right.get(i);
+  result_type accum = result_type(left.get(0)*right.get(0));
+  for(int i = 1; i < left.size(); ++ i)
+    accum += result_type(left.get(i)*right.get(i));
   return accum;
 }
 

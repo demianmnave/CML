@@ -53,7 +53,7 @@ outer_product_node<Sub1,Sub2>::i_cols() const
 template<class Sub1, class Sub2> auto
 outer_product_node<Sub1,Sub2>::i_get(int i, int j) const -> immutable_value
 {
-  return this->m_left.get(i)*this->m_right.get(j);
+  return immutable_value(this->m_left.get(i)*this->m_right.get(j));
 }
 
 } // namespace cml

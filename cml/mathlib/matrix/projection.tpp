@@ -31,28 +31,26 @@ matrix_orthographic(
     cml::are_convertible<value_type_trait_of_t<Sub>, E>::value,
     "incompatible scalar types");
 
-  typedef value_type_trait_of_t<Sub>			value_type;
-
   cml::check_minimum_size(m, int_c<4>(), int_c<4>());
 
   /* Initialize: */
   m.identity();
     
-  auto inv_width = value_type(1) / (right - left);
-  auto inv_height = value_type(1) / (top - bottom);
-  auto inv_depth = value_type(1) / (f - n);
-  auto s = value_type(handedness == left_handed ? 1 : -1);
+  auto inv_width = E(1) / (right - left);
+  auto inv_height = E(1) / (top - bottom);
+  auto inv_depth = E(1) / (f - n);
+  auto s = E(handedness == left_handed ? 1 : -1);
 
   if (z_clip == z_clip_neg_one) {
-    m.set_basis_element(2,2, s * value_type(2) * inv_depth);
+    m.set_basis_element(2,2, s * E(2) * inv_depth);
     m.set_basis_element(3,2, -(f + n) * inv_depth);
   } else { // z_clip.z_clip() == 0
     m.set_basis_element(2,2, s * inv_depth);
     m.set_basis_element(3,2, -n * inv_depth);
   }
 
-  m.set_basis_element(0,0, value_type(2) * inv_width   );
-  m.set_basis_element(1,1, value_type(2) * inv_height  );
+  m.set_basis_element(0,0, E(2) * inv_width   );
+  m.set_basis_element(1,1, E(2) * inv_height  );
   m.set_basis_element(3,0, -(right + left) * inv_width );
   m.set_basis_element(3,1, -(top + bottom) * inv_height);
 }
@@ -85,9 +83,8 @@ matrix_orthographic(
   AxisOrientation handedness, ZClip z_clip
   )
 {
-  typedef value_type_trait_of_t<Sub>			value_type;
-  auto half_width = width / value_type(2);
-  auto half_height = height / value_type(2);
+  auto half_width = width / E(2);
+  auto half_height = height / E(2);
   matrix_orthographic(m,
     -half_width, half_width, -half_height, half_height,
     n, f, handedness, z_clip);
@@ -128,22 +125,20 @@ matrix_perspective(
     cml::are_convertible<value_type_trait_of_t<Sub>, E>::value,
     "incompatible scalar types");
 
-  typedef value_type_trait_of_t<Sub>			value_type;
-
   cml::check_minimum_size(m, int_c<4>(), int_c<4>());
 
   /* Initialize: */
   m.identity();
 
-  auto inv_width = value_type(1) / (right - left);
-  auto inv_height = value_type(1) / (top - bottom);
-  auto inv_depth = value_type(1) / (f - n);
-  auto near2 = value_type(2) * n;
-  auto s = value_type(handedness == left_handed ? 1 : -1);
+  auto inv_width = E(1) / (right - left);
+  auto inv_height = E(1) / (top - bottom);
+  auto inv_depth = E(1) / (f - n);
+  auto near2 = E(2) * n;
+  auto s = E(handedness == left_handed ? 1 : -1);
 
   if (z_clip == z_clip_neg_one) {
     m.set_basis_element(2,2, s * (f + n) * inv_depth);
-    m.set_basis_element(3,2, value_type(-2) * f * n * inv_depth);
+    m.set_basis_element(3,2, - E(2) * f * n * inv_depth);
   } else { // z_clip == z_clip_zero
     m.set_basis_element(2,2,  s * f * inv_depth);
     m.set_basis_element(3,2, -s * n * m.basis_element(2,2));
@@ -154,7 +149,7 @@ matrix_perspective(
   m.set_basis_element(2,0, -s * (right + left) * inv_width );
   m.set_basis_element(2,1, -s * (top + bottom) * inv_height);
   m.set_basis_element(2,3, s                               );
-  m.set_basis_element(3,3, value_type(0)                   );
+  m.set_basis_element(3,3, 0                               );
 }
 
 template<class Sub, class E> inline void
@@ -185,9 +180,8 @@ matrix_perspective(
   AxisOrientation handedness, ZClip z_clip
   )
 {
-  typedef value_type_trait_of_t<Sub>			value_type;
-  auto half_width = width / value_type(2);
-  auto half_height = height / value_type(2);
+  auto half_width = width / E(2);
+  auto half_height = height / E(2);
   matrix_perspective(m,
     -half_width, half_width, -half_height, half_height,
     n, f, handedness, z_clip);
@@ -221,11 +215,10 @@ matrix_perspective_xfov(
   AxisOrientation handedness, ZClip z_clip
   )
 {
-  typedef value_type_trait_of_t<Sub>			value_type;
-  typedef scalar_traits<value_type>			value_traits;
+  typedef scalar_traits<E>				E_traits;
 
   /* Compute the view height from the field of view: */
-  auto width = value_type(2) * n * value_traits::tan(xfov / value_type(2));
+  auto width = E(2) * n * E_traits::tan(xfov / E(2));
   matrix_perspective(m, width, width / aspect, n, f, handedness, z_clip);
 }
 
@@ -257,11 +250,10 @@ matrix_perspective_yfov(
   AxisOrientation handedness, ZClip z_clip
   )
 {
-  typedef value_type_trait_of_t<Sub>			value_type;
-  typedef scalar_traits<value_type>			value_traits;
+  typedef scalar_traits<E>				E_traits;
 
   /* Compute the view height from the field of view: */
-  auto height = value_type(2) * n * value_traits::tan(yfov / value_type(2));
+  auto height = E(2) * n * E_traits::tan(yfov / E(2));
   matrix_perspective(m, height * aspect, height, n, f, handedness, z_clip);
 }
 

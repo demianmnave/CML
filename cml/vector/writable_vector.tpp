@@ -111,7 +111,7 @@ writable_vector<DT>::normalize() &&
 template<class DT> DT&
 writable_vector<DT>::zero() __CML_REF
 {
-  for(int i = 0; i < this->size(); ++ i) this->put(i, value_type(0));
+  for(int i = 0; i < this->size(); ++ i) this->put(i,0);
   return this->actual();
 }
 
@@ -127,7 +127,7 @@ writable_vector<DT>::zero() &&
 template<class DT> DT&
 writable_vector<DT>::cardinal(int i) __CML_REF
 {
-  return this->zero().put(i, value_type(1));
+  return this->zero().put(i,1);
 }
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
@@ -144,7 +144,7 @@ writable_vector<DT>::minimize(const readable_vector<ODT>& other) __CML_REF
 {
   cml::check_same_size(*this, other);
   for(int i = 0; i < this->size(); ++ i) {
-    this->put(i, std::min(this->get(i), other.get(i)));
+    this->put(i, std::min(this->get(i), value_type(other.get(i))));
   }
   return this->actual();
 }
@@ -163,7 +163,7 @@ writable_vector<DT>::maximize(const readable_vector<ODT>& other) __CML_REF
 {
   cml::check_same_size(*this, other);
   for(int i = 0; i < this->size(); ++ i) {
-    this->put(i, std::max(this->get(i), other.get(i)));
+    this->put(i, std::max(this->get(i), value_type(other.get(i))));
   }
   return this->actual();
 }

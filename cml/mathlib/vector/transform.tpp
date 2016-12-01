@@ -8,6 +8,7 @@
 #error "mathlib/vector/transform.tpp not included correctly"
 #endif
 
+#include <cml/vector/fixed_compiled.h>
 #include <cml/matrix/vector_product.h>
 #include <cml/mathlib/matrix/size_checking.h>
 
@@ -43,14 +44,12 @@ transform_vector_2D(
   ) -> temporary_of_t<Sub2>
 {
   typedef temporary_of_t<Sub2>				result_type;
+  typedef value_type_trait_of_t<result_type>		value_type;
   cml::check_minimum_size(m, int_c<2>(), int_c<2>());
   cml::check_size(v, int_c<2>());
   return result_type(
-    m.basis_element(0,0)*v[0] +
-    m.basis_element(1,0)*v[1],
-
-    m.basis_element(0,1)*v[0] +
-    m.basis_element(1,1)*v[1]
+    value_type(m.basis_element(0,0)*v[0] + m.basis_element(1,0)*v[1]),
+    value_type(m.basis_element(0,1)*v[0] + m.basis_element(1,1)*v[1])
     );
 }
 
@@ -60,16 +59,19 @@ transform_point_2D(
   ) -> temporary_of_t<Sub2>
 {
   typedef temporary_of_t<Sub2>				result_type;
+  typedef value_type_trait_of_t<result_type>		value_type;
   cml::check_affine_2D(m);
   cml::check_size(v, int_c<2>());
   return result_type(
-    m.basis_element(0,0)*v[0] +
-    m.basis_element(1,0)*v[1] +
-    m.basis_element(2,0),
+    value_type(
+      m.basis_element(0,0)*v[0] +
+      m.basis_element(1,0)*v[1] +
+      m.basis_element(2,0)),
 
-    m.basis_element(0,1)*v[0] +
-    m.basis_element(1,1)*v[1] +
-    m.basis_element(2,1)
+    value_type(
+      m.basis_element(0,1)*v[0] +
+      m.basis_element(1,1)*v[1] +
+      m.basis_element(2,1))
     );
 }
 
@@ -82,20 +84,24 @@ transform_vector(
   ) -> temporary_of_t<Sub2>
 {
   typedef temporary_of_t<Sub2>				result_type;
+  typedef value_type_trait_of_t<result_type>		value_type;
   cml::check_minimum_size(m, int_c<3>(), int_c<3>());
   cml::check_size(v, int_c<3>());
   return result_type(
-    m.basis_element(0,0)*v[0] +
-    m.basis_element(1,0)*v[1] +
-    m.basis_element(2,0)*v[2],
+    value_type(
+      m.basis_element(0,0)*v[0] +
+      m.basis_element(1,0)*v[1] +
+      m.basis_element(2,0)*v[2]),
 
-    m.basis_element(0,1)*v[0] +
-    m.basis_element(1,1)*v[1] +
-    m.basis_element(2,1)*v[2],
+    value_type(
+      m.basis_element(0,1)*v[0] +
+      m.basis_element(1,1)*v[1] +
+      m.basis_element(2,1)*v[2]),
 
-    m.basis_element(0,2)*v[0] +
-    m.basis_element(1,2)*v[1] +
-    m.basis_element(2,2)*v[2]
+    value_type(
+      m.basis_element(0,2)*v[0] +
+      m.basis_element(1,2)*v[1] +
+      m.basis_element(2,2)*v[2])
     );
 }
 
@@ -105,23 +111,27 @@ transform_point(
   ) -> temporary_of_t<Sub2>
 {
   typedef temporary_of_t<Sub2>				result_type;
+  typedef value_type_trait_of_t<result_type>		value_type;
   cml::check_affine_3D(m);
   cml::check_size(v, int_c<3>());
   return result_type(
-    m.basis_element(0,0)*v[0] +
-    m.basis_element(1,0)*v[1] +
-    m.basis_element(2,0)*v[2] +
-    m.basis_element(3,0),
+    value_type(
+      m.basis_element(0,0)*v[0] +
+      m.basis_element(1,0)*v[1] +
+      m.basis_element(2,0)*v[2] +
+      m.basis_element(3,0)),
 
-    m.basis_element(0,1)*v[0] +
-    m.basis_element(1,1)*v[1] +
-    m.basis_element(2,1)*v[2] +
-    m.basis_element(3,1),
+    value_type(
+      m.basis_element(0,1)*v[0] +
+      m.basis_element(1,1)*v[1] +
+      m.basis_element(2,1)*v[2] +
+      m.basis_element(3,1)),
 
-    m.basis_element(0,2)*v[0] +
-    m.basis_element(1,2)*v[1] +
-    m.basis_element(2,2)*v[2] +
-    m.basis_element(3,2)
+    value_type(
+      m.basis_element(0,2)*v[0] +
+      m.basis_element(1,2)*v[1] +
+      m.basis_element(2,2)*v[2] +
+      m.basis_element(3,2))
     );
 }
 
@@ -144,9 +154,39 @@ transform_point_4D(
 {
   typedef temporary_of_t<Sub2>				result_type;
   typedef supervector_of_t<Sub2>			super_type;
-  typedef value_type_trait_of_t<Sub2>			one_type;
+  typedef value_type_trait_of_t<result_type>		value_type;
+
+  cml::check_size(m, int_c<4>(), int_c<4>());
   cml::check_size(v, int_c<3>());
-  auto h = transform_vector_4D(m, super_type(v, one_type(1)));
+
+  /* 4D vector temporary: */
+  vector<value_type, compiled<4>> h(
+    value_type(
+      m.basis_element(0,0)*v[0] +
+      m.basis_element(1,0)*v[1] +
+      m.basis_element(2,0)*v[2] +
+      m.basis_element(3,0)),
+
+    value_type(
+      m.basis_element(0,1)*v[0] +
+      m.basis_element(1,1)*v[1] +
+      m.basis_element(2,1)*v[2] +
+      m.basis_element(3,1)),
+
+    value_type(
+      m.basis_element(0,2)*v[0] +
+      m.basis_element(1,2)*v[1] +
+      m.basis_element(2,2)*v[2] +
+      m.basis_element(3,2)),
+
+    value_type(
+      m.basis_element(0,3)*v[0] +
+      m.basis_element(1,3)*v[1] +
+      m.basis_element(2,3)*v[2] +
+      m.basis_element(3,3))
+    );
+
+  /* Return projection: */
   return result_type(h[0] / h[3], h[1] / h[3], h[2] / h[3]);
 }
 

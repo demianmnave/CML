@@ -21,16 +21,15 @@ polar_to_cartesian(
   writable_vector<Sub>& v, E0 radius, E1 theta
   )
 {
-  typedef value_type_trait_of_t<Sub>			value_type;
-  typedef scalar_traits<value_type>			value_traits;
+  typedef scalar_traits<E1>				theta_traits;
 
   static_assert(
     cml::are_convertible<value_type_trait_of_t<Sub>, E0, E1>::value,
     "incompatible scalar types");
   cml::check_size(v, int_c<2>());
 
-  v[0] = value_traits::cos(theta) * radius;
-  v[1] = value_traits::sin(theta) * radius;
+  v[0] = theta_traits::cos(theta) * radius;
+  v[1] = theta_traits::sin(theta) * radius;
 }
 
 template<class E, class Sub> inline void
@@ -47,8 +46,7 @@ cylindrical_to_cartesian(
     writable_vector<Sub>& v, int axis, E0 radius, E1 theta, E2 height
     )
 {
-  typedef value_type_trait_of_t<Sub>			value_type;
-  typedef scalar_traits<value_type>			value_traits;
+  typedef scalar_traits<E1>				theta_traits;
 
   static_assert(
     cml::are_convertible<value_type_trait_of_t<Sub>, E0, E1, E2>::value,
@@ -65,8 +63,8 @@ cylindrical_to_cartesian(
 
   /* Initialize the vector: */
   v[i] = height;
-  v[j] = value_traits::cos(theta) * radius;
-  v[k] = value_traits::sin(theta) * radius;
+  v[j] = theta_traits::cos(theta) * radius;
+  v[k] = theta_traits::sin(theta) * radius;
 }
 
 template<class E, class Sub> inline void
@@ -82,8 +80,8 @@ template<class Sub, class E0, class E1, class E2> inline void
 spherical_to_cartesian(writable_vector<Sub>& v,
   int axis, LatitudeType type, E0 radius, E1 theta, E2 phi)
 {
-  typedef value_type_trait_of_t<Sub>			value_type;
-  typedef scalar_traits<value_type>			value_traits;
+  typedef scalar_traits<E1>				theta_traits;
+  typedef scalar_traits<E2>				phi_traits;
 
   static_assert(
     cml::are_convertible<value_type_trait_of_t<Sub>, E0, E1, E2>::value,
@@ -92,10 +90,10 @@ spherical_to_cartesian(writable_vector<Sub>& v,
     std::invalid_argument, "axis must be 0, 1, or 2");
   cml::check_size(v, int_c<3>());
 
-  if(type == latitude) phi = constants<value_type>::pi_over_2() - phi;
+  if(type == latitude) phi = constants<E2>::pi_over_2() - phi;
 
-  auto sin_phi = value_traits::sin(phi);
-  auto cos_phi = value_traits::cos(phi);
+  auto sin_phi = phi_traits::sin(phi);
+  auto cos_phi = phi_traits::cos(phi);
   auto sin_phi_r = sin_phi * radius;
 
   /* Make i = axis, and (j,k) equal to the other axis in cyclic order from
@@ -106,8 +104,8 @@ spherical_to_cartesian(writable_vector<Sub>& v,
 
   /* Initialize the vector: */
   v[i] = cos_phi * radius;
-  v[j] = sin_phi_r * value_traits::cos(theta);
-  v[k] = sin_phi_r * value_traits::sin(theta);
+  v[j] = sin_phi_r * theta_traits::cos(theta);
+  v[k] = sin_phi_r * theta_traits::sin(theta);
 }
 
 template<class E, class Sub> inline void
@@ -137,7 +135,7 @@ cartesian_to_polar(
 
   radius = v.length();
   theta = radius < tolerance
-    ? value_type(0) : value_traits::atan2(v[1],v[0]);
+    ? E1(0) : E1(value_traits::atan2(v[1], v[0]));
 }
 
 template<class Sub, class E0, class E1> inline void
@@ -173,10 +171,10 @@ cartesian_to_cylindrical(const readable_vector<Sub>& v,
   cml::cyclic_permutation(axis, i, j, k);
 
   /* Initialize return values; */
-  height = v[i];
-  radius = cml::length(v[j], v[k]);
+  height = E2(v[i]);
+  radius = E0(cml::length(v[j], v[k]));
   theta = radius < tolerance
-    ? value_type(0) : value_traits::atan2(v[k], v[j]);
+    ? E1(0) : E1(value_traits::atan2(v[k], v[j]));
 }
 
 template<class Sub, class E0, class E1, class E2> inline void
@@ -221,13 +219,13 @@ cartesian_to_spherical(const readable_vector<Sub>& v,
   cml::cyclic_permutation(axis, i, j, k);
 
   auto len = cml::length(v[j], v[k]);
-  theta = len < tolerance ? value_type(0) : value_traits::atan2(v[k], v[j]);
-  radius = cml::length(v[i], len);
+  theta = len < tolerance ? E1(0) : E1(value_traits::atan2(v[k], v[j]));
+  radius = E0(cml::length(v[i], len));
   if(radius < tolerance) {
-    phi = value_type(0);
+    phi = E2(0);
   } else {
-    phi = value_traits::atan2(len,v[i]);
-    if(type == latitude) phi = constants<value_type>::pi_over_2() - phi;
+    phi = E2(value_traits::atan2(len,v[i]));
+    if(type == latitude) phi = constants<E2>::pi_over_2() - phi;
   }
 }
 

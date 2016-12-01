@@ -28,13 +28,13 @@ quaternion_rotation_world_axis(
     value_type_trait_of_t<Sub>, E>::value, "incompatible scalar types");
 
   typedef order_type_trait_of_t<Sub>			order_type;
-  typedef traits_of_t<E>				scalar_traits;
+  typedef traits_of_t<E>				angle_traits;
 
   cml_require(0 <= axis && axis <= 2, std::invalid_argument, "invalid axis");
 
   q.identity();
-  q[order_type::W] = scalar_traits::cos(angle / E(2));
-  q[order_type::X + axis] = scalar_traits::sin(angle / E(2));
+  q[order_type::W] = angle_traits::cos(angle / E(2));
+  q[order_type::X + axis] = angle_traits::sin(angle / E(2));
 }
 
 template<class Sub, class E> inline void
@@ -65,12 +65,12 @@ inline void quaternion_rotation_axis_angle(
     value_type_trait_of_t<Sub>, value_type_trait_of_t<ASub>, E>::value,
     "incompatible scalar types");
 
-  typedef traits_of_t<E>				scalar_traits;
+  typedef traits_of_t<E>				angle_traits;
 
   cml::check_size(axis, int_c<3>());
   q.set(
-    scalar_traits::cos(angle / E(2)),
-    scalar_traits::sin(angle / E(2)) * axis);
+    angle_traits::cos(angle / E(2)),
+    angle_traits::sin(angle / E(2)) * axis);
 }
 
 template<class Sub, class MSub>
@@ -85,6 +85,8 @@ inline void quaternion_rotation_matrix(
   typedef order_type_trait_of_t<Sub>			order_type;
   typedef value_type_trait_of_t<Sub>			value_type;
   typedef traits_of_t<value_type>			value_traits;
+  typedef value_type_trait_of_t<MSub>			M_type;
+  typedef traits_of_t<M_type>				M_traits;
 
   cml::check_minimum_size(m, int_c<3>(), int_c<3>());
 
@@ -111,9 +113,9 @@ inline void quaternion_rotation_matrix(
     const int I = X + i;
     const int J = X + j;
     const int K = X + k;
-    q[I] = value_traits::sqrt(
+    q[I] = value_type(M_traits::sqrt(
       m.basis_element(i,i) - m.basis_element(j,j)
-      - m.basis_element(k,k) + value_type(1)) / value_type(2);
+      - m.basis_element(k,k) + value_type(1))) / value_type(2);
     value_type s = (value_type(1) / value_type(4)) / q[I];
     q[J] = (m.basis_element(i,j) + m.basis_element(j,i)) * s;
     q[K] = (m.basis_element(i,k) + m.basis_element(k,i)) * s;
@@ -131,8 +133,9 @@ quaternion_rotation_euler(writable_quaternion<Sub>& q,
     "incompatible scalar types");
 
   typedef order_type_trait_of_t<Sub>			order_type;
-  typedef value_type_trait_of_t<Sub>			value_type;
-  typedef traits_of_t<value_type>			value_traits;
+  typedef scalar_traits<E0>				angle0_traits;
+  typedef scalar_traits<E1>				angle1_traits;
+  typedef scalar_traits<E2>				angle2_traits;
 
   int i, j, k;
   bool odd, repeat;
@@ -145,21 +148,21 @@ quaternion_rotation_euler(writable_quaternion<Sub>& q,
 
   if(odd) angle_1 = -angle_1;
 
-  angle_0 /= value_type(2);
-  angle_1 /= value_type(2);
-  angle_2 /= value_type(2);
+  angle_0 /= E0(2);
+  angle_1 /= E1(2);
+  angle_2 /= E2(2);
 
-  value_type s0 = value_traits::sin(angle_0);
-  value_type c0 = value_traits::cos(angle_0);
-  value_type s1 = value_traits::sin(angle_1);
-  value_type c1 = value_traits::cos(angle_1);
-  value_type s2 = value_traits::sin(angle_2);
-  value_type c2 = value_traits::cos(angle_2);
+  auto s0 = angle0_traits::sin(angle_0);
+  auto c0 = angle0_traits::cos(angle_0);
+  auto s1 = angle1_traits::sin(angle_1);
+  auto c1 = angle1_traits::cos(angle_1);
+  auto s2 = angle2_traits::sin(angle_2);
+  auto c2 = angle2_traits::cos(angle_2);
 
-  value_type s0s2 = s0 * s2;
-  value_type s0c2 = s0 * c2;
-  value_type c0s2 = c0 * s2;
-  value_type c0c2 = c0 * c2;
+  auto s0s2 = s0 * s2;
+  auto s0c2 = s0 * c2;
+  auto c0s2 = c0 * s2;
+  auto c0c2 = c0 * c2;
 
   if(repeat) {
     q[I] = c1 * (c0s2 + s0c2);
@@ -234,19 +237,18 @@ quaternion_to_axis_angle(
     value_type_trait_of_t<Sub>, value_type_trait_of_t<ASub>, E, Tol>::value,
     "incompatible scalar types");
 
-  typedef value_type_trait_of_t<Sub>			value_type;
-  typedef scalar_traits<value_type>			value_traits;
+  typedef scalar_traits<E>				angle_traits;
 
   cml::detail::check_or_resize(axis, int_c<3>());
 
   axis = q.imaginary();
-  value_type l = axis.length();
-  if (l > tolerance) {
+  auto l = axis.length();
+  if(l > tolerance) {
     axis /= l;
-    angle = value_type(2) * value_traits::atan2(l, q.real());
+    angle = E(2) * angle_traits::atan2(l, q.real());
   } else {
     axis.zero();
-    angle = value_type(0);
+    angle = E(0);
   }
 }
 
