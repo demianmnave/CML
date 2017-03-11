@@ -196,7 +196,7 @@ template<> struct scalar_traits<float>
 : detail::default_floating_point_traits<float>
 {
   /** Returns a constant for sqrt(numeric_limits<float>::epsilon()). */
-  static inline double sqrt_epsilon() {
+  static inline float sqrt_epsilon() {
     return 3.452669831e-4f;		// 10 digits
   }
 };
