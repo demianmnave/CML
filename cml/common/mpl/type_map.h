@@ -11,6 +11,12 @@
 
 #include <cml/common/mpl/if_t.h>
 
+#ifdef _MSC_VER
+/* Disable "identifier too long" warning:
+#pragma warning(push)
+#pragma warning(disable : 4503)
+#endif
+
 namespace cml {
 
 /** A bijective mapping of unique types, using a list of arbitrary items as
@@ -114,6 +120,10 @@ struct type_map_item
 };
 
 } // namespace cml
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif
 

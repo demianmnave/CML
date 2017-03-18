@@ -11,6 +11,12 @@
 
 #include <cml/common/mpl/if_t.h>
 
+#ifdef _MSC_VER
+/* Disable "identifier too long" warning:
+#pragma warning(push)
+#pragma warning(disable : 4503)
+#endif
+
 namespace cml {
 
 /** A symmetric mapping of type pairs to a new type, using a list of
@@ -106,6 +112,10 @@ struct type_table_item
 };
 
 } // namespace cml
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif
 
