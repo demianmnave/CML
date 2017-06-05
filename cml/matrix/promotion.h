@@ -284,6 +284,60 @@ template<class Sub1, class Sub2, class Basis, class Layout>
   using matrix_outer_product_promote_t
     = typename matrix_outer_product_promote<Sub1,Sub2,Basis,Layout>::type;
 
+
+/** Determine the row vector temporary type for matrix type @c Sub. */
+template<class Sub, class Enable = void> struct row_type_of;
+
+template<class Sub>
+struct row_type_of<Sub,
+  typename std::enable_if<cml::is_matrix<Sub>::value>::type>
+{
+  /* Matrix traits and types: */
+  using matrix_type = cml::unqualified_type_t<Sub>;
+  using matrix_traits = cml::traits_of_t<matrix_type>;
+  using matrix_storage_type = cml::storage_type_of_t<matrix_traits>;
+  using value_type = cml::value_type_of_t<matrix_traits>;
+
+  /* The vector proxy type and size comes from the matrix proxy type: */
+  using unbound_type = cml::proxy_type_of_t<matrix_storage_type>;
+  using proxy_type = cml::rebind_matrix_storage_t<unbound_type>;
+  static const int array_size = proxy_type::array_cols;
+  using vector_type = cml::resize_storage_t<unbound_type, array_size>;
+
+  /* Build the temporary: */
+  using type = cml::vector<value_type, vector_type>;
+};
+
+/** Convenience alias for row_type_of. */
+template<class Sub> using row_type_of_t = typename row_type_of<Sub>::type;
+
+
+/** Determine the column vector temporary type for matrix type @c Sub. */
+template<class Sub, class Enable = void> struct col_type_of;
+
+template<class Sub>
+struct col_type_of<Sub,
+  typename std::enable_if<cml::is_matrix<Sub>::value>::type>
+{
+  /* Matrix traits and types: */
+  using matrix_type = cml::unqualified_type_t<Sub>;
+  using matrix_traits = cml::traits_of_t<matrix_type>;
+  using matrix_storage_type = cml::storage_type_of_t<matrix_traits>;
+  using value_type = cml::value_type_of_t<matrix_traits>;
+
+  /* The vector proxy type and size comes from the matrix proxy type: */
+  using unbound_type = cml::proxy_type_of_t<matrix_storage_type>;
+  using proxy_type = cml::rebind_matrix_storage_t<unbound_type>;
+  static const int array_size = proxy_type::array_rows;
+  using vector_type = cml::resize_storage_t<unbound_type, array_size>;
+
+  /* Build the temporary: */
+  using type = cml::vector<value_type, vector_type>;
+};
+
+/** Convenience alias for col_type_of. */
+template<class Sub> using col_type_of_t = typename col_type_of<Sub>::type;
+
 } // namespace cml
 
 #endif

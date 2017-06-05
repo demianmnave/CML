@@ -4,21 +4,20 @@
 
 # Search for Boost.Test:
 if(CML_BUILD_TESTING)
+
+  if(NOT DEFINED BOOST_ROOT)
+    set(BOOST_ROOT "" CACHE PATH "Path containing Boost")
+  else()
+    if("${BOOST_ROOT}" STREQUAL "")
+      message(FATAL_ERROR "Please set BOOST_ROOT before configuring again")
+    endif()
+  endif()
+
   set(Boost_USE_STATIC_LIBS TRUE)
   set(Boost_USE_STATIC_RUNTIME TRUE)
 
   # Find Boost.UTF:
   find_package(Boost REQUIRED COMPONENTS unit_test_framework)
-
-  # Allow the user to specify the library path if necessary:
-  if(NOT DEFINED Boost_UNIT_TEST_FRAMEWORK_LIBRARY_FOUND)
-    if(NOT DEFINED Boost_LIBRARY_DIR)
-      set(BOOST_LIBRARYDIR "" CACHE PATH "Path to the Boost libraries")
-    endif()
-  endif()
-
-  # Boost library directory:
-  link_directories(${Boost_LIBRARY_DIR})
 endif()
 
 macro(MAKE_CML_TEST_GROUP _Group)
@@ -55,7 +54,8 @@ macro(ADD_CML_TEST
   # Setup the build target:
   add_executable(${ExecName} ${_Name}.cpp)
   set_target_properties(${ExecName} PROPERTIES FOLDER "${test_group}")
-  target_link_libraries(${ExecName} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+  target_compile_definitions(${ExecName} PRIVATE -DBOOST_ALL_NO_LIB)
+  target_link_libraries(${ExecName} Boost::unit_test_framework)
 
   # Setup the test:
   add_test(NAME ${TestName} COMMAND ${ExecName} --log_level=warning)

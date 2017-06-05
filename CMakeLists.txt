@@ -32,7 +32,6 @@ CML_VERSION_FROM_FILE(
   )
 message(STATUS "Building CML ${CML_VERSION}")
 
-
 # Modify build settings locally for static linking of tests and examples:
 if(MINGW)
 
