@@ -12,17 +12,17 @@ environment:
       BOOST_ROOT: "C:\\Libraries\\boost_1_59_0"
       BOOST_LIBRARYDIR: "C:\\Libraries\\boost_1_59_0\\lib64-msvc-12.0"
 
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-      GENERATOR: "Visual Studio 14 2015 Win64"
-      CONFIG: Release
-      BOOST_ROOT: "C:\\Libraries\\boost_1_63_0"
-      BOOST_LIBRARYDIR: "C:\\Libraries\\boost_1_63_0\\lib64-msvc-14.0"
-
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      GENERATOR: "Visual Studio 15 2017 Win64"
-      CONFIG: Release
-      BOOST_ROOT: "C:\\Libraries\\boost_1_64_0"
-      BOOST_LIBRARYDIR: "C:\\Libraries\\boost_1_64_0\\lib64-msvc-14.1"
+#    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+#      GENERATOR: "Visual Studio 14 2015 Win64"
+#      CONFIG: Release
+#      BOOST_ROOT: "C:\\Libraries\\boost_1_63_0"
+#      BOOST_LIBRARYDIR: "C:\\Libraries\\boost_1_63_0\\lib64-msvc-14.0"
+#
+#    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+#      GENERATOR: "Visual Studio 15 2017 Win64"
+#      CONFIG: Release
+#      BOOST_ROOT: "C:\\Libraries\\boost_1_64_0"
+#      BOOST_LIBRARYDIR: "C:\\Libraries\\boost_1_64_0\\lib64-msvc-14.1"
 
 build_script:
   - mkdir build
@@ -33,8 +33,8 @@ build_script:
 test_script:
   - ctest -V --build-config "%CONFIG%"
 
-## init:
-##   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-## 
-## on_finish:
-##   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+init:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
