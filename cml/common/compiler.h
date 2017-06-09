@@ -26,10 +26,17 @@
 /* Defaulted move constructor supported: */
 # define CML_HAS_DEFAULTED_MOVE_CONSTRUCTOR
 
+/* Constexpr support: */
+# define CML_CONSTEXPR constexpr
+
+/* This dummy qualifier is not needed for gcc: */
+#  define CML_DUMMY_TYPENAME
+
 #elif defined(_MSC_VER)
 /* VC++ support for C++11 features used by CML: */
 
 # if _MSC_VER < 1900
+
 /* VC++ (at least VS12) does not support move from *this, so no need to
  * disambiguate:
  */
@@ -37,6 +44,14 @@
 
 /* VC++ (at least VS12) has brain-dead operator= overload resolution: */
 #  define CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
+
+/* VC++ 2013 cannot figure out default arguments returned as a template
+ * method without this qualifier:
+ */
+#  define CML_DUMMY_TYPENAME typename
+
+/* No constexpr support: */
+#  define CML_CONSTEXPR inline
 
 # else
 
@@ -53,6 +68,12 @@
 
 /* Defaulted move constructor supported: */
 #  define CML_HAS_DEFAULTED_MOVE_CONSTRUCTOR
+
+/* Constexpr support: */
+#  define CML_CONSTEXPR constexpr
+
+/* Not needed for other versions of VC++: */
+#  define CML_DUMMY_TYPENAME
 
 # endif
 
@@ -73,6 +94,12 @@
 /* Defaulted move constructor supported: */
 # define CML_HAS_DEFAULTED_MOVE_CONSTRUCTOR
 
+/* Constexpr support: */
+# define CML_CONSTEXPR constexpr
+
+/* This dummy qualifier is not needed for Clang: */
+#  define CML_DUMMY_TYPENAME
+
 #elif defined(__apple_build_version__) && (__apple_build_version__ >= 7000000)
 /* AppleClang support for C++11 features used by CML: */
 
@@ -90,6 +117,12 @@
 /* Defaulted move constructor supported: */
 # define CML_HAS_DEFAULTED_MOVE_CONSTRUCTOR
 
+/* Constexpr support: */
+# define CML_CONSTEXPR constexpr
+
+/* This dummy qualifier is not needed for Clang: */
+#  define CML_DUMMY_TYPENAME
+
 #else
 #warning "Unrecognized compiler; using safe defaults"
 
@@ -101,6 +134,12 @@
 
 /* Assume no disambiguation needed: */
 # define __CML_REF
+
+/* Assume no constexpr support: */
+# define CML_CONSTEXPR inline
+
+/* Assume this dummy qualifier is not needed: */
+#  define CML_DUMMY_TYPENAME
 
 #endif
 

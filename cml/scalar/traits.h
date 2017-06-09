@@ -11,6 +11,7 @@
 
 #include <cmath>
 #include <limits>
+#include <cml/common/compiler.h>
 #include <cml/common/mpl/enable_if_arithmetic.h>
 #include <cml/common/temporary.h>
 #include <cml/common/traits.h>
@@ -49,7 +50,7 @@ template<typename Scalar> struct default_integral_traits
     return (value_type) std::fmod(double(v), double(w));
   }
 
-  static inline value_type sqrt(const value_type& v) {
+  static CML_CONSTEXPR value_type sqrt(const value_type& v) {
     return (value_type) std::sqrt(double(v));
   }
 
@@ -120,7 +121,7 @@ template<typename Scalar> struct default_floating_point_traits
     return std::fmod(v, w);
   }
 
-  static inline value_type sqrt(const value_type& v) {
+  static CML_CONSTEXPR value_type sqrt(const value_type& v) {
     return std::sqrt(v);
   }
 
@@ -175,7 +176,7 @@ Scalar, typename std::enable_if<std::is_integral<Scalar>::value>::type>
 : detail::default_integral_traits<Scalar>
 {
   /** Returns 0. */
-  static inline Scalar sqrt_epsilon() { return 0; }
+  static CML_CONSTEXPR Scalar sqrt_epsilon() { return 0; }
 };
 
 /** Specialization of scalar_traits for floating-point types. */
@@ -184,10 +185,9 @@ Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
 : detail::default_floating_point_traits<Scalar>
 {
   /** Returns sqrt(numeric_limits<float>::epsilon()). */
-  static inline double sqrt_epsilon() {
-    static double _s = detail::default_floating_point_traits<Scalar>::sqrt(
+  static CML_CONSTEXPR double sqrt_epsilon() {
+    return detail::default_floating_point_traits<Scalar>::sqrt(
       std::numeric_limits<Scalar>::epsilon());
-    return _s;
   }
 };
 
@@ -196,7 +196,7 @@ template<> struct scalar_traits<float>
 : detail::default_floating_point_traits<float>
 {
   /** Returns a constant for sqrt(numeric_limits<float>::epsilon()). */
-  static inline float sqrt_epsilon() {
+  static CML_CONSTEXPR float sqrt_epsilon() {
     return 3.452669831e-4f;		// 10 digits
   }
 };
@@ -206,26 +206,18 @@ template<> struct scalar_traits<double>
 : detail::default_floating_point_traits<double>
 {
   /** Returns a constant for sqrt(numeric_limits<double>::epsilon()). */
-  static inline double sqrt_epsilon() {
+  static CML_CONSTEXPR double sqrt_epsilon() {
     return 1.49011611938476563e-8;	// 18 digits
   }
 };
 
-/** Returns eps for type S.
- *
- * @note This is mostly a hack for VC++ 2013, which can't seem to handle
- * traits access for defaulted template function arguments.
- */
-template<class S> inline S epsilon() {
+/** Returns eps for type S. */
+template<typename S> CML_CONSTEXPR S epsilon() {
   return scalar_traits<S>::epsilon();
 }
 
-/** Returns sqrt(eps) for type S.
- *
- * @note This is mostly a hack for VC++ 2013, which can't seem to handle
- * traits access for defaulted template function arguments.
- */
-template<class S> inline S sqrt_epsilon() {
+/** Returns sqrt(eps) for type S. */
+template<typename S> CML_CONSTEXPR S sqrt_epsilon() {
   return scalar_traits<S>::sqrt_epsilon();
 }
 

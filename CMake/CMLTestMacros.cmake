@@ -10,14 +10,15 @@ if(CML_BUILD_TESTING)
   else()
     if("${BOOST_ROOT}" STREQUAL "")
       message(FATAL_ERROR "Please set BOOST_ROOT before configuring again")
+    else()
+
+      set(Boost_USE_STATIC_LIBS TRUE)
+      set(Boost_USE_STATIC_RUNTIME TRUE)
+
+      # Find Boost.UTF:
+      find_package(Boost REQUIRED COMPONENTS unit_test_framework)
     endif()
   endif()
-
-  set(Boost_USE_STATIC_LIBS TRUE)
-  set(Boost_USE_STATIC_RUNTIME TRUE)
-
-  # Find Boost.UTF:
-  find_package(Boost REQUIRED COMPONENTS unit_test_framework)
 endif()
 
 macro(MAKE_CML_TEST_GROUP _Group)
