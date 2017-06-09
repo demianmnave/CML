@@ -27,7 +27,7 @@ environment:
 build_script:
   - mkdir build
   - cd build
-  - cmake "-G%GENERATOR%" -DBOOST_ROOT="%BOOST_ROOT%" -DCML_BUILD_TESTING=ON ..
+  - cmake "-G%GENERATOR%" -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" -DCML_BUILD_TESTING=ON ..
   - cmake --build . --config "%CONFIG%"
 
 test_script:
