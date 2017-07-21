@@ -4,11 +4,37 @@ matrix:
   fast_finish: true
   include:
 
-    - os: osx
-      osx_image: xcode7.3
+#     - os: osx
+#       osx_image: xcode7.3
+#       env: BOOST_ROOT=/usr/local
+# 
+#     - os: osx
+#       osx_image: xcode8.3
+#       env: BOOST_ROOT=/usr/local
 
-    - os: osx
-      osx_image: xcode8.3
+    - os: linux
+	addons:
+	  apt:
+	    sources:
+	      - llvm-toolchain-trusty-4.0
+	    packages:
+	      - clang-4.0
+	      - libboost-test-dev
+	env:
+	  - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
+          - BOOST_ROOT=/usr
+
+#     - os: linux
+#       addons:
+# 	apt:
+# 	  sources:
+# 	    - llvm-toolchain-trusty
+# 	  packages:
+# 	    - clang-5.0
+# 	    - libboost-test-dev
+#       env:
+# 	- MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+#           - BOOST_ROOT=/usr
 
 before_install:
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then
@@ -17,11 +43,17 @@ before_install:
       brew outdated cmake || brew upgrade cmake;
     fi
 
+  - if [ ${TRAVIS_OS_NAME} == "linux" ]; then
+      eval "${MATRIX_EVAL}"
+    fi
+
+  - eval "${BOOST_ROOT}"
+
 before_script:
   - mkdir build 
   - cd build
 
 script:
-  - cmake -G "Unix Makefiles" -DBOOST_ROOT=/usr/local -DCML_BUILD_TESTING:Bool=ON ..
-  - cmake --build . --config Release
-  - ctest -C Release
+  - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE -DBOOST_ROOT=${BOOST_ROOT} -DCML_BUILD_TESTING:Bool=ON ..
+    cmake --build . --config Release
+    ctest -C Release

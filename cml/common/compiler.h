@@ -77,7 +77,8 @@
 
 # endif
 
-#elif defined(__clang__) && ((__clang_major__ >= 3) && (__clang_minor__ >= 5))
+#elif defined(__clang__) && ((__clang_major__ >= 4) \
+  || ((__clang_major__ >= 3) && (__clang_minor__ >= 5)))
 /* clang support for C++11 features used by CML: */
 
 /* N2439 move semantics for *this, used, for example, to efficiently return
