@@ -13,28 +13,28 @@ matrix:
 #       env: BOOST_ROOT=/usr/local
 
     - os: linux
-	addons:
-	  apt:
-	    sources:
-	      - llvm-toolchain-trusty-4.0
-	    packages:
-	      - clang-4.0
-	      - libboost-test-dev
-	env:
-	  - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
-          - BOOST_ROOT=/usr
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-4.0
+          packages:
+            - clang-4.0
+            - libboost-test-dev
+      env:
+        - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
+        - BOOST_ROOT=/usr
 
 #     - os: linux
 #       addons:
-# 	apt:
-# 	  sources:
-# 	    - llvm-toolchain-trusty
-# 	  packages:
-# 	    - clang-5.0
-# 	    - libboost-test-dev
+#         apt:
+#           sources:
+#             - llvm-toolchain-trusty
+#           packages:
+#             - clang-5.0
+#             - libboost-test-dev
 #       env:
-# 	- MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
-#           - BOOST_ROOT=/usr
+#         - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+#         - BOOST_ROOT=/usr
 
 before_install:
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then
