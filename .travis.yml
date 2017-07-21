@@ -48,7 +48,7 @@ before_install:
     fi
 
   - if [ ${TRAVIS_OS_NAME} == "linux" ]; then
-      eval "${MATRIX_EVAL}"
+      eval "${MATRIX_EVAL}";
     fi
 
   - eval "${BOOST_ROOT}"
