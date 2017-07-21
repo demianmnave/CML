@@ -20,7 +20,8 @@ matrix:
 #       env: BOOST_ROOT=/usr/local
 
     - os: linux
-      addons: &clang50
+      dist: trusty
+      addons: &clang40
         apt:
           packages: ['libboost-test-dev', 'clang-4.0']
           sources: *apt_sources
