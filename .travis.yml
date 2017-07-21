@@ -1,5 +1,12 @@
 language: cpp
 
+addons:
+  apt:
+    sources: &apt_sources
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-trusty
+      - llvm-toolchain-trusty-4.0
+
 matrix:
   fast_finish: true
   include:
@@ -13,13 +20,10 @@ matrix:
 #       env: BOOST_ROOT=/usr/local
 
     - os: linux
-      addons:
+      addons: &clang50
         apt:
-          sources:
-            - llvm-toolchain-trusty-4.0
-          packages:
-            - clang-4.0
-            - libboost-test-dev
+          packages: ['libboost-test-dev', 'clang-4.0']
+          sources: *apt_sources
       env:
         - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
         - BOOST_ROOT=/usr
