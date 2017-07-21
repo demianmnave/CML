@@ -58,6 +58,7 @@ before_script:
   - cd build
 
 script:
-  - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE -DBOOST_ROOT=${BOOST_ROOT} -DCML_BUILD_TESTING:Bool=ON ..
-    cmake --build . --config Release
-    ctest -C Release
+  - ${CXX} --version
+  - cmake -G "Unix Makefiles" -DBOOST_ROOT=${BOOST_ROOT} -DCML_BUILD_TESTING:Bool=ON ..
+  - cmake --build . --config Release
+  - ctest -C Release
