@@ -13,11 +13,13 @@ matrix:
 
 #     - os: osx
 #       osx_image: xcode7.3
-#       env: BOOST_ROOT=/usr/local
+#       env:
+#         - BOOST_ROOT="BOOST_ROOT=/usr/local"
 # 
 #     - os: osx
 #       osx_image: xcode8.3
-#       env: BOOST_ROOT=/usr/local
+#       env:
+#         - BOOST_ROOT="BOOST_ROOT=/usr/local"
 
     - os: linux
       dist: trusty
@@ -30,16 +32,15 @@ matrix:
         - BOOST_ROOT="BOOST_ROOT=/usr"
 
 #     - os: linux
-#       addons:
+#       dist: trusty
+#       addons: &clang50
 #         apt:
-#           sources:
-#             - llvm-toolchain-trusty
-#           packages:
-#             - clang-5.0
-#             - libboost-test-dev
+#           packages: ['libboost-test-dev', 'clang-5.0']
+#           sources: *apt_sources
 #       env:
 #         - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
-#         - BOOST_ROOT=/usr
+#         - BOOST_ROOT="BOOST_ROOT=/usr"
+
 
 before_install:
   - if [ ${TRAVIS_OS_NAME} == "osx" ]; then
@@ -60,6 +61,6 @@ before_script:
 
 script:
   - ${CXX} --version
-  - cmake -G "Unix Makefiles" -DBOOST_ROOT=${BOOST_ROOT} -DCML_BUILD_TESTING:Bool=ON ..
+  - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE -DBOOST_ROOT=${BOOST_ROOT} -DCML_BUILD_TESTING:Bool=ON ..
   - cmake --build . --config Release
   - ctest -C Release
