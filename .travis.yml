@@ -26,7 +26,7 @@ matrix:
           sources: *apt_sources
       env:
         - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
-        - BOOST_ROOT=/usr
+        - BOOST_ROOT="BOOST_ROOT=/usr"
 
 #     - os: linux
 #       addons:
