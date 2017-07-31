@@ -1,12 +1,5 @@
 language: cpp
 
-addons:
-  apt:
-    sources: &apt_sources
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-trusty-4.0
-      - llvm-toolchain-trusty-5.0
-
 matrix:
   fast_finish: true
   include:
@@ -19,19 +12,23 @@ matrix:
 
     - os: linux
       dist: trusty
-      addons: &clang40
+      addons:
         apt:
-          packages: ['clang-4.0']
-          sources: *apt_sources
+          packages: clang-4.0
+          sources:
+             - ubuntu-toolchain-r-test
+             - llvm-toolchain-trusty-4.0
       env:
         - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
 
     - os: linux
       dist: trusty
-      addons: &clang50
+      addons:
         apt:
-          packages: ['clang-5.0']
-          sources: *apt_sources
+          packages: clang-5.0
+          sources:
+             - ubuntu-toolchain-r-test
+             - llvm-toolchain-trusty-5.0
       env:
         - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
 
