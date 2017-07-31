@@ -237,9 +237,7 @@ CATCH_TEST_CASE("fixed external, scalar_multiply_assign2")
   CATCH_CHECK(w[1] == 4.);
   CATCH_CHECK(w[2] == 6.);
 #else
-  BOOST_WARN_MESSAGE(
-    BOOST_IS_DEFINED(CML_HAS_RVALUE_REFERENCE_FROM_THIS),
-    "Assignment to temporary external vectors not supported");
+  CATCH_WARN("Assignment to temporary external vectors not supported");
 #endif
 }
 
@@ -266,9 +264,7 @@ CATCH_TEST_CASE("fixed external, scalar_divide_assign2")
   CATCH_CHECK(w[1] == 2.);
   CATCH_CHECK(w[2] == 3.);
 #else
-  BOOST_WARN_MESSAGE(
-    BOOST_IS_DEFINED(CML_HAS_RVALUE_REFERENCE_FROM_THIS),
-    "Assignment to temporary external vectors not supported");
+  CATCH_WARN("Assignment to temporary external vectors not supported");
 #endif
 }
 
@@ -324,9 +320,7 @@ CATCH_TEST_CASE("dynamic external, scalar_multiply_assign2")
   CATCH_CHECK(w[1] == 4.);
   CATCH_CHECK(w[2] == 6.);
 #else
-  BOOST_WARN_MESSAGE(
-    BOOST_IS_DEFINED(CML_HAS_RVALUE_REFERENCE_FROM_THIS),
-    "Assignment to temporary external vectors not supported");
+  CATCH_WARN("Assignment to temporary external vectors not supported");
 #endif
 }
 
@@ -353,13 +347,9 @@ CATCH_TEST_CASE("dynamic external, scalar_divide_assign2")
   CATCH_CHECK(w[1] == 2.);
   CATCH_CHECK(w[2] == 3.);
 #else
-  BOOST_WARN_MESSAGE(
-    BOOST_IS_DEFINED(CML_HAS_RVALUE_REFERENCE_FROM_THIS),
-    "Assignment to temporary external vectors not supported");
+  CATCH_WARN("Assignment to temporary external vectors not supported");
 #endif
 }
-
-
 
 
 CATCH_TEST_CASE("dynamic, scalar_multiply1")
@@ -443,7 +433,6 @@ CATCH_TEST_CASE("dynamic, scalar_divide_assign2")
   CATCH_CHECK(w[1] == 2.);
   CATCH_CHECK(w[2] == 3.);
 }
-
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

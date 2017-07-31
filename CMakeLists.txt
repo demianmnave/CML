@@ -15,8 +15,7 @@ project(CML)
 set(CML_ROOT "${CML_SOURCE_DIR}")
 
 # Path to project-specific configuration files:
-# list(APPEND CMAKE_MODULE_PATH ${CML_ROOT}/CMake)
-set(CMAKE_MODULE_PATH "${CML_ROOT}/CMake;${CMAKE_MODULE_PATH}")
+list(APPEND CMAKE_MODULE_PATH ${CML_ROOT}/CMake)
 
 # Include project macros:
 include(CMLBuildMacros)
