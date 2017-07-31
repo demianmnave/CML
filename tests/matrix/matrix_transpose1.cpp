@@ -13,12 +13,9 @@
 #include <cml/matrix/types.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE matrix_transpose1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_SUITE(fixed)
-
-BOOST_AUTO_TEST_CASE(transpose_assign_3x3)
+CATCH_TEST_CASE("fixed transpose_assign_3x3")
 {
   auto M = cml::matrix33d(
     1.,  2.,  3.,
@@ -35,10 +32,10 @@ BOOST_AUTO_TEST_CASE(transpose_assign_3x3)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_EQUAL(M(i,j), expected(i,j));
+      CATCH_CHECK(M(i,j) == expected(i,j));
 }
 
-BOOST_AUTO_TEST_CASE(transpose_3x3_1)
+CATCH_TEST_CASE("fixed transpose_3x3_1")
 {
   auto M = cml::matrix33d(
     1.,  2.,  3.,
@@ -55,10 +52,10 @@ BOOST_AUTO_TEST_CASE(transpose_3x3_1)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_EQUAL(T(i,j), expected(i,j));
+      CATCH_CHECK(T(i,j) == expected(i,j));
 }
 
-BOOST_AUTO_TEST_CASE(transpose_3x3_2)
+CATCH_TEST_CASE("fixed transpose_3x3_2")
 {
   auto T = cml::transpose(
     cml::matrix33d(
@@ -76,15 +73,10 @@ BOOST_AUTO_TEST_CASE(transpose_3x3_2)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_EQUAL(T(i,j), expected(i,j));
+      CATCH_CHECK(T(i,j) == expected(i,j));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
-
-
-BOOST_AUTO_TEST_SUITE(fixed_external)
-
-BOOST_AUTO_TEST_CASE(transpose_assign_3x3)
+CATCH_TEST_CASE("fixed external transpose_assign_3x3")
 {
   double avM[] = {
     1.,  2.,  3.,
@@ -102,10 +94,10 @@ BOOST_AUTO_TEST_CASE(transpose_assign_3x3)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_EQUAL(M(i,j), expected(i,j));
+      CATCH_CHECK(M(i,j) == expected(i,j));
 }
 
-BOOST_AUTO_TEST_CASE(transpose_3x3_1)
+CATCH_TEST_CASE("fixed external transpose_3x3_1")
 {
   double avM[] = {
     1.,  2.,  3.,
@@ -123,10 +115,10 @@ BOOST_AUTO_TEST_CASE(transpose_3x3_1)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_EQUAL(T(i,j), expected(i,j));
+      CATCH_CHECK(T(i,j) == expected(i,j));
 }
 
-BOOST_AUTO_TEST_CASE(transpose_3x3_2)
+CATCH_TEST_CASE("fixed external transpose_3x3_2")
 {
   double avM[] = {
     1.,  2.,  3.,
@@ -143,15 +135,10 @@ BOOST_AUTO_TEST_CASE(transpose_3x3_2)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_EQUAL(T(i,j), expected(i,j));
+      CATCH_CHECK(T(i,j) == expected(i,j));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
-
-
-BOOST_AUTO_TEST_SUITE(dynamic_external)
-
-BOOST_AUTO_TEST_CASE(transpose_assign_3x3)
+CATCH_TEST_CASE("dynamic external transpose_assign_3x3")
 {
   double avM[] = {
     1.,  2.,  3.,
@@ -169,10 +156,10 @@ BOOST_AUTO_TEST_CASE(transpose_assign_3x3)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_EQUAL(M(i,j), expected(i,j));
+      CATCH_CHECK(M(i,j) == expected(i,j));
 }
 
-BOOST_AUTO_TEST_CASE(transpose_3x3_1)
+CATCH_TEST_CASE("dynamic external transpose_3x3_1")
 {
   double avM[] = {
     1.,  2.,  3.,
@@ -190,10 +177,10 @@ BOOST_AUTO_TEST_CASE(transpose_3x3_1)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_EQUAL(T(i,j), expected(i,j));
+      CATCH_CHECK(T(i,j) == expected(i,j));
 }
 
-BOOST_AUTO_TEST_CASE(transpose_3x3_2)
+CATCH_TEST_CASE("dynamic external transpose_3x3_2")
 {
   double avM[] = {
     1.,  2.,  3.,
@@ -210,15 +197,10 @@ BOOST_AUTO_TEST_CASE(transpose_3x3_2)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_EQUAL(T(i,j), expected(i,j));
+      CATCH_CHECK(T(i,j) == expected(i,j));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
-
-
-BOOST_AUTO_TEST_SUITE(dynamic)
-
-BOOST_AUTO_TEST_CASE(transpose_assign_3x3)
+CATCH_TEST_CASE("dynamic transpose_assign_3x3")
 {
   auto M = cml::matrixd(
     3,3,
@@ -236,10 +218,10 @@ BOOST_AUTO_TEST_CASE(transpose_assign_3x3)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_EQUAL(M(i,j), expected(i,j));
+      CATCH_CHECK(M(i,j) == expected(i,j));
 }
 
-BOOST_AUTO_TEST_CASE(transpose_3x3_1)
+CATCH_TEST_CASE("dynamic transpose_3x3_1")
 {
   auto M = cml::matrixd(
     3,3,
@@ -257,10 +239,10 @@ BOOST_AUTO_TEST_CASE(transpose_3x3_1)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_EQUAL(T(i,j), expected(i,j));
+      CATCH_CHECK(T(i,j) == expected(i,j));
 }
 
-BOOST_AUTO_TEST_CASE(transpose_3x3_2)
+CATCH_TEST_CASE("dynamic transpose_3x3_2")
 {
   auto T = cml::transpose(
     cml::matrixd(
@@ -279,10 +261,8 @@ BOOST_AUTO_TEST_CASE(transpose_3x3_2)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_EQUAL(T(i,j), expected(i,j));
+      CATCH_CHECK(T(i,j) == expected(i,j));
 }
-
-BOOST_AUTO_TEST_SUITE_END()
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

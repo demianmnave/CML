@@ -15,22 +15,20 @@
 #include <cml/matrix/types.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE determinant1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_SUITE(fixed)
 
-BOOST_AUTO_TEST_CASE(det_2x2)
+CATCH_TEST_CASE("fixed, det_2x2")
 {
   auto M = cml::matrix22d(
      2.,  -1.,
      3.,  3.
     );
   auto result = cml::determinant(M);
-  BOOST_CHECK_CLOSE(result, 9, .001);
+  CATCH_CHECK(result == Approx(9).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(det_3x3)
+CATCH_TEST_CASE("fixed, det_3x3")
 {
   auto M = cml::matrix33d(
      2.,  0.,  2.,
@@ -38,10 +36,10 @@ BOOST_AUTO_TEST_CASE(det_3x3)
      5.,  5.,  4.
     );
   auto result = cml::determinant(M);
-  BOOST_CHECK_CLOSE(result, -16, .001);
+  CATCH_CHECK(result == Approx(-16).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(det_4x4)
+CATCH_TEST_CASE("fixed, det_4x4")
 {
   auto M = cml::matrix44d(
      2.,  0.,  2.,  .6,
@@ -50,10 +48,10 @@ BOOST_AUTO_TEST_CASE(det_4x4)
     -1., -2., 3.4,  -1.
     );
   auto result = cml::determinant(M);
-  BOOST_CHECK_CLOSE(result, -120, .001);
+  CATCH_CHECK(result == Approx(-120).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(det_5x5)
+CATCH_TEST_CASE("fixed, det_5x5")
 {
   auto M = cml::matrix<double, cml::fixed<5,5>>(
      2.,  0.,  2.,  .5,   2.,
@@ -63,15 +61,13 @@ BOOST_AUTO_TEST_CASE(det_5x5)
      1.,  6.,  7.,  .5,   1.
     );
   auto result = cml::determinant(M);
-  BOOST_CHECK_CLOSE(result, 464, .001);
+  CATCH_CHECK(result == Approx(464).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(fixed_external)
 
-BOOST_AUTO_TEST_CASE(det_2x2)
+CATCH_TEST_CASE("fixed external, det_2x2")
 {
   double avM[] = {
     2.,  -1.,
@@ -79,10 +75,10 @@ BOOST_AUTO_TEST_CASE(det_2x2)
   };
   auto M = cml::external22d(avM);
   auto result = cml::determinant(M);
-  BOOST_CHECK_CLOSE(result, 9, .001);
+  CATCH_CHECK(result == Approx(9).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(det_3x3)
+CATCH_TEST_CASE("fixed external, det_3x3")
 {
   double avM[] = {
      2.,  0.,  2.,
@@ -91,10 +87,10 @@ BOOST_AUTO_TEST_CASE(det_3x3)
   };
   auto M = cml::external33d(avM);
   auto result = cml::determinant(M);
-  BOOST_CHECK_CLOSE(result, -16, .001);
+  CATCH_CHECK(result == Approx(-16).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(det_4x4)
+CATCH_TEST_CASE("fixed external, det_4x4")
 {
   double avM[] = {
      2.,  0.,  2.,  .6,
@@ -104,10 +100,10 @@ BOOST_AUTO_TEST_CASE(det_4x4)
   };
   auto M = cml::external44d(avM);
   auto result = cml::determinant(M);
-  BOOST_CHECK_CLOSE(result, -120, .001);
+  CATCH_CHECK(result == Approx(-120).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(det_5x5)
+CATCH_TEST_CASE("fixed external, det_5x5")
 {
   double avM[] = {
      2.,  0.,  2.,  .5,   2.,
@@ -118,15 +114,13 @@ BOOST_AUTO_TEST_CASE(det_5x5)
   };
   auto M = cml::matrix<double, cml::external<5,5>>(avM);
   auto result = cml::determinant(M);
-  BOOST_CHECK_CLOSE(result, 464, .001);
+  CATCH_CHECK(result == Approx(464).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(dynamic_external)
 
-BOOST_AUTO_TEST_CASE(det_2x2)
+CATCH_TEST_CASE("dynamic external, det_2x2")
 {
   double avM[] = {
     2.,  -1.,
@@ -134,10 +128,10 @@ BOOST_AUTO_TEST_CASE(det_2x2)
   };
   auto M = cml::externalmnd(2,2, avM);
   auto result = cml::determinant(M);
-  BOOST_CHECK_CLOSE(result, 9, .001);
+  CATCH_CHECK(result == Approx(9).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(det_3x3)
+CATCH_TEST_CASE("dynamic external, det_3x3")
 {
   double avM[] = {
      2.,  0.,  2.,
@@ -146,10 +140,10 @@ BOOST_AUTO_TEST_CASE(det_3x3)
   };
   auto M = cml::externalmnd(3,3, avM);
   auto result = cml::determinant(M);
-  BOOST_CHECK_CLOSE(result, -16, .001);
+  CATCH_CHECK(result == Approx(-16).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(det_4x4)
+CATCH_TEST_CASE("dynamic external, det_4x4")
 {
   double avM[] = {
      2.,  0.,  2.,  .6,
@@ -159,10 +153,10 @@ BOOST_AUTO_TEST_CASE(det_4x4)
   };
   auto M = cml::externalmnd(4,4, avM);
   auto result = cml::determinant(M);
-  BOOST_CHECK_CLOSE(result, -120, .001);
+  CATCH_CHECK(result == Approx(-120).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(det_5x5)
+CATCH_TEST_CASE("dynamic external, det_5x5")
 {
   double avM[] = {
      2.,  0.,  2.,  .5,   2.,
@@ -173,15 +167,13 @@ BOOST_AUTO_TEST_CASE(det_5x5)
   };
   auto M = cml::matrix<double, cml::external<>>(5,5, avM);
   auto result = cml::determinant(M);
-  BOOST_CHECK_CLOSE(result, 464, .001);
+  CATCH_CHECK(result == Approx(464).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(dynamic)
 
-BOOST_AUTO_TEST_CASE(det_2x2)
+CATCH_TEST_CASE("dynamic, det_2x2")
 {
   auto M = cml::matrixd(
     2,2,
@@ -189,10 +181,10 @@ BOOST_AUTO_TEST_CASE(det_2x2)
      3.,  3.
     );
   auto result = cml::determinant(M);
-  BOOST_CHECK_CLOSE(result, 9, .001);
+  CATCH_CHECK(result == Approx(9).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(det_3x3)
+CATCH_TEST_CASE("dynamic, det_3x3")
 {
   auto M = cml::matrixd(
     3,3,
@@ -201,10 +193,10 @@ BOOST_AUTO_TEST_CASE(det_3x3)
      5.,  5.,  4.
     );
   auto result = cml::determinant(M);
-  BOOST_CHECK_CLOSE(result, -16, .001);
+  CATCH_CHECK(result == Approx(-16).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(det_4x4)
+CATCH_TEST_CASE("dynamic, det_4x4")
 {
   auto M = cml::matrixd(
     4,4,
@@ -214,10 +206,10 @@ BOOST_AUTO_TEST_CASE(det_4x4)
     -1., -2., 3.4,  -1.
     );
   auto result = cml::determinant(M);
-  BOOST_CHECK_CLOSE(result, -120, .001);
+  CATCH_CHECK(result == Approx(-120).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(det_5x5)
+CATCH_TEST_CASE("dynamic, det_5x5")
 {
   auto M = cml::matrix<double, cml::dynamic<>>(
     5,5,
@@ -228,10 +220,9 @@ BOOST_AUTO_TEST_CASE(det_5x5)
      1.,  6.,  7.,  .5,   1.
     );
   auto result = cml::determinant(M);
-  BOOST_CHECK_CLOSE(result, 464, .001);
+  CATCH_CHECK(result == Approx(464).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

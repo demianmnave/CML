@@ -11,368 +11,359 @@
 #include <cml/matrix.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE matrix_translation1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_SUITE(set_2D)
 
-BOOST_AUTO_TEST_CASE(set1)
+CATCH_TEST_CASE("set 2D, set1")
 {
   cml::matrix33d M;
   cml::matrix_set_translation_2D(M.identity(), 2., -3.);
-  BOOST_CHECK_EQUAL(M(0,2), 2.);
-  BOOST_CHECK_EQUAL(M(1,2), -3.);
+  CATCH_CHECK(M(0,2) == 2.);
+  CATCH_CHECK(M(1,2) == -3.);
 }
 
-BOOST_AUTO_TEST_CASE(set2)
+CATCH_TEST_CASE("set 2D, set2")
 {
   cml::matrix33d_r M;
   cml::matrix_set_translation_2D(M.identity(), 2., -3.);
-  BOOST_CHECK_EQUAL(M(2,0), 2.);
-  BOOST_CHECK_EQUAL(M(2,1), -3.);
+  CATCH_CHECK(M(2,0) == 2.);
+  CATCH_CHECK(M(2,1) == -3.);
 }
 
-BOOST_AUTO_TEST_CASE(set3)
+CATCH_TEST_CASE("set 2D, set3")
 {
   cml::matrix33d M;
   cml::matrix_set_translation_2D(M.identity(), cml::vector2d(2.,-3.));
-  BOOST_CHECK_EQUAL(M(0,2), 2.);
-  BOOST_CHECK_EQUAL(M(1,2), -3.);
+  CATCH_CHECK(M(0,2) == 2.);
+  CATCH_CHECK(M(1,2) == -3.);
 }
 
-BOOST_AUTO_TEST_CASE(set4)
+CATCH_TEST_CASE("set 2D, set4")
 {
   cml::matrix33d_r M;
   cml::matrix_set_translation_2D(M.identity(), cml::vector2d(2., -3.));
-  BOOST_CHECK_EQUAL(M(2,0), 2.);
-  BOOST_CHECK_EQUAL(M(2,1), -3.);
+  CATCH_CHECK(M(2,0) == 2.);
+  CATCH_CHECK(M(2,1) == -3.);
 }
 
 
-BOOST_AUTO_TEST_CASE(make1)
+CATCH_TEST_CASE("set 2D, make1")
 {
   cml::matrix33d M;
   cml::matrix_translation_2D(M, 2., -3.);
-  BOOST_CHECK_EQUAL(M(0,2), 2.);
-  BOOST_CHECK_EQUAL(M(1,2), -3.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(1,1), 1.);
-  BOOST_CHECK_EQUAL(M(2,2), 1.);
+  CATCH_CHECK(M(0,2) == 2.);
+  CATCH_CHECK(M(1,2) == -3.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(1,1) == 1.);
+  CATCH_CHECK(M(2,2) == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(make2)
+CATCH_TEST_CASE("set 2D, make2")
 {
   cml::matrix33d_r M;
   cml::matrix_translation_2D(M, 2., -3.);
-  BOOST_CHECK_EQUAL(M(2,0), 2.);
-  BOOST_CHECK_EQUAL(M(2,1), -3.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(1,1), 1.);
-  BOOST_CHECK_EQUAL(M(2,2), 1.);
+  CATCH_CHECK(M(2,0) == 2.);
+  CATCH_CHECK(M(2,1) == -3.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(1,1) == 1.);
+  CATCH_CHECK(M(2,2) == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(make3)
+CATCH_TEST_CASE("set 2D, make3")
 {
   cml::matrix33d M;
   cml::matrix_translation_2D(M, cml::vector2d(2.,-3.));
-  BOOST_CHECK_EQUAL(M(0,2), 2.);
-  BOOST_CHECK_EQUAL(M(1,2), -3.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(1,1), 1.);
-  BOOST_CHECK_EQUAL(M(2,2), 1.);
+  CATCH_CHECK(M(0,2) == 2.);
+  CATCH_CHECK(M(1,2) == -3.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(1,1) == 1.);
+  CATCH_CHECK(M(2,2) == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(make4)
+CATCH_TEST_CASE("set 2D, make4")
 {
   cml::matrix33d_r M;
   cml::matrix_translation_2D(M, cml::vector2d(2., -3.));
-  BOOST_CHECK_EQUAL(M(2,0), 2.);
-  BOOST_CHECK_EQUAL(M(2,1), -3.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(1,1), 1.);
-  BOOST_CHECK_EQUAL(M(2,2), 1.);
+  CATCH_CHECK(M(2,0) == 2.);
+  CATCH_CHECK(M(2,1) == -3.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(1,1) == 1.);
+  CATCH_CHECK(M(2,2) == 1.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(get_2D)
 
-BOOST_AUTO_TEST_CASE(get1)
+CATCH_TEST_CASE("get 2D, get1")
 {
   cml::matrix33d M;
   cml::matrix_set_translation_2D(M.identity(), 2., -3.);
 
   double e0, e1;
   cml::matrix_get_translation_2D(M, e0, e1);
-  BOOST_CHECK_EQUAL(e0, 2.);
-  BOOST_CHECK_EQUAL(e1, -3.);
+  CATCH_CHECK(e0 == 2.);
+  CATCH_CHECK(e1 == -3.);
 }
 
-BOOST_AUTO_TEST_CASE(get2)
+CATCH_TEST_CASE("get 2D, get2")
 {
   cml::matrix33d_r M;
   cml::matrix_set_translation_2D(M.identity(), 2., -3.);
 
   double e0, e1;
   cml::matrix_get_translation_2D(M, e0, e1);
-  BOOST_CHECK_EQUAL(e0, 2.);
-  BOOST_CHECK_EQUAL(e1, -3.);
+  CATCH_CHECK(e0 == 2.);
+  CATCH_CHECK(e1 == -3.);
 }
 
-BOOST_AUTO_TEST_CASE(get3)
+CATCH_TEST_CASE("get 2D, get3")
 {
   cml::matrix33d M;
   cml::matrix_set_translation_2D(M.identity(), 2., -3.);
   auto T = cml::matrix_get_translation_2D(M);
-  BOOST_CHECK_EQUAL(T[0], 2.);
-  BOOST_CHECK_EQUAL(T[1], -3.);
+  CATCH_CHECK(T[0] == 2.);
+  CATCH_CHECK(T[1] == -3.);
 }
 
-BOOST_AUTO_TEST_CASE(get4)
+CATCH_TEST_CASE("get 2D, get4")
 {
   cml::matrix33d_r M;
   cml::matrix_set_translation_2D(M.identity(), 2., -3.);
   auto T = cml::matrix_get_translation_2D(M);
-  BOOST_CHECK_EQUAL(T[0], 2.);
-  BOOST_CHECK_EQUAL(T[1], -3.);
+  CATCH_CHECK(T[0] == 2.);
+  CATCH_CHECK(T[1] == -3.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
 
-BOOST_AUTO_TEST_SUITE(set_3D)
 
-BOOST_AUTO_TEST_CASE(set1)
+CATCH_TEST_CASE("set 3D, set1")
 {
   cml::matrix44d M;
   cml::matrix_set_translation(M.identity(), 2., -3., 1.);
-  BOOST_CHECK_EQUAL(M(0,3), 2.);
-  BOOST_CHECK_EQUAL(M(1,3), -3.);
-  BOOST_CHECK_EQUAL(M(2,3), 1.);
+  CATCH_CHECK(M(0,3) == 2.);
+  CATCH_CHECK(M(1,3) == -3.);
+  CATCH_CHECK(M(2,3) == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(set2)
+CATCH_TEST_CASE("set 3D, set2")
 {
   cml::matrix44d_r M;
   cml::matrix_set_translation(M.identity(), 2., -3., 1.);
-  BOOST_CHECK_EQUAL(M(3,0), 2.);
-  BOOST_CHECK_EQUAL(M(3,1), -3.);
-  BOOST_CHECK_EQUAL(M(3,2), 1.);
+  CATCH_CHECK(M(3,0) == 2.);
+  CATCH_CHECK(M(3,1) == -3.);
+  CATCH_CHECK(M(3,2) == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(set3)
+CATCH_TEST_CASE("set 3D, set3")
 {
   cml::matrix44d M;
   cml::matrix_set_translation(M.identity(), cml::vector3d(2.,-3., 1.));
-  BOOST_CHECK_EQUAL(M(0,3), 2.);
-  BOOST_CHECK_EQUAL(M(1,3), -3.);
-  BOOST_CHECK_EQUAL(M(2,3), 1.);
+  CATCH_CHECK(M(0,3) == 2.);
+  CATCH_CHECK(M(1,3) == -3.);
+  CATCH_CHECK(M(2,3) == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(set4)
+CATCH_TEST_CASE("set 3D, set4")
 {
   cml::matrix44d_r M;
   cml::matrix_set_translation(M.identity(), cml::vector3d(2., -3., 1.));
-  BOOST_CHECK_EQUAL(M(3,0), 2.);
-  BOOST_CHECK_EQUAL(M(3,1), -3.);
-  BOOST_CHECK_EQUAL(M(3,2), 1.);
+  CATCH_CHECK(M(3,0) == 2.);
+  CATCH_CHECK(M(3,1) == -3.);
+  CATCH_CHECK(M(3,2) == 1.);
 }
 
 
-BOOST_AUTO_TEST_CASE(set2D_1)
+CATCH_TEST_CASE("set 3D, set2D_1")
 {
   cml::matrix44d M;
   cml::matrix_set_translation(M.identity(), 2., -3.);
-  BOOST_CHECK_EQUAL(M(0,3), 2.);
-  BOOST_CHECK_EQUAL(M(1,3), -3.);
-  BOOST_CHECK_EQUAL(M(2,3), 0.);
+  CATCH_CHECK(M(0,3) == 2.);
+  CATCH_CHECK(M(1,3) == -3.);
+  CATCH_CHECK(M(2,3) == 0.);
 }
 
-BOOST_AUTO_TEST_CASE(set2D_2)
+CATCH_TEST_CASE("set 3D, set2D_2")
 {
   cml::matrix44d_r M;
   cml::matrix_set_translation(M.identity(), 2., -3.);
-  BOOST_CHECK_EQUAL(M(3,0), 2.);
-  BOOST_CHECK_EQUAL(M(3,1), -3.);
-  BOOST_CHECK_EQUAL(M(3,2), 0.);
+  CATCH_CHECK(M(3,0) == 2.);
+  CATCH_CHECK(M(3,1) == -3.);
+  CATCH_CHECK(M(3,2) == 0.);
 }
 
-BOOST_AUTO_TEST_CASE(set2D_3)
+CATCH_TEST_CASE("set 3D, set2D_3")
 {
   cml::matrix44d M;
   cml::matrix_set_translation(M.identity(), cml::vector2d(2.,-3.));
-  BOOST_CHECK_EQUAL(M(0,3), 2.);
-  BOOST_CHECK_EQUAL(M(1,3), -3.);
-  BOOST_CHECK_EQUAL(M(2,3), 0.);
+  CATCH_CHECK(M(0,3) == 2.);
+  CATCH_CHECK(M(1,3) == -3.);
+  CATCH_CHECK(M(2,3) == 0.);
 }
 
-BOOST_AUTO_TEST_CASE(set2D_4)
+CATCH_TEST_CASE("set 3D, set2D_4")
 {
   cml::matrix44d_r M;
   cml::matrix_set_translation(M.identity(), cml::vector2d(2., -3.));
-  BOOST_CHECK_EQUAL(M(3,0), 2.);
-  BOOST_CHECK_EQUAL(M(3,1), -3.);
-  BOOST_CHECK_EQUAL(M(3,2), 0.);
+  CATCH_CHECK(M(3,0) == 2.);
+  CATCH_CHECK(M(3,1) == -3.);
+  CATCH_CHECK(M(3,2) == 0.);
 }
 
 
-BOOST_AUTO_TEST_CASE(make1)
+CATCH_TEST_CASE("set 3D, make1")
 {
   cml::matrix44d M;
   cml::matrix_translation(M, 2., -3., 1.);
-  BOOST_CHECK_EQUAL(M(0,3), 2.);
-  BOOST_CHECK_EQUAL(M(1,3), -3.);
-  BOOST_CHECK_EQUAL(M(2,3), 1.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(1,1), 1.);
-  BOOST_CHECK_EQUAL(M(2,2), 1.);
-  BOOST_CHECK_EQUAL(M(3,3), 1.);
+  CATCH_CHECK(M(0,3) == 2.);
+  CATCH_CHECK(M(1,3) == -3.);
+  CATCH_CHECK(M(2,3) == 1.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(1,1) == 1.);
+  CATCH_CHECK(M(2,2) == 1.);
+  CATCH_CHECK(M(3,3) == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(make2)
+CATCH_TEST_CASE("set 3D, make2")
 {
   cml::matrix44d_r M;
   cml::matrix_translation(M, 2., -3., 1.);
-  BOOST_CHECK_EQUAL(M(3,0), 2.);
-  BOOST_CHECK_EQUAL(M(3,1), -3.);
-  BOOST_CHECK_EQUAL(M(3,2), 1.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(1,1), 1.);
-  BOOST_CHECK_EQUAL(M(2,2), 1.);
-  BOOST_CHECK_EQUAL(M(3,3), 1.);
+  CATCH_CHECK(M(3,0) == 2.);
+  CATCH_CHECK(M(3,1) == -3.);
+  CATCH_CHECK(M(3,2) == 1.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(1,1) == 1.);
+  CATCH_CHECK(M(2,2) == 1.);
+  CATCH_CHECK(M(3,3) == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(make3)
+CATCH_TEST_CASE("set 3D, make3")
 {
   cml::matrix44d M;
   cml::matrix_translation(M, cml::vector3d(2.,-3., 1.));
-  BOOST_CHECK_EQUAL(M(0,3), 2.);
-  BOOST_CHECK_EQUAL(M(1,3), -3.);
-  BOOST_CHECK_EQUAL(M(2,3), 1.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(1,1), 1.);
-  BOOST_CHECK_EQUAL(M(2,2), 1.);
-  BOOST_CHECK_EQUAL(M(3,3), 1.);
+  CATCH_CHECK(M(0,3) == 2.);
+  CATCH_CHECK(M(1,3) == -3.);
+  CATCH_CHECK(M(2,3) == 1.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(1,1) == 1.);
+  CATCH_CHECK(M(2,2) == 1.);
+  CATCH_CHECK(M(3,3) == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(make4)
+CATCH_TEST_CASE("set 3D, make4")
 {
   cml::matrix44d_r M;
   cml::matrix_translation(M, cml::vector3d(2., -3., 1.));
-  BOOST_CHECK_EQUAL(M(3,0), 2.);
-  BOOST_CHECK_EQUAL(M(3,1), -3.);
-  BOOST_CHECK_EQUAL(M(3,2), 1.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(1,1), 1.);
-  BOOST_CHECK_EQUAL(M(2,2), 1.);
-  BOOST_CHECK_EQUAL(M(3,3), 1.);
+  CATCH_CHECK(M(3,0) == 2.);
+  CATCH_CHECK(M(3,1) == -3.);
+  CATCH_CHECK(M(3,2) == 1.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(1,1) == 1.);
+  CATCH_CHECK(M(2,2) == 1.);
+  CATCH_CHECK(M(3,3) == 1.);
 }
 
 
-BOOST_AUTO_TEST_CASE(make2D_1)
+CATCH_TEST_CASE("set 3D, make2D_1")
 {
   cml::matrix44d M;
   cml::matrix_translation(M, 2., -3.);
-  BOOST_CHECK_EQUAL(M(0,3), 2.);
-  BOOST_CHECK_EQUAL(M(1,3), -3.);
-  BOOST_CHECK_EQUAL(M(2,3), 0.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(1,1), 1.);
-  BOOST_CHECK_EQUAL(M(2,2), 1.);
-  BOOST_CHECK_EQUAL(M(3,3), 1.);
+  CATCH_CHECK(M(0,3) == 2.);
+  CATCH_CHECK(M(1,3) == -3.);
+  CATCH_CHECK(M(2,3) == 0.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(1,1) == 1.);
+  CATCH_CHECK(M(2,2) == 1.);
+  CATCH_CHECK(M(3,3) == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(make2D_2)
+CATCH_TEST_CASE("set 3D, make2D_2")
 {
   cml::matrix44d_r M;
   cml::matrix_translation(M, 2., -3.);
-  BOOST_CHECK_EQUAL(M(3,0), 2.);
-  BOOST_CHECK_EQUAL(M(3,1), -3.);
-  BOOST_CHECK_EQUAL(M(3,2), 0.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(1,1), 1.);
-  BOOST_CHECK_EQUAL(M(2,2), 1.);
-  BOOST_CHECK_EQUAL(M(3,3), 1.);
+  CATCH_CHECK(M(3,0) == 2.);
+  CATCH_CHECK(M(3,1) == -3.);
+  CATCH_CHECK(M(3,2) == 0.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(1,1) == 1.);
+  CATCH_CHECK(M(2,2) == 1.);
+  CATCH_CHECK(M(3,3) == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(make2D_3)
+CATCH_TEST_CASE("set 3D, make2D_3")
 {
   cml::matrix44d M;
   cml::matrix_translation(M, cml::vector2d(2.,-3.));
-  BOOST_CHECK_EQUAL(M(0,3), 2.);
-  BOOST_CHECK_EQUAL(M(1,3), -3.);
-  BOOST_CHECK_EQUAL(M(2,3), 0.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(1,1), 1.);
-  BOOST_CHECK_EQUAL(M(2,2), 1.);
-  BOOST_CHECK_EQUAL(M(3,3), 1.);
+  CATCH_CHECK(M(0,3) == 2.);
+  CATCH_CHECK(M(1,3) == -3.);
+  CATCH_CHECK(M(2,3) == 0.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(1,1) == 1.);
+  CATCH_CHECK(M(2,2) == 1.);
+  CATCH_CHECK(M(3,3) == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(make2D_4)
+CATCH_TEST_CASE("set 3D, make2D_4")
 {
   cml::matrix44d_r M;
   cml::matrix_translation(M, cml::vector2d(2., -3.));
-  BOOST_CHECK_EQUAL(M(3,0), 2.);
-  BOOST_CHECK_EQUAL(M(3,1), -3.);
-  BOOST_CHECK_EQUAL(M(3,2), 0.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(1,1), 1.);
-  BOOST_CHECK_EQUAL(M(2,2), 1.);
-  BOOST_CHECK_EQUAL(M(3,3), 1.);
+  CATCH_CHECK(M(3,0) == 2.);
+  CATCH_CHECK(M(3,1) == -3.);
+  CATCH_CHECK(M(3,2) == 0.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(1,1) == 1.);
+  CATCH_CHECK(M(2,2) == 1.);
+  CATCH_CHECK(M(3,3) == 1.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(get_3D)
 
-BOOST_AUTO_TEST_CASE(get1)
+CATCH_TEST_CASE("get 3D, get1")
 {
   cml::matrix44d M;
   cml::matrix_set_translation(M.identity(), 2., -3., 1.);
 
   double e0, e1, e2;
   cml::matrix_get_translation(M, e0, e1, e2);
-  BOOST_CHECK_EQUAL(e0, 2.);
-  BOOST_CHECK_EQUAL(e1, -3.);
-  BOOST_CHECK_EQUAL(e2, 1.);
+  CATCH_CHECK(e0 == 2.);
+  CATCH_CHECK(e1 == -3.);
+  CATCH_CHECK(e2 == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(get2)
+CATCH_TEST_CASE("get 3D, get2")
 {
   cml::matrix44d_r M;
   cml::matrix_set_translation(M.identity(), 2., -3., 1.);
 
   double e0, e1, e2;
   cml::matrix_get_translation(M, e0, e1, e2);
-  BOOST_CHECK_EQUAL(e0, 2.);
-  BOOST_CHECK_EQUAL(e1, -3.);
-  BOOST_CHECK_EQUAL(e2, 1.);
+  CATCH_CHECK(e0 == 2.);
+  CATCH_CHECK(e1 == -3.);
+  CATCH_CHECK(e2 == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(get3)
+CATCH_TEST_CASE("get 3D, get3")
 {
   cml::matrix44d M;
   cml::matrix_set_translation(M.identity(), 2., -3., 1.);
   auto T = cml::matrix_get_translation(M);
-  BOOST_CHECK_EQUAL(T[0], 2.);
-  BOOST_CHECK_EQUAL(T[1], -3.);
-  BOOST_CHECK_EQUAL(T[2], 1.);
+  CATCH_CHECK(T[0] == 2.);
+  CATCH_CHECK(T[1] == -3.);
+  CATCH_CHECK(T[2] == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(get4)
+CATCH_TEST_CASE("get 3D, get4")
 {
   cml::matrix44d_r M;
   cml::matrix_set_translation(M.identity(), 2., -3., 1.);
   auto T = cml::matrix_get_translation(M);
-  BOOST_CHECK_EQUAL(T[0], 2.);
-  BOOST_CHECK_EQUAL(T[1], -3.);
-  BOOST_CHECK_EQUAL(T[2], 1.);
+  CATCH_CHECK(T[0] == 2.);
+  CATCH_CHECK(T[1] == -3.);
+  CATCH_CHECK(T[2] == 1.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

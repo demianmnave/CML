@@ -1,18 +1,20 @@
 /* -*- C++ -*- ------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
+/** @file catch_main.cpp
  */
 
-#include <cml/common/temporary.h>
-#include <cml/scalar/traits.h>
+#define CATCH_CONFIG_RUNNER
+#if defined(WIN32)
+#define DO_NOT_USE_WMAIN
+#endif
+#include "catch.hpp"
 
-/* Testing headers: */
-#include "catch_runner.h"
-
-CATCH_TEST_CASE("const_temporary1")
+int
+main(int argc, char** argv)
 {
-  typedef cml::temporary_of_t<const double> const_type;
+  int result = Catch::Session().run(argc, argv);
+  return result < 0xff ? result : 0xff;
 }
 
 // -------------------------------------------------------------------------

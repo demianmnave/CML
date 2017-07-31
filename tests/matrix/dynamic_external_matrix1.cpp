@@ -8,26 +8,17 @@
 #include <cml/matrix/types.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE dynamic_external_matrix1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_CASE(typecheck)
+CATCH_TEST_CASE("typecheck")
 {
-  BOOST_CHECK_EQUAL(
-    (std::is_same<cml::externalmnd::basis_tag,cml::col_basis>::value),
-    true);
-  BOOST_CHECK_EQUAL(
-    (std::is_same<cml::externalmnd::layout_tag,cml::row_major>::value),
-    true);
-  BOOST_CHECK_EQUAL(
-    (std::is_same<cml::externalmnd_c::basis_tag,cml::col_basis>::value),
-    true);
-  BOOST_CHECK_EQUAL(
-    (std::is_same<cml::externalmnd_c::layout_tag,cml::col_major>::value),
-    true);
+  CATCH_CHECK((std::is_same<cml::externalmnd::basis_tag,cml::col_basis>::value));
+  CATCH_CHECK((std::is_same<cml::externalmnd::layout_tag,cml::row_major>::value));
+  CATCH_CHECK((std::is_same<cml::externalmnd_c::basis_tag,cml::col_basis>::value));
+  CATCH_CHECK((std::is_same<cml::externalmnd_c::layout_tag,cml::col_major>::value));
 }
 
-BOOST_AUTO_TEST_CASE(array_construct1)
+CATCH_TEST_CASE("array_construct1")
 {
   double data[] = {
     1.,  2.,  3.,  4.,
@@ -38,18 +29,18 @@ BOOST_AUTO_TEST_CASE(array_construct1)
   // Note: external<> refers to the wrapped data in the layout assigned to
   // the matrix.
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-  BOOST_REQUIRE_EQUAL(M.data(), &data[0]);
-  BOOST_CHECK_EQUAL(M.data()[0], 1.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(2,0), 9.);
-  BOOST_CHECK_EQUAL(M(2,1), 0.);
-  BOOST_CHECK_EQUAL(M(2,2), 0.);
-  BOOST_CHECK_EQUAL(M(2,3), 0.);
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 4);
+  CATCH_REQUIRE(M.data() == &data[0]);
+  CATCH_CHECK(M.data()[0] == 1.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(2,0) == 9.);
+  CATCH_CHECK(M(2,1) == 0.);
+  CATCH_CHECK(M(2,2) == 0.);
+  CATCH_CHECK(M(2,3) == 0.);
 }
 
-BOOST_AUTO_TEST_CASE(array_construct2)
+CATCH_TEST_CASE("array_construct2")
 {
   double data[] = {
     1., 5., 9.,
@@ -61,18 +52,18 @@ BOOST_AUTO_TEST_CASE(array_construct2)
   // Note: external<> refers to the wrapped data in the layout assigned to
   // the matrix.
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-  BOOST_REQUIRE_EQUAL(M.data(), &data[0]);
-  BOOST_CHECK_EQUAL(M.data()[0], 1.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(2,0), 9.);
-  BOOST_CHECK_EQUAL(M(2,1), 0.);
-  BOOST_CHECK_EQUAL(M(2,2), 0.);
-  BOOST_CHECK_EQUAL(M(2,3), 0.);
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 4);
+  CATCH_REQUIRE(M.data() == &data[0]);
+  CATCH_CHECK(M.data()[0] == 1.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(2,0) == 9.);
+  CATCH_CHECK(M(2,1) == 0.);
+  CATCH_CHECK(M(2,2) == 0.);
+  CATCH_CHECK(M(2,3) == 0.);
 }
 
-BOOST_AUTO_TEST_CASE(array_assign1)
+CATCH_TEST_CASE("array_assign1")
 {
   double data[3*4];
   double aM[] = {
@@ -84,18 +75,18 @@ BOOST_AUTO_TEST_CASE(array_assign1)
   M = aM;
   // Note: external<> copies arrays using row-major layout.
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-  BOOST_REQUIRE_EQUAL(M.data(), &data[0]);
-  BOOST_CHECK_EQUAL(M.data()[0], 1.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(2,0), 9.);
-  BOOST_CHECK_EQUAL(M(2,1), 0.);
-  BOOST_CHECK_EQUAL(M(2,2), 0.);
-  BOOST_CHECK_EQUAL(M(2,3), 0.);
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 4);
+  CATCH_REQUIRE(M.data() == &data[0]);
+  CATCH_CHECK(M.data()[0] == 1.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(2,0) == 9.);
+  CATCH_CHECK(M(2,1) == 0.);
+  CATCH_CHECK(M(2,2) == 0.);
+  CATCH_CHECK(M(2,3) == 0.);
 }
 
-BOOST_AUTO_TEST_CASE(array_assign2)
+CATCH_TEST_CASE("array_assign2")
 {
   double data[3*4];
   double aM[] = {
@@ -107,18 +98,18 @@ BOOST_AUTO_TEST_CASE(array_assign2)
   M = aM;
   // Note: external<> copies arrays using row-major layout.
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-  BOOST_REQUIRE_EQUAL(M.data(), &data[0]);
-  BOOST_CHECK_EQUAL(M.data()[0], 1.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(2,0), 9.);
-  BOOST_CHECK_EQUAL(M(2,1), 0.);
-  BOOST_CHECK_EQUAL(M(2,2), 0.);
-  BOOST_CHECK_EQUAL(M(2,3), 0.);
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 4);
+  CATCH_REQUIRE(M.data() == &data[0]);
+  CATCH_CHECK(M.data()[0] == 1.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(2,0) == 9.);
+  CATCH_CHECK(M(2,1) == 0.);
+  CATCH_CHECK(M(2,2) == 0.);
+  CATCH_CHECK(M(2,3) == 0.);
 }
 
-BOOST_AUTO_TEST_CASE(array2_construct1)
+CATCH_TEST_CASE("array2_construct1")
 {
   double data[3][4] = {
     { 1.,  2.,  3.,  4. },
@@ -129,18 +120,18 @@ BOOST_AUTO_TEST_CASE(array2_construct1)
   // Note: external<> refers to the wrapped data in the layout assigned to
   // the matrix.
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-  BOOST_REQUIRE_EQUAL(M.data(), &data[0][0]);
-  BOOST_CHECK_EQUAL(M.data()[0], 1.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(2,0), 9.);
-  BOOST_CHECK_EQUAL(M(2,1), 0.);
-  BOOST_CHECK_EQUAL(M(2,2), 0.);
-  BOOST_CHECK_EQUAL(M(2,3), 0.);
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 4);
+  CATCH_REQUIRE(M.data() == &data[0][0]);
+  CATCH_CHECK(M.data()[0] == 1.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(2,0) == 9.);
+  CATCH_CHECK(M(2,1) == 0.);
+  CATCH_CHECK(M(2,2) == 0.);
+  CATCH_CHECK(M(2,3) == 0.);
 }
 
-BOOST_AUTO_TEST_CASE(array2_construct2)
+CATCH_TEST_CASE("array2_construct2")
 {
   double data[4][3] = {
     { 1., 5., 9. },
@@ -152,18 +143,18 @@ BOOST_AUTO_TEST_CASE(array2_construct2)
   // Note: external<> refers to the wrapped data in the layout assigned to
   // the matrix.
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-  BOOST_REQUIRE_EQUAL(M.data(), &data[0][0]);
-  BOOST_CHECK_EQUAL(M.data()[0], 1.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(2,0), 9.);
-  BOOST_CHECK_EQUAL(M(2,1), 0.);
-  BOOST_CHECK_EQUAL(M(2,2), 0.);
-  BOOST_CHECK_EQUAL(M(2,3), 0.);
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 4);
+  CATCH_REQUIRE(M.data() == &data[0][0]);
+  CATCH_CHECK(M.data()[0] == 1.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(2,0) == 9.);
+  CATCH_CHECK(M(2,1) == 0.);
+  CATCH_CHECK(M(2,2) == 0.);
+  CATCH_CHECK(M(2,3) == 0.);
 }
 
-BOOST_AUTO_TEST_CASE(array2_assign1)
+CATCH_TEST_CASE("array2_assign1")
 {
   double data[3*4];
   double aM[3][4] = {
@@ -175,18 +166,18 @@ BOOST_AUTO_TEST_CASE(array2_assign1)
   M = aM;
   // Note: external<> copies arrays using row-major layout.
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-  BOOST_REQUIRE_EQUAL(M.data(), &data[0]);
-  BOOST_CHECK_EQUAL(M.data()[0], 1.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(2,0), 9.);
-  BOOST_CHECK_EQUAL(M(2,1), 0.);
-  BOOST_CHECK_EQUAL(M(2,2), 0.);
-  BOOST_CHECK_EQUAL(M(2,3), 0.);
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 4);
+  CATCH_REQUIRE(M.data() == &data[0]);
+  CATCH_CHECK(M.data()[0] == 1.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(2,0) == 9.);
+  CATCH_CHECK(M(2,1) == 0.);
+  CATCH_CHECK(M(2,2) == 0.);
+  CATCH_CHECK(M(2,3) == 0.);
 }
 
-BOOST_AUTO_TEST_CASE(array2_assign2)
+CATCH_TEST_CASE("array2_assign2")
 {
   double data[3*4];
   double aM[3][4] = {
@@ -198,18 +189,18 @@ BOOST_AUTO_TEST_CASE(array2_assign2)
   M = aM;
   // Note: external<> copies arrays using row-major layout.
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-  BOOST_REQUIRE_EQUAL(M.data(), &data[0]);
-  BOOST_CHECK_EQUAL(M.data()[0], 1.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(2,0), 9.);
-  BOOST_CHECK_EQUAL(M(2,1), 0.);
-  BOOST_CHECK_EQUAL(M(2,2), 0.);
-  BOOST_CHECK_EQUAL(M(2,3), 0.);
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 4);
+  CATCH_REQUIRE(M.data() == &data[0]);
+  CATCH_CHECK(M.data()[0] == 1.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(2,0) == 9.);
+  CATCH_CHECK(M(2,1) == 0.);
+  CATCH_CHECK(M(2,2) == 0.);
+  CATCH_CHECK(M(2,3) == 0.);
 }
 
-BOOST_AUTO_TEST_CASE(list_assign1)
+CATCH_TEST_CASE("list_assign1")
 {
   double data[3*4];
   cml::externalmnd_c M(data, 3,4);
@@ -220,18 +211,18 @@ BOOST_AUTO_TEST_CASE(list_assign1)
   };
   // Note: external<> copies arrays using row-major layout.
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-  BOOST_REQUIRE_EQUAL(M.data(), &data[0]);
-  BOOST_CHECK_EQUAL(M.data()[0], 1.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(2,0), 9.);
-  BOOST_CHECK_EQUAL(M(2,1), 0.);
-  BOOST_CHECK_EQUAL(M(2,2), 0.);
-  BOOST_CHECK_EQUAL(M(2,3), 0.);
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 4);
+  CATCH_REQUIRE(M.data() == &data[0]);
+  CATCH_CHECK(M.data()[0] == 1.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(2,0) == 9.);
+  CATCH_CHECK(M(2,1) == 0.);
+  CATCH_CHECK(M(2,2) == 0.);
+  CATCH_CHECK(M(2,3) == 0.);
 }
 
-BOOST_AUTO_TEST_CASE(list_assign2)
+CATCH_TEST_CASE("list_assign2")
 {
   double data[3*4];
   cml::externalmnd_c M(data, 3,4);
@@ -242,45 +233,45 @@ BOOST_AUTO_TEST_CASE(list_assign2)
   };
   // Note: external<> copies arrays using row-major layout.
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-  BOOST_REQUIRE_EQUAL(M.data(), &data[0]);
-  BOOST_CHECK_EQUAL(M.data()[0], 1.);
-  BOOST_CHECK_EQUAL(M(0,0), 1.);
-  BOOST_CHECK_EQUAL(M(2,0), 9.);
-  BOOST_CHECK_EQUAL(M(2,1), 0.);
-  BOOST_CHECK_EQUAL(M(2,2), 0.);
-  BOOST_CHECK_EQUAL(M(2,3), 0.);
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 4);
+  CATCH_REQUIRE(M.data() == &data[0]);
+  CATCH_CHECK(M.data()[0] == 1.);
+  CATCH_CHECK(M(0,0) == 1.);
+  CATCH_CHECK(M(2,0) == 9.);
+  CATCH_CHECK(M(2,1) == 0.);
+  CATCH_CHECK(M(2,2) == 0.);
+  CATCH_CHECK(M(2,3) == 0.);
 }
 
-BOOST_AUTO_TEST_CASE(resize1)
+CATCH_TEST_CASE("resize1")
 {
   double data[3*4];
   cml::externalmnd_c M(3,4, data);
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-  BOOST_REQUIRE_EQUAL(M.data(), &data[0]);
-  BOOST_REQUIRE_NO_THROW(M.resize(4,3));
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 4);
+  CATCH_REQUIRE(M.data() == &data[0]);
+  CATCH_REQUIRE_NOTHROW(M.resize(4,3));
 }
 
-BOOST_AUTO_TEST_CASE(resize2)
+CATCH_TEST_CASE("resize2")
 {
   double data[3*4];
   cml::externalmnd_c M(3,4, data);
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-  BOOST_REQUIRE_EQUAL(M.data(), &data[0]);
-  BOOST_REQUIRE_THROW(M.resize(3,3), cml::matrix_size_error);
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 4);
+  CATCH_REQUIRE(M.data() == &data[0]);
+  CATCH_REQUIRE_THROWS_AS(M.resize(3,3), cml::matrix_size_error);
 }
 
-BOOST_AUTO_TEST_CASE(size_check1)
+CATCH_TEST_CASE("size_check1")
 {
   double data[3*4];
   cml::externalmnd_c M(data, 3,4);
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-  BOOST_REQUIRE_EQUAL(M.data(), &data[0]);
-  BOOST_REQUIRE_THROW(
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 4);
+  CATCH_REQUIRE(M.data() == &data[0]);
+  CATCH_REQUIRE_THROWS_AS(
     (M = {
      1.,  2.,  3.,  4.,
      5.,  6.,  7.,  8.,
@@ -288,14 +279,14 @@ BOOST_AUTO_TEST_CASE(size_check1)
      }), cml::incompatible_matrix_size_error);
 }
 
-BOOST_AUTO_TEST_CASE(size_check2)
+CATCH_TEST_CASE("size_check2")
 {
   double data[3*4];
   cml::externalmnd_c M(data, 3,4);
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-  BOOST_REQUIRE_EQUAL(M.data(), &data[0]);
-  BOOST_REQUIRE_THROW(
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 4);
+  CATCH_REQUIRE(M.data() == &data[0]);
+  CATCH_REQUIRE_THROWS_AS(
     (M = {
      1.,  2.,  3.,  4.,
      5.,  6.,  7.,  8.,

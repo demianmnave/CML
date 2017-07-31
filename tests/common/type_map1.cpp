@@ -7,8 +7,7 @@
 #include <cml/common/mpl/type_map.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE type_map1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
 template<class T1, class T2>
 struct table_item
@@ -17,7 +16,7 @@ struct table_item
   typedef T2 second;
 };
 
-BOOST_AUTO_TEST_CASE(map1)
+CATCH_TEST_CASE("map1")
 {
   using cml::type_map;
   typedef type_map<
@@ -27,28 +26,28 @@ BOOST_AUTO_TEST_CASE(map1)
     > int_table;
 
   typedef int_table::find_second<int>::type Ti;
-  BOOST_CHECK(Ti::value);
-  BOOST_CHECK((std::is_same<Ti::type, int>::value));
+  CATCH_CHECK(Ti::value);
+  CATCH_CHECK((std::is_same<Ti::type, int>::value));
 
   typedef int_table::find_first<int>::type Ti2;
-  BOOST_CHECK(Ti2::value);
-  BOOST_CHECK((std::is_same<Ti2::type, int>::value));
+  CATCH_CHECK(Ti2::value);
+  CATCH_CHECK((std::is_same<Ti2::type, int>::value));
 
   typedef int_table::find_first<float>::type Tf1;
-  BOOST_CHECK(Tf1::value);
-  BOOST_CHECK((std::is_same<Tf1::type, int>::value));
+  CATCH_CHECK(Tf1::value);
+  CATCH_CHECK((std::is_same<Tf1::type, int>::value));
 
   typedef int_table::find_second<float>::type Tf2;
-  BOOST_CHECK(!Tf2::value);
-  BOOST_CHECK((std::is_same<Tf2::type, void>::value));
+  CATCH_CHECK(!Tf2::value);
+  CATCH_CHECK((std::is_same<Tf2::type, void>::value));
 
   typedef int_table::find_first<double>::type Td1;
-  BOOST_CHECK(Td1::value);
-  BOOST_CHECK((std::is_same<Td1::type, int>::value));
+  CATCH_CHECK(Td1::value);
+  CATCH_CHECK((std::is_same<Td1::type, int>::value));
 
   typedef int_table::find_second<double>::type Td2;
-  BOOST_CHECK(!Td2::value);
-  BOOST_CHECK((std::is_same<Td2::type, void>::value));
+  CATCH_CHECK(!Td2::value);
+  CATCH_CHECK((std::is_same<Td2::type, void>::value));
 }
 
 // -------------------------------------------------------------------------

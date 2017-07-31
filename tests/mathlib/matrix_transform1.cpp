@@ -15,12 +15,10 @@
 #include <cml/util.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE matrix_transform1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_SUITE(look_at_3D)
 
-BOOST_AUTO_TEST_CASE(look_at_rh_1)
+CATCH_TEST_CASE("look at 3D, look_at_rh_1")
 {
   auto M = cml::zero_4x4();
   cml::matrix_look_at_RH(M,
@@ -31,12 +29,12 @@ BOOST_AUTO_TEST_CASE(look_at_rh_1)
   auto v = cml::vector3d(1., 1., 1.);
   auto w = cml::transform_point(M,v);
 
-  BOOST_CHECK_CLOSE(w[0], 1., .0001);
-  BOOST_CHECK_CLOSE(w[1], 1., .0001);
-  BOOST_CHECK_SMALL(w[2], 1e-8);
+  CATCH_CHECK(w[0] == Approx(1.).epsilon(.0001));
+  CATCH_CHECK(w[1] == Approx(1.).epsilon(.0001));
+  CATCH_CHECK(0 == Approx(w[2]).epsilon(0).margin(1e-8));
 }
 
-BOOST_AUTO_TEST_CASE(look_at_lh_1)
+CATCH_TEST_CASE("look at 3D, look_at_lh_1")
 {
   auto M = cml::zero_4x4();
   cml::matrix_look_at_LH(M,
@@ -47,34 +45,31 @@ BOOST_AUTO_TEST_CASE(look_at_lh_1)
   auto v = cml::vector3d(1., 1., 1.);
   auto w = cml::transform_point(M,v);
 
-  BOOST_CHECK_CLOSE(w[0], -1., .0001);
-  BOOST_CHECK_CLOSE(w[1],  1., .0001);
-  BOOST_CHECK_SMALL(w[2],  1e-8);
+  CATCH_CHECK(w[0] == Approx(-1.).epsilon(.0001));
+  CATCH_CHECK(w[1] == Approx( 1.).epsilon(.0001));
+  CATCH_CHECK(0 == Approx(w[2]).epsilon(0).margin( 1e-8));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(affine_3D)
 
-BOOST_AUTO_TEST_CASE(test1)
+CATCH_TEST_CASE("affine 3D, test1")
 {
   cml::matrix44d M;
   auto axis = cml::vector3d(1.,1.,1.).normalize();
   cml::vector3d xlate(2.,2.,2.);
   cml::matrix_affine_transform(M, axis, cml::rad(22.5), xlate);
 
-  BOOST_CHECK_EQUAL(M(0,3), 2.0);
-  BOOST_CHECK_EQUAL(M(1,3), 2.0);
-  BOOST_CHECK_EQUAL(M(2,3), 2.0);
-  BOOST_CHECK_EQUAL(M(3,3), 1.0);
+  CATCH_CHECK(M(0,3) == 2.0);
+  CATCH_CHECK(M(1,3) == 2.0);
+  CATCH_CHECK(M(2,3) == 2.0);
+  CATCH_CHECK(M(3,3) == 1.0);
 
-  BOOST_CHECK_CLOSE(M(0,0), 0.949253, .001);
-  BOOST_CHECK_CLOSE(M(1,1), 0.949253, .001);
-  BOOST_CHECK_CLOSE(M(2,2), 0.949253, .001);
+  CATCH_CHECK(M(0,0) == Approx(0.949253).epsilon(.001));
+  CATCH_CHECK(M(1,1) == Approx(0.949253).epsilon(.001));
+  CATCH_CHECK(M(2,2) == Approx(0.949253).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

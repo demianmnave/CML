@@ -5,7 +5,7 @@
 project(CML_Testing_Util)
 set(CML_CURRENT_TEST_GROUP "Util")
 
-ADD_CML_TEST(vector_hash1)
+CML_ADD_TEST(vector_hash1)
 
 # --------------------------------------------------------------------------
 # vim:ft=cmake

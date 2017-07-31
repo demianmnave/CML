@@ -16,290 +16,269 @@
 #include <cml/vector/types.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE subvector1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_SUITE(fixed)
 
-BOOST_AUTO_TEST_CASE(sub1)
+CATCH_TEST_CASE("fixed, sub1")
 {
   cml::vector3d v1 = { 1., 2., 3. };
   auto xpr = cml::subvector(v1,0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == 2);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_CASE(sub2)
+CATCH_TEST_CASE("fixed, sub2")
 {
   cml::vector3d v1 = { 1., 2., 3. };
   auto xpr = v1.subvector(0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == 2);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_CASE(sub3)
+CATCH_TEST_CASE("fixed, sub3")
 {
   auto xpr = cml::subvector(cml::vector3d(1., 2., 3.), 0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == 2);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(fixed_external)
 
-BOOST_AUTO_TEST_CASE(sub1)
+CATCH_TEST_CASE("fixed external, sub1")
 {
   double av1[] = { 1., 2., 3. };
   cml::external3d v1(av1);
   auto xpr = cml::subvector(v1,0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == 2);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_CASE(sub2)
+CATCH_TEST_CASE("fixed external, sub2")
 {
   double av1[] = { 1., 2., 3. };
   cml::external3d v1(av1);
   auto xpr = v1.subvector(0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == 2);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_CASE(sub3)
+CATCH_TEST_CASE("fixed external, sub3")
 {
   double av1[] = { 1., 2., 3. };
   auto xpr = cml::subvector(cml::external3d(av1), 0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == 2);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(fixed_const_external)
 
-BOOST_AUTO_TEST_CASE(sub1)
+CATCH_TEST_CASE("fixed const external, sub1")
 {
   const double av1[] = { 1., 2., 3. };
   cml::external3cd v1(av1);
   auto xpr = cml::subvector(v1,0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == 2);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_CASE(sub2)
+CATCH_TEST_CASE("fixed const external, sub2")
 {
   const double av1[] = { 1., 2., 3. };
   cml::external3cd v1(av1);
   auto xpr = v1.subvector(0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == 2);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_CASE(sub3)
+CATCH_TEST_CASE("fixed const external, sub3")
 {
   const double av1[] = { 1., 2., 3. };
   auto xpr = cml::subvector(cml::external3cd(av1), 0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == 2);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(dynamic)
 
-BOOST_AUTO_TEST_CASE(sub1)
+CATCH_TEST_CASE("dynamic, sub1")
 {
   cml::vectord v1 = { 1., 2., 3. };
   auto xpr = cml::subvector(v1,0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, -1);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == -1);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_CASE(sub2)
+CATCH_TEST_CASE("dynamic, sub2")
 {
   cml::vectord v1 = { 1., 2., 3. };
   auto xpr = v1.subvector(0);
-  BOOST_REQUIRE_EQUAL(v1.size(), 3);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, -1);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(v1.size() == 3);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == -1);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_CASE(sub3)
+CATCH_TEST_CASE("dynamic, sub3")
 {
   auto xpr = cml::subvector(cml::vectord(1., 2., 3.), 0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, -1);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == -1);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(dynamic_external)
 
-BOOST_AUTO_TEST_CASE(sub1)
+CATCH_TEST_CASE("dynamic external, sub1")
 {
   double av1[] = { 1., 2., 3. };
   cml::externalnd v1(av1, 3);
   auto xpr = cml::subvector(v1,0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, -1);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == -1);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_CASE(sub2)
+CATCH_TEST_CASE("dynamic external, sub2")
 {
   double av1[] = { 1., 2., 3. };
   cml::externalnd v1(av1, 3);
   auto xpr = v1.subvector(0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, -1);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == -1);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_CASE(sub3)
+CATCH_TEST_CASE("dynamic external, sub3")
 {
   double av1[] = { 1., 2., 3. };
   auto xpr = cml::subvector(cml::externalnd(av1, 3), 0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, -1);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == -1);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(dynamic_const_external)
 
-BOOST_AUTO_TEST_CASE(sub1)
+CATCH_TEST_CASE("dynamic const external, sub1")
 {
   const double av1[] = { 1., 2., 3. };
   cml::externalncd v1(av1, 3);
   auto xpr = cml::subvector(v1,0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, -1);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == -1);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_CASE(sub2)
+CATCH_TEST_CASE("dynamic const external, sub2")
 {
   const double av1[] = { 1., 2., 3. };
   cml::externalncd v1(av1, 3);
   auto xpr = v1.subvector(0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, -1);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == -1);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_CASE(sub3)
+CATCH_TEST_CASE("dynamic const external, sub3")
 {
   const double av1[] = { 1., 2., 3. };
   auto xpr = cml::subvector(cml::externalncd(av1, 3), 0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, -1);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == -1);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-BOOST_AUTO_TEST_SUITE(rv_from_this1)
 
-BOOST_AUTO_TEST_CASE(sub1)
+CATCH_TEST_CASE("rv from this1, sub1")
 {
   typedef decltype(cml::vector3d().subvector(0)) node_type;
-  BOOST_CHECK_EQUAL((std::is_rvalue_reference<
-      typename node_type::sub_arg_type>::value), true);
+  CATCH_CHECK((std::is_rvalue_reference<typename node_type::sub_arg_type>::value));
   auto xpr = cml::vector3d(1., 2., 3.).subvector(0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == 2);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_CASE(sub2)
+CATCH_TEST_CASE("rv from this1, sub2")
 {
   cml::vector3d v1 = { 1., 2., 3. };
   typedef decltype(v1.subvector(0)) node_type;
-  BOOST_CHECK_EQUAL((std::is_lvalue_reference<
-      typename node_type::sub_arg_type>::value), true);
+  CATCH_CHECK((std::is_lvalue_reference<typename node_type::sub_arg_type>::value));
   auto xpr = v1.subvector(0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == 2);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 #else
-BOOST_AUTO_TEST_SUITE(rv_from_this1)
 
-BOOST_AUTO_TEST_CASE(sub1)
+CATCH_TEST_CASE("rv from this1, sub1")
 {
   typedef cml::vector3d vector3_t;
   typedef decltype(vector3_t().subvector(0)) node_type;
 
-  BOOST_CHECK_EQUAL((std::is_same<
-      typename node_type::sub_type, vector3_t>::value), true);
+  CATCH_CHECK((std::is_same<typename node_type::sub_type, vector3_t>::value));
 
   auto xpr = vector3_t(1., 2., 3.).subvector(0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == 2);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_CASE(sub2)
+CATCH_TEST_CASE("rv from this1, sub2")
 {
   typedef cml::vector3d vector3_t;
   vector3_t v1 = { 1., 2., 3. };
   typedef decltype(v1.subvector(0)) node_type;
 
-  BOOST_CHECK_EQUAL((std::is_same<
-      typename node_type::sub_type, vector3_t>::value), true);
+  CATCH_CHECK((std::is_same<typename node_type::sub_type, vector3_t>::value));
 
   auto xpr = v1.subvector(0);
-  BOOST_REQUIRE_EQUAL(cml::int_c<decltype(xpr)::array_size>::value, 2);
-  BOOST_REQUIRE_EQUAL(xpr.size(), 2);
-  BOOST_CHECK_EQUAL(xpr[0], 2.);
-  BOOST_CHECK_EQUAL(xpr[1], 3.);
+  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == 2);
+  CATCH_REQUIRE(xpr.size() == 2);
+  CATCH_CHECK(xpr[0] == 2.);
+  CATCH_CHECK(xpr[1] == 3.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 #endif
 
 // -------------------------------------------------------------------------

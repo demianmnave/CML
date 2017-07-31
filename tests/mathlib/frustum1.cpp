@@ -12,10 +12,9 @@
 #include <cml/mathlib/matrix/projection.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE frustum1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_CASE(orthographic_planes1)
+CATCH_TEST_CASE("orthographic_planes1")
 {
   cml::matrix44d O;
   cml::matrix_orthographic_RH(
@@ -25,15 +24,15 @@ BOOST_AUTO_TEST_CASE(orthographic_planes1)
   double planes[6][4]; // l, r, b, t, n ,f
   cml::extract_frustum_planes(O, planes, cml::z_clip_neg_one);
 
-  BOOST_CHECK_CLOSE(planes[0][0], 1., .001);
-  BOOST_CHECK_CLOSE(planes[1][0], -1., .001);
-  BOOST_CHECK_CLOSE(planes[2][1], 1., .001);
-  BOOST_CHECK_CLOSE(planes[3][1], -1., .001);
-  BOOST_CHECK_CLOSE(planes[4][2], -1., .001);
-  BOOST_CHECK_CLOSE(planes[5][2], 1., .001);
+  CATCH_CHECK(planes[0][0] == Approx(1.).epsilon(.001));
+  CATCH_CHECK(planes[1][0] == Approx(-1.).epsilon(.001));
+  CATCH_CHECK(planes[2][1] == Approx(1.).epsilon(.001));
+  CATCH_CHECK(planes[3][1] == Approx(-1.).epsilon(.001));
+  CATCH_CHECK(planes[4][2] == Approx(-1.).epsilon(.001));
+  CATCH_CHECK(planes[5][2] == Approx(1.).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(perspective_planes1)
+CATCH_TEST_CASE("perspective_planes1")
 {
   cml::matrix44d O;
   cml::matrix_perspective_RH(
@@ -43,12 +42,12 @@ BOOST_AUTO_TEST_CASE(perspective_planes1)
   double planes[6][4]; // l, r, b, t, n ,f
   cml::extract_frustum_planes(O, planes, cml::z_clip_neg_one);
 
-  BOOST_CHECK_CLOSE(planes[0][0], .002, .001);
-  BOOST_CHECK_CLOSE(planes[1][0], -.002, .001);
-  BOOST_CHECK_CLOSE(planes[2][1], .002, .001);
-  BOOST_CHECK_CLOSE(planes[3][1], -.002, .001);
-  BOOST_CHECK_CLOSE(planes[4][2], -1., .001);
-  BOOST_CHECK_CLOSE(planes[5][2], 1., .001);
+  CATCH_CHECK(planes[0][0] == Approx(.002).epsilon(.001));
+  CATCH_CHECK(planes[1][0] == Approx(-.002).epsilon(.001));
+  CATCH_CHECK(planes[2][1] == Approx(.002).epsilon(.001));
+  CATCH_CHECK(planes[3][1] == Approx(-.002).epsilon(.001));
+  CATCH_CHECK(planes[4][2] == Approx(-1.).epsilon(.001));
+  CATCH_CHECK(planes[5][2] == Approx(1.).epsilon(.001));
 }
 
 // -------------------------------------------------------------------------

@@ -11,102 +11,97 @@
 #include <cml/matrix.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE matrix_scale1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_SUITE(scale_2D)
 
-BOOST_AUTO_TEST_CASE(set1)
+CATCH_TEST_CASE("scale 2D, set1")
 {
   cml::matrix33d M;
   cml::matrix_scale_2D(M, 2., 2.);
-  BOOST_CHECK_EQUAL(M(0,0), 2.);
-  BOOST_CHECK_EQUAL(M(1,1), 2.);
+  CATCH_CHECK(M(0,0) == 2.);
+  CATCH_CHECK(M(1,1) == 2.);
 }
 
-BOOST_AUTO_TEST_CASE(set2)
+CATCH_TEST_CASE("scale 2D, set2")
 {
   cml::matrix33d M;
   cml::matrix_scale_2D(M, cml::vector2d(2., 2.));
-  BOOST_CHECK_EQUAL(M(0,0), 2.);
-  BOOST_CHECK_EQUAL(M(1,1), 2.);
+  CATCH_CHECK(M(0,0) == 2.);
+  CATCH_CHECK(M(1,1) == 2.);
 }
 
-BOOST_AUTO_TEST_CASE(uniform1)
+CATCH_TEST_CASE("scale 2D, uniform1")
 {
   cml::matrix33d M;
   cml::matrix_uniform_scale_2D(M, 2.);
-  BOOST_CHECK_EQUAL(M(0,0), 2.);
-  BOOST_CHECK_EQUAL(M(1,1), 2.);
+  CATCH_CHECK(M(0,0) == 2.);
+  CATCH_CHECK(M(1,1) == 2.);
 }
 
-BOOST_AUTO_TEST_CASE(inverse1)
+CATCH_TEST_CASE("scale 2D, inverse1")
 {
   cml::matrix33d M;
   cml::matrix_inverse_scale_2D(M, .5, .5);
-  BOOST_CHECK_EQUAL(M(0,0), 2.);
-  BOOST_CHECK_EQUAL(M(1,1), 2.);
+  CATCH_CHECK(M(0,0) == 2.);
+  CATCH_CHECK(M(1,1) == 2.);
 }
 
-BOOST_AUTO_TEST_CASE(inverse2)
+CATCH_TEST_CASE("scale 2D, inverse2")
 {
   cml::matrix33d M;
   cml::matrix_inverse_scale_2D(M, cml::vector2d(.5, .5));
-  BOOST_CHECK_EQUAL(M(0,0), 2.);
-  BOOST_CHECK_EQUAL(M(1,1), 2.);
+  CATCH_CHECK(M(0,0) == 2.);
+  CATCH_CHECK(M(1,1) == 2.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(scale_3D)
 
-BOOST_AUTO_TEST_CASE(set1)
+CATCH_TEST_CASE("scale 3D, set1")
 {
   cml::matrix44d M;
   cml::matrix_scale(M, 2., 2., 2.);
-  BOOST_CHECK_EQUAL(M(0,0), 2.);
-  BOOST_CHECK_EQUAL(M(1,1), 2.);
-  BOOST_CHECK_EQUAL(M(2,2), 2.);
+  CATCH_CHECK(M(0,0) == 2.);
+  CATCH_CHECK(M(1,1) == 2.);
+  CATCH_CHECK(M(2,2) == 2.);
 }
 
-BOOST_AUTO_TEST_CASE(set2)
+CATCH_TEST_CASE("scale 3D, set2")
 {
   cml::matrix44d M;
   cml::matrix_scale(M, cml::vector3d(2., 2., 2.));
-  BOOST_CHECK_EQUAL(M(0,0), 2.);
-  BOOST_CHECK_EQUAL(M(1,1), 2.);
-  BOOST_CHECK_EQUAL(M(2,2), 2.);
+  CATCH_CHECK(M(0,0) == 2.);
+  CATCH_CHECK(M(1,1) == 2.);
+  CATCH_CHECK(M(2,2) == 2.);
 }
 
-BOOST_AUTO_TEST_CASE(uniform1)
+CATCH_TEST_CASE("scale 3D, uniform1")
 {
   cml::matrix44d M;
   cml::matrix_uniform_scale(M, 2.);
-  BOOST_CHECK_EQUAL(M(0,0), 2.);
-  BOOST_CHECK_EQUAL(M(1,1), 2.);
-  BOOST_CHECK_EQUAL(M(2,2), 2.);
+  CATCH_CHECK(M(0,0) == 2.);
+  CATCH_CHECK(M(1,1) == 2.);
+  CATCH_CHECK(M(2,2) == 2.);
 }
 
-BOOST_AUTO_TEST_CASE(inverse1)
+CATCH_TEST_CASE("scale 3D, inverse1")
 {
   cml::matrix44d M;
   cml::matrix_inverse_scale(M, .5, .5, .5);
-  BOOST_CHECK_EQUAL(M(0,0), 2.);
-  BOOST_CHECK_EQUAL(M(1,1), 2.);
-  BOOST_CHECK_EQUAL(M(2,2), 2.);
+  CATCH_CHECK(M(0,0) == 2.);
+  CATCH_CHECK(M(1,1) == 2.);
+  CATCH_CHECK(M(2,2) == 2.);
 }
 
-BOOST_AUTO_TEST_CASE(inverse2)
+CATCH_TEST_CASE("scale 3D, inverse2")
 {
   cml::matrix44d M;
   cml::matrix_inverse_scale(M, cml::vector3d(.5, .5, .5));
-  BOOST_CHECK_EQUAL(M(0,0), 2.);
-  BOOST_CHECK_EQUAL(M(1,1), 2.);
-  BOOST_CHECK_EQUAL(M(2,2), 2.);
+  CATCH_CHECK(M(0,0) == 2.);
+  CATCH_CHECK(M(1,1) == 2.);
+  CATCH_CHECK(M(2,2) == 2.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

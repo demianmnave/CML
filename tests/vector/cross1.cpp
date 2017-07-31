@@ -13,10 +13,9 @@
 #include <cml/vector/types.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE cross1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_CASE(cross1)
+CATCH_TEST_CASE("cross1")
 {
   cml::vector3d v1 = { 1., 1., 1. };
   cml::vector3d v2 = { 2., 2., 2. };
@@ -27,13 +26,13 @@ BOOST_AUTO_TEST_CASE(cross1)
     "got wrong size_tag from cross()");
 
   auto v = cml::cross(v1,v2);
-  BOOST_REQUIRE_EQUAL(v.size(), 3);
-  BOOST_CHECK_EQUAL(v[0], 0.);
-  BOOST_CHECK_EQUAL(v[1], 0.);
-  BOOST_CHECK_EQUAL(v[2], 0.);
+  CATCH_REQUIRE(v.size() == 3);
+  CATCH_CHECK(v[0] == 0.);
+  CATCH_CHECK(v[1] == 0.);
+  CATCH_CHECK(v[2] == 0.);
 }
 
-BOOST_AUTO_TEST_CASE(cross2)
+CATCH_TEST_CASE("cross2")
 {
   cml::vectord v1(1., 2., 3.);
   cml::vector3d v2 (3., 2., 1.);
@@ -44,30 +43,30 @@ BOOST_AUTO_TEST_CASE(cross2)
     "got wrong size_tag from cross()");
 
   auto v = cml::cross(v1,v2);
-  BOOST_REQUIRE_EQUAL(v.size(), 3);
-  BOOST_CHECK_EQUAL(v[0], -4.);
-  BOOST_CHECK_EQUAL(v[1],  8.);
-  BOOST_CHECK_EQUAL(v[2], -4.);
+  CATCH_REQUIRE(v.size() == 3);
+  CATCH_CHECK(v[0] == -4.);
+  CATCH_CHECK(v[1] ==  8.);
+  CATCH_CHECK(v[2] == -4.);
 }
 
-BOOST_AUTO_TEST_CASE(size_check1)
+CATCH_TEST_CASE("size_check1")
 {
   cml::vectord v1(2);
-  BOOST_CHECK_THROW(cml::cross(v1,v1), cml::vector_size_error);
+  CATCH_CHECK_THROWS_AS(cml::cross(v1,v1), cml::vector_size_error);
 }
 
-BOOST_AUTO_TEST_CASE(size_check2)
+CATCH_TEST_CASE("size_check2")
 {
   cml::vectord v1(2,3);
   cml::vector3d v2(2,3,3);
-  BOOST_CHECK_THROW(cml::cross(v1,v2), cml::vector_size_error);
+  CATCH_CHECK_THROWS_AS(cml::cross(v1,v2), cml::vector_size_error);
 }
 
-BOOST_AUTO_TEST_CASE(size_check3)
+CATCH_TEST_CASE("size_check3")
 {
   cml::vector3d v1(2,3,3);
   cml::vectord v2(2,3);
-  BOOST_CHECK_THROW(cml::cross(v1,v2), cml::vector_size_error);
+  CATCH_CHECK_THROWS_AS(cml::cross(v1,v2), cml::vector_size_error);
 }
 
 // -------------------------------------------------------------------------

@@ -11,12 +11,10 @@
 #include <cml/matrix.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE matrix_basis1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_SUITE(basis_2D)
 
-BOOST_AUTO_TEST_CASE(basis1)
+CATCH_TEST_CASE("basis 2D, basis1")
 {
   cml::matrix22d M;	// column basis
 
@@ -26,13 +24,13 @@ BOOST_AUTO_TEST_CASE(basis1)
   auto b1 = cml::matrix_get_x_basis_vector_2D(M);
   auto b2 = cml::matrix_get_y_basis_vector_2D(M);
 
-  BOOST_CHECK_EQUAL(b1[0], 1.);
-  BOOST_CHECK_EQUAL(b1[1], 2.);
-  BOOST_CHECK_EQUAL(b2[0], 3.);
-  BOOST_CHECK_EQUAL(b2[1], 4.);
+  CATCH_CHECK(b1[0] == 1.);
+  CATCH_CHECK(b1[1] == 2.);
+  CATCH_CHECK(b2[0] == 3.);
+  CATCH_CHECK(b2[1] == 4.);
 }
 
-BOOST_AUTO_TEST_CASE(basis2)
+CATCH_TEST_CASE("basis 2D, basis2")
 {
   cml::matrix22d M;	// column basis
 
@@ -42,13 +40,13 @@ BOOST_AUTO_TEST_CASE(basis2)
   auto b1 = cml::matrix_get_transposed_x_basis_vector_2D(M);
   auto b2 = cml::matrix_get_transposed_y_basis_vector_2D(M);
 
-  BOOST_CHECK_EQUAL(b1[0], 1.);
-  BOOST_CHECK_EQUAL(b1[1], 2.);
-  BOOST_CHECK_EQUAL(b2[0], 3.);
-  BOOST_CHECK_EQUAL(b2[1], 4.);
+  CATCH_CHECK(b1[0] == 1.);
+  CATCH_CHECK(b1[1] == 2.);
+  CATCH_CHECK(b2[0] == 3.);
+  CATCH_CHECK(b2[1] == 4.);
 }
 
-BOOST_AUTO_TEST_CASE(basis3)
+CATCH_TEST_CASE("basis 2D, basis3")
 {
   cml::matrix22d M;	// column basis
 
@@ -58,13 +56,13 @@ BOOST_AUTO_TEST_CASE(basis3)
   cml::vectord b1, b2;
   cml::matrix_get_basis_vectors_2D(M, b1, b2);
 
-  BOOST_CHECK_EQUAL(b1[0], 1.);
-  BOOST_CHECK_EQUAL(b1[1], 2.);
-  BOOST_CHECK_EQUAL(b2[0], 3.);
-  BOOST_CHECK_EQUAL(b2[1], 4.);
+  CATCH_CHECK(b1[0] == 1.);
+  CATCH_CHECK(b1[1] == 2.);
+  CATCH_CHECK(b2[0] == 3.);
+  CATCH_CHECK(b2[1] == 4.);
 }
 
-BOOST_AUTO_TEST_CASE(basis4)
+CATCH_TEST_CASE("basis 2D, basis4")
 {
   cml::matrix22d M;	// column basis
 
@@ -74,18 +72,16 @@ BOOST_AUTO_TEST_CASE(basis4)
   cml::vectord b1, b2;
   cml::matrix_get_transposed_basis_vectors_2D(M, b1, b2);
 
-  BOOST_CHECK_EQUAL(b1[0], 1.);
-  BOOST_CHECK_EQUAL(b1[1], 2.);
-  BOOST_CHECK_EQUAL(b2[0], 3.);
-  BOOST_CHECK_EQUAL(b2[1], 4.);
+  CATCH_CHECK(b1[0] == 1.);
+  CATCH_CHECK(b1[1] == 2.);
+  CATCH_CHECK(b2[0] == 3.);
+  CATCH_CHECK(b2[1] == 4.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(basis_3D)
 
-BOOST_AUTO_TEST_CASE(basis1)
+CATCH_TEST_CASE("basis 3D, basis1")
 {
   cml::matrix33d M;	// column basis
 
@@ -97,20 +93,20 @@ BOOST_AUTO_TEST_CASE(basis1)
   auto b2 = cml::matrix_get_y_basis_vector(M);
   auto b3 = cml::matrix_get_z_basis_vector(M);
 
-  BOOST_CHECK_EQUAL(b1[0], 1.);
-  BOOST_CHECK_EQUAL(b1[1], 2.);
-  BOOST_CHECK_EQUAL(b1[2], 3.);
+  CATCH_CHECK(b1[0] == 1.);
+  CATCH_CHECK(b1[1] == 2.);
+  CATCH_CHECK(b1[2] == 3.);
 
-  BOOST_CHECK_EQUAL(b2[0], 4.);
-  BOOST_CHECK_EQUAL(b2[1], 5.);
-  BOOST_CHECK_EQUAL(b2[2], 6.);
+  CATCH_CHECK(b2[0] == 4.);
+  CATCH_CHECK(b2[1] == 5.);
+  CATCH_CHECK(b2[2] == 6.);
 
-  BOOST_CHECK_EQUAL(b3[0], 7.);
-  BOOST_CHECK_EQUAL(b3[1], 8.);
-  BOOST_CHECK_EQUAL(b3[2], 9.);
+  CATCH_CHECK(b3[0] == 7.);
+  CATCH_CHECK(b3[1] == 8.);
+  CATCH_CHECK(b3[2] == 9.);
 }
 
-BOOST_AUTO_TEST_CASE(basis2)
+CATCH_TEST_CASE("basis 3D, basis2")
 {
   cml::matrix33d M;	// column basis
 
@@ -122,20 +118,20 @@ BOOST_AUTO_TEST_CASE(basis2)
   auto b2 = cml::matrix_get_transposed_y_basis_vector(M);
   auto b3 = cml::matrix_get_transposed_z_basis_vector(M);
 
-  BOOST_CHECK_EQUAL(b1[0], 1.);
-  BOOST_CHECK_EQUAL(b1[1], 2.);
-  BOOST_CHECK_EQUAL(b1[2], 3.);
+  CATCH_CHECK(b1[0] == 1.);
+  CATCH_CHECK(b1[1] == 2.);
+  CATCH_CHECK(b1[2] == 3.);
 
-  BOOST_CHECK_EQUAL(b2[0], 4.);
-  BOOST_CHECK_EQUAL(b2[1], 5.);
-  BOOST_CHECK_EQUAL(b2[2], 6.);
+  CATCH_CHECK(b2[0] == 4.);
+  CATCH_CHECK(b2[1] == 5.);
+  CATCH_CHECK(b2[2] == 6.);
 
-  BOOST_CHECK_EQUAL(b3[0], 7.);
-  BOOST_CHECK_EQUAL(b3[1], 8.);
-  BOOST_CHECK_EQUAL(b3[2], 9.);
+  CATCH_CHECK(b3[0] == 7.);
+  CATCH_CHECK(b3[1] == 8.);
+  CATCH_CHECK(b3[2] == 9.);
 }
 
-BOOST_AUTO_TEST_CASE(basis3)
+CATCH_TEST_CASE("basis 3D, basis3")
 {
   cml::matrix33d M;	// column basis
 
@@ -145,20 +141,20 @@ BOOST_AUTO_TEST_CASE(basis3)
   cml::vectord b1, b2, b3;
   cml::matrix_get_basis_vectors(M, b1, b2, b3);
 
-  BOOST_CHECK_EQUAL(b1[0], 1.);
-  BOOST_CHECK_EQUAL(b1[1], 2.);
-  BOOST_CHECK_EQUAL(b1[2], 3.);
+  CATCH_CHECK(b1[0] == 1.);
+  CATCH_CHECK(b1[1] == 2.);
+  CATCH_CHECK(b1[2] == 3.);
 
-  BOOST_CHECK_EQUAL(b2[0], 4.);
-  BOOST_CHECK_EQUAL(b2[1], 5.);
-  BOOST_CHECK_EQUAL(b2[2], 6.);
+  CATCH_CHECK(b2[0] == 4.);
+  CATCH_CHECK(b2[1] == 5.);
+  CATCH_CHECK(b2[2] == 6.);
 
-  BOOST_CHECK_EQUAL(b3[0], 7.);
-  BOOST_CHECK_EQUAL(b3[1], 8.);
-  BOOST_CHECK_EQUAL(b3[2], 9.);
+  CATCH_CHECK(b3[0] == 7.);
+  CATCH_CHECK(b3[1] == 8.);
+  CATCH_CHECK(b3[2] == 9.);
 }
 
-BOOST_AUTO_TEST_CASE(basis4)
+CATCH_TEST_CASE("basis 3D, basis4")
 {
   cml::matrix33d M;	// column basis
 
@@ -168,25 +164,23 @@ BOOST_AUTO_TEST_CASE(basis4)
   cml::vectord b1, b2, b3;
   cml::matrix_get_transposed_basis_vectors(M, b1, b2, b3);
 
-  BOOST_CHECK_EQUAL(b1[0], 1.);
-  BOOST_CHECK_EQUAL(b1[1], 2.);
-  BOOST_CHECK_EQUAL(b1[2], 3.);
+  CATCH_CHECK(b1[0] == 1.);
+  CATCH_CHECK(b1[1] == 2.);
+  CATCH_CHECK(b1[2] == 3.);
 
-  BOOST_CHECK_EQUAL(b2[0], 4.);
-  BOOST_CHECK_EQUAL(b2[1], 5.);
-  BOOST_CHECK_EQUAL(b2[2], 6.);
+  CATCH_CHECK(b2[0] == 4.);
+  CATCH_CHECK(b2[1] == 5.);
+  CATCH_CHECK(b2[2] == 6.);
 
-  BOOST_CHECK_EQUAL(b3[0], 7.);
-  BOOST_CHECK_EQUAL(b3[1], 8.);
-  BOOST_CHECK_EQUAL(b3[2], 9.);
+  CATCH_CHECK(b3[0] == 7.);
+  CATCH_CHECK(b3[1] == 8.);
+  CATCH_CHECK(b3[2] == 9.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(basis_nD)
 
-BOOST_AUTO_TEST_CASE(basis1)
+CATCH_TEST_CASE("basis nD, basis1")
 {
   auto M = cml::matrix34d_c(
     1., 0., 0., 3.,
@@ -194,12 +188,12 @@ BOOST_AUTO_TEST_CASE(basis1)
     0., 0., 1., 1.
     );
   auto T = cml::matrix_get_basis_vector_nD(M, 3);
-  BOOST_CHECK_EQUAL(T[0], 3.);
-  BOOST_CHECK_EQUAL(T[1], 2.);
-  BOOST_CHECK_EQUAL(T[2], 1.);
+  CATCH_CHECK(T[0] == 3.);
+  CATCH_CHECK(T[1] == 2.);
+  CATCH_CHECK(T[2] == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(basis2)
+CATCH_TEST_CASE("basis nD, basis2")
 {
   auto M = cml::matrix43d_r(
     1., 0., 0.,
@@ -208,12 +202,11 @@ BOOST_AUTO_TEST_CASE(basis2)
     3., 2., 1.
     );
   auto T = cml::matrix_get_basis_vector_nD(M, 3);
-  BOOST_CHECK_EQUAL(T[0], 3.);
-  BOOST_CHECK_EQUAL(T[1], 2.);
-  BOOST_CHECK_EQUAL(T[2], 1.);
+  CATCH_CHECK(T[0] == 3.);
+  CATCH_CHECK(T[1] == 2.);
+  CATCH_CHECK(T[2] == 1.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

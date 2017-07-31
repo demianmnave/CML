@@ -11,15 +11,14 @@
 #include <cml/quaternion/types.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE quaternion_dot1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_CASE(dot1)
+CATCH_TEST_CASE("dot1")
 {
   cml::quaterniond v1 = { 1., 1., 1., 1. };
   cml::quaterniond v2 = { 2., 2., 2., 2. };
   double dp = cml::dot(v1,v2);
-  BOOST_CHECK_EQUAL(dp, 8.);
+  CATCH_CHECK(dp == 8.);
 }
 
 // -------------------------------------------------------------------------

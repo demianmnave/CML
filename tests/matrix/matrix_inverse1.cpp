@@ -13,25 +13,23 @@
 #include <cml/matrix/types.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE matrix_inverse1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_SUITE(fixed)
 
-BOOST_AUTO_TEST_CASE(inverse_assign_2x2)
+CATCH_TEST_CASE("fixed, inverse_assign_2x2")
 {
   cml::matrix22d M(
     1., 2.,
     3., 4.
     );
   M.inverse();
-  BOOST_CHECK_CLOSE(M(0,0), -2.0, .001);
-  BOOST_CHECK_CLOSE(M(0,1),  1.0, .001);
-  BOOST_CHECK_CLOSE(M(1,0),  1.5, .001);
-  BOOST_CHECK_CLOSE(M(1,1), -0.5, .001);
+  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(.001));
+  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(.001));
+  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(.001));
+  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(inverse_assign_3x3)
+CATCH_TEST_CASE("fixed, inverse_assign_3x3")
 {
   cml::matrix33d M(
     1.,  2.,  3.,
@@ -49,10 +47,10 @@ BOOST_AUTO_TEST_CASE(inverse_assign_3x3)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_CLOSE(M(i,j), expected(i,j), .001);
+      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(inverse_assign_4x4)
+CATCH_TEST_CASE("fixed, inverse_assign_4x4")
 {
   cml::matrix44d M(
     1.,  2.,  3., 4.,
@@ -72,10 +70,10 @@ BOOST_AUTO_TEST_CASE(inverse_assign_4x4)
 
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      BOOST_CHECK_CLOSE(M(i,j), expected(i,j), .001);
+      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(inverse_2x2)
+CATCH_TEST_CASE("fixed, inverse_2x2")
 {
   auto M = cml::inverse(
     cml::matrix22d(
@@ -83,18 +81,16 @@ BOOST_AUTO_TEST_CASE(inverse_2x2)
       3., 4.
       )
     );
-  BOOST_CHECK_CLOSE(M(0,0), -2.0, .001);
-  BOOST_CHECK_CLOSE(M(0,1),  1.0, .001);
-  BOOST_CHECK_CLOSE(M(1,0),  1.5, .001);
-  BOOST_CHECK_CLOSE(M(1,1), -0.5, .001);
+  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(.001));
+  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(.001));
+  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(.001));
+  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(fixed_external)
 
-BOOST_AUTO_TEST_CASE(inverse_assign_2x2)
+CATCH_TEST_CASE("fixed external, inverse_assign_2x2")
 {
   double avM[] = {
     1., 2.,
@@ -102,13 +98,13 @@ BOOST_AUTO_TEST_CASE(inverse_assign_2x2)
   };
   cml::external22d M(avM);
   M.inverse();
-  BOOST_CHECK_CLOSE(M(0,0), -2.0, .001);
-  BOOST_CHECK_CLOSE(M(0,1),  1.0, .001);
-  BOOST_CHECK_CLOSE(M(1,0),  1.5, .001);
-  BOOST_CHECK_CLOSE(M(1,1), -0.5, .001);
+  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(.001));
+  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(.001));
+  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(.001));
+  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(inverse_assign_3x3)
+CATCH_TEST_CASE("fixed external, inverse_assign_3x3")
 {
   double avM[] = {
     1.,  2.,  3.,
@@ -127,10 +123,10 @@ BOOST_AUTO_TEST_CASE(inverse_assign_3x3)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_CLOSE(M(i,j), expected(i,j), .001);
+      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(inverse_assign_4x4)
+CATCH_TEST_CASE("fixed external, inverse_assign_4x4")
 {
   double avM[] = {
     1.,  2.,  3., 4.,
@@ -151,28 +147,26 @@ BOOST_AUTO_TEST_CASE(inverse_assign_4x4)
 
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      BOOST_CHECK_CLOSE(M(i,j), expected(i,j), .001);
+      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(inverse_2x2)
+CATCH_TEST_CASE("fixed external, inverse_2x2")
 {
   double avM[] = {
     1., 2.,
     3., 4.
   };
   auto M = cml::inverse(cml::external22d(avM));
-  BOOST_CHECK_CLOSE(M(0,0), -2.0, .001);
-  BOOST_CHECK_CLOSE(M(0,1),  1.0, .001);
-  BOOST_CHECK_CLOSE(M(1,0),  1.5, .001);
-  BOOST_CHECK_CLOSE(M(1,1), -0.5, .001);
+  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(.001));
+  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(.001));
+  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(.001));
+  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(dynamic_external)
 
-BOOST_AUTO_TEST_CASE(inverse_assign_2x2)
+CATCH_TEST_CASE("dynamic external, inverse_assign_2x2")
 {
   double avM[] = {
     1., 2.,
@@ -180,13 +174,13 @@ BOOST_AUTO_TEST_CASE(inverse_assign_2x2)
   };
   cml::externalmnd M(2,2, avM);
   M.inverse();
-  BOOST_CHECK_CLOSE(M(0,0), -2.0, .001);
-  BOOST_CHECK_CLOSE(M(0,1),  1.0, .001);
-  BOOST_CHECK_CLOSE(M(1,0),  1.5, .001);
-  BOOST_CHECK_CLOSE(M(1,1), -0.5, .001);
+  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(.001));
+  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(.001));
+  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(.001));
+  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(inverse_assign_3x3)
+CATCH_TEST_CASE("dynamic external, inverse_assign_3x3")
 {
   double avM[] = {
     1.,  2.,  3.,
@@ -205,10 +199,10 @@ BOOST_AUTO_TEST_CASE(inverse_assign_3x3)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_CLOSE(M(i,j), expected(i,j), .001);
+      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(inverse_assign_4x4)
+CATCH_TEST_CASE("dynamic external, inverse_assign_4x4")
 {
   double avM[] = {
     1.,  2.,  3., 4.,
@@ -229,37 +223,35 @@ BOOST_AUTO_TEST_CASE(inverse_assign_4x4)
 
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      BOOST_CHECK_CLOSE(M(i,j), expected(i,j), .001);
+      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(inverse_2x2)
+CATCH_TEST_CASE("dynamic external, inverse_2x2")
 {
   double avM[] = {
     1., 2.,
     3., 4.
   };
   auto M = cml::inverse(cml::externalmnd(2,2, avM));
-  BOOST_CHECK_CLOSE(M(0,0), -2.0, .001);
-  BOOST_CHECK_CLOSE(M(0,1),  1.0, .001);
-  BOOST_CHECK_CLOSE(M(1,0),  1.5, .001);
-  BOOST_CHECK_CLOSE(M(1,1), -0.5, .001);
+  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(.001));
+  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(.001));
+  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(.001));
+  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(size_check1)
+CATCH_TEST_CASE("dynamic external, size_check1")
 {
   double avM[3*4];
   cml::externalmnd M(3,4, avM);
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-  BOOST_REQUIRE_THROW(M.inverse(), cml::non_square_matrix_error);
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 4);
+  CATCH_REQUIRE_THROWS_AS(M.inverse(), cml::non_square_matrix_error);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(dynamic)
 
-BOOST_AUTO_TEST_CASE(inverse_assign_2x2)
+CATCH_TEST_CASE("dynamic, inverse_assign_2x2")
 {
   cml::matrixd M(
     2,2,
@@ -267,13 +259,13 @@ BOOST_AUTO_TEST_CASE(inverse_assign_2x2)
     3., 4.
     );
   M.inverse();
-  BOOST_CHECK_CLOSE(M(0,0), -2.0, .001);
-  BOOST_CHECK_CLOSE(M(0,1),  1.0, .001);
-  BOOST_CHECK_CLOSE(M(1,0),  1.5, .001);
-  BOOST_CHECK_CLOSE(M(1,1), -0.5, .001);
+  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(.001));
+  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(.001));
+  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(.001));
+  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(inverse_assign_3x3)
+CATCH_TEST_CASE("dynamic, inverse_assign_3x3")
 {
   cml::matrixd M(
     3,3,
@@ -292,10 +284,10 @@ BOOST_AUTO_TEST_CASE(inverse_assign_3x3)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_CLOSE(M(i,j), expected(i,j), .001);
+      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(inverse_assign_4x4)
+CATCH_TEST_CASE("dynamic, inverse_assign_4x4")
 {
   cml::matrixd M(
     4,4,
@@ -316,10 +308,10 @@ BOOST_AUTO_TEST_CASE(inverse_assign_4x4)
 
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      BOOST_CHECK_CLOSE(M(i,j), expected(i,j), .001);
+      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(inverse_2x2)
+CATCH_TEST_CASE("dynamic, inverse_2x2")
 {
   auto M = cml::inverse(
     cml::matrixd(
@@ -328,21 +320,20 @@ BOOST_AUTO_TEST_CASE(inverse_2x2)
       3., 4.
       )
     );
-  BOOST_CHECK_CLOSE(M(0,0), -2.0, .001);
-  BOOST_CHECK_CLOSE(M(0,1),  1.0, .001);
-  BOOST_CHECK_CLOSE(M(1,0),  1.5, .001);
-  BOOST_CHECK_CLOSE(M(1,1), -0.5, .001);
+  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(.001));
+  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(.001));
+  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(.001));
+  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_CASE(size_check1)
+CATCH_TEST_CASE("dynamic, size_check1")
 {
   cml::matrixd M(3,4);
-  BOOST_REQUIRE_EQUAL(M.rows(), 3);
-  BOOST_REQUIRE_EQUAL(M.cols(), 4);
-  BOOST_REQUIRE_THROW(M.inverse(), cml::non_square_matrix_error);
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 4);
+  CATCH_REQUIRE_THROWS_AS(M.inverse(), cml::non_square_matrix_error);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

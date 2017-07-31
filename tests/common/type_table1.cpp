@@ -7,8 +7,7 @@
 #include <cml/common/mpl/type_table.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE type_table1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
 template<class T1, class T2, class T>
 struct table_item
@@ -18,7 +17,7 @@ struct table_item
   typedef T type;
 };
 
-BOOST_AUTO_TEST_CASE(map1)
+CATCH_TEST_CASE("map1")
 {
   using cml::type_table;
   typedef type_table<
@@ -28,19 +27,19 @@ BOOST_AUTO_TEST_CASE(map1)
     > int_table;
 
   typedef int_table::find<int,int>::type Tii;
-  BOOST_CHECK(Tii::value);
+  CATCH_CHECK(Tii::value);
 
   typedef int_table::find<int,double>::type Tid;
-  BOOST_CHECK(Tid::value);
+  CATCH_CHECK(Tid::value);
 
   typedef int_table::find<double,int>::type Tdi;
-  BOOST_CHECK(Tdi::value);
+  CATCH_CHECK(Tdi::value);
 
   typedef int_table::find<int,char>::type Tic;
-  BOOST_CHECK(!Tic::value);
+  CATCH_CHECK(!Tic::value);
 
   typedef int_table::find<char,int>::type Tic;
-  BOOST_CHECK(!Tic::value);
+  CATCH_CHECK(!Tic::value);
 }
 
 
@@ -60,24 +59,24 @@ struct map_struct {
     > int_table;
 };
 
-BOOST_AUTO_TEST_CASE(map_struct1)
+CATCH_TEST_CASE("map_struct1")
 {
   typedef map_struct::int_table int_table;
 
   typedef int_table::find<int,int>::type Tii;
-  BOOST_CHECK(Tii::value);
+  CATCH_CHECK(Tii::value);
 
   typedef int_table::find<int,double>::type Tid;
-  BOOST_CHECK(Tid::value);
+  CATCH_CHECK(Tid::value);
 
   typedef int_table::find<double,int>::type Tdi;
-  BOOST_CHECK(Tdi::value);
+  CATCH_CHECK(Tdi::value);
 
   typedef int_table::find<int,char>::type Tic;
-  BOOST_CHECK(!Tic::value);
+  CATCH_CHECK(!Tic::value);
 
   typedef int_table::find<char,int>::type Tic;
-  BOOST_CHECK(!Tic::value);
+  CATCH_CHECK(!Tic::value);
 }
 
 // -------------------------------------------------------------------------

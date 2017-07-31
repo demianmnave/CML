@@ -12,26 +12,25 @@
 #include <cml/quaternion/types.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE quaternion_unary_node1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_CASE(unary_types1)
+CATCH_TEST_CASE("unary_types1")
 {
   typedef cml::quaterniond quaternion_type;
   {
-    BOOST_CHECK(cml::is_statically_polymorphic<quaternion_type>::value);
+    CATCH_CHECK(cml::is_statically_polymorphic<quaternion_type>::value);
   }
   {
     auto xpr = - quaternion_type();
     typedef decltype(xpr) xpr_type;
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_rvalue_reference<typename xpr_type::sub_arg_type>::value
       );
   }
   {
     auto xpr = + quaternion_type();
     typedef decltype(xpr) xpr_type;
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_rvalue_reference<typename xpr_type::sub_arg_type>::value
       );
   }
@@ -39,7 +38,7 @@ BOOST_AUTO_TEST_CASE(unary_types1)
     quaternion_type M;
     auto xpr = - M;
     typedef decltype(xpr) xpr_type;
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_lvalue_reference<typename xpr_type::sub_arg_type>::value
       );
   }
@@ -47,72 +46,70 @@ BOOST_AUTO_TEST_CASE(unary_types1)
     quaternion_type M;
     auto xpr = + M;
     typedef decltype(xpr) xpr_type;
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_lvalue_reference<typename xpr_type::sub_arg_type>::value
       );
   }
 }
 
-BOOST_AUTO_TEST_SUITE(fixed)
 
-BOOST_AUTO_TEST_CASE(unary_minus1)
+CATCH_TEST_CASE("fixed, unary_minus1")
 {
   cml::quaterniond q = { 1., 2., 3., 4. };
   cml::quaterniond r;
   r = - q;
-  BOOST_REQUIRE_EQUAL(r.size(), 4);
-  BOOST_CHECK_EQUAL(r[0], - 1.);
-  BOOST_CHECK_EQUAL(r[1], - 2.);
-  BOOST_CHECK_EQUAL(r[2], - 3.);
-  BOOST_CHECK_EQUAL(r[3], - 4.);
+  CATCH_REQUIRE(r.size() == 4);
+  CATCH_CHECK(r[0] == - 1.);
+  CATCH_CHECK(r[1] == - 2.);
+  CATCH_CHECK(r[2] == - 3.);
+  CATCH_CHECK(r[3] == - 4.);
 }
 
-BOOST_AUTO_TEST_CASE(unary_minus2)
+CATCH_TEST_CASE("fixed, unary_minus2")
 {
   cml::quaterniond q = { 1., 2., 3., 4. };
   cml::quaterniond r = - q;
-  BOOST_REQUIRE_EQUAL(r.size(), 4);
-  BOOST_CHECK_EQUAL(r[0], - 1.);
-  BOOST_CHECK_EQUAL(r[1], - 2.);
-  BOOST_CHECK_EQUAL(r[2], - 3.);
-  BOOST_CHECK_EQUAL(r[3], - 4.);
+  CATCH_REQUIRE(r.size() == 4);
+  CATCH_CHECK(r[0] == - 1.);
+  CATCH_CHECK(r[1] == - 2.);
+  CATCH_CHECK(r[2] == - 3.);
+  CATCH_CHECK(r[3] == - 4.);
 }
 
-BOOST_AUTO_TEST_CASE(unary_plus1)
+CATCH_TEST_CASE("fixed, unary_plus1")
 {
   cml::quaterniond q = { 1., 2., 3., 4. };
   cml::quaterniond r;
   r = + q;
-  BOOST_REQUIRE_EQUAL(r.size(), 4);
-  BOOST_CHECK_EQUAL(r[0], + 1.);
-  BOOST_CHECK_EQUAL(r[1], + 2.);
-  BOOST_CHECK_EQUAL(r[2], + 3.);
-  BOOST_CHECK_EQUAL(r[3], + 4.);
+  CATCH_REQUIRE(r.size() == 4);
+  CATCH_CHECK(r[0] == + 1.);
+  CATCH_CHECK(r[1] == + 2.);
+  CATCH_CHECK(r[2] == + 3.);
+  CATCH_CHECK(r[3] == + 4.);
 }
 
-BOOST_AUTO_TEST_CASE(unary_plus2)
+CATCH_TEST_CASE("fixed, unary_plus2")
 {
   cml::quaterniond q = { 1., 2., 3., 4. };
   cml::quaterniond r = + q;
-  BOOST_REQUIRE_EQUAL(r.size(), 4);
-  BOOST_CHECK_EQUAL(r[0], + 1.);
-  BOOST_CHECK_EQUAL(r[1], + 2.);
-  BOOST_CHECK_EQUAL(r[2], + 3.);
-  BOOST_CHECK_EQUAL(r[3], + 4.);
+  CATCH_REQUIRE(r.size() == 4);
+  CATCH_CHECK(r[0] == + 1.);
+  CATCH_CHECK(r[1] == + 2.);
+  CATCH_CHECK(r[2] == + 3.);
+  CATCH_CHECK(r[3] == + 4.);
 }
 
-BOOST_AUTO_TEST_CASE(double_negate1)
+CATCH_TEST_CASE("fixed, double_negate1")
 {
   cml::quaterniond q = { 1., 2., 3., 4. };
   cml::quaterniond r = - (- q);
-  BOOST_REQUIRE_EQUAL(r.size(), 4);
-  BOOST_CHECK_EQUAL(r[0], 1.);
-  BOOST_CHECK_EQUAL(r[1], 2.);
-  BOOST_CHECK_EQUAL(r[2], 3.);
-  BOOST_CHECK_EQUAL(r[3], 4.);
+  CATCH_REQUIRE(r.size() == 4);
+  CATCH_CHECK(r[0] == 1.);
+  CATCH_CHECK(r[1] == 2.);
+  CATCH_CHECK(r[2] == 3.);
+  CATCH_CHECK(r[3] == 4.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

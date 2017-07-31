@@ -12,90 +12,87 @@
 #include <cml/quaternion/types.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE conjugate1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_SUITE(fixed)
 
-BOOST_AUTO_TEST_CASE(readable1)
+CATCH_TEST_CASE("fixed, readable1")
 {
   const cml::quaterniond_ip q(1., 2., 3., 4.);
   auto xpr = q.conjugate();
-  BOOST_CHECK_EQUAL(xpr[0], - 1.);
-  BOOST_CHECK_EQUAL(xpr[1], - 2.);
-  BOOST_CHECK_EQUAL(xpr[2], - 3.);
-  BOOST_CHECK_EQUAL(xpr[3],   4.);
+  CATCH_CHECK(xpr[0] == - 1.);
+  CATCH_CHECK(xpr[1] == - 2.);
+  CATCH_CHECK(xpr[2] == - 3.);
+  CATCH_CHECK(xpr[3] ==   4.);
 }
 
-BOOST_AUTO_TEST_CASE(readable2)
+CATCH_TEST_CASE("fixed, readable2")
 {
   const cml::quaterniond_rp q(1., 2., 3., 4.);
   auto xpr = q.conjugate();
-  BOOST_CHECK_EQUAL(xpr[0],   1.);
-  BOOST_CHECK_EQUAL(xpr[1], - 2.);
-  BOOST_CHECK_EQUAL(xpr[2], - 3.);
-  BOOST_CHECK_EQUAL(xpr[3], - 4.);
+  CATCH_CHECK(xpr[0] ==   1.);
+  CATCH_CHECK(xpr[1] == - 2.);
+  CATCH_CHECK(xpr[2] == - 3.);
+  CATCH_CHECK(xpr[3] == - 4.);
 }
 
-BOOST_AUTO_TEST_CASE(writable1)
+CATCH_TEST_CASE("fixed, writable1")
 {
   cml::quaterniond_ip q = { 1., 2., 3., 4. };
   q.conjugate();
-  BOOST_CHECK_EQUAL(q[0], - 1.);
-  BOOST_CHECK_EQUAL(q[1], - 2.);
-  BOOST_CHECK_EQUAL(q[2], - 3.);
-  BOOST_CHECK_EQUAL(q[3],   4.);
+  CATCH_CHECK(q[0] == - 1.);
+  CATCH_CHECK(q[1] == - 2.);
+  CATCH_CHECK(q[2] == - 3.);
+  CATCH_CHECK(q[3] ==   4.);
 }
 
-BOOST_AUTO_TEST_CASE(writable2)
+CATCH_TEST_CASE("fixed, writable2")
 {
   cml::quaterniond_rp q = { 1., 2., 3., 4. };
   q.conjugate();
-  BOOST_CHECK_EQUAL(q[0],   1.);
-  BOOST_CHECK_EQUAL(q[1], - 2.);
-  BOOST_CHECK_EQUAL(q[2], - 3.);
-  BOOST_CHECK_EQUAL(q[3], - 4.);
+  CATCH_CHECK(q[0] ==   1.);
+  CATCH_CHECK(q[1] == - 2.);
+  CATCH_CHECK(q[2] == - 3.);
+  CATCH_CHECK(q[3] == - 4.);
 }
 
-BOOST_AUTO_TEST_CASE(function1)
+CATCH_TEST_CASE("fixed, function1")
 {
   cml::quaterniond_ip q = { 1., 2., 3., 4. };
   auto xpr = cml::conjugate(q);
-  BOOST_CHECK_EQUAL(xpr[0], - 1.);
-  BOOST_CHECK_EQUAL(xpr[1], - 2.);
-  BOOST_CHECK_EQUAL(xpr[2], - 3.);
-  BOOST_CHECK_EQUAL(xpr[3],   4.);
+  CATCH_CHECK(xpr[0] == - 1.);
+  CATCH_CHECK(xpr[1] == - 2.);
+  CATCH_CHECK(xpr[2] == - 3.);
+  CATCH_CHECK(xpr[3] ==   4.);
 }
 
-BOOST_AUTO_TEST_CASE(function2)
+CATCH_TEST_CASE("fixed, function2")
 {
   cml::quaterniond_rp q = { 1., 2., 3., 4. };
   auto xpr = cml::conjugate(q);
-  BOOST_CHECK_EQUAL(xpr[0],   1.);
-  BOOST_CHECK_EQUAL(xpr[1], - 2.);
-  BOOST_CHECK_EQUAL(xpr[2], - 3.);
-  BOOST_CHECK_EQUAL(xpr[3], - 4.);
+  CATCH_CHECK(xpr[0] ==   1.);
+  CATCH_CHECK(xpr[1] == - 2.);
+  CATCH_CHECK(xpr[2] == - 3.);
+  CATCH_CHECK(xpr[3] == - 4.);
 }
 
-BOOST_AUTO_TEST_CASE(temporary1)
+CATCH_TEST_CASE("fixed, temporary1")
 {
   auto xpr = cml::conjugate(cml::quaterniond_ip(1., 2., 3., 4.));
-  BOOST_CHECK_EQUAL(xpr[0], - 1.);
-  BOOST_CHECK_EQUAL(xpr[1], - 2.);
-  BOOST_CHECK_EQUAL(xpr[2], - 3.);
-  BOOST_CHECK_EQUAL(xpr[3],   4.);
+  CATCH_CHECK(xpr[0] == - 1.);
+  CATCH_CHECK(xpr[1] == - 2.);
+  CATCH_CHECK(xpr[2] == - 3.);
+  CATCH_CHECK(xpr[3] ==   4.);
 }
 
-BOOST_AUTO_TEST_CASE(conjugate2)
+CATCH_TEST_CASE("fixed, conjugate2")
 {
   auto xpr = cml::conjugate(cml::quaterniond_rp(1., 2., 3., 4.));
-  BOOST_CHECK_EQUAL(xpr[0],   1.);
-  BOOST_CHECK_EQUAL(xpr[1], - 2.);
-  BOOST_CHECK_EQUAL(xpr[2], - 3.);
-  BOOST_CHECK_EQUAL(xpr[3], - 4.);
+  CATCH_CHECK(xpr[0] ==   1.);
+  CATCH_CHECK(xpr[1] == - 2.);
+  CATCH_CHECK(xpr[2] == - 3.);
+  CATCH_CHECK(xpr[3] == - 4.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
 // -------------------------------------------------------------------------

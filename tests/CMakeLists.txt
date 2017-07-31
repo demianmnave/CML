@@ -5,6 +5,9 @@
 # Need the test macros:
 include(CMLTestMacros)
 
+# Catch-based test runner:
+add_subdirectory(main)
+
 # Common functionality tests:
 add_subdirectory(common)
 

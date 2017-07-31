@@ -12,37 +12,36 @@
 #include <cml/vector/types.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE perp_dot1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_CASE(perp_dot1)
+CATCH_TEST_CASE("perp_dot1")
 {
   cml::vector2d v1 = { 1., 0. };
   cml::vector2d v2 = { 0., 1. };
   double pd = cml::perp_dot(v1,v2);
-  BOOST_CHECK_EQUAL(pd, 1.);
+  CATCH_CHECK(pd == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(perp_dot2)
+CATCH_TEST_CASE("perp_dot2")
 {
   cml::vectord v1(2., 8.);
   cml::vector2d v2(3., 7.);
   double pd = cml::perp_dot(v1,v2);
-  BOOST_CHECK_EQUAL(pd, -10.);
+  CATCH_CHECK(pd == -10.);
 }
 
-BOOST_AUTO_TEST_CASE(size_check1)
+CATCH_TEST_CASE("size_check1")
 {
   cml::vectord v1(2,3,3);
   cml::vector2d v2(2,3);
-  BOOST_CHECK_THROW(cml::perp_dot(v1,v2), cml::vector_size_error);
+  CATCH_CHECK_THROWS_AS(cml::perp_dot(v1,v2), cml::vector_size_error);
 }
 
-BOOST_AUTO_TEST_CASE(size_check2)
+CATCH_TEST_CASE("size_check2")
 {
   cml::vector2d v1(2,3);
   cml::vectord v2(2,3,3);
-  BOOST_CHECK_THROW(cml::perp_dot(v1,v2), cml::vector_size_error);
+  CATCH_CHECK_THROWS_AS(cml::perp_dot(v1,v2), cml::vector_size_error);
 }
 
 // -------------------------------------------------------------------------

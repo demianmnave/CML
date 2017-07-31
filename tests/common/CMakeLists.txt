@@ -5,11 +5,11 @@
 project(CML_Testing_Common)
 set(CML_CURRENT_TEST_GROUP "Common")
 
-ADD_CML_TEST(rv_from_this1)
-ADD_CML_TEST(type_util1)
-ADD_CML_TEST(type_table1)
-ADD_CML_TEST(type_map1)
-ADD_CML_TEST(temporary_of1)
+CML_ADD_TEST(rv_from_this1)
+CML_ADD_TEST(type_util1)
+CML_ADD_TEST(type_table1)
+CML_ADD_TEST(type_map1)
+CML_ADD_TEST(temporary_of1)
 
 # --------------------------------------------------------------------------
 # vim:ft=cmake

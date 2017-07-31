@@ -9,8 +9,7 @@
 #include <cml/storage/promotion.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE promotion1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
 template<class S1, class S2>
   using promote_t = typename cml::storage_promote<S1, S2>::type;
@@ -18,7 +17,7 @@ template<class S1, class S2>
 template<class S1, class S2, class S>
   using check_c = std::is_same<promote_t<S1, S2>, S>;
 
-BOOST_AUTO_TEST_CASE(basic1)
+CATCH_TEST_CASE("basic1")
 {
   using cml::any_storage;
   using cml::compiled;
@@ -33,7 +32,7 @@ BOOST_AUTO_TEST_CASE(basic1)
   typedef rebind_t<any_storage<>, vector_storage_tag>	any_type;
 
 #define _CHECK(_S1, _S2, _S)						\
-  BOOST_CHECK((check_c<_S1, _S2, _S>::value))
+  CATCH_CHECK((check_c<_S1, _S2, _S>::value))
 
     _CHECK( compiled_type,	compiled_type,	compiled<>	 );
     _CHECK( compiled_type,	allocated_type,	compiled<>	 );

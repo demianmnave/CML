@@ -12,35 +12,34 @@
 #include <cml/vector/types.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE vector_dot1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_CASE(dot1)
+CATCH_TEST_CASE("dot1")
 {
   cml::vector3d v1 = { 1., 1., 1. };
   cml::vector3d v2 = { 2., 2., 2. };
   double dp = cml::dot(v1,v2);
-  BOOST_CHECK_EQUAL(dp, 6.);
+  CATCH_CHECK(dp == 6.);
 }
 
-BOOST_AUTO_TEST_CASE(size_check1)
+CATCH_TEST_CASE("size_check1")
 {
   cml::vectord v1;
-  BOOST_CHECK_THROW(cml::dot(v1,v1), cml::minimum_vector_size_error);
+  CATCH_CHECK_THROWS_AS(cml::dot(v1,v1), cml::minimum_vector_size_error);
 }
 
-BOOST_AUTO_TEST_CASE(size_check2)
+CATCH_TEST_CASE("size_check2")
 {
   cml::vectord v1(2,3);
   cml::vector3d v2(2,3,3);
-  BOOST_CHECK_THROW(cml::dot(v1,v2), cml::incompatible_vector_size_error);
+  CATCH_CHECK_THROWS_AS(cml::dot(v1,v2), cml::incompatible_vector_size_error);
 }
 
-BOOST_AUTO_TEST_CASE(size_check3)
+CATCH_TEST_CASE("size_check3")
 {
   cml::vector3d v1(2,3,3);
   cml::vectord v2(2,3);
-  BOOST_CHECK_THROW(cml::dot(v1,v2), cml::incompatible_vector_size_error);
+  CATCH_CHECK_THROWS_AS(cml::dot(v1,v2), cml::incompatible_vector_size_error);
 }
 
 // -------------------------------------------------------------------------

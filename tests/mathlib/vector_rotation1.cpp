@@ -10,33 +10,30 @@
 #include <cml/vector.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE vector_rotation1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_SUITE(rotation_3D)
 
-BOOST_AUTO_TEST_CASE(world_axis1)
+CATCH_TEST_CASE("rotation 3D, world_axis1")
 {
   auto vx = cml::rotate_vector(
     cml::vector3d(0., 1., 0.), cml::vector3d(1., 0., 0.), cml::rad(90.));
-  BOOST_CHECK_SMALL(vx[0], 1e-7);
-  BOOST_CHECK_SMALL(vx[1], 1e-7);
-  BOOST_CHECK_CLOSE(vx[2], 1., .0001);
+  CATCH_CHECK(0 == Approx(vx[0]).epsilon(0).margin(1e-7));
+  CATCH_CHECK(0 == Approx(vx[1]).epsilon(0).margin(1e-7));
+  CATCH_CHECK(vx[2] == Approx(1.).epsilon(.0001));
 
   auto vy = cml::rotate_vector(
     cml::vector3d(-1., 0., 0.), cml::vector3d(0., 1., 0.), cml::rad(90.));
-  BOOST_CHECK_SMALL(vy[0], 1e-7);
-  BOOST_CHECK_SMALL(vy[1], 1e-7);
-  BOOST_CHECK_CLOSE(vy[2], 1., .0001);
+  CATCH_CHECK(0 == Approx(vy[0]).epsilon(0).margin(1e-7));
+  CATCH_CHECK(0 == Approx(vy[1]).epsilon(0).margin(1e-7));
+  CATCH_CHECK(vy[2] == Approx(1.).epsilon(.0001));
 
   auto vz = cml::rotate_vector(
     cml::vector3d(1., 0., 0.), cml::vector3d(0., 0., 1.), cml::rad(90.));
-  BOOST_CHECK_SMALL(vz[0], 1e-7);
-  BOOST_CHECK_CLOSE(vz[1], 1., .0001);
-  BOOST_CHECK_SMALL(vz[2], 1e-7);
+  CATCH_CHECK(0 == Approx(vz[0]).epsilon(0).margin(1e-7));
+  CATCH_CHECK(vz[1] == Approx(1.).epsilon(.0001));
+  CATCH_CHECK(0 == Approx(vz[2]).epsilon(0).margin(1e-7));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

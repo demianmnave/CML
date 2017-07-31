@@ -19,12 +19,9 @@
 #include <cml/types.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE matrix_vector_product1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_SUITE(fixed)
-
-BOOST_AUTO_TEST_CASE(product1)
+CATCH_TEST_CASE("fixed product1")
 {
   cml::matrix22d M(
     1., 2.,
@@ -35,13 +32,13 @@ BOOST_AUTO_TEST_CASE(product1)
     );
 
   auto v = M*v1;
-  BOOST_REQUIRE((std::is_same<decltype(v), cml::vector2d>::value));
-  BOOST_REQUIRE_EQUAL(v.size(), 2);
-  BOOST_CHECK_EQUAL(v[0], 17.);
-  BOOST_CHECK_EQUAL(v[1], 39.);
+  CATCH_REQUIRE((std::is_same<decltype(v), cml::vector2d>::value));
+  CATCH_REQUIRE(v.size() == 2);
+  CATCH_CHECK(v[0] == 17.);
+  CATCH_CHECK(v[1] == 39.);
 }
 
-BOOST_AUTO_TEST_CASE(product2)
+CATCH_TEST_CASE("fixed product2")
 {
   cml::matrix22d M(
     1., 2.,
@@ -52,18 +49,13 @@ BOOST_AUTO_TEST_CASE(product2)
     );
 
   auto v = v1*M;
-  BOOST_REQUIRE((std::is_same<decltype(v), cml::vector2d>::value));
-  BOOST_REQUIRE_EQUAL(v.size(), 2);
-  BOOST_CHECK_EQUAL(v[0], 23.);
-  BOOST_CHECK_EQUAL(v[1], 34.);
+  CATCH_REQUIRE((std::is_same<decltype(v), cml::vector2d>::value));
+  CATCH_REQUIRE(v.size() == 2);
+  CATCH_CHECK(v[0] == 23.);
+  CATCH_CHECK(v[1] == 34.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
-
-
-BOOST_AUTO_TEST_SUITE(fixed_external)
-
-BOOST_AUTO_TEST_CASE(product1)
+CATCH_TEST_CASE("fixed external product1")
 {
   double aM[] = { 1., 2., 3., 4. };
   cml::external22d M(aM);
@@ -72,13 +64,13 @@ BOOST_AUTO_TEST_CASE(product1)
   cml::external2d v1(av1);
 
   auto v = M*v1;
-  BOOST_REQUIRE((std::is_same<decltype(v), cml::vector2d>::value));
-  BOOST_REQUIRE_EQUAL(v.size(), 2);
-  BOOST_CHECK_EQUAL(v[0], 17.);
-  BOOST_CHECK_EQUAL(v[1], 39.);
+  CATCH_REQUIRE((std::is_same<decltype(v), cml::vector2d>::value));
+  CATCH_REQUIRE(v.size() == 2);
+  CATCH_CHECK(v[0] == 17.);
+  CATCH_CHECK(v[1] == 39.);
 }
 
-BOOST_AUTO_TEST_CASE(product2)
+CATCH_TEST_CASE("fixed external product2")
 {
   double aM[] = { 1., 2., 3., 4. };
   cml::external22d M(aM);
@@ -87,18 +79,13 @@ BOOST_AUTO_TEST_CASE(product2)
   cml::external2d v1(av1);
 
   auto v = v1*M;
-  BOOST_REQUIRE((std::is_same<decltype(v), cml::vector2d>::value));
-  BOOST_REQUIRE_EQUAL(v.size(), 2);
-  BOOST_CHECK_EQUAL(v[0], 23.);
-  BOOST_CHECK_EQUAL(v[1], 34.);
+  CATCH_REQUIRE((std::is_same<decltype(v), cml::vector2d>::value));
+  CATCH_REQUIRE(v.size() == 2);
+  CATCH_CHECK(v[0] == 23.);
+  CATCH_CHECK(v[1] == 34.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
-
-
-BOOST_AUTO_TEST_SUITE(dynamic_external)
-
-BOOST_AUTO_TEST_CASE(product1)
+CATCH_TEST_CASE("dynamic external product1")
 {
   double aM[] = { 1., 2., 3., 4. };
   cml::externalmnd M(aM, 2,2);
@@ -107,13 +94,13 @@ BOOST_AUTO_TEST_CASE(product1)
   cml::externalnd v1(2, av1);
 
   auto v = M*v1;
-  BOOST_REQUIRE((std::is_same<decltype(v), cml::vectord>::value));
-  BOOST_REQUIRE_EQUAL(v.size(), 2);
-  BOOST_CHECK_EQUAL(v[0], 17.);
-  BOOST_CHECK_EQUAL(v[1], 39.);
+  CATCH_REQUIRE((std::is_same<decltype(v), cml::vectord>::value));
+  CATCH_REQUIRE(v.size() == 2);
+  CATCH_CHECK(v[0] == 17.);
+  CATCH_CHECK(v[1] == 39.);
 }
 
-BOOST_AUTO_TEST_CASE(product2)
+CATCH_TEST_CASE("dynamic external product2")
 {
   double aM[] = { 1., 2., 3., 4. };
   cml::externalmnd M(aM, 2,2);
@@ -122,34 +109,29 @@ BOOST_AUTO_TEST_CASE(product2)
   cml::externalnd v1(2, av1);
 
   auto v = v1*M;
-  BOOST_REQUIRE((std::is_same<decltype(v), cml::vectord>::value));
-  BOOST_REQUIRE_EQUAL(v.size(), 2);
-  BOOST_CHECK_EQUAL(v[0], 23.);
-  BOOST_CHECK_EQUAL(v[1], 34.);
+  CATCH_REQUIRE((std::is_same<decltype(v), cml::vectord>::value));
+  CATCH_REQUIRE(v.size() == 2);
+  CATCH_CHECK(v[0] == 23.);
+  CATCH_CHECK(v[1] == 34.);
 }
 
-BOOST_AUTO_TEST_CASE(size_checking1)
+CATCH_TEST_CASE("dynamic external size_checking1")
 {
   double aM1[4], av1[3];
-  BOOST_REQUIRE_THROW(
+  CATCH_REQUIRE_THROWS_AS(
     (cml::externalmnd(aM1, 2,2) * cml::externalnd(3, av1)),
     cml::incompatible_matrix_inner_size_error);
 }
 
-BOOST_AUTO_TEST_CASE(size_checking2)
+CATCH_TEST_CASE("dynamic external size_checking2")
 {
   double aM1[4], av1[3];
-  BOOST_REQUIRE_THROW(
+  CATCH_REQUIRE_THROWS_AS(
     (cml::externalnd(3, av1) * cml::externalmnd(2,2, aM1)),
     cml::incompatible_matrix_inner_size_error);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
-
-
-BOOST_AUTO_TEST_SUITE(dynamic)
-
-BOOST_AUTO_TEST_CASE(product1)
+CATCH_TEST_CASE("dynamic product1")
 {
   cml::matrixd M(
     2,2,
@@ -161,13 +143,13 @@ BOOST_AUTO_TEST_CASE(product1)
     );
 
   auto v = M*v1;
-  BOOST_REQUIRE((std::is_same<decltype(v), cml::vectord>::value));
-  BOOST_REQUIRE_EQUAL(v.size(), 2);
-  BOOST_CHECK_EQUAL(v[0], 17.);
-  BOOST_CHECK_EQUAL(v[1], 39.);
+  CATCH_REQUIRE((std::is_same<decltype(v), cml::vectord>::value));
+  CATCH_REQUIRE(v.size() == 2);
+  CATCH_CHECK(v[0] == 17.);
+  CATCH_CHECK(v[1] == 39.);
 }
 
-BOOST_AUTO_TEST_CASE(product2)
+CATCH_TEST_CASE("dynamic product2")
 {
   cml::matrixd M(
     2,2,
@@ -179,27 +161,25 @@ BOOST_AUTO_TEST_CASE(product2)
     );
 
   auto v = v1*M;
-  BOOST_REQUIRE((std::is_same<decltype(v), cml::vectord>::value));
-  BOOST_REQUIRE_EQUAL(v.size(), 2);
-  BOOST_CHECK_EQUAL(v[0], 23.);
-  BOOST_CHECK_EQUAL(v[1], 34.);
+  CATCH_REQUIRE((std::is_same<decltype(v), cml::vectord>::value));
+  CATCH_REQUIRE(v.size() == 2);
+  CATCH_CHECK(v[0] == 23.);
+  CATCH_CHECK(v[1] == 34.);
 }
 
-BOOST_AUTO_TEST_CASE(size_checking1)
+CATCH_TEST_CASE("dynamic size_checking1")
 {
-  BOOST_REQUIRE_THROW(
+  CATCH_REQUIRE_THROWS_AS(
     (cml::matrixd(2,2) * cml::vectord(3)),
     cml::incompatible_matrix_inner_size_error);
 }
 
-BOOST_AUTO_TEST_CASE(size_checking2)
+CATCH_TEST_CASE("dynamic size_checking2")
 {
-  BOOST_REQUIRE_THROW(
+  CATCH_REQUIRE_THROWS_AS(
     (cml::vectord(3) * cml::matrixd(2,2)),
     cml::incompatible_matrix_inner_size_error);
 }
-
-BOOST_AUTO_TEST_SUITE_END()
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

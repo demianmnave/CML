@@ -9,64 +9,63 @@
 #include <cml/vector/types.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE dynamic_external_vector1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_CASE(array_construct)
+CATCH_TEST_CASE("array_construct")
 {
   double data[] = { 1., 2., 3. };
   cml::externalnd v(data, 3);
-  BOOST_REQUIRE_EQUAL(v.size(), 3);
-  BOOST_CHECK_EQUAL(v.data(), &data[0]);
-  BOOST_CHECK_EQUAL(v.data()[0], 1.);
-  BOOST_CHECK_EQUAL(v[0], 1.);
+  CATCH_REQUIRE(v.size() == 3);
+  CATCH_CHECK(v.data() == &data[0]);
+  CATCH_CHECK(v.data()[0] == 1.);
+  CATCH_CHECK(v[0] == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(array_assign)
+CATCH_TEST_CASE("array_assign")
 {
   double av[3];
   double data[] = { 1., 2., 3. };
   cml::externalnd v(av, 3);
   v = data;
-  BOOST_REQUIRE_EQUAL(v.size(), 3);
-  BOOST_CHECK_EQUAL(v.data()[0], 1.);
-  BOOST_CHECK_EQUAL(v[0], 1.);
+  CATCH_REQUIRE(v.size() == 3);
+  CATCH_CHECK(v.data()[0] == 1.);
+  CATCH_CHECK(v[0] == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(list_assign)
+CATCH_TEST_CASE("list_assign")
 {
   double av[3];
   cml::externalnd v(av, 3);
   v = { 1., 2., 3. };
-  BOOST_REQUIRE_EQUAL(v.size(), 3);
-  BOOST_CHECK_EQUAL(v.data()[0], 1.);
-  BOOST_CHECK_EQUAL(v[0], 1.);
+  CATCH_REQUIRE(v.size() == 3);
+  CATCH_CHECK(v.data()[0] == 1.);
+  CATCH_CHECK(v[0] == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(write1)
+CATCH_TEST_CASE("write1")
 {
   double data[] = { 1., 2., 3. };
   cml::externalnd v(data, 3);
-  BOOST_REQUIRE_EQUAL(v.size(), 3);
+  CATCH_REQUIRE(v.size() == 3);
   v[0] = 1.;
-  BOOST_CHECK_EQUAL(v.data()[0], 1.);
-  BOOST_CHECK_EQUAL(v[0], 1.);
+  CATCH_CHECK(v.data()[0] == 1.);
+  CATCH_CHECK(v[0] == 1.);
 }
 
-BOOST_AUTO_TEST_CASE(size_check1)
+CATCH_TEST_CASE("size_check1")
 {
   double av[3];
   cml::externalnd v(av, 3);
-  BOOST_REQUIRE_EQUAL(v.size(), 3);
-  BOOST_CHECK_THROW(
+  CATCH_REQUIRE(v.size() == 3);
+  CATCH_CHECK_THROWS_AS(
     (v = { 1., 2., 3., 4. }), cml::incompatible_vector_size_error);
 }
 
-BOOST_AUTO_TEST_CASE(const1)
+CATCH_TEST_CASE("const1")
 {
   const double av[] = { 1., 2., 3. };
   cml::externalncd v(av, 3);
-  BOOST_REQUIRE_EQUAL(v.size(), 3);
+  CATCH_REQUIRE(v.size() == 3);
 }
 
 // -------------------------------------------------------------------------

@@ -4,16 +4,15 @@
 /** @file
  */
 
-#include <cml/common/temporary.h>
-#include <cml/scalar/traits.h>
+#pragma once
 
-/* Testing headers: */
-#include "catch_runner.h"
+#ifndef Support_GTL_tests_main_catch_runner_h
+#define Support_GTL_tests_main_catch_runner_h
 
-CATCH_TEST_CASE("const_temporary1")
-{
-  typedef cml::temporary_of_t<const double> const_type;
-}
+#define CATCH_CONFIG_PREFIX_ALL
+#include "catch.hpp"
+
+#endif
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

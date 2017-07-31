@@ -11,70 +11,69 @@
 #include <cml/vector/types.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE vector_comparison1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_CASE(less_greater1)
+CATCH_TEST_CASE("less_greater1")
 {
   cml::vector3d v = { 1., 2., 3. };
   cml::vector3d w = { 2., 2., 2. };
-  BOOST_REQUIRE(v < w);
-  BOOST_REQUIRE(w > v);
+  CATCH_REQUIRE(v < w);
+  CATCH_REQUIRE(w > v);
 }
 
-BOOST_AUTO_TEST_CASE(less_greater2)
+CATCH_TEST_CASE("less_greater2")
 {
   cml::vector3d v = { 1., 2., 3. };
   cml::vector3d w = { 1., 2., 2. };
-  BOOST_REQUIRE(w < v);
-  BOOST_REQUIRE(v > w);
+  CATCH_REQUIRE(w < v);
+  CATCH_REQUIRE(v > w);
 }
 
-BOOST_AUTO_TEST_CASE(less_greater3)
+CATCH_TEST_CASE("less_greater3")
 {
   cml::vector3d v = { 1., 2., 3. };
   cml::vector3d w = { 1., 2., 3. };
-  BOOST_REQUIRE(!(w < v));
-  BOOST_REQUIRE(!(v < w));
+  CATCH_REQUIRE(!(w < v));
+  CATCH_REQUIRE(!(v < w));
 }
 
-BOOST_AUTO_TEST_CASE(less_equal1)
+CATCH_TEST_CASE("less_equal1")
 {
   cml::vector3d v = { 1., 2., 3. };
   cml::vector3d w = { 1., 2., 3. };
-  BOOST_REQUIRE(v <= w);
-  BOOST_REQUIRE(w <= v);
+  CATCH_REQUIRE(v <= w);
+  CATCH_REQUIRE(w <= v);
 }
 
-BOOST_AUTO_TEST_CASE(less_equal2)
+CATCH_TEST_CASE("less_equal2")
 {
   cml::vector3d v = { 1., 2., 3. };
   cml::vector3d w = { 1., 2., 4. };
-  BOOST_REQUIRE(v <= w);
-  BOOST_REQUIRE(!(w <= v));
+  CATCH_REQUIRE(v <= w);
+  CATCH_REQUIRE(!(w <= v));
 }
 
-BOOST_AUTO_TEST_CASE(greater_equal1)
+CATCH_TEST_CASE("greater_equal1")
 {
   cml::vector3d v = { 1., 2., 3. };
   cml::vector3d w = { 1., 2., 3. };
-  BOOST_REQUIRE(v >= w);
-  BOOST_REQUIRE(w >= v);
+  CATCH_REQUIRE(v >= w);
+  CATCH_REQUIRE(w >= v);
 }
 
-BOOST_AUTO_TEST_CASE(greater_equal2)
+CATCH_TEST_CASE("greater_equal2")
 {
   cml::vector3d v = { 1., 2., 3. };
   cml::vector3d w = { 1., 2., 4. };
-  BOOST_REQUIRE(w >= v);
-  BOOST_REQUIRE(!(v >= w));
+  CATCH_REQUIRE(w >= v);
+  CATCH_REQUIRE(!(v >= w));
 }
 
-BOOST_AUTO_TEST_CASE(equal1)
+CATCH_TEST_CASE("equal1")
 {
   cml::vector3d v = { 1., 2., 3. };
   cml::vector3d w = { 1., 2., 3. };
-  BOOST_REQUIRE(w == v);
+  CATCH_REQUIRE(w == v);
 }
 
 // -------------------------------------------------------------------------

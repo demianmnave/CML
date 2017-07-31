@@ -13,17 +13,15 @@
 #include <cml/util/matrix_print.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE outer_product1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_SUITE(fixed)
 
-BOOST_AUTO_TEST_CASE(outer1)
+CATCH_TEST_CASE("fixed, outer1")
 {
   auto v = cml::vector3d(1., 2., 3.);
   auto C = cml::outer(v,v);
-  BOOST_REQUIRE_EQUAL(C.rows(), 3);
-  BOOST_REQUIRE_EQUAL(C.cols(), 3);
+  CATCH_REQUIRE(C.rows() == 3);
+  CATCH_REQUIRE(C.cols() == 3);
 
   auto expected = cml::matrix33d(
     1., 2., 3.,
@@ -33,21 +31,19 @@ BOOST_AUTO_TEST_CASE(outer1)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_CLOSE(C(i,j), expected(i,j), .001);
+      CATCH_CHECK(C(i,j) == Approx(expected(i,j)).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(fixed_external)
 
-BOOST_AUTO_TEST_CASE(outer1)
+CATCH_TEST_CASE("fixed external, outer1")
 {
   double av[] = { 1., 2., 3. };
   auto v = cml::external3d(av);
   auto C = cml::outer(v,v);
-  BOOST_REQUIRE_EQUAL(C.rows(), 3);
-  BOOST_REQUIRE_EQUAL(C.cols(), 3);
+  CATCH_REQUIRE(C.rows() == 3);
+  CATCH_REQUIRE(C.cols() == 3);
 
   auto expected = cml::matrix33d(
     1., 2., 3.,
@@ -57,21 +53,19 @@ BOOST_AUTO_TEST_CASE(outer1)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_CLOSE(C(i,j), expected(i,j), .001);
+      CATCH_CHECK(C(i,j) == Approx(expected(i,j)).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(dynamic_external)
 
-BOOST_AUTO_TEST_CASE(outer1)
+CATCH_TEST_CASE("dynamic external, outer1")
 {
   double av[] = { 1., 2., 3. };
   auto v = cml::externalnd(3, av);
   auto C = cml::outer(v,v);
-  BOOST_REQUIRE_EQUAL(C.rows(), 3);
-  BOOST_REQUIRE_EQUAL(C.cols(), 3);
+  CATCH_REQUIRE(C.rows() == 3);
+  CATCH_REQUIRE(C.cols() == 3);
 
   auto expected = cml::matrix33d(
     1., 2., 3.,
@@ -81,20 +75,18 @@ BOOST_AUTO_TEST_CASE(outer1)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_CLOSE(C(i,j), expected(i,j), .001);
+      CATCH_CHECK(C(i,j) == Approx(expected(i,j)).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(dynamic)
 
-BOOST_AUTO_TEST_CASE(outer1)
+CATCH_TEST_CASE("dynamic, outer1")
 {
   auto v = cml::vectord(1., 2., 3.);
   auto C = cml::outer(v,v);
-  BOOST_REQUIRE_EQUAL(C.rows(), 3);
-  BOOST_REQUIRE_EQUAL(C.cols(), 3);
+  CATCH_REQUIRE(C.rows() == 3);
+  CATCH_REQUIRE(C.cols() == 3);
 
   auto expected = cml::matrix33d(
     1., 2., 3.,
@@ -104,10 +96,9 @@ BOOST_AUTO_TEST_CASE(outer1)
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      BOOST_CHECK_CLOSE(C(i,j), expected(i,j), .001);
+      CATCH_CHECK(C(i,j) == Approx(expected(i,j)).epsilon(.001));
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

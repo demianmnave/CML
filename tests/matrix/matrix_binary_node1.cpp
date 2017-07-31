@@ -13,32 +13,31 @@
 #include <cml/matrix/dynamic.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE matrix_binary_node1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_CASE(binary_types1)
+CATCH_TEST_CASE("binary_types1")
 {
   typedef cml::matrix<double, cml::fixed<2,2>> matrix_type;
   {
-    BOOST_CHECK(cml::is_statically_polymorphic<matrix_type>::value);
+    CATCH_CHECK(cml::is_statically_polymorphic<matrix_type>::value);
   }
   {
     auto xpr = matrix_type() + matrix_type();
     typedef decltype(xpr) xpr_type;
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_rvalue_reference<typename xpr_type::left_arg_type>::value
       );
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_rvalue_reference<typename xpr_type::right_arg_type>::value
       );
   }
   {
     auto xpr = matrix_type() - matrix_type();
     typedef decltype(xpr) xpr_type;
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_rvalue_reference<typename xpr_type::left_arg_type>::value
       );
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_rvalue_reference<typename xpr_type::right_arg_type>::value
       );
   }
@@ -46,10 +45,10 @@ BOOST_AUTO_TEST_CASE(binary_types1)
     matrix_type M;
     auto xpr = matrix_type() + M;
     typedef decltype(xpr) xpr_type;
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_rvalue_reference<typename xpr_type::left_arg_type>::value
       );
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_lvalue_reference<typename xpr_type::right_arg_type>::value
       );
   }
@@ -57,10 +56,10 @@ BOOST_AUTO_TEST_CASE(binary_types1)
     matrix_type M;
     auto xpr = M + matrix_type();
     typedef decltype(xpr) xpr_type;
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_lvalue_reference<typename xpr_type::left_arg_type>::value
       );
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_rvalue_reference<typename xpr_type::right_arg_type>::value
       );
   }
@@ -68,10 +67,10 @@ BOOST_AUTO_TEST_CASE(binary_types1)
     matrix_type M;
     auto xpr = matrix_type() - M;
     typedef decltype(xpr) xpr_type;
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_rvalue_reference<typename xpr_type::left_arg_type>::value
       );
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_lvalue_reference<typename xpr_type::right_arg_type>::value
       );
   }
@@ -79,10 +78,10 @@ BOOST_AUTO_TEST_CASE(binary_types1)
     matrix_type M;
     auto xpr = M - matrix_type();
     typedef decltype(xpr) xpr_type;
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_lvalue_reference<typename xpr_type::left_arg_type>::value
       );
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_rvalue_reference<typename xpr_type::right_arg_type>::value
       );
   }
@@ -90,10 +89,10 @@ BOOST_AUTO_TEST_CASE(binary_types1)
     matrix_type M1, M2;
     auto xpr = M1 + M2;
     typedef decltype(xpr) xpr_type;
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_lvalue_reference<typename xpr_type::left_arg_type>::value
       );
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_lvalue_reference<typename xpr_type::right_arg_type>::value
       );
   }
@@ -101,18 +100,17 @@ BOOST_AUTO_TEST_CASE(binary_types1)
     matrix_type M1, M2;
     auto xpr = M1 - M2;
     typedef decltype(xpr) xpr_type;
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_lvalue_reference<typename xpr_type::left_arg_type>::value
       );
-    BOOST_CHECK(
+    CATCH_CHECK(
       std::is_lvalue_reference<typename xpr_type::right_arg_type>::value
       );
   }
 }
 
-BOOST_AUTO_TEST_SUITE(fixed)
 
-BOOST_AUTO_TEST_CASE(binary_minus1)
+CATCH_TEST_CASE("fixed, binary_minus1")
 {
   cml::matrix<double, cml::fixed<2,2>> M1(
     1., 2.,
@@ -126,15 +124,15 @@ BOOST_AUTO_TEST_CASE(binary_minus1)
   cml::matrix<double, cml::fixed<2,2>> M;
   M = M1 - M2;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), -4.);
-  BOOST_CHECK_EQUAL(M(0,1), -4.);
-  BOOST_CHECK_EQUAL(M(1,0), -4.);
-  BOOST_CHECK_EQUAL(M(1,1), -4.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == -4.);
+  CATCH_CHECK(M(0,1) == -4.);
+  CATCH_CHECK(M(1,0) == -4.);
+  CATCH_CHECK(M(1,1) == -4.);
 }
 
-BOOST_AUTO_TEST_CASE(binary_minus2)
+CATCH_TEST_CASE("fixed, binary_minus2")
 {
   cml::matrix<double, cml::fixed<2,2>> M1(
     1., 2.,
@@ -147,15 +145,15 @@ BOOST_AUTO_TEST_CASE(binary_minus2)
 
   cml::matrix<double, cml::fixed<2,2>> M = M1 - M2;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), -4.);
-  BOOST_CHECK_EQUAL(M(0,1), -4.);
-  BOOST_CHECK_EQUAL(M(1,0), -4.);
-  BOOST_CHECK_EQUAL(M(1,1), -4.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == -4.);
+  CATCH_CHECK(M(0,1) == -4.);
+  CATCH_CHECK(M(1,0) == -4.);
+  CATCH_CHECK(M(1,1) == -4.);
 }
 
-BOOST_AUTO_TEST_CASE(binary_plus1)
+CATCH_TEST_CASE("fixed, binary_plus1")
 {
   cml::matrix<double, cml::fixed<2,2>> M1(
     1., 2.,
@@ -169,15 +167,15 @@ BOOST_AUTO_TEST_CASE(binary_plus1)
   cml::matrix<double, cml::fixed<2,2>> M;
   M = M1 + M2;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 6.);
-  BOOST_CHECK_EQUAL(M(0,1), 8.);
-  BOOST_CHECK_EQUAL(M(1,0), 10.);
-  BOOST_CHECK_EQUAL(M(1,1), 12.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 6.);
+  CATCH_CHECK(M(0,1) == 8.);
+  CATCH_CHECK(M(1,0) == 10.);
+  CATCH_CHECK(M(1,1) == 12.);
 }
 
-BOOST_AUTO_TEST_CASE(binary_plus2)
+CATCH_TEST_CASE("fixed, binary_plus2")
 {
   cml::matrix<double, cml::fixed<2,2>> M1(
     1., 2.,
@@ -190,15 +188,15 @@ BOOST_AUTO_TEST_CASE(binary_plus2)
 
   cml::matrix<double, cml::fixed<2,2>> M = M1 + M2;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 6.);
-  BOOST_CHECK_EQUAL(M(0,1), 8.);
-  BOOST_CHECK_EQUAL(M(1,0), 10.);
-  BOOST_CHECK_EQUAL(M(1,1), 12.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 6.);
+  CATCH_CHECK(M(0,1) == 8.);
+  CATCH_CHECK(M(1,0) == 10.);
+  CATCH_CHECK(M(1,1) == 12.);
 }
 
-BOOST_AUTO_TEST_CASE(multiple_plus1)
+CATCH_TEST_CASE("fixed, multiple_plus1")
 {
   cml::matrix<double, cml::fixed<2,2>> M1(
     1., 2.,
@@ -214,15 +212,15 @@ BOOST_AUTO_TEST_CASE(multiple_plus1)
     );
   cml::matrix<double, cml::fixed<2,2>> M;
   M = M1 + M2 + M3;
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 15.);
-  BOOST_CHECK_EQUAL(M(0,1), 18.);
-  BOOST_CHECK_EQUAL(M(1,0), 21.);
-  BOOST_CHECK_EQUAL(M(1,1), 24.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 15.);
+  CATCH_CHECK(M(0,1) == 18.);
+  CATCH_CHECK(M(1,0) == 21.);
+  CATCH_CHECK(M(1,1) == 24.);
 }
 
-BOOST_AUTO_TEST_CASE(multiple_plus2)
+CATCH_TEST_CASE("fixed, multiple_plus2")
 {
   cml::matrix<double, cml::fixed<2,2>> M1(
     1., 2.,
@@ -237,15 +235,15 @@ BOOST_AUTO_TEST_CASE(multiple_plus2)
     11., 12.
     );
   cml::matrix<double, cml::fixed<2,2>> M = M1 + M2 + M3;
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 15.);
-  BOOST_CHECK_EQUAL(M(0,1), 18.);
-  BOOST_CHECK_EQUAL(M(1,0), 21.);
-  BOOST_CHECK_EQUAL(M(1,1), 24.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 15.);
+  CATCH_CHECK(M(0,1) == 18.);
+  CATCH_CHECK(M(1,0) == 21.);
+  CATCH_CHECK(M(1,1) == 24.);
 }
 
-BOOST_AUTO_TEST_CASE(mixed_op1)
+CATCH_TEST_CASE("fixed, mixed_op1")
 {
   cml::matrix<double, cml::fixed<2,2>> M1(
     1., 2.,
@@ -261,15 +259,15 @@ BOOST_AUTO_TEST_CASE(mixed_op1)
     );
   cml::matrix<double, cml::fixed<2,2>> M;
   M = M1 + (M3 - M2);
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 5.);
-  BOOST_CHECK_EQUAL(M(0,1), 6.);
-  BOOST_CHECK_EQUAL(M(1,0), 7.);
-  BOOST_CHECK_EQUAL(M(1,1), 8.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 5.);
+  CATCH_CHECK(M(0,1) == 6.);
+  CATCH_CHECK(M(1,0) == 7.);
+  CATCH_CHECK(M(1,1) == 8.);
 }
 
-BOOST_AUTO_TEST_CASE(mixed_op2)
+CATCH_TEST_CASE("fixed, mixed_op2")
 {
   cml::matrix<double, cml::fixed<2,2>> M1(
     1., 2.,
@@ -284,15 +282,15 @@ BOOST_AUTO_TEST_CASE(mixed_op2)
     11., 12.
     );
   cml::matrix<double, cml::fixed<2,2>> M = M1 + (M3 - M2);
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 5.);
-  BOOST_CHECK_EQUAL(M(0,1), 6.);
-  BOOST_CHECK_EQUAL(M(1,0), 7.);
-  BOOST_CHECK_EQUAL(M(1,1), 8.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 5.);
+  CATCH_CHECK(M(0,1) == 6.);
+  CATCH_CHECK(M(1,0) == 7.);
+  CATCH_CHECK(M(1,1) == 8.);
 }
 
-BOOST_AUTO_TEST_CASE(assign_minus1)
+CATCH_TEST_CASE("fixed, assign_minus1")
 {
   cml::matrix<double, cml::fixed<2,2>> M1(
     5., 6.,
@@ -304,15 +302,15 @@ BOOST_AUTO_TEST_CASE(assign_minus1)
     );
   M -= M1;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), -4.);
-  BOOST_CHECK_EQUAL(M(0,1), -4.);
-  BOOST_CHECK_EQUAL(M(1,0), -4.);
-  BOOST_CHECK_EQUAL(M(1,1), -4.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == -4.);
+  CATCH_CHECK(M(0,1) == -4.);
+  CATCH_CHECK(M(1,0) == -4.);
+  CATCH_CHECK(M(1,1) == -4.);
 }
 
-BOOST_AUTO_TEST_CASE(assign_plus1)
+CATCH_TEST_CASE("fixed, assign_plus1")
 {
   cml::matrix<double, cml::fixed<2,2>> M1(
     5., 6.,
@@ -325,20 +323,18 @@ BOOST_AUTO_TEST_CASE(assign_plus1)
 
   M += M1;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 6.);
-  BOOST_CHECK_EQUAL(M(0,1), 8.);
-  BOOST_CHECK_EQUAL(M(1,0), 10.);
-  BOOST_CHECK_EQUAL(M(1,1), 12.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 6.);
+  CATCH_CHECK(M(0,1) == 8.);
+  CATCH_CHECK(M(1,0) == 10.);
+  CATCH_CHECK(M(1,1) == 12.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(fixed_external)
 
-BOOST_AUTO_TEST_CASE(binary_minus1)
+CATCH_TEST_CASE("fixed external, binary_minus1")
 {
   double aM1[] = {
     1., 2.,
@@ -356,15 +352,15 @@ BOOST_AUTO_TEST_CASE(binary_minus1)
   cml::matrix<double, cml::external<2,2>> M(data);
   M = M1 - M2;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), -4.);
-  BOOST_CHECK_EQUAL(M(0,1), -4.);
-  BOOST_CHECK_EQUAL(M(1,0), -4.);
-  BOOST_CHECK_EQUAL(M(1,1), -4.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == -4.);
+  CATCH_CHECK(M(0,1) == -4.);
+  CATCH_CHECK(M(1,0) == -4.);
+  CATCH_CHECK(M(1,1) == -4.);
 }
 
-BOOST_AUTO_TEST_CASE(binary_plus1)
+CATCH_TEST_CASE("fixed external, binary_plus1")
 {
   double aM1[] = {
     1., 2.,
@@ -382,15 +378,15 @@ BOOST_AUTO_TEST_CASE(binary_plus1)
   cml::matrix<double, cml::external<2,2>> M(data);
   M = M1 + M2;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 6.);
-  BOOST_CHECK_EQUAL(M(0,1), 8.);
-  BOOST_CHECK_EQUAL(M(1,0), 10.);
-  BOOST_CHECK_EQUAL(M(1,1), 12.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 6.);
+  CATCH_CHECK(M(0,1) == 8.);
+  CATCH_CHECK(M(1,0) == 10.);
+  CATCH_CHECK(M(1,1) == 12.);
 }
 
-BOOST_AUTO_TEST_CASE(multiple_plus1)
+CATCH_TEST_CASE("fixed external, multiple_plus1")
 {
   double aM1[] = {
     1., 2.,
@@ -414,15 +410,15 @@ BOOST_AUTO_TEST_CASE(multiple_plus1)
   cml::matrix<double, cml::external<2,2>> M(data);
   M = M1 + M2 + M3;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 15.);
-  BOOST_CHECK_EQUAL(M(0,1), 18.);
-  BOOST_CHECK_EQUAL(M(1,0), 21.);
-  BOOST_CHECK_EQUAL(M(1,1), 24.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 15.);
+  CATCH_CHECK(M(0,1) == 18.);
+  CATCH_CHECK(M(1,0) == 21.);
+  CATCH_CHECK(M(1,1) == 24.);
 }
 
-BOOST_AUTO_TEST_CASE(mixed_op1)
+CATCH_TEST_CASE("fixed external, mixed_op1")
 {
   double aM1[] = {
     1., 2.,
@@ -446,15 +442,15 @@ BOOST_AUTO_TEST_CASE(mixed_op1)
   cml::matrix<double, cml::external<2,2>> M(data);
   M = M1 + (M3 - M2);
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 5.);
-  BOOST_CHECK_EQUAL(M(0,1), 6.);
-  BOOST_CHECK_EQUAL(M(1,0), 7.);
-  BOOST_CHECK_EQUAL(M(1,1), 8.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 5.);
+  CATCH_CHECK(M(0,1) == 6.);
+  CATCH_CHECK(M(1,0) == 7.);
+  CATCH_CHECK(M(1,1) == 8.);
 }
 
-BOOST_AUTO_TEST_CASE(assign_minus1)
+CATCH_TEST_CASE("fixed external, assign_minus1")
 {
   double aM1[] = {
     5., 6.,
@@ -469,15 +465,15 @@ BOOST_AUTO_TEST_CASE(assign_minus1)
   cml::matrix<double, cml::external<2,2>> M(data);
   M -= M1;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), -4.);
-  BOOST_CHECK_EQUAL(M(0,1), -4.);
-  BOOST_CHECK_EQUAL(M(1,0), -4.);
-  BOOST_CHECK_EQUAL(M(1,1), -4.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == -4.);
+  CATCH_CHECK(M(0,1) == -4.);
+  CATCH_CHECK(M(1,0) == -4.);
+  CATCH_CHECK(M(1,1) == -4.);
 }
 
-BOOST_AUTO_TEST_CASE(assign_plus1)
+CATCH_TEST_CASE("fixed external, assign_plus1")
 {
   double aM1[] = {
     5., 6.,
@@ -492,19 +488,17 @@ BOOST_AUTO_TEST_CASE(assign_plus1)
   cml::matrix<double, cml::external<2,2>> M(data);
   M += M1;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 6.);
-  BOOST_CHECK_EQUAL(M(0,1), 8.);
-  BOOST_CHECK_EQUAL(M(1,0), 10.);
-  BOOST_CHECK_EQUAL(M(1,1), 12.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 6.);
+  CATCH_CHECK(M(0,1) == 8.);
+  CATCH_CHECK(M(1,0) == 10.);
+  CATCH_CHECK(M(1,1) == 12.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_AUTO_TEST_SUITE(dynamic_external)
 
-BOOST_AUTO_TEST_CASE(binary_minus1)
+CATCH_TEST_CASE("dynamic external, binary_minus1")
 {
   double aM1[] = {
     1., 2.,
@@ -522,15 +516,15 @@ BOOST_AUTO_TEST_CASE(binary_minus1)
   cml::matrix<double, cml::external<>> M(data);
   M = M1 - M2;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), -4.);
-  BOOST_CHECK_EQUAL(M(0,1), -4.);
-  BOOST_CHECK_EQUAL(M(1,0), -4.);
-  BOOST_CHECK_EQUAL(M(1,1), -4.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == -4.);
+  CATCH_CHECK(M(0,1) == -4.);
+  CATCH_CHECK(M(1,0) == -4.);
+  CATCH_CHECK(M(1,1) == -4.);
 }
 
-BOOST_AUTO_TEST_CASE(binary_plus1)
+CATCH_TEST_CASE("dynamic external, binary_plus1")
 {
   double aM1[] = {
     1., 2.,
@@ -548,15 +542,15 @@ BOOST_AUTO_TEST_CASE(binary_plus1)
   cml::matrix<double, cml::external<>> M(data);
   M = M1 + M2;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 6.);
-  BOOST_CHECK_EQUAL(M(0,1), 8.);
-  BOOST_CHECK_EQUAL(M(1,0), 10.);
-  BOOST_CHECK_EQUAL(M(1,1), 12.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 6.);
+  CATCH_CHECK(M(0,1) == 8.);
+  CATCH_CHECK(M(1,0) == 10.);
+  CATCH_CHECK(M(1,1) == 12.);
 }
 
-BOOST_AUTO_TEST_CASE(multiple_plus1)
+CATCH_TEST_CASE("dynamic external, multiple_plus1")
 {
   double aM1[] = {
     1., 2.,
@@ -580,15 +574,15 @@ BOOST_AUTO_TEST_CASE(multiple_plus1)
   cml::matrix<double, cml::external<>> M(data);
   M = M1 + M2 + M3;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 15.);
-  BOOST_CHECK_EQUAL(M(0,1), 18.);
-  BOOST_CHECK_EQUAL(M(1,0), 21.);
-  BOOST_CHECK_EQUAL(M(1,1), 24.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 15.);
+  CATCH_CHECK(M(0,1) == 18.);
+  CATCH_CHECK(M(1,0) == 21.);
+  CATCH_CHECK(M(1,1) == 24.);
 }
 
-BOOST_AUTO_TEST_CASE(mixed_op1)
+CATCH_TEST_CASE("dynamic external, mixed_op1")
 {
   double aM1[] = {
     1., 2.,
@@ -612,15 +606,15 @@ BOOST_AUTO_TEST_CASE(mixed_op1)
   cml::matrix<double, cml::external<>> M(data);
   M = M1 + (M3 - M2);
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 5.);
-  BOOST_CHECK_EQUAL(M(0,1), 6.);
-  BOOST_CHECK_EQUAL(M(1,0), 7.);
-  BOOST_CHECK_EQUAL(M(1,1), 8.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 5.);
+  CATCH_CHECK(M(0,1) == 6.);
+  CATCH_CHECK(M(1,0) == 7.);
+  CATCH_CHECK(M(1,1) == 8.);
 }
 
-BOOST_AUTO_TEST_CASE(assign_minus1)
+CATCH_TEST_CASE("dynamic external, assign_minus1")
 {
   double aM1[] = {
     5., 6.,
@@ -635,15 +629,15 @@ BOOST_AUTO_TEST_CASE(assign_minus1)
   cml::matrix<double, cml::external<>> M(data, 2,2);
   M -= M1;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), -4.);
-  BOOST_CHECK_EQUAL(M(0,1), -4.);
-  BOOST_CHECK_EQUAL(M(1,0), -4.);
-  BOOST_CHECK_EQUAL(M(1,1), -4.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == -4.);
+  CATCH_CHECK(M(0,1) == -4.);
+  CATCH_CHECK(M(1,0) == -4.);
+  CATCH_CHECK(M(1,1) == -4.);
 }
 
-BOOST_AUTO_TEST_CASE(assign_plus1)
+CATCH_TEST_CASE("dynamic external, assign_plus1")
 {
   double aM1[] = {
     5., 6.,
@@ -658,19 +652,17 @@ BOOST_AUTO_TEST_CASE(assign_plus1)
   cml::matrix<double, cml::external<>> M(data, 2,2);
   M += M1;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 6.);
-  BOOST_CHECK_EQUAL(M(0,1), 8.);
-  BOOST_CHECK_EQUAL(M(1,0), 10.);
-  BOOST_CHECK_EQUAL(M(1,1), 12.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 6.);
+  CATCH_CHECK(M(0,1) == 8.);
+  CATCH_CHECK(M(1,0) == 10.);
+  CATCH_CHECK(M(1,1) == 12.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_AUTO_TEST_SUITE(dynamic)
 
-BOOST_AUTO_TEST_CASE(binary_minus1)
+CATCH_TEST_CASE("dynamic, binary_minus1")
 {
   cml::matrix<double, cml::dynamic<>> M1(
     2,2,
@@ -686,15 +678,15 @@ BOOST_AUTO_TEST_CASE(binary_minus1)
   cml::matrix<double, cml::dynamic<>> M;
   M = M1 - M2;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), -4.);
-  BOOST_CHECK_EQUAL(M(0,1), -4.);
-  BOOST_CHECK_EQUAL(M(1,0), -4.);
-  BOOST_CHECK_EQUAL(M(1,1), -4.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == -4.);
+  CATCH_CHECK(M(0,1) == -4.);
+  CATCH_CHECK(M(1,0) == -4.);
+  CATCH_CHECK(M(1,1) == -4.);
 }
 
-BOOST_AUTO_TEST_CASE(binary_minus2)
+CATCH_TEST_CASE("dynamic, binary_minus2")
 {
   cml::matrix<double, cml::dynamic<>> M1(
     2,2,
@@ -709,15 +701,15 @@ BOOST_AUTO_TEST_CASE(binary_minus2)
 
   cml::matrix<double, cml::dynamic<>> M = M1 - M2;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), -4.);
-  BOOST_CHECK_EQUAL(M(0,1), -4.);
-  BOOST_CHECK_EQUAL(M(1,0), -4.);
-  BOOST_CHECK_EQUAL(M(1,1), -4.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == -4.);
+  CATCH_CHECK(M(0,1) == -4.);
+  CATCH_CHECK(M(1,0) == -4.);
+  CATCH_CHECK(M(1,1) == -4.);
 }
 
-BOOST_AUTO_TEST_CASE(binary_plus1)
+CATCH_TEST_CASE("dynamic, binary_plus1")
 {
   cml::matrix<double, cml::dynamic<>> M1(
     2,2,
@@ -733,15 +725,15 @@ BOOST_AUTO_TEST_CASE(binary_plus1)
   cml::matrix<double, cml::dynamic<>> M;
   M = M1 + M2;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 6.);
-  BOOST_CHECK_EQUAL(M(0,1), 8.);
-  BOOST_CHECK_EQUAL(M(1,0), 10.);
-  BOOST_CHECK_EQUAL(M(1,1), 12.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 6.);
+  CATCH_CHECK(M(0,1) == 8.);
+  CATCH_CHECK(M(1,0) == 10.);
+  CATCH_CHECK(M(1,1) == 12.);
 }
 
-BOOST_AUTO_TEST_CASE(binary_plus2)
+CATCH_TEST_CASE("dynamic, binary_plus2")
 {
   cml::matrix<double, cml::dynamic<>> M1(
     2,2,
@@ -756,15 +748,15 @@ BOOST_AUTO_TEST_CASE(binary_plus2)
 
   cml::matrix<double, cml::dynamic<>> M = M1 + M2;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 6.);
-  BOOST_CHECK_EQUAL(M(0,1), 8.);
-  BOOST_CHECK_EQUAL(M(1,0), 10.);
-  BOOST_CHECK_EQUAL(M(1,1), 12.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 6.);
+  CATCH_CHECK(M(0,1) == 8.);
+  CATCH_CHECK(M(1,0) == 10.);
+  CATCH_CHECK(M(1,1) == 12.);
 }
 
-BOOST_AUTO_TEST_CASE(multiple_plus1)
+CATCH_TEST_CASE("dynamic, multiple_plus1")
 {
   cml::matrix<double, cml::dynamic<>> M1(
     2,2,
@@ -783,15 +775,15 @@ BOOST_AUTO_TEST_CASE(multiple_plus1)
     );
   cml::matrix<double, cml::dynamic<>> M;
   M = M1 + M2 + M3;
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 15.);
-  BOOST_CHECK_EQUAL(M(0,1), 18.);
-  BOOST_CHECK_EQUAL(M(1,0), 21.);
-  BOOST_CHECK_EQUAL(M(1,1), 24.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 15.);
+  CATCH_CHECK(M(0,1) == 18.);
+  CATCH_CHECK(M(1,0) == 21.);
+  CATCH_CHECK(M(1,1) == 24.);
 }
 
-BOOST_AUTO_TEST_CASE(multiple_plus2)
+CATCH_TEST_CASE("dynamic, multiple_plus2")
 {
   cml::matrix<double, cml::dynamic<>> M1(
     2,2,
@@ -809,15 +801,15 @@ BOOST_AUTO_TEST_CASE(multiple_plus2)
     11., 12.
     );
   cml::matrix<double, cml::dynamic<>> M = M1 + M2 + M3;
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 15.);
-  BOOST_CHECK_EQUAL(M(0,1), 18.);
-  BOOST_CHECK_EQUAL(M(1,0), 21.);
-  BOOST_CHECK_EQUAL(M(1,1), 24.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 15.);
+  CATCH_CHECK(M(0,1) == 18.);
+  CATCH_CHECK(M(1,0) == 21.);
+  CATCH_CHECK(M(1,1) == 24.);
 }
 
-BOOST_AUTO_TEST_CASE(mixed_op1)
+CATCH_TEST_CASE("dynamic, mixed_op1")
 {
   cml::matrix<double, cml::dynamic<>> M1(
     2,2,
@@ -836,15 +828,15 @@ BOOST_AUTO_TEST_CASE(mixed_op1)
     );
   cml::matrix<double, cml::dynamic<>> M;
   M = M1 + (M3 - M2);
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 5.);
-  BOOST_CHECK_EQUAL(M(0,1), 6.);
-  BOOST_CHECK_EQUAL(M(1,0), 7.);
-  BOOST_CHECK_EQUAL(M(1,1), 8.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 5.);
+  CATCH_CHECK(M(0,1) == 6.);
+  CATCH_CHECK(M(1,0) == 7.);
+  CATCH_CHECK(M(1,1) == 8.);
 }
 
-BOOST_AUTO_TEST_CASE(mixed_op2)
+CATCH_TEST_CASE("dynamic, mixed_op2")
 {
   cml::matrix<double, cml::dynamic<>> M1(
     2,2,
@@ -862,15 +854,15 @@ BOOST_AUTO_TEST_CASE(mixed_op2)
     11., 12.
     );
   cml::matrix<double, cml::dynamic<>> M = M1 + (M3 - M2);
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 5.);
-  BOOST_CHECK_EQUAL(M(0,1), 6.);
-  BOOST_CHECK_EQUAL(M(1,0), 7.);
-  BOOST_CHECK_EQUAL(M(1,1), 8.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 5.);
+  CATCH_CHECK(M(0,1) == 6.);
+  CATCH_CHECK(M(1,0) == 7.);
+  CATCH_CHECK(M(1,1) == 8.);
 }
 
-BOOST_AUTO_TEST_CASE(assign_minus1)
+CATCH_TEST_CASE("dynamic, assign_minus1")
 {
   cml::matrix<double, cml::dynamic<>> M1(
     2,2,
@@ -884,15 +876,15 @@ BOOST_AUTO_TEST_CASE(assign_minus1)
     );
   M -= M1;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), -4.);
-  BOOST_CHECK_EQUAL(M(0,1), -4.);
-  BOOST_CHECK_EQUAL(M(1,0), -4.);
-  BOOST_CHECK_EQUAL(M(1,1), -4.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == -4.);
+  CATCH_CHECK(M(0,1) == -4.);
+  CATCH_CHECK(M(1,0) == -4.);
+  CATCH_CHECK(M(1,1) == -4.);
 }
 
-BOOST_AUTO_TEST_CASE(assign_plus1)
+CATCH_TEST_CASE("dynamic, assign_plus1")
 {
   cml::matrix<double, cml::dynamic<>> M1(
     2,2,
@@ -907,15 +899,14 @@ BOOST_AUTO_TEST_CASE(assign_plus1)
 
   M += M1;
 
-  BOOST_REQUIRE_EQUAL(M.rows(), 2);
-  BOOST_REQUIRE_EQUAL(M.cols(), 2);
-  BOOST_CHECK_EQUAL(M(0,0), 6.);
-  BOOST_CHECK_EQUAL(M(0,1), 8.);
-  BOOST_CHECK_EQUAL(M(1,0), 10.);
-  BOOST_CHECK_EQUAL(M(1,1), 12.);
+  CATCH_REQUIRE(M.rows() == 2);
+  CATCH_REQUIRE(M.cols() == 2);
+  CATCH_CHECK(M(0,0) == 6.);
+  CATCH_CHECK(M(0,1) == 8.);
+  CATCH_CHECK(M(1,0) == 10.);
+  CATCH_CHECK(M(1,1) == 12.);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
 
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

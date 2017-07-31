@@ -13,26 +13,25 @@
 #include <cml/vector/types.h>
 
 /* Testing headers: */
-#define BOOST_TEST_MODULE triple_product1
-#include <boost/test/unit_test.hpp>
+#include "catch_runner.h"
 
-BOOST_AUTO_TEST_CASE(triple_product1)
+CATCH_TEST_CASE("triple_product1")
 {
   cml::vector3d v1 = { 1., 2., 3. };
   cml::vectord v2 = { 4., 5., 6. };
   double a3[3] = { 7., 8., 9. };
   cml::external3d v3(a3);
   double tp = cml::triple_product(v1,v2,v3);
-  BOOST_CHECK_EQUAL(tp, 0.);
+  CATCH_CHECK(tp == 0.);
 }
 
-BOOST_AUTO_TEST_CASE(size_check1)
+CATCH_TEST_CASE("size_check1")
 {
   cml::vectord v1 = { 1., 2. };
   cml::vectord v2 = { 4., 5., 6. };
   double a3[3] = { 7., 8., 9. };
   cml::external3d v3(a3);
-  BOOST_CHECK_THROW(cml::triple_product(v1,v2,v3), cml::vector_size_error);
+  CATCH_CHECK_THROWS_AS(cml::triple_product(v1,v2,v3), cml::vector_size_error);
 }
 
 // -------------------------------------------------------------------------
