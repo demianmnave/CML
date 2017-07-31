@@ -11,21 +11,22 @@
 
 #include <cstdint>
 #include <functional>
+#include <cml/common/mpl/int_c.h>
 #include <cml/vector/vector.h>
 #include <cml/vector/traits.h>
 
 namespace cml {
 namespace detail {
 
-/* From boost/functional/hash/hash.hpp> */
+/* Adapted mrom boost/functional/hash/hash.hpp> */
 #if defined(_MSC_VER)
 #define _HASH_ROTL32(x, r) _rotl(x,r)
 #else
 #define _HASH_ROTL32(x, r) ((x << r) | (x >> (32 - r)))
 #endif
 
-inline void
-hash_combine(std::uint32_t& h1, std::uint32_t k1)
+template<typename U32> inline void
+hash_combine_impl(U32& h1, U32 k1, cml::int_c<4>)
 {
   const auto c1 = UINT32_C(0xcc9e2d51);
   const auto c2 = UINT32_C(0x1b873593);
@@ -41,8 +42,8 @@ hash_combine(std::uint32_t& h1, std::uint32_t k1)
 
 #undef _CML_HASH_ROTL32
 
-inline void
-hash_combine(std::uint64_t& h, std::uint64_t k)
+template<typename U64> inline void
+hash_combine_impl(U64& h, U64 k, cml::int_c<8>)
 {
   const auto m = UINT64_C(0xc6a4a7935bd1e995);
   const auto r = 47;
@@ -56,7 +57,14 @@ hash_combine(std::uint64_t& h, std::uint64_t k)
 
   // Completely arbitrary number, to prevent 0's
   // from hashing to 0.
-  h += 0xe6546b64;
+  h += UINT64_C(0xe6546b64);
+}
+
+
+template<typename UInt> inline void
+hash_combine(UInt& h, UInt k)
+{
+  hash_combine_impl(h, k, cml::int_c<sizeof(UInt)>());
 }
 
 }
