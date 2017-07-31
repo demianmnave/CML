@@ -4,27 +4,27 @@ matrix:
   fast_finish: true
   include:
 
-    - os: osx
-      osx_image: xcode7.3
-
-    - os: osx
-      osx_image: xcode8.3
+#    - os: osx
+#      osx_image: xcode7.3
+#
+#    - os: osx
+#      osx_image: xcode8.3
+#
+#    - os: linux
+#      dist: trusty
+#      addons: &clang40
+#        apt:
+#          packages: clang-4.0
+#          sources:
+#             - ubuntu-toolchain-r-test
+#             - llvm-toolchain-trusty-4.0
+#      env:
+#        - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
 
     - os: linux
       dist: trusty
       addons:
-        apt:
-          packages: clang-4.0
-          sources:
-             - ubuntu-toolchain-r-test
-             - llvm-toolchain-trusty-4.0
-      env:
-        - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
-
-    - os: linux
-      dist: trusty
-      addons:
-        apt:
+        apt: &clang50
           packages: clang-5.0
           sources:
              - ubuntu-toolchain-r-test
