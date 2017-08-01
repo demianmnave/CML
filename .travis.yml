@@ -25,13 +25,24 @@ matrix:
       dist: trusty
       addons:
         apt:
-          packages: clang-6.0
+          packages: clang-5.0
           sources:
           - ubuntu-toolchain-r-test
           - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-5.0 main'
             key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
       env:
-        - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
+        - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+
+#    - os: linux
+#      dist: trusty
+#      addons:
+#        apt:
+#          packages: clang-6.0
+#          sources:
+#          - ubuntu-toolchain-r-test
+#          - llvm-toolchain-trusty
+#      env:
+#        - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
 
 
 before_install:
