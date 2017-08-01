@@ -19,9 +19,9 @@ Currently, CML2 does not have a `make install` option.  As it is header-only, it
 
 ## Running Tests
 
-To build and run the CML test suite, you will need a local Boost installation having at least Boost.Test.  The tests should work with Boost 1.54 and higher, but Boost 1.60 and higher is suggested. From the command line, start in your build directory and execute:
+To run the test suite from a command prompt using a Makefile-like generator, start in your build directory and execute:
 
-`cmake . -G<generator name> -DCML_BUILD_TESTING:Bool=On`
+`cmake . -G<generator name> -DCML_BUILD_TESTING=On -DCML_BUILD_TYPE=RELEASE`
 
 Then, to build the tests (again from your build directory):
 
@@ -31,8 +31,9 @@ You can run the full test suite from your build directory by executing:
 
 `ctest -C Release`
 
-If you have multiple CPUs (e.g. 4 in this case), you can speed things up a bit using:
+If you have multiple CPUs (e.g. 4 in this case), you can speed things up a bit using, for example:
 
+`cmake --build . --config Release -- -j4`
 `ctest -C Release -j4`
 
-If `cmake-gui` is available, you can use it to set CML_BUILD_TESTING to On.  A command prompt is still required to execute `ctest`, however.
+Visual Studio 12 (2013), 14 (2015), and 15 (2017) are also supported, as are XCode 7.3 and 8.3.
