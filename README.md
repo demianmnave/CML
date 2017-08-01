@@ -34,6 +34,7 @@ You can run the full test suite from your build directory by executing:
 If you have multiple CPUs (e.g. 4 in this case), you can speed things up a bit using, for example:
 
 `cmake --build . --config Release -- -j4`
+
 `ctest -C Release -j4`
 
 Visual Studio 12 (2013), 14 (2015), and 15 (2017) are also supported, as are XCode 7.3 and 8.3.
