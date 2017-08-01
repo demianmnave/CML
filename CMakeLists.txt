@@ -65,6 +65,15 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   # Enforce common compiler settings:
   list(APPEND CMAKE_CXX_FLAGS "-fexceptions -std=c++14")
 
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+
+  # Convert compiler command lines to lists for easier manipulation:
+  separate_arguments(CMAKE_CXX_FLAGS)
+
+  # Enforce common compiler settings:
+  list(APPEND CMAKE_CXX_FLAGS
+    "-fexceptions -std=c++14 -static -static-libgcc -static-libstdc++")
+
 else()
   message(FATAL_ERROR "Unknown compiler")
 endif()
