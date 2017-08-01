@@ -9,7 +9,8 @@
 #ifndef cml_common_compiler_h
 #define cml_common_compiler_h
 
-#if defined(__GNUC__) && ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 9))
+#if defined(__GNUC__) && (__GNUC__ > 4 \
+  || ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 9)))
 /* g++ support for C++11 features used by CML: */
 
 /* N2439 move semantics for *this, used, for example, to efficiently return
