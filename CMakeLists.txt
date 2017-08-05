@@ -57,6 +57,16 @@ elseif(MSVC)
   list(APPEND CMAKE_CXX_FLAGS_DEBUG "/MTd")
   list(APPEND CMAKE_CXX_FLAGS_RELEASE "/MT")
 
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 19.00)
+    list(APPEND CMAKE_CXX_FLAGS
+      /Zc:auto
+      /Zc:rvalueCast
+      /Zc:inline
+      /Zc:referenceBinding
+      /permissive-
+      )
+  endif()
+
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 
   # Convert compiler command lines to lists for easier manipulation:
