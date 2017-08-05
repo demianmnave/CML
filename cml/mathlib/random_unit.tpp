@@ -24,8 +24,6 @@ random_unit(writable_vector<Sub1>& n,
   const readable_vector<Sub2>& d, const Scalar& a, cml::int_c<2>
   )
 {
-  typedef value_type_trait_of_t<Sub1>			value_type;
-  typedef scalar_traits<value_type>			value_traits;
   typedef scalar_traits<Scalar>				theta_traits;
 
   /* Generate a uniformly random angle in [-a,a]: */
@@ -54,8 +52,6 @@ random_unit(writable_vector<Sub1>& n,
   const readable_vector<Sub2>& d, const Scalar& a, cml::int_c<N>
   )
 {
-  typedef value_type_trait_of_t<Sub1>			value_type;
-  typedef scalar_traits<value_type>			value_traits;
   typedef scalar_traits<Scalar>				a_traits;
 
   /* Generate a uniformly random vector on the unit sphere: */

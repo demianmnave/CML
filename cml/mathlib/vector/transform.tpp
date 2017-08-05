@@ -153,7 +153,6 @@ transform_point_4D(
   ) -> temporary_of_t<Sub2>
 {
   typedef temporary_of_t<Sub2>				result_type;
-  typedef supervector_of_t<Sub2>			super_type;
   typedef value_type_trait_of_t<result_type>		value_type;
 
   cml::check_size(m, int_c<4>(), int_c<4>());

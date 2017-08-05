@@ -395,7 +395,6 @@ matrix_to_axis_angle(
   typedef value_type_trait_of_t<Sub>			value_type;
   typedef scalar_traits<value_type>			value_traits;
   typedef value_type_trait_of_t<ASub>			asub_type;
-  typedef scalar_traits<asub_type>			asub_traits;
 
   cml::check_linear_3D(m);
   cml::detail::check_or_resize(axis, int_c<3>());

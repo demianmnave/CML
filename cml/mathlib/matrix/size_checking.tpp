@@ -15,7 +15,7 @@ namespace detail {
 
 /* No-op matrix size checking. */
 template<class Sub> inline void
-check_affine_2D(const readable_matrix<Sub>& m, any_basis)
+check_affine_2D(const readable_matrix<Sub>&, any_basis)
 {
 }
 
@@ -36,7 +36,7 @@ check_affine_2D(const readable_matrix<Sub>& m, col_basis)
 
 /* No-op matrix size checking. */
 template<class Sub> inline void
-check_affine_3D(const readable_matrix<Sub>& m, any_basis)
+check_affine_3D(const readable_matrix<Sub>&, any_basis)
 {
 }
 
