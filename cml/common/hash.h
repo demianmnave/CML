@@ -9,6 +9,7 @@
 #ifndef cml_common_hash_h
 #define cml_common_hash_h
 
+#include <cml/common/mpl/int_c.h>
 #include <functional>
 #include <cstdint>
 
