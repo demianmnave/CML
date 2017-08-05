@@ -9,7 +9,6 @@
 #ifndef cml_util_vector_hash_h
 #define cml_util_vector_hash_h
 
-#include <cml/common/mpl/int_c.h>
 #include <cml/common/hash.h>
 #include <cml/vector/vector.h>
 #include <cml/vector/traits.h>
