@@ -10,6 +10,7 @@
 #define cml_common_hash_h
 
 #include <functional>
+#include <cstdint>
 
 namespace cml {
 namespace detail {
