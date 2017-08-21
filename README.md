@@ -1,6 +1,6 @@
 ## Configurable Math Library
 
-For CML version 1, please see https://github.com/demianmnave/CML.git.
+For CML version 1, please see https://github.com/demianmnave/CML1.
 
 ## License
 
