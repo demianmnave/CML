@@ -1,4 +1,6 @@
-## Configurable Math Library v2
+## Configurable Math Library
+
+For CML version 1, please see https://github.com/demianmnave/CML.git.
 
 ## License
 
@@ -14,7 +16,7 @@ License, Version 1.0.](http://www.boost.org/LICENSE_1_0.txt).
 
 ## Using the CML
 
-Currently, CML2 does not have a `make install` option.  As it is header-only, it is simple enough to copy the `cml` header directory into your project, and setup your build to reference it.
+Currently, CML does not have a `make install` option.  As it is header-only, it is simple enough to copy the `cml` header directory into your project, and setup your build to reference it.
 
 
 ## Running Tests
