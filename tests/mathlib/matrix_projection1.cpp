@@ -22,10 +22,10 @@ CATCH_TEST_CASE("orthographic, rh1")
   // l, r, b, t, near, far
 
   cml::vector4d o = O * cml::vector4d(.5, .5, 0., 1.);
-  CATCH_CHECK(o[0] == Approx(1.).epsilon(.001));
-  CATCH_CHECK(o[1] == Approx(1.).epsilon(.001));
+  CATCH_CHECK(o[0] == Approx(1.).epsilon(1e-12));
+  CATCH_CHECK(o[1] == Approx(1.).epsilon(1e-12));
   CATCH_CHECK(0 == Approx(o[2]).epsilon(0).margin(1e-7));
-  CATCH_CHECK(o[3] == Approx(1.).epsilon(.001));
+  CATCH_CHECK(o[3] == Approx(1.).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("orthographic, rh2")
@@ -35,10 +35,10 @@ CATCH_TEST_CASE("orthographic, rh2")
   // width x height, near, far
 
   cml::vector4d o = O * cml::vector4d(.5, .5, 0., 1.);
-  CATCH_CHECK(o[0] == Approx(1.).epsilon(.001));
-  CATCH_CHECK(o[1] == Approx(1.).epsilon(.001));
+  CATCH_CHECK(o[0] == Approx(1.).epsilon(1e-12));
+  CATCH_CHECK(o[1] == Approx(1.).epsilon(1e-12));
   CATCH_CHECK(0 == Approx(o[2]).epsilon(0).margin(1e-7));
-  CATCH_CHECK(o[3] == Approx(1.).epsilon(.001));
+  CATCH_CHECK(o[3] == Approx(1.).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("orthographic, lh1")
@@ -49,10 +49,10 @@ CATCH_TEST_CASE("orthographic, lh1")
   // l, r, b, t, near, far
 
   cml::vector4d o = O * cml::vector4d(.5, .5, 0., 1.);
-  CATCH_CHECK(o[0] == Approx(1.).epsilon(.001));
-  CATCH_CHECK(o[1] == Approx(1.).epsilon(.001));
-  CATCH_CHECK(o[2] == Approx(.5).epsilon(.001));
-  CATCH_CHECK(o[3] == Approx(1.).epsilon(.001));
+  CATCH_CHECK(o[0] == Approx(1.).epsilon(1e-12));
+  CATCH_CHECK(o[1] == Approx(1.).epsilon(1e-12));
+  CATCH_CHECK(o[2] == Approx(.5).epsilon(1e-12));
+  CATCH_CHECK(o[3] == Approx(1.).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("orthographic, lh2")
@@ -62,10 +62,10 @@ CATCH_TEST_CASE("orthographic, lh2")
   // width x height, near, far
 
   cml::vector4d o = O * cml::vector4d(.5, .5, 0., 1.);
-  CATCH_CHECK(o[0] == Approx(1.).epsilon(.001));
-  CATCH_CHECK(o[1] == Approx(1.).epsilon(.001));
-  CATCH_CHECK(o[2] == Approx(.5).epsilon(.001));
-  CATCH_CHECK(o[3] == Approx(1.).epsilon(.001));
+  CATCH_CHECK(o[0] == Approx(1.).epsilon(1e-12));
+  CATCH_CHECK(o[1] == Approx(1.).epsilon(1e-12));
+  CATCH_CHECK(o[2] == Approx(.5).epsilon(1e-12));
+  CATCH_CHECK(o[3] == Approx(1.).epsilon(1e-12));
 }
 
 
@@ -79,10 +79,10 @@ CATCH_TEST_CASE("perspective, rh1")
   // l, r, b, t, near, far
 
   cml::vector4d p = P * cml::vector4d(.5, .5, 1., 1.);
-  CATCH_CHECK(p[0] == Approx(.001).epsilon(.001));
-  CATCH_CHECK(p[1] == Approx(.001).epsilon(.001));
-  CATCH_CHECK(p[2] == Approx(-1.004).epsilon(.001));
-  CATCH_CHECK(p[3] == Approx(-1.).epsilon(.001));
+  CATCH_CHECK(p[0] == Approx(.001).epsilon(1e-12));
+  CATCH_CHECK(p[1] == Approx(.001).epsilon(1e-12));
+  CATCH_CHECK(p[2] == Approx(-1.004004004004).epsilon(1e-12));
+  CATCH_CHECK(p[3] == Approx(-1.).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("perspective, rh2")
@@ -92,10 +92,10 @@ CATCH_TEST_CASE("perspective, rh2")
   // width x height, near, far
 
   cml::vector4d p = P * cml::vector4d(.5, .5, 1., 1.);
-  CATCH_CHECK(p[0] == Approx(.001).epsilon(.001));
-  CATCH_CHECK(p[1] == Approx(.001).epsilon(.001));
-  CATCH_CHECK(p[2] == Approx(-1.004).epsilon(.001));
-  CATCH_CHECK(p[3] == Approx(-1.).epsilon(.001));
+  CATCH_CHECK(p[0] == Approx(.001).epsilon(1e-12));
+  CATCH_CHECK(p[1] == Approx(.001).epsilon(1e-12));
+  CATCH_CHECK(p[2] == Approx(-1.004004004004).epsilon(1e-12));
+  CATCH_CHECK(p[3] == Approx(-1.).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("perspective, lh1")
@@ -106,10 +106,10 @@ CATCH_TEST_CASE("perspective, lh1")
   // l, r, b, t, near, far
 
   cml::vector4d p = P * cml::vector4d(.5, .5, 1., 1.);
-  CATCH_CHECK(p[0] == Approx(.001).epsilon(.001));
-  CATCH_CHECK(p[1] == Approx(.001).epsilon(.001));
-  CATCH_CHECK(p[2] == Approx(1.).epsilon(.001));
-  CATCH_CHECK(p[3] == Approx(1.).epsilon(.001));
+  CATCH_CHECK(p[0] == Approx(.001).epsilon(1e-12));
+  CATCH_CHECK(p[1] == Approx(.001).epsilon(1e-12));
+  CATCH_CHECK(p[2] == Approx(1.).epsilon(1e-12));
+  CATCH_CHECK(p[3] == Approx(1.).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("perspective, lh2")
@@ -119,10 +119,10 @@ CATCH_TEST_CASE("perspective, lh2")
   // width x height, near, far
 
   cml::vector4d p = P * cml::vector4d(.5, .5, 1., 1.);
-  CATCH_CHECK(p[0] == Approx(.001).epsilon(.001));
-  CATCH_CHECK(p[1] == Approx(.001).epsilon(.001));
-  CATCH_CHECK(p[2] == Approx(1.).epsilon(.001));
-  CATCH_CHECK(p[3] == Approx(1.).epsilon(.001));
+  CATCH_CHECK(p[0] == Approx(.001).epsilon(1e-12));
+  CATCH_CHECK(p[1] == Approx(.001).epsilon(1e-12));
+  CATCH_CHECK(p[2] == Approx(1.).epsilon(1e-12));
+  CATCH_CHECK(p[3] == Approx(1.).epsilon(1e-12));
 }
 
 

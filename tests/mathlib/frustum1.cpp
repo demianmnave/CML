@@ -24,12 +24,12 @@ CATCH_TEST_CASE("orthographic_planes1")
   double planes[6][4]; // l, r, b, t, n ,f
   cml::extract_frustum_planes(O, planes, cml::z_clip_neg_one);
 
-  CATCH_CHECK(planes[0][0] == Approx(1.).epsilon(.001));
-  CATCH_CHECK(planes[1][0] == Approx(-1.).epsilon(.001));
-  CATCH_CHECK(planes[2][1] == Approx(1.).epsilon(.001));
-  CATCH_CHECK(planes[3][1] == Approx(-1.).epsilon(.001));
-  CATCH_CHECK(planes[4][2] == Approx(-1.).epsilon(.001));
-  CATCH_CHECK(planes[5][2] == Approx(1.).epsilon(.001));
+  CATCH_CHECK(planes[0][0] == Approx(1.).epsilon(1e-12));
+  CATCH_CHECK(planes[1][0] == Approx(-1.).epsilon(1e-12));
+  CATCH_CHECK(planes[2][1] == Approx(1.).epsilon(1e-12));
+  CATCH_CHECK(planes[3][1] == Approx(-1.).epsilon(1e-12));
+  CATCH_CHECK(planes[4][2] == Approx(-1.).epsilon(1e-12));
+  CATCH_CHECK(planes[5][2] == Approx(1.).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("perspective_planes1")
@@ -42,12 +42,12 @@ CATCH_TEST_CASE("perspective_planes1")
   double planes[6][4]; // l, r, b, t, n ,f
   cml::extract_frustum_planes(O, planes, cml::z_clip_neg_one);
 
-  CATCH_CHECK(planes[0][0] == Approx(.002).epsilon(.001));
-  CATCH_CHECK(planes[1][0] == Approx(-.002).epsilon(.001));
-  CATCH_CHECK(planes[2][1] == Approx(.002).epsilon(.001));
-  CATCH_CHECK(planes[3][1] == Approx(-.002).epsilon(.001));
-  CATCH_CHECK(planes[4][2] == Approx(-1.).epsilon(.001));
-  CATCH_CHECK(planes[5][2] == Approx(1.).epsilon(.001));
+  CATCH_CHECK(planes[0][0] == Approx(.0019999960).epsilon(1e-12));
+  CATCH_CHECK(planes[1][0] == Approx(-.0019999960).epsilon(1e-12));
+  CATCH_CHECK(planes[2][1] == Approx(.0019999960).epsilon(1e-12));
+  CATCH_CHECK(planes[3][1] == Approx(-.0019999960).epsilon(1e-12));
+  CATCH_CHECK(planes[4][2] == Approx(-1.).epsilon(1e-12));
+  CATCH_CHECK(planes[5][2] == Approx(1.).epsilon(1e-12));
 }
 
 // -------------------------------------------------------------------------

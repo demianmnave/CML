@@ -23,10 +23,10 @@ CATCH_TEST_CASE("fixed, inverse_assign_2x2")
     3., 4.
     );
   M.inverse();
-  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(.001));
-  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(.001));
-  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(.001));
-  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(.001));
+  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(1e-12));
+  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(1e-12));
+  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(1e-12));
+  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed, inverse_assign_3x3")
@@ -47,7 +47,7 @@ CATCH_TEST_CASE("fixed, inverse_assign_3x3")
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed, inverse_assign_4x4")
@@ -70,7 +70,7 @@ CATCH_TEST_CASE("fixed, inverse_assign_4x4")
 
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed, inverse_2x2")
@@ -81,10 +81,10 @@ CATCH_TEST_CASE("fixed, inverse_2x2")
       3., 4.
       )
     );
-  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(.001));
-  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(.001));
-  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(.001));
-  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(.001));
+  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(1e-12));
+  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(1e-12));
+  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(1e-12));
+  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(1e-12));
 }
 
 
@@ -98,10 +98,10 @@ CATCH_TEST_CASE("fixed external, inverse_assign_2x2")
   };
   cml::external22d M(avM);
   M.inverse();
-  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(.001));
-  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(.001));
-  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(.001));
-  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(.001));
+  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(1e-12));
+  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(1e-12));
+  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(1e-12));
+  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed external, inverse_assign_3x3")
@@ -123,7 +123,7 @@ CATCH_TEST_CASE("fixed external, inverse_assign_3x3")
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed external, inverse_assign_4x4")
@@ -147,7 +147,7 @@ CATCH_TEST_CASE("fixed external, inverse_assign_4x4")
 
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed external, inverse_2x2")
@@ -157,10 +157,10 @@ CATCH_TEST_CASE("fixed external, inverse_2x2")
     3., 4.
   };
   auto M = cml::inverse(cml::external22d(avM));
-  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(.001));
-  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(.001));
-  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(.001));
-  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(.001));
+  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(1e-12));
+  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(1e-12));
+  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(1e-12));
+  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(1e-12));
 }
 
 
@@ -174,10 +174,10 @@ CATCH_TEST_CASE("dynamic external, inverse_assign_2x2")
   };
   cml::externalmnd M(2,2, avM);
   M.inverse();
-  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(.001));
-  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(.001));
-  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(.001));
-  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(.001));
+  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(1e-12));
+  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(1e-12));
+  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(1e-12));
+  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic external, inverse_assign_3x3")
@@ -199,7 +199,7 @@ CATCH_TEST_CASE("dynamic external, inverse_assign_3x3")
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic external, inverse_assign_4x4")
@@ -223,7 +223,7 @@ CATCH_TEST_CASE("dynamic external, inverse_assign_4x4")
 
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic external, inverse_2x2")
@@ -233,10 +233,10 @@ CATCH_TEST_CASE("dynamic external, inverse_2x2")
     3., 4.
   };
   auto M = cml::inverse(cml::externalmnd(2,2, avM));
-  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(.001));
-  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(.001));
-  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(.001));
-  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(.001));
+  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(1e-12));
+  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(1e-12));
+  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(1e-12));
+  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic external, size_check1")
@@ -259,10 +259,10 @@ CATCH_TEST_CASE("dynamic, inverse_assign_2x2")
     3., 4.
     );
   M.inverse();
-  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(.001));
-  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(.001));
-  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(.001));
-  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(.001));
+  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(1e-12));
+  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(1e-12));
+  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(1e-12));
+  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic, inverse_assign_3x3")
@@ -284,7 +284,7 @@ CATCH_TEST_CASE("dynamic, inverse_assign_3x3")
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic, inverse_assign_4x4")
@@ -308,7 +308,7 @@ CATCH_TEST_CASE("dynamic, inverse_assign_4x4")
 
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(M(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic, inverse_2x2")
@@ -320,10 +320,10 @@ CATCH_TEST_CASE("dynamic, inverse_2x2")
       3., 4.
       )
     );
-  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(.001));
-  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(.001));
-  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(.001));
-  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(.001));
+  CATCH_CHECK(M(0,0) == Approx(-2.0).epsilon(1e-12));
+  CATCH_CHECK(M(0,1) == Approx( 1.0).epsilon(1e-12));
+  CATCH_CHECK(M(1,0) == Approx( 1.5).epsilon(1e-12));
+  CATCH_CHECK(M(1,1) == Approx(-0.5).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic, size_check1")

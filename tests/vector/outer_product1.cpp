@@ -31,7 +31,7 @@ CATCH_TEST_CASE("fixed, outer1")
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      CATCH_CHECK(C(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(C(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 }
 
 
@@ -53,7 +53,7 @@ CATCH_TEST_CASE("fixed external, outer1")
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      CATCH_CHECK(C(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(C(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 }
 
 
@@ -75,7 +75,7 @@ CATCH_TEST_CASE("dynamic external, outer1")
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      CATCH_CHECK(C(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(C(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 }
 
 
@@ -96,7 +96,7 @@ CATCH_TEST_CASE("dynamic, outer1")
 
   for(int i = 0; i < 3; ++ i)
     for(int j = 0; j < 3; ++ j)
-      CATCH_CHECK(C(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(C(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 }
 
 

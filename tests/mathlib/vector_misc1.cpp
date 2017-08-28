@@ -37,7 +37,7 @@ CATCH_TEST_CASE("city_block1")
   auto v1 = cml::vector3d(3., 7., 1.);
   auto v2 = cml::vector3d(1., 9., 2.);
   auto c = cml::manhattan_distance(v1, v2);
-  CATCH_CHECK(c == Approx(5.).epsilon(.001));
+  CATCH_CHECK(c == Approx(5.).epsilon(1e-12));
 }
 
 // -------------------------------------------------------------------------

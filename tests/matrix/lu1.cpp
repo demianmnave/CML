@@ -27,7 +27,7 @@ CATCH_TEST_CASE("fixed, lu1")
     );
   auto LU = cml::lu(M);
   double D = LU(0,0)*LU(1,1)*LU(2,2)*LU(3,3);
-  CATCH_CHECK(D == Approx(-120.).epsilon(.001));
+  CATCH_CHECK(D == Approx(-120.).epsilon(1e-12));
 
   auto expected = cml::matrix44d(
     2., 0., 2., .6,
@@ -38,7 +38,7 @@ CATCH_TEST_CASE("fixed, lu1")
 
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      CATCH_CHECK(LU(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(LU(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed, lu_pivot1")
@@ -60,7 +60,7 @@ CATCH_TEST_CASE("fixed, lu_pivot1")
     );
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      CATCH_CHECK(lup.lu(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(lup.lu(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 
   std::array<int,4> order = { 2, 0, 3, 1 };
   for(int i = 0; i < 4; ++ i)
@@ -88,7 +88,7 @@ CATCH_TEST_CASE("fixed, lu_pivot2")
     );
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      CATCH_CHECK(lup.lu(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(lup.lu(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 
   std::array<int,4> order = { 2, 0, 3, 1 };
   for(int i = 0; i < 4; ++ i)
@@ -108,7 +108,7 @@ CATCH_TEST_CASE("fixed, lu_solve1")
   auto b = cml::vector4d(5., 1., 8., 3.);
   auto x = cml::lu_solve(LU, b);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed, lu_solve2")
@@ -124,7 +124,7 @@ CATCH_TEST_CASE("fixed, lu_solve2")
   auto x = cml::vector4d();
   cml::lu_solve(LU, x, b);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 
@@ -142,7 +142,7 @@ CATCH_TEST_CASE("fixed, lu_pivot_solve1")
   auto b = cml::vector4d(5., 1., 8., 3.);
   auto x = cml::lu_solve(lup, b);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed, lu_pivot_solve2")
@@ -160,7 +160,7 @@ CATCH_TEST_CASE("fixed, lu_pivot_solve2")
   auto x = cml::vector4d();
   cml::lu_solve(lup, x, b);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed, lu_pivot_solve3")
@@ -178,7 +178,7 @@ CATCH_TEST_CASE("fixed, lu_pivot_solve3")
   auto x = b;
   cml::lu_solve(lup, x, x);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 
@@ -195,7 +195,7 @@ CATCH_TEST_CASE("fixed external, lu1")
   auto M = cml::external44d(avM);
   auto LU = cml::lu(M);
   double D = LU(0,0)*LU(1,1)*LU(2,2)*LU(3,3);
-  CATCH_CHECK(D == Approx(-120.).epsilon(.001));
+  CATCH_CHECK(D == Approx(-120.).epsilon(1e-12));
 
   auto expected = cml::matrix44d(
     2., 0., 2., .6,
@@ -206,7 +206,7 @@ CATCH_TEST_CASE("fixed external, lu1")
 
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      CATCH_CHECK(LU(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(LU(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed external, lu_pivot1")
@@ -229,7 +229,7 @@ CATCH_TEST_CASE("fixed external, lu_pivot1")
     );
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      CATCH_CHECK(lup.lu(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(lup.lu(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 
   std::array<int,4> order = { 2, 0, 3, 1 };
   for(int i = 0; i < 4; ++ i)
@@ -258,7 +258,7 @@ CATCH_TEST_CASE("fixed external, lu_pivot2")
     );
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      CATCH_CHECK(lup.lu(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(lup.lu(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 
   std::array<int,4> order = { 2, 0, 3, 1 };
   for(int i = 0; i < 4; ++ i)
@@ -281,7 +281,7 @@ CATCH_TEST_CASE("fixed external, lu_solve1")
   auto b = cml::external4d(avb);
   auto x = cml::lu_solve(LU, b);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed external, lu_solve2")
@@ -303,7 +303,7 @@ CATCH_TEST_CASE("fixed external, lu_solve2")
 
   cml::lu_solve(LU, x, b);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 
@@ -323,7 +323,7 @@ CATCH_TEST_CASE("fixed external, lu_pivot_solve1")
   auto b = cml::external4d(avb);
   auto x = cml::lu_solve(lup, b);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed external, lu_pivot_solve2")
@@ -346,7 +346,7 @@ CATCH_TEST_CASE("fixed external, lu_pivot_solve2")
 
   cml::lu_solve(lup, x, b);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed external, lu_pivot_solve3")
@@ -369,7 +369,7 @@ CATCH_TEST_CASE("fixed external, lu_pivot_solve3")
 
   cml::lu_solve(lup, x, x);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 
@@ -386,7 +386,7 @@ CATCH_TEST_CASE("dynamic external, lu1")
   auto M = cml::externalmnd(4,4, avM);
   auto LU = cml::lu(M);
   double D = LU(0,0)*LU(1,1)*LU(2,2)*LU(3,3);
-  CATCH_CHECK(D == Approx(-120.).epsilon(.001));
+  CATCH_CHECK(D == Approx(-120.).epsilon(1e-12));
 
   auto expected = cml::matrix44d(
     2., 0., 2., .6,
@@ -397,7 +397,7 @@ CATCH_TEST_CASE("dynamic external, lu1")
 
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      CATCH_CHECK(LU(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(LU(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic external, lu_pivot1")
@@ -420,7 +420,7 @@ CATCH_TEST_CASE("dynamic external, lu_pivot1")
     );
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      CATCH_CHECK(lup.lu(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(lup.lu(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 
   std::array<int,4> order = { 2, 0, 3, 1 };
   for(int i = 0; i < 4; ++ i)
@@ -449,7 +449,7 @@ CATCH_TEST_CASE("dynamic external, lu_pivot2")
     );
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      CATCH_CHECK(lup.lu(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(lup.lu(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 
   std::array<int,4> order = { 2, 0, 3, 1 };
   for(int i = 0; i < 4; ++ i)
@@ -473,7 +473,7 @@ CATCH_TEST_CASE("dynamic external, lu_solve1")
 
   auto x = cml::lu_solve(LU, b);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic external, lu_solve2")
@@ -495,7 +495,7 @@ CATCH_TEST_CASE("dynamic external, lu_solve2")
 
   cml::lu_solve(LU, x, b);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 
@@ -516,7 +516,7 @@ CATCH_TEST_CASE("dynamic external, lu_pivot_solve1")
 
   auto x = cml::lu_solve(lup, b);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic external, lu_pivot_solve2")
@@ -539,7 +539,7 @@ CATCH_TEST_CASE("dynamic external, lu_pivot_solve2")
 
   cml::lu_solve(lup, x, b);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic external, lu_pivot_solve3")
@@ -562,7 +562,7 @@ CATCH_TEST_CASE("dynamic external, lu_pivot_solve3")
 
   cml::lu_solve(lup, x, x);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 
@@ -579,7 +579,7 @@ CATCH_TEST_CASE("dynamic, lu1")
     );
   auto LU = cml::lu(M);
   double D = LU(0,0)*LU(1,1)*LU(2,2)*LU(3,3);
-  CATCH_CHECK(D == Approx(-120.).epsilon(.001));
+  CATCH_CHECK(D == Approx(-120.).epsilon(1e-12));
 
   auto expected = cml::matrix44d(
     2., 0., 2., .6,
@@ -590,7 +590,7 @@ CATCH_TEST_CASE("dynamic, lu1")
 
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      CATCH_CHECK(LU(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(LU(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic, lu_pivot1")
@@ -613,7 +613,7 @@ CATCH_TEST_CASE("dynamic, lu_pivot1")
     );
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      CATCH_CHECK(lup.lu(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(lup.lu(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 
   std::array<int,4> order = { 2, 0, 3, 1 };
   for(int i = 0; i < 4; ++ i)
@@ -642,7 +642,7 @@ CATCH_TEST_CASE("dynamic, lu_pivot2")
     );
   for(int i = 0; i < 4; ++ i)
     for(int j = 0; j < 4; ++ j)
-      CATCH_CHECK(lup.lu(i,j) == Approx(expected(i,j)).epsilon(.001));
+      CATCH_CHECK(lup.lu(i,j) == Approx(expected(i,j)).epsilon(1e-12));
 
   std::array<int,4> order = { 2, 0, 3, 1 };
   for(int i = 0; i < 4; ++ i)
@@ -663,7 +663,7 @@ CATCH_TEST_CASE("dynamic, lu_solve1")
   auto b = cml::vectord(5., 1., 8., 3.);
   auto x = cml::lu_solve(LU, b);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic, lu_solve2")
@@ -680,7 +680,7 @@ CATCH_TEST_CASE("dynamic, lu_solve2")
   auto x = cml::vectord(4);
   cml::lu_solve(LU, x, b);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 
@@ -699,7 +699,7 @@ CATCH_TEST_CASE("dynamic, lu_pivot_solve1")
   auto b = cml::vectord(5., 1., 8., 3.);
   auto x = cml::lu_solve(lup, b);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic, lu_pivot_solve2")
@@ -718,7 +718,7 @@ CATCH_TEST_CASE("dynamic, lu_pivot_solve2")
   auto x = cml::vectord(4);
   cml::lu_solve(lup, x, b);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic, lu_pivot_solve3")
@@ -737,7 +737,7 @@ CATCH_TEST_CASE("dynamic, lu_pivot_solve3")
   auto x = b;
   cml::lu_solve(lup, x, x);
   auto Ax = A*x;
-  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(.001));
+  for(int i = 0; i < 4; ++ i) CATCH_CHECK(Ax[i] == Approx(b[i]).epsilon(1e-12));
 }
 
 

@@ -25,7 +25,7 @@ CATCH_TEST_CASE("fixed, det_2x2")
      3.,  3.
     );
   auto result = cml::determinant(M);
-  CATCH_CHECK(result == Approx(9).epsilon(.001));
+  CATCH_CHECK(result == Approx(9).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed, det_3x3")
@@ -36,7 +36,7 @@ CATCH_TEST_CASE("fixed, det_3x3")
      5.,  5.,  4.
     );
   auto result = cml::determinant(M);
-  CATCH_CHECK(result == Approx(-16).epsilon(.001));
+  CATCH_CHECK(result == Approx(-16).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed, det_4x4")
@@ -48,7 +48,7 @@ CATCH_TEST_CASE("fixed, det_4x4")
     -1., -2., 3.4,  -1.
     );
   auto result = cml::determinant(M);
-  CATCH_CHECK(result == Approx(-120).epsilon(.001));
+  CATCH_CHECK(result == Approx(-120).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed, det_5x5")
@@ -61,7 +61,7 @@ CATCH_TEST_CASE("fixed, det_5x5")
      1.,  6.,  7.,  .5,   1.
     );
   auto result = cml::determinant(M);
-  CATCH_CHECK(result == Approx(464).epsilon(.001));
+  CATCH_CHECK(result == Approx(464).epsilon(1e-12));
 }
 
 
@@ -75,7 +75,7 @@ CATCH_TEST_CASE("fixed external, det_2x2")
   };
   auto M = cml::external22d(avM);
   auto result = cml::determinant(M);
-  CATCH_CHECK(result == Approx(9).epsilon(.001));
+  CATCH_CHECK(result == Approx(9).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed external, det_3x3")
@@ -87,7 +87,7 @@ CATCH_TEST_CASE("fixed external, det_3x3")
   };
   auto M = cml::external33d(avM);
   auto result = cml::determinant(M);
-  CATCH_CHECK(result == Approx(-16).epsilon(.001));
+  CATCH_CHECK(result == Approx(-16).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed external, det_4x4")
@@ -100,7 +100,7 @@ CATCH_TEST_CASE("fixed external, det_4x4")
   };
   auto M = cml::external44d(avM);
   auto result = cml::determinant(M);
-  CATCH_CHECK(result == Approx(-120).epsilon(.001));
+  CATCH_CHECK(result == Approx(-120).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("fixed external, det_5x5")
@@ -114,7 +114,7 @@ CATCH_TEST_CASE("fixed external, det_5x5")
   };
   auto M = cml::matrix<double, cml::external<5,5>>(avM);
   auto result = cml::determinant(M);
-  CATCH_CHECK(result == Approx(464).epsilon(.001));
+  CATCH_CHECK(result == Approx(464).epsilon(1e-12));
 }
 
 
@@ -128,7 +128,7 @@ CATCH_TEST_CASE("dynamic external, det_2x2")
   };
   auto M = cml::externalmnd(2,2, avM);
   auto result = cml::determinant(M);
-  CATCH_CHECK(result == Approx(9).epsilon(.001));
+  CATCH_CHECK(result == Approx(9).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic external, det_3x3")
@@ -140,7 +140,7 @@ CATCH_TEST_CASE("dynamic external, det_3x3")
   };
   auto M = cml::externalmnd(3,3, avM);
   auto result = cml::determinant(M);
-  CATCH_CHECK(result == Approx(-16).epsilon(.001));
+  CATCH_CHECK(result == Approx(-16).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic external, det_4x4")
@@ -153,7 +153,7 @@ CATCH_TEST_CASE("dynamic external, det_4x4")
   };
   auto M = cml::externalmnd(4,4, avM);
   auto result = cml::determinant(M);
-  CATCH_CHECK(result == Approx(-120).epsilon(.001));
+  CATCH_CHECK(result == Approx(-120).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic external, det_5x5")
@@ -167,7 +167,7 @@ CATCH_TEST_CASE("dynamic external, det_5x5")
   };
   auto M = cml::matrix<double, cml::external<>>(5,5, avM);
   auto result = cml::determinant(M);
-  CATCH_CHECK(result == Approx(464).epsilon(.001));
+  CATCH_CHECK(result == Approx(464).epsilon(1e-12));
 }
 
 
@@ -181,7 +181,7 @@ CATCH_TEST_CASE("dynamic, det_2x2")
      3.,  3.
     );
   auto result = cml::determinant(M);
-  CATCH_CHECK(result == Approx(9).epsilon(.001));
+  CATCH_CHECK(result == Approx(9).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic, det_3x3")
@@ -193,7 +193,7 @@ CATCH_TEST_CASE("dynamic, det_3x3")
      5.,  5.,  4.
     );
   auto result = cml::determinant(M);
-  CATCH_CHECK(result == Approx(-16).epsilon(.001));
+  CATCH_CHECK(result == Approx(-16).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic, det_4x4")
@@ -206,7 +206,7 @@ CATCH_TEST_CASE("dynamic, det_4x4")
     -1., -2., 3.4,  -1.
     );
   auto result = cml::determinant(M);
-  CATCH_CHECK(result == Approx(-120).epsilon(.001));
+  CATCH_CHECK(result == Approx(-120).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("dynamic, det_5x5")
@@ -220,7 +220,7 @@ CATCH_TEST_CASE("dynamic, det_5x5")
      1.,  6.,  7.,  .5,   1.
     );
   auto result = cml::determinant(M);
-  CATCH_CHECK(result == Approx(464).epsilon(.001));
+  CATCH_CHECK(result == Approx(464).epsilon(1e-12));
 }
 
 

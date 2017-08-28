@@ -29,8 +29,8 @@ CATCH_TEST_CASE("look at 3D, look_at_rh_1")
   auto v = cml::vector3d(1., 1., 1.);
   auto w = cml::transform_point(M,v);
 
-  CATCH_CHECK(w[0] == Approx(1.).epsilon(.0001));
-  CATCH_CHECK(w[1] == Approx(1.).epsilon(.0001));
+  CATCH_CHECK(w[0] == Approx(1.).epsilon(1e-12));
+  CATCH_CHECK(w[1] == Approx(1.).epsilon(1e-12));
   CATCH_CHECK(0 == Approx(w[2]).epsilon(0).margin(1e-8));
 }
 
@@ -45,8 +45,8 @@ CATCH_TEST_CASE("look at 3D, look_at_lh_1")
   auto v = cml::vector3d(1., 1., 1.);
   auto w = cml::transform_point(M,v);
 
-  CATCH_CHECK(w[0] == Approx(-1.).epsilon(.0001));
-  CATCH_CHECK(w[1] == Approx( 1.).epsilon(.0001));
+  CATCH_CHECK(w[0] == Approx(-1.).epsilon(1e-12));
+  CATCH_CHECK(w[1] == Approx( 1.).epsilon(1e-12));
   CATCH_CHECK(0 == Approx(w[2]).epsilon(0).margin( 1e-8));
 }
 
@@ -65,9 +65,9 @@ CATCH_TEST_CASE("affine 3D, test1")
   CATCH_CHECK(M(2,3) == 2.0);
   CATCH_CHECK(M(3,3) == 1.0);
 
-  CATCH_CHECK(M(0,0) == Approx(0.949253).epsilon(.001));
-  CATCH_CHECK(M(1,1) == Approx(0.949253).epsilon(.001));
-  CATCH_CHECK(M(2,2) == Approx(0.949253).epsilon(.001));
+  CATCH_CHECK(M(0,0) == Approx(0.9492530216742).epsilon(1e-12));
+  CATCH_CHECK(M(1,1) == Approx(0.9492530216742).epsilon(1e-12));
+  CATCH_CHECK(M(2,2) == Approx(0.9492530216742).epsilon(1e-12));
 }
 
 

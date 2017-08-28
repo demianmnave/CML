@@ -114,7 +114,7 @@ CATCH_TEST_CASE("fixed, trace1")
     -44.,  43.,   6., -5.
     );
   double expected = 242. - 48. - 27. - 5.;
-  CATCH_CHECK(M.trace() == Approx(expected).epsilon(.001));
+  CATCH_CHECK(M.trace() == Approx(expected).epsilon(1e-12));
 }
 
 

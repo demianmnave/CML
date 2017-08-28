@@ -21,8 +21,8 @@ CATCH_TEST_CASE("transform 2D, vector1")
     1., 2.,
     0., 1.);
   auto w = cml::transform_vector_2D(M,v);
-  CATCH_CHECK(w[0] == Approx(3.).epsilon(.0001));
-  CATCH_CHECK(w[1] == Approx(1.).epsilon(.0001));
+  CATCH_CHECK(w[0] == Approx(3.).epsilon(1e-12));
+  CATCH_CHECK(w[1] == Approx(1.).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("transform 2D, vector2")
@@ -32,8 +32,8 @@ CATCH_TEST_CASE("transform 2D, vector2")
     1., 2.,
     0., 1.);
   auto w = cml::transform_vector_2D(M,v);
-  CATCH_CHECK(w[0] == Approx(1.).epsilon(.0001));
-  CATCH_CHECK(w[1] == Approx(3.).epsilon(.0001));
+  CATCH_CHECK(w[0] == Approx(1.).epsilon(1e-12));
+  CATCH_CHECK(w[1] == Approx(3.).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("transform 2D, point1")
@@ -45,8 +45,8 @@ CATCH_TEST_CASE("transform 2D, point1")
     0., 0., 2.
     );
   auto q = cml::transform_point_2D(M,p);
-  CATCH_CHECK(q[0] == Approx(3.).epsilon(.0001));
-  CATCH_CHECK(q[1] == Approx(2.).epsilon(.0001));
+  CATCH_CHECK(q[0] == Approx(3.).epsilon(1e-12));
+  CATCH_CHECK(q[1] == Approx(2.).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("transform 2D, point2")
@@ -58,8 +58,8 @@ CATCH_TEST_CASE("transform 2D, point2")
     1., 0., 2.
     );
   auto q = cml::transform_point_2D(M,p);
-  CATCH_CHECK(q[0] == Approx(3.).epsilon(.0001));
-  CATCH_CHECK(q[1] == Approx(2.).epsilon(.0001));
+  CATCH_CHECK(q[0] == Approx(3.).epsilon(1e-12));
+  CATCH_CHECK(q[1] == Approx(2.).epsilon(1e-12));
 }
 
 
@@ -73,9 +73,9 @@ CATCH_TEST_CASE("transform 3D, vector1")
     0., 1., 0.,
     0., 0., 1.);
   auto w = cml::transform_vector(M,v);
-  CATCH_CHECK(w[0] == Approx(3.).epsilon(.0001));
-  CATCH_CHECK(w[1] == Approx(1.).epsilon(.0001));
-  CATCH_CHECK(w[2] == Approx(1.).epsilon(.0001));
+  CATCH_CHECK(w[0] == Approx(3.).epsilon(1e-12));
+  CATCH_CHECK(w[1] == Approx(1.).epsilon(1e-12));
+  CATCH_CHECK(w[2] == Approx(1.).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("transform 3D, vector2")
@@ -86,9 +86,9 @@ CATCH_TEST_CASE("transform 3D, vector2")
     0., 1., 0.,
     0., 0., 1.);
   auto w = cml::transform_vector(M,v);
-  CATCH_CHECK(w[0] == Approx(1.).epsilon(.0001));
-  CATCH_CHECK(w[1] == Approx(1.).epsilon(.0001));
-  CATCH_CHECK(w[2] == Approx(3.).epsilon(.0001));
+  CATCH_CHECK(w[0] == Approx(1.).epsilon(1e-12));
+  CATCH_CHECK(w[1] == Approx(1.).epsilon(1e-12));
+  CATCH_CHECK(w[2] == Approx(3.).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("transform 3D, point1")
@@ -101,9 +101,9 @@ CATCH_TEST_CASE("transform 3D, point1")
     0., 0., 0., 2.
     );
   auto q = cml::transform_point(M,p);
-  CATCH_CHECK(q[0] == Approx(3.).epsilon(.0001));
-  CATCH_CHECK(q[1] == Approx(2.).epsilon(.0001));
-  CATCH_CHECK(q[2] == Approx(2.).epsilon(.0001));
+  CATCH_CHECK(q[0] == Approx(3.).epsilon(1e-12));
+  CATCH_CHECK(q[1] == Approx(2.).epsilon(1e-12));
+  CATCH_CHECK(q[2] == Approx(2.).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("transform 3D, point2")
@@ -116,9 +116,9 @@ CATCH_TEST_CASE("transform 3D, point2")
     1., 0., 0., 2.
     );
   auto q = cml::transform_point(M,p);
-  CATCH_CHECK(q[0] == Approx(3.).epsilon(.0001));
-  CATCH_CHECK(q[1] == Approx(2.).epsilon(.0001));
-  CATCH_CHECK(q[2] == Approx(2.).epsilon(.0001));
+  CATCH_CHECK(q[0] == Approx(3.).epsilon(1e-12));
+  CATCH_CHECK(q[1] == Approx(2.).epsilon(1e-12));
+  CATCH_CHECK(q[2] == Approx(2.).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("transform 3D, hvector1")
@@ -131,7 +131,7 @@ CATCH_TEST_CASE("transform 3D, hvector1")
     0., 0., 0., 1.
     );
   auto w = cml::transform_vector_4D(M,v);
-  CATCH_CHECK(w[0] == Approx(6.).epsilon(.0001));
+  CATCH_CHECK(w[0] == Approx(6.).epsilon(1e-12));
   CATCH_CHECK(w[1] == 1.);
   CATCH_CHECK(w[2] == 1.);
   CATCH_CHECK(w[3] == 0.);
@@ -148,9 +148,9 @@ CATCH_TEST_CASE("transform 3D, hvector2")
     );
   auto w = cml::transform_vector_4D(M,v);
   CATCH_CHECK(w[0] == 1.);
-  CATCH_CHECK(w[1] == Approx(3.).epsilon(.0001));
-  CATCH_CHECK(w[2] == Approx(4.).epsilon(.0001));
-  CATCH_CHECK(w[3] == Approx(4.).epsilon(.0001));
+  CATCH_CHECK(w[1] == Approx(3.).epsilon(1e-12));
+  CATCH_CHECK(w[2] == Approx(4.).epsilon(1e-12));
+  CATCH_CHECK(w[3] == Approx(4.).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("transform 3D, hpoint1")
@@ -163,9 +163,9 @@ CATCH_TEST_CASE("transform 3D, hpoint1")
     0., 0., 0., 2.
     );
   auto q = cml::transform_point_4D(M,p);
-  CATCH_CHECK(q[0] == Approx(1.5).epsilon(.0001));
-  CATCH_CHECK(q[1] == Approx(1.).epsilon(.0001));
-  CATCH_CHECK(q[2] == Approx(1.).epsilon(.0001));
+  CATCH_CHECK(q[0] == Approx(1.5).epsilon(1e-12));
+  CATCH_CHECK(q[1] == Approx(1.).epsilon(1e-12));
+  CATCH_CHECK(q[2] == Approx(1.).epsilon(1e-12));
 }
 
 CATCH_TEST_CASE("transform 3D, hpoint2")
@@ -178,9 +178,9 @@ CATCH_TEST_CASE("transform 3D, hpoint2")
     0., 0., 0., 2.
     );
   auto q = cml::transform_point_4D(M,p);
-  CATCH_CHECK(q[0] == Approx(.5).epsilon(.0001));
-  CATCH_CHECK(q[1] == Approx(.5).epsilon(.0001));
-  CATCH_CHECK(q[2] == Approx(.5).epsilon(.0001));
+  CATCH_CHECK(q[0] == Approx(.5).epsilon(1e-12));
+  CATCH_CHECK(q[1] == Approx(.5).epsilon(1e-12));
+  CATCH_CHECK(q[2] == Approx(.5).epsilon(1e-12));
 }
 
 
