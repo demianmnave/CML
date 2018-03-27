@@ -24,6 +24,8 @@ inline auto hadamard(Sub1&& sub1, Sub2&& sub2)
     (std::forward<Sub1>(sub1), std::forward<Sub2>(sub2));
 }
 
+} // namespace cml
+
 #endif
 
 // -------------------------------------------------------------------------
