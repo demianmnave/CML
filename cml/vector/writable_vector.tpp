@@ -73,9 +73,8 @@ writable_vector<DT>::get(int i) -> mutable_value
 
 #ifdef CML_HAS_STRUCTURED_BINDINGS
 template<class DT>
-template<std::size_t I> auto
-writable_vector<DT>::get()
--> enable_if_fixed_size_t<traits_type, mutable_value>
+template<std::size_t I, enable_if_fixed_size<vector_traits<DT>>*> auto
+writable_vector<DT>::get() -> mutable_value
 {
   return this->actual().i_get(I);
 }

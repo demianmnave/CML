@@ -80,8 +80,8 @@ class writable_vector
 
 #ifdef CML_HAS_STRUCTURED_BINDINGS
     /** Return const element @c i. */
-    template<std::size_t I> auto get()
-      -> enable_if_fixed_size_t<traits_type, mutable_value>;
+    template<std::size_t I, enable_if_fixed_size<vector_traits<DerivedT>>* = nullptr>
+    mutable_value get();
 #endif
 
     /** Return a mutable reference to element @c i. */

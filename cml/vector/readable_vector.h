@@ -68,8 +68,8 @@ class readable_vector
 
 #ifdef CML_HAS_STRUCTURED_BINDINGS
     /** Return const element @c i. */
-    template<std::size_t I> auto get() const
-      -> enable_if_fixed_size_t<traits_type, immutable_value>;
+    template<std::size_t I, enable_if_fixed_size<vector_traits<DerivedT>>* = nullptr>
+    immutable_value get() const;
 #endif
 
     /** Return const element @c i. */
