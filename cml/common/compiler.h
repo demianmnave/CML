@@ -78,6 +78,14 @@
 
 # endif
 
+/* C++17 features: */
+# if (_MSC_VER >= 1911) && (_MSVC_LANG >= 201703L)
+
+/* Enable structured bindings: */
+#  define CML_HAS_STRUCTURED_BINDINGS
+
+# endif
+
 #elif defined(__clang__) && ((__clang_major__ >= 4) \
   || ((__clang_major__ >= 3) && (__clang_minor__ >= 5)))
 /* clang support for C++11 features used by CML: */
@@ -102,6 +110,14 @@
 /* This dummy qualifier is not needed for Clang: */
 #  define CML_DUMMY_TYPENAME
 
+/* C++17 features: */
+# if __clang_major__ >= 4
+
+/* Enable structured bindings: */
+#  define CML_HAS_STRUCTURED_BINDINGS
+
+# endif
+
 #elif defined(__apple_build_version__) && (__apple_build_version__ >= 7000000)
 /* AppleClang support for C++11 features used by CML: */
 
@@ -124,6 +140,14 @@
 
 /* This dummy qualifier is not needed for Clang: */
 #  define CML_DUMMY_TYPENAME
+
+/* C++17 features: */
+# if __apple_build_version__ >= 9000000
+
+/* Enable structured bindings: */
+#  define CML_HAS_STRUCTURED_BINDINGS
+
+# endif
 
 #else
 #warning "Unrecognized compiler; using safe defaults"

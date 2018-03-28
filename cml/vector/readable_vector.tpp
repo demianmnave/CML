@@ -36,6 +36,16 @@ readable_vector<DT>::get(int i) const -> immutable_value
   return this->actual().i_get(i);
 }
 
+#ifdef CML_HAS_STRUCTURED_BINDINGS
+template<class DT>
+template<std::size_t I> auto
+readable_vector<DT>::get() const
+-> enable_if_fixed_size_t<traits_type, immutable_value>
+{
+  return this->actual().i_get(I);
+}
+#endif
+
 template<class DT> auto
 readable_vector<DT>::operator[](int i) const -> immutable_value
 {

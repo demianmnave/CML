@@ -2,7 +2,8 @@ version: build-{branch}-#{build}
 
 branches:
   only:
-  - cml2
+  - master
+  - develop
 
 environment:
   matrix:

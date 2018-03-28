@@ -68,5 +68,16 @@ CATCH_TEST_CASE("const1")
   CATCH_REQUIRE(v.size() == 3);
 }
 
+#ifdef CML_HAS_STRUCTURED_BINDINGS
+CATCH_TEST_CASE("structured_binding1")
+{
+  double data[] = { 1., 2., 3. };
+  auto [x,y,z] = cml::external3d(data);
+  CATCH_CHECK(x == 1.);
+  CATCH_CHECK(y == 2.);
+  CATCH_CHECK(z == 3.);
+}
+#endif
+
 // -------------------------------------------------------------------------
 // vim:ft=cpp:sw=2

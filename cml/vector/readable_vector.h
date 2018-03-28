@@ -41,6 +41,7 @@ class readable_vector
     typedef typename traits_type::element_traits	element_traits;
     typedef typename traits_type::value_type		value_type;
     typedef typename traits_type::immutable_value	immutable_value;
+    typedef typename traits_type::size_tag	        size_tag;
 
 
   public:
@@ -64,6 +65,12 @@ class readable_vector
 
     /** Return const element @c i. */
     immutable_value get(int i) const;
+
+#ifdef CML_HAS_STRUCTURED_BINDINGS
+    /** Return const element @c i. */
+    template<std::size_t I> auto get() const
+      -> enable_if_fixed_size_t<traits_type, immutable_value>;
+#endif
 
     /** Return const element @c i. */
     immutable_value operator[](int i) const;

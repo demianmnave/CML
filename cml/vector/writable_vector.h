@@ -78,6 +78,12 @@ class writable_vector
     /** Return mutable element @c i. */
     mutable_value get(int i);
 
+#ifdef CML_HAS_STRUCTURED_BINDINGS
+    /** Return const element @c i. */
+    template<std::size_t I> auto get()
+      -> enable_if_fixed_size_t<traits_type, mutable_value>;
+#endif
+
     /** Return a mutable reference to element @c i. */
     mutable_value operator[](int i);
 

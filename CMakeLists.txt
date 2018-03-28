@@ -67,13 +67,19 @@ elseif(MSVC)
       )
   endif()
 
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 19.11)
+    list(APPEND CMAKE_CXX_FLAGS
+      /std:c++17
+      )
+  endif()
+
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 
   # Convert compiler command lines to lists for easier manipulation:
   separate_arguments(CMAKE_CXX_FLAGS)
 
   # Enforce common compiler settings:
-  list(APPEND CMAKE_CXX_FLAGS "-fexceptions -std=c++14")
+  list(APPEND CMAKE_CXX_FLAGS "-fexceptions -std=c++1z")
 
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 

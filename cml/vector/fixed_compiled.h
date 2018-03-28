@@ -232,6 +232,20 @@ class vector<Element, fixed<Size>>
 
 } // namespace cml
 
+#ifdef CML_HAS_STRUCTURED_BINDINGS
+template<typename E, int Size>
+struct std::tuple_size<cml::vector<E, cml::fixed<Size>>>
+{
+  static const int value = Size;
+};
+
+template<std::size_t I, typename E, int Size>
+struct std::tuple_element<I, cml::vector<E, cml::fixed<Size>>>
+{
+  using type = cml::value_type_of_t<cml::vector<E, cml::fixed<Size>>>;
+};
+#endif
+
 #define __CML_VECTOR_FIXED_COMPILED_TPP
 #include <cml/vector/fixed_compiled.tpp>
 #undef __CML_VECTOR_FIXED_COMPILED_TPP
