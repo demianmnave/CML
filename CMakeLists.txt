@@ -57,20 +57,29 @@ elseif(MSVC)
   list(APPEND CMAKE_CXX_FLAGS_DEBUG "/MTd")
   list(APPEND CMAKE_CXX_FLAGS_RELEASE "/MT")
 
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 19.00)
-    list(APPEND CMAKE_CXX_FLAGS
-      /Zc:auto
-      /Zc:rvalueCast
-      /Zc:inline
-      /Zc:referenceBinding
-      /permissive-
-      )
-  endif()
+ 
+  if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 19.00)
+      list(APPEND CMAKE_CXX_FLAGS
+	/Zc:auto
+	/Zc:rvalueCast
+	/Zc:inline
+	/Zc:referenceBinding
+	/permissive-
+	)
+    endif()
 
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 19.11)
-    list(APPEND CMAKE_CXX_FLAGS
-      /std:c++17
-      )
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 19.11)
+      list(APPEND CMAKE_CXX_FLAGS
+	/std:c++17
+	)
+    endif()
+  elseif("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xClang")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.00)
+      list(APPEND CMAKE_CXX_FLAGS
+	/std:c++17
+	)
+    endif()
   endif()
 
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -80,6 +89,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 
   # Enforce common compiler settings:
   list(APPEND CMAKE_CXX_FLAGS "-fexceptions -std=c++1z")
+  message("yes")
 
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 
