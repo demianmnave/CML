@@ -22,6 +22,7 @@ CML_ADD_TEST(basis1)
 CML_ADD_TEST(rowcol1)
 CML_ADD_TEST(lu1)
 CML_ADD_TEST(determinant1)
+CML_ADD_TEST(matrix_hadamard_product1)
 
 # --------------------------------------------------------------------------
 # vim:ft=cmake
