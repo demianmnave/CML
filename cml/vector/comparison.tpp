@@ -16,39 +16,42 @@ template<class Sub1, class Sub2> inline bool operator<(
   const readable_vector<Sub1>& left, const readable_vector<Sub2>& right
   )
 {
-  cml::check_same_size(left, right);
-  for(int i = 0; i < left.size(); i ++) {
+  int n = std::min(left.size(), right.size());
+  for(int i = 0; i < n; i ++) {
     /**/ if(left[i] < right[i]) return true;	// Strictly less.
-    else if(left[i] > right[i]) return false;	// Strictly greater.
-    else continue;				// Equal.
+    else if(right[i] < left[i]) return false;	// Strictly greater.
+    else continue;				// Possibly equal.
   }
 
-  /* Equal. */
-  return false;
+  /* Equal only if the same length: */
+  return left.size() < right.size();
 }
 
 template<class Sub1, class Sub2> inline bool operator>(
   const readable_vector<Sub1>& left, const readable_vector<Sub2>& right
   )
 {
-  cml::check_same_size(left, right);
-  for(int i = 0; i < left.size(); i ++) {
-    /**/ if(left[i] > right[i]) return true;	// Strictly greater.
-    else if(left[i] < right[i]) return false;	// Strictly less.
-    else continue;				// Equal.
+  int n = std::min(left.size(), right.size());
+  for(int i = 0; i < n; i ++) {
+    /**/ if(left[i] < right[i]) return false;	// Strictly less.
+    else if(right[i] < left[i]) return true;	// Strictly greater.
+    else continue;				// Possibly equal.
   }
 
-  /* Equal. */
-  return false;
+  /* Equal only if the same length: */
+  return left.size() > right.size();
 }
 
 template<class Sub1, class Sub2> inline bool operator==(
   const readable_vector<Sub1>& left, const readable_vector<Sub2>& right
   )
 {
-  cml::check_same_size(left, right);
+  /* Possibly equal only if the same length: */
+  if(left.size() != right.size()) return false;
   for(int i = 0; i < left.size(); i ++) {
-    if(!(left[i] == right[i])) return false;	// Not equal.
+    /**/ if(left[i] < right[i]) return false;	// Strictly less.
+    else if(right[i] < left[i]) return false;	// Strictly greater.
+    else continue;				// Possibly equal.
   }
   return true;
 }
