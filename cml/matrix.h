@@ -12,6 +12,7 @@
 #include <cml/matrix/fixed.h>
 #include <cml/matrix/external.h>
 #include <cml/matrix/dynamic.h>
+#include <cml/matrix/comparison.h>
 #include <cml/matrix/ops.h>
 #include <cml/matrix/vector_product.h>
 #include <cml/matrix/matrix_product.h>
