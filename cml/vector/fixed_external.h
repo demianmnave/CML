@@ -87,11 +87,7 @@ class vector<Element, external<Size>>
 
   public:
 
-    /** Default construct with a null pointer.
-     *
-     * @warning The default constructor is enabled only if the compiler
-     * supports rvalue references from *this.
-     */
+    /** Default construct with a null pointer. */
     vector();
 
     /** Construct from the wrapped pointer. */
