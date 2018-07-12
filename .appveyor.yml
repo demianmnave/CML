@@ -3,7 +3,7 @@ version: build-{branch}-#{build}
 branches:
   only:
   - master
-  - develop
+  # - develop
 
 environment:
   matrix:
