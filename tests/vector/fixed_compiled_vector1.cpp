@@ -172,6 +172,14 @@ CATCH_TEST_CASE("list_assign")
   CATCH_CHECK(v[0] == 1.);
 }
 
+CATCH_TEST_CASE("fill1") {
+  cml::vector3d v;
+  v.fill(1.);
+  CATCH_REQUIRE(v.size() == 3);
+  CATCH_CHECK(v.data()[0] == 1.);
+  CATCH_CHECK(v[2] == 1.);
+}
+
 CATCH_TEST_CASE("write1")
 {
   cml::vector3d v;

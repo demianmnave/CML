@@ -360,6 +360,16 @@ CATCH_TEST_CASE("list_assign2")
   CATCH_CHECK(M(2,3) == 0.);
 }
 
+CATCH_TEST_CASE("fill1")
+{
+  cml::matrixd M(5,5);
+  M.fill(1.);
+  CATCH_REQUIRE(M.rows() == 5);
+  CATCH_REQUIRE(M.cols() == 5);
+  CATCH_CHECK(M.data()[0] == 1.);
+  CATCH_CHECK(M(4,4) == 1.);
+}
+
 CATCH_TEST_CASE("size_check1")
 {
   cml::matrixd M(3,4);

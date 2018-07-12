@@ -244,6 +244,17 @@ CATCH_TEST_CASE("list_assign2")
   CATCH_CHECK(M(2,3) == 0.);
 }
 
+CATCH_TEST_CASE("fill1")
+{
+  double data[5*5];
+  cml::externalmnd_c M(data, 5,5);
+  M.fill(1.);
+  CATCH_REQUIRE(M.rows() == 5);
+  CATCH_REQUIRE(M.cols() == 5);
+  CATCH_CHECK(M.data()[0] == 1.);
+  CATCH_CHECK(M(4,4) == 1.);
+}
+
 CATCH_TEST_CASE("resize1")
 {
   double data[3*4];

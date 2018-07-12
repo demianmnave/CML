@@ -123,9 +123,6 @@ option(CML_BUILD_TESTING "Build CML tests" OFF)
 
 ## PATH CONFIGURATION ##
 
-# Include directories:
-include_directories(${CML_ROOT})
-
 # Output paths:
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CML_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CML_BINARY_DIR}/lib)
@@ -133,6 +130,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CML_BINARY_DIR}/lib)
 
 
 ## Build subdirectories:
+include(CML.cmake)
 
 # Build tests if requested:
 if(CML_BUILD_TESTING)

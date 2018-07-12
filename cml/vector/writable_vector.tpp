@@ -210,6 +210,22 @@ writable_vector<DT>::random(const_reference low, const_reference high) &&
 }
 #endif
 
+template<class DT> DT&
+writable_vector<DT>::fill(const_reference v) __CML_REF
+{
+  for(int i = 0; i < this->size(); ++ i) this->put(i, v);
+  return this->actual();
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> DT&&
+writable_vector<DT>::fill(const_reference v) &&
+{
+  this->fill(v);
+  return (DT&&) *this;
+}
+#endif
+
 template<class DT> template<class E0, class... Es> auto
 writable_vector<DT>::set(const E0& e0, const Es&... eN) __CML_REF
 -> enable_if_t<are_convertible<value_type, E0, Es...>::value, DT&>

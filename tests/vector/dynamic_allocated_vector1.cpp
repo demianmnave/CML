@@ -164,6 +164,15 @@ CATCH_TEST_CASE("list_temp_construct")
   CATCH_CHECK(v[0] == 1.);
 }
 
+CATCH_TEST_CASE("fill1")
+{
+  cml::vectord v(5);
+  v.fill(1.);
+  CATCH_REQUIRE(v.size() == 5);
+  CATCH_CHECK(v.data()[0] == 1.);
+  CATCH_CHECK(v[4] == 1.);
+}
+
 CATCH_TEST_CASE("write1")
 {
   cml::vectord v(3);

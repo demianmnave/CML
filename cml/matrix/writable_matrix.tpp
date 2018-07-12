@@ -176,7 +176,6 @@ writable_matrix<DT>::identity() &&
 }
 #endif
 
-
 template<class DT> DT&
 writable_matrix<DT>::random(
   const_reference low, const_reference high
@@ -199,6 +198,22 @@ template<class DT> DT&&
 writable_matrix<DT>::random(const_reference low, const_reference high) &&
 {
   this->random(low, high);
+  return (DT&&) *this;
+}
+#endif
+
+template<class DT> DT&
+writable_matrix<DT>::fill(const_reference v) __CML_REF
+{
+  detail::generate(*this, [&v](int,int) { return v; }, layout_tag());
+  return this->actual();
+}
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+template<class DT> DT&&
+writable_matrix<DT>::fill(const_reference v) &&
+{
+  this->fill(v);
   return (DT&&) *this;
 }
 #endif

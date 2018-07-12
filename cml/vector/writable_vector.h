@@ -172,6 +172,14 @@ class writable_vector
     DerivedT&& random(const_reference low, const_reference high) &&;
 #endif
 
+    /** Set all elements to a specific value. */
+    DerivedT& fill(const_reference v) __CML_REF;
+
+#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
+    /** Set all elements of a temporary to a specific value. */
+    DerivedT&& fill(const_reference v) &&;
+#endif
+
 
   public:
 
