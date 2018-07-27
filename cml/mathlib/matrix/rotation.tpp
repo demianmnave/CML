@@ -45,6 +45,28 @@ matrix_rotation_2D(writable_matrix<Sub>& m, E angle)
 }
 
 
+/* 2D alignment: */
+
+template<class Sub, class ASub> void
+matrix_rotation_align_2D(
+  writable_matrix<Sub>& m, const readable_vector<ASub>& align,
+  bool normalize, axis_order2D order)
+{
+  static_assert(cml::are_convertible<value_type_trait_of_t<Sub>,
+    value_type_trait_of_t<ASub>>::value, "incompatible scalar types");
+
+  typedef value_type_trait_of_t<Sub>			value_type;
+
+  cml::check_linear_2D(m);
+
+  m.identity();
+
+  vector<value_type, compiled<2>> x, y;
+  orthonormal_basis_2D(align, x, y, normalize, order);
+  matrix_set_basis_vectors_2D(m, x, y);
+}
+
+
 /* 3D rotations: */
 
 template<class Sub, class E> inline void
@@ -694,21 +716,6 @@ matrix_rotation_aim_at_axial(
 //////////////////////////////////////////////////////////////////////////////
 // 2D rotation to align with a vector
 //////////////////////////////////////////////////////////////////////////////
-
-/** See vector_ortho.h for details */
-template < typename E, class A, class B, class L, class VecT > void
-matrix_rotation_align_2D(matrix<E,A,B,L>& m, const VecT& align,
-    bool normalize = true, axis_order2D order = axis_order_xy)
-{
-    typedef vector< E, fixed<2> > vector_type;
-
-    identity_transform(m);
-    
-    vector_type x, y;
-
-    orthonormal_basis_2D(align, x, y, normalize, order);
-    matrix_set_basis_vectors_2D(m, x, y);
-}
 
 //////////////////////////////////////////////////////////////////////////////
 // 3D relative rotation about world axes

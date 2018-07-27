@@ -22,7 +22,7 @@
 namespace cml {
 
 /* Forward declarations: */
-template<class Allocator = std::allocator<void>,
+template<class Allocator = std::allocator<void*>,
   int Size1 = -1, int Size2 = -1, class Tag = void> struct allocated;
 
 /** Base selector to choose dynamically-allocated types (types with runtime
@@ -200,9 +200,11 @@ struct storage_disambiguate<
   allocated<Allocator1, R1, C1, Tag1>,
   allocated<Allocator2, R2, C2, Tag2>>
 {
-  /* Rebind the allocators to void to compare them: */
-  typedef typename Allocator1::template rebind<void>::other	left_type;
-  typedef typename Allocator2::template rebind<void>::other	right_type;
+  /* Rebind the allocators to void* to compare them: */
+  typedef std::allocator_traits<Allocator1>                     left_traits;
+  typedef std::allocator_traits<Allocator2>                     right_traits;
+  typedef typename left_traits::template rebind_alloc<void*>    left_type;
+  typedef typename right_traits::template rebind_alloc<void*>   right_type;
 
   /* True if the unbound allocators are the same: */
   static const bool is_same
@@ -210,9 +212,9 @@ struct storage_disambiguate<
 
   /* True if the left and/or right allocators are the default: */
   static const bool left_is_default
-    = std::is_same<left_type, std::allocator<void>>::value;
+    = std::is_same<left_type, std::allocator<void*>>::value;
   static const bool right_is_default
-    = std::is_same<right_type, std::allocator<void>>::value;
+    = std::is_same<right_type, std::allocator<void*>>::value;
 
   /* Prefer the left allocator if it is not the default allocator: */
   static const bool prefer_left
@@ -233,7 +235,7 @@ struct storage_disambiguate<
     cml::if_t<is_same,		left_type,
     cml::if_t<prefer_left,	left_type,
     cml::if_t<prefer_right,	right_type,
-    /*else*/			std::allocator<void>
+    /*else*/			std::allocator<void*>
       >>>						allocator_type;
 
   /* Build the disambiguated unbound storage type: */
@@ -242,7 +244,7 @@ struct storage_disambiguate<
 
 
 /** For compatibility with CML1. */
-template<class Allocator = std::allocator<void>>
+template<class Allocator = std::allocator<void*>>
   using dynamic = allocated<Allocator>;
 
 } // namespace cml
