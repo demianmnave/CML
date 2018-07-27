@@ -97,11 +97,13 @@ matrix<E, dynamic<A>, BO, L>::matrix(
 template<class E, class A, typename BO, typename L>
 matrix<E, dynamic<A>, BO, L>::~matrix()
 {
-  typedef typename allocator_type::size_type size_type;
+  typedef typename allocator_traits::size_type size_type;
   int n = this->m_rows*this->m_cols;
   this->destruct(this->m_data, n,
     typename std::is_trivially_destructible<E>::type());
-  allocator_type().deallocate(this->m_data, size_type(n));
+
+  auto allocator = allocator_type();
+  allocator_traits::deallocate(allocator, this->m_data, size_type(n));
 }
 
 
@@ -153,7 +155,7 @@ matrix<E, dynamic<A>, BO, L>::resize(int rows, int cols)
 
   /* Allocate the new array: */
   pointer data = this->m_data;
-  pointer copy = allocator.allocate(n_new);
+  pointer copy = allocator_traits::allocate(allocator, n_new);
   try {
 
     /* Destruct elements if necessary: */
@@ -164,14 +166,14 @@ matrix<E, dynamic<A>, BO, L>::resize(int rows, int cols)
     if(data) {
       int to = std::min(n_old, n_new);
       for(pointer src = data, dst = copy; src < data + to; ++ src, ++ dst) {
-	allocator.construct(dst, *src);
+	allocator_traits::construct(allocator, dst, *src);
       }
 
       /* Deallocate the old array: */
-      allocator.deallocate(data, n_old);
+      allocator_traits::deallocate(allocator, data, n_old);
     }
   } catch(...) {
-    allocator_type().deallocate(copy, n_new);
+    allocator_traits::deallocate(allocator, copy, n_new);
     throw;
   }
 
@@ -202,7 +204,7 @@ matrix<E, dynamic<A>, BO, L>::resize_fast(int rows, int cols)
 
   /* Allocate the new array: */
   pointer data = this->m_data;
-  pointer copy = allocator.allocate(n_new);
+  pointer copy = allocator_traits::allocate(allocator, n_new);
   try {
 
     /* Destruct elements if necessary: */
@@ -210,9 +212,9 @@ matrix<E, dynamic<A>, BO, L>::resize_fast(int rows, int cols)
       typename std::is_trivially_destructible<E>::type());
 
     /* Deallocate the old array: */
-    allocator.deallocate(data, n_old);
+    allocator_traits::deallocate(allocator,data,n_old);
   } catch(...) {
-    allocator_type().deallocate(copy, n_new);
+    allocator_traits::deallocate(allocator,copy,n_new);
     throw;
   }
 
@@ -260,7 +262,11 @@ matrix<E, dynamic<A>, BO, L>::destruct(pointer data, int n, std::false_type)
   if(data == nullptr) return;
 
   /* Destruct each element: */
-  else for(pointer e = data; e < data + n; ++ e) allocator_type().destroy(e);
+  else {
+    auto allocator = allocator_type();
+    for(pointer e = data; e < data + n; ++ e)
+    allocator_traits::destroy(allocator, e);
+  }
 }
 
 

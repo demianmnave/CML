@@ -50,7 +50,10 @@ class vector<Element, dynamic<Allocator>>
   protected:
 
     /** The real allocator type. */
-    typedef rebind_t<Allocator, Element>		allocator_type;
+    typedef cml::rebind_alloc_t<Allocator,Element>      allocator_type;
+
+    /** Allocator traits. */
+    typedef std::allocator_traits<allocator_type>       allocator_traits;
 
     /** Require a stateless allocator. */
     static_assert(std::is_empty<allocator_type>::value,

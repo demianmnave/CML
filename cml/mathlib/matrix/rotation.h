@@ -40,6 +40,24 @@ matrix_rotation_2D(writable_matrix<Sub>& m, E angle);
 
 /*@}*/
 
+/** @defgroup mathlib_matrix_rotation_alignment_2D 2D Rotation Alignment  */
+/*@{*/
+
+/** Compute a rotation matrix that aligns the x- or y-axis to @c align,
+ * based on the axis order @c order.
+ * 
+ * @throws minimum_matrix_size_error at run-time if @c m is
+ * dynamically-sized, and is not at least 2x2.  If @c m is fixed-size, the
+ * size is checked at compile-time.
+ */
+template<class Sub, class ASub> void
+matrix_rotation_align_2D(
+  writable_matrix<Sub>& m, const readable_vector<ASub>& align,
+  bool normalize = true, axis_order2D order = axis_order_xy);
+
+/*@}*/
+
+
 /** @defgroup mathlib_matrix_rotation_builders_3D 3D Rotation Matrix Builders  */
 /*@{*/
 
