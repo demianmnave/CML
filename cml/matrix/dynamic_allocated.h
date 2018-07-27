@@ -72,7 +72,10 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
   protected:
 
     /** The real allocator type. */
-    typedef rebind_t<Allocator, Element>		allocator_type;
+    typedef cml::rebind_alloc_t<Allocator,Element>      allocator_type;
+
+    /** Allocator traits. */
+    typedef std::allocator_traits<allocator_type>       allocator_traits;
 
     /** Require a stateless allocator. */
     static_assert(std::is_empty<allocator_type>::value,
@@ -82,7 +85,7 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
   public:
 
     typedef matrix<Element,
-	    dynamic<Allocator>, BasisOrient, Layout>	matrix_type;
+            dynamic<Allocator>, BasisOrient, Layout>	matrix_type;
     typedef readable_matrix<matrix_type>		readable_type;
     typedef writable_matrix<matrix_type>		writable_type;
     typedef matrix_traits<matrix_type>			traits_type;
@@ -155,22 +158,22 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
     template<typename RowsT, typename ColsT, class E0, class... Elements,
       enable_if_t<
 
-	/* Avoid implicit conversions, for example, from double: */
-	/**/ std::is_integral<RowsT>::value
-       	&&   std::is_integral<ColsT>::value
+        /* Avoid implicit conversions, for example, from double: */
+        /**/ std::is_integral<RowsT>::value
+        &&   std::is_integral<ColsT>::value
 
-	/* Require compatible values: */
-	&&   cml::are_convertible<value_type, E0, Elements...>::value
-	>* = nullptr>
+        /* Require compatible values: */
+        &&   cml::are_convertible<value_type, E0, Elements...>::value
+        >* = nullptr>
 
-	matrix(RowsT rows, ColsT cols, const E0& e0, const Elements&... eN)
-	// XXX Should be in matrix/dynamic_allocated.tpp, but VC++12 has
-	// brain-dead out-of-line template argument matching...
-	: m_data(0), m_rows(0), m_cols(0)
-	{
-	  this->resize_fast(rows,cols);
-	  this->assign_elements(e0, eN...);
-	}
+        matrix(RowsT rows, ColsT cols, const E0& e0, const Elements&... eN)
+        // XXX Should be in matrix/dynamic_allocated.tpp, but VC++12 has
+        // brain-dead out-of-line template argument matching...
+        : m_data(0), m_rows(0), m_cols(0)
+        {
+          this->resize_fast(rows,cols);
+          this->assign_elements(e0, eN...);
+        }
 
     /** Construct from an array type. */
     template<class Array, enable_if_array_t<Array>* = nullptr>
@@ -234,22 +237,22 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
 #ifdef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
     template<class Other>
       inline matrix_type& operator=(const readable_matrix<Other>& other) {
-	return this->assign(other);
+        return this->assign(other);
       }
 
     template<class Array, enable_if_array_t<Array>* = nullptr>
       inline matrix_type& operator=(const Array& array) {
-	return this->assign(array);
+        return this->assign(array);
       }
 
     template<class Other, int Rows, int Cols>
       inline matrix_type& operator=(Other const (&array)[Rows][Cols]) {
-	return this->assign(array);
+        return this->assign(array);
       }
 
     template<class Other>
       inline matrix_type& operator=(std::initializer_list<Other> l) {
-	return this->assign(l);
+        return this->assign(l);
       }
 #endif
 

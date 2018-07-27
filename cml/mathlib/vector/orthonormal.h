@@ -19,7 +19,19 @@ namespace cml {
 /** @addtogroup mathlib_vector_ortho */
 /*@{*/
 
-/** @defgroup mathlib_vector_ortho_basis Orthonormal Basis Construction */
+/** @defgroup mathlib_vector_ortho_basis_2D 2D Orthonormal Basis Construction */
+/*@{*/
+
+/** Build a 2D orthonormal basis. */
+template<class Sub, class XSub, class YSub> void
+orthonormal_basis_2D(
+  const readable_vector<Sub>& align,
+  writable_vector<XSub>& x, writable_vector<YSub>& y,
+  bool normalize_align = true, axis_order2D order = axis_order_xy);
+
+/*@}*/
+
+/** @defgroup mathlib_vector_ortho_basis_3D 3D Orthonormal Basis Construction */
 /*@{*/
 
 /** This version of orthonormal_basis() ultimately does the work for all

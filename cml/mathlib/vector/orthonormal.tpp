@@ -9,12 +9,41 @@
 #endif
 
 #include <cml/common/mpl/are_convertible.h>
-#include <cml/vector/detail/check_or_resize.h>
 #include <cml/vector/cross.h>
 #include <cml/vector/fixed_compiled.h>
-#include <cml/mathlib/vector/generators.h>
+#include <cml/mathlib/vector/misc.h>
 
 namespace cml {
+
+template<class Sub, class XSub, class YSub> void
+orthonormal_basis_2D(
+  const readable_vector<Sub>& align,
+  writable_vector<XSub>& x, writable_vector<YSub>& y,
+  bool normalize_align, axis_order2D order)
+{
+  static_assert(cml::are_convertible<value_type_trait_of_t<Sub>,
+    value_type_trait_of_t<XSub>, value_type_trait_of_t<YSub>>::value,
+    "incompatible scalar types");
+
+  typedef value_type_trait_of_t<Sub>			value_type;
+  typedef vector<value_type, compiled<2>>		temporary_type;
+
+  /* Checking handled by perp() and assignment to fixed<2>. */
+
+  int i, j;
+  bool odd;
+  unpack_axis_order2D(order, i, j, odd);
+
+  temporary_type axes[2];
+
+  axes[i] = align; if(normalize_align) axes[i].normalize();
+  axes[j] = cml::perp(axes[i]);
+
+  if(odd) axes[j] = -axes[j];
+
+  x = axes[0];
+  y = axes[1];
+}
 
 template<class Sub1, class Sub2, class XSub, class YSub, class ZSub> void
 orthonormal_basis(
@@ -33,12 +62,14 @@ orthonormal_basis(
 
   int i, j, k;
   bool odd;
-  cml::unpack_axis_order(order, i, j, k, odd);
+  unpack_axis_order(order, i, j, k, odd);
 
   temporary_type axes[3];
   axes[i] = align; if(normalize_align) axes[i].normalize();
   axes[k] = cml::cross(axes[i], reference).normalize();
-  axes[j] = cml::cross(axes[k], axes[i]); if(odd) axes[k] = - axes[k];
+  axes[j] = cml::cross(axes[k], axes[i]);
+ 
+  if(odd) axes[k] = - axes[k];
 
   x = axes[0];
   y = axes[1];
@@ -279,36 +310,6 @@ void orthonormal_basis_viewplane_RH(
 {
     orthonormal_basis_viewplane(
         view_matrix,x,y,z,right_handed,order);
-}
-
-/** Build a 2D orthonormal basis. */
-template < class VecT, typename E, class A >
-void orthonormal_basis_2D(
-    const VecT& align,
-    vector<E,A>& x,
-    vector<E,A>& y,
-    bool normalize_align = true,
-    axis_order2D order = axis_order_xy)
-{
-    typedef vector< E,fixed<2> > vector_type;
-
-    /* Checking handled by perp() and assignment to fixed<2>. */
-
-    size_t i, j;
-    bool odd;
-    detail::unpack_axis_order_2D(order, i, j, odd);
-    
-    vector_type axis[2];
-
-    axis[i] = normalize_align ? normalize(align) : align;
-    axis[j] = perp(axis[i]);
-
-    if (odd) {
-        axis[j] = -axis[j];
-    }
-
-    x = axis[0];
-    y = axis[1];
 }
 #endif
 
