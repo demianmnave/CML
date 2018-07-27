@@ -13,7 +13,7 @@
 
 namespace cml {
 
-/** Specify axis ordering. */
+/** Specify 3D axis ordering. */
 enum axis_order {
   axis_order_xyz = euler_order_xyz, // 0x00 [0000]
   axis_order_xzy = euler_order_xzy, // 0x02 [0010]
@@ -23,8 +23,15 @@ enum axis_order {
   axis_order_zyx = euler_order_zyx  // 0x0A [1010]
 };
 
+/** Specify 2D axis ordering. */
+enum axis_order2D {
+  axis_order_xy = axis_order_xyz, // 0x00 [0000]
+  axis_order_yx = axis_order_yxz, // 0x06 [0110]
+};
+
 /** For CML1 compatibility. */
 typedef axis_order AxisOrder;
+typedef axis_order2D AxisOrder2D;
 
 inline void unpack_axis_order(
   axis_order order, int& i, int& j, int& k, bool& odd
@@ -37,6 +44,18 @@ inline void unpack_axis_order(
   i = (order & AXIS) % 3;
   j = (i + 1 + offset) % 3;
   k = (i + 2 - offset) % 3;
+}
+
+inline void unpack_axis_order2D(
+  axis_order2D order, int& i, int& j, bool& odd
+  )
+{
+  enum { ODD = 0x02, AXIS = 0x0C };
+
+  odd = ((order & ODD) == ODD);
+  int offset = int(odd);
+  i = (order & AXIS) % 3;
+  j = (i + 1 + offset) % 3;
 }
 
 inline axis_order pack_axis_order(int i, bool odd) {

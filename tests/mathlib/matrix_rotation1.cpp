@@ -25,6 +25,16 @@ CATCH_TEST_CASE("rotation 2D, rotation1")
   CATCH_CHECK(0 == Approx(v[1]).epsilon(0).margin(1e-7));
 }
 
+CATCH_TEST_CASE("rotation 2D, align1")
+{
+  cml::matrix22d M;
+  cml::matrix_rotation_align_2D(M, cml::vector2d(0.,1.));
+
+  auto v = M*cml::vector2d(0., 1.);
+  CATCH_CHECK(v[0] == Approx(-1.).epsilon(1e-12));
+  CATCH_CHECK(0 == Approx(v[1]).epsilon(0).margin(1e-7));
+}
+
 
 
 
