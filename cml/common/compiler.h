@@ -101,6 +101,13 @@
 
 # else
 
+# if(_MSC_VER < 1914)
+/* Apparently, VS2015 does not allow a parameter pack expansion to target non-
+ * packed parameters.
+ */
+#  define CML_HAS_MSVC_WONKY_PARAMETER_PACK
+# endif
+
 /* N2439 move semantics for *this, used, for example, to efficiently return
  * an expression node from a class method. Without this, a temporary is
  * returned instead:
