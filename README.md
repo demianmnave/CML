@@ -11,7 +11,7 @@ License, Version 1.0.](http://www.boost.org/LICENSE_1_0.txt).
 ## Status
 
 [![Build status](https://ci.appveyor.com/api/projects/status/r3l3xnhxe8djjimg/branch/master?svg=true)](https://ci.appveyor.com/project/demianmnave/cml/branch/master)
-[![Build Status](https://travis-ci.org/demianmnave/CML.svg?branch=master)](https://travis-ci.org/demianmnave/CML/builds)
+[![Build Status](https://travis-ci.com/demianmnave/CML.svg?branch=master)](https://travis-ci.com/github/demianmnave/CML)
 
 
 ## Using the CML
@@ -39,4 +39,4 @@ If you have multiple CPUs (e.g. 4 in this case), you can speed things up a bit u
 
 `ctest -C Release -j4`
 
-Visual Studio 12 (2013), 14 (2015), and 15 (2017) are also supported, as are XCode 7.3 and 8.3.
+See .travis.yml for supported XCode, Clang, and GCC versions, and .appveyor.yml for supported Visual Studio versions.
