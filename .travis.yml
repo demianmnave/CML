@@ -3,6 +3,7 @@ language: cpp
 branches:
   only:
     - master
+    - develop
 
 matrix:
   fast_finish: true
