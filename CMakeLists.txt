@@ -3,7 +3,7 @@
 #*-------------------------------------------------------------------------
 
 # Set the minimum CMake version:
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.12.4)
 
 # Allow solution folders:
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
