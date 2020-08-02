@@ -50,7 +50,7 @@ template<typename Scalar> struct default_integral_traits
     return (value_type) std::fmod(double(v), double(w));
   }
 
-  static CML_CONSTEXPR value_type sqrt(const value_type& v) {
+  static constexpr value_type sqrt(const value_type& v) {
     return (value_type) std::sqrt(double(v));
   }
 
@@ -121,7 +121,7 @@ template<typename Scalar> struct default_floating_point_traits
     return std::fmod(v, w);
   }
 
-  static CML_CONSTEXPR value_type sqrt(const value_type& v) {
+  static constexpr value_type sqrt(const value_type& v) {
     return std::sqrt(v);
   }
 
@@ -176,7 +176,7 @@ Scalar, typename std::enable_if<std::is_integral<Scalar>::value>::type>
 : detail::default_integral_traits<Scalar>
 {
   /** Returns 0. */
-  static CML_CONSTEXPR Scalar sqrt_epsilon() { return 0; }
+  static constexpr Scalar sqrt_epsilon() { return 0; }
 };
 
 /** Specialization of scalar_traits for floating-point types. */
@@ -185,7 +185,7 @@ Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
 : detail::default_floating_point_traits<Scalar>
 {
   /** Returns sqrt(numeric_limits<float>::epsilon()). */
-  static CML_CONSTEXPR double sqrt_epsilon() {
+  static constexpr double sqrt_epsilon() {
     return detail::default_floating_point_traits<Scalar>::sqrt(
       std::numeric_limits<Scalar>::epsilon());
   }
@@ -196,7 +196,7 @@ template<> struct scalar_traits<float>
 : detail::default_floating_point_traits<float>
 {
   /** Returns a constant for sqrt(numeric_limits<float>::epsilon()). */
-  static CML_CONSTEXPR float sqrt_epsilon() {
+  static constexpr float sqrt_epsilon() {
     return 3.452669831e-4f;		// 10 digits
   }
 };
@@ -206,18 +206,18 @@ template<> struct scalar_traits<double>
 : detail::default_floating_point_traits<double>
 {
   /** Returns a constant for sqrt(numeric_limits<double>::epsilon()). */
-  static CML_CONSTEXPR double sqrt_epsilon() {
+  static constexpr double sqrt_epsilon() {
     return 1.49011611938476563e-8;	// 18 digits
   }
 };
 
 /** Returns eps for type S. */
-template<typename S> CML_CONSTEXPR S epsilon() {
+template<typename S> constexpr S epsilon() {
   return scalar_traits<S>::epsilon();
 }
 
 /** Returns sqrt(eps) for type S. */
-template<typename S> CML_CONSTEXPR S sqrt_epsilon() {
+template<typename S> constexpr S sqrt_epsilon() {
   return scalar_traits<S>::sqrt_epsilon();
 }
 
