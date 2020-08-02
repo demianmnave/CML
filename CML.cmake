@@ -387,13 +387,10 @@ set(all_headers
   ${mathlib_quaternion_HEADERS}
   )
 
-add_library(cml STATIC ${all_headers} ignore-me.cpp)
-target_include_directories(cml
-  PUBLIC $<BUILD_INTERFACE:${CML_ROOT}>
-  )
+target_include_directories(cml INTERFACE $<BUILD_INTERFACE:${CML_ROOT}>)
 
-source_group("_" FILES ignore-me.cpp)
-set_target_properties(cml PROPERTIES EXCLUDE_FROM_ALL TRUE)
-
-# --------------------------------------------------------------------------
-# vim:ft=cmake
+option(CML_ENABLE_DEV
+ "Enable the cml-dev custom target to see headers to an IDE" OFF)
+if(CML_ENABLE_DEV)
+  add_custom_target(cml-dev SOURCES ${all_headers})
+endif()

@@ -5,7 +5,4 @@
 project(CML_Testing_Storage)
 set(CML_CURRENT_TEST_GROUP "Storage")
 
-CML_ADD_TEST(storage_promotion1)
-
-# --------------------------------------------------------------------------
-# vim:ft=cmake
+cml_add_test(storage_promotion1)
