@@ -13,20 +13,21 @@ environment:
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       GENERATOR: "Visual Studio 16 2019"
-      CMAKE_ARCH: -A x64
+      CMAKE_ARCH: x64
       CONFIG: Release
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       GENERATOR: "Visual Studio 16 2019"
-      CMAKE_ARCH: -A x64
-      CMAKE_TOOLKIT: -T ClangCl
+      CMAKE_ARCH: x64
+      CMAKE_TOOLKIT: ClangCl
       CONFIG: Release
 
 build_script:
-  - mkdir build
-  - cd build
-  - cmake "-G%GENERATOR%" %CMAKE_ARCH% %CMAKE_TOOLKIT% -DCML_BUILD_TESTING=ON ..
-  - cmake --build . --config "%CONFIG%"
+  - @mkdir build
+  - @cd build
+  - @echo "CMake configuration: %GENERATOR% %CMAKE_ARCH% %CMAKE_TOOLKIT%"
+  - @cmake "-G%GENERATOR%" "-A%CMAKE_ARCH%" "-T%CMAKE_TOOLKIT%" -DCMAKE_CXX_STANDARD=11 -DCML_BUILD_TESTING=ON ..
+  - @cmake --build . --config "%CONFIG%"
 
 test_script:
   - ctest -V -C "%CONFIG%"
