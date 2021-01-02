@@ -25,7 +25,7 @@ environment:
 build_script:
   - mkdir build
   - cd build
-  - echo "CMake configuration: %GENERATOR% %CMAKE_ARCH% %CMAKE_TOOLKIT%"
+#  - echo CMake configuration: %GENERATOR% %CMAKE_ARCH% %CMAKE_TOOLKIT%
   - cmake "-G%GENERATOR%" "-A%CMAKE_ARCH%" "-T%CMAKE_TOOLKIT%" -DCMAKE_CXX_STANDARD=11 -DCML_BUILD_TESTING=ON ..
   - cmake --build . --config "%CONFIG%"
 
