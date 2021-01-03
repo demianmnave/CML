@@ -10,20 +10,20 @@ environment:
 #    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
 #      GENERATOR: "Visual Studio 15 2017 Win64"
 #      CONFIG: Release
-#      VCPATH: "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community"
+#      VCPATH: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community"
 #
 #    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 #      GENERATOR: "Visual Studio 16 2019"
 #      CMAKE_ARCH: -A x64
 #      CONFIG: Release
-#      VCPATH: "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community"
+#      VCPATH: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community"
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       GENERATOR: "Visual Studio 16 2019"
       CMAKE_ARCH: -A x64
       CMAKE_TOOLKIT: -T ClangCl
       CONFIG: Release
-      VCPATH: "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community"
+      VCPATH: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community"
 
 build_script:
   - cmd: call %VCPATH%\VC\Auxiliary\Build\vcvars64.bat
