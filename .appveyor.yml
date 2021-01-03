@@ -23,11 +23,11 @@ environment:
       CONFIG: Release
 
 build_script:
-  - cmd: mkdir build
-  - cmd: cd build
-  - cmd: echo Executing cmake: %GENERATOR% %CMAKE_ARCH% %CMAKE_TOOLKIT%
-  - cmd: cmake "-G%GENERATOR%" %CMAKE_ARCH% %CMAKE_TOOLKIT% -DCMAKE_CXX_STANDARD=11 -DCML_BUILD_TESTING=ON ..
-  - cmd: cmake --build . --config "%CONFIG%"
+  - mkdir build
+  - cd build
+  - echo Executing "cmake -G %GENERATOR% %CMAKE_ARCH% %CMAKE_TOOLKIT%"
+  - cmake "-G%GENERATOR%" %CMAKE_ARCH% %CMAKE_TOOLKIT% -DCMAKE_CXX_STANDARD=11 -DCML_BUILD_TESTING=ON ..
+  - cmake --build . --config "%CONFIG%"
 
 test_script:
   - ctest -V -C "%CONFIG%"
