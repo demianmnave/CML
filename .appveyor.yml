@@ -26,7 +26,7 @@ environment:
       VCPATH: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community"
 
 build_script:
-  - cmd: call %VCPATH%\VC\Auxiliary\Build\vcvars64.bat
+  - cmd: call "%VCPATH%\VC\Auxiliary\Build\vcvars64.bat"
   - cmd: mkdir build
   - cmd: cd build
   - cmd: echo Executing cmake -G %GENERATOR% %CMAKE_ARCH% %CMAKE_TOOLKIT%
