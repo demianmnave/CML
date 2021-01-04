@@ -11,7 +11,7 @@
 #
 # The major, minor, and patch versions are stored to <version_major>,
 # <version_minor>, and <version_patch>.
-macro(CML_VERSION_FROM_FILE
+macro(cml_version_from_file
     version_file
     version_macro_name
     version_major
@@ -49,6 +49,3 @@ macro(CML_VERSION_FROM_FILE
       "Unable to parse the version from ${version_file}")
   endif()
 endmacro()
-
-# --------------------------------------------------------------------------
-# vim:ft=cmake

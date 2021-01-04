@@ -10,6 +10,3 @@ target_include_directories(cml_test_main
   PRIVATE ${CML_ROOT}
   )
 set_target_properties(cml_test_main PROPERTIES FOLDER "CML-Tests")
-
-# --------------------------------------------------------------------------
-# vim:ft=cmake

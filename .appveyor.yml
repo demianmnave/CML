@@ -10,29 +10,34 @@ environment:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       GENERATOR: "Visual Studio 15 2017 Win64"
       CONFIG: Release
+      VCPATH: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community"
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       GENERATOR: "Visual Studio 16 2019"
       CMAKE_ARCH: -A x64
       CONFIG: Release
+      VCPATH: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community"
 
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      GENERATOR: "Visual Studio 16 2019"
-      CMAKE_ARCH: -A x64
-      CMAKE_TOOLKIT: -T ClangCl
-      CONFIG: Release
+#    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+#      GENERATOR: "Visual Studio 16 2019"
+#      CMAKE_ARCH: -A x64
+#      CMAKE_TOOLKIT: -T ClangCl
+#      CONFIG: Release
+#      VCPATH: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community"
 
 build_script:
-  - mkdir build
-  - cd build
-  - cmake "-G%GENERATOR%" %CMAKE_ARCH% %CMAKE_TOOLKIT% -DCML_BUILD_TESTING=ON ..
-  - cmake --build . --config "%CONFIG%"
+  - cmd: call "%VCPATH%\VC\Auxiliary\Build\vcvars64.bat"
+  - cmd: mkdir build
+  - cmd: cd build
+  - cmd: echo Executing cmake -G %GENERATOR% %CMAKE_ARCH% %CMAKE_TOOLKIT%
+  - cmd: cmake "-G%GENERATOR%" %CMAKE_ARCH% %CMAKE_TOOLKIT% -DCMAKE_CXX_STANDARD=11 -DCML_BUILD_TESTING=ON ..
+  - cmd: cmake --build . --config "%CONFIG%"
 
 test_script:
-  - ctest -V -C "%CONFIG%"
+  - cmd: ctest -V -C "%CONFIG%"
 
 # init:
 #   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-# 
+ 
 # on_finish:
 #   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

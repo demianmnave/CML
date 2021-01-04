@@ -5,7 +5,7 @@
 # Macro to add a single-file test to the build, using ${_Name}.cpp as the
 # test source.  The executable name and test title will be set to
 # ${_Name}_test.
-macro(CML_ADD_TEST
+macro(cml_add_test
     _Name			# The test basename, e.g. my -> my_test
     )
 
@@ -28,6 +28,3 @@ macro(CML_ADD_TEST
   # Setup the test:
   add_test(NAME ${TestName} COMMAND ${ExecName})
 endmacro()
-
-# --------------------------------------------------------------------------
-# vim:ft=cmake
