@@ -10,12 +10,9 @@
 #define	cml_version_h
 
 /* Current CML version: */
-#define CML_VERSION			200103U
+#define CML_VERSION			200200U
 
 /* Current CML version as a string: */
-#define CML_VERSION_STRING		"2.1.3"
+#define CML_VERSION_STRING		"2.2.0"
 
 #endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2
