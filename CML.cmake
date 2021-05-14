@@ -2,12 +2,6 @@
 # @@COPYRIGHT@@
 #*-------------------------------------------------------------------------
 
-if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
-  set(_header_group "Header Files\\")
-else()
-  set(_header_group)
-endif()
-
 set(main_HEADERS
   cml/cml.h
   cml/matrix.h
@@ -17,7 +11,6 @@ set(main_HEADERS
   cml/vector.h
   cml/version.h
   )
-source_group("${_header_group}" FILES ${main_HEADERS})
 
 set(common_HEADERS
   cml/common/array_size_of.h
@@ -33,7 +26,6 @@ set(common_HEADERS
   cml/common/traits.h
   cml/common/type_util.h
   )
-source_group("${_header_group}common" FILES ${common_HEADERS})
 
 set(common_mpl_HEADERS
   cml/common/mpl/are_convertible.h
@@ -56,7 +48,6 @@ set(common_mpl_HEADERS
   cml/common/mpl/type_map.h
   cml/common/mpl/type_table.h
   )
-source_group("${_header_group}common\\mpl" FILES ${common_mpl_HEADERS})
 
 set(scalar_HEADERS
   cml/scalar/binary_ops.h
@@ -66,7 +57,6 @@ set(scalar_HEADERS
   cml/scalar/traits.h
   cml/scalar/unary_ops.h
   )
-source_group("${_header_group}scalar" FILES ${scalar_HEADERS})
 
 set(storage_HEADERS
   cml/storage/allocated_selector.h
@@ -78,7 +68,6 @@ set(storage_HEADERS
   cml/storage/selectors.h
   cml/storage/type_util.h
   )
-source_group("${_header_group}storage" FILES ${storage_HEADERS})
 
 set(vector_HEADERS
   cml/vector/binary_node.h
@@ -145,14 +134,12 @@ set(vector_HEADERS
   cml/vector/writable_vector.h
   cml/vector/writable_vector.tpp
   )
-source_group("${_header_group}vector" FILES ${vector_HEADERS})
 
 set(vector_detail_HEADERS
   cml/vector/detail/check_or_resize.h
   cml/vector/detail/combined_size_of.h
   cml/vector/detail/resize.h
   )
-source_group("${_header_group}vector\\detail" FILES ${vector_detail_HEADERS})
 
 set(matrix_HEADERS
   cml/matrix/array_size_of.h
@@ -221,7 +208,6 @@ set(matrix_HEADERS
   cml/matrix/writable_matrix.h
   cml/matrix/writable_matrix.tpp
   )
-source_group("${_header_group}matrix" FILES ${matrix_HEADERS})
 
 set(matrix_detail_HEADERS
   cml/matrix/detail/apply.h
@@ -237,7 +223,6 @@ set(matrix_detail_HEADERS
   cml/matrix/detail/resize.h
   cml/matrix/detail/transpose.h
   )
-source_group("${_header_group}matrix\\detail" FILES ${matrix_detail_HEADERS})
 
 set(quaternion_HEADERS
   cml/quaternion/binary_node.h
@@ -291,7 +276,6 @@ set(quaternion_HEADERS
   cml/quaternion/writable_quaternion.h
   cml/quaternion/writable_quaternion.tpp
   )
-source_group("${_header_group}quaternion" FILES ${quaternion_HEADERS})
 
 set(mathlib_HEADERS
   cml/mathlib/axis_order.h
@@ -305,7 +289,6 @@ set(mathlib_HEADERS
   cml/mathlib/random_unit.h
   cml/mathlib/random_unit.tpp
   )
-source_group("${_header_group}mathlib" FILES ${mathlib_HEADERS})
 
 set(mathlib_vector_HEADERS
   cml/mathlib/vector/angle.h
@@ -321,7 +304,6 @@ set(mathlib_vector_HEADERS
   cml/mathlib/vector/transform.h
   cml/mathlib/vector/transform.tpp
   )
-source_group("${_header_group}mathlib\\vector" FILES ${mathlib_vector_HEADERS})
 
 set(mathlib_matrix_HEADERS
   cml/mathlib/matrix/basis.h
@@ -347,7 +329,6 @@ set(mathlib_matrix_HEADERS
   cml/mathlib/matrix/translation.h
   cml/mathlib/matrix/translation.tpp
   )
-source_group("${_header_group}mathlib\\matrix" FILES ${mathlib_matrix_HEADERS})
 
 set(mathlib_quaternion_HEADERS
   cml/mathlib/quaternion/basis.h
@@ -355,8 +336,6 @@ set(mathlib_quaternion_HEADERS
   cml/mathlib/quaternion/rotation.h
   cml/mathlib/quaternion/rotation.tpp
   )
-source_group("${_header_group}mathlib\\quaternion"
-  FILES ${mathlib_quaternion_HEADERS})
 
 set(util_HEADERS
   cml/util/matrix_print.h
@@ -367,7 +346,6 @@ set(util_HEADERS
   cml/util/vector_print.h
   cml/util/vector_print.tpp
   )
-source_group("${_header_group}\\util" FILES ${util_HEADERS})
 
 set(all_headers
   ${main_HEADERS}
@@ -387,10 +365,33 @@ set(all_headers
   ${mathlib_quaternion_HEADERS}
   )
 
+add_library(cml INTERFACE)
+target_compile_options(cml INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
+target_compile_features(cml INTERFACE
+ cxx_reference_qualified_functions
+ cxx_constexpr
+ cxx_defaulted_functions
+ )
 target_include_directories(cml INTERFACE $<BUILD_INTERFACE:${CML_ROOT}>)
+target_include_directories(cml INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
 
-option(CML_ENABLE_DEV
- "Enable the cml-dev custom target to see headers to an IDE" OFF)
-if(CML_ENABLE_DEV)
-  add_custom_target(cml-dev SOURCES ${all_headers})
+# Setup a custom target, and use IDE groups for the headers when possible:
+if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
+  set(_header_group "Header Files\\")
+  source_group("${_header_group}" FILES ${main_HEADERS})
+  source_group("${_header_group}common" FILES ${common_HEADERS})
+  source_group("${_header_group}common\\mpl" FILES ${common_mpl_HEADERS})
+  source_group("${_header_group}scalar" FILES ${scalar_HEADERS})
+  source_group("${_header_group}storage" FILES ${storage_HEADERS})
+  source_group("${_header_group}vector" FILES ${vector_HEADERS})
+  source_group("${_header_group}vector\\detail" FILES ${vector_detail_HEADERS})
+  source_group("${_header_group}matrix" FILES ${matrix_HEADERS})
+  source_group("${_header_group}matrix\\detail" FILES ${matrix_detail_HEADERS})
+  source_group("${_header_group}quaternion" FILES ${quaternion_HEADERS})
+  source_group("${_header_group}mathlib" FILES ${mathlib_HEADERS})
+  source_group("${_header_group}mathlib\\vector" FILES ${mathlib_vector_HEADERS})
+  source_group("${_header_group}mathlib\\matrix" FILES ${mathlib_matrix_HEADERS})
+  source_group("${_header_group}mathlib\\quaternion" FILES ${mathlib_quaternion_HEADERS})
+  source_group("${_header_group}\\util" FILES ${util_HEADERS})
 endif()
+add_custom_target(cml-dev SOURCES ${all_headers})
