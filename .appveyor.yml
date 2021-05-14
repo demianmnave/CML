@@ -13,12 +13,14 @@ environment:
       CMAKE_GENERATOR: Visual Studio 15 2017
       CMAKE_ARCH: -Ax64
       CMAKE_TOOLSET: -Thost=x64
+      CMAKE_CONCURRENT: /m
       # WARNING: do not add a space after -T here.
 
     - appveyor_build_worker_image: Visual Studio 2019
       CMAKE_GENERATOR: Visual Studio 16 2019
       CMAKE_ARCH: -Ax64
       CMAKE_TOOLSET: -Thost=x64
+      CMAKE_CONCURRENT: /m
       # WARNING: do not add a space after -A or -T here.
 
 
@@ -54,11 +56,13 @@ build_script:
        New-Item -Path .\build -ItemType Directory
        Set-Location -Path .\build
        cmake .. -DCML_BUILD_TESTING=ON "-G${env:CMAKE_GENERATOR}" ${env:CMAKE_ARCH} ${env:CMAKE_TOOLSET} ${env:CMAKE_BUILD_TYPE}
-       cmake --build . --config Release
+       cmake --build . --config Release -- ${env:CMAKE_CONCURRENT}
 
 test_script:
   - pwsh: |
-       Set-Location -Path .\build
+       if((Split-Path -Leaf -Path ${pwd}) -ne 'build') {
+         Set-Location -Path .\build
+       }
        ctest -V -C Release
 
 # init:
