@@ -3,27 +3,16 @@ language: cpp
 branches:
   only:
     - master
-    # - develop
+    - develop
 
 matrix:
-  fast_finish: true
   include:
 
   - os: osx
     osx_image: xcode11.6
  
   - os: osx
-    osx_image: xcode12
-
-  - os: linux
-    dist: bionic
-    env:
-      - MATRIX_EVAL="CC=clang && CXX=clang++"
-
-  - os: linux
-    dist: bionic
-    env:
-      - MATRIX_EVAL="CC=gcc && CXX=g++"
+    osx_image: xcode12.5
 
 before_install:
   - if [ ${TRAVIS_OS_NAME} == "linux" ]; then
@@ -35,8 +24,6 @@ before_script:
   - cd build
 
 script:
-  - cmake --version
-  - ${CXX} --version
   - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_CXX_STANDARD=11 -DCML_BUILD_TESTING:Bool=ON ..
   - cmake --build . --config Release -- -j2
   - ctest -V -C Release

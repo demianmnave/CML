@@ -2,7 +2,7 @@ version: build-{branch}-#{build}
 
 branches:
   only:
-  # - master
+  - master
   - develop
 
 environment:
