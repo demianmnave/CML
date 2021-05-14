@@ -6,8 +6,6 @@ branches:
   - develop
 
 environment:
-  CMAKE_BUILD_TYPE: -DCMAKE_BUILD_TYPE=Release
-
   matrix:
 
     # Visual Studio builds:
@@ -27,25 +25,29 @@ environment:
     # Clang builds:
     - appveyor_build_worker_image: Ubuntu
       CMAKE_GENERATOR: Ninja
-      CC: clang
-      CXX: clang++
+      CC: clang-11
+      CXX: clang++-11
+      CMAKE_BUILD_TYPE: -DCMAKE_BUILD_TYPE=Release
 
     - appveyor_build_worker_image: Ubuntu
       CMAKE_GENERATOR: Ninja
       CC: clang-10
       CXX: clang++-10
+      CMAKE_BUILD_TYPE: -DCMAKE_BUILD_TYPE=Release
 
 
     # GCC builds:
     - appveyor_build_worker_image: Ubuntu
       CMAKE_GENERATOR: Ninja
-      CC: gcc
-      CXX: g++
+      CC: gcc-9
+      CXX: g++-9
+      CMAKE_BUILD_TYPE: -DCMAKE_BUILD_TYPE=Release
 
     - appveyor_build_worker_image: Ubuntu
       CMAKE_GENERATOR: Ninja
       CC: gcc-8
       CXX: g++-8
+      CMAKE_BUILD_TYPE: -DCMAKE_BUILD_TYPE=Release
 
 build_script:
   - pwsh: |
@@ -56,6 +58,7 @@ build_script:
 
 test_script:
   - pwsh: |
+       Set-Location -Path .\build
        ctest -V -C Release
 
 # init:
