@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.2.1 (2021-05-15)
+
+- [**bug**] Redundant "add_library" in cml-config.cmake [#35](https://github.com/demianmnave/CML/issues/35)
+
 ## v2.2.0 (2021-05-15)
 
 #### bug
