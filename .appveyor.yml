@@ -3,38 +3,67 @@ version: build-{branch}-#{build}
 branches:
   only:
   - master
-  # - develop
+  - develop
 
 environment:
   matrix:
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      GENERATOR: "Visual Studio 15 2017 Win64"
-      CONFIG: Release
-      VCPATH: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community"
 
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      GENERATOR: "Visual Studio 16 2019"
-      CMAKE_ARCH: -A x64
-      CONFIG: Release
-      VCPATH: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community"
+    # Visual Studio builds:
+    - appveyor_build_worker_image: Visual Studio 2017
+      CMAKE_GENERATOR: Visual Studio 15 2017
+      CMAKE_ARCH: -Ax64
+      CMAKE_TOOLSET: -Thost=x64
+      CMAKE_CONCURRENT: /m
+      # WARNING: do not add a space after -T here.
 
-#    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-#      GENERATOR: "Visual Studio 16 2019"
-#      CMAKE_ARCH: -A x64
-#      CMAKE_TOOLKIT: -T ClangCl
-#      CONFIG: Release
-#      VCPATH: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community"
+    - appveyor_build_worker_image: Visual Studio 2019
+      CMAKE_GENERATOR: Visual Studio 16 2019
+      CMAKE_ARCH: -Ax64
+      CMAKE_TOOLSET: -Thost=x64
+      CMAKE_CONCURRENT: /m
+      # WARNING: do not add a space after -A or -T here.
+
+
+    # Clang builds:
+    - appveyor_build_worker_image: Ubuntu
+      CMAKE_GENERATOR: Ninja
+      CC: clang-11
+      CXX: clang++-11
+      CMAKE_BUILD_TYPE: -DCMAKE_BUILD_TYPE=Release
+
+    - appveyor_build_worker_image: Ubuntu
+      CMAKE_GENERATOR: Ninja
+      CC: clang-10
+      CXX: clang++-10
+      CMAKE_BUILD_TYPE: -DCMAKE_BUILD_TYPE=Release
+
+
+    # GCC builds:
+    - appveyor_build_worker_image: Ubuntu
+      CMAKE_GENERATOR: Ninja
+      CC: gcc-9
+      CXX: g++-9
+      CMAKE_BUILD_TYPE: -DCMAKE_BUILD_TYPE=Release
+
+    - appveyor_build_worker_image: Ubuntu
+      CMAKE_GENERATOR: Ninja
+      CC: gcc-8
+      CXX: g++-8
+      CMAKE_BUILD_TYPE: -DCMAKE_BUILD_TYPE=Release
 
 build_script:
-  - cmd: call "%VCPATH%\VC\Auxiliary\Build\vcvars64.bat"
-  - cmd: mkdir build
-  - cmd: cd build
-  - cmd: echo Executing cmake -G %GENERATOR% %CMAKE_ARCH% %CMAKE_TOOLKIT%
-  - cmd: cmake "-G%GENERATOR%" %CMAKE_ARCH% %CMAKE_TOOLKIT% -DCMAKE_CXX_STANDARD=11 -DCML_BUILD_TESTING=ON ..
-  - cmd: cmake --build . --config "%CONFIG%"
+  - pwsh: |
+       New-Item -Path .\build -ItemType Directory
+       Set-Location -Path .\build
+       cmake .. -DCML_BUILD_TESTING=ON "-G${env:CMAKE_GENERATOR}" ${env:CMAKE_ARCH} ${env:CMAKE_TOOLSET} ${env:CMAKE_BUILD_TYPE}
+       cmake --build . --config Release -- ${env:CMAKE_CONCURRENT}
 
 test_script:
-  - cmd: ctest -V -C "%CONFIG%"
+  - pwsh: |
+       if((Split-Path -Leaf -Path ${pwd}) -ne 'build') {
+         Set-Location -Path .\build
+       }
+       ctest -V -C Release
 
 # init:
 #   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
