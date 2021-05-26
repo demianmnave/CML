@@ -41,14 +41,25 @@ if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
   source_group("${_inlines_group}" FILES ${cml_timing_INLINES})
 endif()
 
-# Timing tests:
+# C matrix timing:
 cml_add_timing(cmatrix_mxm_timing
-  cmatrix_mxm_timing.cpp
+  matrix_mxm_timing.cpp
   cmatrix.h cmatrix_mxm.inl 
   )
 target_compile_definitions(cmatrix_mxm_timing
  PRIVATE CML_TIMING_MxM_INL="cmatrix_mxm.inl"
  )
+
+# Expression template timing:
+cml_add_timing(expr_mxm_timing
+  matrix_mxm_timing.cpp
+  expr_mxm.inl 
+  )
+target_compile_definitions(expr_mxm_timing
+ PRIVATE CML_TIMING_MxM_INL="expr_mxm.inl"
+ )
+
+
 #if(MSVC)
-#set_source_files_properties(cmatrix_mxm_timing.cpp PROPERTIES COMPILE_OPTIONS "/Fa\$(IntDir)")
+#set_source_files_properties(matrix_mxm_timing.cpp PROPERTIES COMPILE_OPTIONS "/Fa\$(IntDir)")
 #endif()

@@ -15,8 +15,8 @@
 
 int main(int /*argc*/, char** /*argv*/)
 {
-  const int N = 1;
-  //const int N = 1000000;
+  // const int N = 1;
+  const int N = 1000000;
 
   /* Pre-generate N repeatable pairs of random 4x4 rotations: */
   const auto prep_time_start = cml::testing::usec_time();
