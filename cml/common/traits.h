@@ -18,21 +18,19 @@ template<class T> using traits_of_t = typename traits_of<T>::type;
 /*@{*/
 
 /** Retrieve the value_type of @c T via an embedded typedef. */
-template<class T> struct value_type_of
-{
+template<class T> struct value_type_of {
   using type = typename T::value_type;
 };
 
-/** Convenience alias for value_typet_of. */
+/** Convenience alias for value_type_of. */
 template<class T> using value_type_of_t = typename value_type_of<T>::type;
 
-/** Retrieve the value_type of  @c T via traits.
+/** Retrieve the value_type of @c T via traits.
  *
  * @note This applies to CML expression types, including scalars.
  */
-template<class T> struct value_type_trait_of
-{
-  using type = typename traits_of<T>::type::value_type;
+template<class T> struct value_type_trait_of {
+  using type = typename traits_of_t<T>::value_type;
 };
 
 /** Convenience alias for value_type_trait_of. */
@@ -41,3 +39,5 @@ using value_type_trait_of_t = typename value_type_trait_of<T>::type;
 
 /*@}*/
 } // namespace cml
+
+#endif
