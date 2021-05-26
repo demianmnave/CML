@@ -29,17 +29,18 @@ void uniform_random_rotation_4(
   /* First, create a random unit quaternion (see K. Shoemake, Graphics Gems
    * III):
    */
-  const auto two_pi = cml::constants<double>::two_pi();
-  const auto u1 = d(g), u2 = d(g), u3 = d(g);
-  const auto s1 = std::sqrt(1. - u1), s2 = std::sqrt(u1);
-  const auto t1 = two_pi * d(g), t2 = two_pi * d(g);
+  using scalar_type = value_type_trait_of_t<Matrix44T>;
+  const auto two_pi = cml::constants<scalar_type>::two_pi();
+  const auto u = d(g), u1 = d(g), u2 = d(g);
+  const auto s1 = std::sqrt(1. - u), s2 = std::sqrt(u);
+  const auto t1 = two_pi * u1, t2 = two_pi * u2;
   const auto w = std::cos(t2) * s2;
   const auto x = std::sin(t1) * s1;
   const auto y = std::cos(t1) * s1;
   const auto z = std::sin(t2) * s2;
-  const auto q = cml::quaterniond(w, x, y, z).normalize();
+  const auto q = cml::quaterniond(x, y, z, w).normalize();
 
-  cml::external44d M_out(&M[0][0]);
+  cml::external44d M_out(std::addressof(cml::detail::get(M, 0, 0)));
   cml::matrix_rotation_quaternion(M_out, q);
 }
 
