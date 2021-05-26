@@ -13,10 +13,17 @@ License, Version 1.0.](http://www.boost.org/LICENSE_1_0.txt).
 [![Build status](https://ci.appveyor.com/api/projects/status/r3l3xnhxe8djjimg/branch/master?svg=true)](https://ci.appveyor.com/project/demianmnave/cml/branch/master)
 [![Build Status](https://travis-ci.com/demianmnave/CML.svg?branch=master)](https://travis-ci.com/github/demianmnave/CML)
 
-
 ## Using the CML
 
 As it is header-only, it is simple enough to copy the `cml` header directory into your project and setup your build to reference it. Users of CMake 3.15+ can also leverage [`cmake --install ...`](make.org/cmake/help/v3.15/manual/cmake.1.html#install-a-project) and [`find_package(CML CONFIG)`](https://cmake.org/cmake/help/v3.15/command/find_package.html) to integrate CML into a CMake project.
+
+## Compiler requirements
+
+At the moment, the CML requires the following compiler features (listed as CMake [`target_compile_features(...)`](https://cmake.org/cmake/help/v3.15/prop_gbl/CMAKE_CXX_KNOWN_FEATURES.html) flags here):
+
+- [cxx_reference_qualified_functions](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2439.htm)
+- [cxx_constexpr](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2235.pdf)
+- [cxx_defaulted_functions](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2346.htm)
 
 ## Running Tests
 
