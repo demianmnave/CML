@@ -6,10 +6,12 @@
  */
 
 #include <cstdio>
+
+/* Need the matrix type and CML type system specializations: */
+#include CML_TIMING_MxM_INL
+
 #include "timing.h"
 #include "make_rotation_matrix_pairs.h"
-
-#include "cmatrix_mxm.inl"
 
 int main(int /*argc*/, char** /*argv*/)
 {
