@@ -9,6 +9,7 @@
 #error "uniform_random_rotation.tpp not included correctly"
 #endif
 
+#include <cml/matrix.h>
 #include <cml/quaternion.h>
 #include <cml/common/exception.h>
 #include <cml/mathlib/matrix/rotation.h>
