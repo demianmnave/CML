@@ -5,9 +5,11 @@
  *  @brief
  */
 
-#include "cmatrix_mxm.h"
+#pragma once
 
-void mxm_4x4(matrix44d& res, const matrix44d& A, const matrix44d& B)
+#include "cmatrix.h"
+
+inline void mxm_4x4(matrix44d& res, const matrix44d& A, const matrix44d& B)
 {
     for(int row = 0; row < 4; ++row) {
         for(int col = 0; col < 4; ++col) {

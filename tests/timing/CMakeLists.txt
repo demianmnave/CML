@@ -43,4 +43,9 @@ endif()
 
 # Timing tests:
 cml_add_timing(cmatrix_mxm_timing
-  cmatrix.h cmatrix_mxm.h cmatrix_mxm.cpp cmatrix_mxm_timing.cpp)
+  cmatrix_mxm_timing.cpp
+  cmatrix.h cmatrix_mxm.inl 
+  )
+#if(MSVC)
+#set_source_files_properties(cmatrix_mxm_timing.cpp PROPERTIES COMPILE_OPTIONS "/Fa\$(IntDir)")
+#endif()

@@ -9,12 +9,12 @@
 #include "timing.h"
 #include "make_rotation_matrix_pairs.h"
 
-#include "cmatrix_mxm.h"
+#include "cmatrix_mxm.inl"
 
 int main(int /*argc*/, char** /*argv*/)
 {
-  // const int N = 1;
-  const int N = 1000000;
+  const int N = 1;
+  //const int N = 1000000;
 
   /* Pre-generate N repeatable pairs of random 4x4 rotations: */
   const auto prep_time_start = cml::testing::usec_time();
@@ -24,10 +24,11 @@ int main(int /*argc*/, char** /*argv*/)
   std::printf("prep time (%d pairs): %.5lf s\n", N, static_cast<double>(prep_time)/1e6);
 
   /* Time N multiplications: */
-  matrix44d out;
+  using data_t = struct { matrix44d M; };
+  std::vector<data_t> out(N);
   const auto mxm_time_start = cml::testing::usec_time();
   for(int i = 0; i < N; ++ i) {
-    mxm_4x4(out, rotations[i].first, rotations[i].second);
+    mxm_4x4(out[i].M, rotations[i].first, rotations[i].second);
   }
   const auto mxm_time_end = cml::testing::usec_time();
   const auto mxm_time = mxm_time_end - mxm_time_start;
