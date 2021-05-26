@@ -1,6 +1,6 @@
 # --------------------------------------------------------------------------
 # @@COPYRIGHT@@
-# --------------------------------------------------------------------------
+#*-------------------------------------------------------------------------
 
 include(target-functions)
 function(cml_add_test _name)
@@ -20,3 +20,7 @@ add_subdirectory(quaternion)
 add_subdirectory(expr)
 add_subdirectory(mathlib)
 add_subdirectory(util)
+
+#if(CML_BUILD_TIMING)
+  add_subdirectory(timing)
+#endif()
