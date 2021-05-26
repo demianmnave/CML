@@ -16,8 +16,7 @@ License, Version 1.0.](http://www.boost.org/LICENSE_1_0.txt).
 
 ## Using the CML
 
-Currently, CML does not have a `make install` option.  As it is header-only, it is simple enough to copy the `cml` header directory into your project, and setup your build to reference it.
-
+As it is header-only, it is simple enough to copy the `cml` header directory into your project and setup your build to reference it. Users of CMake 3.15+ can also leverage [`cmake --install ...`](make.org/cmake/help/v3.15/manual/cmake.1.html#install-a-project) and [`find_package(CML CONFIG)`](https://cmake.org/cmake/help/v3.15/command/find_package.html) to integrate CML into a CMake project.
 
 ## Running Tests
 
