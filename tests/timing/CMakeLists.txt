@@ -51,6 +51,25 @@ target_compile_definitions(cmatrix_mxm_timing
   CML_TIMING_MxM_INL="cmatrix_mxm.inl"
  )
 
+# Naive SIMD C-array mxm timing:
+cml_add_timing(cmatrix_simd_mxm_timing
+  matrix_mxm_timing.cpp
+  cmatrix.h cmatrix_simd_mxm.inl 
+  )
+target_compile_definitions(cmatrix_simd_mxm_timing
+ PRIVATE
+  CML_TIMING_MxM_INL="cmatrix_simd_mxm.inl"
+ )
+if(MSVC)
+  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    target_compile_options(cmatrix_simd_mxm_timing
+     PRIVATE
+     "/arch:AVX"
+    )
+  endif()
+endif()
+
+
 # Naive expression template mxm timing:
 cml_add_timing(expr_mxm_timing
   matrix_mxm_timing.cpp
