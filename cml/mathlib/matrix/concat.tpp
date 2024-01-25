@@ -20,7 +20,7 @@ matrix_concat(
   )
 -> matrix_inner_product_promote_t<Sub1, Sub2>
 {
-  return m2 * m1;
+  return m1 * m2;
 }
 
 /** Column-basis concatenation. */
@@ -30,7 +30,7 @@ matrix_concat(
   )
 -> matrix_inner_product_promote_t<Sub1, Sub2>
 {
-  return m1 * m2;
+  return m2 * m1;
 }
 
 } // namespace detail
