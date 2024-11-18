@@ -40,11 +40,13 @@ if(NOT DEFINED BUILD_STATIC_RUNTIME)
 endif()
 
 # Determine the default runtime library for MSVC-like compilers:
-if(NOT DEFINED MSVC_RUNTIME_LIBRARY)
-  if(BUILD_STATIC_RUNTIME)
-    set(MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-  else()
-    set(MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+if(MSVC)
+  if(NOT DEFINED MSVC_RUNTIME_LIBRARY)
+    if(BUILD_STATIC_RUNTIME)
+      set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    else()
+      set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+    endif()
   endif()
 endif()
 

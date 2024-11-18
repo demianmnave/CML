@@ -2,15 +2,27 @@
 # @@COPYRIGHT@@
 # --------------------------------------------------------------------------
 
-add_library(cml_test_main STATIC catch_main.cpp catch.hpp catch_runner.h)
+# Pull Catch2 at v3.7.1
+include(FetchContent)
+
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG v3.7.1
+)
+
+FetchContent_MakeAvailable(Catch2)
+
+add_library(cml_test_main INTERFACE catch_runner.h)
 target_include_directories(cml_test_main
-  PUBLIC ${CMAKE_CURRENT_LIST_DIR}
-  PRIVATE ${CML_ROOT}
+  INTERFACE ${CMAKE_CURRENT_LIST_DIR} ${CML_ROOT}
+)
+target_link_libraries(cml_test_main
+  INTERFACE Catch2::Catch2WithMain
 )
 
 set_target_properties(cml_test_main
   PROPERTIES FOLDER "cml-tests/main"
-  MSVC_RUNTIME_LIBRARY ${MSVC_RUNTIME_LIBRARY}
 )
 
 get_target_property(_path cml_test_main SOURCE_DIR)

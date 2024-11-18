@@ -4,10 +4,8 @@
 
 #pragma once
 
-#ifndef cml_tests_main_catch_runner_h
-#  define cml_tests_main_catch_runner_h
-
-#  define CATCH_CONFIG_PREFIX_ALL
-#  include "catch.hpp"
-
-#endif
+#define CATCH_CONFIG_PREFIX_ALL
+#define CATCH_CONFIG_ENABLE_ALL_STRINGMAKERS
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_approx.hpp> // Note: Approx() is deprecated in Catch2 v3
+using Catch::Approx;

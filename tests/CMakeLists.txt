@@ -60,7 +60,6 @@ function(cml_add_test _name)
 
     set_target_properties(${ExecName} PROPERTIES
       FOLDER "cml-tests/${CML_TEST_GROUP}"
-      MSVC_RUNTIME_LIBRARY ${MSVC_RUNTIME_LIBRARY}
     )
 
     get_target_property(_path ${_name} SOURCE_DIR)
