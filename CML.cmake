@@ -17,6 +17,7 @@ set(common_HEADERS
   cml/common/basis_tags.h
   cml/common/compiler.h
   cml/common/exception.h
+  cml/common/hash.h
   cml/common/layout_tags.h
   cml/common/memory_tags.h
   cml/common/promotion.h
@@ -366,7 +367,6 @@ set(all_headers
 )
 
 add_library(cml INTERFACE)
-target_compile_options(cml INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
 target_compile_features(cml INTERFACE
   cxx_reference_qualified_functions
   cxx_constexpr
@@ -376,23 +376,5 @@ target_include_directories(cml INTERFACE $<BUILD_INTERFACE:${CML_ROOT}>)
 target_include_directories(cml INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
 
 # Setup a custom target, and use IDE groups for the headers when possible:
-if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
-  set(_header_group "Header Files\\")
-  source_group("${_header_group}" FILES ${main_HEADERS})
-  source_group("${_header_group}common" FILES ${common_HEADERS})
-  source_group("${_header_group}common\\mpl" FILES ${common_mpl_HEADERS})
-  source_group("${_header_group}scalar" FILES ${scalar_HEADERS})
-  source_group("${_header_group}storage" FILES ${storage_HEADERS})
-  source_group("${_header_group}vector" FILES ${vector_HEADERS})
-  source_group("${_header_group}vector\\detail" FILES ${vector_detail_HEADERS})
-  source_group("${_header_group}matrix" FILES ${matrix_HEADERS})
-  source_group("${_header_group}matrix\\detail" FILES ${matrix_detail_HEADERS})
-  source_group("${_header_group}quaternion" FILES ${quaternion_HEADERS})
-  source_group("${_header_group}mathlib" FILES ${mathlib_HEADERS})
-  source_group("${_header_group}mathlib\\vector" FILES ${mathlib_vector_HEADERS})
-  source_group("${_header_group}mathlib\\matrix" FILES ${mathlib_matrix_HEADERS})
-  source_group("${_header_group}mathlib\\quaternion" FILES ${mathlib_quaternion_HEADERS})
-  source_group("${_header_group}\\util" FILES ${util_HEADERS})
-endif()
-
+source_group(TREE "${CML_ROOT}/cml" FILES ${all_headers})
 add_custom_target(cml-dev SOURCES ${all_headers})
