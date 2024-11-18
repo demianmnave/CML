@@ -1,6 +1,6 @@
-# -*- cmake -*- -----------------------------------------------------------
+# --------------------------------------------------------------------------
 # @@COPYRIGHT@@
-#*-------------------------------------------------------------------------
+# --------------------------------------------------------------------------
 
 set(main_HEADERS
   cml/cml.h
@@ -10,7 +10,7 @@ set(main_HEADERS
   cml/util.h
   cml/vector.h
   cml/version.h
-  )
+)
 
 set(common_HEADERS
   cml/common/array_size_of.h
@@ -25,7 +25,7 @@ set(common_HEADERS
   cml/common/temporary.h
   cml/common/traits.h
   cml/common/type_util.h
-  )
+)
 
 set(common_mpl_HEADERS
   cml/common/mpl/are_convertible.h
@@ -47,7 +47,7 @@ set(common_mpl_HEADERS
   cml/common/mpl/rebind.h
   cml/common/mpl/type_map.h
   cml/common/mpl/type_table.h
-  )
+)
 
 set(scalar_HEADERS
   cml/scalar/binary_ops.h
@@ -56,7 +56,7 @@ set(scalar_HEADERS
   cml/scalar/promotion.h
   cml/scalar/traits.h
   cml/scalar/unary_ops.h
-  )
+)
 
 set(storage_HEADERS
   cml/storage/allocated_selector.h
@@ -67,7 +67,7 @@ set(storage_HEADERS
   cml/storage/resize.h
   cml/storage/selectors.h
   cml/storage/type_util.h
-  )
+)
 
 set(vector_HEADERS
   cml/vector/binary_node.h
@@ -133,13 +133,13 @@ set(vector_HEADERS
   cml/vector/vector.h
   cml/vector/writable_vector.h
   cml/vector/writable_vector.tpp
-  )
+)
 
 set(vector_detail_HEADERS
   cml/vector/detail/check_or_resize.h
   cml/vector/detail/combined_size_of.h
   cml/vector/detail/resize.h
-  )
+)
 
 set(matrix_HEADERS
   cml/matrix/array_size_of.h
@@ -207,7 +207,7 @@ set(matrix_HEADERS
   cml/matrix/vector_product.tpp
   cml/matrix/writable_matrix.h
   cml/matrix/writable_matrix.tpp
-  )
+)
 
 set(matrix_detail_HEADERS
   cml/matrix/detail/apply.h
@@ -222,7 +222,7 @@ set(matrix_detail_HEADERS
   cml/matrix/detail/lu.tpp
   cml/matrix/detail/resize.h
   cml/matrix/detail/transpose.h
-  )
+)
 
 set(quaternion_HEADERS
   cml/quaternion/binary_node.h
@@ -275,7 +275,7 @@ set(quaternion_HEADERS
   cml/quaternion/unary_ops.h
   cml/quaternion/writable_quaternion.h
   cml/quaternion/writable_quaternion.tpp
-  )
+)
 
 set(mathlib_HEADERS
   cml/mathlib/axis_order.h
@@ -288,7 +288,7 @@ set(mathlib_HEADERS
   cml/mathlib/mathlib.h
   cml/mathlib/random_unit.h
   cml/mathlib/random_unit.tpp
-  )
+)
 
 set(mathlib_vector_HEADERS
   cml/mathlib/vector/angle.h
@@ -303,7 +303,7 @@ set(mathlib_vector_HEADERS
   cml/mathlib/vector/rotation.tpp
   cml/mathlib/vector/transform.h
   cml/mathlib/vector/transform.tpp
-  )
+)
 
 set(mathlib_matrix_HEADERS
   cml/mathlib/matrix/basis.h
@@ -328,14 +328,14 @@ set(mathlib_matrix_HEADERS
   cml/mathlib/matrix/transform.tpp
   cml/mathlib/matrix/translation.h
   cml/mathlib/matrix/translation.tpp
-  )
+)
 
 set(mathlib_quaternion_HEADERS
   cml/mathlib/quaternion/basis.h
   cml/mathlib/quaternion/basis.tpp
   cml/mathlib/quaternion/rotation.h
   cml/mathlib/quaternion/rotation.tpp
-  )
+)
 
 set(util_HEADERS
   cml/util/matrix_print.h
@@ -345,7 +345,7 @@ set(util_HEADERS
   cml/util/vector_hash.h
   cml/util/vector_print.h
   cml/util/vector_print.tpp
-  )
+)
 
 set(all_headers
   ${main_HEADERS}
@@ -363,15 +363,15 @@ set(all_headers
   ${mathlib_vector_HEADERS}
   ${mathlib_matrix_HEADERS}
   ${mathlib_quaternion_HEADERS}
-  )
+)
 
 add_library(cml INTERFACE)
 target_compile_options(cml INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
 target_compile_features(cml INTERFACE
- cxx_reference_qualified_functions
- cxx_constexpr
- cxx_defaulted_functions
- )
+  cxx_reference_qualified_functions
+  cxx_constexpr
+  cxx_defaulted_functions
+)
 target_include_directories(cml INTERFACE $<BUILD_INTERFACE:${CML_ROOT}>)
 target_include_directories(cml INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
 
@@ -394,4 +394,5 @@ if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
   source_group("${_header_group}mathlib\\quaternion" FILES ${mathlib_quaternion_HEADERS})
   source_group("${_header_group}\\util" FILES ${util_HEADERS})
 endif()
+
 add_custom_target(cml-dev SOURCES ${all_headers})
