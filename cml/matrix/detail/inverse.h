@@ -196,8 +196,8 @@ inverse_pivot(writable_matrix<Sub>& M, RowIndexArray& row_index,
     pivoted[col] = true;
     pivot = M(col, col);
     M(col, col) = value_type(1);
-    value_type k = value_type(1) / pivot;
-    for(int j = 0; j < N; ++j) M(col, j) *= k;
+    value_type s = value_type(1) / pivot;
+    for(int j = 0; j < N; ++j) M(col, j) *= s;
 
     /* Process other rows */
     for(int j = 0; j < N; ++j) {
