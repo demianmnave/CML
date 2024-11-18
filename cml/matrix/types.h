@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_matrix_types_h
-#define	cml_matrix_types_h
 
 #include <cml/storage/selectors.h>
 #include <cml/matrix/matrix.h>
@@ -18,133 +13,128 @@ namespace cml {
 /*@{*/
 
 // Column-basis, row-major:
-typedef matrix<int,    fixed<2,2>>    matrix22i;
-typedef matrix<int,    fixed<3,3>>    matrix33i;
-typedef matrix<int,    fixed<4,4>>    matrix44i;
-typedef matrix<int,    fixed<2,3>>    matrix23i;
-typedef matrix<int,    fixed<3,4>>    matrix34i;
-typedef matrix<int,    dynamic<>>     matrixi;
-typedef matrix<int,    external<2,2>> external22i;
-typedef matrix<int,    external<3,3>> external33i;
-typedef matrix<int,    external<4,4>> external44i;
-typedef matrix<int,    external<2,3>> external23i;
-typedef matrix<int,    external<3,4>> external34i;
-typedef matrix<int,    external<>>    externalmni;
+using matrix22i = matrix<int, fixed<2, 2>>;
+using matrix33i = matrix<int, fixed<3, 3>>;
+using matrix44i = matrix<int, fixed<4, 4>>;
+using matrix23i = matrix<int, fixed<2, 3>>;
+using matrix34i = matrix<int, fixed<3, 4>>;
+using matrixi = matrix<int, dynamic<>>;
+using external22i = matrix<int, external<2, 2>>;
+using external33i = matrix<int, external<3, 3>>;
+using external44i = matrix<int, external<4, 4>>;
+using external23i = matrix<int, external<2, 3>>;
+using external34i = matrix<int, external<3, 4>>;
+using externalmni = matrix<int, external<>>;
 
-typedef matrix<float,  fixed<2,2>>    matrix22f;
-typedef matrix<float,  fixed<3,3>>    matrix33f;
-typedef matrix<float,  fixed<4,4>>    matrix44f;
-typedef matrix<float,  fixed<2,3>>    matrix32f;
-typedef matrix<float,  fixed<3,4>>    matrix34f;
-typedef matrix<float,  dynamic<>>     matrixf;
-typedef matrix<float,  external<2,2>> external22f;
-typedef matrix<float,  external<3,3>> external33f;
-typedef matrix<float,  external<4,4>> external44f;
-typedef matrix<float,  external<2,3>> external23f;
-typedef matrix<float,  external<3,4>> external34f;
-typedef matrix<float,  external<>>    externalmnf;
+using matrix22f = matrix<float, fixed<2, 2>>;
+using matrix33f = matrix<float, fixed<3, 3>>;
+using matrix44f = matrix<float, fixed<4, 4>>;
+using matrix32f = matrix<float, fixed<2, 3>>;
+using matrix34f = matrix<float, fixed<3, 4>>;
+using matrixf = matrix<float, dynamic<>>;
+using external22f = matrix<float, external<2, 2>>;
+using external33f = matrix<float, external<3, 3>>;
+using external44f = matrix<float, external<4, 4>>;
+using external23f = matrix<float, external<2, 3>>;
+using external34f = matrix<float, external<3, 4>>;
+using externalmnf = matrix<float, external<>>;
 
-typedef matrix<double, fixed<2,2>>    matrix22d;
-typedef matrix<double, fixed<3,3>>    matrix33d;
-typedef matrix<double, fixed<4,4>>    matrix44d;
-typedef matrix<double, fixed<2,3>>    matrix23d;
-typedef matrix<double, fixed<3,4>>    matrix34d;
-typedef matrix<double, dynamic<>>     matrixd;
-typedef matrix<double, external<2,2>> external22d;
-typedef matrix<double, external<3,3>> external33d;
-typedef matrix<double, external<4,4>> external44d;
-typedef matrix<double, external<2,3>> external23d;
-typedef matrix<double, external<3,4>> external34d;
-typedef matrix<double, external<>>    externalmnd;
+using matrix22d = matrix<double, fixed<2, 2>>;
+using matrix33d = matrix<double, fixed<3, 3>>;
+using matrix44d = matrix<double, fixed<4, 4>>;
+using matrix23d = matrix<double, fixed<2, 3>>;
+using matrix34d = matrix<double, fixed<3, 4>>;
+using matrixd = matrix<double, dynamic<>>;
+using external22d = matrix<double, external<2, 2>>;
+using external33d = matrix<double, external<3, 3>>;
+using external44d = matrix<double, external<4, 4>>;
+using external23d = matrix<double, external<2, 3>>;
+using external34d = matrix<double, external<3, 4>>;
+using externalmnd = matrix<double, external<>>;
 
 
 // Row-basis, row-major:
-typedef matrix<int,    fixed<2,2>, row_basis, row_major>    matrix22i_r;
-typedef matrix<int,    fixed<3,3>, row_basis, row_major>    matrix33i_r;
-typedef matrix<int,    fixed<4,4>, row_basis, row_major>    matrix44i_r;
-typedef matrix<int,    fixed<3,2>, row_basis, row_major>    matrix32i_r;
-typedef matrix<int,    fixed<4,3>, row_basis, row_major>    matrix43i_r;
-typedef matrix<int,    dynamic<>,  row_basis, row_major>    matrixi_r;
-typedef matrix<int,    external<2,2>, row_basis, row_major> external22i_r;
-typedef matrix<int,    external<3,3>, row_basis, row_major> external33i_r;
-typedef matrix<int,    external<4,4>, row_basis, row_major> external44i_r;
-typedef matrix<int,    external<3,2>, row_basis, row_major> external32i_r;
-typedef matrix<int,    external<4,3>, row_basis, row_major> external43i_r;
-typedef matrix<int,    external<>,  row_basis, row_major>   externalmni_r;
+using matrix22i_r = matrix<int, fixed<2, 2>, row_basis, row_major>;
+using matrix33i_r = matrix<int, fixed<3, 3>, row_basis, row_major>;
+using matrix44i_r = matrix<int, fixed<4, 4>, row_basis, row_major>;
+using matrix32i_r = matrix<int, fixed<3, 2>, row_basis, row_major>;
+using matrix43i_r = matrix<int, fixed<4, 3>, row_basis, row_major>;
+using matrixi_r = matrix<int, dynamic<>, row_basis, row_major>;
+using external22i_r = matrix<int, external<2, 2>, row_basis, row_major>;
+using external33i_r = matrix<int, external<3, 3>, row_basis, row_major>;
+using external44i_r = matrix<int, external<4, 4>, row_basis, row_major>;
+using external32i_r = matrix<int, external<3, 2>, row_basis, row_major>;
+using external43i_r = matrix<int, external<4, 3>, row_basis, row_major>;
+using externalmni_r = matrix<int, external<>, row_basis, row_major>;
 
 
-typedef matrix<float,  fixed<2,2>, row_basis, row_major>    matrix22f_r;
-typedef matrix<float,  fixed<3,3>, row_basis, row_major>    matrix33f_r;
-typedef matrix<float,  fixed<4,4>, row_basis, row_major>    matrix44f_r;
-typedef matrix<float,  fixed<3,2>, row_basis, row_major>    matrix32f_r;
-typedef matrix<float,  fixed<4,3>, row_basis, row_major>    matrix43f_r;
-typedef matrix<float,  dynamic<>,  row_basis, row_major>    matrixf_r;
-typedef matrix<float,  external<2,2>, row_basis, row_major> external22f_r;
-typedef matrix<float,  external<3,3>, row_basis, row_major> external33f_r;
-typedef matrix<float,  external<4,4>, row_basis, row_major> external44f_r;
-typedef matrix<float,  external<3,2>, row_basis, row_major> external32f_r;
-typedef matrix<float,  external<4,3>, row_basis, row_major> external43f_r;
-typedef matrix<float,  external<>,  row_basis, row_major>   externalmnf_r;
+using matrix22f_r = matrix<float, fixed<2, 2>, row_basis, row_major>;
+using matrix33f_r = matrix<float, fixed<3, 3>, row_basis, row_major>;
+using matrix44f_r = matrix<float, fixed<4, 4>, row_basis, row_major>;
+using matrix32f_r = matrix<float, fixed<3, 2>, row_basis, row_major>;
+using matrix43f_r = matrix<float, fixed<4, 3>, row_basis, row_major>;
+using matrixf_r = matrix<float, dynamic<>, row_basis, row_major>;
+using external22f_r = matrix<float, external<2, 2>, row_basis, row_major>;
+using external33f_r = matrix<float, external<3, 3>, row_basis, row_major>;
+using external44f_r = matrix<float, external<4, 4>, row_basis, row_major>;
+using external32f_r = matrix<float, external<3, 2>, row_basis, row_major>;
+using external43f_r = matrix<float, external<4, 3>, row_basis, row_major>;
+using externalmnf_r = matrix<float, external<>, row_basis, row_major>;
 
-typedef matrix<double, fixed<2,2>, row_basis, row_major>    matrix22d_r;
-typedef matrix<double, fixed<3,3>, row_basis, row_major>    matrix33d_r;
-typedef matrix<double, fixed<4,4>, row_basis, row_major>    matrix44d_r;
-typedef matrix<double, fixed<3,2>, row_basis, row_major>    matrix32d_r;
-typedef matrix<double, fixed<4,3>, row_basis, row_major>    matrix43d_r;
-typedef matrix<double, dynamic<>,  row_basis, row_major>    matrixd_r;
-typedef matrix<double, external<2,2>, row_basis, row_major> external22d_r;
-typedef matrix<double, external<3,3>, row_basis, row_major> external33d_r;
-typedef matrix<double, external<4,4>, row_basis, row_major> external44d_r;
-typedef matrix<double, external<3,2>, row_basis, row_major> external32d_r;
-typedef matrix<double, external<4,3>, row_basis, row_major> external43d_r;
-typedef matrix<double, external<>,  row_basis, row_major>   externalmnd_r;
+using matrix22d_r = matrix<double, fixed<2, 2>, row_basis, row_major>;
+using matrix33d_r = matrix<double, fixed<3, 3>, row_basis, row_major>;
+using matrix44d_r = matrix<double, fixed<4, 4>, row_basis, row_major>;
+using matrix32d_r = matrix<double, fixed<3, 2>, row_basis, row_major>;
+using matrix43d_r = matrix<double, fixed<4, 3>, row_basis, row_major>;
+using matrixd_r = matrix<double, dynamic<>, row_basis, row_major>;
+using external22d_r = matrix<double, external<2, 2>, row_basis, row_major>;
+using external33d_r = matrix<double, external<3, 3>, row_basis, row_major>;
+using external44d_r = matrix<double, external<4, 4>, row_basis, row_major>;
+using external32d_r = matrix<double, external<3, 2>, row_basis, row_major>;
+using external43d_r = matrix<double, external<4, 3>, row_basis, row_major>;
+using externalmnd_r = matrix<double, external<>, row_basis, row_major>;
 
 
 // Column-basis, column-major:
-typedef matrix<int,    fixed<2,2>, col_basis, col_major>    matrix22i_c;
-typedef matrix<int,    fixed<3,3>, col_basis, col_major>    matrix33i_c;
-typedef matrix<int,    fixed<4,4>, col_basis, col_major>    matrix44i_c;
-typedef matrix<int,    fixed<2,3>, col_basis, col_major>    matrix23i_c;
-typedef matrix<int,    fixed<3,4>, col_basis, col_major>    matrix34i_c;
-typedef matrix<int,    dynamic<>,  col_basis, col_major>    matrixi_c;
-typedef matrix<int,    external<2,2>, col_basis, col_major> external22i_c;
-typedef matrix<int,    external<3,3>, col_basis, col_major> external33i_c;
-typedef matrix<int,    external<4,4>, col_basis, col_major> external44i_c;
-typedef matrix<int,    external<2,3>, col_basis, col_major> external23i_c;
-typedef matrix<int,    external<3,4>, col_basis, col_major> external34i_c;
-typedef matrix<int,    external<>,  col_basis, col_major>   externalmni_c;
+using matrix22i_c = matrix<int, fixed<2, 2>, col_basis, col_major>;
+using matrix33i_c = matrix<int, fixed<3, 3>, col_basis, col_major>;
+using matrix44i_c = matrix<int, fixed<4, 4>, col_basis, col_major>;
+using matrix23i_c = matrix<int, fixed<2, 3>, col_basis, col_major>;
+using matrix34i_c = matrix<int, fixed<3, 4>, col_basis, col_major>;
+using matrixi_c = matrix<int, dynamic<>, col_basis, col_major>;
+using external22i_c = matrix<int, external<2, 2>, col_basis, col_major>;
+using external33i_c = matrix<int, external<3, 3>, col_basis, col_major>;
+using external44i_c = matrix<int, external<4, 4>, col_basis, col_major>;
+using external23i_c = matrix<int, external<2, 3>, col_basis, col_major>;
+using external34i_c = matrix<int, external<3, 4>, col_basis, col_major>;
+using externalmni_c = matrix<int, external<>, col_basis, col_major>;
 
-typedef matrix<float,  fixed<2,2>, col_basis, col_major>    matrix22f_c;
-typedef matrix<float,  fixed<3,3>, col_basis, col_major>    matrix33f_c;
-typedef matrix<float,  fixed<4,4>, col_basis, col_major>    matrix44f_c;
-typedef matrix<float,  fixed<2,3>, col_basis, col_major>    matrix23f_c;
-typedef matrix<float,  fixed<3,4>, col_basis, col_major>    matrix34f_c;
-typedef matrix<float,  dynamic<>,  col_basis, col_major>    matrixf_c;
-typedef matrix<float,  external<2,2>, col_basis, col_major> external22f_c;
-typedef matrix<float,  external<3,3>, col_basis, col_major> external33f_c;
-typedef matrix<float,  external<4,4>, col_basis, col_major> external44f_c;
-typedef matrix<float,  external<2,3>, col_basis, col_major> external23f_c;
-typedef matrix<float,  external<3,4>, col_basis, col_major> external34f_c;
-typedef matrix<float,  external<>,  col_basis, col_major>   externalmnf_c;
+using matrix22f_c = matrix<float, fixed<2, 2>, col_basis, col_major>;
+using matrix33f_c = matrix<float, fixed<3, 3>, col_basis, col_major>;
+using matrix44f_c = matrix<float, fixed<4, 4>, col_basis, col_major>;
+using matrix23f_c = matrix<float, fixed<2, 3>, col_basis, col_major>;
+using matrix34f_c = matrix<float, fixed<3, 4>, col_basis, col_major>;
+using matrixf_c = matrix<float, dynamic<>, col_basis, col_major>;
+using external22f_c = matrix<float, external<2, 2>, col_basis, col_major>;
+using external33f_c = matrix<float, external<3, 3>, col_basis, col_major>;
+using external44f_c = matrix<float, external<4, 4>, col_basis, col_major>;
+using external23f_c = matrix<float, external<2, 3>, col_basis, col_major>;
+using external34f_c = matrix<float, external<3, 4>, col_basis, col_major>;
+using externalmnf_c = matrix<float, external<>, col_basis, col_major>;
 
-typedef matrix<double, fixed<2,2>, col_basis, col_major>    matrix22d_c;
-typedef matrix<double, fixed<3,3>, col_basis, col_major>    matrix33d_c;
-typedef matrix<double, fixed<4,4>, col_basis, col_major>    matrix44d_c;
-typedef matrix<double, fixed<2,3>, col_basis, col_major>    matrix23d_c;
-typedef matrix<double, fixed<3,4>, col_basis, col_major>    matrix34d_c;
-typedef matrix<double, dynamic<>,  col_basis, col_major>    matrixd_c;
-typedef matrix<double, external<2,2>, col_basis, col_major> external22d_c;
-typedef matrix<double, external<3,3>, col_basis, col_major> external33d_c;
-typedef matrix<double, external<4,4>, col_basis, col_major> external44d_c;
-typedef matrix<double, external<2,3>, col_basis, col_major> external23d_c;
-typedef matrix<double, external<3,4>, col_basis, col_major> external34d_c;
-typedef matrix<double, external<>,  col_basis, col_major>   externalmnd_c;
+using matrix22d_c = matrix<double, fixed<2, 2>, col_basis, col_major>;
+using matrix33d_c = matrix<double, fixed<3, 3>, col_basis, col_major>;
+using matrix44d_c = matrix<double, fixed<4, 4>, col_basis, col_major>;
+using matrix23d_c = matrix<double, fixed<2, 3>, col_basis, col_major>;
+using matrix34d_c = matrix<double, fixed<3, 4>, col_basis, col_major>;
+using matrixd_c = matrix<double, dynamic<>, col_basis, col_major>;
+using external22d_c = matrix<double, external<2, 2>, col_basis, col_major>;
+using external33d_c = matrix<double, external<3, 3>, col_basis, col_major>;
+using external44d_c = matrix<double, external<4, 4>, col_basis, col_major>;
+using external23d_c = matrix<double, external<2, 3>, col_basis, col_major>;
+using external34d_c = matrix<double, external<3, 4>, col_basis, col_major>;
+using externalmnd_c = matrix<double, external<>, col_basis, col_major>;
 
 /*@}*/
 
-} // namespace cml
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2
+}  // namespace cml

@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_vector_binary_node_h
-#define	cml_vector_binary_node_h
 
 #include <cml/vector/readable_vector.h>
 #include <cml/vector/promotion.h>
@@ -18,28 +13,27 @@ template<class Sub1, class Sub2, class Op> class vector_binary_node;
 
 /** vector_binary_node<> traits. */
 template<class Sub1, class Sub2, class Op>
-struct vector_traits< vector_binary_node<Sub1,Sub2,Op> >
+struct vector_traits<vector_binary_node<Sub1, Sub2, Op>>
 {
-  typedef vector_binary_node<Sub1,Sub2,Op>		vector_type;
-  typedef Sub1						left_arg_type;
-  typedef Sub2						right_arg_type;
-  typedef cml::unqualified_type_t<Sub1>			left_type;
-  typedef cml::unqualified_type_t<Sub2>			right_type;
-  typedef vector_traits<left_type>			left_traits;
-  typedef vector_traits<right_type>			right_traits;
-  typedef scalar_traits<typename Op::result_type>	element_traits;
-  typedef typename element_traits::value_type		value_type;
-  typedef value_type					immutable_value;
+  using vector_type = vector_binary_node<Sub1, Sub2, Op>;
+  using left_arg_type = Sub1;
+  using right_arg_type = Sub2;
+  using left_type = cml::unqualified_type_t<Sub1>;
+  using right_type = cml::unqualified_type_t<Sub2>;
+  using left_traits = vector_traits<left_type>;
+  using right_traits = vector_traits<right_type>;
+  using element_traits = scalar_traits<typename Op::result_type>;
+  using value_type = typename element_traits::value_type;
+  using immutable_value = value_type;
 
   /* Determine the common storage type for the node, based on the storage
    * types of its subexpressions:
    */
-  typedef vector_binary_storage_promote_t<
-    storage_type_of_t<left_traits>,
-    storage_type_of_t<right_traits>>			storage_type;
+  using storage_type = vector_binary_storage_promote_t<storage_type_of_t<left_traits>,
+    storage_type_of_t<right_traits>>;
 
   /* Traits and types for the storage: */
-  typedef typename storage_type::size_tag		size_tag;
+  using size_tag = typename storage_type::size_tag;
 
   /* Array size: */
   static const int array_size = storage_type::array_size;
@@ -48,33 +42,30 @@ struct vector_traits< vector_binary_node<Sub1,Sub2,Op> >
 /** Represents a binary vector operation in an expression tree. */
 template<class Sub1, class Sub2, class Op>
 class vector_binary_node
-: public readable_vector< vector_binary_node<Sub1,Sub2,Op> >
+: public readable_vector<vector_binary_node<Sub1, Sub2, Op>>
 {
   public:
-
-    typedef vector_binary_node<Sub1,Sub2,Op>		node_type;
-    typedef readable_vector<node_type>			readable_type;
-    typedef vector_traits<node_type>			traits_type;
-    typedef typename traits_type::left_arg_type		left_arg_type;
-    typedef typename traits_type::right_arg_type	right_arg_type;
-    typedef typename traits_type::left_type		left_type;
-    typedef typename traits_type::right_type		right_type;
-    typedef typename traits_type::element_traits	element_traits;
-    typedef typename traits_type::value_type		value_type;
-    typedef typename traits_type::immutable_value	immutable_value;
-    typedef typename traits_type::storage_type		storage_type;
-    typedef typename traits_type::size_tag		size_tag;
-
-
-  public:
-
-    /** Constant containing the array size. */
-    static const int array_size = traits_type::array_size;
+  using node_type = vector_binary_node<Sub1, Sub2, Op>;
+  using readable_type = readable_vector<node_type>;
+  using traits_type = vector_traits<node_type>;
+  using left_arg_type = typename traits_type::left_arg_type;
+  using right_arg_type = typename traits_type::right_arg_type;
+  using left_type = typename traits_type::left_type;
+  using right_type = typename traits_type::right_type;
+  using element_traits = typename traits_type::element_traits;
+  using value_type = typename traits_type::value_type;
+  using immutable_value = typename traits_type::immutable_value;
+  using storage_type = typename traits_type::storage_type;
+  using size_tag = typename traits_type::size_tag;
 
 
   public:
+  /** Constant containing the array size. */
+  static const int array_size = traits_type::array_size;
 
-    /** Construct from the wrapped sub-expressions.  Sub1 and Sub2 must be
+
+  public:
+  /** Construct from the wrapped sub-expressions.  Sub1 and Sub2 must be
      * lvalue reference or rvalue reference types.
      *
      * @throws incompatible_vector_size_error at run-time if either Sub1 or
@@ -82,79 +73,70 @@ class vector_binary_node
      * If both Sub1 and Sub2 are fixed-size expressions, then the sizes are
      * checked at compile time.
      */
-    vector_binary_node(Sub1 left, Sub2 right);
+  vector_binary_node(Sub1 left, Sub2 right);
 
-    /** Move constructor. */
-    vector_binary_node(node_type&& other);
+  /** Move constructor. */
+  vector_binary_node(node_type&& other);
 
 #ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-    /** Copy constructor. */
-    vector_binary_node(const node_type& other);
+  /** Copy constructor. */
+  vector_binary_node(const node_type& other);
 #endif
 
 
   protected:
+  /** @name readable_vector Interface */
+  /*@{*/
 
-    /** @name readable_vector Interface */
-    /*@{*/
+  friend readable_type;
 
-    friend readable_type;
+  /** Return the size of the vector expression. */
+  int i_size() const;
 
-    /** Return the size of the vector expression. */
-    int i_size() const;
-
-    /** Apply the operator to element @c i of the subexpressions and return
+  /** Apply the operator to element @c i of the subexpressions and return
      * the result.
      */
-    immutable_value i_get(int i) const;
+  immutable_value i_get(int i) const;
 
-    /*@}*/
+  /*@}*/
 
 
   protected:
-
-    /** The type used to store the left subexpression.  The expression is
+  /** The type used to store the left subexpression.  The expression is
      * stored as a copy if Sub1 is an rvalue reference (temporary), or by
      * const reference if Sub1 is an lvalue reference.
      */
-    typedef cml::if_t<std::is_lvalue_reference<Sub1>::value,
-	    const left_type&, left_type>		left_wrap_type;
+  using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub1>::value, const left_type&,
+    left_type>;
 
-    /** The type used to store the right subexpression.  The expression is
+  /** The type used to store the right subexpression.  The expression is
      * stored as a copy if Sub2 is an rvalue reference (temporary), or by
      * const reference if Sub2 is an lvalue reference.
      */
-    typedef cml::if_t<std::is_lvalue_reference<Sub2>::value,
-	    const right_type&, right_type>		right_wrap_type;
+  using right_wrap_type = cml::if_t<std::is_lvalue_reference<Sub2>::value, const right_type&,
+    right_type>;
 
 
   protected:
+  /** The wrapped left subexpression. */
+  left_wrap_type m_left;
 
-    /** The wrapped left subexpression. */
-    left_wrap_type		m_left;
-
-    /** The wrapped right subexpression. */
-    right_wrap_type		m_right;
+  /** The wrapped right subexpression. */
+  right_wrap_type m_right;
 
 
   private:
-
 #ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-    // Not copy constructible.
-    vector_binary_node(const node_type&);
+  // Not copy constructible.
+  vector_binary_node(const node_type&);
 #endif
 
-    // Not assignable.
-    node_type& operator=(const node_type&);
+  // Not assignable.
+  node_type& operator=(const node_type&);
 };
 
-} // namespace cml
+}  // namespace cml
 
 #define __CML_VECTOR_BINARY_NODE_TPP
 #include <cml/vector/binary_node.tpp>
 #undef __CML_VECTOR_BINARY_NODE_TPP
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

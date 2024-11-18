@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_mathlib_matrix_invert_h
-#define	cml_mathlib_matrix_invert_h
 
 #include <cml/matrix/fwd.h>
 
@@ -40,13 +35,8 @@ template<class Sub> void matrix_invert_RT_only(writable_matrix<Sub>& m);
  */
 template<class Sub> void matrix_invert_RT(writable_matrix<Sub>& m);
 
-} // namespace cml
+}  // namespace cml
 
 #define __CML_MATHLIB_MATRIX_INVERT_TPP
 #include <cml/mathlib/matrix/invert.tpp>
 #undef __CML_MATHLIB_MATRIX_INVERT_TPP
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

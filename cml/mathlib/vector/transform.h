@@ -1,17 +1,11 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
 
-#ifndef	cml_mathlib_vector_transform_h
-#define	cml_mathlib_vector_transform_h
-
 #include <cml/vector/temporary.h>
 #include <cml/matrix/fwd.h>
-
 
 /** @defgroup mathlib_vector_transform Vector Transformation Functions */
 
@@ -33,9 +27,9 @@ namespace cml {
  * @throws vector_size_error at run-time if @c v is dynamically-sized, and
  * is not 2D.  If @c v is fixed-size, the size is checked at compile-time.
  */
-template<class Sub1, class Sub2> auto transform_vector_2D(
-  const readable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
-  -> temporary_of_t<Sub2>;
+template<class Sub1, class Sub2>
+auto transform_vector_2D(const readable_matrix<Sub1>& m,
+  const readable_vector<Sub2>& v) -> temporary_of_t<Sub2>;
 
 /** Apply a 2D affine transform to a 2D point, taking basis orientation
  * into account.
@@ -47,9 +41,9 @@ template<class Sub1, class Sub2> auto transform_vector_2D(
  * @throws vector_size_error at run-time if @c v is dynamically-sized, and
  * is not 2D.  If @c v is fixed-size, the size is checked at compile-time.
  */
-template<class Sub1, class Sub2> auto transform_point_2D(
-  const readable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
-  -> temporary_of_t<Sub2>;
+template<class Sub1, class Sub2>
+auto transform_point_2D(const readable_matrix<Sub1>& m,
+  const readable_vector<Sub2>& v) -> temporary_of_t<Sub2>;
 
 /*@}*/
 
@@ -67,9 +61,9 @@ template<class Sub1, class Sub2> auto transform_point_2D(
  * @throws vector_size_error at run-time if @c v is dynamically-sized, and
  * is not 3D.  If @c v is fixed-size, the size is checked at compile-time.
  */
-template<class Sub1, class Sub2> auto transform_vector(
-  const readable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
-  -> temporary_of_t<Sub2>;
+template<class Sub1, class Sub2>
+auto transform_vector(const readable_matrix<Sub1>& m,
+  const readable_vector<Sub2>& v) -> temporary_of_t<Sub2>;
 
 /** Apply a 3D affine transform to a 3D point, taking basis orientation
  * into account.
@@ -81,9 +75,9 @@ template<class Sub1, class Sub2> auto transform_vector(
  * @throws vector_size_error at run-time if @c v is dynamically-sized, and
  * is not 3D.  If @c v is fixed-size, the size is checked at compile-time.
  */
-template<class Sub1, class Sub2> auto transform_point(
-  const readable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
-  -> temporary_of_t<Sub2>;
+template<class Sub1, class Sub2>
+auto transform_point(const readable_matrix<Sub1>& m,
+  const readable_vector<Sub2>& v) -> temporary_of_t<Sub2>;
 
 /** Apply a 3D homogeneous transformation to a 4D vector, taking basis
  * orientation into account.
@@ -95,9 +89,9 @@ template<class Sub1, class Sub2> auto transform_point(
  * @throws vector_size_error at run-time if @c v is dynamically-sized, and
  * is not 4D.  If @c v is fixed-size, the size is checked at compile-time.
  */
-template<class Sub1, class Sub2> auto transform_vector_4D(
-  const readable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
-  -> temporary_of_t<Sub2>;
+template<class Sub1, class Sub2>
+auto transform_vector_4D(const readable_matrix<Sub1>& m,
+  const readable_vector<Sub2>& v) -> temporary_of_t<Sub2>;
 
 /** Apply a 3D homogeneous transformation to a 3D point, taking basis
  * orientation into account.
@@ -109,21 +103,16 @@ template<class Sub1, class Sub2> auto transform_vector_4D(
  * @throws vector_size_error at run-time if @c v is dynamically-sized, and
  * is not 3D.  If @c v is fixed-size, the size is checked at compile-time.
  */
-template<class Sub1, class Sub2> auto transform_point_4D(
-  const readable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
-  -> temporary_of_t<Sub2>;
+template<class Sub1, class Sub2>
+auto transform_point_4D(const readable_matrix<Sub1>& m,
+  const readable_vector<Sub2>& v) -> temporary_of_t<Sub2>;
 
 /*@}*/
 
 /*@}*/
 
-} // namespace cml
+}  // namespace cml
 
 #define __CML_MATHLIB_VECTOR_TRANSFORM_TPP
 #include <cml/mathlib/vector/transform.tpp>
 #undef __CML_MATHLIB_VECTOR_TRANSFORM_TPP
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

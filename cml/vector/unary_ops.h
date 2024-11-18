@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_vector_unary_ops_h
-#define	cml_vector_unary_ops_h
 
 #include <cml/scalar/unary_ops.h>
 #include <cml/vector/unary_node.h>
@@ -18,35 +13,33 @@ namespace cml {
  * (i.e. derived from readable_vector<>).
  */
 template<class Op, class Sub, enable_if_vector_t<Sub>* = nullptr>
-inline auto make_vector_unary_node(Sub&& sub)
--> vector_unary_node<actual_operand_type_of_t<decltype(sub)>, Op>
+inline auto
+make_vector_unary_node(Sub&& sub)
+  -> vector_unary_node<actual_operand_type_of_t<decltype(sub)>, Op>
 {
-  static_assert(std::is_same<
-    decltype(sub), decltype(std::forward<Sub>(sub))>::value,
+  static_assert(
+    std::is_same<decltype(sub), decltype(std::forward<Sub>(sub))>::value,
     "internal error: unexpected expression type");
 
   /* Deduce the operand type of the subexpression (&, const&, &&): */
-  typedef actual_operand_type_of_t<decltype(sub)> sub_type;
+  using sub_type = actual_operand_type_of_t<decltype(sub)>;
   return vector_unary_node<sub_type, Op>((sub_type) sub);
 }
 
 template<class Sub, enable_if_vector_t<Sub>* = nullptr>
-inline auto operator-(Sub&& sub)
--> decltype(make_vector_unary_node<unary_minus_t<Sub>>(std::forward<Sub>(sub)))
+inline auto
+operator-(Sub&& sub) -> decltype(make_vector_unary_node<unary_minus_t<Sub>>(
+  std::forward<Sub>(sub)))
 {
   return make_vector_unary_node<unary_minus_t<Sub>>(std::forward<Sub>(sub));
 }
 
 template<class Sub, enable_if_vector_t<Sub>* = nullptr>
-inline auto operator+(Sub&& sub)
--> decltype(make_vector_unary_node<unary_plus_t<Sub>>(std::forward<Sub>(sub)))
+inline auto
+operator+(Sub&& sub)
+  -> decltype(make_vector_unary_node<unary_plus_t<Sub>>(std::forward<Sub>(sub)))
 {
   return make_vector_unary_node<unary_plus_t<Sub>>(std::forward<Sub>(sub));
 }
 
-} // namespace cml
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2
+}  // namespace cml

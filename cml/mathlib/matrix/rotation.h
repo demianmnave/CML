@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_mathlib_matrix_rotation_h
-#define	cml_mathlib_matrix_rotation_h
 
 #include <tuple>
 #include <cml/scalar/traits.h>
@@ -35,8 +30,8 @@ namespace cml {
  * dynamically-sized, and is not at least 2x2.  If @c m is fixed-size, the
  * size is checked at compile-time.
  */
-template<class Sub, class E> void
-matrix_rotation_2D(writable_matrix<Sub>& m, E angle);
+template<class Sub, class E>
+void matrix_rotation_2D(writable_matrix<Sub>& m, E angle);
 
 /*@}*/
 
@@ -50,10 +45,10 @@ matrix_rotation_2D(writable_matrix<Sub>& m, E angle);
  * dynamically-sized, and is not at least 2x2.  If @c m is fixed-size, the
  * size is checked at compile-time.
  */
-template<class Sub, class ASub> void
-matrix_rotation_align_2D(
-  writable_matrix<Sub>& m, const readable_vector<ASub>& align,
-  bool normalize = true, axis_order2D order = axis_order_xy);
+template<class Sub, class ASub>
+void matrix_rotation_align_2D(writable_matrix<Sub>& m,
+  const readable_vector<ASub>& align, bool normalize = true,
+  axis_order2D order = axis_order_xy);
 
 /*@}*/
 
@@ -70,8 +65,9 @@ matrix_rotation_align_2D(
  *
  * @throws std::invalid_argument if @c axis < 0 or @c axis > 2.
  */
-template<class Sub, class E> void
-matrix_rotation_world_axis(writable_matrix<Sub>& m, int axis, const E& angle);
+template<class Sub, class E>
+void matrix_rotation_world_axis(writable_matrix<Sub>& m, int axis,
+  const E& angle);
 
 /** Compute a matrix representing a 3D rotation @c angle about the world
  * x-axis.
@@ -80,8 +76,8 @@ matrix_rotation_world_axis(writable_matrix<Sub>& m, int axis, const E& angle);
  * dynamically-sized, and is not at least 3x3.  If @c m is fixed-size, the
  * size is checked at compile-time.
  */
-template<class Sub, class E> void
-matrix_rotation_world_x(writable_matrix<Sub>& m, const E& angle);
+template<class Sub, class E>
+void matrix_rotation_world_x(writable_matrix<Sub>& m, const E& angle);
 
 /** Compute a matrix representing a 3D rotation @c angle about the world
  * y-axis.
@@ -90,8 +86,8 @@ matrix_rotation_world_x(writable_matrix<Sub>& m, const E& angle);
  * dynamically-sized, and is not at least 3x3.  If @c m is fixed-size, the
  * size is checked at compile-time.
  */
-template<class Sub, class E> void
-matrix_rotation_world_y(writable_matrix<Sub>& m, const E& angle);
+template<class Sub, class E>
+void matrix_rotation_world_y(writable_matrix<Sub>& m, const E& angle);
 
 /** Compute a matrix representing a 3D rotation @c angle about the world
  * z-axis.
@@ -100,8 +96,8 @@ matrix_rotation_world_y(writable_matrix<Sub>& m, const E& angle);
  * dynamically-sized, and is not at least 3x3.  If @c m is fixed-size, the
  * size is checked at compile-time.
  */
-template<class Sub, class E> void
-matrix_rotation_world_z(writable_matrix<Sub>& m, const E& angle);
+template<class Sub, class E>
+void matrix_rotation_world_z(writable_matrix<Sub>& m, const E& angle);
 
 /** Compute a rotation matrix from an axis and angle.
  *
@@ -112,8 +108,9 @@ matrix_rotation_world_z(writable_matrix<Sub>& m, const E& angle);
  * @throws vector_size_error at run-time if @c v is dynamically-sized, and
  * is not 3D.  If @c v is fixed-size, the size is checked at compile-time.
  */
-template<class Sub, class QSub, class E> void matrix_rotation_axis_angle(
-  writable_matrix<Sub>& m, const readable_vector<QSub>& axis, const E& angle);
+template<class Sub, class QSub, class E>
+void matrix_rotation_axis_angle(writable_matrix<Sub>& m,
+  const readable_vector<QSub>& axis, const E& angle);
 
 /** Compute a rotation matrix given three Euler angles and the required
  * order.
@@ -143,17 +140,17 @@ template<class Sub, class QSub, class E> void matrix_rotation_axis_angle(
  * dynamically-sized, and is not at least 3x3.  If @c m is fixed-size, the
  * size is checked at compile-time.
  */
-template<class Sub, class E0, class E1, class E2> void
-matrix_rotation_euler(writable_matrix<Sub>& m,
-  E0 angle_0, E1 angle_1, E2 angle_2, euler_order order);
+template<class Sub, class E0, class E1, class E2>
+void matrix_rotation_euler(writable_matrix<Sub>& m, E0 angle_0, E1 angle_1,
+  E2 angle_2, euler_order order);
 
 /** Compute a rotation matrix given a vector containing the Euler angles.
  *
  * @throws vector_size_error at run-time if @c euler is dynamically-sized,
  * and is not 3D.  If fixed-size, the sizs is checked at compile-time.
  */
-template<class Sub, class ESub> void
-matrix_rotation_euler(writable_matrix<Sub>& m,
+template<class Sub, class ESub>
+void matrix_rotation_euler(writable_matrix<Sub>& m,
   const readable_vector<ESub>& euler, euler_order order);
 
 /** Build a matrix of derivatives of Euler angles about the specified axis.
@@ -185,8 +182,8 @@ matrix_rotation_euler(writable_matrix<Sub>& m,
  * @throws std::invalid_argument if @c axis is not 0, 1, or 2, or if @c
  * order has a repeated axis.
  */
-template<class Sub, class E0, class E1, class E2> void
-matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
+template<class Sub, class E0, class E1, class E2>
+void matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
   E0 angle_0, E1 angle_1, E2 angle_2, euler_order order);
 
 /** Build a matrix of derivatives of Euler angles about the specified axis,
@@ -195,8 +192,8 @@ matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
  * @throws vector_size_error at run-time if @c euler is dynamically-sized,
  * and is not 3D.  If fixed-size, the sizs is checked at compile-time.
  */
-template<class Sub, class ESub> void
-matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
+template<class Sub, class ESub>
+void matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
   const readable_vector<ESub>& euler, euler_order order);
 
 /** Compute a rotation matrix from a quaternion.
@@ -205,9 +202,9 @@ matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
  * dynamically-sized, and is not at least 3x3.  If @c m is fixed-size, the
  * size is checked at compile-time.
  */
-template<class Sub, class QSub> void
-matrix_rotation_quaternion(
-  writable_matrix<Sub>& m, const readable_quaternion<QSub>& q);
+template<class Sub, class QSub>
+void matrix_rotation_quaternion(writable_matrix<Sub>& m,
+  const readable_quaternion<QSub>& q);
 
 /*@}*/
 
@@ -217,16 +214,16 @@ matrix_rotation_quaternion(
 /** Compute a rotation matrix that aligns vector @c align to @c reference,
  * using rotations in axis order @c order.
  */
-template<class Sub, class ASub, class RSub> void
-matrix_rotation_align(writable_matrix<Sub>& m,
+template<class Sub, class ASub, class RSub>
+void matrix_rotation_align(writable_matrix<Sub>& m,
   const readable_vector<ASub>& align, const readable_vector<RSub>& reference,
   bool normalize = true, axis_order order = axis_order_zyx);
 
 /** Compute a rotation matrix to align the vector from @c pos to @c target
  * with @c reference.
  */
-template<class Sub, class PSub, class TSub, class RSub> void
-matrix_rotation_aim_at(writable_matrix<Sub>& m,
+template<class Sub, class PSub, class TSub, class RSub>
+void matrix_rotation_aim_at(writable_matrix<Sub>& m,
   const readable_vector<PSub>& pos, const readable_vector<TSub>& target,
   const readable_vector<RSub>& reference, axis_order order = axis_order_zyx);
 
@@ -240,10 +237,10 @@ matrix_rotation_aim_at(writable_matrix<Sub>& m,
  * @note @c tolerance is used to detect a near-zero axis length.
  */
 template<class Sub, class ASub, class E,
-  class Tol = value_type_trait_of_t<ASub>> void
-matrix_to_axis_angle(
-  const readable_matrix<Sub>& m, writable_vector<ASub>& axis,
-  E& angle, Tol tolerance =  scalar_traits<Tol>::epsilon());
+  class Tol = value_type_trait_of_t<ASub>>
+void matrix_to_axis_angle(const readable_matrix<Sub>& m,
+  writable_vector<ASub>& axis, E& angle,
+  Tol tolerance = scalar_traits<Tol>::epsilon());
 
 /** Convert a 3D rotation matrix @c m to an axis-angle pair returned as a
  * std::tuple.
@@ -251,22 +248,19 @@ matrix_to_axis_angle(
  * @note @c tolerance is used to detect a near-zero axis length.
  */
 template<class Sub, class Tol = value_type_trait_of_t<Sub>>
-std::tuple<
- vector<value_type_trait_of_t<Sub>, compiled<3>>, value_type_trait_of_t<Sub>
- >
-matrix_to_axis_angle(
-  const readable_matrix<Sub>& m,
-  Tol tolerance =  scalar_traits<Tol>::epsilon());
+std::tuple<vector<value_type_trait_of_t<Sub>, compiled<3>>,
+  value_type_trait_of_t<Sub>>
+matrix_to_axis_angle(const readable_matrix<Sub>& m,
+  Tol tolerance = scalar_traits<Tol>::epsilon());
 
 /** Convert a 3D rotation matrix @c m to an Euler-angle triple.
  *
  * @note @c tolerance is used to detect degeneracies.
  */
 template<class Sub, class E0, class E1, class E2,
-  class Tol = value_type_trait_of_t<Sub>> void
-matrix_to_euler(const readable_matrix<Sub>& m,
-  E0& angle_0, E1& angle_1, E2& angle_2, euler_order order,
-  Tol tolerance =  scalar_traits<Tol>::epsilon(),
+  class Tol = value_type_trait_of_t<Sub>>
+void matrix_to_euler(const readable_matrix<Sub>& m, E0& angle_0, E1& angle_1,
+  E2& angle_2, euler_order order, Tol tolerance = scalar_traits<Tol>::epsilon(),
   enable_if_matrix_t<Sub>* = nullptr);
 
 /** Convert a 3D rotation matrix @c m to an Euler-angle triple, and return
@@ -275,9 +269,9 @@ matrix_to_euler(const readable_matrix<Sub>& m,
  * @note @c tolerance is used to detect degeneracies.
  */
 template<class Sub, class Tol = value_type_trait_of_t<Sub>>
-vector<value_type_trait_of_t<Sub>, compiled<3>>
-matrix_to_euler(const readable_matrix<Sub>& m, euler_order order,
-  Tol tolerance =  scalar_traits<Tol>::epsilon(),
+vector<value_type_trait_of_t<Sub>, compiled<3>> matrix_to_euler(
+  const readable_matrix<Sub>& m, euler_order order,
+  Tol tolerance = scalar_traits<Tol>::epsilon(),
   enable_if_matrix_t<Sub>* = nullptr);
 
 /** Convert a 3D rotation matrix @c m to an Euler-angle triple, and return
@@ -289,23 +283,17 @@ matrix_to_euler(const readable_matrix<Sub>& m, euler_order order,
  * storage (e.g.  compiled<3> or allocated<>).  The default is vector<T,
  * compiled<3>>, where T is the value_type of the matrix.
  */
-template<class VectorT, class Sub,
-  class Tol = value_type_trait_of_t<Sub>> VectorT
-matrix_to_euler(const readable_matrix<Sub>& m, euler_order order,
-  Tol tolerance =  scalar_traits<Tol>::epsilon(),
+template<class VectorT, class Sub, class Tol = value_type_trait_of_t<Sub>>
+VectorT matrix_to_euler(const readable_matrix<Sub>& m, euler_order order,
+  Tol tolerance = scalar_traits<Tol>::epsilon(),
   enable_if_vector_t<VectorT>* = nullptr, enable_if_matrix_t<Sub>* = nullptr);
 
 /*@}*/
 
 /*@}*/
 
-} // namespace cml
+}  // namespace cml
 
 #define __CML_MATHLIB_MATRIX_ROTATION_TPP
 #include <cml/mathlib/matrix/rotation.tpp>
 #undef __CML_MATHLIB_MATRIX_ROTATION_TPP
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

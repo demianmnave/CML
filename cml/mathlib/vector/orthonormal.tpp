@@ -1,11 +1,9 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #ifndef __CML_MATHLIB_VECTOR_ORTHONORMAL_TPP
-#error "mathlib/vector/orthonormal.tpp not included correctly"
+#  error "mathlib/vector/orthonormal.tpp not included correctly"
 #endif
 
 #include <cml/common/mpl/are_convertible.h>
@@ -15,18 +13,19 @@
 
 namespace cml {
 
-template<class Sub, class XSub, class YSub> void
-orthonormal_basis_2D(
-  const readable_vector<Sub>& align,
-  writable_vector<XSub>& x, writable_vector<YSub>& y,
-  bool normalize_align, axis_order2D order)
+template<class Sub, class XSub, class YSub>
+void
+orthonormal_basis_2D(const readable_vector<Sub>& align,
+  writable_vector<XSub>& x, writable_vector<YSub>& y, bool normalize_align,
+  axis_order2D order)
 {
-  static_assert(cml::are_convertible<value_type_trait_of_t<Sub>,
-    value_type_trait_of_t<XSub>, value_type_trait_of_t<YSub>>::value,
+  static_assert(
+    cml::are_convertible<value_type_trait_of_t<Sub>,
+      value_type_trait_of_t<XSub>, value_type_trait_of_t<YSub>>::value,
     "incompatible scalar types");
 
-  typedef value_type_trait_of_t<Sub>			value_type;
-  typedef vector<value_type, compiled<2>>		temporary_type;
+  using value_type = value_type_trait_of_t<Sub>;
+  using temporary_type = vector<value_type, compiled<2>>;
 
   /* Checking handled by perp() and assignment to fixed<2>. */
 
@@ -36,7 +35,8 @@ orthonormal_basis_2D(
 
   temporary_type axes[2];
 
-  axes[i] = align; if(normalize_align) axes[i].normalize();
+  axes[i] = align;
+  if(normalize_align) axes[i].normalize();
   axes[j] = cml::perp(axes[i]);
 
   if(odd) axes[j] = -axes[j];
@@ -45,38 +45,40 @@ orthonormal_basis_2D(
   y = axes[1];
 }
 
-template<class Sub1, class Sub2, class XSub, class YSub, class ZSub> void
-orthonormal_basis(
-  const readable_vector<Sub1>& align, const readable_vector<Sub2>& reference,
-  writable_vector<XSub>& x, writable_vector<YSub>& y, writable_vector<ZSub>& z,
-  bool normalize_align, axis_order order
-  )
+template<class Sub1, class Sub2, class XSub, class YSub, class ZSub>
+void
+orthonormal_basis(const readable_vector<Sub1>& align,
+  const readable_vector<Sub2>& reference, writable_vector<XSub>& x,
+  writable_vector<YSub>& y, writable_vector<ZSub>& z, bool normalize_align,
+  axis_order order)
 {
-  static_assert(cml::are_convertible<value_type_trait_of_t<Sub1>,
-    value_type_trait_of_t<Sub2>, value_type_trait_of_t<XSub>,
-    value_type_trait_of_t<YSub>, value_type_trait_of_t<ZSub>>::value,
+  static_assert(
+    cml::are_convertible<value_type_trait_of_t<Sub1>,
+      value_type_trait_of_t<Sub2>, value_type_trait_of_t<XSub>,
+      value_type_trait_of_t<YSub>, value_type_trait_of_t<ZSub>>::value,
     "incompatible scalar types");
 
-  typedef value_type_trait_of_t<Sub1>			value_type;
-  typedef vector<value_type, compiled<3>>		temporary_type;
+  using value_type = value_type_trait_of_t<Sub1>;
+  using temporary_type = vector<value_type, compiled<3>>;
 
   int i, j, k;
   bool odd;
   unpack_axis_order(order, i, j, k, odd);
 
   temporary_type axes[3];
-  axes[i] = align; if(normalize_align) axes[i].normalize();
+  axes[i] = align;
+  if(normalize_align) axes[i].normalize();
   axes[k] = cml::cross(axes[i], reference).normalize();
   axes[j] = cml::cross(axes[k], axes[i]);
- 
-  if(odd) axes[k] = - axes[k];
+
+  if(odd) axes[k] = -axes[k];
 
   x = axes[0];
   y = axes[1];
   z = axes[2];
 }
 
-} // namespace cml
+}  // namespace cml
 
 
 #if 0
@@ -312,6 +314,3 @@ void orthonormal_basis_viewplane_RH(
         view_matrix,x,y,z,right_handed,order);
 }
 #endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2
