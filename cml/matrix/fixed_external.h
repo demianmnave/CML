@@ -91,9 +91,7 @@ class matrix<Element, external<Rows, Cols>, BasisOrient, Layout>
   public:
   /* Include methods from writable_type: */
   using writable_type::operator();
-#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
   using writable_type::operator=;
-#endif
 
 
   public:
@@ -112,26 +110,26 @@ class matrix<Element, external<Rows, Cols>, BasisOrient, Layout>
 
   public:
   /** Default construct with a null pointer.
-     *
-     * @warning The default constructor is enabled only if the compiler
-     * supports rvalue references from *this.
-     */
+   *
+   * @warning The default constructor is enabled only if the compiler
+   * supports rvalue references from *this.
+   */
   matrix();
 
   /** Construct from the wrapped pointer.
-     *
-     * @note @c data will be referenced using the assigned matrix layout.
-     */
+   *
+   * @note @c data will be referenced using the assigned matrix layout.
+   */
   explicit matrix(pointer data);
 
   /** Construct from a wrapped pointer to a 2D array of values.
-     *
-     * @note The dimensions of @c array must match those of the matrix,
-     * taking the matrix layout into account.  For example, the C-array
-     * initializer for a 3x2 external matrix in row-major layout will have
-     * dimensions [3][2], but the initializer for a column-major matrix
-     * will have dimensions [2][3].
-     */
+   *
+   * @note The dimensions of @c array must match those of the matrix,
+   * taking the matrix layout into account.  For example, the C-array
+   * initializer for a 3x2 external matrix in row-major layout will have
+   * dimensions [3][2], but the initializer for a column-major matrix
+   * will have dimensions [2][3].
+   */
   matrix(matrix_data_type& array);
 
   /** Move constructor. */
@@ -158,32 +156,6 @@ class matrix<Element, external<Rows, Cols>, BasisOrient, Layout>
 
   /** Move assignment. */
   matrix_type& operator=(matrix_type&& other);
-
-#ifdef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
-  template<class Other>
-  inline matrix_type& operator=(const readable_matrix<Other>& other)
-  {
-    return this->assign(other);
-  }
-
-  template<class Array, enable_if_array_t<Array>* = nullptr>
-  inline matrix_type& operator=(const Array& array)
-  {
-    return this->assign(array);
-  }
-
-  template<class Other, int Rows, int Cols>
-  inline matrix_type& operator=(Other const (&array)[Rows][Cols])
-  {
-    return this->assign(array);
-  }
-
-  template<class Other>
-  inline matrix_type& operator=(std::initializer_list<Other> l)
-  {
-    return this->assign(l);
-  }
-#endif
 
 
   protected:
@@ -215,12 +187,10 @@ class matrix<Element, external<Rows, Cols>, BasisOrient, Layout>
 
   /** Set element @c i. */
   template<class Other>
-  matrix_type& i_put(int i, int j, const Other& v) __CML_REF;
+  matrix_type& i_put(int i, int j, const Other& v) &;
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Set element @c i on a temporary. */
   template<class Other> matrix_type&& i_put(int i, int j, const Other& v) &&;
-#endif
 
   /*@}*/
 

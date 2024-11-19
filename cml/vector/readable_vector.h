@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <cml/common/compiler.h>
 #include <cml/scalar/binary_ops.h>
 #include <cml/vector/temporary.h>
 
@@ -57,12 +56,10 @@ template<class DerivedT> class readable_vector
   /** Return const element @c i. */
   immutable_value get(int i) const;
 
-#ifdef CML_HAS_STRUCTURED_BINDINGS
   /** Return const element @c i. */
   template<std::size_t I,
     enable_if_fixed_size<vector_traits<DerivedT>>* = nullptr>
   immutable_value get() const;
-#endif
 
   /** Return const element @c i. */
   immutable_value operator[](int i) const;
@@ -75,7 +72,6 @@ template<class DerivedT> class readable_vector
   /** Return the length of the vector. */
   value_type length() const;
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Return the normalized vector as an expression node. */
   vector_scalar_node<const DerivedT&, value_type,
     op::binary_divide<value_type, value_type>>
@@ -87,14 +83,7 @@ template<class DerivedT> class readable_vector
   vector_scalar_node<DerivedT&&, value_type,
     op::binary_divide<value_type, value_type>>
   normalize() const&&;
-#else
-  /** Return the normalized vector as an expression node. */
-  vector_scalar_node<DerivedT, value_type,
-    op::binary_divide<value_type, value_type>>
-  normalize() const;
-#endif
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Return subvector @c i as an expression node. */
   subvector_node<const DerivedT&> subvector(int i) const&;
 
@@ -102,10 +91,6 @@ template<class DerivedT> class readable_vector
      * into the node.
      */
   subvector_node<DerivedT&&> subvector(int i) const&&;
-#else
-  /** Return subvector @c i as an expression node. */
-  subvector_node<DerivedT> subvector(int i) const;
-#endif
 
 
   protected:
@@ -115,10 +100,8 @@ template<class DerivedT> class readable_vector
   // Use the compiler-generated copy constructor:
   readable_vector(const readable_vector&) = default;
 
-#ifdef CML_HAS_DEFAULTED_MOVE_CONSTRUCTOR
   // Use the compiler-generated move constructor:
   readable_vector(readable_vector&&) = default;
-#endif
 };
 
 }  // namespace cml

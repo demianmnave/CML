@@ -204,8 +204,6 @@ CATCH_TEST_CASE("dynamic const external, sub3")
 }
 
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-
 CATCH_TEST_CASE("rv from this1, sub1")
 {
   using node_type = decltype(cml::vector3d().subvector(0));
@@ -230,36 +228,3 @@ CATCH_TEST_CASE("rv from this1, sub2")
   CATCH_CHECK(xpr[0] == 2.);
   CATCH_CHECK(xpr[1] == 3.);
 }
-
-#else
-
-CATCH_TEST_CASE("rv from this1, sub1")
-{
-  typedef cml::vector3d vector3_t;
-  typedef decltype(vector3_t().subvector(0)) node_type;
-
-  CATCH_CHECK((std::is_same<typename node_type::sub_type, vector3_t>::value));
-
-  auto xpr = vector3_t(1., 2., 3.).subvector(0);
-  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == 2);
-  CATCH_REQUIRE(xpr.size() == 2);
-  CATCH_CHECK(xpr[0] == 2.);
-  CATCH_CHECK(xpr[1] == 3.);
-}
-
-CATCH_TEST_CASE("rv from this1, sub2")
-{
-  typedef cml::vector3d vector3_t;
-  vector3_t v1 = {1., 2., 3.};
-  typedef decltype(v1.subvector(0)) node_type;
-
-  CATCH_CHECK((std::is_same<typename node_type::sub_type, vector3_t>::value));
-
-  auto xpr = v1.subvector(0);
-  CATCH_REQUIRE(cml::int_c<decltype(xpr)::array_size>::value == 2);
-  CATCH_REQUIRE(xpr.size() == 2);
-  CATCH_CHECK(xpr[0] == 2.);
-  CATCH_CHECK(xpr[1] == 3.);
-}
-
-#endif

@@ -76,22 +76,20 @@ class quaternion_binary_node
 
   public:
   /** Construct from the wrapped sub-expressions.  Sub1 and Sub2 must be
-     * lvalue reference or rvalue reference types.
-     *
-     * @throws incompatible_quaternion_size_error at run-time if either Sub1 or
-     * Sub2 is a dynamically-sized quaternion, and sub1.size() != sub2.size().
-     * If both Sub1 and Sub2 are fixed-size expressions, then the sizes are
-     * checked at compile time.
-     */
+   * lvalue reference or rvalue reference types.
+   *
+   * @throws incompatible_quaternion_size_error at run-time if either Sub1 or
+   * Sub2 is a dynamically-sized quaternion, and sub1.size() != sub2.size().
+   * If both Sub1 and Sub2 are fixed-size expressions, then the sizes are
+   * checked at compile time.
+   */
   quaternion_binary_node(Sub1 left, Sub2 right);
 
   /** Move constructor. */
   quaternion_binary_node(node_type&& other);
 
-#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Copy constructor. */
   quaternion_binary_node(const node_type& other);
-#endif
 
 
   protected:
@@ -101,8 +99,8 @@ class quaternion_binary_node
   friend readable_type;
 
   /** Apply the operator to element @c i of the subexpressions and return
-     * the result.
-     */
+   * the result.
+   */
   immutable_value i_get(int i) const;
 
   /*@}*/
@@ -110,16 +108,16 @@ class quaternion_binary_node
 
   protected:
   /** The type used to store the left subexpression.  The expression is
-     * stored as a copy if Sub1 is an rvalue reference (temporary), or by
-     * const reference if Sub1 is an lvalue reference.
-     */
+   * stored as a copy if Sub1 is an rvalue reference (temporary), or by
+   * const reference if Sub1 is an lvalue reference.
+   */
   using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub1>::value, const left_type&,
     left_type>;
 
   /** The type used to store the right subexpression.  The expression is
-     * stored as a copy if Sub2 is an rvalue reference (temporary), or by
-     * const reference if Sub2 is an lvalue reference.
-     */
+   * stored as a copy if Sub2 is an rvalue reference (temporary), or by
+   * const reference if Sub2 is an lvalue reference.
+   */
   using right_wrap_type = cml::if_t<std::is_lvalue_reference<Sub2>::value, const right_type&,
     right_type>;
 
@@ -133,11 +131,6 @@ class quaternion_binary_node
 
 
   private:
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-  // Not copy constructible.
-  quaternion_binary_node(const node_type&);
-#endif
-
   // Not assignable.
   node_type& operator=(const node_type&);
 };

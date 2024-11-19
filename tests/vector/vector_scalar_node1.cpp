@@ -197,7 +197,6 @@ CATCH_TEST_CASE("fixed external, scalar_multiply_assign1")
 
 CATCH_TEST_CASE("fixed external, scalar_multiply_assign2")
 {
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   double av1[] = {1., 2., 3.};
   cml::external3d w;
   w = (cml::external3d(av1) *= 2);
@@ -206,9 +205,6 @@ CATCH_TEST_CASE("fixed external, scalar_multiply_assign2")
   CATCH_CHECK(w[0] == 2.);
   CATCH_CHECK(w[1] == 4.);
   CATCH_CHECK(w[2] == 6.);
-#else
-  CATCH_WARN("Assignment to temporary external vectors not supported");
-#endif
 }
 
 CATCH_TEST_CASE("fixed external, scalar_divide_assign1")
@@ -224,7 +220,6 @@ CATCH_TEST_CASE("fixed external, scalar_divide_assign1")
 
 CATCH_TEST_CASE("fixed external, scalar_divide_assign2")
 {
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   double av1[] = {2., 4., 6.};
   cml::external3d w;
   w = (cml::external3d(av1) /= 2);
@@ -233,9 +228,6 @@ CATCH_TEST_CASE("fixed external, scalar_divide_assign2")
   CATCH_CHECK(w[0] == 1.);
   CATCH_CHECK(w[1] == 2.);
   CATCH_CHECK(w[2] == 3.);
-#else
-  CATCH_WARN("Assignment to temporary external vectors not supported");
-#endif
 }
 
 CATCH_TEST_CASE("dynamic external, scalar_multiply1")
@@ -277,7 +269,6 @@ CATCH_TEST_CASE("dynamic external, scalar_multiply_assign1")
 
 CATCH_TEST_CASE("dynamic external, scalar_multiply_assign2")
 {
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   double av1[] = {1., 2., 3.};
   cml::externalnd w;
   w = (cml::externalnd(av1, 3) *= 2);
@@ -286,9 +277,6 @@ CATCH_TEST_CASE("dynamic external, scalar_multiply_assign2")
   CATCH_CHECK(w[0] == 2.);
   CATCH_CHECK(w[1] == 4.);
   CATCH_CHECK(w[2] == 6.);
-#else
-  CATCH_WARN("Assignment to temporary external vectors not supported");
-#endif
 }
 
 CATCH_TEST_CASE("dynamic external, scalar_divide_assign1")
@@ -304,7 +292,6 @@ CATCH_TEST_CASE("dynamic external, scalar_divide_assign1")
 
 CATCH_TEST_CASE("dynamic external, scalar_divide_assign2")
 {
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   double av1[] = {2., 4., 6.};
   cml::externalnd w;
   w = (cml::externalnd(av1, 3) /= 2);
@@ -313,9 +300,6 @@ CATCH_TEST_CASE("dynamic external, scalar_divide_assign2")
   CATCH_CHECK(w[0] == 1.);
   CATCH_CHECK(w[1] == 2.);
   CATCH_CHECK(w[2] == 3.);
-#else
-  CATCH_WARN("Assignment to temporary external vectors not supported");
-#endif
 }
 
 CATCH_TEST_CASE("dynamic, scalar_multiply1")

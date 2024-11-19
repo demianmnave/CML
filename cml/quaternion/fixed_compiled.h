@@ -70,9 +70,7 @@ class quaternion<Element, fixed<>, Order, Cross>
   using writable_type::X;
   using writable_type::Y;
   using writable_type::Z;
-#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
   using writable_type::operator=;
-#endif
 
 
   public:
@@ -85,9 +83,9 @@ class quaternion<Element, fixed<>, Order, Cross>
 
   public:
   /** Compiler-default constructor.
-     *
-     * @note The quaternion elements are uninitialized.
-     */
+   *
+   * @note The quaternion elements are uninitialized.
+   */
   quaternion() = default;
 
   /** Compiler-default destructor. */
@@ -96,19 +94,17 @@ class quaternion<Element, fixed<>, Order, Cross>
   /** Compiler-default copy constructor. */
   quaternion(const quaternion_type& other) = default;
 
-#ifdef CML_HAS_DEFAULTED_MOVE_CONSTRUCTOR
   /** Compiler-default move constructor. */
   quaternion(quaternion_type&& other) = default;
-#endif
 
   /** Construct from a readable_quaternion. */
   template<class Sub> quaternion(const readable_quaternion<Sub>& sub);
 
   /** Construct from 4 values.
-     *
-     * @note This overload is enabled only if all of the arguments are
-     * convertible to value_type.
-     */
+   *
+   * @note This overload is enabled only if all of the arguments are
+   * convertible to value_type.
+   */
   template<class E0, class E1, class E2, class E3,
     enable_if_convertible_t<value_type, E0, E1, E2, E3>* = nullptr>
   quaternion(const E0& e0, const E1& e1, const E2& e2, const E3& e3)
@@ -119,13 +115,13 @@ class quaternion<Element, fixed<>, Order, Cross>
   }
 
   /** Construct from a 3D readable_vector and one additional element.
-     *
-     * @note Although the imaginary part is specified first, the proper
-     * coefficient order is maintained.
-     *
-     * @note This overload is enabled only if the value_type of @c sub and
-     * the scalar argument are convertible to value_type.
-     */
+   *
+   * @note Although the imaginary part is specified first, the proper
+   * coefficient order is maintained.
+   *
+   * @note This overload is enabled only if the value_type of @c sub and
+   * the scalar argument are convertible to value_type.
+   */
   template<class Sub, class E0,
     enable_if_convertible_t<value_type, value_type_trait_of_t<Sub>, E0>* =
       nullptr>
@@ -137,13 +133,13 @@ class quaternion<Element, fixed<>, Order, Cross>
   }
 
   /** Construct from one additional element and a 3D readable_vector.
-     *
-     * @note Although the imaginary part is specified second, the proper
-     * coefficient order is maintained.
-     *
-     * @note This overload is enabled only if the value_type of @c sub and
-     * the scalar argument are convertible to value_type.
-     */
+   *
+   * @note Although the imaginary part is specified second, the proper
+   * coefficient order is maintained.
+   *
+   * @note This overload is enabled only if the value_type of @c sub and
+   * the scalar argument are convertible to value_type.
+   */
   template<class E0, class Sub,
     enable_if_convertible_t<value_type, value_type_trait_of_t<Sub>, E0>* =
       nullptr>
@@ -155,18 +151,18 @@ class quaternion<Element, fixed<>, Order, Cross>
   }
 
   /** Construct from a 3-element array and one additional element.
-     *
-     * @note Although the imaginary part is specified first, the proper
-     * coefficient order is maintained.
-     */
+   *
+   * @note Although the imaginary part is specified first, the proper
+   * coefficient order is maintained.
+   */
   template<class Array, class E1, enable_if_array_t<Array>* = nullptr>
   quaternion(const Array& array, const E1& e1);
 
   /** Construct from one additional element and a 3-element array.
-     *
-     * @note Although the imaginary part is specified second, the proper
-     * coefficient order is maintained.
-     */
+   *
+   * @note Although the imaginary part is specified second, the proper
+   * coefficient order is maintained.
+   */
   template<class E0, class Array, enable_if_array_t<Array>* = nullptr>
   quaternion(const E0& e0, const Array& array);
 
@@ -206,26 +202,6 @@ class quaternion<Element, fixed<>, Order, Cross>
   /** Move assignment. */
   quaternion_type& operator=(quaternion_type&& other);
 
-#ifdef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
-  template<class Other>
-  quaternion_type& operator=(const readable_quaternion<Other>& other)
-  {
-    return this->assign(other);
-  }
-
-  template<class Array, enable_if_array_t<Array>* = nullptr>
-  quaternion_type& operator=(const Array& array)
-  {
-    return this->assign(array);
-  }
-
-  template<class Other>
-  quaternion_type& operator=(std::initializer_list<Other> l)
-  {
-    return this->assign(l);
-  }
-#endif
-
 
   protected:
   /** @name readable_quaternion Interface */
@@ -249,12 +225,10 @@ class quaternion<Element, fixed<>, Order, Cross>
   mutable_value i_get(int i);
 
   /** Set element @c i. */
-  template<class Other> quaternion_type& i_put(int i, const Other& v) __CML_REF;
+  template<class Other> quaternion_type& i_put(int i, const Other& v) &;
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Set element @c i on a temporary. */
   template<class Other> quaternion_type&& i_put(int i, const Other& v) &&;
-#endif
 
   /*@}*/
 

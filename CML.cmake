@@ -15,7 +15,6 @@ set(main_HEADERS
 set(common_HEADERS
   cml/common/array_size_of.h
   cml/common/basis_tags.h
-  cml/common/compiler.h
   cml/common/exception.h
   cml/common/hash.h
   cml/common/layout_tags.h

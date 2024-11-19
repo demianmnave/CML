@@ -63,19 +63,17 @@ class matrix_basis_node<Sub, -1>
 
   public:
   /** Construct from the wrapped sub-expression and the basis index.  @c
-     * sub must be an lvalue reference or rvalue reference type.
-     *
-     * @throws std::invalid_argument if @c i < 0.
-     */
+   * sub must be an lvalue reference or rvalue reference type.
+   *
+   * @throws std::invalid_argument if @c i < 0.
+   */
   explicit matrix_basis_node(Sub sub, int i);
 
   /** Move constructor. */
   matrix_basis_node(node_type&& other);
 
-#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Copy constructor. */
   matrix_basis_node(const node_type& other);
-#endif
 
 
   protected:
@@ -95,9 +93,9 @@ class matrix_basis_node<Sub, -1>
 
   protected:
   /** The type used to store the subexpression.  The expression is stored
-     * as a copy if Sub is an rvalue reference (temporary), or by const
-     * reference if Sub is an lvalue reference.
-     */
+   * as a copy if Sub is an rvalue reference (temporary), or by const
+   * reference if Sub is an lvalue reference.
+   */
   using sub_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const sub_type&,
     sub_type>;
 
@@ -111,11 +109,6 @@ class matrix_basis_node<Sub, -1>
 
 
   private:
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-  // Not copy constructible.
-  matrix_basis_node(const node_type&);
-#endif
-
   // Not assignable.
   node_type& operator=(const node_type&);
 };

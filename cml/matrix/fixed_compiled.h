@@ -85,9 +85,7 @@ class matrix<Element, fixed<Rows, Cols>, BasisOrient, Layout>
   public:
   /* Include methods from writable_matrix: */
   using writable_type::operator();
-#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
   using writable_type::operator=;
-#endif
 
 
   public:
@@ -106,9 +104,9 @@ class matrix<Element, fixed<Rows, Cols>, BasisOrient, Layout>
 
   public:
   /** Compiler-default constructor.
-     *
-     * @note The matrix elements are uninitialized.
-     */
+   *
+   * @note The matrix elements are uninitialized.
+   */
   matrix() = default;
 
   /** Compiler-default destructor. */
@@ -117,19 +115,17 @@ class matrix<Element, fixed<Rows, Cols>, BasisOrient, Layout>
   /** Compiler-default copy constructor. */
   matrix(const matrix_type& other) = default;
 
-#ifdef CML_HAS_DEFAULTED_MOVE_CONSTRUCTOR
   /** Compiler-default move constructor. */
   matrix(matrix_type&& other) = default;
-#endif
 
   /** Construct from a readable_matrix. */
   template<class Sub> matrix(const readable_matrix<Sub>& sub);
 
   /** Construct from at least 1 value.
-     *
-     * @note This overload is enabled only if all of the arguments are
-     * convertible to value_type.
-     */
+   *
+   * @note This overload is enabled only if all of the arguments are
+   * convertible to value_type.
+   */
   template<class E0, class... Elements,
     // XXX This could be enable_if_convertible_t, but VC++12 ICEs:
     typename enable_if_convertible<value_type, E0, Elements...>::type* =
@@ -178,32 +174,6 @@ class matrix<Element, fixed<Rows, Cols>, BasisOrient, Layout>
   /** Move assignment. */
   matrix_type& operator=(matrix_type&& other);
 
-#ifdef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
-  template<class Other>
-  inline matrix_type& operator=(const readable_matrix<Other>& other)
-  {
-    return this->assign(other);
-  }
-
-  template<class Array, typename enable_if_array_t<Array>* = nullptr>
-  inline matrix_type& operator=(const Array& array)
-  {
-    return this->assign(array);
-  }
-
-  template<class Other, int Rows, int Cols>
-  inline matrix_type& operator=(Other const (&array)[Rows][Cols])
-  {
-    return this->assign(array);
-  }
-
-  template<class Other>
-  inline matrix_type& operator=(std::initializer_list<Other> l)
-  {
-    return this->assign(l);
-  }
-#endif
-
 
   protected:
   /** @name readable_matrix Interface */
@@ -234,12 +204,10 @@ class matrix<Element, fixed<Rows, Cols>, BasisOrient, Layout>
 
   /** Set element @c i. */
   template<class Other>
-  matrix_type& i_put(int i, int j, const Other& v) __CML_REF;
+  matrix_type& i_put(int i, int j, const Other& v) &;
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Set element @c i on a temporary. */
   template<class Other> matrix_type&& i_put(int i, int j, const Other& v) &&;
-#endif
 
   /*@}*/
 

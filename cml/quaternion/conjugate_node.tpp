@@ -22,12 +22,10 @@ conjugate_node<Sub>::conjugate_node(node_type&& other)
 : m_sub(std::move(other.m_sub))
 {}
 
-#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class Sub>
 conjugate_node<Sub>::conjugate_node(const node_type& other)
 : m_sub(other.m_sub)
 {}
-#endif
 
 
 /* Internal methods: */

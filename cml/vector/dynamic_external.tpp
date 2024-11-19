@@ -17,9 +17,6 @@ vector<E, external<>>::vector()
 : m_data(0)
 , m_size(0)
 {
-#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-  static_assert(false, "external vector default constructor not supported");
-#endif
 }
 
 template<class E>
@@ -138,13 +135,12 @@ vector<E, external<>>::i_get(int i) -> mutable_value
 template<class E>
 template<class Other>
 auto
-vector<E, external<>>::i_put(int i, const Other& v) __CML_REF->vector_type&
+vector<E, external<>>::i_put(int i, const Other& v) &->vector_type&
 {
   this->m_data[i] = value_type(v);
   return *this;
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class E>
 template<class Other>
 auto
@@ -153,6 +149,5 @@ vector<E, external<>>::i_put(int i, const Other& v) && -> vector_type&&
   this->m_data[i] = value_type(v);
   return (vector_type&&) *this;
 }
-#endif
 
 }  // namespace cml

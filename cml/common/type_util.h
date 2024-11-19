@@ -5,7 +5,6 @@
 #pragma once
 
 #include <utility>
-#include <cml/common/compiler.h>
 #include <cml/common/mpl/is_statically_polymorphic.h>
 
 namespace cml {

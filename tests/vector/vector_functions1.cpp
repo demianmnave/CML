@@ -449,9 +449,6 @@ CATCH_TEST_CASE("dynamic const external, normalize2")
   CATCH_CHECK(l2 == Approx(1.0).epsilon(1e-12));
 }
 
-
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-
 CATCH_TEST_CASE("rv from this1, normalize1")
 {
   CATCH_CHECK((std::is_rvalue_reference<
@@ -503,65 +500,3 @@ CATCH_TEST_CASE("rv from this1, cardinal1")
   CATCH_CHECK(xpr[1] == 0.);
   CATCH_CHECK(xpr[2] == 0.);
 }
-
-#else
-
-CATCH_TEST_CASE("rv from this1, normalize1")
-{
-  CATCH_CHECK((std::is_lvalue_reference<
-    decltype(cml::vector3d(1., 1., 1.).normalize())>::value));
-  auto xpr = cml::vector3d(1., 1., 1.).normalize();
-  CATCH_CHECK((std::is_reference<decltype(xpr)>::value) == false);
-
-  double l2 = xpr.length_squared();
-  CATCH_CHECK(l2 == Approx(1.0).epsilon(1e-12));
-}
-
-CATCH_TEST_CASE("rv from this1, zero1")
-{
-  CATCH_CHECK((std::is_lvalue_reference<
-    decltype(cml::vector3d(1., 1., 1.).zero())>::value));
-  auto xpr = cml::vector3d(1., 1., 1.).zero();
-  CATCH_CHECK((std::is_reference<decltype(xpr)>::value) == false);
-  CATCH_CHECK(xpr[0] == 0.);
-  CATCH_CHECK(xpr[1] == 0.);
-  CATCH_CHECK(xpr[2] == 0.);
-  CATCH_CHECK(xpr.length() == 0.);
-}
-
-CATCH_TEST_CASE("rv from this1, minimize1")
-{
-  CATCH_CHECK((std::is_lvalue_reference<
-    decltype(cml::vector3d(1., 1., 1.).minimize(cml::vector3d(2., 0., 3.)))>::
-      value));
-  auto xpr = cml::vector3d(1., 1., 1.).minimize(cml::vector3d(2., 0., 3.));
-  CATCH_CHECK((std::is_reference<decltype(xpr)>::value) == false);
-  CATCH_CHECK(xpr[0] == 1.);
-  CATCH_CHECK(xpr[1] == 0.);
-  CATCH_CHECK(xpr[2] == 1.);
-}
-
-CATCH_TEST_CASE("rv from this1, maximize1")
-{
-  CATCH_CHECK((std::is_lvalue_reference<
-    decltype(cml::vector3d(1., 1., 1.).maximize(cml::vector3d(2., 0., 3.)))>::
-      value));
-  auto xpr = cml::vector3d(1., 1., 1.).maximize(cml::vector3d(2., 0., 3.));
-  CATCH_CHECK((std::is_reference<decltype(xpr)>::value) == false);
-  CATCH_CHECK(xpr[0] == 2.);
-  CATCH_CHECK(xpr[1] == 1.);
-  CATCH_CHECK(xpr[2] == 3.);
-}
-
-CATCH_TEST_CASE("rv from this1, cardinal1")
-{
-  CATCH_CHECK(
-    (std::is_lvalue_reference<decltype(cml::vector3d().cardinal(0))>::value));
-  auto xpr = cml::vector3d().cardinal(0);
-  CATCH_CHECK((std::is_reference<decltype(xpr)>::value) == false);
-  CATCH_CHECK(xpr[0] == 1.);
-  CATCH_CHECK(xpr[1] == 0.);
-  CATCH_CHECK(xpr[2] == 0.);
-}
-
-#endif

@@ -59,17 +59,15 @@ class conjugate_node : public readable_quaternion<conjugate_node<Sub>>
 
   public:
   /** Construct from the wrapped quaternion expression.  @c sub must be
-     * an lvalue reference or rvalue reference.
-     */
+   * an lvalue reference or rvalue reference.
+   */
   explicit conjugate_node(Sub sub);
 
   /** Move constructor. */
   conjugate_node(node_type&& other);
 
-#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Copy constructor. */
   conjugate_node(const node_type& other);
-#endif
 
 
   protected:
@@ -86,9 +84,9 @@ class conjugate_node : public readable_quaternion<conjugate_node<Sub>>
 
   protected:
   /** The type used to store the subexpression.  The expression is stored
-     * as a copy if Sub is an rvalue reference (temporary), or by const
-     * reference if Sub is an lvalue reference.
-     */
+   * as a copy if Sub is an rvalue reference (temporary), or by const
+   * reference if Sub is an lvalue reference.
+   */
   using wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const sub_type&,
     sub_type>;
 
@@ -97,11 +95,6 @@ class conjugate_node : public readable_quaternion<conjugate_node<Sub>>
 
 
   private:
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-  // Not copy constructible.
-  conjugate_node(const node_type&);
-#endif
-
   // Not assignable.
   node_type& operator=(const node_type&);
 };

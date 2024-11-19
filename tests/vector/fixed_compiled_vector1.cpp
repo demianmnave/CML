@@ -196,7 +196,6 @@ CATCH_TEST_CASE("size_check1")
     cml::incompatible_vector_size_error);
 }
 
-#ifdef CML_HAS_STRUCTURED_BINDINGS
 CATCH_TEST_CASE("structured_binding1")
 {
   auto [x, y, z] = cml::vector3d(1., 2., 3.);
@@ -204,4 +203,3 @@ CATCH_TEST_CASE("structured_binding1")
   CATCH_CHECK(y == 2.);
   CATCH_CHECK(z == 3.);
 }
-#endif

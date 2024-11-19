@@ -82,17 +82,15 @@ class matrix_scalar_node
 
   public:
   /** Construct from the wrapped sub-expression and the scalar to apply.
-     * @c left and @c right must be lvalue or rvalue references.
-     */
+   * @c left and @c right must be lvalue or rvalue references.
+   */
   matrix_scalar_node(Sub left, Scalar right);
 
   /** Move constructor. */
   matrix_scalar_node(node_type&& other);
 
-#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Copy constructor. */
   matrix_scalar_node(const node_type& other);
-#endif
 
 
   protected:
@@ -108,8 +106,8 @@ class matrix_scalar_node
   int i_cols() const;
 
   /** Apply the operator to element @c (i,j) of the subexpressions and
-     * return the result.
-     */
+   * return the result.
+   */
   immutable_value i_get(int i, int j) const;
 
   /*@}*/
@@ -117,9 +115,9 @@ class matrix_scalar_node
 
   protected:
   /** The type used to store the left subexpression.  The expression is
-     * stored as a copy if Sub is an rvalue reference (temporary), or by
-     * const reference if Sub is an lvalue reference.
-     */
+   * stored as a copy if Sub is an rvalue reference (temporary), or by
+   * const reference if Sub is an lvalue reference.
+   */
   using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const left_type&,
     left_type>;
 
@@ -133,11 +131,6 @@ class matrix_scalar_node
 
 
   private:
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-  // Not copy constructible.
-  matrix_scalar_node(const node_type&);
-#endif
-
   // Not assignable.
   node_type& operator=(const node_type&);
 };

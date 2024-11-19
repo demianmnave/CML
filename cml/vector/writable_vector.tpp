@@ -68,7 +68,6 @@ writable_vector<DT>::get(int i) -> mutable_value
   return this->actual().i_get(i);
 }
 
-#ifdef CML_HAS_STRUCTURED_BINDINGS
 template<class DT>
 template<std::size_t I, enable_if_fixed_size<vector_traits<DT>>*>
 auto
@@ -76,7 +75,6 @@ writable_vector<DT>::get() -> mutable_value
 {
   return this->actual().i_get(I);
 }
-#endif
 
 template<class DT>
 auto
@@ -88,12 +86,11 @@ writable_vector<DT>::operator[](int i) -> mutable_value
 template<class DT>
 template<class Other>
 DT&
-writable_vector<DT>::put(int i, const Other& v) __CML_REF
+writable_vector<DT>::put(int i, const Other& v) &
 {
   return this->actual().i_put(i, v);
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class Other>
 DT&&
@@ -102,17 +99,15 @@ writable_vector<DT>::put(int i, const Other& v) &&
   this->put(i, v);  // Forward to put(...) &
   return (DT&&) *this;
 }
-#endif
 
 
 template<class DT>
 DT&
-writable_vector<DT>::normalize() __CML_REF
+writable_vector<DT>::normalize() &
 {
   return this->operator/=(this->length());
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 DT&&
 writable_vector<DT>::normalize() &&
@@ -120,17 +115,15 @@ writable_vector<DT>::normalize() &&
   this->normalize();  // Forward to normalize &
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 DT&
-writable_vector<DT>::zero() __CML_REF
+writable_vector<DT>::zero() &
 {
   for(int i = 0; i < this->size(); ++i) this->put(i, 0);
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 DT&&
 writable_vector<DT>::zero() &&
@@ -138,16 +131,14 @@ writable_vector<DT>::zero() &&
   this->zero();  // Forward to zero &
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 DT&
-writable_vector<DT>::cardinal(int i) __CML_REF
+writable_vector<DT>::cardinal(int i) &
 {
   return this->zero().put(i, 1);
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 DT&&
 writable_vector<DT>::cardinal(int i) &&
@@ -155,12 +146,11 @@ writable_vector<DT>::cardinal(int i) &&
   this->cardinal(i);  // Forward to cardinal &
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 template<class ODT>
 DT&
-writable_vector<DT>::minimize(const readable_vector<ODT>& other) __CML_REF
+writable_vector<DT>::minimize(const readable_vector<ODT>& other) &
 {
   cml::check_same_size(*this, other);
   for(int i = 0; i < this->size(); ++i) {
@@ -169,7 +159,6 @@ writable_vector<DT>::minimize(const readable_vector<ODT>& other) __CML_REF
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class ODT>
 DT&&
@@ -178,12 +167,11 @@ writable_vector<DT>::minimize(const readable_vector<ODT>& other) &&
   this->minimize(other);  // Forward to minimize &
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 template<class ODT>
 DT&
-writable_vector<DT>::maximize(const readable_vector<ODT>& other) __CML_REF
+writable_vector<DT>::maximize(const readable_vector<ODT>& other) &
 {
   cml::check_same_size(*this, other);
   for(int i = 0; i < this->size(); ++i) {
@@ -192,7 +180,6 @@ writable_vector<DT>::maximize(const readable_vector<ODT>& other) __CML_REF
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class ODT>
 DT&&
@@ -201,11 +188,10 @@ writable_vector<DT>::maximize(const readable_vector<ODT>& other) &&
   this->maximize(other);  // Forward to maximize &
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 DT&
-writable_vector<DT>::random(const_reference low, const_reference high) __CML_REF
+writable_vector<DT>::random(const_reference low, const_reference high) &
 {
   using distribution_type = if_t<std::is_integral<value_type>::value,
     std::uniform_int_distribution<value_type>,
@@ -217,7 +203,6 @@ writable_vector<DT>::random(const_reference low, const_reference high) __CML_REF
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 DT&&
 writable_vector<DT>::random(const_reference low, const_reference high) &&
@@ -225,17 +210,15 @@ writable_vector<DT>::random(const_reference low, const_reference high) &&
   this->random(low, high);
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 DT&
-writable_vector<DT>::fill(const_reference v) __CML_REF
+writable_vector<DT>::fill(const_reference v) &
 {
   for(int i = 0; i < this->size(); ++i) this->put(i, v);
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 DT&&
 writable_vector<DT>::fill(const_reference v) &&
@@ -243,18 +226,16 @@ writable_vector<DT>::fill(const_reference v) &&
   this->fill(v);
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 template<class E0, class... Es>
 auto
-writable_vector<DT>::set(const E0& e0, const Es&... eN) __CML_REF
+writable_vector<DT>::set(const E0& e0, const Es&... eN) &
   ->enable_if_t<are_convertible<value_type, E0, Es...>::value, DT&>
 {
   return this->assign_elements(e0, eN...);
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class E0, class... Es>
 auto
@@ -264,11 +245,10 @@ writable_vector<DT>::set(const E0& e0, const Es&... eN) && -> enable_if_t<
   this->assign_elements(e0, eN...);
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 DT&
-writable_vector<DT>::operator=(const writable_vector& other) __CML_REF
+writable_vector<DT>::operator=(const writable_vector& other) &
 {
   return this->assign(other);
 }
@@ -276,12 +256,11 @@ writable_vector<DT>::operator=(const writable_vector& other) __CML_REF
 template<class DT>
 template<class ODT>
 DT&
-writable_vector<DT>::operator=(const readable_vector<ODT>& other) __CML_REF
+writable_vector<DT>::operator=(const readable_vector<ODT>& other) &
 {
   return this->assign(other);
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class ODT>
 DT&&
@@ -290,17 +269,15 @@ writable_vector<DT>::operator=(const readable_vector<ODT>& other) &&
   this->operator=(other);
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 template<class Array, enable_if_array_t<Array>*>
 DT&
-writable_vector<DT>::operator=(const Array& array) __CML_REF
+writable_vector<DT>::operator=(const Array& array) &
 {
   return this->assign(array);
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class Array, enable_if_array_t<Array>*>
 DT&&
@@ -309,17 +286,15 @@ writable_vector<DT>::operator=(const Array& array) &&
   this->operator=(array);
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 template<class Other>
 DT&
-writable_vector<DT>::operator=(std::initializer_list<Other> l) __CML_REF
+writable_vector<DT>::operator=(std::initializer_list<Other> l) &
 {
   return this->assign(l);
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class Other>
 DT&&
@@ -327,12 +302,11 @@ writable_vector<DT>::operator=(std::initializer_list<Other> l) &&
 {
   return this->assign(l);
 }
-#endif
 
 template<class DT>
 template<class ODT>
 DT&
-writable_vector<DT>::operator+=(const readable_vector<ODT>& other) __CML_REF
+writable_vector<DT>::operator+=(const readable_vector<ODT>& other) &
 {
   using op_type = binary_plus_t<DT, ODT>;
   detail::check_or_resize(*this, other);
@@ -341,7 +315,6 @@ writable_vector<DT>::operator+=(const readable_vector<ODT>& other) __CML_REF
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class ODT>
 DT&&
@@ -350,12 +323,11 @@ writable_vector<DT>::operator+=(const readable_vector<ODT>& other) &&
   this->operator+=(other);
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 template<class ODT>
 DT&
-writable_vector<DT>::operator-=(const readable_vector<ODT>& other) __CML_REF
+writable_vector<DT>::operator-=(const readable_vector<ODT>& other) &
 {
   using op_type = binary_minus_t<DT, ODT>;
   detail::check_or_resize(*this, other);
@@ -364,7 +336,6 @@ writable_vector<DT>::operator-=(const readable_vector<ODT>& other) __CML_REF
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class ODT>
 DT&&
@@ -373,13 +344,12 @@ writable_vector<DT>::operator-=(const readable_vector<ODT>& other) &&
   this->operator-=(other);
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 template<class ScalarT,
   enable_if_convertible_t<typename vector_traits<DT>::value_type, ScalarT>*>
 DT&
-writable_vector<DT>::operator*=(const ScalarT& v) __CML_REF
+writable_vector<DT>::operator*=(const ScalarT& v) &
 {
   using op_type = binary_multiply_t<DT, ScalarT>;
   for(int i = 0; i < this->size(); ++i)
@@ -387,7 +357,6 @@ writable_vector<DT>::operator*=(const ScalarT& v) __CML_REF
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class ScalarT,
   enable_if_convertible_t<typename vector_traits<DT>::value_type, ScalarT>*>
@@ -397,13 +366,12 @@ writable_vector<DT>::operator*=(const ScalarT& v) &&
   this->operator*=(v);
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 template<class ScalarT,
   enable_if_convertible_t<typename vector_traits<DT>::value_type, ScalarT>*>
 DT&
-writable_vector<DT>::operator/=(const ScalarT& v) __CML_REF
+writable_vector<DT>::operator/=(const ScalarT& v) &
 {
   using op_type = binary_divide_t<DT, ScalarT>;
   for(int i = 0; i < this->size(); ++i)
@@ -411,7 +379,6 @@ writable_vector<DT>::operator/=(const ScalarT& v) __CML_REF
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class ScalarT,
   enable_if_convertible_t<typename vector_traits<DT>::value_type, ScalarT>*>
@@ -421,8 +388,6 @@ writable_vector<DT>::operator/=(const ScalarT& v) &&
   this->operator/=(v);
   return (DT&&) *this;
 }
-#endif
-
 
 /* Internal methods: */
 

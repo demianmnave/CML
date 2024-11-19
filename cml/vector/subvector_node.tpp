@@ -22,13 +22,11 @@ subvector_node<Sub>::subvector_node(node_type&& other)
 , m_skip(other.m_skip)
 {}
 
-#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class Sub>
 subvector_node<Sub>::subvector_node(const node_type& other)
 : m_sub(other.m_sub)
 , m_skip(other.m_skip)
 {}
-#endif
 
 
 /* Internal methods: */

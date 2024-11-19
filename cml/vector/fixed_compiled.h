@@ -59,9 +59,7 @@ class vector<Element, fixed<Size>>
   public:
   /* Include methods from writable_type: */
   using writable_type::operator[];
-#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
   using writable_type::operator=;
-#endif
 
 
   public:
@@ -74,9 +72,9 @@ class vector<Element, fixed<Size>>
 
   public:
   /** Compiler-default constructor.
-     *
-     * @note The vector elements are uninitialized.
-     */
+   *
+   * @note The vector elements are uninitialized.
+   */
   vector() = default;
 
   /** Compiler-default destructor. */
@@ -85,19 +83,17 @@ class vector<Element, fixed<Size>>
   /** Compiler-default copy constructor. */
   vector(const vector_type& other) = default;
 
-#ifdef CML_HAS_DEFAULTED_MOVE_CONSTRUCTOR
   /** Compiler-default move constructor. */
   vector(vector_type&& other) = default;
-#endif
 
   /** Construct from a readable_vector. */
   template<class Sub> vector(const readable_vector<Sub>& sub);
 
   /** Construct from at least 1 value.
-     *
-     * @note This overload is enabled only if all of the arguments are
-     * convertible to value_type.
-     */
+   *
+   * @note This overload is enabled only if all of the arguments are
+   * convertible to value_type.
+   */
   template<class E0, class... Elements,
     enable_if_convertible_t<value_type, E0, Elements...>* = nullptr>
   vector(const E0& e0, const Elements&... eN)
@@ -108,11 +104,11 @@ class vector<Element, fixed<Size>>
   }
 
   /** Construct from a readable_vector and at least one
-     * additional element.
-     *
-     * @note This overload is enabled only if the value_type of @c sub and
-     * all of the scalar arguments are convertible to value_type.
-     */
+   * additional element.
+   *
+   * @note This overload is enabled only if the value_type of @c sub and
+   * all of the scalar arguments are convertible to value_type.
+   */
   template<class Sub, class E0, class... Elements,
     enable_if_convertible_t<value_type, value_type_trait_of_t<Sub>, E0,
       Elements...>* = nullptr>
@@ -156,26 +152,6 @@ class vector<Element, fixed<Size>>
   /** Move assignment. */
   vector_type& operator=(vector_type&& other);
 
-#ifdef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
-  template<class Other>
-  inline vector_type& operator=(const readable_vector<Other>& other)
-  {
-    return this->assign(other);
-  }
-
-  template<class Array, enable_if_array_t<Array>* = nullptr>
-  inline vector_type& operator=(const Array& array)
-  {
-    return this->assign(array);
-  }
-
-  template<class Other>
-  inline vector_type& operator=(std::initializer_list<Other> l)
-  {
-    return this->assign(l);
-  }
-#endif
-
 
   protected:
   /** @name readable_vector Interface */
@@ -202,12 +178,10 @@ class vector<Element, fixed<Size>>
   mutable_value i_get(int i);
 
   /** Set element @c i. */
-  template<class Other> vector_type& i_put(int i, const Other& v) __CML_REF;
+  template<class Other> vector_type& i_put(int i, const Other& v) &;
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Set element @c i on a temporary. */
   template<class Other> vector_type&& i_put(int i, const Other& v) &&;
-#endif
 
   /*@}*/
 
@@ -219,7 +193,6 @@ class vector<Element, fixed<Size>>
 
 }  // namespace cml
 
-#ifdef CML_HAS_STRUCTURED_BINDINGS
 template<typename E, int Size>
 struct std::tuple_size<cml::vector<E, cml::fixed<Size>>>
 {
@@ -231,7 +204,6 @@ struct std::tuple_element<I, cml::vector<E, cml::fixed<Size>>>
 {
   using type = cml::value_type_of_t<cml::vector<E, cml::fixed<Size>>>;
 };
-#endif
 
 #define __CML_VECTOR_FIXED_COMPILED_TPP
 #include <cml/vector/fixed_compiled.tpp>

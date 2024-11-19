@@ -223,7 +223,6 @@ CATCH_TEST_CASE("fixed external scalar_multiply_assign1")
 
 CATCH_TEST_CASE("fixed external scalar_multiply_assign2")
 {
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   double aM[] = {1., 2., 3., 4.};
   cml::external22d M;
   M = (cml::external22d(aM) *= 2.);
@@ -233,9 +232,6 @@ CATCH_TEST_CASE("fixed external scalar_multiply_assign2")
   CATCH_CHECK(M(0, 1) == 4.);
   CATCH_CHECK(M(1, 0) == 6.);
   CATCH_CHECK(M(1, 1) == 8.);
-#else
-  CATCH_WARN("Assignment to temporary external vectors not supported");
-#endif
 }
 
 CATCH_TEST_CASE("fixed external scalar_divide_assign1")
@@ -254,7 +250,6 @@ CATCH_TEST_CASE("fixed external scalar_divide_assign1")
 
 CATCH_TEST_CASE("fixed external scalar_divide_assign2")
 {
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   double aM[] = {2., 4., 6., 8.};
   cml::external22d M;
   M = (cml::external22d(aM) /= 2.);
@@ -264,9 +259,6 @@ CATCH_TEST_CASE("fixed external scalar_divide_assign2")
   CATCH_CHECK(M(0, 1) == 2.);
   CATCH_CHECK(M(1, 0) == 3.);
   CATCH_CHECK(M(1, 1) == 4.);
-#else
-  CATCH_WARN("Assignment to temporary external vectors not supported");
-#endif
 }
 
 CATCH_TEST_CASE("dynamic external scalar_multiply1")
@@ -319,7 +311,6 @@ CATCH_TEST_CASE("dynamic external scalar_multiply_assign1")
 
 CATCH_TEST_CASE("dynamic external scalar_multiply_assign2")
 {
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   double aM[] = {1., 2., 3., 4.};
   cml::externalmnd M;
   M = (cml::externalmnd(aM, 2, 2) *= 2.);
@@ -329,9 +320,6 @@ CATCH_TEST_CASE("dynamic external scalar_multiply_assign2")
   CATCH_CHECK(M(0, 1) == 4.);
   CATCH_CHECK(M(1, 0) == 6.);
   CATCH_CHECK(M(1, 1) == 8.);
-#else
-  CATCH_WARN("Assignment to temporary external vectors not supported");
-#endif
 }
 
 CATCH_TEST_CASE("dynamic external scalar_divide_assign1")
@@ -350,7 +338,6 @@ CATCH_TEST_CASE("dynamic external scalar_divide_assign1")
 
 CATCH_TEST_CASE("dynamic external scalar_divide_assign2")
 {
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   double aM[] = {2., 4., 6., 8.};
   cml::externalmnd M;
   M = (cml::externalmnd(2, 2, aM) /= 2.);
@@ -360,9 +347,6 @@ CATCH_TEST_CASE("dynamic external scalar_divide_assign2")
   CATCH_CHECK(M(0, 1) == 2.);
   CATCH_CHECK(M(1, 0) == 3.);
   CATCH_CHECK(M(1, 1) == 4.);
-#else
-  CATCH_WARN("Assignment to temporary external vectors not supported");
-#endif
 }
 
 CATCH_TEST_CASE("dynamic scalar_multiply1")

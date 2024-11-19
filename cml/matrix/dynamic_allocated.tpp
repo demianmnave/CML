@@ -4,14 +4,11 @@
 
 #pragma once
 
-#ifndef cml_matrix_dynamic_allocated_tpp
-#  define cml_matrix_dynamic_allocated_tpp
+#ifndef __CML_MATRIX_DYNAMIC_ALLOCATED_TPP
+#  error "matrix/dynamic_allocated.tpp not included correctly"
+#endif
 
-#  ifndef __CML_MATRIX_DYNAMIC_ALLOCATED_TPP
-#    error "matrix/dynamic_allocated.tpp not included correctly"
-#  endif
-
-#  include <cml/common/exception.h>
+#include <cml/common/exception.h>
 
 namespace cml {
 
@@ -317,13 +314,12 @@ template<class E, class A, typename BO, typename L>
 template<class Other>
 auto
 matrix<E, dynamic<A>, BO, L>::i_put(int i, int j,
-  const Other& v) __CML_REF->matrix_type&
+  const Other& v) & -> matrix_type&
 {
   s_access(*this, i, j, layout_tag()) = value_type(v);
   return *this;
 }
 
-#  ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class E, class A, typename BO, typename L>
 template<class Other>
 auto
@@ -333,8 +329,5 @@ matrix<E, dynamic<A>, BO, L>::i_put(int i, int j,
   s_access(*this, i, j, layout_tag()) = value_type(v);
   return (matrix_type&&) *this;
 }
-#  endif
 
 }  // namespace cml
-
-#endif

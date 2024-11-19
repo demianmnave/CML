@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <cml/common/compiler.h>
 #include <cml/scalar/binary_ops.h>
 #include <cml/quaternion/traits.h>
 
@@ -78,7 +77,6 @@ template<class DerivedT> class readable_quaternion
   /** Return the real part of the quaternion. */
   immutable_value real() const;
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Return the imaginary part of the quaternion as a vector expression.
      */
   imaginary_node<const DerivedT&> imaginary() const&;
@@ -87,10 +85,6 @@ template<class DerivedT> class readable_quaternion
      * moving the source into the node.
      */
   imaginary_node<DerivedT&&> imaginary() const&&;
-#else
-  /** Return the imaginary part of the quaternion as a vector expression. */
-  imaginary_node<DerivedT> imaginary() const;
-#endif
 
   /** Return the squared length of the quaternion. */
   value_type length_squared() const;
@@ -101,7 +95,6 @@ template<class DerivedT> class readable_quaternion
   /** Return the Cayley norm of the quaternion. */
   value_type norm() const;
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Return the normalized quaternion as an expression node. */
   quaternion_scalar_node<const DerivedT&, value_type,
     op::binary_divide<value_type, value_type>>
@@ -113,14 +106,7 @@ template<class DerivedT> class readable_quaternion
   quaternion_scalar_node<DerivedT&&, value_type,
     op::binary_divide<value_type, value_type>>
   normalize() const&&;
-#else
-  /** Return the normalized quaternion as an expression node. */
-  quaternion_scalar_node<DerivedT, value_type,
-    op::binary_divide<value_type, value_type>>
-  normalize() const;
-#endif
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Return the conjugate as an expression node. */
   conjugate_node<const DerivedT&> conjugate() const&;
 
@@ -128,12 +114,7 @@ template<class DerivedT> class readable_quaternion
      * the node.
      */
   conjugate_node<DerivedT&&> conjugate() const&&;
-#else
-  /** Return the conjugate as an expression node. */
-  conjugate_node<DerivedT> conjugate() const;
-#endif
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Return the inverse as an expression node. */
   inverse_node<const DerivedT&> inverse() const&;
 
@@ -141,10 +122,6 @@ template<class DerivedT> class readable_quaternion
      * the node.
      */
   inverse_node<DerivedT&&> inverse() const&&;
-#else
-  /** Return the inverse as an expression node. */
-  inverse_node<DerivedT> inverse() const;
-#endif
 
 
   protected:
@@ -154,10 +131,8 @@ template<class DerivedT> class readable_quaternion
   // Use the compiler-generated copy constructor:
   readable_quaternion(const readable_quaternion&) = default;
 
-#ifdef CML_HAS_DEFAULTED_MOVE_CONSTRUCTOR
   // Use the compiler-generated move constructor:
   readable_quaternion(readable_quaternion&&) = default;
-#endif
 };
 
 }  // namespace cml

@@ -73,9 +73,7 @@ class vector<Element, dynamic<Allocator>>
   public:
   /* Include methods from writable_type: */
   using writable_type::operator[];
-#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
   using writable_type::operator=;
-#endif
 
 
   public:
@@ -85,15 +83,15 @@ class vector<Element, dynamic<Allocator>>
 
   public:
   /** Default constructor.
-     *
-     * @note The vector has no elements.
-     */
+   *
+   * @note The vector has no elements.
+   */
   vector();
 
   /** Construct given a size.
-     *
-     * @throws std::invalid_argument if @c size < 0.
-     */
+   *
+   * @throws std::invalid_argument if @c size < 0.
+   */
   template<class Int, enable_if_t<std::is_integral<Int>::value>* = nullptr>
   explicit vector(Int size);
 
@@ -107,11 +105,11 @@ class vector<Element, dynamic<Allocator>>
   template<class Sub> vector(const readable_vector<Sub>& sub);
 
   /** Construct from at least 1 value.  The vector is resized to
-     * accomodate the number of elements passed.
-     *
-     * @note This overload is enabled only if all of the arguments are
-     * convertible to value_type.
-     */
+   * accomodate the number of elements passed.
+   *
+   * @note This overload is enabled only if all of the arguments are
+   * convertible to value_type.
+   */
   template<class E0, class... Elements,
     enable_if_convertible_t<value_type, E0, Elements...>* = nullptr>
   vector(const E0& e0, const Elements&... eN)
@@ -124,12 +122,12 @@ class vector<Element, dynamic<Allocator>>
   }
 
   /** Construct from a readable_vector and at least one
-     * additional element.  The vector is resized to accomodate the total
-     * number of elements passed.
-     *
-     * @note This overload is enabled only if the value_type of @c sub and
-     * all of the scalar arguments are convertible to value_type.
-     */
+   * additional element.  The vector is resized to accomodate the total
+   * number of elements passed.
+   *
+   * @note This overload is enabled only if the value_type of @c sub and
+   * all of the scalar arguments are convertible to value_type.
+   */
   template<class Sub, class E0, class... Elements,
     enable_if_convertible_t<value_type, value_type_trait_of_t<Sub>, E0,
       Elements...>* = nullptr>
@@ -175,19 +173,19 @@ class vector<Element, dynamic<Allocator>>
   const_pointer end() const;
 
   /** Resize the vector to the specified size.
-     *
-     * @note This will reallocate the array and copy existing elements, if
-     * any.
-     *
-     * @throws std::invalid_argument if @c n is negative.
-     */
+   *
+   * @note This will reallocate the array and copy existing elements, if
+   * any.
+   *
+   * @throws std::invalid_argument if @c n is negative.
+   */
   void resize(int n);
 
   /** Resize the vector to the specified size without copying the old
-     * elements.
-     *
-     * @throws std::invalid_argument if @c n is negative.
-     */
+   * elements.
+   *
+   * @throws std::invalid_argument if @c n is negative.
+   */
   void resize_fast(int n);
 
 
@@ -198,36 +196,16 @@ class vector<Element, dynamic<Allocator>>
   /** Move assignment. */
   vector_type& operator=(vector_type&& other);
 
-#ifdef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
-  template<class Other>
-  inline vector_type& operator=(const readable_vector<Other>& other)
-  {
-    return this->assign(other);
-  }
-
-  template<class Array, enable_if_array_t<Array>* = nullptr>
-  inline vector_type& operator=(const Array& array)
-  {
-    return this->assign(array);
-  }
-
-  template<class Other>
-  inline vector_type& operator=(std::initializer_list<Other> l)
-  {
-    return this->assign(l);
-  }
-#endif
-
 
   protected:
   /** No-op for trivially destructible elements
-     * (is_trivially_destructible).
-     */
+   * (is_trivially_destructible).
+   */
   void destruct(pointer, int, std::true_type);
 
   /** Invoke non-trivial destructors for @c n elements starting at @c
-     * data.
-     */
+   * data.
+   */
   void destruct(pointer data, int n, std::false_type);
 
 
@@ -256,12 +234,10 @@ class vector<Element, dynamic<Allocator>>
   mutable_value i_get(int i);
 
   /** Set element @c i. */
-  template<class Other> vector_type& i_put(int i, const Other& v) __CML_REF;
+  template<class Other> vector_type& i_put(int i, const Other& v) &;
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Set element @c i on a temporary. */
   template<class Other> vector_type&& i_put(int i, const Other& v) &&;
-#endif
 
   /*@}*/
 

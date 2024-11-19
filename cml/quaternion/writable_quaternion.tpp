@@ -32,12 +32,11 @@ writable_quaternion<DT>::get(int i) -> mutable_value
 template<class DT>
 template<class Other>
 DT&
-writable_quaternion<DT>::put(int i, const Other& v) __CML_REF
+writable_quaternion<DT>::put(int i, const Other& v) &
 {
   return this->actual().i_put(i, v);
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class Other>
 DT&&
@@ -46,7 +45,6 @@ writable_quaternion<DT>::put(int i, const Other& v) &&
   this->put(i, v);
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 auto
@@ -85,12 +83,11 @@ writable_quaternion<DT>::z() -> mutable_value
 
 template<class DT>
 DT&
-writable_quaternion<DT>::normalize() __CML_REF
+writable_quaternion<DT>::normalize() &
 {
   return this->operator/=(this->length());
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 DT&&
 writable_quaternion<DT>::normalize() &&
@@ -98,17 +95,15 @@ writable_quaternion<DT>::normalize() &&
   this->normalize();  // Forward to normalize &
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 DT&
-writable_quaternion<DT>::zero() __CML_REF
+writable_quaternion<DT>::zero() &
 {
   for(int i = 0; i < 4; ++i) this->put(i, value_type(0));
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 DT&&
 writable_quaternion<DT>::zero() &&
@@ -116,11 +111,10 @@ writable_quaternion<DT>::zero() &&
   this->zero();  // Forward to zero &
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 DT&
-writable_quaternion<DT>::identity() __CML_REF
+writable_quaternion<DT>::identity() &
 {
   this->put(W, value_type(1));
   this->put(X, value_type(0));
@@ -129,7 +123,6 @@ writable_quaternion<DT>::identity() __CML_REF
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 DT&&
 writable_quaternion<DT>::identity() &&
@@ -137,11 +130,10 @@ writable_quaternion<DT>::identity() &&
   this->identity();  // Forward to identity &
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 DT&
-writable_quaternion<DT>::conjugate() __CML_REF
+writable_quaternion<DT>::conjugate() &
 {
   this->put(W, this->get(W));
   this->put(X, -this->get(X));
@@ -150,7 +142,6 @@ writable_quaternion<DT>::conjugate() __CML_REF
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 DT&&
 writable_quaternion<DT>::conjugate() &&
@@ -158,11 +149,10 @@ writable_quaternion<DT>::conjugate() &&
   this->conjugate();  // Forward to conjugate &
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 DT&
-writable_quaternion<DT>::inverse() __CML_REF
+writable_quaternion<DT>::inverse() &
 {
   /* Cayley norm (squared length). */
   auto n = this->norm();
@@ -175,7 +165,6 @@ writable_quaternion<DT>::inverse() __CML_REF
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 DT&&
 writable_quaternion<DT>::inverse() &&
@@ -183,11 +172,10 @@ writable_quaternion<DT>::inverse() &&
   this->inverse();  // Forward to inverse &
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 DT&
-writable_quaternion<DT>::log() __CML_REF
+writable_quaternion<DT>::log() &
 {
   /* Shorthand: */
   using element_traits = typename traits_type::element_traits;
@@ -206,7 +194,6 @@ writable_quaternion<DT>::log() __CML_REF
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 DT&&
 writable_quaternion<DT>::log() &&
@@ -214,11 +201,10 @@ writable_quaternion<DT>::log() &&
   this->log();  // Forward to log &
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 DT&
-writable_quaternion<DT>::exp() __CML_REF
+writable_quaternion<DT>::exp() &
 {
   /* Shorthand: */
   using element_traits = typename traits_type::element_traits;
@@ -237,7 +223,6 @@ writable_quaternion<DT>::exp() __CML_REF
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 DT&&
 writable_quaternion<DT>::exp() &&
@@ -245,40 +230,12 @@ writable_quaternion<DT>::exp() &&
   this->exp();  // Forward to exp &
   return (DT&&) *this;
 }
-#endif
-
-
-#if 0
-template<class DT> DT&
-writable_quaternion<DT>::random(
-  const_reference low, const_reference high
-  ) __CML_REF
-{
-  typedef if_t<std::is_integral<value_type>::value
-    , std::uniform_int_distribution<value_type>
-    , std::uniform_real_distribution<value_type>>	distribution_type;
-
-  std::default_random_engine gen(std::rand());
-  distribution_type d(low, high);
-  for(int i = 0; i < this->size(); ++ i) this->put(i, d(gen));
-  return this->actual();
-}
-
-#  ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-template<class DT> DT&&
-writable_quaternion<DT>::random(const_reference low, const_reference high) &&
-{
-  this->random(low, high);
-  return (DT&&) *this;
-}
-#  endif
-#endif
 
 template<class DT>
 template<class Sub, class E, enable_if_vector_t<Sub>*>
 auto
-writable_quaternion<DT>::set(const readable_vector<Sub>& v, const E& s)
-  __CML_REF->enable_if_t<
+writable_quaternion<DT>::
+  set(const readable_vector<Sub>& v, const E& s) & -> enable_if_t<
     are_convertible<value_type, value_type_trait_of_t<Sub>, E>::value, DT&>
 {
   return this->assign(v, s);
@@ -287,14 +244,12 @@ writable_quaternion<DT>::set(const readable_vector<Sub>& v, const E& s)
 template<class DT>
 template<class E, class Sub, enable_if_vector_t<Sub>*>
 auto
-writable_quaternion<DT>::set(const E& s, const readable_vector<Sub>& v)
-  __CML_REF->enable_if_t<
+writable_quaternion<DT>::
+  set(const E& s, const readable_vector<Sub>& v) & -> enable_if_t<
     are_convertible<value_type, value_type_trait_of_t<Sub>, E>::value, DT&>
 {
   return this->assign(v, s);
 }
-
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 
 template<class DT>
 template<class Sub, class E, enable_if_vector_t<Sub>*>
@@ -318,18 +273,14 @@ writable_quaternion<DT>::
   return (DT&&) *this;
 }
 
-#endif
-
 template<class DT>
 template<class ODT>
 DT&
-writable_quaternion<DT>::operator=(
-  const readable_quaternion<ODT>& other) __CML_REF
+writable_quaternion<DT>::operator=(const readable_quaternion<ODT>& other) &
 {
   return this->assign(other);
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class ODT>
 DT&&
@@ -338,17 +289,15 @@ writable_quaternion<DT>::operator=(const readable_quaternion<ODT>& other) &&
   this->operator=(other);
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 template<class Array, enable_if_array_t<Array>*>
 DT&
-writable_quaternion<DT>::operator=(const Array& array) __CML_REF
+writable_quaternion<DT>::operator=(const Array& array) &
 {
   return this->assign(array);
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class Array, enable_if_array_t<Array>*>
 DT&&
@@ -357,17 +306,15 @@ writable_quaternion<DT>::operator=(const Array& array) &&
   this->operator=(array);
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 template<class Other>
 DT&
-writable_quaternion<DT>::operator=(std::initializer_list<Other> l) __CML_REF
+writable_quaternion<DT>::operator=(std::initializer_list<Other> l) &
 {
   return this->assign(l);
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class Other>
 DT&&
@@ -375,13 +322,11 @@ writable_quaternion<DT>::operator=(std::initializer_list<Other> l) &&
 {
   return this->assign(l);
 }
-#endif
 
 template<class DT>
 template<class ODT>
 DT&
-writable_quaternion<DT>::operator+=(
-  const readable_quaternion<ODT>& other) __CML_REF
+writable_quaternion<DT>::operator+=(const readable_quaternion<ODT>& other) &
 {
   using op_type = binary_plus_t<DT, ODT>;
   for(int i = 0; i < 4; ++i)
@@ -389,7 +334,6 @@ writable_quaternion<DT>::operator+=(
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class ODT>
 DT&&
@@ -398,13 +342,11 @@ writable_quaternion<DT>::operator+=(const readable_quaternion<ODT>& other) &&
   this->operator+=(other);
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 template<class ODT>
 DT&
-writable_quaternion<DT>::operator-=(
-  const readable_quaternion<ODT>& other) __CML_REF
+writable_quaternion<DT>::operator-=(const readable_quaternion<ODT>& other) &
 {
   using op_type = binary_minus_t<DT, ODT>;
   for(int i = 0; i < 4; ++i)
@@ -412,7 +354,6 @@ writable_quaternion<DT>::operator-=(
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class ODT>
 DT&&
@@ -421,19 +362,16 @@ writable_quaternion<DT>::operator-=(const readable_quaternion<ODT>& other) &&
   this->operator-=(other);
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 template<class ODT>
 DT&
-writable_quaternion<DT>::operator*=(
-  const readable_quaternion<ODT>& other) __CML_REF
+writable_quaternion<DT>::operator*=(const readable_quaternion<ODT>& other) &
 {
   return this->assign((*this) * other);
   /* Note: operator*() returns a temporary here. */
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class ODT>
 DT&&
@@ -442,21 +380,19 @@ writable_quaternion<DT>::operator*=(const readable_quaternion<ODT>& other) &&
   this->operator*=(other);
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 template<class ScalarT,
   typename enable_if_convertible<typename quaternion_traits<DT>::value_type,
     ScalarT>::type*>
 DT&
-writable_quaternion<DT>::operator*=(const ScalarT& v) __CML_REF
+writable_quaternion<DT>::operator*=(const ScalarT& v) &
 {
   using op_type = binary_multiply_t<DT, ScalarT>;
   for(int i = 0; i < 4; ++i) this->put(i, op_type().apply(this->get(i), v));
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class ScalarT,
   typename enable_if_convertible<typename quaternion_traits<DT>::value_type,
@@ -467,21 +403,19 @@ writable_quaternion<DT>::operator*=(const ScalarT& v) &&
   this->operator*=(v);
   return (DT&&) *this;
 }
-#endif
 
 template<class DT>
 template<class ScalarT,
   typename enable_if_convertible<typename quaternion_traits<DT>::value_type,
     ScalarT>::type*>
 DT&
-writable_quaternion<DT>::operator/=(const ScalarT& v) __CML_REF
+writable_quaternion<DT>::operator/=(const ScalarT& v) &
 {
   using op_type = binary_divide_t<DT, ScalarT>;
   for(int i = 0; i < 4; ++i) this->put(i, op_type().apply(this->get(i), v));
   return this->actual();
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 template<class ScalarT,
   typename enable_if_convertible<typename quaternion_traits<DT>::value_type,
@@ -492,8 +426,6 @@ writable_quaternion<DT>::operator/=(const ScalarT& v) &&
   this->operator/=(v);
   return (DT&&) *this;
 }
-#endif
-
 
 /* Internal methods: */
 

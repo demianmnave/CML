@@ -70,17 +70,15 @@ class quaternion_scalar_node
 
   public:
   /** Construct from the wrapped sub-expression and the scalar to apply.
-     * @c left must be an lvalue reference or rvalue reference.
-     */
+   * @c left must be an lvalue reference or rvalue reference.
+   */
   quaternion_scalar_node(Sub left, const right_type& right);
 
   /** Move constructor. */
   quaternion_scalar_node(node_type&& other);
 
-#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Copy constructor. */
   quaternion_scalar_node(const node_type& other);
-#endif
 
 
   protected:
@@ -90,8 +88,8 @@ class quaternion_scalar_node
   friend readable_type;
 
   /** Apply the scalar operator to element @c i of the subexpression and
-     * return the result.
-     */
+   * return the result.
+   */
   immutable_value i_get(int i) const;
 
   /*@}*/
@@ -99,9 +97,9 @@ class quaternion_scalar_node
 
   protected:
   /** The type used to store the left subexpression.  The expression is
-     * stored as a copy if Sub is an rvalue reference (temporary), or by
-     * const reference if Sub is an lvalue reference.
-     */
+   * stored as a copy if Sub is an rvalue reference (temporary), or by
+   * const reference if Sub is an lvalue reference.
+   */
   using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const left_type&,
     left_type>;
 
@@ -115,11 +113,6 @@ class quaternion_scalar_node
 
 
   private:
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-  // Not copy constructible.
-  quaternion_scalar_node(const node_type&);
-#endif
-
   // Not assignable.
   node_type& operator=(const node_type&);
 };

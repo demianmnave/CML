@@ -64,9 +64,7 @@ class vector<Element, external<Size>>
   public:
   /* Include methods from writable_type: */
   using writable_type::operator[];
-#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
   using writable_type::operator=;
-#endif
 
 
   public:
@@ -85,10 +83,10 @@ class vector<Element, external<Size>>
   explicit vector(pointer data);
 
   /** Copy constructor.
-     *
-     * @warning This copy has the semantics of a raw pointer, and can lead
-     * to memory leaks if not used correctly.
-     */
+   *
+   * @warning This copy has the semantics of a raw pointer, and can lead
+   * to memory leaks if not used correctly.
+   */
   vector(const vector_type& other);
 
   /** Move constructor. */
@@ -111,34 +109,14 @@ class vector<Element, external<Size>>
 
   public:
   /** Copy assignment.
-     *
-     * @warning This assignment has the semantics of a raw pointer, and can
-     * lead to memory leaks if not used correctly.
-     */
+   *
+   * @warning This assignment has the semantics of a raw pointer, and can
+   * lead to memory leaks if not used correctly.
+   */
   vector_type& operator=(const vector_type& other);
 
   /** Move assignment. */
   vector_type& operator=(vector_type&& other);
-
-#ifdef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
-  template<class Other>
-  inline vector_type& operator=(const readable_vector<Other>& other)
-  {
-    return this->assign(other);
-  }
-
-  template<class Array, enable_if_array_t<Array>* = nullptr>
-  inline vector_type& operator=(const Array& array)
-  {
-    return this->assign(array);
-  }
-
-  template<class Other>
-  inline vector_type& operator=(std::initializer_list<Other> l)
-  {
-    return this->assign(l);
-  }
-#endif
 
 
   protected:
@@ -166,12 +144,10 @@ class vector<Element, external<Size>>
   mutable_value i_get(int i);
 
   /** Set element @c i. */
-  template<class Other> vector_type& i_put(int i, const Other& v) __CML_REF;
+  template<class Other> vector_type& i_put(int i, const Other& v) &;
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Set element @c i on a temporary. */
   template<class Other> vector_type&& i_put(int i, const Other& v) &&;
-#endif
 
   /*@}*/
 
@@ -183,7 +159,6 @@ class vector<Element, external<Size>>
 
 }  // namespace cml
 
-#ifdef CML_HAS_STRUCTURED_BINDINGS
 template<typename E, int Size>
 struct std::tuple_size<cml::vector<E, cml::external<Size>>>
 {
@@ -195,7 +170,6 @@ struct std::tuple_element<I, cml::vector<E, cml::external<Size>>>
 {
   using type = cml::value_type_of_t<cml::vector<E, cml::external<Size>>>;
 };
-#endif
 
 #define __CML_VECTOR_FIXED_EXTERNAL_TPP
 #include <cml/vector/fixed_external.tpp>

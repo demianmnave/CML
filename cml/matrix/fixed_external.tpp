@@ -14,9 +14,6 @@ template<class E, int R, int C, typename BO, typename L>
 matrix<E, external<R, C>, BO, L>::matrix()
 : m_data(0)
 {
-#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-  static_assert(false, "external matrix default constructor not supported");
-#endif
 }
 
 template<class E, int R, int C, typename BO, typename L>
@@ -120,13 +117,12 @@ template<class E, int R, int C, typename BO, typename L>
 template<class Other>
 auto
 matrix<E, external<R, C>, BO, L>::i_put(int i, int j,
-  const Other& v) __CML_REF->matrix_type&
+  const Other& v) &->matrix_type&
 {
   s_access(*this, i, j, layout_tag()) = value_type(v);
   return *this;
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class E, int R, int C, typename BO, typename L>
 template<class Other>
 auto
@@ -136,6 +132,5 @@ matrix<E, external<R, C>, BO, L>::i_put(int i, int j,
   s_access(*this, i, j, layout_tag()) = value_type(v);
   return (matrix_type&&) *this;
 }
-#endif
 
 }  // namespace cml

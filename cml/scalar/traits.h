@@ -6,7 +6,6 @@
 
 #include <cmath>
 #include <limits>
-#include <cml/common/compiler.h>
 #include <cml/common/mpl/enable_if_arithmetic.h>
 #include <cml/common/temporary.h>
 #include <cml/common/traits.h>

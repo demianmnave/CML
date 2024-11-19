@@ -63,9 +63,7 @@ class vector<Element, external<>>
   public:
   /* Include methods from writable_type: */
   using writable_type::operator[];
-#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
   using writable_type::operator=;
-#endif
 
 
   public:
@@ -75,26 +73,26 @@ class vector<Element, external<>>
 
   public:
   /** Default construct with a null pointer and 0 size.
-     *
-     * @warning The default constructor is enabled only if the compiler
-     * supports rvalue references from *this.
-     */
+   *
+   * @warning The default constructor is enabled only if the compiler
+   * supports rvalue references from *this.
+   */
   vector();
 
   /** Construct from the wrapped pointer and size.
-     *
-     * @note This is for CML1 compatibility.
-     */
+   *
+   * @note This is for CML1 compatibility.
+   */
   vector(pointer data, int size);
 
   /** Construct from the wrapped pointer and size. */
   vector(int size, pointer data);
 
   /** Copy constructor.
-     *
-     * @warning This copy has the semantics of a raw pointer, and can lead
-     * to memory leaks if not used correctly.
-     */
+   *
+   * @warning This copy has the semantics of a raw pointer, and can lead
+   * to memory leaks if not used correctly.
+   */
   vector(const vector_type& other);
 
   /** Move constructor. */
@@ -120,33 +118,13 @@ class vector<Element, external<>>
 
   public:
   /** Copy assignment.
-     *
-     * @note This copies element-by-element from @c other.
-     */
+   *
+   * @note This copies element-by-element from @c other.
+   */
   vector_type& operator=(const vector_type& other);
 
   /** Move assignment. */
   vector_type& operator=(vector_type&& other);
-
-#ifdef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
-  template<class Other>
-  inline vector_type& operator=(const readable_vector<Other>& other)
-  {
-    return this->assign(other);
-  }
-
-  template<class Array, enable_if_array_t<Array>* = nullptr>
-  inline vector_type& operator=(const Array& array)
-  {
-    return this->assign(array);
-  }
-
-  template<class Other>
-  inline vector_type& operator=(std::initializer_list<Other> l)
-  {
-    return this->assign(l);
-  }
-#endif
 
 
   protected:
@@ -174,12 +152,10 @@ class vector<Element, external<>>
   mutable_value i_get(int i);
 
   /** Set element @c i. */
-  template<class Other> vector_type& i_put(int i, const Other& v) __CML_REF;
+  template<class Other> vector_type& i_put(int i, const Other& v) &;
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Set element @c i on a temporary. */
   template<class Other> vector_type&& i_put(int i, const Other& v) &&;
-#endif
 
   /*@}*/
 

@@ -64,8 +64,8 @@ template<class DerivedT> class readable_matrix
   immutable_value operator()(int i, int j) const;
 
   /** Returns element @c j of basis vector @c i.  The returned value
-     * depends upon the basis orientation.
-     */
+   * depends upon the basis orientation.
+   */
   immutable_value basis_element(int i, int j) const;
 
   /** Returns the number of basis vectors. */
@@ -75,19 +75,19 @@ template<class DerivedT> class readable_matrix
   int basis_size() const;
 
   /** Compute the determinant of the matrix.
-     *
-     * @throws non_square_matrix_error at run-time if the matrix is
-     * dynamically-sized and not square.  Fixed-size matrices are checked
-     * at compile-time.
-     */
+   *
+   * @throws non_square_matrix_error at run-time if the matrix is
+   * dynamically-sized and not square.  Fixed-size matrices are checked
+   * at compile-time.
+   */
   value_type determinant() const;
 
   /** Compute the trace of the matrix.
-     *
-     * @throws non_square_matrix_error at run-time if the matrix is
-     * dynamically-sized and not square.  Fixed-size matrices are checked
-     * at compile-time.
-     */
+   *
+   * @throws non_square_matrix_error at run-time if the matrix is
+   * dynamically-sized and not square.  Fixed-size matrices are checked
+   * at compile-time.
+   */
   value_type trace() const;
 
 
@@ -105,13 +105,13 @@ template<class DerivedT> class readable_matrix
   int basis_count(col_basis) const;
 
   /** Return the number of elements in a basis vector for a row_basis
-     * matrix.
-     */
+   * matrix.
+   */
   int basis_size(row_basis) const;
 
   /** Return the number of elements in a basis vectors for a col_basis
-     * matrix.
-     */
+   * matrix.
+   */
   int basis_size(col_basis) const;
 
 
@@ -122,10 +122,8 @@ template<class DerivedT> class readable_matrix
   // Use the compiler-generated copy constructor:
   readable_matrix(const readable_matrix&) = default;
 
-#ifdef CML_HAS_DEFAULTED_MOVE_CONSTRUCTOR
   // Use the compiler-generated move constructor:
   readable_matrix(readable_matrix&&) = default;
-#endif
 };
 
 }  // namespace cml

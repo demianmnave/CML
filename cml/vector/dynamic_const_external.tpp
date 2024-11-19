@@ -12,13 +12,11 @@ namespace cml {
 
 /* dynamic_const_external 'structors: */
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class E>
 vector<const E, external<>>::vector()
 : m_data(0)
 , m_size(0)
 {}
-#endif
 
 template<class E>
 vector<const E, external<>>::vector(const_pointer data, int size)

@@ -124,14 +124,7 @@ CATCH_TEST_CASE("fixed external, copy_assign_dynamic")
 CATCH_TEST_CASE("fixed external, move_assign")
 {
   cml::vector3d v = {1., 2., 3.};
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   cml::external3d w;
-#else
-  cml::external3d w(nullptr);
-  // Note: this allows the test to go through, but is not recommended for
-  // user code on compilers that do not support rvalue references from
-  // this.
-#endif
   double at[3] = {1., 2., 3.};
   w = cml::external3d(at);
   CATCH_REQUIRE(w.data() == &at[0]);
@@ -179,14 +172,7 @@ CATCH_TEST_CASE("dynamic external, copy_assign_dynamic")
 CATCH_TEST_CASE("dynamic external, move_assign")
 {
   cml::vector3d v = {1., 2., 3.};
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   cml::externalnd w;
-#else
-  cml::externalnd w(nullptr, 0);
-  // Note: this allows the test to go through, but is not recommended for
-  // user code on compilers that do not support rvalue references from
-  // this.
-#endif
   double at[3] = {1., 2., 3.};
   w = cml::externalnd(at, 3);
   CATCH_REQUIRE(w.data() == &at[0]);

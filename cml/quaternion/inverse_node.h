@@ -59,17 +59,15 @@ class inverse_node : public readable_quaternion<inverse_node<Sub>>
 
   public:
   /** Construct from the wrapped quaternion expression.  @c sub must be
-     * an lvalue reference or rvalue reference.
-     */
+   * an lvalue reference or rvalue reference.
+   */
   explicit inverse_node(Sub sub);
 
   /** Move constructor. */
   inverse_node(node_type&& other);
 
-#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Copy constructor. */
   inverse_node(const node_type& other);
-#endif
 
 
   protected:
@@ -86,11 +84,11 @@ class inverse_node : public readable_quaternion<inverse_node<Sub>>
 
   protected:
   /** The type used to store the subexpression.  The expression is stored
-     * as a copy if Sub is an rvalue reference (temporary), or by const
-     * reference if Sub is an lvalue reference.
-     */
-  using wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const sub_type&,
-    sub_type>;
+   * as a copy if Sub is an rvalue reference (temporary), or by const
+   * reference if Sub is an lvalue reference.
+   */
+  using wrap_type =
+    cml::if_t<std::is_lvalue_reference<Sub>::value, const sub_type&, sub_type>;
 
   /** The wrapped subexpression. */
   wrap_type m_sub;
@@ -100,11 +98,6 @@ class inverse_node : public readable_quaternion<inverse_node<Sub>>
 
 
   private:
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-  // Not copy constructible.
-  inverse_node(const node_type&);
-#endif
-
   // Not assignable.
   node_type& operator=(const node_type&);
 };

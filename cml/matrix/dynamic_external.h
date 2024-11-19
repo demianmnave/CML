@@ -92,9 +92,7 @@ class matrix<Element, external<>, BasisOrient, Layout>
   public:
   /* Include methods from writable_type: */
   using writable_type::operator();
-#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
   using writable_type::operator=;
-#endif
 
 
   public:
@@ -113,35 +111,35 @@ class matrix<Element, external<>, BasisOrient, Layout>
 
   public:
   /** Default construct with a null pointer and 0 size (rows, cols).
-     *
-     * @warning The default constructor is enabled only if the compiler
-     * supports rvalue references from *this.
-     */
+   *
+   * @warning The default constructor is enabled only if the compiler
+   * supports rvalue references from *this.
+   */
   matrix();
 
   /** Construct from the wrapped pointer and the dimensions.
-     *
-     * @note @c data will be referenced using the assigned matrix layout.
-     *
-     * @note This is for compatibility with CML1.
-     */
+   *
+   * @note @c data will be referenced using the assigned matrix layout.
+   *
+   * @note This is for compatibility with CML1.
+   */
   matrix(pointer data, int rows, int cols);
 
   /** Construct from the wrapped pointer and the dimensions.
-     *
-     * @note @c data will be referenced using the assigned matrix layout.
-     */
+   *
+   * @note @c data will be referenced using the assigned matrix layout.
+   */
   matrix(int rows, int cols, pointer data);
 
   /** Construct from a wrapped pointer to a 2D array of values with
-     * dimensions N1xN2.
-     *
-     * @note The dimensions of @c array must take the matrix layout into
-     * account.  For example, the C-array initializer for a 3x2 external
-     * matrix in row-major layout will have dimensions N1xN2 = [3][2], but
-     * the initializer for a column-major matrix will have dimensions N1xN2
-     * = [2][3].
-     */
+   * dimensions N1xN2.
+   *
+   * @note The dimensions of @c array must take the matrix layout into
+   * account.  For example, the C-array initializer for a 3x2 external
+   * matrix in row-major layout will have dimensions N1xN2 = [3][2], but
+   * the initializer for a column-major matrix will have dimensions N1xN2
+   * = [2][3].
+   */
   template<class Other, int N1, int N2> matrix(Other (&array)[N1][N2]);
 
   /** Move constructor. */
@@ -162,14 +160,14 @@ class matrix<Element, external<>, BasisOrient, Layout>
   const_pointer end() const;
 
   /** Resize (reshape) the matrix to the specified size.
-     *
-     * @note The existing elements are not changed.
-     *
-     * @throws std::invalid_argument if @c rows or @c cols is negative.
-     *
-     * @throws matrix_size_error if the number of elements in the resized
-     * matrix would be different from the original.
-     */
+   *
+   * @note The existing elements are not changed.
+   *
+   * @throws std::invalid_argument if @c rows or @c cols is negative.
+   *
+   * @throws matrix_size_error if the number of elements in the resized
+   * matrix would be different from the original.
+   */
   void resize(int rows, int cols);
 
   /** Reset the matrix to have no elements and no external pointer. */
@@ -182,32 +180,6 @@ class matrix<Element, external<>, BasisOrient, Layout>
 
   /** Move assignment. */
   matrix_type& operator=(matrix_type&& other);
-
-#ifdef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
-  template<class Other>
-  inline matrix_type& operator=(const readable_matrix<Other>& other)
-  {
-    return this->assign(other);
-  }
-
-  template<class Array, enable_if_array_t<Array>* = nullptr>
-  inline matrix_type& operator=(const Array& array)
-  {
-    return this->assign(array);
-  }
-
-  template<class Other, int Rows, int Cols>
-  inline matrix_type& operator=(Other const (&array)[Rows][Cols])
-  {
-    return this->assign(array);
-  }
-
-  template<class Other>
-  inline matrix_type& operator=(std::initializer_list<Other> l)
-  {
-    return this->assign(l);
-  }
-#endif
 
 
   protected:
@@ -239,12 +211,10 @@ class matrix<Element, external<>, BasisOrient, Layout>
 
   /** Set element @c i. */
   template<class Other>
-  matrix_type& i_put(int i, int j, const Other& v) __CML_REF;
+  matrix_type& i_put(int i, int j, const Other& v) &;
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Set element @c i on a temporary. */
   template<class Other> matrix_type&& i_put(int i, int j, const Other& v) &&;
-#endif
 
   /*@}*/
 

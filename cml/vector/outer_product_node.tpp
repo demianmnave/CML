@@ -22,13 +22,11 @@ outer_product_node<Sub1, Sub2>::outer_product_node(node_type&& other)
 , m_right(std::move(other.m_right))
 {}
 
-#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class Sub1, class Sub2>
 outer_product_node<Sub1, Sub2>::outer_product_node(const node_type& other)
 : m_left(other.m_left)
 , m_right(other.m_right)
 {}
-#endif
 
 
 /* Internal methods: */

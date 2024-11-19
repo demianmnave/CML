@@ -98,9 +98,7 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
   public:
   /* Include methods from writable_type: */
   using writable_type::operator();
-#ifndef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
   using writable_type::operator=;
-#endif
 
 
   public:
@@ -119,15 +117,15 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
 
   public:
   /** Default constructor.
-     *
-     * @note The matrix has no elements.
-     */
+   *
+   * @note The matrix has no elements.
+   */
   matrix();
 
   /** Construct given a size.
-     *
-     * @throws std::invalid_argument if  @c rows < 0 or @c cols < 0.
-     */
+   *
+   * @throws std::invalid_argument if  @c rows < 0 or @c cols < 0.
+   */
   matrix(int rows, int cols);
 
   /** Copy constructor. */
@@ -140,10 +138,10 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
   template<class Sub> matrix(const readable_matrix<Sub>& sub);
 
   /** Construct from at least 1 value.
-     *
-     * @note This overload is enabled only if all of the arguments are
-     * convertible to value_type.
-     */
+   *
+   * @note This overload is enabled only if all of the arguments are
+   * convertible to value_type.
+   */
   template<typename RowsT, typename ColsT, class E0, class... Elements,
     enable_if_t<
 
@@ -199,19 +197,19 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
   const_pointer end() const;
 
   /** Resize the matrix to the specified size.
-     *
-     * @note This will reallocate the array and copy existing elements, if
-     * any.
-     *
-     * @throws std::invalid_argument if @c rows or @c cols is negative.
-     */
+   *
+   * @note This will reallocate the array and copy existing elements, if
+   * any.
+   *
+   * @throws std::invalid_argument if @c rows or @c cols is negative.
+   */
   void resize(int rows, int cols);
 
   /** Resize the matrix to the specified size without copying the old
-     * elements.
-     *
-     * @throws std::invalid_argument if @c rows or @c cols is negative.
-     */
+   * elements.
+   *
+   * @throws std::invalid_argument if @c rows or @c cols is negative.
+   */
   void resize_fast(int rows, int cols);
 
 
@@ -222,42 +220,16 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
   /** Move assignment. */
   matrix_type& operator=(matrix_type&& other);
 
-#ifdef CML_HAS_MSVC_BRAIN_DEAD_ASSIGNMENT_OVERLOADS
-  template<class Other>
-  inline matrix_type& operator=(const readable_matrix<Other>& other)
-  {
-    return this->assign(other);
-  }
-
-  template<class Array, enable_if_array_t<Array>* = nullptr>
-  inline matrix_type& operator=(const Array& array)
-  {
-    return this->assign(array);
-  }
-
-  template<class Other, int Rows, int Cols>
-  inline matrix_type& operator=(Other const (&array)[Rows][Cols])
-  {
-    return this->assign(array);
-  }
-
-  template<class Other>
-  inline matrix_type& operator=(std::initializer_list<Other> l)
-  {
-    return this->assign(l);
-  }
-#endif
-
 
   protected:
   /** No-op for trivially destructible elements
-     * (is_trivially_destructible).
-     */
+   * (is_trivially_destructible).
+   */
   void destruct(pointer, int, std::true_type);
 
   /** Invoke non-trivial destructors for @c n elements starting at @c
-     * data.
-     */
+   * data.
+   */
   void destruct(pointer data, int n, std::false_type);
 
 
@@ -289,13 +261,10 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
   mutable_value i_get(int i, int j);
 
   /** Set element @c i. */
-  template<class Other>
-  matrix_type& i_put(int i, int j, const Other& v) __CML_REF;
+  template<class Other> matrix_type& i_put(int i, int j, const Other& v) &;
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Set element @c i on a temporary. */
   template<class Other> matrix_type&& i_put(int i, int j, const Other& v) &&;
-#endif
 
   /*@}*/
 

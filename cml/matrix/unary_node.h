@@ -74,17 +74,15 @@ class matrix_unary_node : public readable_matrix<matrix_unary_node<Sub, Op>>
 
   public:
   /** Construct from the wrapped sub-expression.  @c sub must be an
-     * lvalue reference or rvalue reference type.
-     */
+   * lvalue reference or rvalue reference type.
+   */
   explicit matrix_unary_node(Sub sub);
 
   /** Move constructor. */
   matrix_unary_node(node_type&& other);
 
-#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
   /** Copy constructor. */
   matrix_unary_node(const node_type& other);
-#endif
 
 
   protected:
@@ -100,8 +98,8 @@ class matrix_unary_node : public readable_matrix<matrix_unary_node<Sub, Op>>
   int i_cols() const;
 
   /** Apply the operator to element @c (i,j) of the subexpressions and
-     * return the result.
-     */
+   * return the result.
+   */
   immutable_value i_get(int i, int j) const;
 
   /*@}*/
@@ -109,9 +107,9 @@ class matrix_unary_node : public readable_matrix<matrix_unary_node<Sub, Op>>
 
   protected:
   /** The type used to store the subexpression.  The expression is stored
-     * as a copy if Sub is an rvalue reference (temporary), or by const
-     * reference if Sub is an lvalue reference.
-     */
+   * as a copy if Sub is an rvalue reference (temporary), or by const
+   * reference if Sub is an lvalue reference.
+   */
   using sub_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const sub_type&,
     sub_type>;
 
@@ -122,11 +120,6 @@ class matrix_unary_node : public readable_matrix<matrix_unary_node<Sub, Op>>
 
 
   private:
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
-  // Not copy constructible.
-  matrix_unary_node(const node_type&);
-#endif
-
   // Not assignable.
   node_type& operator=(const node_type&);
 };

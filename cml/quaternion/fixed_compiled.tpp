@@ -133,13 +133,12 @@ template<class E, class O, class C>
 template<class Other>
 auto
 quaternion<E, fixed<>, O, C>::i_put(int i,
-  const Other& v) __CML_REF->quaternion_type&
+  const Other& v) &->quaternion_type&
 {
   this->m_data[i] = value_type(v);
   return *this;
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class E, class O, class C>
 template<class Other>
 auto
@@ -149,6 +148,5 @@ quaternion<E, fixed<>, O, C>::i_put(int i,
   this->m_data[i] = value_type(v);
   return (quaternion_type&&) *this;
 }
-#endif
 
 }  // namespace cml

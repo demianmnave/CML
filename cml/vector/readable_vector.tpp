@@ -37,7 +37,6 @@ readable_vector<DT>::get(int i) const -> immutable_value
   return this->actual().i_get(i);
 }
 
-#ifdef CML_HAS_STRUCTURED_BINDINGS
 template<class DT>
 template<std::size_t I, enable_if_fixed_size<vector_traits<DT>>*>
 auto
@@ -45,7 +44,6 @@ readable_vector<DT>::get() const -> immutable_value
 {
   return this->actual().i_get(I);
 }
-#endif
 
 template<class DT>
 auto
@@ -71,7 +69,6 @@ readable_vector<DT>::length() const -> value_type
   return element_traits::sqrt(this->length_squared());
 }
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 auto
 readable_vector<DT>::normalize() const& -> vector_scalar_node<const DT&,
@@ -90,19 +87,7 @@ readable_vector<DT>::normalize() const&& -> vector_scalar_node<DT&&, value_type,
   return vector_scalar_node<DT&&, value_type,
     op::binary_divide<value_type, value_type>>((DT&&) *this, this->length());
 }
-#else
-template<class DT>
-auto
-readable_vector<DT>::normalize() const -> vector_scalar_node<DT, value_type,
-  op::binary_divide<value_type, value_type>>
-{
-  return vector_scalar_node<DT, value_type,
-    op::binary_divide<value_type, value_type>>((const DT&) *this,
-    this->length());
-}
-#endif
 
-#ifdef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class DT>
 auto
 readable_vector<DT>::subvector(int i) const& -> subvector_node<const DT&>
@@ -116,13 +101,5 @@ readable_vector<DT>::subvector(int i) const&& -> subvector_node<DT&&>
 {
   return subvector_node<DT&&>((DT&&) *this, i);
 }
-#else
-template<class DT>
-auto
-readable_vector<DT>::subvector(int i) const -> subvector_node<DT>
-{
-  return subvector_node<DT>((const DT&) *this, i);
-}
-#endif
 
 }  // namespace cml

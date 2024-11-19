@@ -24,13 +24,11 @@ matrix_col_node<Sub, -1>::matrix_col_node(node_type&& other)
 , m_col(other.m_col)
 {}
 
-#ifndef CML_HAS_RVALUE_REFERENCE_FROM_THIS
 template<class Sub>
 matrix_col_node<Sub, -1>::matrix_col_node(const node_type& other)
 : m_sub(other.m_sub)
 , m_col(other.m_col)
 {}
-#endif
 
 
 /* Internal methods: */
