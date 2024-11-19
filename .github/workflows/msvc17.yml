@@ -31,7 +31,7 @@ jobs:
       - name: CMake configure-build-test
         uses: lukka/run-cmake@v10
         with:
-          configurePreset: "cml-ci-msvc17-mt-s",
+          configurePreset: "cml-ci-msvc17-mt-s"
           configurePresetAdditionalArgs: "['-T version=14.40']"
-          buildPreset: "cml-ci-msvc17-mt-s-release",
+          buildPreset: "cml-ci-msvc17-mt-s-release"
           testPreset: "cml-ci-msvc17-mt-s-release-test"
