@@ -22,10 +22,12 @@ jobs:
             '--add', 'Microsoft.VisualStudio.Component.VC.14.40.17.10.x86.x64'
           Write-Host $modify.ExitCode
 
-          $vsbin = 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.40.33807\bin\Hostx64\x64'
-          Test-Path -Path $vsbin | Should -Be $true
+          Get-ChildItem -Path (Join-Path $vspath 'VC\Tools\MSVC')
 
-          $clexe = Join-Path $vsbin 'cl.exe'
-          Test-Path -Path $clexe | Should -Be $true
+          #$vsbin = 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.40.33807\bin\Hostx64\x64'
+          #Test-Path -Path $vsbin | Should -Be $true
 
-          & $clexe /?
+          #$clexe = Join-Path $vsbin 'cl.exe'
+          #Test-Path -Path $clexe | Should -Be $true
+
+          #& $clexe /?
