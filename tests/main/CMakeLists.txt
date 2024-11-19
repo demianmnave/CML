@@ -2,16 +2,21 @@
 # @@COPYRIGHT@@
 # --------------------------------------------------------------------------
 
-# Pull Catch2 at v3.7.1
-include(FetchContent)
+# Allow finding Catch2 locally first:
+find_package(Catch2 3.7.1 CONFIG QUIET)
 
-FetchContent_Declare(
-  Catch2
-  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-  GIT_TAG v3.7.1
-)
+# If not found or already pulled, pull Catch2 at v3.7.1
+if(NOT Catch2_FOUND)
+  include(FetchContent)
 
-FetchContent_MakeAvailable(Catch2)
+  FetchContent_Declare(
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG v3.7.1
+  )
+
+  FetchContent_MakeAvailable(Catch2)
+endif()
 
 add_library(cml_test_main INTERFACE catch_runner.h)
 target_include_directories(cml_test_main
