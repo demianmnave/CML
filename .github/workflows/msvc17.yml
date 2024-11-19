@@ -9,7 +9,9 @@ jobs:
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
-      - uses: lukka/get-cmake@v3.29
+      - uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: "~3.29.0"
       - uses: lukka/run-vcpkg@v11
       - uses: lukka/run-cmake@v10
         with:
