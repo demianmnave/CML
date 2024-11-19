@@ -11,16 +11,21 @@ jobs:
       - name: Run vs_installer.exe
         shell: pwsh
         run: |
+          $vspath = 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise'
+          Test-Path -Path $vspath | Should -Be $true
+
           $vsinstaller = 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe'
           Test-Path -Path $vsinstaller | Should -Be $true
 
           $modify = Start-Process -Wait -PassThru -FilePath $vsinstaller `
-            -ArgumentList 'modify', '--add', 'Microsoft.VisualStudio.Component.VC.14.40.17.10.x86.x64', '--quiet', '--wait'
+            -ArgumentList 'modify', '--installPath', "$vspath", '--quiet', '--norestart', '--nocache' `
+             '--add', 'Microsoft.VisualStudio.Component.VC.14.40.17.10.x86.x64'
           Write-Host $modify.ExitCode
 
-          Get-ChildItem -Recurse 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC'
+          $vsbin = 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.40.33807\bin\Hostx64\x64'
+          Test-Path -Path $vsbin | Should -Be $true
 
-          #$vsbin = 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.40.33807\bin\Hostx64\x64'
-          #$clexe = Join-Path $vsbin 'cl.exe'
-          #Test-Path -Path $clexe | Should -Be $true
-          #& $clexe /?
+          $clexe = Join-Path $vsbin 'cl.exe'
+          Test-Path -Path $clexe | Should -Be $true
+
+          & $clexe /?
