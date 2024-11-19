@@ -2,6 +2,11 @@
 # @@COPYRIGHT@@
 # --------------------------------------------------------------------------
 
+set(CML_ROOT "${CMAKE_CURRENT_LIST_DIR}")
+list(APPEND CMAKE_MODULE_PATH ${CML_ROOT}/cmake)
+include(CMakeDependentOption)
+include(CMLBuildMacros)
+
 # Set the minimum CMake version:
 cmake_minimum_required(VERSION 3.15)
 
@@ -14,17 +19,16 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 # Just enable Debug and Release for multi-config generators:
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
 
-# The project name:
-project(CML)
-
-# Path to the project source tree:
-set(CML_ROOT "${CML_SOURCE_DIR}")
-
-# Path to project-specific configuration files:
-list(APPEND CMAKE_MODULE_PATH ${CML_ROOT}/CMake)
-include(CMLBuildMacros)
-
-include(CMakeDependentOption)
+# Set the project version:
+cml_version_from_file(
+  ${CML_ROOT}/cml/version.h # Path to version.h
+  "CML_VERSION" # The macro name to find
+  _CML_VERSION_MAJOR # Parsed major version
+  _CML_VERSION_MINOR # Parsed minor version
+  _CML_VERSION_PATCH # Parsed patch version
+  _CML_VERSION # String MM.mm.pp
+)
+project(CML VERSION ${_CML_VERSION})
 
 if(NOT DEFINED BUILD_SHARED_LIBS)
   option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
@@ -83,17 +87,6 @@ if(NOT DEFINED CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/lib)
   endif()
 endif()
-
-# Figure out which version of CML is being built by parsing CML/version.h (this
-# is from the root Boost.CMake CMakeLists.txt file):
-cml_version_from_file(
-  ${CML_ROOT}/cml/version.h # Path to version.h
-  "CML_VERSION" # The macro name to find
-  CML_VERSION_MAJOR # Parsed major version
-  CML_VERSION_MINOR # Parsed minor version
-  CML_VERSION_PATCH # Parsed patch version
-  CML_VERSION # String MM.mm.pp
-)
 message(STATUS "Building CML ${CML_VERSION}")
 
 # Create the CML interface library:
@@ -118,7 +111,7 @@ install(EXPORT cml-targets DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cml FILE cm
 install(DIRECTORY cml DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} FILES_MATCHING PATTERN "*")
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/cml-config-version.cmake
-  CMake/cml-config.cmake
+  cmake/cml-config.cmake
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cml
 )
 
