@@ -17,11 +17,8 @@ jobs:
           $vsinstaller = 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe'
           Test-Path -Path $vsinstaller | Should -Be $true
 
-          Start-Process -NoNewWindow -Wait -FilePath $vsinstaller `
-          -RedirectStandardOutput stdout.txt `
-          -RedirectStandardError stderr.txt `
-           -ArgumentList `
-            'modify', '--installPath', "$vspath", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
+          Start-Process -NoNewWindow -Wait -FilePath $vsinstaller -ArgumentList `
+            'modify', '--installPath', "`"$vspath`"", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
             '--add', 'Microsoft.VisualStudio.Component.VC.14.40.17.10.x86.x64'
 
           Get-ChildItem $env:LOCALAPPDATA\Temp\dd_installer_* | Get-Content
