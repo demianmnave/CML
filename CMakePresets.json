@@ -188,6 +188,14 @@
     },
 
     {
+      // Static Ninja+MSVC release build:
+      "name": "cml-ci-ninja-msvc-mt-s-release",
+      "inherits": [ ".cml-windows-build-only" ],
+      "configurePreset": "cml-ci-ninja-msvc-mt-s",
+      "inheritConfigureEnvironment": true,
+      "configuration": "Release"
+    },
+    {
       // Static Ninja+ClangCl release build:
       "name": "cml-ci-ninja-msvc-clangcl-mt-s-release",
       "inherits": [ ".cml-windows-build-only" ],
@@ -222,6 +230,13 @@
       }
     },
 
+    {
+      "name": "cml-ci-ninja-msvc-mt-s-release-test",
+      "inherits": [ ".cml-windows-test-only" ],
+      "configurePreset": "cml-ci-ninja-msvc-mt-s",
+      "inheritConfigureEnvironment": true,
+      "configuration": "Release"
+    },
     {
       "name": "cml-ci-ninja-msvc-clangcl-mt-s-release-test",
       "inherits": [ ".cml-windows-test-only" ],

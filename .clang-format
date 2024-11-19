@@ -62,7 +62,7 @@ EmptyLineAfterAccessModifier: Never
 EmptyLineBeforeAccessModifier: Always
 ExperimentalAutoDetectBinPacking: false
 FixNamespaceComments: true
-ForEachMacros: ['foreach', 'Q_FOREACH', 'BOOST_FOREACH']
+ForEachMacros: []
 IncludeBlocks: Preserve
 IndentAccessModifiers: false
 IndentCaseBlocks: false

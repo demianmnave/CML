@@ -4,26 +4,13 @@ name: msvc17
 on: push
 
 jobs:
-  job:
-    name: MSVC 17.10
+  msvc-latest:
+    name: MSVC Latest
     runs-on: windows-2022
     steps:
-      - name: Install MSVC 17.10
-        shell: pwsh
-        run: |
-          $vspath = 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise'
-          Test-Path -Path $vspath | Should -Be $true
-
-          $vsinstaller = 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe'
-          Test-Path -Path $vsinstaller | Should -Be $true
-
-          Start-Process -NoNewWindow -Wait -FilePath $vsinstaller -ArgumentList `
-            'modify', '--installPath', "`"$vspath`"", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
-            '--add', 'Microsoft.VisualStudio.Component.VC.14.40.17.10.x86.x64'
-
       - uses: lukka/get-cmake@latest
         with:
-          cmakeVersion: "~3.27.0"
+          cmakeVersion: "~3.29.0"
           useCloudCache: true
 
       - uses: actions/checkout@v4
@@ -31,7 +18,38 @@ jobs:
       - name: CMake configure-build-test
         uses: lukka/run-cmake@v10
         with:
-          configurePreset: "cml-ci-msvc17-mt-s"
-          configurePresetAdditionalArgs: "['-T version=14.40']"
-          buildPreset: "cml-ci-msvc17-mt-s-release"
-          testPreset: "cml-ci-msvc17-mt-s-release-test"
+          configurePreset: "cml-ci-ninja-msvc-mt-s"
+          buildPreset: "cml-ci-ninja-msvc-mt-s-release"
+          testPreset: "cml-ci-ninja-msvc-mt-s-release-test"
+
+#  msvc-17-10:
+#    name: MSVC 17.10
+#    runs-on: windows-2022
+#    steps:
+#      - name: Install MSVC 17.10
+#        shell: pwsh
+#        run: |
+#          $vspath = 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise'
+#          Test-Path -Path $vspath | Should -Be $true
+#
+#          $vsinstaller = 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe'
+#          Test-Path -Path $vsinstaller | Should -Be $true
+#
+#          Start-Process -NoNewWindow -Wait -FilePath $vsinstaller -ArgumentList `
+#            'modify', '--installPath', "`"$vspath`"", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
+#            '--add', 'Microsoft.VisualStudio.Component.VC.14.40.17.10.x86.x64'
+#
+#      - uses: lukka/get-cmake@latest
+#        with:
+#          cmakeVersion: "~3.29.0"
+#          useCloudCache: true
+#
+#      - uses: actions/checkout@v4
+#
+#      - name: CMake configure-build-test
+#        uses: lukka/run-cmake@v10
+#        with:
+#          configurePreset: "cml-ci-msvc17-mt-s"
+#          configurePresetAdditionalArgs: "['-T version=14.40']"
+#          buildPreset: "cml-ci-msvc17-mt-s-release"
+#          testPreset: "cml-ci-msvc17-mt-s-release-test"
