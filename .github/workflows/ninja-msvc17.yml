@@ -1,0 +1,16 @@
+# SPDX short identifier: BSL-1.0
+
+name: ninja-msvc17
+on: push
+
+jobs:
+  job:
+    name: VS 2022 update test
+    runs-on: windows-2022
+    steps:
+      - name: Run vs_installer.exe
+        shell: pwsh
+        run: |
+          $vsinstaller = 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe'
+          Test-Path -Path $vsinstaller | Should -Be $true
+          & $vsinstaller modify --add 'Microsoft.VisualStudio.Component.VC.14.40.17.10.x86.x64'
