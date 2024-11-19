@@ -22,7 +22,6 @@ function(cml_add_test _name)
   if(MSVC)
     set(_msvc_common_options
       /permissive-
-      /MP
       /EHsc
       /W4 # Enable strict warnings.
     )
@@ -36,6 +35,7 @@ function(cml_add_test _name)
       /Zc:rvalueCast
       /diagnostics:caret
       /WL
+      /MP
     )
 
     set(_msvc_link_options

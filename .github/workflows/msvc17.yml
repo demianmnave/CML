@@ -1,11 +1,11 @@
 # SPDX short identifier: BSL-1.0
 
-name: ninja-msvc17
+name: msvc17
 on: push
 
 jobs:
   job:
-    name: MSVC 17.10, CMake 3.27
+    name: MSVC 17.10
     runs-on: windows-2022
     steps:
       - name: Install MSVC 17.10
@@ -21,16 +21,14 @@ jobs:
             'modify', '--installPath', "`"$vspath`"", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
             '--add', 'Microsoft.VisualStudio.Component.VC.14.40.17.10.x86.x64'
 
-      - name: Pull cmake 3.27
-        uses: lukka/get-cmake@latest
+      - uses: lukka/get-cmake@latest
         with:
           cmakeVersion: "~3.27.0"
           useCloudCache: true
 
-      - name: Checkout CML
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Build and test with MSVC 17.10
+      - name: CMake configure-build-test
         uses: lukka/run-cmake@v10
         with:
           configurePreset: "cml-ci-msvc17-mt-s",
