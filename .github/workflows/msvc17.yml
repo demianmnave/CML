@@ -8,15 +8,10 @@ jobs:
     name: MSVC Latest
     runs-on: windows-2022
     steps:
-      - uses: lukka/get-cmake@latest
-        with:
-          cmakeVersion: "~3.29.0"
-          useCloudCache: true
-
       - uses: actions/checkout@v4
-
-      - name: CMake configure-build-test
-        uses: lukka/run-cmake@v10
+      - uses: lukka/get-cmake@v3.29
+      - uses: lukka/run-vcpkg@v11
+      - uses: lukka/run-cmake@v10
         with:
           configurePreset: "cml-ci-ninja-msvc-mt-s"
           buildPreset: "cml-ci-ninja-msvc-mt-s-release"
