@@ -1,6 +1,6 @@
 # SPDX short identifier: BSL-1.0
 
-name: msvc17-17-10
+name: msvc-17-10
 on:
   push:
     paths:
