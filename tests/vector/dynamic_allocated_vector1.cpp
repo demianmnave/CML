@@ -1,8 +1,6 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #include <iostream>
 
@@ -46,7 +44,7 @@ CATCH_TEST_CASE("resize1")
 
 CATCH_TEST_CASE("array_construct")
 {
-  double data[] = { 1., 2., 3. };
+  double data[] = {1., 2., 3.};
   cml::vectord v(data);
   CATCH_REQUIRE(v.size() == 3);
   CATCH_CHECK(v.data()[0] == 1.);
@@ -55,7 +53,7 @@ CATCH_TEST_CASE("array_construct")
 
 CATCH_TEST_CASE("array_temp_construct")
 {
-  double data[] = { 1., 2., 3. };
+  double data[] = {1., 2., 3.};
   cml::vectord v = data;
   CATCH_REQUIRE(v.size() == 3);
   CATCH_CHECK(v.data()[0] == 1.);
@@ -64,7 +62,7 @@ CATCH_TEST_CASE("array_temp_construct")
 
 CATCH_TEST_CASE("array_assign")
 {
-  double data[] = { 1., 2., 3. };
+  double data[] = {1., 2., 3.};
   cml::vectord v;
   v = data;
   CATCH_REQUIRE(v.size() == 3);
@@ -101,7 +99,7 @@ CATCH_TEST_CASE("element_construct3")
 
 CATCH_TEST_CASE("element_construct4")
 {
-  cml::vectord v(1.,2.f,3,4U);
+  cml::vectord v(1., 2.f, 3, 4U);
   CATCH_REQUIRE(v.size() == 4);
   CATCH_CHECK(v.data()[0] == 1.);
   CATCH_CHECK(v[0] == 1.);
@@ -132,7 +130,7 @@ CATCH_TEST_CASE("combine_construct2")
 
 CATCH_TEST_CASE("pointer_construct1")
 {
-  double data[] = { 1., 2., 3. };
+  double data[] = {1., 2., 3.};
   cml::vectord v(3, &data[0]);
   CATCH_REQUIRE(v.size() == 3);
   CATCH_CHECK(v.data()[0] == 1.);
@@ -141,7 +139,7 @@ CATCH_TEST_CASE("pointer_construct1")
 
 CATCH_TEST_CASE("pointer_construct2")
 {
-  double data[] = { 1., 2., 3. };
+  double data[] = {1., 2., 3.};
   cml::vectord v(&data[0], 3);
   CATCH_REQUIRE(v.size() == 3);
   CATCH_CHECK(v.data()[0] == 1.);
@@ -150,7 +148,7 @@ CATCH_TEST_CASE("pointer_construct2")
 
 CATCH_TEST_CASE("list_construct")
 {
-  cml::vectord v { 1., 2., 3. };
+  cml::vectord v{1., 2., 3.};
   CATCH_REQUIRE(v.size() == 3);
   CATCH_CHECK(v.data()[0] == 1.);
   CATCH_CHECK(v[0] == 1.);
@@ -158,7 +156,7 @@ CATCH_TEST_CASE("list_construct")
 
 CATCH_TEST_CASE("list_temp_construct")
 {
-  cml::vectord v = { 1., 2., 3. };
+  cml::vectord v = {1., 2., 3.};
   CATCH_REQUIRE(v.size() == 3);
   CATCH_CHECK(v.data()[0] == 1.);
   CATCH_CHECK(v[0] == 1.);
@@ -186,8 +184,5 @@ CATCH_TEST_CASE("size_check1")
 {
   cml::vectord v;
   CATCH_REQUIRE(v.size() == 0);
-  CATCH_CHECK_NOTHROW((v = { 1., 2., 3., 4. }));
+  CATCH_CHECK_NOTHROW((v = {1., 2., 3., 4.}));
 }
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

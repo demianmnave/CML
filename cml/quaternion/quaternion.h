@@ -1,14 +1,10 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
 
-#ifndef	cml_quaternion_quaternion_h
-#define	cml_quaternion_quaternion_h
-
+#include <cml/storage/compiled_selector.h>
 #include <cml/quaternion/cross_tags.h>
 #include <cml/quaternion/order_tags.h>
 
@@ -34,12 +30,7 @@ namespace cml {
  * left-handed (negative_cross) or right-handed (positive_cross).
  */
 template<typename Element, class ArrayType = fixed<>,
-    class Order = imaginary_first, class Cross = positive_cross>
-      class quaternion;
+  class Order = imaginary_first, class Cross = positive_cross>
+class quaternion;
 
-} // namespace cml
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2
+}  // namespace cml

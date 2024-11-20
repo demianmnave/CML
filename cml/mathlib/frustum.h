@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_mathlib_frustum_h
-#define	cml_mathlib_frustum_h
 
 #include <cml/matrix/fwd.h>
 #include <cml/mathlib/constants.h>
@@ -39,11 +34,10 @@ namespace cml {
  * is dynamically-sized and non-square.  The size is checked at
  * compile-time for fixed-size matrices.
  */
-template<class Sub1, class Sub2, class E> void
-extract_frustum_planes(
-  const readable_matrix<Sub1>& modelview,
-  const readable_matrix<Sub2>& projection,
-  E planes[6][4], ZClip z_clip, bool normalize = true);
+template<class Sub1, class Sub2, class E>
+void extract_frustum_planes(const readable_matrix<Sub1>& modelview,
+  const readable_matrix<Sub2>& projection, E planes[6][4], ZClip z_clip,
+  bool normalize = true);
 
 /** Extract the planes of a frustum from a matrix assumed to contain any
  * model and view transforms, followed by a projection transform with the
@@ -62,10 +56,9 @@ extract_frustum_planes(
  * and is not at least 4x4.  The size is checked at compile-time for
  * fixed-size matrices.
  */
-template<class Sub, class E> void
-extract_frustum_planes(
-  const readable_matrix<Sub>& m,
-  E planes[6][4], ZClip z_clip, bool normalize = true);
+template<class Sub, class E>
+void extract_frustum_planes(const readable_matrix<Sub>& m, E planes[6][4],
+  ZClip z_clip, bool normalize = true);
 
 /** Extract the near plane of a frustum given a concatenated modelview and
  * projection matrix @c m and the near z-clipping range. The plane is not
@@ -78,19 +71,14 @@ extract_frustum_planes(
  * and is not at least 4x4.  The size is checked at compile-time for
  * fixed-size matrices.
  */
-template<class Sub, class Plane> void
-extract_near_frustum_plane(
-  const readable_matrix<Sub>& m, Plane& plane, ZClip z_clip);
+template<class Sub, class Plane>
+void extract_near_frustum_plane(const readable_matrix<Sub>& m, Plane& plane,
+  ZClip z_clip);
 
 /*@}*/
 
-} // namespace cml
+}  // namespace cml
 
 #define __CML_MATHLIB_FRUSTUM_TPP
 #include <cml/mathlib/frustum.tpp>
 #undef __CML_MATHLIB_FRUSTUM_TPP
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

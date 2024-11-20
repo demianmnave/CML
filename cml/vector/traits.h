@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_vector_traits_h
-#define	cml_vector_traits_h
 
 #include <cml/scalar/traits.h>
 #include <cml/vector/type_util.h>
@@ -23,14 +18,9 @@ namespace cml {
 template<class Vector> struct vector_traits;
 
 /** traits_of for vector types. */
-template<class Vector>
-struct traits_of<Vector, enable_if_vector_t<Vector>> {
-  typedef vector_traits<Vector>				type;
+template<class Vector> struct traits_of<Vector, enable_if_vector_t<Vector>>
+{
+  using type = vector_traits<Vector>;
 };
 
-} // namespace cml
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2
+}  // namespace cml

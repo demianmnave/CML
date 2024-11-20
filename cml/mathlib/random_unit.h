@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_mathlib_random_unit_h
-#define	cml_mathlib_random_unit_h
 
 #include <cml/vector/fwd.h>
 
@@ -34,8 +29,8 @@ namespace cml {
  *
  * @throws minimum_vector_size_error if @c n has zero size.
  */
-template<class Sub, class RNG> void
-  random_unit(writable_vector<Sub>& n, RNG& gen);
+template<class Sub, class RNG>
+void random_unit(writable_vector<Sub>& n, RNG& gen);
 
 /** Replace @c n with a uniformly random unit vector.
  *
@@ -75,18 +70,14 @@ template<class Sub> void random_unit(writable_vector<Sub>& n);
  * dynamically-sized, it will be resized to @c d.size().  If both @c n and
  * @c d are fixed-size, then the size is checked at compile-time.
  */
-template<class Sub1, class Sub2, class Scalar> void random_unit(
-  writable_vector<Sub1>& n, const readable_vector<Sub2>& d, const Scalar& a);
+template<class Sub1, class Sub2, class Scalar>
+void random_unit(writable_vector<Sub1>& n, const readable_vector<Sub2>& d,
+  const Scalar& a);
 
 /*@}*/
 
-} // namespace cml
+}  // namespace cml
 
 #define __CML_MATHLIB_RANDOM_UNIT_TPP
 #include <cml/mathlib/random_unit.tpp>
 #undef __CML_MATHLIB_RANDOM_UNIT_TPP
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

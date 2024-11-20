@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_mathlib_matrix_concat_h
-#define	cml_mathlib_matrix_concat_h
 
 #include <cml/matrix/fwd.h>
 #include <cml/matrix/promotion.h>
@@ -30,19 +25,15 @@ namespace cml {
  * dynamically-sized and non-square.  The size is checked at compile-time
  * for fixed-size matrices.
  */
-template<class Sub1, class Sub2> auto matrix_concat(
-  const readable_matrix<Sub1>& m1, const readable_matrix<Sub2>& m2)
--> matrix_inner_product_promote_t<Sub1, Sub2>;
+template<class Sub1, class Sub2>
+auto matrix_concat(const readable_matrix<Sub1>& m1,
+  const readable_matrix<Sub2>& m2)
+  -> matrix_inner_product_promote_t<Sub1, Sub2>;
 
 /*@}*/
 
-} // namespace cml
+}  // namespace cml
 
 #define __CML_MATHLIB_MATRIX_CONCAT_TPP
 #include <cml/mathlib/matrix/concat.tpp>
 #undef __CML_MATHLIB_MATRIX_CONCAT_TPP
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

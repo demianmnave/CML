@@ -1,11 +1,9 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #ifndef __CML_MATHLIB_MATRIX_SCALE_TPP
-#error "mathlib/matrix/scale.tpp not included correctly"
+#  error "mathlib/matrix/scale.tpp not included correctly"
 #endif
 
 #include <cml/common/mpl/are_convertible.h>
@@ -16,62 +14,55 @@ namespace cml {
 
 /* 2D scale: */
 
-template<class Sub, class E0, class E1> inline void
-matrix_scale_2D(
-  writable_matrix<Sub>& m, const E0& e0, const E1& e1
-  )
+template<class Sub, class E0, class E1>
+inline void
+matrix_scale_2D(writable_matrix<Sub>& m, const E0& e0, const E1& e1)
 {
-  static_assert(
-    cml::are_convertible<value_type_trait_of_t<Sub>, E0, E1>::value,
+  static_assert(cml::are_convertible<value_type_trait_of_t<Sub>, E0, E1>::value,
     "incompatible scalar types");
 
   cml::check_affine_2D(m);
   m.identity();
-  m.set_basis_element(0,0, e0);
-  m.set_basis_element(1,1, e1);
+  m.set_basis_element(0, 0, e0);
+  m.set_basis_element(1, 1, e1);
 }
 
-template<class Sub1, class Sub2> inline void
-matrix_scale_2D(
-  writable_matrix<Sub1>& m, const readable_vector<Sub2>& v
-  )
+template<class Sub1, class Sub2>
+inline void
+matrix_scale_2D(writable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
 {
   cml::check_size(v, int_c<2>());
   matrix_scale_2D(m, v[0], v[1]);
 }
 
-template<class Sub, class E0> inline void
-matrix_uniform_scale_2D(
-  writable_matrix<Sub>& m, const E0& e0
-  )
+template<class Sub, class E0>
+inline void
+matrix_uniform_scale_2D(writable_matrix<Sub>& m, const E0& e0)
 {
   matrix_scale_2D(m, e0, e0);
 }
 
-template<class Sub, class E0, class E1> inline void
-matrix_inverse_scale_2D(
-  writable_matrix<Sub>& m, const E0& e0, const E1& e1
-  )
+template<class Sub, class E0, class E1>
+inline void
+matrix_inverse_scale_2D(writable_matrix<Sub>& m, const E0& e0, const E1& e1)
 {
-  matrix_scale_2D(m, E0(1)/e0, E1(1)/e1);
+  matrix_scale_2D(m, E0(1) / e0, E1(1) / e1);
 }
 
-template<class Sub1, class Sub2> inline void
-matrix_inverse_scale_2D(
-  writable_matrix<Sub1>& m, const readable_vector<Sub2>& v
-  )
+template<class Sub1, class Sub2>
+inline void
+matrix_inverse_scale_2D(writable_matrix<Sub1>& m,
+  const readable_vector<Sub2>& v)
 {
   cml::check_size(v, int_c<2>());
   matrix_inverse_scale_2D(m, v[0], v[1]);
 }
 
-
 /* 3D scaling: */
 
-template<class Sub, class E0, class E1, class E2> inline void
-matrix_scale(
-  writable_matrix<Sub>& m, const E0& e0, const E1& e1, const E2& e2
-  )
+template<class Sub, class E0, class E1, class E2>
+inline void
+matrix_scale(writable_matrix<Sub>& m, const E0& e0, const E1& e1, const E2& e2)
 {
   static_assert(
     cml::are_convertible<value_type_trait_of_t<Sub>, E0, E1, E2>::value,
@@ -79,46 +70,43 @@ matrix_scale(
 
   cml::check_affine_3D(m);
   m.identity();
-  m.set_basis_element(0,0, e0);
-  m.set_basis_element(1,1, e1);
-  m.set_basis_element(2,2, e2);
+  m.set_basis_element(0, 0, e0);
+  m.set_basis_element(1, 1, e1);
+  m.set_basis_element(2, 2, e2);
 }
 
-template<class Sub1, class Sub2> inline void
-matrix_scale(
-  writable_matrix<Sub1>& m, const readable_vector<Sub2>& v
-  )
+template<class Sub1, class Sub2>
+inline void
+matrix_scale(writable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
 {
   cml::check_size(v, int_c<3>());
   matrix_scale(m, v[0], v[1], v[2]);
 }
 
-template<class Sub, class E0> inline void
-matrix_uniform_scale(
-  writable_matrix<Sub>& m, const E0& e0
-  )
+template<class Sub, class E0>
+inline void
+matrix_uniform_scale(writable_matrix<Sub>& m, const E0& e0)
 {
   matrix_scale(m, e0, e0, e0);
 }
 
-template<class Sub, class E0, class E1, class E2> inline void
-matrix_inverse_scale(
-  writable_matrix<Sub>& m, const E0& e0, const E1& e1, const E2& e2
-  )
+template<class Sub, class E0, class E1, class E2>
+inline void
+matrix_inverse_scale(writable_matrix<Sub>& m, const E0& e0, const E1& e1,
+  const E2& e2)
 {
-  matrix_scale(m, E0(1)/e0, E1(1)/e1, E2(1)/e2);
+  matrix_scale(m, E0(1) / e0, E1(1) / e1, E2(1) / e2);
 }
 
-template<class Sub1, class Sub2> inline void
-matrix_inverse_scale(
-  writable_matrix<Sub1>& m, const readable_vector<Sub2>& v
-  )
+template<class Sub1, class Sub2>
+inline void
+matrix_inverse_scale(writable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
 {
   cml::check_size(v, int_c<3>());
   matrix_inverse_scale(m, v[0], v[1], v[2]);
 }
 
-} // namespace cml
+}  // namespace cml
 
 
 #if 0
@@ -169,6 +157,3 @@ void matrix_scale_along_axis_2D(matrix<E,A,B,L>&  m, const VecT& axis,
 }
 
 #endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

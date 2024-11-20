@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_quaternion_types_h
-#define	cml_quaternion_types_h
 
 #include <cml/storage/selectors.h>
 #include <cml/quaternion/quaternion.h>
@@ -18,49 +13,32 @@ namespace cml {
 /*@{*/
 
 // Imaginary first, positive cross:
-typedef quaternion<
-  float, fixed<>, imaginary_first, positive_cross>	quaternionf_ip;
-typedef quaternion<
-  float, fixed<>, imaginary_first, positive_cross>	quaternionf_p;
-typedef quaternion<float>				quaternionf;
+using quaternionf_ip = quaternion<float, fixed<>, imaginary_first, positive_cross>;
+using quaternionf_p = quaternion<float, fixed<>, imaginary_first, positive_cross>;
+using quaternionf = quaternion<float>;
 
-typedef quaternion<
-  double, fixed<>, imaginary_first, positive_cross>	quaterniond_ip;
-typedef quaternion<
-  double, fixed<>, imaginary_first, positive_cross>	quaterniond_p;
-typedef quaternion<double>				quaterniond;
+using quaterniond_ip = quaternion<double, fixed<>, imaginary_first, positive_cross>;
+using quaterniond_p = quaternion<double, fixed<>, imaginary_first, positive_cross>;
+using quaterniond = quaternion<double>;
 
 
 // Imaginary first, negative cross:
-typedef quaternion<
-  float, fixed<>, imaginary_first, negative_cross>	quaternionf_in;
-typedef quaternion<
-  float, fixed<>, imaginary_first, negative_cross>	quaternionf_n;
+using quaternionf_in = quaternion<float, fixed<>, imaginary_first, negative_cross>;
+using quaternionf_n = quaternion<float, fixed<>, imaginary_first, negative_cross>;
 
-typedef quaternion<
-  double, fixed<>, imaginary_first, negative_cross>	quaterniond_in;
-typedef quaternion<
-  double, fixed<>, imaginary_first, negative_cross>	quaterniond_n;
+using quaterniond_in = quaternion<double, fixed<>, imaginary_first, negative_cross>;
+using quaterniond_n = quaternion<double, fixed<>, imaginary_first, negative_cross>;
 
 
 // Real first, positive cross:
-typedef quaternion<
-  float, fixed<>, real_first, positive_cross>		quaternionf_rp;
-typedef quaternion<
-  double, fixed<>, real_first, positive_cross>		quaterniond_rp;
+using quaternionf_rp = quaternion<float, fixed<>, real_first, positive_cross>;
+using quaterniond_rp = quaternion<double, fixed<>, real_first, positive_cross>;
 
 
 // Real first, negative cross:
-typedef quaternion<
-  float, fixed<>, real_first, negative_cross>		quaternionf_rn;
-typedef quaternion<
-  double, fixed<>, real_first, negative_cross>		quaterniond_rn;
+using quaternionf_rn = quaternion<float, fixed<>, real_first, negative_cross>;
+using quaterniond_rn = quaternion<double, fixed<>, real_first, negative_cross>;
 
 /*@}*/
 
-} // namespace cml
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2
+}  // namespace cml

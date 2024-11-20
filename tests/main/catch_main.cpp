@@ -1,12 +1,10 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file catch_main.cpp
- */
 
 #define CATCH_CONFIG_RUNNER
 #if defined(WIN32)
-#define DO_NOT_USE_WMAIN
+#  define DO_NOT_USE_WMAIN
 #endif
 #include "catch.hpp"
 

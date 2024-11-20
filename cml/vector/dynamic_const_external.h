@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_vector_dynamic_const_external_h
-#define	cml_vector_dynamic_const_external_h
 
 #include <cml/storage/external_selector.h>
 #include <cml/vector/readable_vector.h>
@@ -15,19 +10,18 @@
 
 namespace cml {
 
-template<class Element>
-struct vector_traits< vector<const Element, external<>> >
+template<class Element> struct vector_traits<vector<const Element, external<>>>
 {
   /* Traits and types for the vector element: */
-  typedef scalar_traits<Element>			element_traits;
-  typedef typename element_traits::value_type		value_type;
-  typedef typename element_traits::const_pointer	const_pointer;
-  typedef typename element_traits::const_reference	const_reference;
-  typedef typename element_traits::immutable_value	immutable_value;
+  using element_traits = scalar_traits<Element>;
+  using value_type = typename element_traits::value_type;
+  using const_pointer = typename element_traits::const_pointer;
+  using const_reference = typename element_traits::const_reference;
+  using immutable_value = typename element_traits::immutable_value;
 
   /* The vector storage type: */
-  typedef rebind_t<external<>, vector_storage_tag>	storage_type;
-  typedef typename storage_type::size_tag		size_tag;
+  using storage_type = rebind_t<external<>, vector_storage_tag>;
+  using size_tag = typename storage_type::size_tag;
   static_assert(std::is_same<size_tag, dynamic_size_tag>::value,
     "invalid size tag");
 
@@ -39,94 +33,83 @@ struct vector_traits< vector<const Element, external<>> >
 /** Runtime-length wrapped array pointer as a vector. */
 template<class Element>
 class vector<const Element, external<>>
-: public readable_vector< vector<const Element, external<>> >
+: public readable_vector<vector<const Element, external<>>>
 {
   public:
-
-    typedef vector<const Element, external<>>		vector_type;
-    typedef readable_vector<vector_type>		readable_type;
-    typedef vector_traits<vector_type>			traits_type;
-    typedef typename traits_type::element_traits	element_traits;
-    typedef typename traits_type::value_type		value_type;
-    typedef typename traits_type::const_pointer		const_pointer;
-    typedef typename traits_type::const_reference	const_reference;
-    typedef typename traits_type::immutable_value	immutable_value;
-    typedef typename traits_type::storage_type		storage_type;
-    typedef typename traits_type::size_tag		size_tag;
-
-
-  public:
-
-    /** Constant containing the array size. */
-    static const int array_size = -1;
+  using vector_type = vector<const Element, external<>>;
+  using readable_type = readable_vector<vector_type>;
+  using traits_type = vector_traits<vector_type>;
+  using element_traits = typename traits_type::element_traits;
+  using value_type = typename traits_type::value_type;
+  using const_pointer = typename traits_type::const_pointer;
+  using const_reference = typename traits_type::const_reference;
+  using immutable_value = typename traits_type::immutable_value;
+  using storage_type = typename traits_type::storage_type;
+  using size_tag = typename traits_type::size_tag;
 
 
   public:
+  /** Constant containing the array size. */
+  static const int array_size = -1;
 
-    /** Default construct with a null pointer and 0 size.
+
+  public:
+  /** Default construct with a null pointer and 0 size.
      *
      * @warning The default constructor is enabled only if the compiler
      * supports rvalue references from *this.
      */
-    vector();
+  vector();
 
-    /** Construct from the wrapped pointer and size. */
-    vector(const_pointer data, int size);
+  /** Construct from the wrapped pointer and size. */
+  vector(const_pointer data, int size);
 
-    /** Construct from the wrapped pointer and size. */
-    vector(int size, const_pointer data);
+  /** Construct from the wrapped pointer and size. */
+  vector(int size, const_pointer data);
 
-    /** Move constructor. */
-    vector(vector_type&& other);
+  /** Move constructor. */
+  vector(vector_type&& other);
 
 
   public:
+  /** Return const access to the vector data as a raw pointer. */
+  const_pointer data() const;
 
-    /** Return const access to the vector data as a raw pointer. */
-    const_pointer data() const;
+  /** Read-only iterator. */
+  const_pointer begin() const;
 
-    /** Read-only iterator. */
-    const_pointer begin() const;
+  /** Read-only iterator. */
+  const_pointer end() const;
 
-    /** Read-only iterator. */
-    const_pointer end() const;
-
-    /** Reset the vector to have no elements and no external pointer. */
-    void reset();
-
-
-  protected:
-
-    /** @name readable_vector Interface */
-    /*@{*/
-
-    friend readable_type;
-
-    /** Return the length of the vector. */
-    int i_size() const;
-
-    /** Return vector const element @c i. */
-    immutable_value i_get(int i) const;
-
-    /*@}*/
+  /** Reset the vector to have no elements and no external pointer. */
+  void reset();
 
 
   protected:
+  /** @name readable_vector Interface */
+  /*@{*/
 
-    /** Wrapped pointer. */
-    const_pointer		m_data;
+  friend readable_type;
 
-    /** Number of elements. */
-    int				m_size;
+  /** Return the length of the vector. */
+  int i_size() const;
+
+  /** Return vector const element @c i. */
+  immutable_value i_get(int i) const;
+
+  /*@}*/
+
+
+  protected:
+  /** Wrapped pointer. */
+  const_pointer m_data;
+
+  /** Number of elements. */
+  int m_size;
 };
 
-} // namespace cml
+}  // namespace cml
 
 #define __CML_VECTOR_DYNAMIC_CONST_EXTERNAL_TPP
 #include <cml/vector/dynamic_const_external.tpp>
 #undef __CML_VECTOR_DYNAMIC_CONST_EXTERNAL_TPP
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

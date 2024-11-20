@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_quaternion_traits_h
-#define	cml_quaternion_traits_h
 
 #include <cml/scalar/traits.h>
 #include <cml/quaternion/type_util.h>
@@ -24,13 +19,9 @@ template<class Quaternion> struct quaternion_traits;
 
 /** traits_of for quaternion types. */
 template<class Quaternion>
-struct traits_of<Quaternion, enable_if_quaternion_t<Quaternion>> {
-  typedef quaternion_traits<Quaternion>				type;
+struct traits_of<Quaternion, enable_if_quaternion_t<Quaternion>>
+{
+  using type = quaternion_traits<Quaternion>;
 };
 
-} // namespace cml
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2
+}  // namespace cml
