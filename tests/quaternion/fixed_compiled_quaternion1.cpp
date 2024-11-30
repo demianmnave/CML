@@ -1,8 +1,6 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 // Make sure the main header compiles cleanly:
 #include <cml/quaternion/fixed.h>
@@ -16,7 +14,7 @@
 
 CATCH_TEST_CASE("array_construct1")
 {
-  double data[] = { 1., 2., 3., 4. };
+  double data[] = {1., 2., 3., 4.};
   cml::quaterniond_ip q(data);
   CATCH_REQUIRE(q.size() == 4);
   CATCH_CHECK(q[cml::quaterniond_ip::X] == 1.);
@@ -25,7 +23,7 @@ CATCH_TEST_CASE("array_construct1")
 
 CATCH_TEST_CASE("array_construct2")
 {
-  double data[] = { 1., 2., 3., 4. };
+  double data[] = {1., 2., 3., 4.};
   cml::quaterniond_rp q(data);
   CATCH_REQUIRE(q.size() == 4);
   CATCH_CHECK(q[cml::quaterniond_rp::X] == 2.);
@@ -34,7 +32,7 @@ CATCH_TEST_CASE("array_construct2")
 
 CATCH_TEST_CASE("array_temp_construct1")
 {
-  double data[] = { 1., 2., 3., 4. };
+  double data[] = {1., 2., 3., 4.};
   cml::quaterniond_ip q = data;
   CATCH_REQUIRE(q.size() == 4);
   CATCH_CHECK(q[cml::quaterniond_ip::X] == 1.);
@@ -43,7 +41,7 @@ CATCH_TEST_CASE("array_temp_construct1")
 
 CATCH_TEST_CASE("array_temp_construct2")
 {
-  double data[] = { 1., 2., 3., 4. };
+  double data[] = {1., 2., 3., 4.};
   cml::quaterniond_rp q = data;
   CATCH_REQUIRE(q.size() == 4);
   CATCH_CHECK(q[cml::quaterniond_rp::X] == 2.);
@@ -100,7 +98,7 @@ CATCH_TEST_CASE("combine_construct4")
 
 CATCH_TEST_CASE("combine_construct5")
 {
-  double data[] = { 1., 2., 3. };
+  double data[] = {1., 2., 3.};
   cml::quaterniond_ip q(data, 4.);
   CATCH_REQUIRE(q.size() == 4);
   CATCH_CHECK(q[cml::quaterniond_ip::X] == 1.);
@@ -109,7 +107,7 @@ CATCH_TEST_CASE("combine_construct5")
 
 CATCH_TEST_CASE("combine_construct6")
 {
-  double data[] = { 1., 2., 3. };
+  double data[] = {1., 2., 3.};
   cml::quaterniond_rp q(data, 4.);
   CATCH_REQUIRE(q.size() == 4);
   CATCH_CHECK(q[cml::quaterniond_rp::X] == 1.);
@@ -118,7 +116,7 @@ CATCH_TEST_CASE("combine_construct6")
 
 CATCH_TEST_CASE("combine_construct7")
 {
-  double data[] = { 1., 2., 3. };
+  double data[] = {1., 2., 3.};
   cml::quaterniond_ip q(4., data);
   CATCH_REQUIRE(q.size() == 4);
   CATCH_CHECK(q[cml::quaterniond_ip::X] == 1.);
@@ -127,7 +125,7 @@ CATCH_TEST_CASE("combine_construct7")
 
 CATCH_TEST_CASE("combine_construct8")
 {
-  double data[] = { 1., 2., 3. };
+  double data[] = {1., 2., 3.};
   cml::quaterniond_rp q(4., data);
   CATCH_REQUIRE(q.size() == 4);
   CATCH_CHECK(q[cml::quaterniond_rp::X] == 1.);
@@ -136,7 +134,7 @@ CATCH_TEST_CASE("combine_construct8")
 
 CATCH_TEST_CASE("array_assign1")
 {
-  double data[] = { 1., 2., 3., 4. };
+  double data[] = {1., 2., 3., 4.};
   cml::quaterniond_ip q;
   q = data;
   CATCH_REQUIRE(q.size() == 4);
@@ -146,7 +144,7 @@ CATCH_TEST_CASE("array_assign1")
 
 CATCH_TEST_CASE("array_assign2")
 {
-  double data[] = { 1., 2., 3., 4. };
+  double data[] = {1., 2., 3., 4.};
   cml::quaterniond_rp q;
   q = data;
   CATCH_REQUIRE(q.size() == 4);
@@ -156,7 +154,7 @@ CATCH_TEST_CASE("array_assign2")
 
 CATCH_TEST_CASE("pointer_construct1")
 {
-  double data[] = { 1., 2., 3., 4. };
+  double data[] = {1., 2., 3., 4.};
   cml::quaterniond_ip q(&data[0]);
   CATCH_REQUIRE(q.size() == 4);
   CATCH_CHECK(q[cml::quaterniond_ip::X] == 1.);
@@ -165,7 +163,7 @@ CATCH_TEST_CASE("pointer_construct1")
 
 CATCH_TEST_CASE("pointer_construct2")
 {
-  double data[] = { 1., 2., 3., 4. };
+  double data[] = {1., 2., 3., 4.};
   cml::quaterniond_rp q(&data[0]);
   CATCH_REQUIRE(q.size() == 4);
   CATCH_CHECK(q[cml::quaterniond_rp::X] == 2.);
@@ -174,7 +172,7 @@ CATCH_TEST_CASE("pointer_construct2")
 
 CATCH_TEST_CASE("list_temp_construct1")
 {
-  cml::quaterniond_ip q = { 1., 2., 3., 4. };
+  cml::quaterniond_ip q = {1., 2., 3., 4.};
   CATCH_REQUIRE(q.size() == 4);
   CATCH_CHECK(q[cml::quaterniond_ip::X] == 1.);
   CATCH_CHECK(q[cml::quaterniond_ip::W] == 4.);
@@ -182,7 +180,7 @@ CATCH_TEST_CASE("list_temp_construct1")
 
 CATCH_TEST_CASE("list_temp_construct2")
 {
-  cml::quaterniond_rp q = { 1., 2., 3., 4. };
+  cml::quaterniond_rp q = {1., 2., 3., 4.};
   CATCH_REQUIRE(q.size() == 4);
   CATCH_CHECK(q[cml::quaterniond_rp::X] == 2.);
   CATCH_CHECK(q[cml::quaterniond_rp::W] == 1.);
@@ -191,7 +189,7 @@ CATCH_TEST_CASE("list_temp_construct2")
 CATCH_TEST_CASE("list_assign1")
 {
   cml::quaterniond_ip q;
-  q = { 1., 2., 3., 4. };
+  q = {1., 2., 3., 4.};
   CATCH_REQUIRE(q.size() == 4);
   CATCH_CHECK(q[cml::quaterniond_ip::X] == 1.);
   CATCH_CHECK(q[cml::quaterniond_ip::W] == 4.);
@@ -200,7 +198,7 @@ CATCH_TEST_CASE("list_assign1")
 CATCH_TEST_CASE("list_assign2")
 {
   cml::quaterniond_rp q;
-  q = { 1., 2., 3., 4. };
+  q = {1., 2., 3., 4.};
   CATCH_REQUIRE(q.size() == 4);
   CATCH_CHECK(q[cml::quaterniond_rp::X] == 2.);
   CATCH_CHECK(q[cml::quaterniond_rp::W] == 1.);
@@ -246,13 +244,12 @@ CATCH_TEST_CASE("size_check1")
 {
   cml::quaterniond_rp q;
   CATCH_REQUIRE(q.size() == 4);
-  CATCH_REQUIRE_THROWS_AS(
-    (q = { 1., 2., 3. }), cml::quaternion_size_error);
+  CATCH_REQUIRE_THROWS_AS((q = {1., 2., 3.}), cml::quaternion_size_error);
 }
 
 CATCH_TEST_CASE("coordinates1")
 {
-  double data[] = { 1., 2., 3., 4. };
+  double data[] = {1., 2., 3., 4.};
   const cml::quaterniond_ip q(data);
   CATCH_REQUIRE(q.size() == 4);
   CATCH_CHECK(q.x() == 1.);
@@ -263,7 +260,7 @@ CATCH_TEST_CASE("coordinates1")
 
 CATCH_TEST_CASE("coordinates2")
 {
-  double data[] = { 1., 2., 3., 4. };
+  double data[] = {1., 2., 3., 4.};
   const cml::quaterniond_rp q(data);
   CATCH_REQUIRE(q.size() == 4);
   CATCH_CHECK(q.x() == 2.);
@@ -299,6 +296,3 @@ CATCH_TEST_CASE("coordinate_assign2")
   CATCH_CHECK(q[cml::quaterniond_rp::Y] == 3.);
   CATCH_CHECK(q[cml::quaterniond_rp::Z] == 4.);
 }
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

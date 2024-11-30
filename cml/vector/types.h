@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_vector_types_h
-#define	cml_vector_types_h
 
 #include <cml/storage/selectors.h>
 #include <cml/vector/vector.h>
@@ -17,50 +12,45 @@ namespace cml {
 /** @defgroup vector_types Predefined Vector Types */
 /*@{*/
 
-typedef vector<int,          fixed<2>>     vector2i;
-typedef vector<int,          fixed<3>>     vector3i;
-typedef vector<int,          fixed<4>>     vector4i;
-typedef vector<int,          dynamic<>>    vectori;
-typedef vector<int,          external<2>>  external2i;
-typedef vector<int,          external<3>>  external3i;
-typedef vector<int,          external<4>>  external4i;
-typedef vector<int,          external<>>   externalni;
-typedef vector<const int,    external<2>>  external2ci;
-typedef vector<const int,    external<3>>  external3ci;
-typedef vector<const int,    external<4>>  external4ci;
-typedef vector<const int,    external<>>   externalnci;
+using vector2i = vector<int, fixed<2>>;
+using vector3i = vector<int, fixed<3>>;
+using vector4i = vector<int, fixed<4>>;
+using vectori = vector<int, dynamic<>>;
+using external2i = vector<int, external<2>>;
+using external3i = vector<int, external<3>>;
+using external4i = vector<int, external<4>>;
+using externalni = vector<int, external<>>;
+using external2ci = vector<const int, external<2>>;
+using external3ci = vector<const int, external<3>>;
+using external4ci = vector<const int, external<4>>;
+using externalnci = vector<const int, external<>>;
 
-typedef vector<float,        fixed<2>>     vector2f;
-typedef vector<float,        fixed<3>>     vector3f;
-typedef vector<float,        fixed<4>>     vector4f;
-typedef vector<float,        dynamic<>>    vectorf;
-typedef vector<float,        external<2>>  external2f;
-typedef vector<float,        external<3>>  external3f;
-typedef vector<float,        external<4>>  external4f;
-typedef vector<float,        external<>>   externalnf;
-typedef vector<const float,  external<2>>  external2cf;
-typedef vector<const float,  external<3>>  external3cf;
-typedef vector<const float,  external<4>>  external4cf;
-typedef vector<const float,  external<>>   externalncf;
+using vector2f = vector<float, fixed<2>>;
+using vector3f = vector<float, fixed<3>>;
+using vector4f = vector<float, fixed<4>>;
+using vectorf = vector<float, dynamic<>>;
+using external2f = vector<float, external<2>>;
+using external3f = vector<float, external<3>>;
+using external4f = vector<float, external<4>>;
+using externalnf = vector<float, external<>>;
+using external2cf = vector<const float, external<2>>;
+using external3cf = vector<const float, external<3>>;
+using external4cf = vector<const float, external<4>>;
+using externalncf = vector<const float, external<>>;
 
-typedef vector<double,       fixed<2>>     vector2d;
-typedef vector<double,       fixed<3>>     vector3d;
-typedef vector<double,       fixed<4>>     vector4d;
-typedef vector<double,       dynamic<>>    vectord;
-typedef vector<double,       external<2>>  external2d;
-typedef vector<double,       external<3>>  external3d;
-typedef vector<double,       external<4>>  external4d;
-typedef vector<double,       external<>>   externalnd;
-typedef vector<const double, external<2>>  external2cd;
-typedef vector<const double, external<3>>  external3cd;
-typedef vector<const double, external<4>>  external4cd;
-typedef vector<const double, external<>>   externalncd;
+using vector2d = vector<double, fixed<2>>;
+using vector3d = vector<double, fixed<3>>;
+using vector4d = vector<double, fixed<4>>;
+using vectord = vector<double, dynamic<>>;
+using external2d = vector<double, external<2>>;
+using external3d = vector<double, external<3>>;
+using external4d = vector<double, external<4>>;
+using externalnd = vector<double, external<>>;
+using external2cd = vector<const double, external<2>>;
+using external3cd = vector<const double, external<3>>;
+using external4cd = vector<const double, external<4>>;
+using externalncd = vector<const double, external<>>;
 
 /*@}*/
 
-} // namespace cml
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2
+}  // namespace cml

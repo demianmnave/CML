@@ -1,8 +1,6 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #include <cml/common/temporary.h>
 #include <cml/scalar/traits.h>
@@ -12,8 +10,6 @@
 
 CATCH_TEST_CASE("const_temporary1")
 {
-  typedef cml::temporary_of_t<const double> const_type;
+  using const_type = cml::temporary_of_t<const double>;
+  CATCH_CHECK(std::is_same_v<const_type, const double>);
 }
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

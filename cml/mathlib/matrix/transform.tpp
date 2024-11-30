@@ -1,11 +1,9 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #ifndef __CML_MATHLIB_MATRIX_TRANSFORM_TPP
-#error "mathlib/matrix/transform.tpp not included correctly"
+#  error "mathlib/matrix/transform.tpp not included correctly"
 #endif
 
 #include <cml/vector/functions.h>
@@ -21,15 +19,13 @@ namespace cml {
 
 /* Look-at functions: */
 
-template<class Sub, class SubEye, class SubTarget, class SubUp> inline void
-matrix_look_at(writable_matrix<Sub>& m,
-    const readable_vector<SubEye>& position,
-    const readable_vector<SubTarget>& target,
-    const readable_vector<SubUp>& up,
-    const AxisOrientation handedness
-    )
+template<class Sub, class SubEye, class SubTarget, class SubUp>
+inline void
+matrix_look_at(writable_matrix<Sub>& m, const readable_vector<SubEye>& position,
+  const readable_vector<SubTarget>& target, const readable_vector<SubUp>& up,
+  const AxisOrientation handedness)
 {
-  typedef value_type_trait_of_t<Sub> value_type;
+  using value_type = value_type_trait_of_t<Sub>;
 
   cml::check_affine_3D(m);
 
@@ -42,35 +38,34 @@ matrix_look_at(writable_matrix<Sub>& m,
   auto y = cross(z, x);
 
   matrix_set_transposed_basis_vectors(m, x, y, z);
-  matrix_set_translation(m,
-    -dot(position, x), -dot(position, y), -dot(position, z));
+  matrix_set_translation(m, -dot(position, x), -dot(position, y),
+    -dot(position, z));
 }
 
-template<class Sub, class SubEye, class SubTarget, class SubUp> inline void
+template<class Sub, class SubEye, class SubTarget, class SubUp>
+inline void
 matrix_look_at_LH(writable_matrix<Sub>& m,
-    const readable_vector<SubEye>& position,
-    const readable_vector<SubTarget>& target,
-    const readable_vector<SubUp>& up)
+  const readable_vector<SubEye>& position,
+  const readable_vector<SubTarget>& target, const readable_vector<SubUp>& up)
 {
   matrix_look_at(m, position, target, up, left_handed);
 }
 
-template<class Sub, class SubEye, class SubTarget, class SubUp> inline void
+template<class Sub, class SubEye, class SubTarget, class SubUp>
+inline void
 matrix_look_at_RH(writable_matrix<Sub>& m,
-    const readable_vector<SubEye>& position,
-    const readable_vector<SubTarget>& target,
-    const readable_vector<SubUp>& up) 
+  const readable_vector<SubEye>& position,
+  const readable_vector<SubTarget>& target, const readable_vector<SubUp>& up)
 {
   matrix_look_at(m, position, target, up, right_handed);
 }
 
-
 /* 3D Linear transform functions: */
 
-template<class Sub1, class Sub2> inline void
-matrix_linear_transform(
-  writable_matrix<Sub1>& m, const readable_matrix<Sub2>& l
-  )
+template<class Sub1, class Sub2>
+inline void
+matrix_linear_transform(writable_matrix<Sub1>& m,
+  const readable_matrix<Sub2>& l)
 {
   cml::check_linear_3D(m);
   cml::check_linear_3D(l);
@@ -81,20 +76,18 @@ matrix_linear_transform(
   /* Copy basis elements: */
   for(int i = 0; i < 3; ++i) {
     for(int j = 0; j < 3; ++j) {
-      m.set_basis_element(i,j, l.basis_element(i,j));
+      m.set_basis_element(i, j, l.basis_element(i, j));
     }
   }
 }
 
-
 /* 3D Affine transform functions: */
 
-template<class Sub, class ASub, class E, class TSub> inline void
-matrix_affine_transform(
-  writable_matrix<Sub>& m,
+template<class Sub, class ASub, class E, class TSub>
+inline void
+matrix_affine_transform(writable_matrix<Sub>& m,
   const readable_vector<ASub>& axis, const E& angle,
-  const readable_vector<TSub>& translation, bool normalize
-  )
+  const readable_vector<TSub>& translation, bool normalize)
 {
   cml::check_affine_3D(m);
   if(normalize) {
@@ -105,19 +98,17 @@ matrix_affine_transform(
   cml::matrix_set_translation(m, translation);
 }
 
-template<class Sub, class LSub, class TSub> inline void
-matrix_affine_transform(
-  writable_matrix<Sub>& m,
-  const readable_matrix<LSub>& linear,
-  const readable_vector<TSub>& translation
-  )
+template<class Sub, class LSub, class TSub>
+inline void
+matrix_affine_transform(writable_matrix<Sub>& m,
+  const readable_matrix<LSub>& linear, const readable_vector<TSub>& translation)
 {
   cml::check_affine_3D(m);
   cml::matrix_linear_transform(m, linear);
   cml::matrix_set_translation(m, translation);
 }
 
-} // namespace cml
+}  // namespace cml
 
 
 #if 0
@@ -812,6 +803,3 @@ void matrix_decompose_SRT_2D(
     angle = matrix_to_rotation_2D(rotation_matrix);
 }
 #endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

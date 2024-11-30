@@ -1,11 +1,9 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #ifndef __CML_MATHLIB_MATRIX_PROJECTION_TPP
-#error "mathlib/matrix/projection.tpp not included correctly"
+#  error "mathlib/matrix/projection.tpp not included correctly"
 #endif
 
 #include <cml/common/mpl/are_convertible.h>
@@ -20,109 +18,89 @@ namespace cml {
  *  clipping range
  */
 
-template<class Sub, class E> inline void
-matrix_orthographic(
-  writable_matrix<Sub>& m,
-  E left, E right, E bottom, E top, E n, E f,
-  AxisOrientation handedness, ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_orthographic(writable_matrix<Sub>& m, E left, E right, E bottom, E top,
+  E n, E f, AxisOrientation handedness, ZClip z_clip)
 {
-  static_assert(
-    cml::are_convertible<value_type_trait_of_t<Sub>, E>::value,
+  static_assert(cml::are_convertible<value_type_trait_of_t<Sub>, E>::value,
     "incompatible scalar types");
 
   cml::check_minimum_size(m, int_c<4>(), int_c<4>());
 
   /* Initialize: */
   m.identity();
-    
+
   auto inv_width = E(1) / (right - left);
   auto inv_height = E(1) / (top - bottom);
   auto inv_depth = E(1) / (f - n);
   auto s = E(handedness == left_handed ? 1 : -1);
 
-  if (z_clip == z_clip_neg_one) {
-    m.set_basis_element(2,2, s * E(2) * inv_depth);
-    m.set_basis_element(3,2, -(f + n) * inv_depth);
-  } else { // z_clip.z_clip() == 0
-    m.set_basis_element(2,2, s * inv_depth);
-    m.set_basis_element(3,2, -n * inv_depth);
+  if(z_clip == z_clip_neg_one) {
+    m.set_basis_element(2, 2, s * E(2) * inv_depth);
+    m.set_basis_element(3, 2, -(f + n) * inv_depth);
+  } else {  // z_clip.z_clip() == 0
+    m.set_basis_element(2, 2, s * inv_depth);
+    m.set_basis_element(3, 2, -n * inv_depth);
   }
 
-  m.set_basis_element(0,0, E(2) * inv_width   );
-  m.set_basis_element(1,1, E(2) * inv_height  );
-  m.set_basis_element(3,0, -(right + left) * inv_width );
-  m.set_basis_element(3,1, -(top + bottom) * inv_height);
+  m.set_basis_element(0, 0, E(2) * inv_width);
+  m.set_basis_element(1, 1, E(2) * inv_height);
+  m.set_basis_element(3, 0, -(right + left) * inv_width);
+  m.set_basis_element(3, 1, -(top + bottom) * inv_height);
 }
 
-template<class Sub, class E> inline void
-matrix_orthographic_LH(
-  writable_matrix<Sub>& m,
-  E left, E right, E bottom, E top, E n, E f,
-  ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_orthographic_LH(writable_matrix<Sub>& m, E left, E right, E bottom,
+  E top, E n, E f, ZClip z_clip)
 {
   matrix_orthographic(m, left, right, bottom, top, n, f, left_handed, z_clip);
 }
 
-template<class Sub, class E> inline void
-matrix_orthographic_RH(
-  writable_matrix<Sub>& m,
-  E left, E right, E bottom, E top, E n, E f,
-  ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_orthographic_RH(writable_matrix<Sub>& m, E left, E right, E bottom,
+  E top, E n, E f, ZClip z_clip)
 {
   matrix_orthographic(m, left, right, bottom, top, n, f, right_handed, z_clip);
 }
 
-
-template<class Sub, class E> inline void
-matrix_orthographic(
-  writable_matrix<Sub>& m,
-  E width, E height, E n, E f,
-  AxisOrientation handedness, ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_orthographic(writable_matrix<Sub>& m, E width, E height, E n, E f,
+  AxisOrientation handedness, ZClip z_clip)
 {
   auto half_width = width / E(2);
   auto half_height = height / E(2);
-  matrix_orthographic(m,
-    -half_width, half_width, -half_height, half_height,
-    n, f, handedness, z_clip);
+  matrix_orthographic(m, -half_width, half_width, -half_height, half_height, n,
+    f, handedness, z_clip);
 }
 
-template<class Sub, class E> inline void
-matrix_orthographic_LH(
-  writable_matrix<Sub>& m,
-  E width, E height, E n, E f,
-  ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_orthographic_LH(writable_matrix<Sub>& m, E width, E height, E n, E f,
+  ZClip z_clip)
 {
   matrix_orthographic(m, width, height, n, f, left_handed, z_clip);
 }
 
-template<class Sub, class E> inline void
-matrix_orthographic_RH(
-  writable_matrix<Sub>& m,
-  E width, E height, E n, E f,
-  ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_orthographic_RH(writable_matrix<Sub>& m, E width, E height, E n, E f,
+  ZClip z_clip)
 {
   matrix_orthographic(m, width, height, n, f, right_handed, z_clip);
 }
 
-
-
 /* Perspective projection functions: */
 
-template<class Sub, class E> inline void
-matrix_perspective(
-  writable_matrix<Sub>& m,
-  E left, E right, E bottom, E top, E n, E f,
-  AxisOrientation handedness, ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_perspective(writable_matrix<Sub>& m, E left, E right, E bottom, E top,
+  E n, E f, AxisOrientation handedness, ZClip z_clip)
 {
-  static_assert(
-    cml::are_convertible<value_type_trait_of_t<Sub>, E>::value,
+  static_assert(cml::are_convertible<value_type_trait_of_t<Sub>, E>::value,
     "incompatible scalar types");
 
   cml::check_minimum_size(m, int_c<4>(), int_c<4>());
@@ -136,148 +114,122 @@ matrix_perspective(
   auto near2 = E(2) * n;
   auto s = E(handedness == left_handed ? 1 : -1);
 
-  if (z_clip == z_clip_neg_one) {
-    m.set_basis_element(2,2, s * (f + n) * inv_depth);
-    m.set_basis_element(3,2, - E(2) * f * n * inv_depth);
-  } else { // z_clip == z_clip_zero
-    m.set_basis_element(2,2,  s * f * inv_depth);
-    m.set_basis_element(3,2, -s * n * m.basis_element(2,2));
+  if(z_clip == z_clip_neg_one) {
+    m.set_basis_element(2, 2, s * (f + n) * inv_depth);
+    m.set_basis_element(3, 2, -E(2) * f * n * inv_depth);
+  } else {  // z_clip == z_clip_zero
+    m.set_basis_element(2, 2, s * f * inv_depth);
+    m.set_basis_element(3, 2, -s * n * m.basis_element(2, 2));
   }
 
-  m.set_basis_element(0,0, near2 * inv_width               );
-  m.set_basis_element(1,1, near2 * inv_height              );
-  m.set_basis_element(2,0, -s * (right + left) * inv_width );
-  m.set_basis_element(2,1, -s * (top + bottom) * inv_height);
-  m.set_basis_element(2,3, s                               );
-  m.set_basis_element(3,3, 0                               );
+  m.set_basis_element(0, 0, near2 * inv_width);
+  m.set_basis_element(1, 1, near2 * inv_height);
+  m.set_basis_element(2, 0, -s * (right + left) * inv_width);
+  m.set_basis_element(2, 1, -s * (top + bottom) * inv_height);
+  m.set_basis_element(2, 3, s);
+  m.set_basis_element(3, 3, 0);
 }
 
-template<class Sub, class E> inline void
-matrix_perspective_LH(
-  writable_matrix<Sub>& m,
-  E left, E right, E bottom, E top, E n, E f,
-  ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_perspective_LH(writable_matrix<Sub>& m, E left, E right, E bottom, E top,
+  E n, E f, ZClip z_clip)
 {
   matrix_perspective(m, left, right, bottom, top, n, f, left_handed, z_clip);
 }
 
-template<class Sub, class E> inline void
-matrix_perspective_RH(
-  writable_matrix<Sub>& m,
-  E left, E right, E bottom, E top, E n, E f,
-  ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_perspective_RH(writable_matrix<Sub>& m, E left, E right, E bottom, E top,
+  E n, E f, ZClip z_clip)
 {
   matrix_perspective(m, left, right, bottom, top, n, f, right_handed, z_clip);
 }
 
-
-template<class Sub, class E> inline void
-matrix_perspective(
-  writable_matrix<Sub>& m,
-  E width, E height, E n, E f,
-  AxisOrientation handedness, ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_perspective(writable_matrix<Sub>& m, E width, E height, E n, E f,
+  AxisOrientation handedness, ZClip z_clip)
 {
   auto half_width = width / E(2);
   auto half_height = height / E(2);
-  matrix_perspective(m,
-    -half_width, half_width, -half_height, half_height,
-    n, f, handedness, z_clip);
+  matrix_perspective(m, -half_width, half_width, -half_height, half_height, n,
+    f, handedness, z_clip);
 }
 
-template<class Sub, class E> inline void
-matrix_perspective_LH(
-  writable_matrix<Sub>& m,
-  E width, E height, E n, E f,
-  ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_perspective_LH(writable_matrix<Sub>& m, E width, E height, E n, E f,
+  ZClip z_clip)
 {
   matrix_perspective(m, width, height, n, f, left_handed, z_clip);
 }
 
-template<class Sub, class E> inline void
-matrix_perspective_RH(
-  writable_matrix<Sub>& m,
-  E width, E height, E n, E f,
-  ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_perspective_RH(writable_matrix<Sub>& m, E width, E height, E n, E f,
+  ZClip z_clip)
 {
   matrix_perspective(m, width, height, n, f, right_handed, z_clip);
 }
 
-
-template<class Sub, class E> inline void
-matrix_perspective_xfov(
-  writable_matrix<Sub>& m,
-  E xfov, E aspect, E n, E f,
-  AxisOrientation handedness, ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_perspective_xfov(writable_matrix<Sub>& m, E xfov, E aspect, E n, E f,
+  AxisOrientation handedness, ZClip z_clip)
 {
-  typedef scalar_traits<E>				E_traits;
+  using E_traits = scalar_traits<E>;
 
   /* Compute the view height from the field of view: */
   auto width = E(2) * n * E_traits::tan(xfov / E(2));
   matrix_perspective(m, width, width / aspect, n, f, handedness, z_clip);
 }
 
-template<class Sub, class E> inline void
-matrix_perspective_xfov_LH(
-  writable_matrix<Sub>& m,
-  E xfov, E aspect, E n, E f,
-  ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_perspective_xfov_LH(writable_matrix<Sub>& m, E xfov, E aspect, E n, E f,
+  ZClip z_clip)
 {
   matrix_perspective_xfov(m, xfov, aspect, n, f, left_handed, z_clip);
 }
 
-template<class Sub, class E> inline void
-matrix_perspective_xfov_RH(
-  writable_matrix<Sub>& m,
-  E xfov, E aspect, E n, E f,
-  ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_perspective_xfov_RH(writable_matrix<Sub>& m, E xfov, E aspect, E n, E f,
+  ZClip z_clip)
 {
   matrix_perspective_xfov(m, xfov, aspect, n, f, right_handed, z_clip);
 }
 
-
-template<class Sub, class E> inline void
-matrix_perspective_yfov(
-  writable_matrix<Sub>& m,
-  E yfov, E aspect, E n, E f,
-  AxisOrientation handedness, ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_perspective_yfov(writable_matrix<Sub>& m, E yfov, E aspect, E n, E f,
+  AxisOrientation handedness, ZClip z_clip)
 {
-  typedef scalar_traits<E>				E_traits;
+  using E_traits = scalar_traits<E>;
 
   /* Compute the view height from the field of view: */
   auto height = E(2) * n * E_traits::tan(yfov / E(2));
   matrix_perspective(m, height * aspect, height, n, f, handedness, z_clip);
 }
 
-template<class Sub, class E> inline void
-matrix_perspective_yfov_LH(
-  writable_matrix<Sub>& m,
-  E yfov, E aspect, E n, E f,
-  ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_perspective_yfov_LH(writable_matrix<Sub>& m, E yfov, E aspect, E n, E f,
+  ZClip z_clip)
 {
   matrix_perspective_yfov(m, yfov, aspect, n, f, left_handed, z_clip);
 }
 
-template<class Sub, class E> inline void
-matrix_perspective_yfov_RH(
-  writable_matrix<Sub>& m,
-  E yfov, E aspect, E n, E f,
-  ZClip z_clip
-  )
+template<class Sub, class E>
+inline void
+matrix_perspective_yfov_RH(writable_matrix<Sub>& m, E yfov, E aspect, E n, E f,
+  ZClip z_clip)
 {
   matrix_perspective_yfov(m, yfov, aspect, n, f, right_handed, z_clip);
 }
 
-} // namespace cml
+}  // namespace cml
 
 #if 0
 // XXX INCOMPLETE XXX
@@ -341,6 +293,3 @@ matrix_pick(
         (viewport_height+value_type(2)*(viewport_y-pick_y))*inv_height);
 }
 #endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

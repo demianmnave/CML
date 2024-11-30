@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_matrix_determinant_h
-#define	cml_matrix_determinant_h
 
 #include <cml/common/traits.h>
 #include <cml/matrix/fwd.h>
@@ -23,16 +18,11 @@ namespace cml {
  * dynamically-sized and not square.  Fixed-size matrices are checked at
  * compile-time.
  */
-template<class Sub> auto
-determinant(const readable_matrix<Sub>& M) -> value_type_trait_of_t<Sub>;
+template<class Sub>
+auto determinant(const readable_matrix<Sub>& M) -> value_type_trait_of_t<Sub>;
 
-} // namespace cml
+}  // namespace cml
 
 #define __CML_MATRIX_DETERMINANT_TPP
 #include <cml/matrix/determinant.tpp>
 #undef __CML_MATRIX_DETERMINANT_TPP
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_matrix_matrix_h
-#define	cml_matrix_matrix_h
 
 #include <cml/common/basis_tags.h>
 #include <cml/common/layout_tags.h>
@@ -38,12 +33,8 @@ namespace cml {
  *
  * @sa scalar_traits
  */
-template<typename Element, class StorageType,
-  typename BasisOrient = col_basis, typename Layout = row_major> class matrix;
+template<typename Element, class StorageType, typename BasisOrient = col_basis,
+  typename Layout = row_major>
+class matrix;
 
-} // namespace cml
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2
+}  // namespace cml

@@ -1,11 +1,9 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #ifndef __CML_MATHLIB_FRUSTUM_TPP
-#error "mathlib/frustum.tpp not included correctly"
+#  error "mathlib/frustum.tpp not included correctly"
 #endif
 
 #include <cml/common/mpl/are_convertible.h>
@@ -14,29 +12,22 @@
 
 namespace cml {
 
-template<class Sub1, class Sub2, class E> void
-extract_frustum_planes(
-  const readable_matrix<Sub1>& modelview,
-  const readable_matrix<Sub2>& projection,
-  E planes[6][4],
-  ZClip z_clip,
-  bool normalize
-  )
+template<class Sub1, class Sub2, class E>
+void
+extract_frustum_planes(const readable_matrix<Sub1>& modelview,
+  const readable_matrix<Sub2>& projection, E planes[6][4], ZClip z_clip,
+  bool normalize)
 {
-  extract_frustum_planes(
-    matrix_concat(modelview, projection), planes, z_clip, normalize);
+  extract_frustum_planes(matrix_concat(modelview, projection), planes, z_clip,
+    normalize);
 }
 
-template<class Sub, class E> void
-extract_frustum_planes(
-  const readable_matrix<Sub>& m,
-  E planes[6][4],
-  ZClip z_clip,
-  bool normalize
-  )
+template<class Sub, class E>
+void
+extract_frustum_planes(const readable_matrix<Sub>& m, E planes[6][4],
+  ZClip z_clip, bool normalize)
 {
-  static_assert(
-    cml::are_convertible<value_type_trait_of_t<Sub>, E>::value,
+  static_assert(cml::are_convertible<value_type_trait_of_t<Sub>, E>::value,
     "incompatible scalar types");
 
   /* Near:   [03+02, 13+12, 23+22, 33+32] : [02, 12, 22, 32] */
@@ -45,38 +36,38 @@ extract_frustum_planes(
 
   /* Left:   [03+00, 13+10, 23+20, 33+30] */
 
-  planes[0][0] = E(m.basis_element(0,3) + m.basis_element(0,0));
-  planes[0][1] = E(m.basis_element(1,3) + m.basis_element(1,0));
-  planes[0][2] = E(m.basis_element(2,3) + m.basis_element(2,0));  
-  planes[0][3] = E(m.basis_element(3,3) + m.basis_element(3,0));
+  planes[0][0] = E(m.basis_element(0, 3) + m.basis_element(0, 0));
+  planes[0][1] = E(m.basis_element(1, 3) + m.basis_element(1, 0));
+  planes[0][2] = E(m.basis_element(2, 3) + m.basis_element(2, 0));
+  planes[0][3] = E(m.basis_element(3, 3) + m.basis_element(3, 0));
 
   /* Right:  [03-00, 13-10, 23-20, 33-30] */
 
-  planes[1][0] = E(m.basis_element(0,3) - m.basis_element(0,0));
-  planes[1][1] = E(m.basis_element(1,3) - m.basis_element(1,0));
-  planes[1][2] = E(m.basis_element(2,3) - m.basis_element(2,0));  
-  planes[1][3] = E(m.basis_element(3,3) - m.basis_element(3,0));
+  planes[1][0] = E(m.basis_element(0, 3) - m.basis_element(0, 0));
+  planes[1][1] = E(m.basis_element(1, 3) - m.basis_element(1, 0));
+  planes[1][2] = E(m.basis_element(2, 3) - m.basis_element(2, 0));
+  planes[1][3] = E(m.basis_element(3, 3) - m.basis_element(3, 0));
 
   /* Bottom: [03+01, 13+11, 23+21, 33+31] */
 
-  planes[2][0] = E(m.basis_element(0,3) + m.basis_element(0,1));
-  planes[2][1] = E(m.basis_element(1,3) + m.basis_element(1,1));
-  planes[2][2] = E(m.basis_element(2,3) + m.basis_element(2,1));  
-  planes[2][3] = E(m.basis_element(3,3) + m.basis_element(3,1));
+  planes[2][0] = E(m.basis_element(0, 3) + m.basis_element(0, 1));
+  planes[2][1] = E(m.basis_element(1, 3) + m.basis_element(1, 1));
+  planes[2][2] = E(m.basis_element(2, 3) + m.basis_element(2, 1));
+  planes[2][3] = E(m.basis_element(3, 3) + m.basis_element(3, 1));
 
   /* Top:    [03-01, 13-11, 23-21, 33-31] */
 
-  planes[3][0] = E(m.basis_element(0,3) - m.basis_element(0,1));
-  planes[3][1] = E(m.basis_element(1,3) - m.basis_element(1,1));
-  planes[3][2] = E(m.basis_element(2,3) - m.basis_element(2,1));  
-  planes[3][3] = E(m.basis_element(3,3) - m.basis_element(3,1));
+  planes[3][0] = E(m.basis_element(0, 3) - m.basis_element(0, 1));
+  planes[3][1] = E(m.basis_element(1, 3) - m.basis_element(1, 1));
+  planes[3][2] = E(m.basis_element(2, 3) - m.basis_element(2, 1));
+  planes[3][3] = E(m.basis_element(3, 3) - m.basis_element(3, 1));
 
   /* Far:    [03-02, 13-12, 23-22, 33-32] */
 
-  planes[5][0] = E(m.basis_element(0,3) - m.basis_element(0,2));
-  planes[5][1] = E(m.basis_element(1,3) - m.basis_element(1,2));
-  planes[5][2] = E(m.basis_element(2,3) - m.basis_element(2,2));  
-  planes[5][3] = E(m.basis_element(3,3) - m.basis_element(3,2));
+  planes[5][0] = E(m.basis_element(0, 3) - m.basis_element(0, 2));
+  planes[5][1] = E(m.basis_element(1, 3) - m.basis_element(1, 2));
+  planes[5][2] = E(m.basis_element(2, 3) - m.basis_element(2, 2));
+  planes[5][3] = E(m.basis_element(3, 3) - m.basis_element(3, 2));
 
   /* Compute normalized planes: */
   if(normalize) {
@@ -90,29 +81,29 @@ extract_frustum_planes(
   }
 }
 
-template<class Sub, class Plane> void
-extract_near_frustum_plane(
-  const readable_matrix<Sub>& m, Plane& plane, ZClip z_clip
-  )
+template<class Sub, class Plane>
+void
+extract_near_frustum_plane(const readable_matrix<Sub>& m, Plane& plane,
+  ZClip z_clip)
 {
   cml::check_minimum_size(m, cml::int_c<4>(), cml::int_c<4>());
   //XXX cml::check_minimum_size(plane, cml::int_c<4>());
 
   /* Near:   [03+02, 13+12, 23+22, 33+32] : [02, 12, 22, 32] */
-  if (z_clip == z_clip_neg_one) {       
-    plane[0] = m.basis_element(0,3) + m.basis_element(0,2);
-    plane[1] = m.basis_element(1,3) + m.basis_element(1,2);
-    plane[2] = m.basis_element(2,3) + m.basis_element(2,2);  
-    plane[3] = m.basis_element(3,3) + m.basis_element(3,2);
-  } else { // z_clip == z_clip_zero
-    plane[0] = m.basis_element(0,2);
-    plane[1] = m.basis_element(1,2);
-    plane[2] = m.basis_element(2,2);  
-    plane[3] = m.basis_element(3,2);
+  if(z_clip == z_clip_neg_one) {
+    plane[0] = m.basis_element(0, 3) + m.basis_element(0, 2);
+    plane[1] = m.basis_element(1, 3) + m.basis_element(1, 2);
+    plane[2] = m.basis_element(2, 3) + m.basis_element(2, 2);
+    plane[3] = m.basis_element(3, 3) + m.basis_element(3, 2);
+  } else {  // z_clip == z_clip_zero
+    plane[0] = m.basis_element(0, 2);
+    plane[1] = m.basis_element(1, 2);
+    plane[2] = m.basis_element(2, 2);
+    plane[3] = m.basis_element(3, 2);
   }
 }
 
-} // namespace cml
+}  // namespace cml
 
 #if 0
 // XXX INCOMPLETE XXX
@@ -218,6 +209,3 @@ get_frustum_corners(Real planes[6][4], vector<E,A> corners[8])
 }
 
 #endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

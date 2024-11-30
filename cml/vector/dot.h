@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_vector_dot_h
-#define	cml_vector_dot_h
 
 #include <cml/scalar/promotion.h>
 #include <cml/vector/traits.h>
@@ -24,17 +19,12 @@ namespace cml {
  * both are fixed-size expressions, then the sizes are checked at compile
  * time.
  */
-template<class Sub1, class Sub2> auto
-dot(const readable_vector<Sub1>& left, const readable_vector<Sub2>& right)
--> value_type_trait_promote_t<Sub1,Sub2>;
+template<class Sub1, class Sub2>
+auto dot(const readable_vector<Sub1>& left, const readable_vector<Sub2>& right)
+  -> value_type_trait_promote_t<Sub1, Sub2>;
 
-} // namespace cml
+}  // namespace cml
 
 #define __CML_VECTOR_DOT_TPP
 #include <cml/vector/dot.tpp>
 #undef __CML_VECTOR_DOT_TPP
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

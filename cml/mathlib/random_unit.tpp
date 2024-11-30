@@ -1,11 +1,9 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #ifndef __CML_MATHLIB_RANDOM_UNIT_TPP
-#error "mathlib/random_unit.tpp not included correctly"
+#  error "mathlib/random_unit.tpp not included correctly"
 #endif
 
 #include <cml/scalar/functions.h>
@@ -19,12 +17,12 @@ namespace detail {
 /** Generate a random 2D unit vector in a cone with direction @c d and
  * half-angle @c a, given in radians.
  */
-template<class Sub1, class Sub2, class Scalar> void
-random_unit(writable_vector<Sub1>& n,
-  const readable_vector<Sub2>& d, const Scalar& a, cml::int_c<2>
-  )
+template<class Sub1, class Sub2, class Scalar>
+void
+random_unit(writable_vector<Sub1>& n, const readable_vector<Sub2>& d,
+  const Scalar& a, cml::int_c<2>)
 {
-  typedef scalar_traits<Scalar>				theta_traits;
+  using theta_traits = scalar_traits<Scalar>;
 
   /* Generate a uniformly random angle in [-a,a]: */
   auto theta = cml::random_real(-a, a);
@@ -47,51 +45,52 @@ random_unit(writable_vector<Sub1>& n,
  * spherical cone cap.  This seems to produce nice (uniform) 3D
  * distributions, at least visually.
  */
-template<class Sub1, class Sub2, class Scalar, int N> void
-random_unit(writable_vector<Sub1>& n,
-  const readable_vector<Sub2>& d, const Scalar& a, cml::int_c<N>
-  )
+template<class Sub1, class Sub2, class Scalar, int N>
+void
+random_unit(writable_vector<Sub1>& n, const readable_vector<Sub2>& d,
+  const Scalar& a, cml::int_c<N>)
 {
-  typedef scalar_traits<Scalar>				a_traits;
+  using a_traits = scalar_traits<Scalar>;
 
   /* Generate a uniformly random vector on the unit sphere: */
   cml::random_unit(n);
 
   /* Reorient n to be within 90 degrees of d: */
-  auto cos_O = dot(n,d);	// [-1,1]
+  auto cos_O = dot(n, d);  // [-1,1]
   if(cos_O < 0) {
     n = -n;
-    cos_O = - cos_O;
+    cos_O = -cos_O;
   }
 
   /* Compute the angle between d and n: */
   auto O = acos_safe(cos_O);
-  typedef decltype(O)					O_type;
-  typedef scalar_traits<O_type>				O_traits;
-  typedef scalar_traits<decltype(O-a)>			Oa_traits;
+  using O_type = decltype(O);
+  using O_traits = scalar_traits<O_type>;
+  using Oa_traits = scalar_traits<decltype(O - a)>;
 
   /* Use slerp between d (t=0) and n (t=1) to find the unit vector n_a
    * (t=a/O) lying on the cone between d and n:
    */
-  auto n_a = (Oa_traits::sin(O - a)*d + a_traits::sin(a)*n) / O_traits::sin(O);
+  auto n_a =
+    (Oa_traits::sin(O - a) * d + a_traits::sin(a) * n) / O_traits::sin(O);
   /* Note: n_a is normalized by dividing by sin(O). */
 
   /* Use a second slerp to "scale" the cone with half-angle O to the cone
    * with half-angle a, taking the random vector n along with it:
    */
   auto t = O / constants<O_type>::pi_over_2();
-  n = (Oa_traits::sin((O_type(1) - t)*a)*d + Oa_traits::sin(t*a)*n_a)
+  n = (Oa_traits::sin((O_type(1) - t) * a) * d + Oa_traits::sin(t * a) * n_a)
     / a_traits::sin(a);
   /* Note: n is normalized by dividing by sin(a). */
 }
 
-} // namespace detail
+}  // namespace detail
 
-
-template<class Sub, class RNG> inline void
+template<class Sub, class RNG>
+inline void
 random_unit(writable_vector<Sub>& n, RNG& gen)
 {
-  typedef value_type_trait_of_t<Sub>			value_type;
+  using value_type = value_type_trait_of_t<Sub>;
   static_assert(std::is_floating_point<value_type>::value,
     "floating-point coordinates required");
   cml::check_minimum_size(n, cml::int_c<1>());
@@ -104,7 +103,7 @@ random_unit(writable_vector<Sub>& n, RNG& gen)
   /* Generate coordinates, avoiding the (improbable) case of 0 length: */
   value_type length(0);
   do {
-    for(int i = 0; i < n.size(); ++ i) n[i] = d(gen);
+    for(int i = 0; i < n.size(); ++i) n[i] = d(gen);
     length = n.length_squared();
   } while(length == value_type(0));
 
@@ -112,7 +111,8 @@ random_unit(writable_vector<Sub>& n, RNG& gen)
   n.normalize();
 }
 
-template<class Sub> inline void
+template<class Sub>
+inline void
 random_unit(writable_vector<Sub>& n)
 {
   /* Use the default generator: */
@@ -123,11 +123,11 @@ random_unit(writable_vector<Sub>& n)
 }
 
 template<class Sub1, class Sub2, class Scalar>
-void random_unit(
-  writable_vector<Sub1>& n, const readable_vector<Sub2>& d, const Scalar& a
-  )
+void
+random_unit(writable_vector<Sub1>& n, const readable_vector<Sub2>& d,
+  const Scalar& a)
 {
-  typedef value_type_trait_of_t<Sub1>			value_type;
+  using value_type = value_type_trait_of_t<Sub1>;
   static_assert(std::is_floating_point<value_type>::value,
     "floating-point coordinates required");
   cml_require(a > 0 && a <= constants<value_type>::pi_over_2(),
@@ -137,7 +137,4 @@ void random_unit(
   detail::random_unit(n, d, a, cml::int_c<array_size_of_c<Sub2>::value>());
 }
 
-} // namespace cml
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2
+}  // namespace cml

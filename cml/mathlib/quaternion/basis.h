@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_mathlib_quaternion_basis_h
-#define	cml_mathlib_quaternion_basis_h
 
 #include <cml/vector/temporary.h>
 #include <cml/quaternion/readable_quaternion.h>
@@ -23,24 +18,24 @@ namespace cml {
  *
  * @throws std::invalid_argument if @c i < 0 or @c i > 2.
  */
-template<class Sub> auto
-quaternion_get_basis_vector(const readable_quaternion<Sub>& q, int i)
--> temporary_of_t<decltype(q.imaginary())>;
+template<class Sub>
+auto quaternion_get_basis_vector(const readable_quaternion<Sub>& q, int i)
+  -> temporary_of_t<decltype(q.imaginary())>;
 
 /** Get the x-basis vector of @c q. */
-template<class Sub> auto
-quaternion_get_x_basis_vector(const readable_quaternion<Sub>& q)
--> temporary_of_t<decltype(q.imaginary())>;
+template<class Sub>
+auto quaternion_get_x_basis_vector(const readable_quaternion<Sub>& q)
+  -> temporary_of_t<decltype(q.imaginary())>;
 
 /** Get the y-basis vector of @c q. */
-template<class Sub> auto
-quaternion_get_y_basis_vector(const readable_quaternion<Sub>& q)
--> temporary_of_t<decltype(q.imaginary())>;
+template<class Sub>
+auto quaternion_get_y_basis_vector(const readable_quaternion<Sub>& q)
+  -> temporary_of_t<decltype(q.imaginary())>;
 
 /** Get the z-basis vector of @c q. */
-template<class Sub> auto
-quaternion_get_z_basis_vector(const readable_quaternion<Sub>& q)
--> temporary_of_t<decltype(q.imaginary())>;
+template<class Sub>
+auto quaternion_get_z_basis_vector(const readable_quaternion<Sub>& q)
+  -> temporary_of_t<decltype(q.imaginary())>;
 
 /** Return the basis vectors of @c q as three vectors, @c x, @c y, and @c
  * z.
@@ -50,21 +45,15 @@ quaternion_get_z_basis_vector(const readable_quaternion<Sub>& q)
  * compile-time.
  */
 template<class Sub, class XBasis, class YBasis, class ZBasis,
-  enable_if_vector_t<XBasis>* = nullptr,
-  enable_if_vector_t<YBasis>* = nullptr,
+  enable_if_vector_t<XBasis>* = nullptr, enable_if_vector_t<YBasis>* = nullptr,
   enable_if_vector_t<ZBasis>* = nullptr>
-void quaternion_get_basis_vectors(
-  const readable_quaternion<Sub>& q, XBasis& x, YBasis& y, ZBasis& z);
+void quaternion_get_basis_vectors(const readable_quaternion<Sub>& q, XBasis& x,
+  YBasis& y, ZBasis& z);
 
 /*@}*/
 
-} // namespace cml
+}  // namespace cml
 
 #define __CML_MATHLIB_QUATERNION_BASIS_TPP
 #include <cml/mathlib/quaternion/basis.tpp>
 #undef __CML_MATHLIB_QUATERNION_BASIS_TPP
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

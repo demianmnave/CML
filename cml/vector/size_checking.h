@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_vector_size_checking_h
-#define	cml_vector_size_checking_h
 
 #include <cml/common/mpl/int_c.h>
 #include <cml/common/mpl/enable_if_array.h>
@@ -19,33 +14,41 @@ namespace cml {
 /** Exception thrown when run-time size checking is enabled, and the
  * operands of a vector expression have incompatible sizes.
  */
-struct incompatible_vector_size_error : std::runtime_error {
+struct incompatible_vector_size_error : std::runtime_error
+{
   incompatible_vector_size_error()
-    : std::runtime_error("incompatible vector expression sizes") {}
+  : std::runtime_error("incompatible vector expression sizes")
+  {}
 };
 
 /** Exception thrown when run-time size checking is enabled, and the
  * operand of a vector expression does not meet a minimum size.
  */
-struct minimum_vector_size_error : std::runtime_error {
+struct minimum_vector_size_error : std::runtime_error
+{
   minimum_vector_size_error()
-    : std::runtime_error("vector expression too short") {}
+  : std::runtime_error("vector expression too short")
+  {}
 };
 
 /** Exception thrown when run-time size checking is enabled, and the
  * operand of a vector expression does not have the required size.
  */
-struct vector_size_error : std::runtime_error {
+struct vector_size_error : std::runtime_error
+{
   vector_size_error()
-    : std::runtime_error("incorrect vector expression size") {}
+  : std::runtime_error("incorrect vector expression size")
+  {}
 };
 
 /** Exception thrown when run-time size checking is enabled, and the
  * size of a vector expression operand is outside the required range.
  */
-struct vector_size_range_error : std::runtime_error {
+struct vector_size_range_error : std::runtime_error
+{
   vector_size_range_error()
-    : std::runtime_error("vector expression size out of range") {}
+  : std::runtime_error("vector expression size out of range")
+  {}
 };
 
 
@@ -66,8 +69,9 @@ struct vector_size_range_error : std::runtime_error {
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
  */
-template<class Sub1, class Sub2> void check_same_size(
-  const readable_vector<Sub1>& left, const readable_vector<Sub2>& right);
+template<class Sub1, class Sub2>
+void check_same_size(const readable_vector<Sub1>& left,
+  const readable_vector<Sub2>& right);
 
 /** Front-end for both compile-time and run-time vector binary expression
  * length checking against a fixed-length array.  The first expression must
@@ -88,8 +92,8 @@ template<class Sub1, class Sub2> void check_same_size(
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
  */
-template<class Sub1, class Sub2> void
-check_same_size(const readable_vector<Sub1>& left, const Sub2& right,
+template<class Sub1, class Sub2>
+void check_same_size(const readable_vector<Sub1>& left, const Sub2& right,
   enable_if_array_t<Sub2>* = 0);
 
 /** Front-end for run-time vector binary expression length checking.  The
@@ -109,7 +113,7 @@ check_same_size(const readable_vector<Sub1>& left, const Sub2& right,
  */
 template<class Sub1, class Sub2>
 auto check_same_size(const readable_vector<Sub1>& left, const Sub2& right)
--> decltype(right.size(), void());
+  -> decltype(right.size(), void());
 
 
 /** Front-end for minimum vector expression length checking against a
@@ -154,8 +158,7 @@ void check_minimum_size(const readable_vector<Sub>& left, cml::int_c<N>);
  * @note Run-time checking can be disabled by defining
  * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
  */
-template<class Sub>
-void check_size(const readable_vector<Sub>& left, int N);
+template<class Sub> void check_size(const readable_vector<Sub>& left, int N);
 
 /** Front-end for compile-time and run-time vector expression length
  * checking against an integer constant via int_c<N>.  The expression must
@@ -205,16 +208,11 @@ void check_size_range(const readable_vector<Sub>& left, int Low, int High);
  * CML_NO_RUNTIME_VECTOR_SIZE_CHECKS at compile time.
  */
 template<class Sub, int Low, int High>
-void check_size_range(
-  const readable_vector<Sub>& left, cml::int_c<Low>, cml::int_c<High>);
+void check_size_range(const readable_vector<Sub>& left, cml::int_c<Low>,
+  cml::int_c<High>);
 
-} // namespace cml
+}  // namespace cml
 
 #define __CML_VECTOR_SIZE_CHECKING_TPP
 #include <cml/vector/size_checking.tpp>
 #undef __CML_VECTOR_SIZE_CHECKING_TPP
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2

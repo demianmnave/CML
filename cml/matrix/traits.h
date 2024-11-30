@@ -1,13 +1,8 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #pragma once
-
-#ifndef	cml_matrix_traits_h
-#define	cml_matrix_traits_h
 
 #include <cml/common/traits.h>
 #include <cml/matrix/type_util.h>
@@ -23,14 +18,9 @@ namespace cml {
 template<class Matrix> struct matrix_traits;
 
 /** traits_of for matrix types. */
-template<class Matrix>
-struct traits_of<Matrix, enable_if_matrix_t<Matrix>> {
-  typedef matrix_traits<Matrix>				type;
+template<class Matrix> struct traits_of<Matrix, enable_if_matrix_t<Matrix>>
+{
+  using type = matrix_traits<Matrix>;
 };
 
-} // namespace cml
-
-#endif
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2
+}  // namespace cml

@@ -1,11 +1,9 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- */
 
 #ifndef __CML_UTIL_QUATERNION_PRINT_TPP
-#error "util/quaternion_print.tpp not included correctly"
+#  error "util/quaternion_print.tpp not included correctly"
 #endif
 
 #include <iostream>
@@ -14,21 +12,15 @@
 
 namespace cml {
 
-template<class DT> inline std::ostream&
+template<class DT>
+inline std::ostream&
 operator<<(std::ostream& os, const readable_quaternion<DT>& q)
 {
-  typedef order_type_trait_of_t<DT>			order_type;
+  using order_type = order_type_trait_of_t<DT>;
   os << "[ "
-    << " " << q[order_type::W]
-    << " " << q[order_type::X]
-    << " " << q[order_type::Y]
-    << " " << q[order_type::Z]
-    << " ]";
+     << " " << q[order_type::W] << " " << q[order_type::X] << " "
+     << q[order_type::Y] << " " << q[order_type::Z] << " ]";
   return os;
 }
 
-} // namespace cml
-
-
-// -------------------------------------------------------------------------
-// vim:ft=cpp:sw=2
+}  // namespace cml
