@@ -4,8 +4,8 @@
 
 #pragma once
 
-#ifndef CML_DISABLE_SIMD
-#  define CML_DISABLE_SIMD
+#ifdef CML_DISABLE_SIMD
+#undef CML_DISABLE_SIMD
 #endif
 
 #include <cml/matrix.h>

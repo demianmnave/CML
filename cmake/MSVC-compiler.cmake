@@ -49,7 +49,7 @@ if(MSVC)
 
     cml_get_host_arch(_arch)
     if(${_arch} STREQUAL "x64")
-      list(APPEND _cml_private_cxx_options /arch:AVX)
+      list(APPEND _cml_private_cxx_options /arch:AVX2)
     endif()
   endif()
 

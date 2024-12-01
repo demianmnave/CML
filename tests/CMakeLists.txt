@@ -21,6 +21,6 @@ add_subdirectory(expr)
 add_subdirectory(mathlib)
 add_subdirectory(util)
 
-#if(CML_BUILD_TIMING)
-  add_subdirectory(timing)
+#if(BUILD_TIMING)
+add_subdirectory(timing)
 #endif()
