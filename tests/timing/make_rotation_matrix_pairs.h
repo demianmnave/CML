@@ -1,23 +1,20 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- *  @brief
- */
 
 #pragma once
 
 #include <vector>
 #include <utility>
+#include <cml/matrix.h>
 
-namespace cml {
-namespace testing {
+namespace cml::testing {
 
-template<class Matrix44T>
-std::vector<std::pair<Matrix44T, Matrix44T>>
+template<class Matrix44dT>
+std::vector<std::tuple<Matrix44dT, Matrix44dT, cml::matrix44d>>
 make_rotation_matrix_pairs(int N);
 
-}} // cml::testing
+}  // namespace cml::testing
 
 #define _CML_TESTING_MAKE_ROTATION_MATRIX_PAIRS_TPP
 #include "make_rotation_matrix_pairs.tpp"

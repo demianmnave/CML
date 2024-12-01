@@ -1,9 +1,6 @@
-/* -*- C++ -*- ------------------------------------------------------------
+/*-------------------------------------------------------------------------
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
-/** @file
- *  @brief
- */
 
 #pragma once
 
@@ -25,15 +22,16 @@ template<> struct traits_of<matrix44d>
   using type = matrix44d_traits;
 };
 
-} // namespace cml
+}  // namespace cml
 
-inline std::ostream& operator<<(std::ostream& os, const matrix44d& M)
+inline std::ostream&
+operator<<(std::ostream& os, const matrix44d& M)
 {
   for(int i = 0; i < 4; ++i) {
     os << "[";
     for(int j = 0; j < 4; ++j) os << " " << M[i][j];
     os << " ]";
-    if (i != 4-1) os << std::endl;
+    if(i != 4 - 1) os << std::endl;
   }
   return os;
 }
