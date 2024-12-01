@@ -24,10 +24,10 @@ template<class T> struct value_type_of
   using type = typename T::value_type;
 };
 
-/** Convenience alias for value_typet_of. */
+/** Convenience alias for value_type_of. */
 template<class T> using value_type_of_t = typename value_type_of<T>::type;
 
-/** Retrieve the value_type of  @c T via traits.
+/** Retrieve the value_type of @c T via traits.
  *
  * @note This applies to CML expression types, including scalars.
  */
