@@ -12,16 +12,30 @@ on:
       - 'CMakePresets.json'
       - 'CML.cmake'
       - 'vcpkg.json'
+      - 'vcpkg-configuration.json'
 
 jobs:
   msvc-clangcl-latest:
     name: MSVC ClangCL Latest
     runs-on: windows-2022
     steps:
+      - name: Ensire ClangCL latest is installed
+        shell: pwsh
+        run: |
+          $vspath = 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise'
+          Test-Path -Path $vspath | Should -Be $true
+
+          $vsinstaller = 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe'
+          Test-Path -Path $vsinstaller | Should -Be $true
+
+          Start-Process -NoNewWindow -Wait -FilePath $vsinstaller -ArgumentList `
+            'modify', '--installPath', "`"$vspath`"", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
+            '--add', 'Microsoft.VisualStudio.Component.VC.Llvm.Clang', `
+            '--add', 'Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset'
       - uses: actions/checkout@v4
       - uses: lukka/get-cmake@latest
         with:
-          cmakeVersion: "~3.29.0"
+          cmakeVersion: "~3.31.0"
       - uses: lukka/run-vcpkg@v11
       - uses: lukka/run-cmake@v10
         with:

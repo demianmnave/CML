@@ -12,6 +12,7 @@ on:
       - 'CMakePresets.json'
       - 'CML.cmake'
       - 'vcpkg.json'
+      - 'vcpkg-configuration.json'
 
 jobs:
   msvc-17-10:
@@ -30,15 +31,14 @@ jobs:
           Start-Process -NoNewWindow -Wait -FilePath $vsinstaller -ArgumentList `
             'modify', '--installPath', "`"$vspath`"", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
             '--add', 'Microsoft.VisualStudio.Component.VC.14.40.17.10.x86.x64'
-
       - uses: actions/checkout@v4
       - uses: lukka/get-cmake@latest
         with:
-          cmakeVersion: "~3.29.0"
+          cmakeVersion: "~3.31.0"
       - uses: lukka/run-vcpkg@v11
       - uses: lukka/run-cmake@v10
         with:
           configurePreset: "cml-ci-msvc17-mt-s"
-          configurePresetAdditionalArgs: "['-T version=14.40']"
+          configurePresetAdditionalArgs: "['-T version=14.40.17.10']"
           buildPreset: "cml-ci-msvc17-mt-s-release"
           testPreset: "cml-ci-msvc17-mt-s-release-test"

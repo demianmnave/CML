@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg-configuration.schema.json",
+  "$1": "Baseline vcpkg-root commit hash @ 2025.08.27",
+  "default-registry": {
+    "kind": "git",
+    "repository": "https://internal/mirror/of/github.com/Microsoft/vcpkg",
+    "baseline": "120deac3062162151622ca4860575a33844ba10b"
+  }
+}
