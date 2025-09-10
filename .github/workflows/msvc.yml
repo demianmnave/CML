@@ -12,15 +12,16 @@ on:
       - 'CML.cmake'
       - 'vcpkg.json'
 
-env: 
-  VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-
 jobs:
   msvc-17:
     strategy:
       fail-fast: false
       matrix:
         include:
+        - ver: 14.40
+          vsver: 17.10
+        - ver: 14.42
+          vsver: 17.12
         - ver: 14.44
           vsver: 17.14
     env:
@@ -32,7 +33,12 @@ jobs:
         # Set the number of CMake build and test jobs
       - shell: pwsh
         run: |
-          $ncore = (Get-WmiObject -Class Win32_Processor -Property numberOfCores `
+          $nproc = (Get-WmiObject -Class Win32_ComputerSystem -Property NumberOfProcessors).NumberOfProcessors
+          $ncore = (Get-WmiObject -Class Win32_Processor -Property NumberOfCores).NumberOfCores
+          Write-Host $nproc
+          Write-Host $ncore
+
+          $ncore = (Get-WmiObject -Class Win32_Processor -Property NumberOfCores `
                    | Measure-Object -Property NumberOfCores -Sum).Sum
           "CMAKE_BUILD_PARALLEL_LEVEL=$($ncore)" | Out-File -Append $env:GITHUB_ENV
           "CTEST_PARALLEL_LEVEL=$($ncore)" | Out-File -Append $env:GITHUB_ENV
