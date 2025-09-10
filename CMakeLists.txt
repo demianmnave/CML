@@ -8,7 +8,7 @@ include(CMakeDependentOption)
 include(CMLBuildMacros)
 
 # Set the minimum CMake version:
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.25)
 
 # Policies:
 cmake_policy(SET CMP0091 NEW) # Enable MSVC ABI selection
