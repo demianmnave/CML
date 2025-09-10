@@ -51,11 +51,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: lukka/get-cmake@latest
         with:
-          cmakeVersion: "~3.25.0"
+          cmakeVersion: "~3.31.0"
       - uses: lukka/run-vcpkg@v11
         with:
           vcpkgJsonGlob: 'vcpkg.json'
       - name: Build and test
         shell: pwsh
         run: |
+           Write-Host "Building for MSVC $($env:MSVC_TOOLSET_VERSION) with VCPKG_ROOT @ $($env:VCPKG_ROOT)"
            cmake --workflow --preset=msvc-17-mt-s-vcpkg-release-test
