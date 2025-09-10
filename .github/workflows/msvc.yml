@@ -18,12 +18,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - ver: 14.40
-          vsver: 17.10
-        - ver: 14.42
-          vsver: 17.12
-        - ver: 14.44
-          vsver: 17.14
+        - ver: "14.40"
+          vsver: "17.10"
     env:
       # Consumed by .msvc-17 in cmake/presets/msvc.json:
       MSVC_TOOLSET_VERSION: ${{ matrix.ver }}
@@ -33,11 +29,6 @@ jobs:
         # Set the number of CMake build and test jobs
       - shell: pwsh
         run: |
-          $nproc = (Get-WmiObject -Class Win32_ComputerSystem -Property NumberOfProcessors).NumberOfProcessors
-          $ncore = (Get-WmiObject -Class Win32_Processor -Property NumberOfCores).NumberOfCores
-          Write-Host $nproc
-          Write-Host $ncore
-
           $ncore = (Get-WmiObject -Class Win32_Processor -Property NumberOfCores `
                    | Measure-Object -Property NumberOfCores -Sum).Sum
           "CMAKE_BUILD_PARALLEL_LEVEL=$($ncore)" | Out-File -Append $env:GITHUB_ENV
