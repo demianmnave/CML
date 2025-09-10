@@ -32,7 +32,8 @@ jobs:
         # Set the number of CMake build and test jobs
       - shell: pwsh
         run: |
-          $ncore = (Get-WmiObject -Class Win32_Processor -Property numberOfCores).NumberOfCores
+          $ncore = (Get-WmiObject -Class Win32_Processor -Property numberOfCores `
+                   | Measure-Object -Property NumberOfCores -Sum).Sum
           "CMAKE_BUILD_PARALLEL_LEVEL=$($ncore)" | Out-File -Append $env:GITHUB_ENV
           "CTEST_PARALLEL_LEVEL=$($ncore)" | Out-File -Append $env:GITHUB_ENV
       - name: Install MSVC ${{ matrix.ver }}.${{ matrix.vsver }}
