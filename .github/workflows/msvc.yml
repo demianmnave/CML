@@ -55,6 +55,7 @@ jobs:
       - uses: lukka/run-vcpkg@v11
         with:
           vcpkgJsonGlob: 'vcpkg.json'
-      - uses: lukka/run-cmake@v10
-        with:
-          workflowPreset: "msvc-17-mt-s-vcpkg-release-test"
+      - name: Build and test
+        shell: pwsh
+        run: |
+           cmake --workflow --preset=msvc-17-mt-s-vcpkg-release-test
