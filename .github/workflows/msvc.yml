@@ -3,11 +3,14 @@ name: msvc
 on:
   push:
     paths:
-      - '!.clang-format'
-      - '!.gitignore'
-      - '!CHANGELOG.md'
-      - '!LICENSE'
-      - '!README.md'
+      - '.github/**'
+      - 'cmake/**'
+      - 'cml/**'
+      - 'tests/**'
+      - 'CMakeLists.txt'
+      - 'CMakePresets.json'
+      - 'CML.cmake'
+      - 'vcpkg.json'
 
 env: 
   VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
