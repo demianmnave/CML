@@ -1,0 +1,25 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": ".vcpkg",
+      "hidden": true,
+      "description": "Settings applicable to vcpkg-based configurations",
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_INSTALL_OPTIONS": "--no-print-usage",
+        "VCPKG_OVERLAY_TRIPLETS": "${sourceDir}/cmake/vcpkg-triplets"
+      }
+    },
+
+    {
+      "name": ".vcpkg-msvc-static",
+      "hidden": true,
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows-msvc-static",
+        "VCPKG_HOST_TRIPLET": "x64-windows-msvc-static"
+      }
+    }
+  ]
+}

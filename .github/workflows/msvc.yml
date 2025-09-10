@@ -1,0 +1,56 @@
+
+name: msvc
+on:
+  push:
+    paths:
+      - '!.clang-format'
+      - '!.gitignore'
+      - '!CHANGELOG.md'
+      - '!LICENSE'
+      - '!README.md'
+
+env: 
+  VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+
+jobs:
+  msvc-17:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - ver: 14.44
+          vsver: 17.14
+    env:
+      # Consumed by .msvc-17 in cmake/presets/msvc.json:
+      MSVC_TOOLSET_VERSION: ${{ matrix.ver }}
+    name: "(msvc-17-${{ matrix.ver }})"
+    runs-on: windows-2022
+    steps:
+        # Set the number of CMake build and test jobs
+      - shell: pwsh
+        run: |
+          $ncore = (Get-WmiObject -Class Win32_Processor -Property numberOfCores).NumberOfCores
+          "CMAKE_BUILD_PARALLEL_LEVEL=$($ncore)" | Out-File -Append $env:GITHUB_ENV
+          "CTEST_PARALLEL_LEVEL=$($ncore)" | Out-File -Append $env:GITHUB_ENV
+      - name: Install MSVC ${{ matrix.ver }}.${{ matrix.vsver }}
+        shell: pwsh
+        run: |
+          $vspath = 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise'
+          Test-Path -Path $vspath | Should -Be $true
+
+          $vsinstaller = 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe'
+          Test-Path -Path $vsinstaller | Should -Be $true
+
+          Start-Process -NoNewWindow -Wait -FilePath $vsinstaller -ArgumentList `
+            'modify', '--installPath', "`"$vspath`"", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
+            '--add', 'Microsoft.VisualStudio.Component.VC.${{ matrix.ver }}.${{ matrix.vsver }}.x86.x64'
+      - uses: actions/checkout@v4
+      - uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: "~3.25.0"
+      - uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgJsonGlob: 'vcpkg.json'
+      - uses: lukka/run-cmake@v10
+        with:
+          workflowPreset: "msvc-17-mt-s-vcpkg-release-test"

@@ -1,255 +1,66 @@
 {
-  // Core configuration presets:
-  "version": 7,
+  "version": 6,
+  "include": [
+    "cmake/presets/common.json",
+    "cmake/presets/msvc.json",
+    "cmake/presets/vcpkg.json"
+  ],
   "configurePresets": [
     {
-      // Inheritable conditional to enable a configuration preset on Windows only:
-      "name": ".cml-windows-only",
-      "hidden": true,
-      "condition": {
-        "type": "allOf",
-        "conditions": [
-          {
-            "lhs": "${hostSystemName}",
-            "type": "equals",
-            "rhs": "Windows"
-          }
-        ]
-      }
-    },
-    {
-      // Inheritable conditional to enable a configuration preset on Linux only:
-      "name": ".cml-linux-only",
-      "hidden": true,
-      "condition": {
-        "type": "allOf",
-        "conditions": [
-          {
-            "lhs": "${hostSystemName}",
-            "type": "equals",
-            "rhs": "Linux"
-          }
-        ]
-      }
-    },
-    {
-      // Inheritable conditional to enable a configuration preset on Darwin (Mac OS/X) only:
-      "name": ".cml-macosx-only",
-      "hidden": true,
-      "condition": {
-        "type": "allOf",
-        "conditions": [
-          {
-            "lhs": "${hostSystemName}",
-            "type": "equals",
-            "rhs": "Darwin"
-          }
-        ]
-      }
-    },
-
-
-    {
-      // Standard build directory, and always target x64:
-      "name": ".cml-configure-defaults",
-      "hidden": true,
-      "binaryDir": "${sourceDir}/.build/${presetName}",
-      "architecture": {
-        "value": "x64",
-        "strategy": "external"
-      },
-      "cacheVariables": {
-        "BUILD_SHARED_LIBS": {
-          "type": "BOOL",
-          "value": false
-        },
-        "BUILD_STATIC_RUNTIME": {
-          "type": "BOOL",
-          "value": true
-        },
-        "BUILD_TESTING": {
-          "type": "BOOL",
-          "value": true
-        }
-      }
+      "name": "msvc-17-mt-s-vcpkg",
+      "inherits": [ ".msvc-17-mt-s", ".vcpkg", ".vcpkg-msvc-static", ".testing" ]
     },
 
     {
-      // Inheritable configuration to use the system default MSVC ClangCL and the Ninja generator:
-      "name": ".cml-ninja-msvc-clangcl",
-      "hidden": true, 
-      "inherits": [ ".cml-windows-only" ],
-      "generator": "Ninja Multi-Config",
-      "cacheVariables": {
-        "CMAKE_C_COMPILER": "clang-cl.exe",
-        "CMAKE_CXX_COMPILER": "clang-cl.exe"
-      }
-    },
-    {
-      // Inheritable configuration to use the system default MSVC and the Ninja generator:
-      "name": ".cml-ninja-msvc",
-      "hidden": true, 
-      "inherits": [ ".cml-windows-only" ],
-      "generator": "Ninja Multi-Config",
-      "cacheVariables": {
-        "CMAKE_C_COMPILER": "cl.exe",
-        "CMAKE_CXX_COMPILER": "cl.exe"
-      }
-    },
-    {
-      // Inheritable configuration to use MSVC17 and MSBuild:
-      "name": ".cml-msvc17",
-      "hidden": true, 
-      "inherits": [ ".cml-windows-only" ],
-      "generator": "Visual Studio 17 2022"
-    },
-    {
-      // Inheritable configuration to use the system default MSVC17 with ClangCL and MSBuild:
-      "name": ".cml-msvc17-clangcl",
-      "hidden": true, 
-      "inherits": [ ".cml-windows-only" ],
-      "generator": "Visual Studio 17 2022",
-      "toolset": "ClangCL"
+      "name": "msvc-17-mt-s-vcpkg-14.40",
+      "inherits": [ "msvc-17-mt-s-vcpkg", ".msvc-17-14.40", ".testing" ]
     },
 
     {
-      // Preset to configure a static dev-test (IDE) build with the system default MSVC17:
-      "name": "cml-dev-msvc17-mt-s",
-      "inherits": [ ".cml-configure-defaults", ".cml-msvc17" ]
-    },
-    {
-      // Preset to configure a static dev-test build (IDE) with the system default MSVC17 ClangCL:
-      "name": "cml-dev-msvc17-clangcl-mt-s",
-      "inherits": [ ".cml-configure-defaults", ".cml-msvc17-clangcl" ]
+      "name": "msvc-17-mt-s-vcpkg-14.42",
+      "inherits": [ "msvc-17-mt-s-vcpkg", ".msvc-17-14.42", ".testing" ]
     },
 
     {
-      // Preset to configure a CI test build with Ninja Multi-Config and the system default MSVC ClangCL:
-      "name": "cml-ci-ninja-msvc-clangcl-mt-s",
-      "inherits": [ ".cml-configure-defaults", ".cml-ninja-msvc-clangcl" ]
-    },
-    {
-      // Preset to configure a CI test build with Ninja Multi-Config and the system default MSVC:
-      "name": "cml-ci-ninja-msvc-mt-s",
-      "inherits": [ ".cml-configure-defaults", ".cml-ninja-msvc" ]
-    },
-    {
-      // Preset to configure a CI test build with MSVC17:
-      "name": "cml-ci-msvc17-mt-s",
-      "inherits": [ ".cml-configure-defaults", ".cml-msvc17" ]
+      "name": "msvc-17-mt-s-vcpkg-14.44",
+      "inherits": [ "msvc-17-mt-s-vcpkg", ".msvc-17-14.44", ".testing" ]
     }
   ],
-
   "buildPresets": [
     {
-      // Inheritable conditional to enable a build preset on Windows only:
-      "name": ".cml-windows-build-only",
-      "hidden": true,
-      "condition": {
-        "type": "allOf",
-        "conditions": [
-          {
-            "lhs": "${hostSystemName}",
-            "type": "equals",
-            "rhs": "Windows"
-          }
-        ]
-      }
-    },
-    {
-      // Inheritable conditional to enable a build preset on Linux only:
-      "name": ".cml-linux-build-only",
-      "hidden": true,
-      "condition": {
-        "type": "allOf",
-        "conditions": [
-          {
-            "lhs": "${hostSystemName}",
-            "type": "equals",
-            "rhs": "Windows"
-          }
-        ]
-      }
-    },
-    {
-      // Inheritable conditional to enable a build preset on OS/X only:
-      "name": ".cml-macosx-build-only",
-      "hidden": true,
-      "condition": {
-        "type": "allOf",
-        "conditions": [
-          {
-            "lhs": "${hostSystemName}",
-            "type": "equals",
-            "rhs": "Darwin"
-          }
-        ]
-      }
-    },
-
-    {
-      // Static Ninja+MSVC release build:
-      "name": "cml-ci-ninja-msvc-mt-s-release",
-      "inherits": [ ".cml-windows-build-only" ],
-      "configurePreset": "cml-ci-ninja-msvc-mt-s",
-      "inheritConfigureEnvironment": true,
-      "configuration": "Release"
-    },
-    {
-      // Static Ninja+ClangCl release build:
-      "name": "cml-ci-ninja-msvc-clangcl-mt-s-release",
-      "inherits": [ ".cml-windows-build-only" ],
-      "configurePreset": "cml-ci-ninja-msvc-clangcl-mt-s",
-      "inheritConfigureEnvironment": true,
-      "configuration": "Release"
-    },
-    {
-      // Static MSVC release build:
-      "name": "cml-ci-msvc17-mt-s-release",
-      "inherits": [ ".cml-windows-build-only" ],
-      "configurePreset": "cml-ci-msvc17-mt-s",
+      "name": "msvc-17-mt-s-vcpkg-release",
+      "inherits": [ ".windows" ],
+      "configurePreset": "msvc-17-mt-s-vcpkg",
       "inheritConfigureEnvironment": true,
       "configuration": "Release"
     }
   ],
-
   "testPresets": [
     {
-      // Inheritable conditional to enable a test preset on Windows only:
-      "name": ".cml-windows-test-only",
-      "hidden": true,
-      "condition": {
-        "type": "allOf",
-        "conditions": [
-          {
-            "lhs": "${hostSystemName}",
-            "type": "equals",
-            "rhs": "Windows"
-          }
-        ]
-      }
-    },
-
-    {
-      "name": "cml-ci-ninja-msvc-mt-s-release-test",
-      "inherits": [ ".cml-windows-test-only" ],
-      "configurePreset": "cml-ci-ninja-msvc-mt-s",
+      "name": "msvc-17-mt-s-vcpkg-release-test",
+      "inherits": [ ".windows" ],
+      "configurePreset": "msvc-17-mt-s-vcpkg",
       "inheritConfigureEnvironment": true,
       "configuration": "Release"
-    },
+    }
+  ],
+  "workflowPresets": [
     {
-      "name": "cml-ci-ninja-msvc-clangcl-mt-s-release-test",
-      "inherits": [ ".cml-windows-test-only" ],
-      "configurePreset": "cml-ci-ninja-msvc-clangcl-mt-s",
-      "inheritConfigureEnvironment": true,
-      "configuration": "Release"
-    },
-    {
-      "name": "cml-ci-msvc17-mt-s-release-test",
-      "inherits": [ ".cml-windows-test-only" ],
-      "configurePreset": "cml-ci-msvc17-mt-s",
-      "inheritConfigureEnvironment": true,
-      "configuration": "Release"
+      "name": "msvc-17-mt-s-vcpkg-release-test",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "msvc-17-mt-s-vcpkg"
+        },
+        {
+          "type": "build",
+          "name": "msvc-17-mt-s-vcpkg-release"
+        },
+        {
+          "type": "test",
+          "name": "msvc-17-mt-s-vcpkg-release-test"
+        }
+      ]
     }
   ]
 }
