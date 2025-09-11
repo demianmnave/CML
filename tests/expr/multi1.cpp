@@ -25,7 +25,7 @@ CATCH_TEST_CASE("aliasing-effects1")
 
   CATCH_SECTION("Expression protected from aliasing")
   {
-    const auto x = cml::vector{m} + p;
+    const auto x = cml::vector(m) + p;
     CATCH_CHECK(x[0] == Approx(5.).margin(cml::epsilon<double>()));
 
     /* x is changed because m is changed: */
