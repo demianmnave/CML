@@ -59,6 +59,13 @@ jobs:
             Start-Process -NoNewWindow -Wait -FilePath $vsinstaller -ArgumentList `
               'modify', '--installPath', "`"$vspath`"", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
               '--add', "$($workload)"
+
+            # Should exist now:
+            $install = Get-VSSetupInstance -All | Select-VSSetupInstance -Require "$($workload)" | Select-Object -First 1
+            if($null -eq $install) {
+              Write-Error "Installation of $($workload) failed"
+              Exit 1;
+            }
           } else {
             Write-Host "... $($workload) installed for $($install.InstallationPath)"
           }
