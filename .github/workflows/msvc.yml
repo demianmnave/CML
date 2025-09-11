@@ -43,12 +43,11 @@ jobs:
         run: |
           # Determine if the required MSVC version is already installed:
           $workload = "Microsoft.VisualStudio.Component.VC.${{ matrix.ver }}.${{ matrix.vsver }}.x86.x64"
-
           Write-Host "Determining if $($workload) is installed..."
-          Install-Module -Name VSSetup -Force
 
-          $installs = Get-VSSetupInstance -All | Select-VSSetupInstance -Require "$($workload)"
-          if($null -eq $installs) {}
+          Install-Module -Name VSSetup -Force
+          $install = Get-VSSetupInstance -All | Select-VSSetupInstance -Require "$($workload)" | Select-Object -First 1
+          if($null -eq $install) {
             Write-Host "Would install $($workload)"
             # $vsinstaller = 'C:/Program Files (x86)/Microsoft Visual Studio/Installer/vs_installer.exe'
             # if(!(Test-Path -Path $vsinstaller)) {
@@ -60,8 +59,7 @@ jobs:
             #   'modify', '--installPath', "`"$vspath`"", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
             #   '--add', $workload
           } else {
-            Write-Host "$($workload) already installed"
-            Write-Host $installs
+            Write-Host "$($workload) installed for $($install.InstallationPath)"
           }
       # - uses: actions/checkout@v4
       # - uses: lukka/get-cmake@latest
