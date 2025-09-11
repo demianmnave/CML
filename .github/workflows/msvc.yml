@@ -43,12 +43,11 @@ jobs:
         run: |
           # Determine if the required MSVC version is already installed:
           $workload = "Microsoft.VisualStudio.Component.VC.${{ matrix.ver }}.${{ matrix.vsver }}.x86.x64"
-          Write-Host "Determining if $($workload) is installed..."
 
+          Write-Host "Determining if $($workload) is installed..."
           Install-Module -Name VSSetup -Force
-          $install = Get-VSSetupInstance -All | Select-VSSetupInstance -Require "$($workload)" | Select-Object -First 1
-          if($null -eq $install) {
-            Write-Host "... installing $($workload)"
+          $installed = Get-VSSetupInstance -All | Select-VSSetupInstance -Require "$($workload)"
+          if($null -eq $installed) {
 
             $vsinstaller = 'C:/Program Files (x86)/Microsoft Visual Studio/Installer/vs_installer.exe'
             if(!(Test-Path -Path $vsinstaller)) {
@@ -56,18 +55,22 @@ jobs:
               Exit 1;
             }
 
-            Start-Process -NoNewWindow -Wait -FilePath $vsinstaller -ArgumentList `
+            # Install to the latest VS version:
+            $vs = Get-VSSetupInstance -All | Sort-Object -Property InstallationVersion -Descending | Select-Object -First 1
+            $vspath = $vs.InstallationPath
+            Write-Host "... installing $($workload) for $($vspath)"
+            Start-Process -Verbose -NoNewWindow -Wait -FilePath $vsinstaller -ArgumentList `
               'modify', '--installPath', "`"$vspath`"", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
               '--add', "$($workload)"
 
             # Should exist now:
-            $install = Get-VSSetupInstance -All | Select-VSSetupInstance -Require "$($workload)" | Select-Object -First 1
-            if($null -eq $install) {
-              Write-Error "Installation of $($workload) failed"
+            $installed = Get-VSSetupInstance -All | Select-VSSetupInstance -Require "$($workload)"
+            if($null -eq $installed) {
+              Write-Error "Installation of $($workload) for $($vspath) failed"
               Exit 1;
             }
           } else {
-            Write-Host "... $($workload) installed for $($install.InstallationPath)"
+            Write-Host "... $($workload) already installed"
           }
       - uses: actions/checkout@v4
       - uses: lukka/get-cmake@latest
@@ -76,18 +79,9 @@ jobs:
       - uses: lukka/run-vcpkg@v11
         with:
           vcpkgJsonGlob: 'vcpkg.json'
-      - name: Build
+      - name: Build and test
         shell: pwsh
         run: |
-          $config = 'msvc-17-mt-s-vcpkg'
-          $build = 'msvc-17-mt-s-vcpkg-release'
-          Write-Host "Executing $($config) and $($build) for MSVC $($env:MSVC_TOOLSET_VERSION) with VCPKG_ROOT @ $($env:VCPKG_ROOT)"
-          cmake --preset=$config
-          cmake --build --preset=$build
-
-      # - name: Build and test
-      #   shell: pwsh
-      #   run: |
-      #      $preset = msvc-17-mt-s-vcpkg-release-test
-      #      Write-Host "Executing $($preset) for MSVC $($env:MSVC_TOOLSET_VERSION) with VCPKG_ROOT @ $($env:VCPKG_ROOT)"
-      #      cmake --workflow --preset=$preset
+           $preset = msvc-17-mt-s-vcpkg-release-test
+           Write-Host "Executing $($preset) for MSVC $($env:MSVC_TOOLSET_VERSION) with VCPKG_ROOT @ $($env:VCPKG_ROOT)"
+           cmake --workflow --preset=$preset
