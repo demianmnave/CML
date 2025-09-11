@@ -18,18 +18,12 @@ if(NOT Catch2_FOUND)
   FetchContent_MakeAvailable(Catch2)
 endif()
 
-add_library(cml_test_main INTERFACE catch_runner.h)
-target_include_directories(cml_test_main
-  INTERFACE ${CMAKE_CURRENT_LIST_DIR} ${CML_ROOT}
+cml_add_library(cml_test_main INTERFACE
+  SOURCES catch_runner.h
+  USES Catch2::Catch2WithMain cml
+  FOLDER "cml-tests"
+  SKIP_INSTALL
+  )
+target_include_directories(cml_test_main INTERFACE
+ $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
 )
-target_link_libraries(cml_test_main
-  INTERFACE Catch2::Catch2WithMain
-)
-
-set_target_properties(cml_test_main
-  PROPERTIES FOLDER "cml-tests/main"
-)
-
-get_target_property(_path cml_test_main SOURCE_DIR)
-get_target_property(_sources cml_test_main SOURCES)
-source_group(TREE "${_path}" FILES ${_sources})
