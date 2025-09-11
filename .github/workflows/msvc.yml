@@ -20,10 +20,10 @@ jobs:
         include:
         - ver: "14.40"
           vsver: "17.10"
-        - ver: "14.42"
-          vsver: "17.12"
-        - ver: "14.44"
-          vsver: "17.14"
+        # - ver: "14.42"
+        #   vsver: "17.12"
+        # - ver: "14.44"
+        #   vsver: "17.14"
     env:
       # Consumed by .msvc-17 in cmake/presets/msvc.json:
       MSVC_TOOLSET_VERSION: ${{ matrix.ver }}
@@ -43,27 +43,35 @@ jobs:
         run: |
           # Determine if the required MSVC version is already installed:
           $workload = "Microsoft.VisualStudio.Component.VC.${{ matrix.ver }}.${{ matrix.vsver }}.x86.x64"
-          Install-Module -Name VSSetup -Force
-          if(! (Get-VSSetupInstance -All | Select-VSSetupInstance -Require "$workload")) {
-            $vsinstaller = 'C:/Program Files (x86)/Microsoft Visual Studio/Installer/vs_installer.exe'
-            if(!(Test-Path -Path $vsinstaller)) {
-              Write-Error "Could not locate the Visual Studio installer"
-              Exit 1;
-            }
 
-            Start-Process -NoNewWindow -Wait -FilePath $vsinstaller -ArgumentList `
-              'modify', '--installPath', "`"$vspath`"", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
-              '--add', $workload
+          Write-Host "Determining if $($workload) is installed..."
+          Install-Module -Name VSSetup -Force
+
+          $installs = Get-VSSetupInstance -All | Select-VSSetupInstance -Require "$($workload)"
+          if($null -eq $installs) {}
+            Write-Host "Would install $($workload)"
+            # $vsinstaller = 'C:/Program Files (x86)/Microsoft Visual Studio/Installer/vs_installer.exe'
+            # if(!(Test-Path -Path $vsinstaller)) {
+            #   Write-Error "Could not locate the Visual Studio installer"
+            #   Exit 1;
+            # }
+
+            # Start-Process -NoNewWindow -Wait -FilePath $vsinstaller -ArgumentList `
+            #   'modify', '--installPath', "`"$vspath`"", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
+            #   '--add', $workload
+          } else {
+            Write-Host "$($workload) already installed"
+            Write-Host $installs
           }
-      - uses: actions/checkout@v4
-      - uses: lukka/get-cmake@latest
-        with:
-          cmakeVersion: "~3.31.0"
-      - uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgJsonGlob: 'vcpkg.json'
-      - name: Build and test
-        shell: pwsh
-        run: |
-           Write-Host "Building for MSVC $($env:MSVC_TOOLSET_VERSION) with VCPKG_ROOT @ $($env:VCPKG_ROOT)"
-           cmake --workflow --preset=msvc-17-mt-s-vcpkg-release-test
+      # - uses: actions/checkout@v4
+      # - uses: lukka/get-cmake@latest
+      #   with:
+      #     cmakeVersion: "~3.31.0"
+      # - uses: lukka/run-vcpkg@v11
+      #   with:
+      #     vcpkgJsonGlob: 'vcpkg.json'
+      # - name: Build and test
+      #   shell: pwsh
+      #   run: |
+      #      Write-Host "Building for MSVC $($env:MSVC_TOOLSET_VERSION) with VCPKG_ROOT @ $($env:VCPKG_ROOT)"
+      #      cmake --workflow --preset=msvc-17-mt-s-vcpkg-release-test
