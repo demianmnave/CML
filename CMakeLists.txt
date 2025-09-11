@@ -3,7 +3,7 @@
 # --------------------------------------------------------------------------
 
 # Set the minimum CMake version:
-cmake_minimum_required(VERSION 3.31)
+cmake_minimum_required(VERSION 3.28)
 
 # Policies:
 cmake_policy(SET CMP0022 NEW) # Export interface libraries
@@ -27,6 +27,13 @@ cml_version_from_file(
 )
 project(cml VERSION ${_CML_VERSION} LANGUAGES CXX)
 message(STATUS "Building ${PROJECT_NAME} ${CML_VERSION}")
+
+if(NOT DEFINED CMAKE_CXX_COMPILER_ID)
+  message(FATAL_ERROR "${PROJECT_NAME} requires a C++ compiler")
+endif()
+
+# Standard includes:
+include(CMakeDependentOption)
 
 if(NOT DEFINED BUILD_SHARED_LIBS)
   option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
