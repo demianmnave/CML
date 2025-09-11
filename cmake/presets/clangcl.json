@@ -1,0 +1,19 @@
+{
+  "version": 6,
+  "include": [
+    "common.json",
+    "ninja.json"
+  ],
+  "configurePresets": [
+    {
+      "name": ".ninja-clangcl",
+      "hidden": true, 
+      "description": "Use clang-cl.exe in the current path",
+      "inherits": [ ".windows", ".ninja" ],
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-cl.exe",
+        "CMAKE_CXX_COMPILER": "clang-cl.exe"
+      }
+    }
+  ]
+}

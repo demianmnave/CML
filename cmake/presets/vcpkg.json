@@ -20,6 +20,15 @@
         "VCPKG_TARGET_TRIPLET": "x64-windows-msvc-static",
         "VCPKG_HOST_TRIPLET": "x64-windows-msvc-static"
       }
+    },
+
+    {
+      "name": ".vcpkg-clangcl-static",
+      "hidden": true,
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows-llvm-static",
+        "VCPKG_HOST_TRIPLET": "x64-windows-llvm-static"
+      }
     }
   ]
 }

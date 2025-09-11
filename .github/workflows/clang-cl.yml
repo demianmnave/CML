@@ -1,0 +1,40 @@
+
+name: clang-cl
+on:
+  push:
+    paths:
+      - '.github/**'
+      - 'cmake/**'
+      - 'cml/**'
+      - 'tests/**'
+      - 'CMakeLists.txt'
+      - 'CMakePresets.json'
+      - 'CML.cmake'
+      - 'vcpkg.json'
+
+jobs:
+  clang-cl:
+    name: "clang-cl"
+    runs-on: windows-latest
+    steps:
+        # Set the number of CMake build and test jobs
+      - name: Set CMake and CTest concurrency
+        shell: pwsh
+        run: |
+          $ncore = (Get-WmiObject -Class Win32_Processor -Property NumberOfCores `
+                   | Measure-Object -Property NumberOfCores -Sum).Sum
+          "CMAKE_BUILD_PARALLEL_LEVEL=$($ncore)" | Out-File -Append $env:GITHUB_ENV
+          "CTEST_PARALLEL_LEVEL=$($ncore)" | Out-File -Append $env:GITHUB_ENV
+      - uses: actions/checkout@v4
+      - uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: "~3.31.0"
+      - uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgJsonGlob: 'vcpkg.json'
+      - name: Build and test
+        shell: pwsh
+        run: |
+           $preset = 'ninja-clangcl-mt-s-vcpkg-release-test'
+           Write-Host "Executing workflow $($preset) for ClangCL with VCPKG_ROOT @ $($env:VCPKG_ROOT)"
+           cmake --workflow --preset=$preset
