@@ -2,7 +2,6 @@
 name: msvc
 on:
   pull_request:
-  push:
     paths:
       - '.github/**'
       - 'cmake/**'

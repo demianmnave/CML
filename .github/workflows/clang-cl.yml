@@ -2,7 +2,6 @@
 name: clang-cl
 on:
   pull_request:
-  push:
     paths:
       - '.github/**'
       - 'cmake/**'
