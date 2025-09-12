@@ -77,28 +77,28 @@
   "testPresets": [
     {
       "name": "windows-ninja-clangcl-mt-s-vcpkg-test",
-      "inherits": [ ".windows" ],
+      "inherits": [ ".windows", ".junit" ],
       "configurePreset": "windows-ninja-clangcl-mt-s-vcpkg",
       "inheritConfigureEnvironment": true,
       "configuration": "Release"
     },
     {
       "name": "windows-msbuild-msvc-17-mt-s-vcpkg-test",
-      "inherits": [ ".windows" ],
+      "inherits": [ ".windows", ".junit" ],
       "configurePreset": "windows-msbuild-msvc-17-mt-s-vcpkg",
       "inheritConfigureEnvironment": true,
       "configuration": "Release"
     },
     {
       "name": "linux-ninja-clang-s-vcpkg-test",
-      "inherits": [ ".linux" ],
+      "inherits": [ ".linux", ".junit" ],
       "configurePreset": "linux-ninja-clang-s-vcpkg",
       "inheritConfigureEnvironment": true,
       "configuration": "Release"
     },
     {
       "name": "linux-ninja-gcc-s-vcpkg-test",
-      "inherits": [ ".linux" ],
+      "inherits": [ ".linux", ".junit" ],
       "configurePreset": "linux-ninja-gcc-s-vcpkg",
       "inheritConfigureEnvironment": true,
       "configuration": "Release"

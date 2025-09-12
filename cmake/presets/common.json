@@ -4,7 +4,7 @@
     {
       "name": ".common",
       "hidden": true,
-      "description": "Settings applicable to all configurations",
+      "description": "Defaults applicable to all configurations",
       "binaryDir": "${sourceDir}/.build/${presetName}$env{ENV_BUILD_SUFFIX}",
       "architecture": {
         "value": "x64",
@@ -143,6 +143,15 @@
         "lhs": "${hostSystemName}",
         "type": "equals",
         "rhs": "Darwin"
+      }
+    },
+    {
+      "name": ".junit",
+      "hidden": true,
+      "description": "Output a JUnit result to ${sourceDir}/ctest.xml",
+      "output": {
+        "quiet": true,
+        "outputJUnitFile": "${sourceDir}/ctest.xml"
       }
     }
   ]

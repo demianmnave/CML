@@ -84,3 +84,31 @@ jobs:
            $preset = 'windows-msbuild-msvc-17-mt-s-vcpkg'
            Write-Host "Executing workflow $($preset) for MSVC $($env:MSVC_TOOLSET_VERSION) with VCPKG_ROOT @ $($env:VCPKG_ROOT)"
            cmake --workflow --preset=$preset
+      - name: Generate JUnit test results
+        uses: ctrf-io/github-test-reporter@v1
+        with:
+          report-path: "ctest.xml"
+          status-check-name: "windows-msbuild-msvc-17-mt-s-${{ matrix.ver }} CTest Report"
+          status-check: true
+          annotate: true
+          summary: true
+          use-suite-name: true
+          file-report: true
+          failed-report: true
+          upload-artifact: false
+          integrations-config: |
+            {
+              "junit-to-ctrf": {
+                "enabled": true,
+                "action": "convert",
+                "options": {
+                  "output": "ctrf.json",
+                  "toolname": "junit-to-ctrf",
+                  "useSuiteName": false,
+                  "env": {
+                    "appName": "cml"
+                  }
+                }
+              }
+            }
+        if: ${{ always() }}
