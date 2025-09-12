@@ -31,11 +31,10 @@
       "inherits": [ ".windows-ninja-clangcl", ".static", ".vcpkg-windows-clangcl-static", ".testing" ]
     },
 
-
     {
       "name": "windows-msbuild-msvc-17-mt-s-vcpkg",
       "description": "Windows MSBuild configuration using ${MSVC_TOOLSET_VERSION} and vcpkg",
-      "inherits": [ ".windows-msbuild-msvc-17", ".static", ".vcpkg-windows-msvc-static" ]
+      "inherits": [ ".windows-msbuild-msvc-17", ".static", ".vcpkg-windows-msvc-static", ".testing" ]
     }
   ],
   "buildPresets": [
