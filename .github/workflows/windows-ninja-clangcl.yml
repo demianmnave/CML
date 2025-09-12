@@ -14,6 +14,8 @@ on:
 
 jobs:
   build-and-test:
+    permissions:
+      checks: write
     name: "windows-ninja-clangcl-mt-s-vcpkg"
     runs-on: windows-latest
     steps:
@@ -40,6 +42,8 @@ jobs:
            cmake --workflow --preset=$preset
       - name: Generate JUnit test results
         uses: ctrf-io/github-test-reporter@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           report-path: "ctest.xml"
           status-check-name: "windows-ninja-clangcl-mt-s CTest Report"

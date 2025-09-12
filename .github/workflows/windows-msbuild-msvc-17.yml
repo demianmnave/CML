@@ -14,6 +14,8 @@ on:
 
 jobs:
   build-and-test:
+    permissions:
+      checks: write
     strategy:
       fail-fast: false
       matrix:
@@ -86,6 +88,8 @@ jobs:
            cmake --workflow --preset=$preset
       - name: Generate JUnit test results
         uses: ctrf-io/github-test-reporter@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           report-path: "ctest.xml"
           status-check-name: "windows-msbuild-msvc-17-mt-s-${{ matrix.ver }} CTest Report"
