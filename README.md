@@ -1,6 +1,5 @@
-[![msvc-latest](https://github.com/demianmnave/CML/actions/workflows/msvc-latest.yml/badge.svg)](https://github.com/demianmnave/CML/actions/workflows/msvc-latest.yml)
-[![msvc-clangcl-latest](https://github.com/demianmnave/CML/actions/workflows/msvc-clangcl-latest.yml/badge.svg)](https://github.com/demianmnave/CML/actions/workflows/msvc-clangcl-latest.yml)
-[![msvc-17-10](https://github.com/demianmnave/CML/actions/workflows/msvc-17-10.yml/badge.svg)](https://github.com/demianmnave/CML/actions/workflows/msvc-17-10.yml)
+[![msvc](https://github.com/demianmnave/CML/actions/workflows/msvc.yml/badge.svg)](https://github.com/demianmnave/CML/actions/workflows/msvc.yml)
+[![clangcl](https://github.com/demianmnave/CML/actions/workflows/clangcl.yml/badge.svg)](https://github.com/demianmnave/CML/actions/workflows/clangcl.yml)
 
 ## Configurable Math Library
 For CML version 1, please see https://github.com/demianmnave/CML1.
