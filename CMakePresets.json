@@ -2,6 +2,7 @@
   "version": 6,
   "include": [
     "cmake/presets/windows-msbuild-msvc.json",
+    "cmake/presets/windows-msbuild-clangcl.json",
     "cmake/presets/windows-ninja-clangcl.json",
     "cmake/presets/linux-ninja-clang.json",
     "cmake/presets/linux-ninja-gcc.json",
@@ -42,6 +43,12 @@
       "name": "windows-msbuild-msvc-17-mt-s-vcpkg",
       "description": "Windows MSBuild configuration using ${MSVC_TOOLSET_VERSION} and vcpkg",
       "inherits": [ ".windows-msbuild-msvc-17", ".static", ".vcpkg-windows-msvc-static", ".testing" ]
+    },
+
+    {
+      "name": "windows-msbuild-clangcl-17-mt-s-vcpkg",
+      "description": "Windows MSBuild configuration using ClangCL and vcpkg",
+      "inherits": [ ".windows-msbuild-clangcl-17", ".static", ".vcpkg-windows-clangcl-static", ".testing" ]
     }
   ],
   "buildPresets": [
