@@ -51,7 +51,9 @@ jobs:
       - name: Install clang-${{ matrix.ver }}
         shell: bash
         run: |
-          sudo apt-get install -qqy --no-install-recommends clang++-${{ matrix.ver }}
+          if [ ! -x "$(command -v clang++-${{ matrix.ver }})" ]; then
+            sudo apt-get install -qqy --no-install-recommends clang++-${{ matrix.ver }}
+          fi
       - uses: actions/checkout@v4
       - uses: lukka/get-cmake@latest
         with:

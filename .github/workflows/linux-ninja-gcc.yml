@@ -19,9 +19,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
+        - ver: "12"
         - ver: "13"
         - ver: "14"
-        - ver: "15"
     env:
       ENV_COMPILER_VERSION: "-${{ matrix.ver }}"
     name: "(linux-ninja-gcc-s-vcpkg-${{ matrix.ver }})"
@@ -51,7 +51,9 @@ jobs:
       - name: Install g++-${{ matrix.ver }}
         shell: bash
         run: |
-          sudo apt-get install -qqy --no-install-recommends g++-${{ matrix.ver }}
+          if [ ! -x "$(command -v g++-${{ matrix.ver }})" ]; then
+            sudo apt-get install -qqy --no-install-recommends g++-${{ matrix.ver }}
+          fi
       - uses: actions/checkout@v4
       - uses: lukka/get-cmake@latest
         with:
@@ -64,7 +66,7 @@ jobs:
         run: |
            preset="linux-ninja-gcc-s-vcpkg"
            echo "Executing workflow $preset for gcc-${{ matrix.ver }} with VCPKG_ROOT @ $VCPKG_ROOT"
-           cmake --workflow --preset=$preset
+           CC=gcc-15 CXX=g++-15 cmake --workflow --preset=$preset
       - name: Generate JUnit test results
         uses: ctrf-io/github-test-reporter@v1
         env:
