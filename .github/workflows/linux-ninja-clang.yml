@@ -35,16 +35,16 @@ jobs:
       - name: Install prerequisites
         shell: bash
         run: |
-          apt-get -qq update
-          apt-get install -qqy ca-certificates gpg wget nodejs
+          sudo apt-get -qq update
+          sudo apt-get install -qqy ca-certificates gpg wget nodejs
       - name: Install vcpkg prerequisites
         shell: bash
         run: |
-          apt-get install -qqy --no-install-recommends curl zip unzip tar pkg-config git ninja-build cmake cmake-data
+          sudo apt-get install -qqy --no-install-recommends curl zip unzip tar pkg-config git
       - name: Install clang-${{ matrix.ver }}
         shell: bash
         run: |
-          apt-get install -qqy --no-install-recommends clang++-${{ matrix.ver }}
+          sudo apt-get install -qqy --no-install-recommends clang++-${{ matrix.ver }}
       - uses: actions/checkout@v4
       - uses: lukka/get-cmake@latest
         with:
