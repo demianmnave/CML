@@ -35,7 +35,12 @@ jobs:
       - name: Install prerequisites
         shell: bash
         run: |
-          sudo apt-get -qq update
+          if [ ! -x "$(command -v sudo)" ]; then
+            apt-get update -qqy
+            apt-get install -qqy sudo
+          else
+            sudo apt-get -qq update
+          fi
           sudo apt-get install -qqy ca-certificates gpg wget nodejs
       - name: Install vcpkg prerequisites
         shell: bash
