@@ -35,6 +35,6 @@ jobs:
       - name: Build and test
         shell: pwsh
         run: |
-           $preset = 'ninja-clangcl-mt-s-vcpkg-release-test'
-           Write-Host "Executing workflow $($preset) for ClangCL with VCPKG_ROOT @ $($env:VCPKG_ROOT)"
+           $preset = 'windows-ninja-clangcl-mt-s-vcpkg'
+           Write-Host "Executing workflow $($preset) with VCPKG_ROOT @ $($env:VCPKG_ROOT)"
            cmake --workflow --preset=$preset

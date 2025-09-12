@@ -1,0 +1,51 @@
+{
+  "version": 6,
+  "include": [
+    "common.json"
+  ],
+  "configurePresets": [
+    {
+      "name": ".windows-msbuild-msvc-17",
+      "hidden": true, 
+      "description": "Use MSVC 14.x (Visual Studio 17 2002)",
+      "inherits": [ ".common", ".windows" ],
+      "generator": "Visual Studio 17 2022",
+      "cacheVariables": {
+        "CMAKE_GENERATOR_TOOLSET": "v143,version=$env{MSVC_TOOLSET_VERSION}"
+      }
+    },
+
+    {
+      "name": ".windows-msbuild-msvc-17-14.40",
+      "hidden": true,
+      "description": "Use MSVC 14.40 (Visual Studio 17.10 2002)",
+      "inherits": [ ".windows-msbuild-msvc-17" ],
+      "environment": {
+        "MSVC_TOOLSET_VERSION": "14.40",
+        "ENV_COMPILER_VERSION": "-14.40"
+      }
+    },
+
+    {
+      "name": ".windows-msbuild-msvc-17-14.42",
+      "hidden": true,
+      "description": "Use MSVC 14.42 (Visual Studio 17.12 2002)",
+      "inherits": [ ".windows-msbuild-msvc-17" ],
+      "environment": {
+        "MSVC_TOOLSET_VERSION": "14.42",
+        "ENV_COMPILER_VERSION": "-14.42"
+      }
+    },
+
+    {
+      "name": ".windows-msbuild-msvc-17-14.44",
+      "hidden": true,
+      "description": "Use MSVC 14.44 (Visual Studio 17.14 2002)",
+      "inherits": [ ".windows-msbuild-msvc-17" ],
+      "environment": {
+        "MSVC_TOOLSET_VERSION": "14.44",
+        "ENV_COMPILER_VERSION": "-14.44"
+      }
+    }
+  ]
+}

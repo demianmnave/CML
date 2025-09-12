@@ -14,8 +14,10 @@
     },
 
     {
-      "name": ".vcpkg-msvc-static",
+      "name": ".vcpkg-windows-msvc-static",
       "hidden": true,
+      "description": "Select the x64-windows-msvc-static triplet",
+      "inherits": [ ".vcpkg" ],
       "cacheVariables": {
         "VCPKG_TARGET_TRIPLET": "x64-windows-msvc-static",
         "VCPKG_HOST_TRIPLET": "x64-windows-msvc-static"
@@ -23,11 +25,24 @@
     },
 
     {
-      "name": ".vcpkg-clangcl-static",
+      "name": ".vcpkg-windows-clangcl-static",
       "hidden": true,
+      "description": "Select the x64-windows-llvm-static triplet",
+      "inherits": [ ".vcpkg" ],
       "cacheVariables": {
         "VCPKG_TARGET_TRIPLET": "x64-windows-llvm-static",
         "VCPKG_HOST_TRIPLET": "x64-windows-llvm-static"
+      }
+    },
+
+    {
+      "name": ".vcpkg-linux-any-static",
+      "hidden": true,
+      "description": "Select the x64-linux-static triplet",
+      "inherits": [ ".vcpkg" ],
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-linux-static",
+        "VCPKG_HOST_TRIPLET": "x64-linux-static"
       }
     }
   ]

@@ -6,7 +6,7 @@
   ],
   "configurePresets": [
     {
-      "name": ".ninja-clangcl",
+      "name": ".windows-ninja-clangcl",
       "hidden": true, 
       "description": "Use clang-cl.exe in the current path",
       "inherits": [ ".windows", ".ninja" ],

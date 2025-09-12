@@ -82,6 +82,6 @@ jobs:
       - name: Build and test
         shell: pwsh
         run: |
-           $preset = 'msvc-17-mt-s-vcpkg-release-test'
+           $preset = 'windows-msbuild-msvc-17-mt-s-vcpkg'
            Write-Host "Executing workflow $($preset) for MSVC $($env:MSVC_TOOLSET_VERSION) with VCPKG_ROOT @ $($env:VCPKG_ROOT)"
            cmake --workflow --preset=$preset

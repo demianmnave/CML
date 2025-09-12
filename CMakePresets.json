@@ -1,106 +1,138 @@
 {
   "version": 6,
   "include": [
-    "cmake/presets/common.json",
-    "cmake/presets/clangcl.json",
-    "cmake/presets/msvc.json",
+    "cmake/presets/windows-msbuild-msvc.json",
+    "cmake/presets/windows-ninja-clangcl.json",
+    "cmake/presets/linux-ninja-clang.json",
     "cmake/presets/vcpkg.json"
   ],
   "configurePresets": [
     {
-      "name": "ninja-clangcl-mt-s",
-      "inherits": [ ".common", ".static", ".ninja-clangcl", ".testing" ]
+      "name": "linux-ninja-clang-s",
+      "description": "Linux Ninja configuration using clang++-${ENV_COMPILER_VERSION}",
+      "inherits": [ ".linux-ninja-clang", ".static", ".testing" ]
     },
 
     {
-      "name": "ninja-clangcl-mt-s-vcpkg",
-      "inherits": [ ".common", ".static", ".ninja-clangcl", ".vcpkg", ".vcpkg-clangcl-static", ".testing" ]
+      "name": "linux-ninja-clang-s-vcpkg",
+      "description": "Linux Ninja configuration using clang++-${ENV_COMPILER_VERSION} and vcpkg",
+      "inherits": [ ".linux-ninja-clang", ".static", ".vcpkg-linux-any-static", ".testing" ]
     },
 
     {
-      "name": "msvc-17-mt-s-vcpkg",
-      "inherits": [ ".msvc-17-mt-s", ".vcpkg", ".vcpkg-msvc-static", ".testing" ]
+      "name": "windows-ninja-clangcl-mt-s",
+      "description": "Windows Ninja configuration using clang-cl.exe",
+      "inherits": [ ".windows-ninja-clangcl", ".static", ".testing" ]
     },
 
     {
-      "name": "msvc-17-mt-s-vcpkg-14.40",
-      "inherits": [ "msvc-17-mt-s-vcpkg", ".msvc-17-14.40", ".testing" ]
+      "name": "windows-ninja-clangcl-mt-s-vcpkg",
+      "description": "Windows Ninja configuration using clang-cl.ex and vcpkg",
+      "inherits": [ ".windows-ninja-clangcl", ".static", ".vcpkg-windows-clangcl-static", ".testing" ]
     },
 
-    {
-      "name": "msvc-17-mt-s-vcpkg-14.42",
-      "inherits": [ "msvc-17-mt-s-vcpkg", ".msvc-17-14.42", ".testing" ]
-    },
 
     {
-      "name": "msvc-17-mt-s-vcpkg-14.44",
-      "inherits": [ "msvc-17-mt-s-vcpkg", ".msvc-17-14.44", ".testing" ]
+      "name": "windows-msbuild-msvc-17-mt-s-vcpkg",
+      "description": "Windows MSBuild configuration using ${MSVC_TOOLSET_VERSION} and vcpkg",
+      "inherits": [ ".windows-msbuild-msvc-17", ".static", ".vcpkg-windows-msvc-static" ]
     }
   ],
   "buildPresets": [
     {
-      "name": "ninja-clangcl-mt-s-vcpkg-release",
+      "name": "windows-ninja-clangcl-mt-s-vcpkg-release",
       "inherits": [ ".windows" ],
-      "configurePreset": "ninja-clangcl-mt-s-vcpkg",
+      "configurePreset": "windows-ninja-clangcl-mt-s-vcpkg",
       "inheritConfigureEnvironment": true,
       "configuration": "Release"
     },
     {
-      "name": "msvc-17-mt-s-vcpkg-release",
+      "name": "windows-msbuild-msvc-17-mt-s-vcpkg-release",
       "inherits": [ ".windows" ],
-      "configurePreset": "msvc-17-mt-s-vcpkg",
+      "configurePreset": "windows-msbuild-msvc-17-mt-s-vcpkg",
+      "inheritConfigureEnvironment": true,
+      "configuration": "Release"
+    },
+    {
+      "name": "linux-ninja-clang-s-vcpkg-release",
+      "inherits": [ ".linux" ],
+      "configurePreset": "linux-ninja-clang-s-vcpkg",
       "inheritConfigureEnvironment": true,
       "configuration": "Release"
     }
   ],
   "testPresets": [
     {
-      "name": "ninja-clangcl-mt-s-vcpkg-release-test",
+      "name": "windows-ninja-clangcl-mt-s-vcpkg-test",
       "inherits": [ ".windows" ],
-      "configurePreset": "ninja-clangcl-mt-s-vcpkg",
+      "configurePreset": "windows-ninja-clangcl-mt-s-vcpkg",
       "inheritConfigureEnvironment": true,
       "configuration": "Release"
     },
     {
-      "name": "msvc-17-mt-s-vcpkg-release-test",
+      "name": "windows-msbuild-msvc-17-mt-s-vcpkg-test",
       "inherits": [ ".windows" ],
-      "configurePreset": "msvc-17-mt-s-vcpkg",
+      "configurePreset": "windows-msbuild-msvc-17-mt-s-vcpkg",
+      "inheritConfigureEnvironment": true,
+      "configuration": "Release"
+    },
+    {
+      "name": "linux-ninja-clang-s-vcpkg-test",
+      "inherits": [ ".linux" ],
+      "configurePreset": "linux-ninja-clang-s-vcpkg",
       "inheritConfigureEnvironment": true,
       "configuration": "Release"
     }
   ],
   "workflowPresets": [
     {
-      "name": "ninja-clangcl-mt-s-vcpkg-release-test",
+      "name": "windows-ninja-clangcl-mt-s-vcpkg",
       "steps": [
         {
           "type": "configure",
-          "name": "ninja-clangcl-mt-s-vcpkg"
+          "name": "windows-ninja-clangcl-mt-s-vcpkg"
         },
         {
           "type": "build",
-          "name": "ninja-clangcl-mt-s-vcpkg-release"
+          "name": "windows-ninja-clangcl-mt-s-vcpkg-release"
         },
         {
           "type": "test",
-          "name": "ninja-clangcl-mt-s-vcpkg-release-test"
+          "name": "windows-ninja-clangcl-mt-s-vcpkg-test"
         }
       ]
     },
     {
-      "name": "msvc-17-mt-s-vcpkg-release-test",
+      "name": "windows-msbuild-msvc-17-mt-s-vcpkg",
       "steps": [
         {
           "type": "configure",
-          "name": "msvc-17-mt-s-vcpkg"
+          "name": "windows-msbuild-msvc-17-mt-s-vcpkg"
         },
         {
           "type": "build",
-          "name": "msvc-17-mt-s-vcpkg-release"
+          "name": "windows-msbuild-msvc-17-mt-s-vcpkg-release"
         },
         {
           "type": "test",
-          "name": "msvc-17-mt-s-vcpkg-release-test"
+          "name": "windows-msbuild-msvc-17-mt-s-vcpkg-test"
+        }
+      ]
+    },
+    {
+      "name": "linux-ninja-clang-s-vcpkg",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-ninja-clang-s-vcpkg"
+        },
+        {
+          "type": "build",
+          "name": "linux-ninja-clang-s-vcpkg-release"
+        },
+        {
+          "type": "test",
+          "name": "linux-ninja-clang-s-vcpkg-test"
         }
       ]
     }

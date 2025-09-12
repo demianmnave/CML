@@ -1,0 +1,54 @@
+{
+  "version": 6,
+  "include": [
+    "common.json",
+    "ninja.json"
+  ],
+  "configurePresets": [
+    {
+      "name": ".linux-ninja-clang",
+      "hidden": true, 
+      "description": "Use clang and clang++ in the current path",
+      "inherits": [ ".common", ".linux", ".ninja" ],
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang$env{ENV_COMPILER_VERSION}",
+        "CMAKE_CXX_COMPILER": "clang++$env{ENV_COMPILER_VERSION}"
+      },
+      "environment": {
+        "CC": "clang$env{ENV_COMPILER_VERSION}",
+        "CXX": "clang++$env{ENV_COMPILER_VERSION}",
+        "ENV_BUILD_SUFFIX": "$env{ENV_COMPILER_VERSION}"
+      }
+    },
+
+    {
+      "name": ".linux-ninja-clang-18",
+      "hidden": true, 
+      "description": "Use clang-18 and clang++-18 in the current path",
+      "inherits": [ ".linux-ninja-clang" ],
+      "environment": {
+        "ENV_COMPILER_VERSION": "-18"
+      }
+    },
+
+    {
+      "name": ".linux-ninja-clang-19",
+      "hidden": true, 
+      "description": "Use clang-19 and clang++-19 in the current path",
+      "inherits": [ ".linux-ninja-clang" ],
+      "environment": {
+        "ENV_COMPILER_VERSION": "-18"
+      }
+    },
+
+    {
+      "name": ".linux-ninja-clang-20",
+      "hidden": true, 
+      "description": "Use clang-20 and clang++-20 in the current path",
+      "inherits": [ ".linux-ninja-clang" ],
+      "environment": {
+        "ENV_COMPILER_VERSION": "-18"
+      }
+    }
+  ]
+}
