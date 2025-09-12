@@ -18,8 +18,8 @@ jobs:
       matrix:
         include:
         - ver: "13"
-        # - ver: "14"
-        # - ver: "15"
+        - ver: "14"
+        - ver: "15"
     env:
       ENV_COMPILER_VERSION: "-${{ matrix.ver }}"
     name: "(linux-ninja-gcc-s-vcpkg-${{ matrix.ver }})"
