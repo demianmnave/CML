@@ -45,6 +45,8 @@ if(MSVC)
   if(PROJECT_IS_TOP_LEVEL)
     list(APPEND _cml_private_cxx_options
       /W4          # Most warnings
+      /MP
+      /arch:AVX
     )
   endif()
 

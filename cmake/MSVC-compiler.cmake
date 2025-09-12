@@ -34,7 +34,6 @@ if(MSVC)
   set(_cml_private_cxx_options
     /permissive-   # Strict(er) standards conformance
     /GL            # Link-time code generation
-    /arch:AVX
   )
 
   if(PROJECT_IS_TOP_LEVEL)
@@ -45,6 +44,7 @@ if(MSVC)
       /EHsc
       /bigobj
       /utf-8
+      /arch:AVX
     )
   endif()
 
