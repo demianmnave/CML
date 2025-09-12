@@ -1,5 +1,6 @@
-[![msvc](https://github.com/demianmnave/CML/actions/workflows/msvc.yml/badge.svg)](https://github.com/demianmnave/CML/actions/workflows/msvc.yml)
-[![clangcl](https://github.com/demianmnave/CML/actions/workflows/clangcl.yml/badge.svg)](https://github.com/demianmnave/CML/actions/workflows/clangcl.yml)
+[![windows-msbuild-msvc-17](https://github.com/demianmnave/CML/actions/workflows/windows-msbuild-msvc-17.yml/badge.svg)](https://github.com/demianmnave/CML/actions/workflows/windows-msbuild-msvc-17.yml)
+[![windows-ninja-clangcl](https://github.com/demianmnave/CML/actions/workflows/windows-ninja-clangcl.yml/badge.svg)](https://github.com/demianmnave/CML/actions/workflows/windows-ninja-clangcl.yml)
+[![linux-ninja-clang](https://github.com/demianmnave/CML/actions/workflows/linux-ninja-clang.yml/badge.svg)](https://github.com/demianmnave/CML/actions/workflows/linux-ninja-clang.yml)
 
 ## Configurable Math Library
 For CML version 1, please see https://github.com/demianmnave/CML1.

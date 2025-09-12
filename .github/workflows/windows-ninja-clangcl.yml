@@ -1,5 +1,5 @@
 
-name: clang-cl
+name: windows-ninja-clangcl
 on:
   pull_request:
     paths:
@@ -13,8 +13,8 @@ on:
       - 'vcpkg.json'
 
 jobs:
-  clang-cl:
-    name: "clang-cl"
+  build-and-test:
+    name: "windows-ninja-clangcl-mt-s-vcpkg"
     runs-on: windows-latest
     steps:
         # Set the number of CMake build and test jobs

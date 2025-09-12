@@ -1,5 +1,5 @@
 
-name: msvc
+name: windows-msbuild-msvc-17
 on:
   pull_request:
     paths:
@@ -13,7 +13,7 @@ on:
       - 'vcpkg.json'
 
 jobs:
-  msvc-17:
+  build-and-test:
     strategy:
       fail-fast: false
       matrix:
@@ -25,9 +25,8 @@ jobs:
         - ver: "14.44"
           vsver: "17.14"
     env:
-      # Consumed by .msvc-17 in cmake/presets/msvc.json:
       MSVC_TOOLSET_VERSION: ${{ matrix.ver }}
-    name: "(msvc-17-${{ matrix.ver }})"
+    name: "(windows-msbuild-msvc-17-mt-s-vcpkg-${{ matrix.ver }})"
     runs-on: windows-latest
     steps:
         # Set the number of CMake build and test jobs
