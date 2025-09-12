@@ -40,7 +40,7 @@ To see the available build presets, execute:
 ```bash
 cmake --build --list-presets
 ```
-To use one of the predefined configure presets, for example _cml-dev-msvc17-clangcl-mt-s_ to use the Visual Studio 2022 IDE with ClangCL:
+To use one of the predefined configure presets, for example _windows-msbuild-msvc-17-mt-s-vcpkg_ to use the Visual Studio 2022 IDE with the current MSVC compiler and vcpkg:
 ```bash
-cmake --preset=cml-dev-msvc17-clangcl-mt-s
+cmake --preset=windows-msbuild-msvc-17-mt-s-vcpkg
 ```
