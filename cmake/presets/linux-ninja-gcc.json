@@ -1,0 +1,54 @@
+{
+  "version": 6,
+  "include": [
+    "common.json",
+    "ninja.json"
+  ],
+  "configurePresets": [
+    {
+      "name": ".linux-ninja-gcc",
+      "hidden": true, 
+      "description": "Use gcc and g++ in the current path",
+      "inherits": [ ".common", ".linux", ".ninja" ],
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc$env{ENV_COMPILER_VERSION}",
+        "CMAKE_CXX_COMPILER": "g++$env{ENV_COMPILER_VERSION}"
+      },
+      "environment": {
+        "CC": "gcc$env{ENV_COMPILER_VERSION}",
+        "CXX": "g++$env{ENV_COMPILER_VERSION}",
+        "ENV_BUILD_SUFFIX": "$env{ENV_COMPILER_VERSION}"
+      }
+    },
+
+    {
+      "name": ".linux-ninja-gcc-13",
+      "hidden": true, 
+      "description": "Use gcc-13 and gcc++-13 in the current path",
+      "inherits": [ ".linux-ninja-gcc" ],
+      "environment": {
+        "ENV_COMPILER_VERSION": "-13"
+      }
+    },
+
+    {
+      "name": ".linux-ninja-gcc-14",
+      "hidden": true, 
+      "description": "Use gcc-14 and gcc++-14 in the current path",
+      "inherits": [ ".linux-ninja-gcc" ],
+      "environment": {
+        "ENV_COMPILER_VERSION": "-14"
+      }
+    },
+
+    {
+      "name": ".linux-ninja-gcc-15",
+      "hidden": true, 
+      "description": "Use gcc-15 and gcc++-15 in the current path",
+      "inherits": [ ".linux-ninja-gcc" ],
+      "environment": {
+        "ENV_COMPILER_VERSION": "-15"
+      }
+    }
+  ]
+}

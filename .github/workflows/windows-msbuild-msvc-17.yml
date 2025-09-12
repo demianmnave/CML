@@ -1,0 +1,118 @@
+
+name: windows-msbuild-msvc-17
+on:
+  pull_request:
+    paths:
+      - '.github/**'
+      - 'cmake/**'
+      - 'cml/**'
+      - 'tests/**'
+      - 'CMakeLists.txt'
+      - 'CMakePresets.json'
+      - 'CML.cmake'
+      - 'vcpkg.json'
+
+jobs:
+  build-and-test:
+    permissions:
+      checks: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - ver: "14.40"
+          vsver: "17.10"
+        - ver: "14.42"
+          vsver: "17.12"
+        - ver: "14.44"
+          vsver: "17.14"
+    env:
+      MSVC_TOOLSET_VERSION: ${{ matrix.ver }}
+    name: "(windows-msbuild-msvc-17-mt-s-vcpkg-${{ matrix.ver }})"
+    runs-on: windows-latest
+    steps:
+        # Set the number of CMake build and test jobs
+      - name: Set CMake and CTest concurrency
+        shell: pwsh
+        run: |
+          $ncore = (Get-WmiObject -Class Win32_Processor -Property NumberOfCores `
+                   | Measure-Object -Property NumberOfCores -Sum).Sum
+          "CMAKE_BUILD_PARALLEL_LEVEL=$($ncore)" | Out-File -Append $env:GITHUB_ENV
+          "CTEST_PARALLEL_LEVEL=$($ncore)" | Out-File -Append $env:GITHUB_ENV
+      - name: Install MSVC ${{ matrix.ver }}.${{ matrix.vsver }}
+        shell: pwsh
+        run: |
+          # Determine if the required MSVC version is already installed:
+          $workload = "Microsoft.VisualStudio.Component.VC.${{ matrix.ver }}.${{ matrix.vsver }}.x86.x64"
+
+          Write-Host "Determining if $($workload) is installed..."
+          Install-Module -Name VSSetup -Force
+          $installed = Get-VSSetupInstance -All | Select-VSSetupInstance -Require "$($workload)"
+          if($null -eq $installed) {
+
+            $vsinstaller = 'C:/Program Files (x86)/Microsoft Visual Studio/Installer/vs_installer.exe'
+            if(!(Test-Path -Path $vsinstaller)) {
+              Write-Error "Could not locate the Visual Studio installer"
+              Exit 1;
+            }
+
+            # Install to the latest VS version:
+            $vs = Get-VSSetupInstance -All | Sort-Object -Property InstallationVersion -Descending | Select-Object -First 1
+            $vspath = $vs.InstallationPath
+            Write-Host "... installing $($workload) for $($vspath)"
+            Start-Process -NoNewWindow -Wait -FilePath $vsinstaller -ArgumentList `
+              'modify', '--installPath', "`"$vspath`"", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
+              '--add', "$($workload)"
+
+            # Should exist now:
+            $installed = Get-VSSetupInstance -All | Select-VSSetupInstance -Require "$($workload)"
+            if($null -eq $installed) {
+              Write-Error "Installation of $($workload) for $($vspath) failed"
+              Exit 1;
+            }
+          } else {
+            Write-Host "... $($workload) already installed"
+          }
+      - uses: actions/checkout@v4
+      - uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: "~3.31.0"
+      - uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgJsonGlob: 'vcpkg.json'
+      - name: Build and test
+        shell: pwsh
+        run: |
+           $preset = 'windows-msbuild-msvc-17-mt-s-vcpkg'
+           Write-Host "Executing workflow $($preset) for MSVC $($env:MSVC_TOOLSET_VERSION) with VCPKG_ROOT @ $($env:VCPKG_ROOT)"
+           cmake --workflow --preset=$preset
+      - name: Generate JUnit test results
+        uses: ctrf-io/github-test-reporter@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          report-path: "ctest.xml"
+          status-check-name: "windows-msbuild-msvc-17-mt-s-${{ matrix.ver }} CTest Report"
+          status-check: true
+          annotate: true
+          summary: true
+          use-suite-name: true
+          file-report: true
+          failed-report: true
+          upload-artifact: false
+          integrations-config: |
+            {
+              "junit-to-ctrf": {
+                "enabled": true,
+                "action": "convert",
+                "options": {
+                  "output": "ctrf.json",
+                  "toolname": "junit-to-ctrf",
+                  "useSuiteName": false,
+                  "env": {
+                    "appName": "cml"
+                  }
+                }
+              }
+            }
+        if: ${{ always() }}

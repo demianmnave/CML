@@ -1,0 +1,99 @@
+name: linux-ninja-clang
+on:
+  pull_request:
+    paths:
+      - '.github/**'
+      - 'cmake/**'
+      - 'cml/**'
+      - 'tests/**'
+      - 'CMakeLists.txt'
+      - 'CMakePresets.json'
+      - 'CML.cmake'
+      - 'vcpkg.json'
+
+jobs:
+  build-and-test:
+    permissions:
+      checks: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - ver: "18"
+        - ver: "19"
+        - ver: "20"
+    env:
+      ENV_COMPILER_VERSION: "-${{ matrix.ver }}"
+    name: "(linux-ninja-clang-s-vcpkg-${{ matrix.ver }})"
+    runs-on: ubuntu-latest
+    steps:
+        # Set the number of CMake build and test jobs
+      - name: Set CMake and CTest concurrency
+        shell: bash
+        run: |
+          ncore=`nproc`
+          echo "CMAKE_BUILD_PARALLEL_LEVEL=$ncore" >> GITHUB_ENV
+          echo "CTEST_PARALLEL_LEVEL=$ncore" >> $GITHUB_ENV
+      - name: Install prerequisites
+        shell: bash
+        run: |
+          if [ ! -x "$(command -v sudo)" ]; then
+            apt-get update -qqy
+            apt-get install -qqy sudo
+          else
+            sudo apt-get -qq update
+          fi
+          sudo apt-get install -qqy ca-certificates gpg wget nodejs
+      - name: Install vcpkg prerequisites
+        shell: bash
+        run: |
+          sudo apt-get install -qqy --no-install-recommends curl zip unzip tar pkg-config git
+      - name: Install clang-${{ matrix.ver }}
+        shell: bash
+        run: |
+          if [ ! -x "$(command -v clang++-${{ matrix.ver }})" ]; then
+            sudo apt-get install -qqy --no-install-recommends clang++-${{ matrix.ver }}
+          fi
+      - uses: actions/checkout@v4
+      - uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: "~3.31.0"
+      - uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgJsonGlob: 'vcpkg.json'
+      - name: Build and test
+        shell: bash
+        run: |
+           preset="linux-ninja-clang-s-vcpkg"
+           echo "Executing workflow $preset for clang-${{ matrix.ver }} with VCPKG_ROOT @ $VCPKG_ROOT"
+           cmake --workflow --preset=$preset
+      - name: Generate JUnit test results
+        uses: ctrf-io/github-test-reporter@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          report-path: "ctest.xml"
+          status-check-name: "linux-ninja-clang-s-vcpkg-${{ matrix.ver }} CTest Report"
+          status-check: true
+          annotate: true
+          summary: true
+          use-suite-name: true
+          file-report: true
+          failed-report: true
+          upload-artifact: false
+          integrations-config: |
+            {
+              "junit-to-ctrf": {
+                "enabled": true,
+                "action": "convert",
+                "options": {
+                  "output": "ctrf.json",
+                  "toolname": "junit-to-ctrf",
+                  "useSuiteName": false,
+                  "env": {
+                    "appName": "cml"
+                  }
+                }
+              }
+            }
+        if: ${{ always() }}

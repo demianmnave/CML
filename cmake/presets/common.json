@@ -1,0 +1,158 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": ".common",
+      "hidden": true,
+      "description": "Defaults applicable to all configurations",
+      "binaryDir": "${sourceDir}/.build/${presetName}$env{ENV_BUILD_SUFFIX}",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      }
+    },
+
+    {
+      "name": ".windows",
+      "hidden": true,
+      "description": "Mark a configuration as Windows-only",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "type": "equals",
+        "rhs": "Windows"
+      }
+    },
+
+    {
+      "name": ".linux",
+      "hidden": true,
+      "description": "Mark a configuration as Linux-only",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "type": "equals",
+        "rhs": "Linux"
+      }
+    },
+
+    {
+      "name": ".macosx",
+      "hidden": true,
+      "description": "Mark a configuration as MacOS/X-only",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "type": "equals",
+        "rhs": "Darwin"
+      }
+    },
+
+    {
+      "name": ".static",
+      "hidden": true,
+      "description": "Enable static builds",
+      "binaryDir": "${sourceDir}/.build/${presetName}",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "BUILD_SHARED_LIBS": {
+          "type": "BOOL",
+          "value": false
+        },
+        "BUILD_STATIC_RUNTIME": {
+          "type": "BOOL",
+          "value": true
+        }
+      }
+    },
+
+    {
+      "name": ".testing",
+      "hidden": true,
+      "description": "Enable testing",
+      "cacheVariables": {
+        "BUILD_TESTING": {
+          "type": "BOOL",
+          "value": true
+        }
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": ".windows",
+      "hidden": true,
+      "description": "Mark a build configuration as Windows-only",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "type": "equals",
+        "rhs": "Windows"
+      }
+    },
+
+    {
+      "name": ".linux",
+      "hidden": true,
+      "description": "Mark a build configuration as Linux-only",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "type": "equals",
+        "rhs": "Linux"
+      }
+    },
+
+    {
+      "name": ".macosx",
+      "hidden": true,
+      "description": "Mark a build configuration as MacOS/X-only",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "type": "equals",
+        "rhs": "Darwin"
+      }
+    }
+  ],
+  "testPresets": [
+    {
+      "name": ".windows",
+      "hidden": true,
+      "description": "Mark a test configuration as Windows-only",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "type": "equals",
+        "rhs": "Windows"
+      }
+    },
+
+    {
+      "name": ".linux",
+      "hidden": true,
+      "description": "Mark a test configuration as Linux-only",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "type": "equals",
+        "rhs": "Linux"
+      }
+    },
+
+    {
+      "name": ".macosx",
+      "hidden": true,
+      "description": "Mark a test configuration as MacOS/X-only",
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "type": "equals",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": ".junit",
+      "hidden": true,
+      "description": "Output a JUnit result to ${sourceDir}/ctest.xml",
+      "output": {
+        "quiet": true,
+        "outputJUnitFile": "${sourceDir}/ctest.xml"
+      }
+    }
+  ]
+}

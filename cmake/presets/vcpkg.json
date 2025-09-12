@@ -1,0 +1,49 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": ".vcpkg",
+      "hidden": true,
+      "description": "Settings applicable to vcpkg-based configurations",
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_INSTALL_OPTIONS": "--no-print-usage",
+        "VCPKG_OVERLAY_TRIPLETS": "${sourceDir}/cmake/vcpkg-triplets"
+      }
+    },
+
+    {
+      "name": ".vcpkg-windows-msvc-static",
+      "hidden": true,
+      "description": "Select the x64-windows-msvc-static triplet",
+      "inherits": [ ".vcpkg" ],
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows-msvc-static",
+        "VCPKG_HOST_TRIPLET": "x64-windows-msvc-static"
+      }
+    },
+
+    {
+      "name": ".vcpkg-windows-clangcl-static",
+      "hidden": true,
+      "description": "Select the x64-windows-llvm-static triplet",
+      "inherits": [ ".vcpkg" ],
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows-llvm-static",
+        "VCPKG_HOST_TRIPLET": "x64-windows-llvm-static"
+      }
+    },
+
+    {
+      "name": ".vcpkg-linux-any-static",
+      "hidden": true,
+      "description": "Select the x64-linux-static triplet",
+      "inherits": [ ".vcpkg" ],
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-linux-static",
+        "VCPKG_HOST_TRIPLET": "x64-linux-static"
+      }
+    }
+  ]
+}

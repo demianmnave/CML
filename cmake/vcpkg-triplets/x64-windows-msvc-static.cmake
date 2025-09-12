@@ -1,0 +1,10 @@
+# Based on ${VCPKG_ROOT}/triplets/x64-windows-static.cmake
+set(VCPKG_TARGET_ARCHITECTURE x64)
+set(VCPKG_CRT_LINKAGE static)
+set(VCPKG_LIBRARY_LINKAGE static)
+
+# Allow the environment to control the MSVC toolset (e.g. 14.40 for VS 17.10):
+set(VCPKG_ENV_PASSTHROUGH_UNTRACKED MSVC_TOOLSET_VERSION)
+if(DEFINED ENV{MSVC_TOOLSET_VERSION})
+  set(VCPKG_PLATFORM_TOOLSET_VERSION $ENV{MSVC_TOOLSET_VERSION})
+endif()
