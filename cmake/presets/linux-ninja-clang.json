@@ -37,7 +37,7 @@
       "description": "Use clang-19 and clang++-19 in the current path",
       "inherits": [ ".linux-ninja-clang" ],
       "environment": {
-        "ENV_COMPILER_VERSION": "-18"
+        "ENV_COMPILER_VERSION": "-19"
       }
     },
 
@@ -47,7 +47,7 @@
       "description": "Use clang-20 and clang++-20 in the current path",
       "inherits": [ ".linux-ninja-clang" ],
       "environment": {
-        "ENV_COMPILER_VERSION": "-18"
+        "ENV_COMPILER_VERSION": "-20"
       }
     }
   ]

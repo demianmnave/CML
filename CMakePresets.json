@@ -4,6 +4,7 @@
     "cmake/presets/windows-msbuild-msvc.json",
     "cmake/presets/windows-ninja-clangcl.json",
     "cmake/presets/linux-ninja-clang.json",
+    "cmake/presets/linux-ninja-gcc.json",
     "cmake/presets/vcpkg.json"
   ],
   "configurePresets": [
@@ -17,6 +18,12 @@
       "name": "linux-ninja-clang-s-vcpkg",
       "description": "Linux Ninja configuration using clang++-${ENV_COMPILER_VERSION} and vcpkg",
       "inherits": [ ".linux-ninja-clang", ".static", ".vcpkg-linux-any-static", ".testing" ]
+    },
+
+    {
+      "name": "linux-ninja-gcc-s-vcpkg",
+      "description": "Linux Ninja configuration using g++-${ENV_COMPILER_VERSION} and vcpkg",
+      "inherits": [ ".linux-ninja-gcc", ".static", ".vcpkg-linux-any-static", ".testing" ]
     },
 
     {
@@ -58,6 +65,13 @@
       "configurePreset": "linux-ninja-clang-s-vcpkg",
       "inheritConfigureEnvironment": true,
       "configuration": "Release"
+    },
+    {
+      "name": "linux-ninja-gcc-s-vcpkg-release",
+      "inherits": [ ".linux" ],
+      "configurePreset": "linux-ninja-gcc-s-vcpkg",
+      "inheritConfigureEnvironment": true,
+      "configuration": "Release"
     }
   ],
   "testPresets": [
@@ -79,6 +93,13 @@
       "name": "linux-ninja-clang-s-vcpkg-test",
       "inherits": [ ".linux" ],
       "configurePreset": "linux-ninja-clang-s-vcpkg",
+      "inheritConfigureEnvironment": true,
+      "configuration": "Release"
+    },
+    {
+      "name": "linux-ninja-gcc-s-vcpkg-test",
+      "inherits": [ ".linux" ],
+      "configurePreset": "linux-ninja-gcc-s-vcpkg",
       "inheritConfigureEnvironment": true,
       "configuration": "Release"
     }
@@ -132,6 +153,23 @@
         {
           "type": "test",
           "name": "linux-ninja-clang-s-vcpkg-test"
+        }
+      ]
+    },
+    {
+      "name": "linux-ninja-gcc-s-vcpkg",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-ninja-gcc-s-vcpkg"
+        },
+        {
+          "type": "build",
+          "name": "linux-ninja-gcc-s-vcpkg-release"
+        },
+        {
+          "type": "test",
+          "name": "linux-ninja-gcc-s-vcpkg-test"
         }
       ]
     }
