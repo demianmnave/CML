@@ -46,8 +46,11 @@ if(MSVC)
     list(APPEND _cml_private_cxx_options
       /W4          # Most warnings
       /MP
-      /arch:AVX
     )
+
+    if(${CMAKE_CXX_COMPILER_ARCHITECTURE_ID} STREQUAL "x64")
+      list(APPEND _cml_private_cxx_options /arch:AVX /clang:-fvectorize)
+    endif()
   endif()
 
   set(_cml_private_exe_link_options /NOIMPLIB)
@@ -74,6 +77,10 @@ else()
       -Wall        # All warnings
       -Wextra
     )
+
+    if(${CMAKE_CXX_COMPILER_ARCHITECTURE_ID} STREQUAL "x86_64")
+      list(APPEND _cml_private_cxx_options -march=native -mavx -fvectorize -fassociative-math)
+    endif()
   endif()
 
   list(APPEND _cml_private_cxx_options_release -O2)

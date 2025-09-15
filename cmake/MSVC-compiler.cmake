@@ -44,8 +44,11 @@ if(MSVC)
       /EHsc
       /bigobj
       /utf-8
-      /arch:AVX
     )
+
+    if(${CMAKE_CXX_COMPILER_ARCHITECTURE_ID} STREQUAL "x64")
+      list(APPEND _cml_private_cxx_options /arch:AVX)
+    endif()
   endif()
 
   set(_cml_private_exe_link_options /NOIMPLIB /NOEXP /LTCG)

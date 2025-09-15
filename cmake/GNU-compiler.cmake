@@ -20,6 +20,10 @@ if(PROJECT_IS_TOP_LEVEL)
     -Wall        # All warnings
     -Wextra
   )
+
+  if(${CMAKE_CXX_COMPILER_ARCHITECTURE_ID} STREQUAL "x86_64")
+    list(APPEND _cml_private_cxx_options -march=native -mavx -fvectorize -fassociative-math)
+  endif()
 endif()
 
 list(APPEND _cml_private_cxx_options_debug -g)
