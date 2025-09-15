@@ -4,6 +4,39 @@
 
 include(target-functions)
 
+# Settings to auto-create Vesion.h:
+set(VERSION_FILE_IN "${CMAKE_CURRENT_SOURCE_DIR}/version.h.in")
+set(VERSION_FILE_OUT "${CMAKE_BINARY_DIR}/cml/version.h")
+
+macro(pad_string string_in pad_in space var_out)
+  string(LENGTH ${string_in} len)
+  math(EXPR count "${space} - ${len}" OUTPUT_FORMAT DECIMAL)
+  string(REPEAT ${pad_in} ${count} padding)
+  set(${var_out} "${padding}${string_in}")
+endmacro()
+
+set(VERSION_MAJOR ${CML_VERSION_MAJOR})
+set(VERSION_MINOR ${CML_VERSION_MINOR})
+set(VERSION_PATCH ${CML_VERSION_PATCH})
+
+# Make a version number as <M><mmm><pp>, with minor and patch padded with
+# 0s up to length 3 and 2, respectively:
+pad_string(${VERSION_MINOR} "0" 3 _padded_minor)
+pad_string(${VERSION_PATCH} "0" 2 _padded_patch)
+# TODO These could be configurable.
+
+# The version number and string:
+set(VERSION_NUMBER "${VERSION_MAJOR}${_padded_minor}${_padded_patch}")
+set(VERSION_STRING "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+
+# Complete the version update:
+configure_file("${VERSION_FILE_IN}" "${VERSION_FILE_OUT}" @ONLY)
+set_source_files_properties(${VERSION_FILE_OUT} PROPERTIES GENERATED TRUE)
+
+set(GENERATED_HEADERS
+  ${VERSION_FILE_OUT}
+)
+
 set(main_HEADERS
   cml.h
   matrix.h
@@ -11,7 +44,6 @@ set(main_HEADERS
   types.h
   util.h
   vector.h
-  version.h
 )
 
 set(common_HEADERS
@@ -350,6 +382,7 @@ set(util_HEADERS
 )
 
 set(all_headers
+  version.h.in
   ${main_HEADERS}
   ${common_HEADERS}
   ${common_mpl_HEADERS}
@@ -371,9 +404,16 @@ cml_add_library(cml INTERFACE
  SOURCES ${all_headers}
   PUBLIC FILE_SET headers TYPE HEADERS
   FILES ${all_headers} BASE_DIRS ${PROJECT_SOURCE_DIR}
+  PUBLIC FILE_SET generated TYPE HEADERS
+  FILES ${GENERATED_HEADERS} BASE_DIRS ${CMAKE_BINARY_DIR}
  FOLDER "/"
 )
 target_include_directories(cml INTERFACE
  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+ $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
 )
+
+# Needs to be separate:
+target_sources(cml PRIVATE ${GENERATED_HEADERS})
+source_group("/" FILES ${GENERATED_HEADERS})
