@@ -13,7 +13,6 @@
 
 namespace cml {
 namespace detail {
-
 /** Generate a random 2D unit vector in a cone with direction @c d and
  * half-angle @c a, given in radians.
  */
@@ -56,7 +55,7 @@ random_unit(writable_vector<Sub1>& n, const readable_vector<Sub2>& d,
   cml::random_unit(n);
 
   /* Reorient n to be within 90 degrees of d: */
-  auto cos_O = dot(n, d);  // [-1,1]
+  auto cos_O = dot(n, d); // [-1,1]
   if(cos_O < 0) {
     n = -n;
     cos_O = -cos_O;
@@ -83,11 +82,10 @@ random_unit(writable_vector<Sub1>& n, const readable_vector<Sub2>& d,
     / a_traits::sin(a);
   /* Note: n is normalized by dividing by sin(a). */
 }
-
-}  // namespace detail
+} // namespace detail
 
 template<class Sub, class RNG>
-inline void
+void
 random_unit(writable_vector<Sub>& n, RNG& gen)
 {
   using value_type = value_type_trait_of_t<Sub>;
@@ -112,13 +110,11 @@ random_unit(writable_vector<Sub>& n, RNG& gen)
 }
 
 template<class Sub>
-inline void
+void
 random_unit(writable_vector<Sub>& n)
 {
-  /* Use the default generator: */
-  std::default_random_engine gen(std::rand());
-
-  /* Generate n: */
+  static std::random_device rd;
+  static std::default_random_engine gen(rd());
   random_unit(n, gen);
 }
 
@@ -136,5 +132,4 @@ random_unit(writable_vector<Sub1>& n, const readable_vector<Sub2>& d,
   cml::detail::check_or_resize(n, d);
   detail::random_unit(n, d, a, cml::int_c<array_size_of_c<Sub2>::value>());
 }
-
-}  // namespace cml
+} // namespace cml
