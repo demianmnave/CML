@@ -1,6 +1,7 @@
 # GCC compiler defaults.
 
 include_guard()
+include(host-functions)
 
 message(STATUS "${PROJECT_NAME}: configuring for ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
 
@@ -21,7 +22,8 @@ if(PROJECT_IS_TOP_LEVEL)
     -Wextra
   )
 
-  if(${CMAKE_CXX_COMPILER_ARCHITECTURE_ID} STREQUAL "x86_64")
+  cml_get_host_arch(_arch)
+  if(${_arch} STREQUAL "x64")
     list(APPEND _cml_private_cxx_options -march=native -mavx -fvectorize -fassociative-math)
   endif()
 endif()
