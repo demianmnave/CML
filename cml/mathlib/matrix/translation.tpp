@@ -12,10 +12,9 @@
 
 namespace cml {
 namespace detail {
-
 /* Base case, set a single basis element (I,J): */
 template<int I, int J, class Sub, class E>
-inline void
+void
 matrix_set_basis(writable_matrix<Sub>& m, const E& e)
 {
   m.set_basis_element(I, J, e);
@@ -25,7 +24,7 @@ matrix_set_basis(writable_matrix<Sub>& m, const E& e)
  * (I,J+1):
  */
 template<int I, int J, class Sub, class E, class... Es>
-inline void
+void
 matrix_set_basis(writable_matrix<Sub>& m, const E& e, const Es&... es)
 {
   m.set_basis_element(I, J, e);
@@ -34,7 +33,7 @@ matrix_set_basis(writable_matrix<Sub>& m, const E& e, const Es&... es)
 
 /* Entry case: set basis vector I from the items in Es: */
 template<int I, class Sub, class... Es>
-inline void
+void
 matrix_set_basis(writable_matrix<Sub>& m, const Es&... es)
 {
   static_assert(cml::are_convertible<value_type_trait_of_t<Sub>, Es...>::value,
@@ -43,13 +42,12 @@ matrix_set_basis(writable_matrix<Sub>& m, const Es&... es)
   /* Recursively set basis vector I, starting at element 0: */
   matrix_set_basis<I, 0>(m, es...);
 }
-
-}  // namespace detail
+} // namespace detail
 
 /* 2D translation: */
 
 template<class Sub, class E0, class E1>
-inline void
+void
 matrix_set_translation_2D(writable_matrix<Sub>& m, const E0& e0, const E1& e1)
 {
   cml::check_affine_2D(m);
@@ -57,7 +55,7 @@ matrix_set_translation_2D(writable_matrix<Sub>& m, const E0& e0, const E1& e1)
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_set_translation_2D(writable_matrix<Sub1>& m,
   const readable_vector<Sub2>& v)
 {
@@ -67,7 +65,7 @@ matrix_set_translation_2D(writable_matrix<Sub1>& m,
 }
 
 template<class Sub, class E0, class E1>
-inline void
+void
 matrix_get_translation_2D(const readable_matrix<Sub>& m, E0& e0, E1& e1)
 {
   static_assert(cml::are_convertible<value_type_trait_of_t<Sub>, E0, E1>::value,
@@ -79,7 +77,7 @@ matrix_get_translation_2D(const readable_matrix<Sub>& m, E0& e0, E1& e1)
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_translation_2D(const readable_matrix<Sub>& m)
   -> n_basis_vector_of_t<Sub, 2>
 {
@@ -93,7 +91,7 @@ matrix_get_translation_2D(const readable_matrix<Sub>& m)
 }
 
 template<class Sub, class E0, class E1>
-inline void
+void
 matrix_translation_2D(writable_matrix<Sub>& m, const E0& e0, const E1& e1)
 {
   m.identity();
@@ -101,7 +99,7 @@ matrix_translation_2D(writable_matrix<Sub>& m, const E0& e0, const E1& e1)
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_translation_2D(writable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
 {
   m.identity();
@@ -111,7 +109,7 @@ matrix_translation_2D(writable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
 /* 3D translation: */
 
 template<class Sub, class E0, class E1, class E2>
-inline void
+void
 matrix_set_translation(writable_matrix<Sub>& m, const E0& e0, const E1& e1,
   const E2& e2)
 {
@@ -120,7 +118,7 @@ matrix_set_translation(writable_matrix<Sub>& m, const E0& e0, const E1& e1,
 }
 
 template<class Sub, class E0, class E1>
-inline void
+void
 matrix_set_translation(writable_matrix<Sub>& m, const E0& e0, const E1& e1)
 {
   using zero_type = value_type_trait_of_t<Sub>;
@@ -129,7 +127,7 @@ matrix_set_translation(writable_matrix<Sub>& m, const E0& e0, const E1& e1)
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_set_translation(writable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
 {
   using zero_type = value_type_trait_of_t<Sub1>;
@@ -140,7 +138,7 @@ matrix_set_translation(writable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
 }
 
 template<class Sub, class E0, class E1, class E2>
-inline void
+void
 matrix_get_translation(const readable_matrix<Sub>& m, E0& e0, E1& e1, E2& e2)
 {
   static_assert(
@@ -154,7 +152,7 @@ matrix_get_translation(const readable_matrix<Sub>& m, E0& e0, E1& e1, E2& e2)
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_translation(const readable_matrix<Sub>& m)
   -> n_basis_vector_of_t<Sub, 3>
 {
@@ -168,7 +166,7 @@ matrix_get_translation(const readable_matrix<Sub>& m)
 }
 
 template<class Sub, class E0, class E1, class E2>
-inline void
+void
 matrix_translation(writable_matrix<Sub>& m, const E0& e0, const E1& e1,
   const E2& e2)
 {
@@ -177,7 +175,7 @@ matrix_translation(writable_matrix<Sub>& m, const E0& e0, const E1& e1,
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_translation(writable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
 {
   m.identity();
@@ -185,14 +183,13 @@ matrix_translation(writable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
 }
 
 template<class Sub, class E0, class E1>
-inline void
+void
 matrix_translation(writable_matrix<Sub>& m, const E0& e0, const E1& e1)
 {
   m.identity();
   matrix_set_translation(m, e0, e1);
 }
-
-}  // namespace cml
+} // namespace cml
 
 
 #if 0
@@ -203,16 +200,16 @@ matrix_translation(writable_matrix<Sub>& m, const E0& e0, const E1& e1)
 //////////////////////////////////////////////////////////////////////////////
 
 /** Get the translation of a 3D affine transform */
-template < class MatT > vector< typename MatT::value_type, fixed<3> >
+template<class MatT> vector<typename MatT::value_type, fixed<3>>
 matrix_get_view_translation(const MatT& m)
 {
-    typedef typename MatT::value_type value_type;
-    typedef vector< value_type, fixed<3> > vector_type;
-    
-    vector_type x, y, z;
-    matrix_get_basis_vectors(m,x,y,z);
-    vector_type p = matrix_get_translation(m);
-    return vector_type(-dot(p,x),-dot(p,y),-dot(p,z));
+  typedef typename MatT::value_type value_type;
+  typedef vector<value_type, fixed<3>> vector_type;
+
+  vector_type x, y, z;
+  matrix_get_basis_vectors(m, x, y, z);
+  vector_type p = matrix_get_translation(m);
+  return vector_type(-dot(p, x), -dot(p, y), -dot(p, z));
 }
 
 #endif

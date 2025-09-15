@@ -8,7 +8,6 @@
 #include <cml/matrix/matrix.h>
 
 namespace cml {
-
 /** @defgroup matrix_types Predefined Matrix Types */
 /*@{*/
 
@@ -136,5 +135,4 @@ using external34d_c = matrix<double, external<3, 4>, col_basis, col_major>;
 using externalmnd_c = matrix<double, external<>, col_basis, col_major>;
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml

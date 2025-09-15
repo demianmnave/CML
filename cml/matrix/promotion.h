@@ -16,7 +16,6 @@
 #include <cml/matrix/matrix.h>
 
 namespace cml {
-
 /** Determine an appropriate storage type to use when combining matrix
  * expressions via a pairwise binary operator.
  *
@@ -51,7 +50,7 @@ template<class Storage1, class Storage2> struct matrix_binary_storage_promote
 /** Convenience alias for matrix_binary_storage_promote. */
 template<class Storage1, class Storage2>
 using matrix_binary_storage_promote_t =
-  typename matrix_binary_storage_promote<Storage1, Storage2>::type;
+typename matrix_binary_storage_promote<Storage1, Storage2>::type;
 
 
 /** Specializable class to determine a temporary type that can store the
@@ -65,8 +64,8 @@ struct matrix_inner_product_promote;
  */
 template<class Sub1, class Sub2>
 struct matrix_inner_product_promote<Sub1, Sub2,
-  typename std::enable_if<is_matrix<Sub1>::value
-    && is_matrix<Sub2>::value>::type>
+    typename std::enable_if<is_matrix<Sub1>::value
+      && is_matrix<Sub2>::value>::type>
 {
   using left_type = cml::unqualified_type_t<Sub1>;
   using right_type = cml::unqualified_type_t<Sub2>;
@@ -78,18 +77,22 @@ struct matrix_inner_product_promote<Sub1, Sub2,
   using right_storage_type = storage_type_of_t<right_traits>;
 
   /* Deduce the element type: */
-  using value_type = value_type_trait_promote_t<left_value_type, right_value_type>;
+  using value_type = value_type_trait_promote_t<left_value_type,
+    right_value_type>;
 
   /* Determine the common unbound storage type from the bound proxy types,
    * preferring a dynamic-size type unless the resulting matrix can be
    * fixed-size:
    */
-  using left_proxy_type = rebind_matrix_storage_t<proxy_type_of_t<left_storage_type>>;
-  using right_proxy_type = rebind_matrix_storage_t<proxy_type_of_t<right_storage_type>>;
+  using left_proxy_type = rebind_matrix_storage_t<proxy_type_of_t<
+    left_storage_type>>;
+  using right_proxy_type = rebind_matrix_storage_t<proxy_type_of_t<
+    right_storage_type>>;
   static const int left_rows = left_proxy_type::array_rows;
   static const int right_cols = right_proxy_type::array_cols;
   static const bool is_fixed = left_rows > 0 && right_cols > 0;
-  using unbound_type = storage_promote_t<left_proxy_type, right_proxy_type, !is_fixed>;
+  using unbound_type = storage_promote_t<left_proxy_type, right_proxy_type, !
+    is_fixed>;
 
   /* Determine the new matrix size: */
   static const int array_rows = is_fixed ? left_rows : -1;
@@ -116,8 +119,8 @@ struct matrix_inner_product_promote<Sub1, Sub2,
  */
 template<class Sub1, class Sub2>
 struct matrix_inner_product_promote<Sub1, Sub2,
-  typename std::enable_if<(is_vector<Sub1>::value && is_matrix<Sub2>::value)
-    || (is_matrix<Sub1>::value && is_vector<Sub2>::value)>::type>
+    typename std::enable_if<(is_vector<Sub1>::value && is_matrix<Sub2>::value)
+      || (is_matrix<Sub1>::value && is_vector<Sub2>::value)>::type>
 {
   using left_type = cml::unqualified_type_t<Sub1>;
   using right_type = cml::unqualified_type_t<Sub2>;
@@ -140,7 +143,8 @@ struct matrix_inner_product_promote<Sub1, Sub2,
   using matrix_storage_type = storage_type_of_t<matrix_traits>;
 
   /* Deduce the element type: */
-  using value_type = value_type_trait_promote_t<vector_value_type, matrix_value_type>;
+  using value_type = value_type_trait_promote_t<vector_value_type,
+    matrix_value_type>;
 
   /* The resulting vector size comes from the bound matrix proxy rows or
    * columns, depending on pre- or post-multiplication:
@@ -167,12 +171,13 @@ struct matrix_inner_product_promote<Sub1, Sub2,
    * fixed-size:
    */
   static const bool is_fixed = array_size > 0;
-  using unbound_type = storage_promote_t<vector_proxy_type, matrix_proxy_type, !is_fixed>;
+  using unbound_type = storage_promote_t<vector_proxy_type, matrix_proxy_type, !
+    is_fixed>;
   using resized_type = resize_storage_t<unbound_type, array_size>;
 
   /* Prefer the unbound vector proxy type when possible: */
   using proxy_type = cml::if_t<
-    /**/ (is_fixed&& is_fixed_size<vector_proxy_type>::value)
+    /**/ (is_fixed && is_fixed_size<vector_proxy_type>::value)
     || (!is_fixed && is_dynamic_size<vector_proxy_type>::value),
     vector_unbound_type, resized_type>;
 
@@ -183,7 +188,7 @@ struct matrix_inner_product_promote<Sub1, Sub2,
 /** Convenience alias for matrix_inner_product_promote. */
 template<class Sub1, class Sub2>
 using matrix_inner_product_promote_t =
-  typename matrix_inner_product_promote<Sub1, Sub2>::type;
+typename matrix_inner_product_promote<Sub1, Sub2>::type;
 
 template<class Storage1, class Storage2>
 struct matrix_outer_product_storage_promote
@@ -194,24 +199,27 @@ struct matrix_outer_product_storage_promote
 
   /* Deduce the left matrix storage type from the vector storage: */
   static const int left_size = Storage1::array_size;
-  using left_unbound_type = reshape_storage_t<typename Storage1::unbound_type, left_size, -1>;
+  using left_unbound_type = reshape_storage_t<typename Storage1::unbound_type,
+    left_size, -1>;
   using left_storage_type = rebind_matrix_storage_t<left_unbound_type>;
 
   /* Deduce the right matrix storage type from the vector storage: */
   static const int right_size = Storage2::array_size;
-  using right_unbound_type = reshape_storage_t<typename Storage2::unbound_type, -1, right_size>;
+  using right_unbound_type = reshape_storage_t<typename Storage2::unbound_type,
+    -1, right_size>;
   using right_storage_type = rebind_matrix_storage_t<right_unbound_type>;
 
   /* Determine the common storage type, based on the storage types of its
    * subexpressions:
    */
-  using type = matrix_binary_storage_promote_t<left_storage_type, right_storage_type>;
+  using type = matrix_binary_storage_promote_t<left_storage_type,
+    right_storage_type>;
 };
 
 /** Convenience alias for matrix_outer_product_promote. */
 template<class Storage1, class Storage2>
 using matrix_outer_product_storage_promote_t =
-  typename matrix_outer_product_storage_promote<Storage1, Storage2>::type;
+typename matrix_outer_product_storage_promote<Storage1, Storage2>::type;
 
 
 /** Specializable class to determine a temporary type that can store the
@@ -227,8 +235,8 @@ struct matrix_outer_product_promote;
  */
 template<class Sub1, class Sub2, class Basis, class Layout>
 struct matrix_outer_product_promote<Sub1, Sub2, Basis, Layout,
-  typename std::enable_if<(is_vector<Sub1>::value
-    && is_vector<Sub2>::value)>::type>
+    typename std::enable_if<(is_vector<Sub1>::value
+      && is_vector<Sub2>::value)>::type>
 {
   using left_type = cml::unqualified_type_t<Sub1>;
   using right_type = cml::unqualified_type_t<Sub2>;
@@ -254,7 +262,7 @@ struct matrix_outer_product_promote<Sub1, Sub2, Basis, Layout,
 /** Convenience alias for matrix_outer_product_promote. */
 template<class Sub1, class Sub2, class Basis, class Layout>
 using matrix_outer_product_promote_t =
-  typename matrix_outer_product_promote<Sub1, Sub2, Basis, Layout>::type;
+typename matrix_outer_product_promote<Sub1, Sub2, Basis, Layout>::type;
 
 
 /** Determine the row vector temporary type for matrix type @c Sub. */
@@ -262,7 +270,7 @@ template<class Sub, class Enable = void> struct row_type_of;
 
 template<class Sub>
 struct row_type_of<Sub,
-  typename std::enable_if<cml::is_matrix<Sub>::value>::type>
+    typename std::enable_if<cml::is_matrix<Sub>::value>::type>
 {
   /* Matrix traits and types: */
   using matrix_type = cml::unqualified_type_t<Sub>;
@@ -289,7 +297,7 @@ template<class Sub, class Enable = void> struct col_type_of;
 
 template<class Sub>
 struct col_type_of<Sub,
-  typename std::enable_if<cml::is_matrix<Sub>::value>::type>
+    typename std::enable_if<cml::is_matrix<Sub>::value>::type>
 {
   /* Matrix traits and types: */
   using matrix_type = cml::unqualified_type_t<Sub>;
@@ -309,5 +317,4 @@ struct col_type_of<Sub,
 
 /** Convenience alias for col_type_of. */
 template<class Sub> using col_type_of_t = typename col_type_of<Sub>::type;
-
-}  // namespace cml
+} // namespace cml

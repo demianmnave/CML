@@ -9,7 +9,6 @@
 #include <cml/quaternion/quaternion.h>
 
 namespace cml {
-
 template<class Element, class Order, class Cross>
 struct quaternion_traits<quaternion<Element, fixed<>, Order, Cross>>
 {
@@ -43,7 +42,7 @@ struct quaternion_traits<quaternion<Element, fixed<>, Order, Cross>>
 /** Fixed-length quaternion. */
 template<class Element, class Order, class Cross>
 class quaternion<Element, fixed<>, Order, Cross>
-: public writable_quaternion<quaternion<Element, fixed<>, Order, Cross>>
+  : public writable_quaternion<quaternion<Element, fixed<>, Order, Cross>>
 {
   public:
   using quaternion_type = quaternion<Element, fixed<>, Order, Cross>;
@@ -63,7 +62,6 @@ class quaternion<Element, fixed<>, Order, Cross>
   using order_type = typename traits_type::order_type;
   using cross_type = typename traits_type::cross_type;
 
-
   public:
   /* Include methods from writable_type: */
   using writable_type::W;
@@ -72,14 +70,12 @@ class quaternion<Element, fixed<>, Order, Cross>
   using writable_type::Z;
   using writable_type::operator=;
 
-
   public:
   /** Constant containing the array size. */
   static const int array_size = traits_type::array_size;
 
   /** The dimension (same as array_size). */
   static const int dimension = array_size;
-
 
   public:
   /** Compiler-default constructor.
@@ -177,7 +173,6 @@ class quaternion<Element, fixed<>, Order, Cross>
   /** Construct from std::initializer_list. */
   template<class Other> quaternion(std::initializer_list<Other> l);
 
-
   public:
   /** Return the length of the quaternion. */
   int size() const;
@@ -194,14 +189,12 @@ class quaternion<Element, fixed<>, Order, Cross>
   /** Read-only iterator. */
   const_pointer end() const;
 
-
   public:
   /** Copy assignment. */
   quaternion_type& operator=(const quaternion_type& other);
 
   /** Move assignment. */
   quaternion_type& operator=(quaternion_type&& other);
-
 
   protected:
   /** @name readable_quaternion Interface */
@@ -237,8 +230,7 @@ class quaternion<Element, fixed<>, Order, Cross>
   /** Fixed-length array. */
   value_type m_data[4];
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_QUATERNION_FIXED_COMPILED_TPP
 #include <cml/quaternion/fixed_compiled.tpp>

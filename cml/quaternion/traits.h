@@ -8,7 +8,6 @@
 #include <cml/quaternion/type_util.h>
 
 namespace cml {
-
 /** Specializable class wrapping traits for quaternion<> types. This class
  * is used to simplify static polymorphism by providing a base class the
  * types used by a particular derived class.
@@ -23,5 +22,4 @@ struct traits_of<Quaternion, enable_if_quaternion_t<Quaternion>>
 {
   using type = quaternion_traits<Quaternion>;
 };
-
-}  // namespace cml
+} // namespace cml

@@ -7,7 +7,6 @@
 #include <memory>
 
 namespace cml {
-
 /** Helper to rebind @c T via template rebind<Args...>.
  *
  * @note Only typed parameters are supported.
@@ -34,5 +33,4 @@ template<class T, class... Args> struct rebind_alloc
 /** Convenience alias for rebind_alloc. */
 template<class T, class... Args>
 using rebind_alloc_t = typename rebind_alloc<T, Args...>::other;
-
-}  // namespace cml
+} // namespace cml

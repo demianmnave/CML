@@ -7,24 +7,25 @@
 #endif
 
 namespace cml {
-
 /* fixed_external 'structors: */
 
 template<class E, int R, int C, typename BO, typename L>
 matrix<E, external<R, C>, BO, L>::matrix()
-: m_data(0)
+  : m_data(0)
 {
 }
 
 template<class E, int R, int C, typename BO, typename L>
 matrix<E, external<R, C>, BO, L>::matrix(pointer data)
-: m_data(reinterpret_cast<matrix_data_type*>(data))
-{}
+  : m_data(reinterpret_cast<matrix_data_type*>(data))
+{
+}
 
 template<class E, int R, int C, typename BO, typename L>
 matrix<E, external<R, C>, BO, L>::matrix(matrix_data_type& array)
-: m_data(&array)
-{}
+  : m_data(&array)
+{
+}
 
 template<class E, int R, int C, typename BO, typename L>
 matrix<E, external<R, C>, BO, L>::matrix(matrix_type&& other)
@@ -117,7 +118,7 @@ template<class E, int R, int C, typename BO, typename L>
 template<class Other>
 auto
 matrix<E, external<R, C>, BO, L>::i_put(int i, int j,
-  const Other& v) &->matrix_type&
+  const Other& v) & -> matrix_type&
 {
   s_access(*this, i, j, layout_tag()) = value_type(v);
   return *this;
@@ -132,5 +133,4 @@ matrix<E, external<R, C>, BO, L>::i_put(int i, int j,
   s_access(*this, i, j, layout_tag()) = value_type(v);
   return (matrix_type&&) *this;
 }
-
-}  // namespace cml
+} // namespace cml

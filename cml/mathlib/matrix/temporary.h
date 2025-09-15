@@ -11,7 +11,6 @@
 #include <cml/matrix/traits.h>
 
 namespace cml {
-
 /** Deduce a temporary for basis @c N-vectors of @c Matrix. */
 template<class Matrix, int N, cml::enable_if_matrix_t<Matrix>* = nullptr>
 struct n_basis_vector_of
@@ -62,5 +61,4 @@ struct basis_vector_of
 /** Convenience alias for basis_vector_of. */
 template<class Matrix>
 using basis_vector_of_t = typename basis_vector_of<Matrix>::type;
-
-}  // namespace cml
+} // namespace cml

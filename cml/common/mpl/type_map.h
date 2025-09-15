@@ -13,7 +13,6 @@
 #endif
 
 namespace cml {
-
 /** A bijective mapping of unique types, using a list of arbitrary items as
  * the source of the mapping.  Types in @c Entries must define @c first and
  * @c second, where @c first and @c second are the mapped types.  For
@@ -42,7 +41,6 @@ template<class... Entries> class type_map
     };
   };
 
-
   public:
   /** Type-compare @c T to @c Entry::first.  @c value is set to the
      * comparison result.
@@ -52,7 +50,6 @@ template<class... Entries> class type_map
     using first = typename Entry::first;
     static const bool value = std::is_same<T, first>::value;
   };
-
 
   private:
   /** The internal find<> helper. */
@@ -70,7 +67,6 @@ template<class... Entries> class type_map
     using second = typename E::first;
   };
 
-
   public:
   /** Search the @c first type of the map entries for T.  If the match is
      * found, @c type is set to <@c T2, true>, where @c T2 is the @c first
@@ -86,7 +82,6 @@ template<class... Entries> class type_map
   {
     using type = typename _find<map_second, T, Entries...>::type;
   };
-
 
   private:
   /** Match @c T to @c Entry, and recursively to @c Rest. */
@@ -112,8 +107,7 @@ template<class T1, class T2> struct type_map_item
   using first = T1;
   using second = T2;
 };
-
-}  // namespace cml
+} // namespace cml
 
 #ifdef _MSC_VER
 #  pragma warning(pop)

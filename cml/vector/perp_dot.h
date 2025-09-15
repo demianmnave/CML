@@ -8,7 +8,6 @@
 #include <cml/vector/traits.h>
 
 namespace cml {
-
 /** Convenience alias to determine the scalar type to return from
  * cml::perp_dot.
  */
@@ -28,8 +27,7 @@ using perp_dot_promote_t = value_type_trait_promote_t<Sub1, Sub2>;
 template<class Sub1, class Sub2>
 auto perp_dot(const readable_vector<Sub1>& left,
   const readable_vector<Sub2>& right) -> perp_dot_promote_t<Sub1, Sub2>;
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_VECTOR_PERP_DOT_TPP
 #include <cml/vector/perp_dot.tpp>

@@ -1,6 +1,7 @@
 # Clang compiler defaults.
 
 include_guard()
+include(host-functions)
 
 message(STATUS "${PROJECT_NAME}: configuring for ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION} (${CMAKE_CXX_COMPILER_FRONTEND_VARIANT})")
 
@@ -34,7 +35,6 @@ if(MSVC)
   set(_cml_private_cxx_options
     /permissive-   # Strict(er) standards conformance
     /GL            # Link-time code generation
-    /arch:AVX
   )
 
   if(PROJECT_IS_TOP_LEVEL)
@@ -46,6 +46,11 @@ if(MSVC)
       /bigobj
       /utf-8
     )
+
+    cml_get_host_arch(_arch)
+    if(${_arch} STREQUAL "x64")
+      list(APPEND _cml_private_cxx_options /arch:AVX)
+    endif()
   endif()
 
   set(_cml_private_exe_link_options /NOIMPLIB /NOEXP /LTCG)

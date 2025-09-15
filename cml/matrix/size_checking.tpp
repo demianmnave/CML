@@ -13,7 +13,6 @@
 
 namespace cml {
 namespace detail {
-
 /* For checking inner product sizes of vectors and/or matrices: */
 template<class Sub, class Enable = void> struct inner_rows_of_c;
 template<class Sub, class Enable = void> struct inner_cols_of_c;
@@ -21,7 +20,7 @@ template<class Sub, class Enable = void> struct inner_cols_of_c;
 /* Use the matrix row size for inner products: */
 template<class Sub>
 struct inner_rows_of_c<Sub,
-  typename std::enable_if<array_rows_of_c<Sub>::value != 0>::type>
+    typename std::enable_if<array_rows_of_c<Sub>::value != 0>::type>
 {
   static const int value = array_rows_of_c<Sub>::value;
 };
@@ -29,7 +28,7 @@ struct inner_rows_of_c<Sub,
 /* Use the matrix column size for inner products: */
 template<class Sub>
 struct inner_cols_of_c<Sub,
-  typename std::enable_if<array_cols_of_c<Sub>::value != 0>::type>
+    typename std::enable_if<array_cols_of_c<Sub>::value != 0>::type>
 {
   static const int value = array_cols_of_c<Sub>::value;
 };
@@ -37,7 +36,7 @@ struct inner_cols_of_c<Sub,
 /* The inner product row size for vectors is just the vector size: */
 template<class Sub>
 struct inner_rows_of_c<Sub,
-  typename std::enable_if<array_size_of_c<Sub>::value != 0>::type>
+    typename std::enable_if<array_size_of_c<Sub>::value != 0>::type>
 {
   static const int value = array_size_of_c<Sub>::value;
 };
@@ -45,14 +44,14 @@ struct inner_rows_of_c<Sub,
 /* The inner product column size for vectors is just the vector size: */
 template<class Sub>
 struct inner_cols_of_c<Sub,
-  typename std::enable_if<array_size_of_c<Sub>::value != 0>::type>
+    typename std::enable_if<array_size_of_c<Sub>::value != 0>::type>
 {
   static const int value = array_size_of_c<Sub>::value;
 };
 
 /* Run-time matrix row size for inner products: */
 template<class Sub>
-inline int
+int
 inner_rows_of(const readable_matrix<Sub>& sub)
 {
   return sub.rows();
@@ -60,7 +59,7 @@ inner_rows_of(const readable_matrix<Sub>& sub)
 
 /* Run-time matrix column size for inner products: */
 template<class Sub>
-inline int
+int
 inner_cols_of(const readable_matrix<Sub>& sub)
 {
   return sub.cols();
@@ -68,7 +67,7 @@ inner_cols_of(const readable_matrix<Sub>& sub)
 
 /* Run-time row size for vectors is the vector size: */
 template<class Sub>
-inline int
+int
 inner_rows_of(const readable_vector<Sub>& sub)
 {
   return sub.size();
@@ -76,7 +75,7 @@ inner_rows_of(const readable_vector<Sub>& sub)
 
 /* Run-time column size for vectors is the vector size: */
 template<class Sub>
-inline int
+int
 inner_cols_of(const readable_vector<Sub>& sub)
 {
   return sub.size();
@@ -84,24 +83,25 @@ inner_cols_of(const readable_vector<Sub>& sub)
 
 /* No-op binary matrix expression linear size checking: */
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_linear_size(const readable_matrix<Sub1>&, const Sub2&, any_size_tag)
-{}
+{
+}
 
 /* Compile-time binary matrix expression linear size checking: */
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_linear_size(const readable_matrix<Sub1>&, const Sub2&,
   fixed_size_tag)
 {
   static_assert(array_rows_of_c<Sub1>::value * array_cols_of_c<Sub1>::value
-      == array_size_of_c<Sub2>::value,
+    == array_size_of_c<Sub2>::value,
     "incompatible matrix expression sizes");
 }
 
 /* Run-time binary matrix expression linear size checking: */
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_linear_size(const readable_matrix<Sub1>& left, const Sub2& right,
   dynamic_size_tag)
 {
@@ -114,13 +114,14 @@ check_same_linear_size(const readable_matrix<Sub1>& left, const Sub2& right,
 
 /* No-op matrix linear size checking. */
 template<class Sub>
-inline void
+void
 check_linear_size(const readable_matrix<Sub>&, int, any_size_tag)
-{}
+{
+}
 
 /* Compile-time matrix linear size checking. */
 template<class Sub, int N>
-inline void
+void
 check_linear_size(const readable_matrix<Sub>&, cml::int_c<N>, fixed_size_tag)
 {
   static_assert(array_rows_of_c<Sub>::value * array_cols_of_c<Sub>::value == N,
@@ -129,7 +130,7 @@ check_linear_size(const readable_matrix<Sub>&, cml::int_c<N>, fixed_size_tag)
 
 /* Run-time matrix linear size checking. */
 template<class Sub, class SizeTag>
-inline void
+void
 check_linear_size(const readable_matrix<Sub>& sub, int N, SizeTag)
 {
 #ifndef CML_NO_RUNTIME_MATRIX_SIZE_CHECKS
@@ -140,23 +141,24 @@ check_linear_size(const readable_matrix<Sub>& sub, int N, SizeTag)
 
 /* No-op binary matrix expression size checking: */
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_size(const readable_matrix<Sub1>&, const Sub2&, any_size_tag)
-{}
+{
+}
 
 /* Compile-time binary matrix expression size checking: */
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_size(const readable_matrix<Sub1>&, const Sub2&, fixed_size_tag)
 {
   static_assert((array_rows_of_c<Sub1>::value == array_rows_of_c<Sub2>::value)
-      && (array_cols_of_c<Sub1>::value == array_cols_of_c<Sub2>::value),
+    && (array_cols_of_c<Sub1>::value == array_cols_of_c<Sub2>::value),
     "incompatible matrix expression sizes");
 }
 
 /* Run-time binary matrix expression size checking: */
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_size(const readable_matrix<Sub1>& left, const Sub2& right,
   dynamic_size_tag)
 {
@@ -169,7 +171,7 @@ check_same_size(const readable_matrix<Sub1>& left, const Sub2& right,
 
 /* Compile-time binary matrix expression size checking against a C-array: */
 template<class Sub, class Other, int R, int C>
-inline void
+void
 check_same_size(const readable_matrix<Sub>&, Other const (&)[R][C],
   fixed_size_tag)
 {
@@ -180,7 +182,7 @@ check_same_size(const readable_matrix<Sub>&, Other const (&)[R][C],
 
 /* Run-time binary matrix expression size checking against a C-array: */
 template<class Sub, class Other, int R, int C>
-inline void
+void
 check_same_size(const readable_matrix<Sub>& left, Other const (&)[R][C],
   dynamic_size_tag)
 {
@@ -193,15 +195,16 @@ check_same_size(const readable_matrix<Sub>& left, Other const (&)[R][C],
 
 /* No-op binary matrix expression row size checking: */
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_row_size(const readable_matrix<Sub1>&, const Sub2&, any_size_tag)
-{}
+{
+}
 
 /* Compile-time binary matrix expression row size checking against a
  * fixed-size readable_vector:
  */
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_row_size(const readable_matrix<Sub1>&, const readable_vector<Sub2>&,
   fixed_size_tag)
 {
@@ -213,7 +216,7 @@ check_same_row_size(const readable_matrix<Sub1>&, const readable_vector<Sub2>&,
  * dynamic-size readable_vector:
  */
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_row_size(const readable_matrix<Sub1>& left,
   const readable_vector<Sub2>& right, dynamic_size_tag)
 {
@@ -226,15 +229,16 @@ check_same_row_size(const readable_matrix<Sub1>& left,
 
 /* No-op binary matrix expression column size checking: */
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_col_size(const readable_matrix<Sub1>&, const Sub2&, any_size_tag)
-{}
+{
+}
 
 /* Compile-time binary matrix expression column size checking against a
  * fixed-size readable_vector:
  */
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_col_size(const readable_matrix<Sub1>&, const readable_vector<Sub2>&,
   fixed_size_tag)
 {
@@ -246,7 +250,7 @@ check_same_col_size(const readable_matrix<Sub1>&, const readable_vector<Sub2>&,
  * dynamic-size readable_vector:
  */
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_col_size(const readable_matrix<Sub1>& left,
   const readable_vector<Sub2>& right, dynamic_size_tag)
 {
@@ -259,13 +263,14 @@ check_same_col_size(const readable_matrix<Sub1>& left,
 
 /* No-op matrix inner product size checking: */
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_inner_size(const Sub1&, const Sub2&, any_size_tag)
-{}
+{
+}
 
 /* Compile-time matrix inner product size checking: */
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_inner_size(const Sub1&, const Sub2&, fixed_size_tag)
 {
   using left_traits = traits_of_t<Sub1>;
@@ -278,7 +283,7 @@ check_same_inner_size(const Sub1&, const Sub2&, fixed_size_tag)
 
 /* Run-time matrix inner product size checking: */
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_inner_size(const Sub1& left, const Sub2& right, dynamic_size_tag)
 {
 #ifndef CML_NO_RUNTIME_MATRIX_SIZE_CHECKS
@@ -290,13 +295,14 @@ check_same_inner_size(const Sub1& left, const Sub2& right, dynamic_size_tag)
 
 /* No-op matrix size checking. */
 template<class Sub>
-inline void
+void
 check_size(const readable_matrix<Sub>&, int, int, any_size_tag)
-{}
+{
+}
 
 /* Compile-time checking against constant row and column sizes. */
 template<class Sub, int R, int C>
-inline void
+void
 check_size(const readable_matrix<Sub>&, cml::int_c<R>, cml::int_c<C>,
   fixed_size_tag)
 {
@@ -307,7 +313,7 @@ check_size(const readable_matrix<Sub>&, cml::int_c<R>, cml::int_c<C>,
 
 /* Run-time matrix size checking. */
 template<class Sub, class SizeTag>
-inline void
+void
 check_size(const readable_matrix<Sub>& sub, int R, int C, SizeTag)
 {
 #ifndef CML_NO_RUNTIME_MATRIX_SIZE_CHECKS
@@ -319,15 +325,16 @@ check_size(const readable_matrix<Sub>& sub, int R, int C, SizeTag)
 
 /* No-op minimum matrix size checking. */
 template<class Sub>
-inline void
+void
 check_minimum_size(const readable_matrix<Sub>&, int, int, any_size_tag)
-{}
+{
+}
 
 /* Compile-time minimum size checking against constant row and column
  * sizes.
  */
 template<class Sub, int R, int C>
-inline void
+void
 check_minimum_size(const readable_matrix<Sub>&, cml::int_c<R>, cml::int_c<C>,
   fixed_size_tag)
 {
@@ -338,7 +345,7 @@ check_minimum_size(const readable_matrix<Sub>&, cml::int_c<R>, cml::int_c<C>,
 
 /* Run-time minimum matrix size checking. */
 template<class Sub, class SizeTag>
-inline void
+void
 check_minimum_size(const readable_matrix<Sub>& sub, int R, int C, SizeTag)
 {
 #ifndef CML_NO_RUNTIME_MATRIX_SIZE_CHECKS
@@ -350,13 +357,14 @@ check_minimum_size(const readable_matrix<Sub>& sub, int R, int C, SizeTag)
 
 /* No-op square matrix checking. */
 template<class Sub>
-inline void
+void
 check_square(const readable_matrix<Sub>&, any_size_tag)
-{}
+{
+}
 
 /* Compile-time square matrix checking. */
 template<class Sub>
-inline void
+void
 check_square(const readable_matrix<Sub>&, fixed_size_tag)
 {
   static_assert((array_rows_of_c<Sub>::value == array_cols_of_c<Sub>::value),
@@ -365,7 +373,7 @@ check_square(const readable_matrix<Sub>&, fixed_size_tag)
 
 /* Run-time square matrix checking. */
 template<class Sub, class SizeTag>
-inline void
+void
 check_square(const readable_matrix<Sub>& sub, SizeTag)
 {
 #ifndef CML_NO_RUNTIME_MATRIX_SIZE_CHECKS
@@ -373,13 +381,12 @@ check_square(const readable_matrix<Sub>& sub, SizeTag)
     (array_rows_of(sub) == array_cols_of(sub)), non_square_matrix_error, /**/);
 #endif
 }
-
-}  // namespace detail
+} // namespace detail
 
 /* check_same_linear_size: */
 
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_linear_size(const readable_matrix<Sub1>& left,
   const readable_matrix<Sub1>& right)
 {
@@ -390,23 +397,23 @@ check_same_linear_size(const readable_matrix<Sub1>& left,
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_linear_size(const readable_matrix<Sub1>& left, const Sub2& right,
   enable_if_array_t<Sub2>*)
 {
   using tag1 = size_tag_of_t<Sub1>;
-  using tag2 = tag1;  // dynamic/dynamic or fixed/fixed.
+  using tag2 = tag1; // dynamic/dynamic or fixed/fixed.
   detail::check_same_linear_size(left, right,
     size_check_promote_t<tag1, tag2>());
 }
 
 template<class Sub1, class Sub2>
-inline auto
+auto
 check_same_linear_size(const readable_matrix<Sub1>& left, const Sub2& right)
   -> decltype(right.size(), void())
 {
   using tag1 = size_tag_of_t<Sub1>;
-  using tag2 = dynamic_size_tag;  // dynamic/dynamic or fixed/dynamic.
+  using tag2 = dynamic_size_tag; // dynamic/dynamic or fixed/dynamic.
   detail::check_same_linear_size(left, right,
     size_check_promote_t<tag1, tag2>());
 }
@@ -414,7 +421,7 @@ check_same_linear_size(const readable_matrix<Sub1>& left, const Sub2& right)
 /* check_linear_size: */
 
 template<class Sub>
-inline void
+void
 check_linear_size(const readable_matrix<Sub>& left, int n)
 {
   using tag = size_tag_of_t<Sub>;
@@ -422,7 +429,7 @@ check_linear_size(const readable_matrix<Sub>& left, int n)
 }
 
 template<class Sub, int N>
-inline void
+void
 check_linear_size(const readable_matrix<Sub>& left, cml::int_c<N>)
 {
   using tag = size_tag_of_t<Sub>;
@@ -432,7 +439,7 @@ check_linear_size(const readable_matrix<Sub>& left, cml::int_c<N>)
 /* check_same_size: */
 
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_size(const readable_matrix<Sub1>& left,
   const readable_matrix<Sub2>& right)
 {
@@ -443,7 +450,7 @@ check_same_size(const readable_matrix<Sub1>& left,
 }
 
 template<class Sub, class Other, int R, int C>
-inline void
+void
 check_same_size(const readable_matrix<Sub>& left, Other const (&array)[R][C])
 {
   using tag1 = size_tag_of_t<Sub>;
@@ -454,7 +461,7 @@ check_same_size(const readable_matrix<Sub>& left, Other const (&array)[R][C])
 /* check_same_row_size: */
 
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_row_size(const readable_matrix<Sub1>& left,
   const readable_vector<Sub2>& right)
 {
@@ -467,7 +474,7 @@ check_same_row_size(const readable_matrix<Sub1>& left,
 /* check_same_col_size: */
 
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_col_size(const readable_matrix<Sub1>& left,
   const readable_vector<Sub2>& right)
 {
@@ -480,7 +487,7 @@ check_same_col_size(const readable_matrix<Sub1>& left,
 /* check_same_inner_size: */
 
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_inner_size(const readable_matrix<Sub1>& left,
   const readable_matrix<Sub2>& right)
 {
@@ -491,7 +498,7 @@ check_same_inner_size(const readable_matrix<Sub1>& left,
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_inner_size(const readable_matrix<Sub1>& left,
   const readable_vector<Sub2>& right)
 {
@@ -502,7 +509,7 @@ check_same_inner_size(const readable_matrix<Sub1>& left,
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 check_same_inner_size(const readable_vector<Sub1>& left,
   const readable_matrix<Sub2>& right)
 {
@@ -515,7 +522,7 @@ check_same_inner_size(const readable_vector<Sub1>& left,
 /* check_size: */
 
 template<class Sub>
-inline void
+void
 check_size(const readable_matrix<Sub>& left, int R, int C)
 {
   using tag = size_tag_of_t<Sub>;
@@ -523,7 +530,7 @@ check_size(const readable_matrix<Sub>& left, int R, int C)
 }
 
 template<class Sub, int R, int C>
-inline void
+void
 check_size(const readable_matrix<Sub>& left, cml::int_c<R>, cml::int_c<C>)
 {
   using tag = size_tag_of_t<Sub>;
@@ -533,7 +540,7 @@ check_size(const readable_matrix<Sub>& left, cml::int_c<R>, cml::int_c<C>)
 /* check_minimum_size: */
 
 template<class Sub>
-inline void
+void
 check_minimum_size(const readable_matrix<Sub>& left, int R, int C)
 {
   using tag = size_tag_of_t<Sub>;
@@ -541,7 +548,7 @@ check_minimum_size(const readable_matrix<Sub>& left, int R, int C)
 }
 
 template<class Sub, int R, int C>
-inline void
+void
 check_minimum_size(const readable_matrix<Sub>& left, cml::int_c<R>,
   cml::int_c<C>)
 {
@@ -552,11 +559,10 @@ check_minimum_size(const readable_matrix<Sub>& left, cml::int_c<R>,
 /* check_square: */
 
 template<class Sub>
-inline void
+void
 check_square(const readable_matrix<Sub>& left)
 {
   using tag = size_tag_of_t<Sub>;
   detail::check_square(left, tag());
 }
-
-}  // namespace cml
+} // namespace cml

@@ -10,7 +10,6 @@
 #include <cml/quaternion/fwd.h>
 
 namespace cml {
-
 /** Exception thrown when run-time size checking is enabled, and the
  * operand of a quaternion expression does not have 4 elements.
  *
@@ -20,8 +19,8 @@ namespace cml {
 struct quaternion_size_error : std::runtime_error
 {
   quaternion_size_error()
-  : std::runtime_error("incorrect quaternion expression size")
-  {}
+    : std::runtime_error("incorrect quaternion expression size")
+  {
+  }
 };
-
-}  // namespace cml
+} // namespace cml

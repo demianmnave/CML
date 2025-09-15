@@ -10,7 +10,6 @@
 #include <cml/storage/type_util.h>
 
 namespace cml {
-
 /** Base selector to specify an arbitrary or unknown storage type.
  *
  * @tparam Tag Tag specifying the type of storage (e.g.
@@ -130,5 +129,4 @@ struct storage_disambiguate<any_storage<Tag1>, any_storage<Tag2>>
 {
   using type = any_storage<>;
 };
-
-}  // namespace cml
+} // namespace cml

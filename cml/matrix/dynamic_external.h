@@ -9,13 +9,12 @@
 #include <cml/matrix/matrix.h>
 
 namespace cml {
-
 template<class Element, typename BasisOrient, typename Layout>
 struct matrix_traits<matrix<Element, external<>, BasisOrient, Layout>>
 {
   /* The basis must be col_basis or row_basis: */
   static_assert(std::is_same<BasisOrient, row_basis>::value
-      || std::is_same<BasisOrient, col_basis>::value,
+    || std::is_same<BasisOrient, col_basis>::value,
     "invalid basis");
 
   /* Traits and types for the matrix element: */
@@ -58,16 +57,16 @@ struct matrix_traits<matrix<Element, external<>, BasisOrient, Layout>>
 /** Fixed-size matrix. */
 template<class Element, typename BasisOrient, typename Layout>
 class matrix<Element, external<>, BasisOrient, Layout>
-: public writable_matrix<matrix<Element, external<>, BasisOrient, Layout>>
+  : public writable_matrix<matrix<Element, external<>, BasisOrient, Layout>>
 {
   // The basis must be col_basis or row_basis (NOT is_basis_tag!):
   static_assert(std::is_same<BasisOrient, row_basis>::value
-      || std::is_same<BasisOrient, col_basis>::value,
+    || std::is_same<BasisOrient, col_basis>::value,
     "invalid basis");
 
   // The layout must be col_major or row_major (NOT is_layout_tag!):
   static_assert(std::is_same<Layout, row_major>::value
-      || std::is_same<Layout, col_major>::value,
+    || std::is_same<Layout, col_major>::value,
     "invalid layout");
 
   public:
@@ -88,12 +87,10 @@ class matrix<Element, external<>, BasisOrient, Layout>
   using basis_tag = typename traits_type::basis_tag;
   using layout_tag = typename traits_type::layout_tag;
 
-
   public:
   /* Include methods from writable_type: */
   using writable_type::operator();
   using writable_type::operator=;
-
 
   public:
   /** Constant containing the number of rows. */
@@ -107,7 +104,6 @@ class matrix<Element, external<>, BasisOrient, Layout>
 
   /** Constant containing the array layout enumeration value. */
   static const layout_kind array_layout = traits_type::array_layout;
-
 
   public:
   /** Default construct with a null pointer and 0 size (rows, cols).
@@ -145,7 +141,6 @@ class matrix<Element, external<>, BasisOrient, Layout>
   /** Move constructor. */
   matrix(matrix_type&& other);
 
-
   public:
   /** Return access to the matrix data as a raw pointer. */
   pointer data();
@@ -173,14 +168,12 @@ class matrix<Element, external<>, BasisOrient, Layout>
   /** Reset the matrix to have no elements and no external pointer. */
   void reset();
 
-
   public:
   /** Copy assignment. */
   matrix_type& operator=(const matrix_type& other);
 
   /** Move assignment. */
   matrix_type& operator=(matrix_type&& other);
-
 
   protected:
   /** @name readable_matrix Interface */
@@ -222,7 +215,7 @@ class matrix<Element, external<>, BasisOrient, Layout>
   protected:
   /** Row-major access to const or non-const @c M. */
   template<class Matrix>
-  inline static auto s_access(Matrix& M, int i, int j, row_major)
+  static auto s_access(Matrix& M, int i, int j, row_major)
     -> decltype(M.m_data[0])
   {
     return M.m_data[i * M.m_cols + j];
@@ -230,12 +223,11 @@ class matrix<Element, external<>, BasisOrient, Layout>
 
   /** Column-major access to const or non-const @c M. */
   template<class Matrix>
-  inline static auto s_access(Matrix& M, int i, int j, col_major)
+  static auto s_access(Matrix& M, int i, int j, col_major)
     -> decltype(M.m_data[0])
   {
     return M.m_data[j * M.m_rows + i];
   }
-
 
   protected:
   /** Wrapped pointer. */
@@ -247,8 +239,7 @@ class matrix<Element, external<>, BasisOrient, Layout>
   /** Column count. */
   int m_cols;
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATRIX_DYNAMIC_EXTERNAL_TPP
 #include <cml/matrix/dynamic_external.tpp>

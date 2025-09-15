@@ -9,9 +9,8 @@
 #include <cml/common/traits.h>
 
 namespace cml::detail {
-
 template<class Sub>
-inline void
+void
 lu_inplace(writable_matrix<Sub>& M)
 {
   using value_type = value_type_trait_of_t<Sub>;
@@ -35,7 +34,7 @@ lu_inplace(writable_matrix<Sub>& M)
 }
 
 template<class Sub, class OrderArray>
-inline int
+int
 lu_pivot_inplace(writable_matrix<Sub>& M, OrderArray& order)
 {
   using value_type = value_type_trait_of_t<Sub>;
@@ -80,5 +79,4 @@ lu_pivot_inplace(writable_matrix<Sub>& M, OrderArray& order)
   /* Done: */
   return flag;
 }
-
 }

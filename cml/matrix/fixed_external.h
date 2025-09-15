@@ -9,14 +9,13 @@
 #include <cml/matrix/matrix.h>
 
 namespace cml {
-
 template<class Element, int Rows, int Cols, typename BasisOrient,
   typename Layout>
 struct matrix_traits<matrix<Element, external<Rows, Cols>, BasisOrient, Layout>>
 {
   /* The basis must be col_basis or row_basis: */
   static_assert(std::is_same<BasisOrient, row_basis>::value
-      || std::is_same<BasisOrient, col_basis>::value,
+    || std::is_same<BasisOrient, col_basis>::value,
     "invalid basis");
 
   /* Traits and types for the matrix element: */
@@ -60,11 +59,12 @@ struct matrix_traits<matrix<Element, external<Rows, Cols>, BasisOrient, Layout>>
 template<class Element, int Rows, int Cols, typename BasisOrient,
   typename Layout>
 class matrix<Element, external<Rows, Cols>, BasisOrient, Layout>
-: public writable_matrix<
+  : public writable_matrix<
     matrix<Element, external<Rows, Cols>, BasisOrient, Layout>>
 {
   public:
-  using matrix_type = matrix<Element, external<Rows, Cols>, BasisOrient, Layout>;
+  using matrix_type = matrix<Element, external<Rows, Cols>, BasisOrient, Layout>
+  ;
   using readable_type = readable_matrix<matrix_type>;
   using writable_type = writable_matrix<matrix_type>;
   using traits_type = matrix_traits<matrix_type>;
@@ -81,18 +81,16 @@ class matrix<Element, external<Rows, Cols>, BasisOrient, Layout>
   using basis_tag = typename traits_type::basis_tag;
   using layout_tag = typename traits_type::layout_tag;
 
-
   public:
   /** The matrix data type, depending upon the layout. */
-  using matrix_data_type = if_t<layout_tag::value == row_major_c, value_type[Rows][Cols],
+  using matrix_data_type = if_t<layout_tag::value == row_major_c, value_type[
+      Rows][Cols],
     value_type[Cols][Rows]>;
-
 
   public:
   /* Include methods from writable_type: */
   using writable_type::operator();
   using writable_type::operator=;
-
 
   public:
   /** Constant containing the number of rows. */
@@ -106,7 +104,6 @@ class matrix<Element, external<Rows, Cols>, BasisOrient, Layout>
 
   /** Constant containing the array layout enumeration value. */
   static const layout_kind array_layout = traits_type::array_layout;
-
 
   public:
   /** Default construct with a null pointer.
@@ -135,7 +132,6 @@ class matrix<Element, external<Rows, Cols>, BasisOrient, Layout>
   /** Move constructor. */
   matrix(matrix_type&& other);
 
-
   public:
   /** Return access to the matrix data as a raw pointer. */
   pointer data();
@@ -149,14 +145,12 @@ class matrix<Element, external<Rows, Cols>, BasisOrient, Layout>
   /** Read-only iterator over the elements as a 1D array. */
   const_pointer end() const;
 
-
   public:
   /** Copy assignment. */
   matrix_type& operator=(const matrix_type& other);
 
   /** Move assignment. */
   matrix_type& operator=(matrix_type&& other);
-
 
   protected:
   /** @name readable_matrix Interface */
@@ -198,7 +192,7 @@ class matrix<Element, external<Rows, Cols>, BasisOrient, Layout>
   protected:
   /** Row-major access to const or non-const @c M. */
   template<class Matrix>
-  inline static auto s_access(Matrix& M, int i, int j, row_major)
+  static auto s_access(Matrix& M, int i, int j, row_major)
     -> decltype((*M.m_data)[0][0])
   {
     return (*M.m_data)[i][j];
@@ -206,19 +200,17 @@ class matrix<Element, external<Rows, Cols>, BasisOrient, Layout>
 
   /** Column-major access to const or non-const @c M. */
   template<class Matrix>
-  inline static auto s_access(Matrix& M, int i, int j, col_major)
+  static auto s_access(Matrix& M, int i, int j, col_major)
     -> decltype((*M.m_data)[0][0])
   {
     return (*M.m_data)[j][i];
   }
 
-
   protected:
   /** Wrapped pointer. */
   matrix_data_type* m_data;
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATRIX_FIXED_EXTERNAL_TPP
 #include <cml/matrix/fixed_external.tpp>

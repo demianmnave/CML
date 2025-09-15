@@ -7,7 +7,6 @@
 #include <cml/common/mpl/if_t.h>
 
 namespace cml {
-
 /** Defines typedef @c type as std::true_type if @c T has a member function
  * actual() that returns a reference type, or std::false_type otherwise.
  * The static bool @c value is set to true or false to match @c type.
@@ -22,7 +21,6 @@ template<class T> struct is_statically_polymorphic
   /* The default overload deduces a void return type. */
   template<class U> static auto get_type_of_actual(...) -> void;
 
-
   public:
   /* std::true_type if T::actual is a member function returning a
    * reference type, std::false_type otherwise.
@@ -34,5 +32,4 @@ template<class T> struct is_statically_polymorphic
   /* True or false, depending upon 'type': */
   static const bool value = type::value;
 };
-
-}  // namespace cml
+} // namespace cml

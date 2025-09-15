@@ -10,9 +10,8 @@
 #include <cml/vector/dot.h>
 
 namespace cml {
-
 template<class Sub1, class Sub2>
-inline auto
+auto
 project_to_vector(const readable_vector<Sub1>& u,
   const readable_vector<Sub2>& v) -> vector_promote_t<Sub1, Sub2>
 {
@@ -21,7 +20,7 @@ project_to_vector(const readable_vector<Sub1>& u,
 }
 
 template<class Sub1, class Sub2>
-inline auto
+auto
 project_to_hplane(const readable_vector<Sub1>& v,
   const readable_vector<Sub2>& n) -> vector_promote_t<Sub1, Sub2>
 {
@@ -30,7 +29,7 @@ project_to_hplane(const readable_vector<Sub1>& v,
 }
 
 template<class Sub>
-inline auto
+auto
 perp(const readable_vector<Sub>& v) -> temporary_of_t<Sub>
 {
   cml::check_size(v, cml::int_c<2>());
@@ -42,7 +41,7 @@ perp(const readable_vector<Sub>& v) -> temporary_of_t<Sub>
 }
 
 template<class Sub1, class Sub2>
-inline auto
+auto
 manhattan_distance(const readable_vector<Sub1>& v1,
   const readable_vector<Sub2>& v2) -> value_type_trait_promote_t<Sub1, Sub2>
 {
@@ -58,5 +57,4 @@ manhattan_distance(const readable_vector<Sub1>& v1,
   for(int i = 1; i < v1.size(); ++i) sum += fabs(value_type(v1[i] - v2[i]));
   return sum;
 }
-
-}  // namespace cml
+} // namespace cml

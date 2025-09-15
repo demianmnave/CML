@@ -8,19 +8,17 @@
 #endif
 
 namespace cml {
-
 template<class Sub>
-inline auto
+auto
 imaginary(const readable_quaternion<Sub>& q) -> imaginary_node<const Sub&>
 {
   return imaginary_node<const Sub&>(q.actual());
 }
 
 template<class Sub>
-inline auto
+auto
 imaginary(readable_quaternion<Sub>&& q) -> imaginary_node<Sub&&>
 {
   return imaginary_node<Sub&&>((Sub&&) q);
 }
-
-}  // namespace cml
+} // namespace cml

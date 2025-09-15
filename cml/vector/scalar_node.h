@@ -7,7 +7,6 @@
 #include <cml/vector/readable_vector.h>
 
 namespace cml {
-
 template<class Sub, class Scalar, class Op> class vector_scalar_node;
 
 /** vector_scalar_node<> traits. */
@@ -36,7 +35,7 @@ struct vector_traits<vector_scalar_node<Sub, Scalar, Op>>
  */
 template<class Sub, class Scalar, class Op>
 class vector_scalar_node
-: public readable_vector<vector_scalar_node<Sub, Scalar, Op>>
+  : public readable_vector<vector_scalar_node<Sub, Scalar, Op>>
 {
   public:
   using node_type = vector_scalar_node<Sub, Scalar, Op>;
@@ -52,11 +51,9 @@ class vector_scalar_node
   using storage_type = typename traits_type::storage_type;
   using size_tag = typename traits_type::size_tag;
 
-
   public:
   /** The array size constant is the same as the subexpression. */
   static const int array_size = traits_type::array_size;
-
 
   public:
   /** Construct from the wrapped sub-expression and the scalar to apply.
@@ -69,7 +66,6 @@ class vector_scalar_node
 
   /** Copy constructor. */
   vector_scalar_node(const node_type& other);
-
 
   protected:
   /** @name readable_vector Interface */
@@ -93,9 +89,9 @@ class vector_scalar_node
    * stored as a copy if Sub is an rvalue reference (temporary), or by
    * const reference if Sub is an lvalue reference.
    */
-  using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const left_type&,
+  using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const
+    left_type&,
     left_type>;
-
 
   protected:
   /** The vector operand. */
@@ -104,13 +100,11 @@ class vector_scalar_node
   /** The scalar operand. */
   right_type m_right;
 
-
   private:
   // Not assignable.
   node_type& operator=(const node_type&);
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_VECTOR_SCALAR_NODE_TPP
 #include <cml/vector/scalar_node.tpp>

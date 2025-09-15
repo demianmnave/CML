@@ -7,7 +7,6 @@
 #include <cml/quaternion/readable_quaternion.h>
 
 namespace cml {
-
 template<class Sub> class inverse_node;
 
 /** inverse_node<> traits. */
@@ -51,11 +50,9 @@ class inverse_node : public readable_quaternion<inverse_node<Sub>>
   using storage_type = typename traits_type::storage_type;
   using size_tag = typename traits_type::size_tag;
 
-
   public:
   /** The array size constant depends upon the subexpression size. */
   static const int array_size = traits_type::array_size;
-
 
   public:
   /** Construct from the wrapped quaternion expression.  @c sub must be
@@ -68,7 +65,6 @@ class inverse_node : public readable_quaternion<inverse_node<Sub>>
 
   /** Copy constructor. */
   inverse_node(const node_type& other);
-
 
   protected:
   /** @name readable_quaternion Interface */
@@ -88,7 +84,7 @@ class inverse_node : public readable_quaternion<inverse_node<Sub>>
    * reference if Sub is an lvalue reference.
    */
   using wrap_type =
-    cml::if_t<std::is_lvalue_reference<Sub>::value, const sub_type&, sub_type>;
+  cml::if_t<std::is_lvalue_reference<Sub>::value, const sub_type&, sub_type>;
 
   /** The wrapped subexpression. */
   wrap_type m_sub;
@@ -96,13 +92,11 @@ class inverse_node : public readable_quaternion<inverse_node<Sub>>
   /** The reciprocal of the subexpression norm. */
   value_type m_inv_norm;
 
-
   private:
   // Not assignable.
   node_type& operator=(const node_type&);
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_QUATERNION_INVERSE_NODE_TPP
 #include <cml/quaternion/inverse_node.tpp>

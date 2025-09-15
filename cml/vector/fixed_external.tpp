@@ -7,18 +7,19 @@
 #endif
 
 namespace cml {
-
 /* fixed_external 'structors: */
 
 template<class E, int S>
 vector<E, external<S>>::vector()
-: m_data(0)
-{}
+  : m_data(0)
+{
+}
 
 template<class E, int S>
 vector<E, external<S>>::vector(pointer data)
-: m_data(data)
-{}
+  : m_data(data)
+{
+}
 
 template<class E, int S>
 vector<E, external<S>>::vector(const vector_type& other)
@@ -108,7 +109,7 @@ vector<E, external<S>>::i_get(int i) -> mutable_value
 template<class E, int S>
 template<class Other>
 auto
-vector<E, external<S>>::i_put(int i, const Other& v) &->vector_type&
+vector<E, external<S>>::i_put(int i, const Other& v) & -> vector_type&
 {
   this->m_data[i] = value_type(v);
   return *this;
@@ -122,5 +123,4 @@ vector<E, external<S>>::i_put(int i, const Other& v) && -> vector_type&&
   this->m_data[i] = value_type(v);
   return (vector_type&&) *this;
 }
-
-}  // namespace cml
+} // namespace cml

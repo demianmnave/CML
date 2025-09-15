@@ -9,20 +9,19 @@
 #include <cml/matrix/fwd.h>
 
 namespace cml::detail {
-
 /** 2x2 determinant implementation. */
 template<class Sub>
-inline auto determinant(const readable_matrix<Sub>& M, int_c<2>)
+auto determinant(const readable_matrix<Sub>& M, int_c<2>)
   -> value_type_trait_of_t<Sub>;
 
 /** 3x3 determinant implementation. */
 template<class Sub>
-inline auto determinant(const readable_matrix<Sub>& M, int_c<3>)
+auto determinant(const readable_matrix<Sub>& M, int_c<3>)
   -> value_type_trait_of_t<Sub>;
 
 /** 4x4 determinant implementation. */
 template<class Sub>
-inline auto determinant(const readable_matrix<Sub>& M, int_c<4>)
+auto determinant(const readable_matrix<Sub>& M, int_c<4>)
   -> value_type_trait_of_t<Sub>;
 
 /** Determinant implementation for statically-sized square matrices with
@@ -32,7 +31,7 @@ inline auto determinant(const readable_matrix<Sub>& M, int_c<4>)
  * @note It is up to the caller to ensure @c M is a square matrix.
  */
 template<class Sub, int N>
-inline auto determinant(const readable_matrix<Sub>& M, int_c<N>)
+auto determinant(const readable_matrix<Sub>& M, int_c<N>)
   -> value_type_trait_of_t<Sub>;
 
 /** Determinant implementation for dynamically-sized matrices.  This
@@ -43,9 +42,8 @@ inline auto determinant(const readable_matrix<Sub>& M, int_c<N>)
  * @note It is up to the caller to ensure @c M is a square matrix.
  */
 template<class Sub>
-inline auto determinant(const readable_matrix<Sub>& M, int_c<-1>)
+auto determinant(const readable_matrix<Sub>& M, int_c<-1>)
   -> value_type_trait_of_t<Sub>;
-
 }
 
 #define __CML_MATRIX_DETAIL_DETERMINANT_TPP

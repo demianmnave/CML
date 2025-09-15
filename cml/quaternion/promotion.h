@@ -15,7 +15,6 @@
 #include <cml/quaternion/quaternion.h>
 
 namespace cml {
-
 /** Determine an appropriate storage type to use when combining quaternion
  * expressions via a pairwise binary operator.
  *
@@ -25,7 +24,7 @@ template<class Storage1, class Storage2>
 struct quaternion_binary_storage_promote
 {
   static_assert(is_quaternion_storage<Storage1>::value
-      && is_quaternion_storage<Storage2>::value,
+    && is_quaternion_storage<Storage2>::value,
     "expected quaternion storage types for binary promotion");
 
   /* Determine the common unbound storage type: */
@@ -41,7 +40,7 @@ struct quaternion_binary_storage_promote
 /** Convenience alias for quaternion_binary_storage_promote. */
 template<class Storage1, class Storage2>
 using quaternion_binary_storage_promote_t =
-  typename quaternion_binary_storage_promote<Storage1, Storage2>::type;
+typename quaternion_binary_storage_promote<Storage1, Storage2>::type;
 
 
 /** Helper to deduce a reasonable quaternion type from two quaternion
@@ -51,8 +50,8 @@ template<class Sub1, class Sub2, class Enable = void> struct quaternion_promote;
 
 template<class Sub1, class Sub2>
 struct quaternion_promote<Sub1, Sub2,
-  typename std::enable_if<is_quaternion<Sub1>::value
-    && is_quaternion<Sub2>::value>::type>
+    typename std::enable_if<is_quaternion<Sub1>::value
+      && is_quaternion<Sub2>::value>::type>
 {
   using left_type = cml::unqualified_type_t<Sub1>;
   using right_type = cml::unqualified_type_t<Sub2>;
@@ -63,7 +62,8 @@ struct quaternion_promote<Sub1, Sub2,
   using value_type = value_type_promote_t<left_traits, right_traits>;
 
   /* Determine the new storage type: */
-  using storage_type = quaternion_binary_storage_promote_t<storage_type_of_t<left_traits>,
+  using storage_type = quaternion_binary_storage_promote_t<storage_type_of_t<
+      left_traits>,
     storage_type_of_t<right_traits>>;
 
   /* Use the proxy type for the temporary: */
@@ -84,5 +84,4 @@ struct quaternion_promote<Sub1, Sub2,
 /** Convenience alias for quaternion_promote<>. */
 template<class Sub1, class Sub2>
 using quaternion_promote_t = typename quaternion_promote<Sub1, Sub2>::type;
-
-}  // namespace cml
+} // namespace cml

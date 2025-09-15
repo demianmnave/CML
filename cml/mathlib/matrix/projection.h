@@ -10,7 +10,6 @@
 /** @defgroup mathlib_matrix_projection Projection Matrix Functions */
 
 namespace cml {
-
 /** @addtogroup mathlib_matrix_projection */
 /*@{*/
 
@@ -234,8 +233,7 @@ void matrix_perspective_yfov_RH(writable_matrix<Sub>& m, E yfov, E aspect, E n,
 /*@}*/
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_MATRIX_PROJECTION_TPP
 #include <cml/mathlib/matrix/projection.tpp>

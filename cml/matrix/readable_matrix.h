@@ -10,7 +10,6 @@
 #include <cml/matrix/traits.h>
 
 namespace cml {
-
 /** Return type for readable_matrix<>::size(). */
 using matrix_size = std::pair<int, int>;
 
@@ -42,7 +41,6 @@ template<class DerivedT> class readable_matrix
   using immutable_value = typename traits_type::immutable_value;
   using basis_tag = typename traits_type::basis_tag;
   using layout_tag = typename traits_type::layout_tag;
-
 
   public:
   /** Return a const reference to the matrix cast as DerivedT. */
@@ -90,7 +88,6 @@ template<class DerivedT> class readable_matrix
    */
   value_type trace() const;
 
-
   protected:
   /** Return basis element @c (i,j) for a row-basis matrix. */
   immutable_value basis_element(int i, int j, row_basis) const;
@@ -114,7 +111,6 @@ template<class DerivedT> class readable_matrix
    */
   int basis_size(col_basis) const;
 
-
   protected:
   // Use the compiler-generated default constructor:
   readable_matrix() = default;
@@ -125,8 +121,7 @@ template<class DerivedT> class readable_matrix
   // Use the compiler-generated move constructor:
   readable_matrix(readable_matrix&&) = default;
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATRIX_READABLE_MATRIX_TPP
 #include <cml/matrix/readable_matrix.tpp>

@@ -22,7 +22,6 @@
  */
 
 namespace cml {
-
 /** @addtogroup mathlib_quaternion_rotation */
 /*@{*/
 
@@ -197,8 +196,7 @@ VectorT quaternion_to_euler(const readable_quaternion<Sub>& q,
 /*@}*/
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_QUATERNION_ROTATION_TPP
 #include <cml/mathlib/quaternion/rotation.tpp>

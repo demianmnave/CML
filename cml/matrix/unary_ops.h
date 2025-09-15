@@ -8,12 +8,11 @@
 #include <cml/matrix/unary_node.h>
 
 namespace cml {
-
 /** Helper function to generate a matrix_unary_node from a matrix type
  * (i.e. derived from readable_matrix<>).
  */
 template<class Op, class Sub, enable_if_matrix_t<Sub>* = nullptr>
-inline auto
+auto
 make_matrix_unary_node(Sub&& sub)
   -> matrix_unary_node<actual_operand_type_of_t<decltype(sub)>, Op>
 {
@@ -27,7 +26,7 @@ make_matrix_unary_node(Sub&& sub)
 }
 
 template<class Sub, enable_if_matrix_t<Sub>* = nullptr>
-inline auto
+auto
 operator-(Sub&& sub) -> decltype(make_matrix_unary_node<unary_minus_t<Sub>>(
   std::forward<Sub>(sub)))
 {
@@ -35,11 +34,10 @@ operator-(Sub&& sub) -> decltype(make_matrix_unary_node<unary_minus_t<Sub>>(
 }
 
 template<class Sub, enable_if_matrix_t<Sub>* = nullptr>
-inline auto
+auto
 operator+(Sub&& sub)
   -> decltype(make_matrix_unary_node<unary_plus_t<Sub>>(std::forward<Sub>(sub)))
 {
   return make_matrix_unary_node<unary_plus_t<Sub>>(std::forward<Sub>(sub));
 }
-
-}  // namespace cml
+} // namespace cml

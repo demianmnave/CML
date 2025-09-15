@@ -10,7 +10,6 @@
 /** @defgroup mathlib_vector_ortho Vector Orthonormalization Functions */
 
 namespace cml {
-
 /** @addtogroup mathlib_vector_ortho */
 /*@{*/
 
@@ -49,8 +48,7 @@ void orthonormal_basis(const readable_vector<Sub1>& align,
 /*@}*/
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_VECTOR_ORTHONORMAL_TPP
 #include <cml/mathlib/vector/orthonormal.tpp>

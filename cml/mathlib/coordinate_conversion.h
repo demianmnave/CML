@@ -10,7 +10,6 @@
 /** @defgroup mathlib_coord_conversion Coordinate Conversion */
 
 namespace cml {
-
 /** @addtogroup mathlib_coord_conversion */
 /*@{*/
 
@@ -188,8 +187,7 @@ void cartesian_to_spherical(const readable_vector<Sub>& v, E& radius, E& theta,
 /*@}*/
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_COORDINATE_CONVERSION_TPP
 #include <cml/mathlib/coordinate_conversion.tpp>

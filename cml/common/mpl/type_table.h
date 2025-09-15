@@ -13,7 +13,6 @@
 #endif
 
 namespace cml {
-
 /** A symmetric mapping of type pairs to a new type, using a list of
  * arbitrary items as the source of the mapping.  Types in @c Entries must
  * define @c first, @c second, and @c type, where @c first and @c second
@@ -43,7 +42,6 @@ template<class... Entries> class type_table
     };
   };
 
-
   public:
   /** Type-compare <@c Ta,@c Tb> to <@c Entry::first,@c Entry::second>
      * using std::is_same, ignoring order. @c value is set to the
@@ -58,11 +56,9 @@ template<class... Entries> class type_table
       || (std::is_same<Ta, second>::value && std::is_same<Tb, first>::value);
   };
 
-
   private:
   /** The internal find<> helper. */
   template<typename T1, typename T2, class... Rest> struct _find;
-
 
   public:
   /** Search the table for type pair <@c T1, @c T2>.  If the pair is
@@ -73,7 +69,6 @@ template<class... Entries> class type_table
   {
     using type = typename _find<T1, T2, Entries...>::type;
   };
-
 
   private:
   /** Match <@c T1, @c T2> to @c Entry, and recursively to @c Rest. */
@@ -99,8 +94,7 @@ template<class T1, class T2, class T> struct type_table_item
   using second = T2;
   using type = T;
 };
-
-}  // namespace cml
+} // namespace cml
 
 #ifdef _MSC_VER
 #  pragma warning(pop)

@@ -11,7 +11,6 @@
 /** @defgroup mathlib_matrix_misc Miscellaneous Matrix Functions */
 
 namespace cml {
-
 /** @addtogroup mathlib_matrix_misc */
 /*@{*/
 
@@ -67,8 +66,7 @@ void matrix_skew_symmetric(writable_matrix<Sub1>& m, const Scalar& s);
  */
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_MATRIX_MISC_TPP
 #include <cml/mathlib/matrix/misc.tpp>

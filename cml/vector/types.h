@@ -8,7 +8,6 @@
 #include <cml/vector/vector.h>
 
 namespace cml {
-
 /** @defgroup vector_types Predefined Vector Types */
 /*@{*/
 
@@ -52,5 +51,4 @@ using external4cd = vector<const double, external<4>>;
 using externalncd = vector<const double, external<>>;
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml

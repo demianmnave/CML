@@ -8,9 +8,8 @@
 #include <cml/matrix/basis_node.h>
 
 namespace cml {
-
 template<class Sub, enable_if_matrix_t<Sub>* = nullptr>
-inline auto
+auto
 basis(Sub&& sub, int i)
   -> matrix_basis_node<actual_operand_type_of_t<decltype(sub)>, -1>
 {
@@ -22,5 +21,4 @@ basis(Sub&& sub, int i)
   using sub_type = actual_operand_type_of_t<decltype(sub)>;
   return matrix_basis_node<sub_type, -1>((sub_type) sub, i);
 }
-
-}  // namespace cml
+} // namespace cml

@@ -7,7 +7,6 @@
 #include <cml/matrix/fwd.h>
 
 namespace cml::detail {
-
 /** In-place LU decomposition using Doolittle's method.
  *
  * @tparam Sub Derived output matrix type.
@@ -17,7 +16,7 @@ namespace cml::detail {
  *
  * @note It is up to the caller to ensure @c M is a square matrix.
  */
-template<class Sub> inline void lu_inplace(writable_matrix<Sub>& M);
+template<class Sub> void lu_inplace(writable_matrix<Sub>& M);
 
 /** In-place LU decomposition using partial pivoting for non-singular
  * square matrices.  @c order contains the new row order after pivoting,
@@ -31,8 +30,7 @@ template<class Sub> inline void lu_inplace(writable_matrix<Sub>& M);
  * an odd number of pivots are performed, 0 if M is singular.
  */
 template<class Sub, class OrderArray>
-inline int lu_pivot_inplace(writable_matrix<Sub>& M, OrderArray& order);
-
+int lu_pivot_inplace(writable_matrix<Sub>& M, OrderArray& order);
 }
 
 #define __CML_MATRIX_DETAIL_LU_TPP

@@ -10,7 +10,6 @@
 /** @defgroup mathlib_vector_transform Vector Transformation Functions */
 
 namespace cml {
-
 /** @addtogroup mathlib_vector_transform */
 /*@{*/
 
@@ -110,8 +109,7 @@ auto transform_point_4D(const readable_matrix<Sub1>& m,
 /*@}*/
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_VECTOR_TRANSFORM_TPP
 #include <cml/mathlib/vector/transform.tpp>

@@ -10,9 +10,8 @@
 #include <cml/matrix/readable_matrix.h>
 
 namespace cml {
-
 template<class DT>
-inline std::ostream&
+std::ostream&
 operator<<(std::ostream& os, const readable_matrix<DT>& M)
 {
   for(int i = 0; i < M.rows(); ++i) {
@@ -23,5 +22,4 @@ operator<<(std::ostream& os, const readable_matrix<DT>& M)
   }
   return os;
 }
-
-}  // namespace cml
+} // namespace cml

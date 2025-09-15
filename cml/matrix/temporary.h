@@ -11,7 +11,6 @@
 #include <cml/matrix/matrix.h>
 
 namespace cml {
-
 /** Deduce a temporary for a matrix expression. */
 template<class Matrix>
 struct temporary_of<Matrix, cml::enable_if_matrix_t<Matrix>>
@@ -31,5 +30,4 @@ struct temporary_of<Matrix, cml::enable_if_matrix_t<Matrix>>
   /* Build the temporary: */
   using type = matrix<value_type, proxy_type, basis_tag, layout_tag>;
 };
-
-}  // namespace cml
+} // namespace cml

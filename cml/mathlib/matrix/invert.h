@@ -7,7 +7,6 @@
 #include <cml/matrix/fwd.h>
 
 namespace cml {
-
 /** Invert a 2D affine transformation consisting of a rotation and a
  * translation only.
  *
@@ -34,8 +33,7 @@ template<class Sub> void matrix_invert_RT_only(writable_matrix<Sub>& m);
  * is fixed-size, the size is checked at compile-time.
  */
 template<class Sub> void matrix_invert_RT(writable_matrix<Sub>& m);
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_MATRIX_INVERT_TPP
 #include <cml/mathlib/matrix/invert.tpp>

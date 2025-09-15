@@ -11,7 +11,6 @@
 #include <cml/common/layout_tags.h>
 
 namespace cml {
-
 /** Deduce the size tag needed to compare the size of two expressions
  * having size tags @c Tag1 and @c Tag2.  By default:
  *
@@ -90,7 +89,8 @@ using size_tag_promote_t = typename size_tag_promote<Tag1, Tag2>::type;
  */
 template<class T1, class T2> struct size_tag_trait_promote
 {
-  using type = size_tag_promote_t<size_tag_trait_of_t<T1>, size_tag_trait_of_t<T2>>;
+  using type = size_tag_promote_t<size_tag_trait_of_t<T1>, size_tag_trait_of_t<
+    T2>>;
 };
 
 /** Convenience alias for size_tag_trait_promote. */
@@ -143,7 +143,7 @@ template<class T1, class T2> struct basis_tag_trait_promote
 /** Convenience alias for basis_tag_trait_promote. */
 template<class T1, class T2>
 using basis_tag_trait_promote_t =
-  typename basis_tag_trait_promote<T1, T2>::type;
+typename basis_tag_trait_promote<T1, T2>::type;
 
 /** Deduce the default layout tag needed to promote the result of combining
  * two expressions having layout tags @c Tag1 and @c Tag2.  By default:
@@ -191,6 +191,5 @@ template<class T1, class T2> struct layout_tag_trait_promote
 /** Convenience alias for layout_tag_trait_promote. */
 template<class T1, class T2>
 using layout_tag_trait_promote_t =
-  typename layout_tag_trait_promote<T1, T2>::type;
-
-}  // namespace cml
+typename layout_tag_trait_promote<T1, T2>::type;
+} // namespace cml

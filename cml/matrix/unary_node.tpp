@@ -7,23 +7,25 @@
 #endif
 
 namespace cml {
-
 /* matrix_unary_node 'structors: */
 
 template<class Sub, class Op>
 matrix_unary_node<Sub, Op>::matrix_unary_node(Sub sub)
-: m_sub(std::move(sub))
-{}
+  : m_sub(std::move(sub))
+{
+}
 
 template<class Sub, class Op>
 matrix_unary_node<Sub, Op>::matrix_unary_node(node_type&& other)
-: m_sub(std::move(other.m_sub))
-{}
+  : m_sub(std::move(other.m_sub))
+{
+}
 
 template<class Sub, class Op>
 matrix_unary_node<Sub, Op>::matrix_unary_node(const node_type& other)
-: m_sub(other.m_sub)
-{}
+  : m_sub(other.m_sub)
+{
+}
 
 /* Internal methods: */
 
@@ -49,5 +51,4 @@ matrix_unary_node<Sub, Op>::i_get(int i, int j) const -> immutable_value
 {
   return Op().apply(this->m_sub.get(i, j));
 }
-
-}  // namespace cml
+} // namespace cml

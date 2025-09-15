@@ -8,7 +8,6 @@
 #include <cml/storage/allocated_selector.h>
 
 namespace cml {
-
 /* Forward declarations: */
 template<int Size1 = -1, int Size2 = -1, class Tag = void> struct external;
 
@@ -164,5 +163,4 @@ struct storage_disambiguate<external<R1, C1, Tag1>, external<R2, C2, Tag2>>
 {
   using type = external<>;
 };
-
-}  // namespace cml
+} // namespace cml

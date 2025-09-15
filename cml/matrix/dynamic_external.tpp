@@ -7,22 +7,21 @@
 #endif
 
 namespace cml {
-
 /* dynamic_external 'structors: */
 
 template<class E, typename BO, typename L>
 matrix<E, external<>, BO, L>::matrix()
-: m_data(0)
-, m_rows(0)
-, m_cols(0)
+  : m_data(0)
+    , m_rows(0)
+    , m_cols(0)
 {
 }
 
 template<class E, typename BO, typename L>
 matrix<E, external<>, BO, L>::matrix(pointer data, int rows, int cols)
-: m_data(data)
-, m_rows(rows)
-, m_cols(cols)
+  : m_data(data)
+    , m_rows(rows)
+    , m_cols(cols)
 {
   cml_require(rows >= 0, std::invalid_argument, "rows < 0");
   cml_require(cols >= 0, std::invalid_argument, "cols < 0");
@@ -30,9 +29,9 @@ matrix<E, external<>, BO, L>::matrix(pointer data, int rows, int cols)
 
 template<class E, typename BO, typename L>
 matrix<E, external<>, BO, L>::matrix(int rows, int cols, pointer data)
-: m_data(data)
-, m_rows(rows)
-, m_cols(cols)
+  : m_data(data)
+    , m_rows(rows)
+    , m_cols(cols)
 {
   cml_require(rows >= 0, std::invalid_argument, "rows < 0");
   cml_require(cols >= 0, std::invalid_argument, "cols < 0");
@@ -41,10 +40,11 @@ matrix<E, external<>, BO, L>::matrix(int rows, int cols, pointer data)
 template<class E, typename BO, typename L>
 template<class Other, int N1, int N2>
 matrix<E, external<>, BO, L>::matrix(Other (&array)[N1][N2])
-: m_data(&array[0][0])
-, m_rows(array_layout == row_major_c ? N1 : N2)
-, m_cols(array_layout == row_major_c ? N2 : N1)
-{}
+  : m_data(&array[0][0])
+    , m_rows(array_layout == row_major_c ? N1 : N2)
+    , m_cols(array_layout == row_major_c ? N2 : N1)
+{
+}
 
 template<class E, typename BO, typename L>
 matrix<E, external<>, BO, L>::matrix(matrix_type&& other)
@@ -175,5 +175,4 @@ matrix<E, external<>, BO, L>::i_put(int i, int j,
   s_access(*this, i, j, layout_tag()) = value_type(v);
   return (matrix_type&&) *this;
 }
-
-}  // namespace cml
+} // namespace cml

@@ -9,7 +9,6 @@
 
 namespace cml {
 namespace op {
-
 #define __cml_binary_op(_name_, _op_)                                          \
   template<class Scalar1, class Scalar2> struct _name_                         \
   {                                                                            \
@@ -33,8 +32,7 @@ __cml_binary_op(binary_multiply, *);
 __cml_binary_op(binary_divide, /);
 
 #undef __cml_binary_op
-
-}  // namespace op
+} // namespace op
 
 #define __cml_binary_op_alias(_name_)                                          \
   template<class Sub1, class Sub2>                                             \
@@ -62,4 +60,4 @@ __cml_binary_op_alias(binary_multiply);
 __cml_binary_op_alias(binary_divide);
 
 #undef __cml_binary_op_alias
-}  // namespace cml
+} // namespace cml

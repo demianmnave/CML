@@ -9,7 +9,6 @@
 /** @defgroup mathlib_vector_generators Vector Generator Functions */
 
 namespace cml {
-
 /** @addtogroup mathlib_vector_generators */
 /*@{*/
 
@@ -18,7 +17,7 @@ namespace cml {
 
 /** Return a fixed-size double-precision N-d zero vector. */
 template<int N>
-inline auto
+auto
 zero() -> vector<double, compiled<N>>
 {
   return vector<double, compiled<N>>().zero();
@@ -52,7 +51,7 @@ zero_4D() -> decltype(zero<4>())
 
 /** Return a fixed-size double-precision N-d cardinal axis by index. */
 template<int N>
-inline auto
+auto
 axis(int i) -> vector<double, compiled<N>>
 {
   return vector<double, compiled<N>>().cardinal(i);
@@ -110,5 +109,4 @@ z_axis_3D() -> decltype(axis<3>(2))
 /*@}*/
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml

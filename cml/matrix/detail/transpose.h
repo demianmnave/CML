@@ -10,10 +10,9 @@
 #include <cml/matrix/transpose.h>
 
 namespace cml::detail {
-
 /** Transpose a fixed-size square matrix. */
 template<class Sub>
-inline void
+void
 transpose(writable_matrix<Sub>& M, fixed_size_tag)
 {
   static const int rows = array_rows_of_c<Sub>::value;
@@ -25,11 +24,10 @@ transpose(writable_matrix<Sub>& M, fixed_size_tag)
 
 /** Transpose a resizable matrix using a temporary. */
 template<class Sub, enable_if_reshapeable_t<Sub>* = nullptr>
-inline void
+void
 transpose(writable_matrix<Sub>& M, dynamic_size_tag)
 {
   temporary_of_t<Sub> T(M);
   M = cml::transpose(T);
 }
-
 }

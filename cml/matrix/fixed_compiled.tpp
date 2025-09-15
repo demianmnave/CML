@@ -7,7 +7,6 @@
 #endif
 
 namespace cml {
-
 /* fixed 'structors: */
 
 template<class E, int R, int C, typename BO, typename L>
@@ -132,7 +131,7 @@ template<class E, int R, int C, typename BO, typename L>
 template<class Other>
 auto
 matrix<E, fixed<R, C>, BO, L>::i_put(int i, int j,
-  const Other& v) &->matrix_type&
+  const Other& v) & -> matrix_type&
 {
   s_access(*this, i, j, layout_tag()) = value_type(v);
   return *this;
@@ -147,5 +146,4 @@ matrix<E, fixed<R, C>, BO, L>::i_put(int i, int j,
   s_access(*this, i, j, layout_tag()) = value_type(v);
   return (matrix_type&&) *this;
 }
-
-}  // namespace cml
+} // namespace cml

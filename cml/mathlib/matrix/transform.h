@@ -11,7 +11,6 @@
 /** @defgroup mathlib_matrix_transform Matrix Transform Functions */
 
 namespace cml {
-
 /** @addtogroup mathlib_matrix_transform */
 /*@{*/
 
@@ -67,7 +66,7 @@ void matrix_look_at_RH(writable_matrix<Sub>& m,
  * size is checked at compile-time.
  */
 template<class Sub1, class Sub2>
-inline void matrix_linear_transform(writable_matrix<Sub1>& m,
+void matrix_linear_transform(writable_matrix<Sub1>& m,
   const readable_matrix<Sub2>& l);
 
 /*@}*/
@@ -92,7 +91,7 @@ inline void matrix_linear_transform(writable_matrix<Sub1>& m,
  * size is checked at compile-time.
  */
 template<class Sub, class ASub, class E, class TSub>
-inline void matrix_affine_transform(writable_matrix<Sub>& m,
+void matrix_affine_transform(writable_matrix<Sub>& m,
   const readable_vector<ASub>& axis, const E& angle,
   const readable_vector<TSub>& translation, bool normalize = false);
 
@@ -111,7 +110,7 @@ inline void matrix_affine_transform(writable_matrix<Sub>& m,
  * size is checked at compile-time.
  */
 template<class Sub, class LSub, class TSub>
-inline void matrix_affine_transform(writable_matrix<Sub>& m,
+void matrix_affine_transform(writable_matrix<Sub>& m,
   const readable_matrix<LSub>& linear,
   const readable_vector<TSub>& translation);
 
@@ -120,8 +119,7 @@ inline void matrix_affine_transform(writable_matrix<Sub>& m,
 /*@}*/
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_MATRIX_TRANSFORM_TPP
 #include <cml/mathlib/matrix/transform.tpp>

@@ -7,7 +7,6 @@
 #include <cml/common/traits.h>
 
 namespace cml {
-
 /* Forward declarations: */
 struct row_major;
 struct col_major;
@@ -84,5 +83,4 @@ template<class T> struct layout_tag_trait_of
 /** Convenience alias for layout_tag_trait_of. */
 template<class T>
 using layout_tag_trait_of_t = typename layout_tag_trait_of<T>::type;
-
-}  // namespace cml
+} // namespace cml

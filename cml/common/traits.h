@@ -5,7 +5,6 @@
 #pragma once
 
 namespace cml {
-
 /** Specializable struct to obtain the traits of a specified class,
  * possibly using SFINAE.  Specializations should typedef "type" as the
  * traits class for @c T.
@@ -41,5 +40,4 @@ template<class T>
 using value_type_trait_of_t = typename value_type_trait_of<T>::type;
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml

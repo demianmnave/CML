@@ -8,7 +8,6 @@
 #include <cml/quaternion/traits.h>
 
 namespace cml {
-
 /** Compute the dot-product of two quaternions.
  *
  * @note Currently, the result is computed immediately, even if it appears
@@ -21,8 +20,7 @@ template<class Sub1, class Sub2>
 auto dot(const readable_quaternion<Sub1>& left,
   const readable_quaternion<Sub2>& right)
   -> value_type_trait_promote_t<Sub1, Sub2>;
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_QUATERNION_DOT_TPP
 #include <cml/quaternion/dot.tpp>

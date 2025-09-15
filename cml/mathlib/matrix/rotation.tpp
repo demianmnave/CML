@@ -16,11 +16,10 @@
 #include <cml/mathlib/matrix/size_checking.h>
 
 namespace cml {
-
 /* 2D rotations: */
 
 template<class Sub, class E>
-inline void
+void
 matrix_rotation_2D(writable_matrix<Sub>& m, E angle)
 {
   static_assert(cml::are_convertible<value_type_trait_of_t<Sub>, E>::value,
@@ -68,7 +67,7 @@ matrix_rotation_align_2D(writable_matrix<Sub>& m,
 /* 3D rotations: */
 
 template<class Sub, class E>
-inline void
+void
 matrix_rotation_world_axis(writable_matrix<Sub>& m, int axis, const E& angle)
 {
   static_assert(cml::are_convertible<value_type_trait_of_t<Sub>, E>::value,
@@ -96,28 +95,28 @@ matrix_rotation_world_axis(writable_matrix<Sub>& m, int axis, const E& angle)
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_rotation_world_x(writable_matrix<Sub>& m, const E& angle)
 {
   matrix_rotation_world_axis(m, 0, angle);
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_rotation_world_y(writable_matrix<Sub>& m, const E& angle)
 {
   matrix_rotation_world_axis(m, 1, angle);
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_rotation_world_z(writable_matrix<Sub>& m, const E& angle)
 {
   matrix_rotation_world_axis(m, 2, angle);
 }
 
 template<class Sub, class ASub, class E>
-inline void
+void
 matrix_rotation_axis_angle(writable_matrix<Sub>& m,
   const readable_vector<ASub>& axis, const E& angle)
 {
@@ -166,7 +165,7 @@ matrix_rotation_axis_angle(writable_matrix<Sub>& m,
 }
 
 template<class Sub, class E0, class E1, class E2>
-inline void
+void
 matrix_rotation_euler(writable_matrix<Sub>& m, E0 angle_0, E1 angle_1,
   E2 angle_2, euler_order order)
 {
@@ -229,7 +228,7 @@ matrix_rotation_euler(writable_matrix<Sub>& m, E0 angle_0, E1 angle_1,
 }
 
 template<class Sub, class ESub>
-inline void
+void
 matrix_rotation_euler(writable_matrix<Sub>& m,
   const readable_vector<ESub>& euler, euler_order order)
 {
@@ -238,7 +237,7 @@ matrix_rotation_euler(writable_matrix<Sub>& m,
 }
 
 template<class Sub, class E0, class E1, class E2>
-inline void
+void
 matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis, E0 angle_0,
   E1 angle_1, E2 angle_2, euler_order order)
 {
@@ -314,7 +313,7 @@ matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis, E0 angle_0,
 }
 
 template<class Sub, class ESub>
-inline void
+void
 matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
   const readable_vector<ESub>& euler, euler_order order)
 {
@@ -324,7 +323,7 @@ matrix_rotation_euler_derivatives(writable_matrix<Sub>& m, int axis,
 }
 
 template<class Sub, class QSub>
-inline void
+void
 matrix_rotation_quaternion(writable_matrix<Sub>& m,
   const readable_quaternion<QSub>& q)
 {
@@ -376,7 +375,7 @@ matrix_rotation_quaternion(writable_matrix<Sub>& m,
 /* Alignment: */
 
 template<class Sub, class ASub, class RSub>
-inline void
+void
 matrix_rotation_align(writable_matrix<Sub>& m,
   const readable_vector<ASub>& align, const readable_vector<RSub>& reference,
   bool normalize, axis_order order)
@@ -407,7 +406,7 @@ matrix_rotation_aim_at(writable_matrix<Sub>& m,
 /* Conversion: */
 
 template<class Sub, class ASub, class E, class Tol>
-inline void
+void
 matrix_to_axis_angle(const readable_matrix<Sub>& m, writable_vector<ASub>& axis,
   E& angle, Tol tolerance)
 {
@@ -440,15 +439,13 @@ matrix_to_axis_angle(const readable_matrix<Sub>& m, writable_vector<ASub>& axis,
   }
 
   /* Near-zero axis: */
-  else if(tmo > value_type(0))
-  {
+  else if(tmo > value_type(0)) {
     axis.zero();
     angle = E(0);
   }
 
   /* Reflection: */
-  else
-  {
+  else {
     auto largest_diagonal_element = cml::index_of_max(m.basis_element(0, 0),
       m.basis_element(1, 1), m.basis_element(2, 2));
 
@@ -471,10 +468,9 @@ matrix_to_axis_angle(const readable_matrix<Sub>& m, writable_vector<ASub>& axis,
 }
 
 namespace detail {
-
 /** Helper for the matrix_to_axis_angle() overloads. */
 template<class VectorT, class Sub, class Tol>
-inline std::tuple<VectorT, value_type_trait_of_t<Sub>>
+std::tuple<VectorT, value_type_trait_of_t<Sub>>
 matrix_to_axis_angle(const readable_matrix<Sub>& m, Tol tolerance)
 {
   static_assert(
@@ -487,11 +483,10 @@ matrix_to_axis_angle(const readable_matrix<Sub>& m, Tol tolerance)
   cml::matrix_to_axis_angle(m, axis, angle, tolerance);
   return std::make_tuple(std::move(axis), std::move(angle));
 }
-
-}  // namespace detail
+} // namespace detail
 
 template<class Sub, class Tol>
-inline std::tuple<vector<value_type_trait_of_t<Sub>, compiled<3>>,
+std::tuple<vector<value_type_trait_of_t<Sub>, compiled<3>>,
   value_type_trait_of_t<Sub>>
 matrix_to_axis_angle(const readable_matrix<Sub>& m, Tol tolerance)
 {
@@ -500,7 +495,7 @@ matrix_to_axis_angle(const readable_matrix<Sub>& m, Tol tolerance)
 }
 
 template<class Sub, class E0, class E1, class E2, class Tol>
-inline void
+void
 matrix_to_euler(const readable_matrix<Sub>& m, E0& angle_0, E1& angle_1,
   E2& angle_2, euler_order order, Tol tolerance, enable_if_matrix_t<Sub>*)
 {
@@ -561,10 +556,9 @@ matrix_to_euler(const readable_matrix<Sub>& m, E0& angle_0, E1& angle_1,
 }
 
 namespace detail {
-
 /** Helper for the matrix_to_euler() overloads. */
 template<class VectorT, class Sub, class Tol>
-inline VectorT
+VectorT
 matrix_to_euler(const readable_matrix<Sub>& m, euler_order order, Tol tolerance)
 {
   static_assert(
@@ -577,11 +571,10 @@ matrix_to_euler(const readable_matrix<Sub>& m, euler_order order, Tol tolerance)
   cml::matrix_to_euler(m, v[0], v[1], v[2], order, tolerance);
   return std::move(v);
 }
-
-}  // namespace detail
+} // namespace detail
 
 template<class Sub, class Tol>
-inline vector<value_type_trait_of_t<Sub>, compiled<3>>
+vector<value_type_trait_of_t<Sub>, compiled<3>>
 matrix_to_euler(const readable_matrix<Sub>& m, euler_order order, Tol tolerance,
   enable_if_matrix_t<Sub>*)
 {
@@ -590,14 +583,13 @@ matrix_to_euler(const readable_matrix<Sub>& m, euler_order order, Tol tolerance,
 }
 
 template<class VectorT, class Sub, class Tol>
-inline VectorT
+VectorT
 matrix_to_euler(const readable_matrix<Sub>& m, euler_order order, Tol tolerance,
   enable_if_vector_t<VectorT>*, enable_if_matrix_t<Sub>*)
 {
   return detail::matrix_to_euler<VectorT, Sub, Tol>(m, order, tolerance);
 }
-
-}  // namespace cml
+} // namespace cml
 
 
 #if 0
@@ -608,74 +600,74 @@ matrix_to_euler(const readable_matrix<Sub>& m, euler_order order, Tol tolerance,
 //////////////////////////////////////////////////////////////////////////////
 
 /** See vector_ortho.h for details */
-template < typename E, class A, class B, class L, class VecT > void
-matrix_rotation_align(matrix<E,A,B,L>& m, const VecT& align,
-    bool normalize = true, axis_order order = axis_order_zyx)
+template<typename E, class A, class B, class L, class VecT> void
+matrix_rotation_align(matrix<E, A, B, L>& m, const VecT& align,
+  bool normalize = true, axis_order order = axis_order_zyx)
 {
-    typedef vector< E,fixed<3> > vector_type;
+  typedef vector<E, fixed<3>> vector_type;
 
-    identity_transform(m);
-    
-    vector_type x, y, z;
+  identity_transform(m);
 
-    orthonormal_basis(align, x, y, z, normalize, order);
-    matrix_set_basis_vectors(m, x, y, z);
+  vector_type x, y, z;
+
+  orthonormal_basis(align, x, y, z, normalize, order);
+  matrix_set_basis_vectors(m, x, y, z);
 }
 
 /** See vector_ortho.h for details */
-template < typename E,class A,class B,class L,class VecT_1,class VecT_2 > void
-matrix_rotation_align_axial(matrix<E,A,B,L>& m, const VecT_1& align,
-    const VecT_2& axis, bool normalize = true,
-    axis_order order = axis_order_zyx)
+template<typename E, class A, class B, class L, class VecT_1, class VecT_2> void
+matrix_rotation_align_axial(matrix<E, A, B, L>& m, const VecT_1& align,
+  const VecT_2& axis, bool normalize = true,
+  axis_order order = axis_order_zyx)
 {
-    typedef vector< E,fixed<3> > vector_type;
+  typedef vector<E, fixed<3>> vector_type;
 
-    identity_transform(m);
-    
-    vector_type x, y, z;
+  identity_transform(m);
 
-    orthonormal_basis_axial(align, axis, x, y, z, normalize, order);
-    matrix_set_basis_vectors(m, x, y, z);
+  vector_type x, y, z;
+
+  orthonormal_basis_axial(align, axis, x, y, z, normalize, order);
+  matrix_set_basis_vectors(m, x, y, z);
 }
 
 /** See vector_ortho.h for details */
-template < typename E, class A, class B, class L, class MatT > void
+template<typename E, class A, class B, class L, class MatT> void
 matrix_rotation_align_viewplane(
-    matrix<E,A,B,L>& m,
-    const MatT& view_matrix,
-    Handedness handedness,
-    axis_order order = axis_order_zyx)
+  matrix<E, A, B, L>& m,
+  const MatT& view_matrix,
+  Handedness handedness,
+  axis_order order = axis_order_zyx)
 {
-    typedef vector< E, fixed<3> > vector_type;
+  typedef vector<E, fixed<3>> vector_type;
 
-    identity_transform(m);
-    
-    vector_type x, y, z;
+  identity_transform(m);
 
-    orthonormal_basis_viewplane(view_matrix, x, y, z, handedness, order);
-    matrix_set_basis_vectors(m, x, y, z);
+  vector_type x, y, z;
+
+  orthonormal_basis_viewplane(view_matrix, x, y, z, handedness, order);
+  matrix_set_basis_vectors(m, x, y, z);
 }
 
 /** See vector_ortho.h for details */
-template < typename E, class A, class B, class L, class MatT > void
+template<typename E, class A, class B, class L, class MatT> void
 matrix_rotation_align_viewplane_LH(
-    matrix<E,A,B,L>& m,
-    const MatT& view_matrix,
-    axis_order order = axis_order_zyx)
+  matrix<E, A, B, L>& m,
+  const MatT& view_matrix,
+  axis_order order = axis_order_zyx)
 {
-    matrix_rotation_align_viewplane(
-        m,view_matrix,left_handed,order);
+  matrix_rotation_align_viewplane(
+    m, view_matrix, left_handed, order);
 }
 
 /** See vector_ortho.h for details */
-template < typename E, class A, class B, class L, class MatT > void
+template<typename E, class A, class B, class L, class MatT> void
 matrix_rotation_align_viewplane_RH(
-    matrix<E,A,B,L>& m,
-    const MatT& view_matrix,
-    axis_order order = axis_order_zyx)
+  matrix<E, A, B, L>& m,
+  const MatT& view_matrix,
+  axis_order order = axis_order_zyx)
 {
-    matrix_rotation_align_viewplane(
-        m,view_matrix,right_handed,order);
+  matrix_rotation_align_viewplane(
+    m, view_matrix, right_handed, order);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -683,28 +675,28 @@ matrix_rotation_align_viewplane_RH(
 //////////////////////////////////////////////////////////////////////////////
 
 /** See vector_ortho.h for details */
-template < typename E, class A, class B, class L,
-    class VecT_1, class VecT_2 > void
+template<typename E, class A, class B, class L,
+  class VecT_1, class VecT_2> void
 matrix_rotation_aim_at(
-    matrix<E,A,B,L>& m,
-    const VecT_1& pos,
-    const VecT_2& target,
-    axis_order order = axis_order_zyx)
+  matrix<E, A, B, L>& m,
+  const VecT_1& pos,
+  const VecT_2& target,
+  axis_order order = axis_order_zyx)
 {
-    matrix_rotation_align(m, target - pos, true, order);
+  matrix_rotation_align(m, target - pos, true, order);
 }
 
 /** See vector_ortho.h for details */
-template < typename E, class A, class B, class L,
-    class VecT_1, class VecT_2, class VecT_3 > void
+template<typename E, class A, class B, class L,
+  class VecT_1, class VecT_2, class VecT_3> void
 matrix_rotation_aim_at_axial(
-    matrix<E,A,B,L>& m,
-    const VecT_1& pos,
-    const VecT_2& target,
-    const VecT_3& axis,
-    axis_order order = axis_order_zyx)
+  matrix<E, A, B, L>& m,
+  const VecT_1& pos,
+  const VecT_2& target,
+  const VecT_3& axis,
+  axis_order order = axis_order_zyx)
 {
-    matrix_rotation_align_axial(m, target - pos, axis, true, order);
+  matrix_rotation_align_axial(m, target - pos, axis, true, order);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -716,51 +708,57 @@ matrix_rotation_aim_at_axial(
 //////////////////////////////////////////////////////////////////////////////
 
 /** Rotate a rotation matrix about the given world axis */
-template < typename E, class A, class B, class L > void
-matrix_rotate_about_world_axis(matrix<E,A,B,L>& m, size_t axis, E angle)
+template<typename E, class A, class B, class L> void
+matrix_rotate_about_world_axis(matrix<E, A, B, L>& m, size_t axis, E angle)
 {
-    typedef matrix<E,A,B,L> matrix_type;
-    typedef typename matrix_type::value_type value_type;
+  typedef matrix<E, A, B, L> matrix_type;
+  typedef typename matrix_type::value_type value_type;
 
-    /* Checking */
-    detail::CheckMatLinear3D(m);
-    detail::CheckIndex3(axis);
+  /* Checking */
+  detail::CheckMatLinear3D(m);
+  detail::CheckIndex3(axis);
 
-    size_t i, j, k;
-    cyclic_permutation(axis, i, j, k);
+  size_t i, j, k;
+  cyclic_permutation(axis, i, j, k);
 
-    value_type s = value_type(std::sin(angle));
-    value_type c = value_type(std::cos(angle));
+  value_type s = value_type(std::sin(angle));
+  value_type c = value_type(std::cos(angle));
 
-    value_type ij = c * m.basis_element(i,j) - s * m.basis_element(i,k);
-    value_type jj = c * m.basis_element(j,j) - s * m.basis_element(j,k);
-    value_type kj = c * m.basis_element(k,j) - s * m.basis_element(k,k);
-    
-    m.set_basis_element(i,k, s*m.basis_element(i,j) + c*m.basis_element(i,k));
-    m.set_basis_element(j,k, s*m.basis_element(j,j) + c*m.basis_element(j,k));
-    m.set_basis_element(k,k, s*m.basis_element(k,j) + c*m.basis_element(k,k));
-    
-    m.set_basis_element(i,j,ij);
-    m.set_basis_element(j,j,jj);
-    m.set_basis_element(k,j,kj);
+  value_type ij = c * m.basis_element(i, j) - s * m.basis_element(i, k);
+  value_type jj = c * m.basis_element(j, j) - s * m.basis_element(j, k);
+  value_type kj = c * m.basis_element(k, j) - s * m.basis_element(k, k);
+
+  m.set_basis_element(i, k,
+    s * m.basis_element(i, j) + c * m.basis_element(i, k));
+  m.set_basis_element(j, k,
+    s * m.basis_element(j, j) + c * m.basis_element(j, k));
+  m.set_basis_element(k, k,
+    s * m.basis_element(k, j) + c * m.basis_element(k, k));
+
+  m.set_basis_element(i, j, ij);
+  m.set_basis_element(j, j, jj);
+  m.set_basis_element(k, j, kj);
 }
 
 /** Rotate a rotation matrix about the world x axis */
-template < typename E, class A, class B, class L > void
-matrix_rotate_about_world_x(matrix<E,A,B,L>& m, E angle) {
-    matrix_rotate_about_world_axis(m,0,angle);
+template<typename E, class A, class B, class L> void
+matrix_rotate_about_world_x(matrix<E, A, B, L>& m, E angle)
+{
+  matrix_rotate_about_world_axis(m, 0, angle);
 }
 
 /** Rotate a rotation matrix about the world y axis */
-template < typename E, class A, class B, class L > void
-matrix_rotate_about_world_y(matrix<E,A,B,L>& m, E angle) {
-    matrix_rotate_about_world_axis(m,1,angle);
+template<typename E, class A, class B, class L> void
+matrix_rotate_about_world_y(matrix<E, A, B, L>& m, E angle)
+{
+  matrix_rotate_about_world_axis(m, 1, angle);
 }
 
 /** Rotate a rotation matrix about the world z axis */
-template < typename E, class A, class B, class L > void
-matrix_rotate_about_world_z(matrix<E,A,B,L>& m, E angle) {
-    matrix_rotate_about_world_axis(m,2,angle);
+template<typename E, class A, class B, class L> void
+matrix_rotate_about_world_z(matrix<E, A, B, L>& m, E angle)
+{
+  matrix_rotate_about_world_axis(m, 2, angle);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -768,77 +766,85 @@ matrix_rotate_about_world_z(matrix<E,A,B,L>& m, E angle) {
 //////////////////////////////////////////////////////////////////////////////
 
 /** Rotate a rotation matrix about the given local axis */
-template < typename E, class A, class B, class L > void
-matrix_rotate_about_local_axis(matrix<E,A,B,L>& m, size_t axis, E angle)
+template<typename E, class A, class B, class L> void
+matrix_rotate_about_local_axis(matrix<E, A, B, L>& m, size_t axis, E angle)
 {
-    typedef matrix<E,A,B,L> matrix_type;
-    typedef typename matrix_type::value_type value_type;
+  typedef matrix<E, A, B, L> matrix_type;
+  typedef typename matrix_type::value_type value_type;
 
-    /* Checking */
-    detail::CheckMatLinear3D(m);
-    detail::CheckIndex3(axis);
+  /* Checking */
+  detail::CheckMatLinear3D(m);
+  detail::CheckIndex3(axis);
 
-    size_t i, j, k;
-    cyclic_permutation(axis, i, j, k);
+  size_t i, j, k;
+  cyclic_permutation(axis, i, j, k);
 
-    value_type s = value_type(std::sin(angle));
-    value_type c = value_type(std::cos(angle));
+  value_type s = value_type(std::sin(angle));
+  value_type c = value_type(std::cos(angle));
 
-    value_type j0 = c * m.basis_element(j,0) + s * m.basis_element(k,0);
-    value_type j1 = c * m.basis_element(j,1) + s * m.basis_element(k,1);
-    value_type j2 = c * m.basis_element(j,2) + s * m.basis_element(k,2);
+  value_type j0 = c * m.basis_element(j, 0) + s * m.basis_element(k, 0);
+  value_type j1 = c * m.basis_element(j, 1) + s * m.basis_element(k, 1);
+  value_type j2 = c * m.basis_element(j, 2) + s * m.basis_element(k, 2);
 
-    m.set_basis_element(k,0, c*m.basis_element(k,0) - s*m.basis_element(j,0));
-    m.set_basis_element(k,1, c*m.basis_element(k,1) - s*m.basis_element(j,1));
-    m.set_basis_element(k,2, c*m.basis_element(k,2) - s*m.basis_element(j,2));
+  m.set_basis_element(k, 0,
+    c * m.basis_element(k, 0) - s * m.basis_element(j, 0));
+  m.set_basis_element(k, 1,
+    c * m.basis_element(k, 1) - s * m.basis_element(j, 1));
+  m.set_basis_element(k, 2,
+    c * m.basis_element(k, 2) - s * m.basis_element(j, 2));
 
-    m.set_basis_element(j,0,j0);
-    m.set_basis_element(j,1,j1);
-    m.set_basis_element(j,2,j2);
+  m.set_basis_element(j, 0, j0);
+  m.set_basis_element(j, 1, j1);
+  m.set_basis_element(j, 2, j2);
 }
 
 /** Rotate a rotation matrix about its local x axis */
-template < typename E, class A, class B, class L > void
-matrix_rotate_about_local_x(matrix<E,A,B,L>& m, E angle) {
-    matrix_rotate_about_local_axis(m,0,angle);
+template<typename E, class A, class B, class L> void
+matrix_rotate_about_local_x(matrix<E, A, B, L>& m, E angle)
+{
+  matrix_rotate_about_local_axis(m, 0, angle);
 }
 
 /** Rotate a rotation matrix about its local y axis */
-template < typename E, class A, class B, class L > void
-matrix_rotate_about_local_y(matrix<E,A,B,L>& m, E angle) {
-    matrix_rotate_about_local_axis(m,1,angle);
+template<typename E, class A, class B, class L> void
+matrix_rotate_about_local_y(matrix<E, A, B, L>& m, E angle)
+{
+  matrix_rotate_about_local_axis(m, 1, angle);
 }
 
 /** Rotate a rotation matrix about its local z axis */
-template < typename E, class A, class B, class L > void
-matrix_rotate_about_local_z(matrix<E,A,B,L>& m, E angle) {
-    matrix_rotate_about_local_axis(m,2,angle);
+template<typename E, class A, class B, class L> void
+matrix_rotate_about_local_z(matrix<E, A, B, L>& m, E angle)
+{
+  matrix_rotate_about_local_axis(m, 2, angle);
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // 2D relative rotation
 //////////////////////////////////////////////////////////////////////////////
 
-template < typename E, class A, class B, class L > void
-matrix_rotate_2D(matrix<E,A,B,L>& m, E angle)
+template<typename E, class A, class B, class L> void
+matrix_rotate_2D(matrix<E, A, B, L>& m, E angle)
 {
-    typedef matrix<E,A,B,L> matrix_type;
-    typedef typename matrix_type::value_type value_type;
+  typedef matrix<E, A, B, L> matrix_type;
+  typedef typename matrix_type::value_type value_type;
 
-    /* Checking */
-    detail::CheckMatLinear2D(m);
+  /* Checking */
+  detail::CheckMatLinear2D(m);
 
-    value_type s = value_type(std::sin(angle));
-    value_type c = value_type(std::cos(angle));
+  value_type s = value_type(std::sin(angle));
+  value_type c = value_type(std::cos(angle));
 
-    value_type m00 = c * m.basis_element(0,0) - s * m.basis_element(0,1);
-    value_type m10 = c * m.basis_element(1,0) - s * m.basis_element(1,1);
+  value_type m00 = c * m.basis_element(0, 0) - s * m.basis_element(0, 1);
+  value_type m10 = c * m.basis_element(1, 0) - s * m.basis_element(1, 1);
 
-    m.set_basis_element(0,1, s*m.basis_element(0,0) + c*m.basis_element(0,1));
-    m.set_basis_element(1,1, s*m.basis_element(1,0) + c*m.basis_element(1,1));
+  m.set_basis_element(0, 1,
+    s * m.basis_element(0, 0) + c * m.basis_element(0, 1));
+  m.set_basis_element(1, 1,
+    s * m.basis_element(1, 0) + c * m.basis_element(1, 1));
 
-    m.set_basis_element(0,0,m00);
-    m.set_basis_element(1,0,m10);
+  m.set_basis_element(0, 0, m00);
+  m.set_basis_element(1, 0, m10);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -850,19 +856,19 @@ matrix_rotate_2D(matrix<E,A,B,L>& m, E angle)
  * Note: The quaternion algorithm is more stable than the matrix algorithm, so
  * we simply pass off to the quaternion function here.
  */
-template < class E,class A,class B,class L,class VecT_1,class VecT_2 > void
+template<class E, class A, class B, class L, class VecT_1, class VecT_2> void
 matrix_rotation_vec_to_vec(
-    matrix<E,A,B,L>& m,
-    const VecT_1& v1,
-    const VecT_2& v2,
-    bool unit_length_vectors = false)
+  matrix<E, A, B, L>& m,
+  const VecT_1& v1,
+  const VecT_2& v2,
+  bool unit_length_vectors = false)
 {
-    typedef quaternion< E,fixed<>,vector_first,positive_cross >
-        quaternion_type;
-    
-    quaternion_type q;
-    quaternion_rotation_vec_to_vec(q,v1,v2,unit_length_vectors);
-    matrix_rotation_quaternion(m,q);
+  typedef quaternion<E, fixed<>, vector_first, positive_cross>
+    quaternion_type;
+
+  quaternion_type q;
+  quaternion_rotation_vec_to_vec(q, v1, v2, unit_length_vectors);
+  matrix_rotation_quaternion(m, q);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -870,29 +876,29 @@ matrix_rotation_vec_to_vec(
 //////////////////////////////////////////////////////////////////////////////
 
 /** Scale the angle of a 3D rotation matrix */
-template < typename E, class A, class B, class L > void
-matrix_scale_rotation_angle(matrix<E,A,B,L>& m, E t,
-    E tolerance = epsilon<E>::placeholder())
+template<typename E, class A, class B, class L> void
+matrix_scale_rotation_angle(matrix<E, A, B, L>& m, E t,
+  E tolerance = epsilon<E>::placeholder())
 {
-    typedef vector< E,fixed<3> > vector_type;
-    typedef typename vector_type::value_type value_type;
-    
-    vector_type axis;
-    value_type angle;
-    matrix_to_axis_angle(m, axis, angle, tolerance);
-    matrix_rotation_axis_angle(m, axis, angle * t);
+  typedef vector<E, fixed<3>> vector_type;
+  typedef typename vector_type::value_type value_type;
+
+  vector_type axis;
+  value_type angle;
+  matrix_to_axis_angle(m, axis, angle, tolerance);
+  matrix_rotation_axis_angle(m, axis, angle * t);
 }
 
 /** Scale the angle of a 2D rotation matrix */
-template < typename E, class A, class B, class L > void
+template<typename E, class A, class B, class L> void
 matrix_scale_rotation_angle_2D(
-    matrix<E,A,B,L>& m, E t, E tolerance = epsilon<E>::placeholder())
+  matrix<E, A, B, L>& m, E t, E tolerance = epsilon<E>::placeholder())
 {
-    typedef vector< E,fixed<2> > vector_type;
-    typedef typename vector_type::value_type value_type;
+  typedef vector<E, fixed<2>> vector_type;
+  typedef typename vector_type::value_type value_type;
 
-    value_type angle = matrix_to_rotation_2D(m);
-    matrix_rotation_2D(m, angle * t);
+  value_type angle = matrix_to_rotation_2D(m);
+  matrix_rotation_2D(m, angle * t);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -924,43 +930,47 @@ matrix_scale_rotation_angle_2D(
       fixed<2, 2>, typename MatT_1::basis_orient, row_major>
 
 namespace detail {
-
 /** Concatenate two 3D row-basis rotation matrices in the order m1->m2 */
-template < class MatT_1, class MatT_2 > MAT_TEMP_3X3
-matrix_concat_rotations(const MatT_1& m1, const MatT_2& m2, row_basis) {
-    return m1*m2;
+template<class MatT_1, class MatT_2> MAT_TEMP_3X3
+matrix_concat_rotations(const MatT_1& m1, const MatT_2& m2, row_basis)
+{
+  return m1 * m2;
 }
 
 /** Concatenate two 3D col-basis rotation matrices in the order m1->m2 */
-template < class MatT_1, class MatT_2 > MAT_TEMP_3X3
-matrix_concat_rotations(const MatT_1& m1, const MatT_2& m2, col_basis) {
-    return m2*m1;
+template<class MatT_1, class MatT_2> MAT_TEMP_3X3
+matrix_concat_rotations(const MatT_1& m1, const MatT_2& m2, col_basis)
+{
+  return m2 * m1;
 }
 
 /** Concatenate two 3D rotation matrices in the order m1->m2 */
-template < class MatT_1, class MatT_2 > MAT_TEMP_3X3
-matrix_concat_rotations(const MatT_1& m1, const MatT_2& m2) {
-    return matrix_concat_rotations(m1,m2,typename MatT_1::basis_orient());
+template<class MatT_1, class MatT_2> MAT_TEMP_3X3
+matrix_concat_rotations(const MatT_1& m1, const MatT_2& m2)
+{
+  return matrix_concat_rotations(m1, m2, typename MatT_1::basis_orient());
 }
 
 /** Concatenate two 2D row-basis rotation matrices in the order m1->m2 */
-template < class MatT_1, class MatT_2 > MAT_TEMP_2X2
-matrix_concat_rotations_2D(const MatT_1& m1, const MatT_2& m2, row_basis) {
-    return m1*m2;
+template<class MatT_1, class MatT_2> MAT_TEMP_2X2
+matrix_concat_rotations_2D(const MatT_1& m1, const MatT_2& m2, row_basis)
+{
+  return m1 * m2;
 }
 
 /** Concatenate two 2D col-basis rotation matrices in the order m1->m2 */
-template < class MatT_1, class MatT_2 > MAT_TEMP_2X2
-matrix_concat_rotations_2D(const MatT_1& m1, const MatT_2& m2, col_basis) {
-    return m2*m1;
+template<class MatT_1, class MatT_2> MAT_TEMP_2X2
+matrix_concat_rotations_2D(const MatT_1& m1, const MatT_2& m2, col_basis)
+{
+  return m2 * m1;
 }
 
 /** Concatenate two 2D rotation matrices in the order m1->m2 */
-template < class MatT_1, class MatT_2 > MAT_TEMP_2X2
-matrix_concat_rotations_2D(const MatT_1& m1, const MatT_2& m2) {
-    return matrix_concat_rotations_2D(m1,m2,typename MatT_1::basis_orient());
+template<class MatT_1, class MatT_2> MAT_TEMP_2X2
+matrix_concat_rotations_2D(const MatT_1& m1, const MatT_2& m2)
+{
+  return matrix_concat_rotations_2D(m1, m2, typename MatT_1::basis_orient());
 }
-
 } // namespace detail
 
 //////////////////////////////////////////////////////////////////////////////
@@ -968,15 +978,17 @@ matrix_concat_rotations_2D(const MatT_1& m1, const MatT_2& m2) {
 //////////////////////////////////////////////////////////////////////////////
 
 /** Return the rotational 'difference' between two 3D rotation matrices */
-template < class MatT_1, class MatT_2 > MAT_TEMP_3X3
-matrix_rotation_difference(const MatT_1& m1, const MatT_2& m2) {
-    return detail::matrix_concat_rotations(transpose(m1),m2);
+template<class MatT_1, class MatT_2> MAT_TEMP_3X3
+matrix_rotation_difference(const MatT_1& m1, const MatT_2& m2)
+{
+  return detail::matrix_concat_rotations(transpose(m1), m2);
 }
 
 /** Return the rotational 'difference' between two 2D rotation matrices */
-template < class MatT_1, class MatT_2 > MAT_TEMP_2X2
-matrix_rotation_difference_2D(const MatT_1& m1, const MatT_2& m2) {
-    return detail::matrix_concat_rotations_2D(transpose(m1),m2);
+template<class MatT_1, class MatT_2> MAT_TEMP_2X2
+matrix_rotation_difference_2D(const MatT_1& m1, const MatT_2& m2)
+{
+  return detail::matrix_concat_rotations_2D(transpose(m1), m2);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -997,27 +1009,27 @@ matrix_rotation_difference_2D(const MatT_1& m1, const MatT_2& m2) {
 */
 
 /** Spherical linear interpolation of two 3D rotation matrices */
-template < class MatT_1, class MatT_2, typename E > MAT_TEMP_3X3
+template<class MatT_1, class MatT_2, typename E> MAT_TEMP_3X3
 matrix_slerp(const MatT_1& m1, const MatT_2& m2, E t,
-    E tolerance = epsilon<E>::placeholder())
+  E tolerance = epsilon<E>::placeholder())
 {
-    typedef MAT_TEMP_3X3 temporary_type;
+  typedef MAT_TEMP_3X3 temporary_type;
 
-    temporary_type m = matrix_rotation_difference(m1,m2);
-    matrix_scale_rotation_angle(m,t,tolerance);
-    return detail::matrix_concat_rotations(m1,m);
+  temporary_type m = matrix_rotation_difference(m1, m2);
+  matrix_scale_rotation_angle(m, t, tolerance);
+  return detail::matrix_concat_rotations(m1, m);
 }
 
 /** Spherical linear interpolation of two 2D rotation matrices */
-template < class MatT_1, class MatT_2, typename E > MAT_TEMP_2X2
+template<class MatT_1, class MatT_2, typename E> MAT_TEMP_2X2
 matrix_slerp_2D(const MatT_1& m1, const MatT_2& m2, E t,
-    E tolerance = epsilon<E>::placeholder())
+  E tolerance = epsilon<E>::placeholder())
 {
-    typedef MAT_TEMP_2X2 temporary_type;
+  typedef MAT_TEMP_2X2 temporary_type;
 
-    temporary_type m = matrix_rotation_difference_2D(m1,m2);
-    matrix_scale_rotation_angle_2D(m,t,tolerance);
-    return detail::matrix_concat_rotations_2D(m1,m);
+  temporary_type m = matrix_rotation_difference_2D(m1, m2);
+  matrix_scale_rotation_angle_2D(m, t, tolerance);
+  return detail::matrix_concat_rotations_2D(m1, m);
 }
 
 #  undef MAT_TEMP_3X3
@@ -1028,13 +1040,13 @@ matrix_slerp_2D(const MatT_1& m1, const MatT_2& m2, E t,
 //////////////////////////////////////////////////////////////////////////////
 
 /** Convert a 2D rotation matrix to a rotation angle */
-template < class MatT > typename MatT::value_type
+template<class MatT> typename MatT::value_type
 matrix_to_rotation_2D(const MatT& m)
 {
-    /* Checking */
-    detail::CheckMatLinear2D(m);
-    
-    return std::atan2(m.basis_element(0,1),m.basis_element(0,0));
+  /* Checking */
+  detail::CheckMatLinear2D(m);
+
+  return std::atan2(m.basis_element(0, 1), m.basis_element(0, 0));
 }
 
 #endif

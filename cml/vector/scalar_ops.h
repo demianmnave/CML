@@ -9,13 +9,12 @@
 #include <cml/vector/scalar_node.h>
 
 namespace cml {
-
 /** Helper function to generate a vector_scalar_node from a vector type
  * (i.e. derived from readable_vector<>) and a scalar type.
  */
 template<class Op, class Sub, class Scalar, enable_if_vector_t<Sub>* = nullptr,
   enable_if_arithmetic_t<cml::unqualified_type_t<Scalar>>* = nullptr>
-inline auto
+auto
 make_vector_scalar_node(Sub&& sub,
   Scalar&& v) -> vector_scalar_node<actual_operand_type_of_t<decltype(sub)>,
   actual_operand_type_of_t<decltype(v)>, Op>
@@ -38,7 +37,7 @@ make_vector_scalar_node(Sub&& sub,
 
 template<class Sub, class Scalar, enable_if_vector_t<Sub>* = nullptr,
   enable_if_arithmetic_t<cml::unqualified_type_t<Scalar>>* = nullptr>
-inline auto
+auto
 operator*(Sub&& sub, Scalar&& v)
   -> decltype(make_vector_scalar_node<binary_multiply_t<Sub, Scalar>>(
     std::forward<Sub>(sub), std::forward<Scalar>(v)))
@@ -50,7 +49,7 @@ operator*(Sub&& sub, Scalar&& v)
 template<class Scalar, class Sub,
   enable_if_arithmetic_t<cml::unqualified_type_t<Scalar>>* = nullptr,
   enable_if_vector_t<Sub>* = nullptr>
-inline auto
+auto
 operator*(Scalar&& v, Sub&& sub)
   -> decltype(make_vector_scalar_node<binary_multiply_t<Sub, Scalar>>(
     std::forward<Sub>(sub), std::forward<Scalar>(v)))
@@ -61,7 +60,7 @@ operator*(Scalar&& v, Sub&& sub)
 
 template<class Sub, class Scalar, enable_if_vector_t<Sub>* = nullptr,
   enable_if_arithmetic_t<cml::unqualified_type_t<Scalar>>* = nullptr>
-inline auto
+auto
 operator/(Sub&& sub, Scalar&& v)
   -> decltype(make_vector_scalar_node<binary_divide_t<Sub, Scalar>>(
     std::forward<Sub>(sub), std::forward<Scalar>(v)))
@@ -69,5 +68,4 @@ operator/(Sub&& sub, Scalar&& v)
   return make_vector_scalar_node<binary_divide_t<Sub, Scalar>>(
     std::forward<Sub>(sub), std::forward<Scalar>(v));
 }
-
-}  // namespace cml
+} // namespace cml

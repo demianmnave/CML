@@ -2,6 +2,10 @@
 
 include_guard()
 
+# Get the TYPE target property of ${InTarget}.
+#
+# Parameters:
+#   InTarget: (required) string containing the target name
 function(cml_get_target_type InTarget OutType)
   get_target_property(${OutType} ${InTarget} TYPE)
   set(${OutType} ${${OutType}} PARENT_SCOPE)
@@ -10,7 +14,8 @@ endfunction()
 # Apply CML_TARGET_PROPERTIES to the named target if defined. ${InTarget} must
 # already exist as a target.
 #
-#   InTarget: (required) string containing the target name :type
+# Parameters:
+#   InTarget: (required) string containing the target name
 function(cml_target_properties_defaults InTarget)
   if(DEFINED CML_TARGET_PROPERTIES)
     set_target_properties(${InTarget} PROPERTIES ${CML_TARGET_PROPERTIES})

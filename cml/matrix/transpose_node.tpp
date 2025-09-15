@@ -7,23 +7,25 @@
 #endif
 
 namespace cml {
-
 /* matrix_transpose_node 'structors: */
 
 template<class Sub>
 matrix_transpose_node<Sub>::matrix_transpose_node(Sub sub)
-: m_sub(std::move(sub))
-{}
+  : m_sub(std::move(sub))
+{
+}
 
 template<class Sub>
 matrix_transpose_node<Sub>::matrix_transpose_node(node_type&& other)
-: m_sub(std::move(other.m_sub))
-{}
+  : m_sub(std::move(other.m_sub))
+{
+}
 
 template<class Sub>
 matrix_transpose_node<Sub>::matrix_transpose_node(const node_type& other)
-: m_sub(other.m_sub)
-{}
+  : m_sub(other.m_sub)
+{
+}
 
 /* Internal methods: */
 
@@ -49,5 +51,4 @@ matrix_transpose_node<Sub>::i_get(int i, int j) const -> immutable_value
 {
   return this->m_sub.get(j, i);
 }
-
-}  // namespace cml
+} // namespace cml

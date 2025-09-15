@@ -8,7 +8,6 @@
 #include <cml/vector/traits.h>
 
 namespace cml {
-
 /** Convenience alias to determine the scalar type to return from
  * cml::triple_product.
  */
@@ -29,8 +28,7 @@ template<class Sub1, class Sub2, class Sub3>
 auto triple_product(const readable_vector<Sub1>& a,
   const readable_vector<Sub2>& b, const readable_vector<Sub3>& c)
   -> triple_product_promote_t<Sub1, Sub2, Sub3>;
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_VECTOR_TRIPLE_PRODUCT_TPP
 #include <cml/vector/triple_product.tpp>

@@ -1,0 +1,11 @@
+#pragma once
+
+#include <string_view>
+
+constexpr auto CML_VERSION_MAJOR = @VERSION_MAJOR@U;
+constexpr auto CML_VERSION_MINOR = @VERSION_MINOR@U;
+constexpr auto CML_VERSION_PATCH = @VERSION_PATCH@U;
+constexpr auto CML_VERSION       = @VERSION_NUMBER@U;
+
+/** Full version as a string(_view). */
+constexpr std::string_view CML_VERSION_STRING = "@VERSION_STRING@";

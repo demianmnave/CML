@@ -9,23 +9,25 @@
 #include <cml/quaternion/order_tags.h>
 
 namespace cml {
-
 /* imaginary_node 'structors: */
 
 template<class Sub>
 imaginary_node<Sub>::imaginary_node(Sub sub)
-: m_sub(std::move(sub))
-{}
+  : m_sub(std::move(sub))
+{
+}
 
 template<class Sub>
 imaginary_node<Sub>::imaginary_node(node_type&& other)
-: m_sub(std::move(other.m_sub))
-{}
+  : m_sub(std::move(other.m_sub))
+{
+}
 
 template<class Sub>
 imaginary_node<Sub>::imaginary_node(const node_type& other)
-: m_sub(other.m_sub)
-{}
+  : m_sub(other.m_sub)
+{
+}
 
 /* Internal methods: */
 
@@ -46,5 +48,4 @@ imaginary_node<Sub>::i_get(int i) const -> immutable_value
   return this->m_sub.get(order_type::X + i);
   /* Note: X is either 0 (imaginary_first) or 1 (real_first). */
 }
-
-}  // namespace cml
+} // namespace cml

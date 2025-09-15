@@ -9,7 +9,6 @@
 #include <cml/vector/vector.h>
 
 namespace cml {
-
 template<class Element> struct vector_traits<vector<const Element, external<>>>
 {
   /* Traits and types for the vector element: */
@@ -33,7 +32,7 @@ template<class Element> struct vector_traits<vector<const Element, external<>>>
 /** Runtime-length wrapped array pointer as a vector. */
 template<class Element>
 class vector<const Element, external<>>
-: public readable_vector<vector<const Element, external<>>>
+  : public readable_vector<vector<const Element, external<>>>
 {
   public:
   using vector_type = vector<const Element, external<>>;
@@ -47,11 +46,9 @@ class vector<const Element, external<>>
   using storage_type = typename traits_type::storage_type;
   using size_tag = typename traits_type::size_tag;
 
-
   public:
   /** Constant containing the array size. */
   static const int array_size = -1;
-
 
   public:
   /** Default construct with a null pointer and 0 size.
@@ -70,7 +67,6 @@ class vector<const Element, external<>>
   /** Move constructor. */
   vector(vector_type&& other);
 
-
   public:
   /** Return const access to the vector data as a raw pointer. */
   const_pointer data() const;
@@ -83,7 +79,6 @@ class vector<const Element, external<>>
 
   /** Reset the vector to have no elements and no external pointer. */
   void reset();
-
 
   protected:
   /** @name readable_vector Interface */
@@ -107,8 +102,7 @@ class vector<const Element, external<>>
   /** Number of elements. */
   int m_size;
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_VECTOR_DYNAMIC_CONST_EXTERNAL_TPP
 #include <cml/vector/dynamic_const_external.tpp>

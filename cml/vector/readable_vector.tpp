@@ -13,7 +13,6 @@
 #include <cml/vector/size_checking.h>
 
 namespace cml {
-
 /* Public methods: */
 
 template<class DT>
@@ -71,7 +70,7 @@ readable_vector<DT>::length() const -> value_type
 
 template<class DT>
 auto
-readable_vector<DT>::normalize() const& -> vector_scalar_node<const DT&,
+readable_vector<DT>::normalize() const & -> vector_scalar_node<const DT&,
   value_type, op::binary_divide<value_type, value_type>>
 {
   return vector_scalar_node<const DT&, value_type,
@@ -81,7 +80,8 @@ readable_vector<DT>::normalize() const& -> vector_scalar_node<const DT&,
 
 template<class DT>
 auto
-readable_vector<DT>::normalize() const&& -> vector_scalar_node<DT&&, value_type,
+readable_vector<DT>::normalize() const && -> vector_scalar_node<DT&&, value_type
+  ,
   op::binary_divide<value_type, value_type>>
 {
   return vector_scalar_node<DT&&, value_type,
@@ -90,16 +90,15 @@ readable_vector<DT>::normalize() const&& -> vector_scalar_node<DT&&, value_type,
 
 template<class DT>
 auto
-readable_vector<DT>::subvector(int i) const& -> subvector_node<const DT&>
+readable_vector<DT>::subvector(int i) const & -> subvector_node<const DT&>
 {
   return subvector_node<const DT&>((const DT&) *this, i);
 }
 
 template<class DT>
 auto
-readable_vector<DT>::subvector(int i) const&& -> subvector_node<DT&&>
+readable_vector<DT>::subvector(int i) const && -> subvector_node<DT&&>
 {
   return subvector_node<DT&&>((DT&&) *this, i);
 }
-
-}  // namespace cml
+} // namespace cml

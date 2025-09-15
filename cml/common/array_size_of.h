@@ -8,16 +8,15 @@
 
 namespace cml {
 namespace detail {
-
 /** Helper defining a typedef @c type that is int if @c T is an integral
  * type, or @c T otherwise.
  */
 template<class T> struct int_if_integral
 {
-  using type = typename std::conditional<std::is_integral<T>::value, int, T>::type;
+  using type = typename std::conditional<std::is_integral<T>::value, int,
+    T>::type;
 };
-
-}  // namespace detail
+} // namespace detail
 
 
 /** Specializable compile-time array size. */
@@ -32,7 +31,7 @@ template<class Array, class Enable = void> struct array_cols_of_c;
 /** Compile-time size of an array. */
 template<class Array>
 struct array_size_of_c<Array,
-  typename std::enable_if<std::is_array<Array>::value>::type>
+    typename std::enable_if<std::is_array<Array>::value>::type>
 {
   static const int value = int(std::extent<Array>::value);
 };
@@ -42,24 +41,25 @@ struct array_size_of_c<Array,
  */
 template<class Array>
 struct array_size_of_c<Array,
-  typename std::enable_if<Array::array_size == Array::array_size>::type>
+    typename std::enable_if<Array::array_size == Array::array_size>::type>
 {
   static const int value = Array::array_size;
 };
 
 /** Return the size of @c array if it implements the size() method. */
 template<class Array>
-inline auto
+auto
 array_size_of(const Array& array) ->
   typename detail::int_if_integral<decltype(array.size())>::type
 {
-  using result_type = typename detail::int_if_integral<decltype(array.size())>::type;
+  using result_type = typename detail::int_if_integral<decltype(array.size()
+  )>::type;
   return result_type(array.size());
 }
 
 /** Return the size of a fixed-length array. */
 template<class Array>
-inline int
+int
 array_size_of(const Array&,
   typename std::enable_if<std::is_array<Array>::value>::type* = 0)
 {
@@ -71,7 +71,7 @@ array_size_of(const Array&,
  */
 template<class Array>
 struct array_rows_of_c<Array,
-  typename std::enable_if<Array::array_rows == Array::array_rows>::type>
+    typename std::enable_if<Array::array_rows == Array::array_rows>::type>
 {
   static const int value = int(Array::array_rows);
 };
@@ -81,7 +81,7 @@ struct array_rows_of_c<Array,
  */
 template<class Array>
 struct array_cols_of_c<Array,
-  typename std::enable_if<Array::array_cols == Array::array_cols>::type>
+    typename std::enable_if<Array::array_cols == Array::array_cols>::type>
 {
   static const int value = int(Array::array_cols);
 };
@@ -90,7 +90,7 @@ struct array_cols_of_c<Array,
  * method.
  */
 template<class Array>
-inline auto
+auto
 array_rows_of(const Array& array) -> decltype(array.rows())
 {
   return array.rows();
@@ -100,10 +100,9 @@ array_rows_of(const Array& array) -> decltype(array.rows())
  * method.
  */
 template<class Array>
-inline auto
+auto
 array_cols_of(const Array& array) -> decltype(array.cols())
 {
   return array.cols();
 }
-
-}  // namespace cml
+} // namespace cml

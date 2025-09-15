@@ -7,7 +7,6 @@
 #include <cml/vector/readable_vector.h>
 
 namespace cml {
-
 template<class Sub, class Op> class vector_unary_node;
 
 /** vector_unary_node<> traits. */
@@ -43,11 +42,9 @@ class vector_unary_node : public readable_vector<vector_unary_node<Sub, Op>>
   using storage_type = typename traits_type::storage_type;
   using size_tag = typename traits_type::size_tag;
 
-
   public:
   /** The array size constant is the same as the subexpression. */
   static const int array_size = traits_type::array_size;
-
 
   public:
   /** Construct from the wrapped sub-expression.  @c sub must be an
@@ -60,7 +57,6 @@ class vector_unary_node : public readable_vector<vector_unary_node<Sub, Op>>
 
   /** Copy constructor. */
   vector_unary_node(const node_type& other);
-
 
   protected:
   /** @name readable_vector Interface */
@@ -82,19 +78,18 @@ class vector_unary_node : public readable_vector<vector_unary_node<Sub, Op>>
    * as a copy if Sub is an rvalue reference (temporary), or by const
    * reference if Sub is an lvalue reference.
    */
-  using sub_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const sub_type&,
+  using sub_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const
+    sub_type&,
     sub_type>;
 
   /** The wrapped subexpression. */
   sub_wrap_type m_sub;
 
-
   private:
   // Not assignable.
   node_type& operator=(const node_type&);
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_VECTOR_UNARY_NODE_TPP
 #include <cml/vector/unary_node.tpp>

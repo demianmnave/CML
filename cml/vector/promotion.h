@@ -13,7 +13,6 @@
 #include <cml/vector/vector.h>
 
 namespace cml {
-
 /** Determine an appropriate storage type to use when combining vector
  * expressions via a pairwise binary operator.
  *
@@ -43,7 +42,7 @@ template<class Storage1, class Storage2> struct vector_binary_storage_promote
 /** Convenience alias for vector_binary_storage_promote. */
 template<class Storage1, class Storage2>
 using vector_binary_storage_promote_t =
-  typename vector_binary_storage_promote<Storage1, Storage2>::type;
+typename vector_binary_storage_promote<Storage1, Storage2>::type;
 
 
 /** Helper to deduce a reasonable vector type from two vector subexpression
@@ -53,8 +52,8 @@ template<class Sub1, class Sub2, class Enable = void> struct vector_promote;
 
 template<class Sub1, class Sub2>
 struct vector_promote<Sub1, Sub2,
-  typename std::enable_if<is_vector<Sub1>::value
-    && is_vector<Sub2>::value>::type>
+    typename std::enable_if<is_vector<Sub1>::value
+      && is_vector<Sub2>::value>::type>
 {
   using left_type = cml::unqualified_type_t<Sub1>;
   using right_type = cml::unqualified_type_t<Sub2>;
@@ -65,7 +64,8 @@ struct vector_promote<Sub1, Sub2,
   using value_type = value_type_promote_t<left_traits, right_traits>;
 
   /* Determine the new storage type: */
-  using storage_type = vector_binary_storage_promote_t<storage_type_of_t<left_traits>,
+  using storage_type = vector_binary_storage_promote_t<storage_type_of_t<
+      left_traits>,
     storage_type_of_t<right_traits>>;
 
   /* Use the proxy type for the temporary: */
@@ -78,5 +78,4 @@ struct vector_promote<Sub1, Sub2,
 /** Convenience alias for vector_promote<>. */
 template<class Sub1, class Sub2>
 using vector_promote_t = typename vector_promote<Sub1, Sub2>::type;
-
-}  // namespace cml
+} // namespace cml

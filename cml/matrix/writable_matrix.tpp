@@ -18,10 +18,9 @@
 
 namespace cml {
 namespace detail {
-
 /* Terminate the assignment recursion at the final element. */
 template<int I, class Sub, class E0>
-inline void
+void
 assign_elements(writable_matrix<Sub>& sub, const E0& e0)
 {
   sub.put(I / sub.cols(), I % sub.cols(), e0);
@@ -31,7 +30,7 @@ assign_elements(writable_matrix<Sub>& sub, const E0& e0)
  * of the elements starting from I+1.
  */
 template<int I, class Sub, class E0, class... Es>
-inline void
+void
 assign_elements(writable_matrix<Sub>& sub, const E0& e0, const Es&... eN)
 {
   sub.put(I / sub.cols(), I % sub.cols(), e0);
@@ -42,13 +41,12 @@ assign_elements(writable_matrix<Sub>& sub, const E0& e0, const Es&... eN)
  * row-major order.
  */
 template<class Sub, class... Es>
-inline void
+void
 assign_elements(writable_matrix<Sub>& sub, const Es&... eN)
 {
   assign_elements<0>(sub, eN...);
 }
-
-}  // namespace detail
+} // namespace detail
 
 /* Public methods: */
 
@@ -79,7 +77,7 @@ template<class Other>
 DT&&
 writable_matrix<DT>::put(int i, int j, const Other& v) &&
 {
-  this->put(i, j, v);  // Forward to put(...) &
+  this->put(i, j, v); // Forward to put(...) &
   return (DT&&) *this;
 }
 
@@ -104,7 +102,7 @@ template<class Other>
 DT&&
 writable_matrix<DT>::set_basis_element(int i, int j, const Other& v) &&
 {
-  this->set_basis_element(i, j, v);  // Forward to set_basis_element(...) &
+  this->set_basis_element(i, j, v); // Forward to set_basis_element(...) &
   return (DT&&) *this;
 }
 
@@ -161,7 +159,7 @@ template<class DT>
 DT&&
 writable_matrix<DT>::zero() &&
 {
-  this->zero();  // Forward to zero &
+  this->zero(); // Forward to zero &
   return (DT&&) *this;
 }
 
@@ -179,7 +177,7 @@ template<class DT>
 DT&&
 writable_matrix<DT>::identity() &&
 {
-  this->identity();  // Forward to zero &
+  this->identity(); // Forward to zero &
   return (DT&&) *this;
 }
 
@@ -191,7 +189,7 @@ writable_matrix<DT>::random(const_reference low, const_reference high) &
     std::uniform_int_distribution<value_type>,
     std::uniform_real_distribution<value_type>>;
 
-  std::random_device rd;  // Non-deterministic seed, if supported.
+  std::random_device rd; // Non-deterministic seed, if supported.
   std::default_random_engine gen(rd());
   distribution_type d(low, high);
   auto random_f = [&d, &gen](int, int) { return d(gen); };
@@ -499,5 +497,4 @@ writable_matrix<DT>::set_basis_element(int i, int j, const Other& v, col_basis)
 {
   this->put(j, i, v);
 }
-
-}  // namespace cml
+} // namespace cml

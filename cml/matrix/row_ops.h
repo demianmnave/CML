@@ -8,9 +8,8 @@
 #include <cml/matrix/row_node.h>
 
 namespace cml {
-
 template<class Sub, enable_if_matrix_t<Sub>* = nullptr>
-inline auto
+auto
 row(Sub&& sub, int row)
   -> matrix_row_node<actual_operand_type_of_t<decltype(sub)>, -1>
 {
@@ -22,5 +21,4 @@ row(Sub&& sub, int row)
   using sub_type = actual_operand_type_of_t<decltype(sub)>;
   return matrix_row_node<sub_type, -1>((sub_type) sub, row);
 }
-
-}  // namespace cml
+} // namespace cml

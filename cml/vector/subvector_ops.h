@@ -7,7 +7,6 @@
 #include <cml/vector/subvector_node.h>
 
 namespace cml {
-
 /** Return an expression node for the subvector @c i of @c sub. @c sub is
  * stored by const reference in the node.
  */
@@ -21,8 +20,7 @@ auto subvector(const readable_vector<Sub>& sub, int i)
  */
 template<class Sub>
 auto subvector(readable_vector<Sub>&& sub) -> subvector_node<Sub&&>;
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_VECTOR_SUBVECTOR_OPS_TPP
 #include <cml/vector/subvector_ops.tpp>

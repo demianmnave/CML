@@ -9,9 +9,8 @@
 #include <cml/matrix/size_checking.h>
 
 namespace cml {
-
 template<class Sub1, class Sub2>
-inline bool
+bool
 operator==(const readable_matrix<Sub1>& left,
   const readable_matrix<Sub2>& right)
 {
@@ -19,21 +18,21 @@ operator==(const readable_matrix<Sub1>& left,
   if(left.size() != right.size()) return false;
   for(int i = 0; i < left.rows(); i++) {
     for(int j = 0; j < left.cols(); j++) {
-      /**/ if(left(i, j) < right(i, j))
-        return false;                                  // Strictly less.
-      else if(right(i, j) < left(i, j)) return false;  // Strictly greater.
-      else continue;                                   // Possibly equal.
+      /**/
+      if(left(i, j) < right(i, j))
+        return false;                                 // Strictly less.
+      else if(right(i, j) < left(i, j)) return false; // Strictly greater.
+      else continue;                                  // Possibly equal.
     }
   }
   return true;
 }
 
 template<class Sub1, class Sub2>
-inline bool
+bool
 operator!=(const readable_matrix<Sub1>& left,
   const readable_matrix<Sub2>& right)
 {
   return !(left == right);
 }
-
-}  // namespace cml
+} // namespace cml

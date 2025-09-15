@@ -8,7 +8,6 @@
 #include <cml/quaternion/temporary.h>
 
 namespace cml {
-
 /** Return the real part of quaternion @c q. */
 template<class DerivedT>
 auto real(const readable_quaternion<DerivedT>& q)
@@ -46,8 +45,7 @@ auto log(const readable_quaternion<DerivedT>& q) -> temporary_of_t<DerivedT>;
 /** Return the exponential of @c q. */
 template<class DerivedT>
 auto exp(const readable_quaternion<DerivedT>& q) -> temporary_of_t<DerivedT>;
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_QUATERNION_FUNCTIONS_TPP
 #include <cml/quaternion/functions.tpp>

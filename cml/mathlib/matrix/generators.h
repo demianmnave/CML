@@ -9,7 +9,6 @@
 /** @defgroup mathlib_matrix_generators Matrix Generator Functions */
 
 namespace cml {
-
 /** @addtogroup mathlib_matrix_generators */
 /*@{*/
 
@@ -18,7 +17,7 @@ namespace cml {
 
 /** Return a fixed-size double-precision zero matrix. */
 template<int Rows, int Cols>
-inline auto
+auto
 zero() -> matrix<double, compiled<Rows, Cols>>
 {
   return matrix<double, compiled<Rows, Cols>>().zero();
@@ -52,7 +51,7 @@ zero_4x4() -> decltype(zero<4, 4>())
 
 /** Return a fixed-size double-precision identity matrix. */
 template<int Rows, int Cols>
-inline auto
+auto
 identity() -> matrix<double, compiled<Rows, Cols>>
 {
   return matrix<double, compiled<Rows, Cols>>().identity();
@@ -82,5 +81,4 @@ identity_4x4() -> decltype(identity<4, 4>())
 /*@}*/
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml

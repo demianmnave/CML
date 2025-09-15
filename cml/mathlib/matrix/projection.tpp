@@ -10,7 +10,6 @@
 #include <cml/mathlib/matrix/size_checking.h>
 
 namespace cml {
-
 /* Orthographic projection functions: */
 
 /** Build a matrix representing an orthographic projection, specified by
@@ -19,7 +18,7 @@ namespace cml {
  */
 
 template<class Sub, class E>
-inline void
+void
 matrix_orthographic(writable_matrix<Sub>& m, E left, E right, E bottom, E top,
   E n, E f, AxisOrientation handedness, ZClip z_clip)
 {
@@ -39,7 +38,8 @@ matrix_orthographic(writable_matrix<Sub>& m, E left, E right, E bottom, E top,
   if(z_clip == z_clip_neg_one) {
     m.set_basis_element(2, 2, s * E(2) * inv_depth);
     m.set_basis_element(3, 2, -(f + n) * inv_depth);
-  } else {  // z_clip.z_clip() == 0
+  } else {
+    // z_clip.z_clip() == 0
     m.set_basis_element(2, 2, s * inv_depth);
     m.set_basis_element(3, 2, -n * inv_depth);
   }
@@ -51,7 +51,7 @@ matrix_orthographic(writable_matrix<Sub>& m, E left, E right, E bottom, E top,
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_orthographic_LH(writable_matrix<Sub>& m, E left, E right, E bottom,
   E top, E n, E f, ZClip z_clip)
 {
@@ -59,7 +59,7 @@ matrix_orthographic_LH(writable_matrix<Sub>& m, E left, E right, E bottom,
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_orthographic_RH(writable_matrix<Sub>& m, E left, E right, E bottom,
   E top, E n, E f, ZClip z_clip)
 {
@@ -67,7 +67,7 @@ matrix_orthographic_RH(writable_matrix<Sub>& m, E left, E right, E bottom,
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_orthographic(writable_matrix<Sub>& m, E width, E height, E n, E f,
   AxisOrientation handedness, ZClip z_clip)
 {
@@ -78,7 +78,7 @@ matrix_orthographic(writable_matrix<Sub>& m, E width, E height, E n, E f,
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_orthographic_LH(writable_matrix<Sub>& m, E width, E height, E n, E f,
   ZClip z_clip)
 {
@@ -86,7 +86,7 @@ matrix_orthographic_LH(writable_matrix<Sub>& m, E width, E height, E n, E f,
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_orthographic_RH(writable_matrix<Sub>& m, E width, E height, E n, E f,
   ZClip z_clip)
 {
@@ -96,7 +96,7 @@ matrix_orthographic_RH(writable_matrix<Sub>& m, E width, E height, E n, E f,
 /* Perspective projection functions: */
 
 template<class Sub, class E>
-inline void
+void
 matrix_perspective(writable_matrix<Sub>& m, E left, E right, E bottom, E top,
   E n, E f, AxisOrientation handedness, ZClip z_clip)
 {
@@ -117,7 +117,8 @@ matrix_perspective(writable_matrix<Sub>& m, E left, E right, E bottom, E top,
   if(z_clip == z_clip_neg_one) {
     m.set_basis_element(2, 2, s * (f + n) * inv_depth);
     m.set_basis_element(3, 2, -E(2) * f * n * inv_depth);
-  } else {  // z_clip == z_clip_zero
+  } else {
+    // z_clip == z_clip_zero
     m.set_basis_element(2, 2, s * f * inv_depth);
     m.set_basis_element(3, 2, -s * n * m.basis_element(2, 2));
   }
@@ -131,7 +132,7 @@ matrix_perspective(writable_matrix<Sub>& m, E left, E right, E bottom, E top,
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_perspective_LH(writable_matrix<Sub>& m, E left, E right, E bottom, E top,
   E n, E f, ZClip z_clip)
 {
@@ -139,7 +140,7 @@ matrix_perspective_LH(writable_matrix<Sub>& m, E left, E right, E bottom, E top,
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_perspective_RH(writable_matrix<Sub>& m, E left, E right, E bottom, E top,
   E n, E f, ZClip z_clip)
 {
@@ -147,7 +148,7 @@ matrix_perspective_RH(writable_matrix<Sub>& m, E left, E right, E bottom, E top,
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_perspective(writable_matrix<Sub>& m, E width, E height, E n, E f,
   AxisOrientation handedness, ZClip z_clip)
 {
@@ -158,7 +159,7 @@ matrix_perspective(writable_matrix<Sub>& m, E width, E height, E n, E f,
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_perspective_LH(writable_matrix<Sub>& m, E width, E height, E n, E f,
   ZClip z_clip)
 {
@@ -166,7 +167,7 @@ matrix_perspective_LH(writable_matrix<Sub>& m, E width, E height, E n, E f,
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_perspective_RH(writable_matrix<Sub>& m, E width, E height, E n, E f,
   ZClip z_clip)
 {
@@ -174,7 +175,7 @@ matrix_perspective_RH(writable_matrix<Sub>& m, E width, E height, E n, E f,
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_perspective_xfov(writable_matrix<Sub>& m, E xfov, E aspect, E n, E f,
   AxisOrientation handedness, ZClip z_clip)
 {
@@ -186,7 +187,7 @@ matrix_perspective_xfov(writable_matrix<Sub>& m, E xfov, E aspect, E n, E f,
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_perspective_xfov_LH(writable_matrix<Sub>& m, E xfov, E aspect, E n, E f,
   ZClip z_clip)
 {
@@ -194,7 +195,7 @@ matrix_perspective_xfov_LH(writable_matrix<Sub>& m, E xfov, E aspect, E n, E f,
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_perspective_xfov_RH(writable_matrix<Sub>& m, E xfov, E aspect, E n, E f,
   ZClip z_clip)
 {
@@ -202,7 +203,7 @@ matrix_perspective_xfov_RH(writable_matrix<Sub>& m, E xfov, E aspect, E n, E f,
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_perspective_yfov(writable_matrix<Sub>& m, E yfov, E aspect, E n, E f,
   AxisOrientation handedness, ZClip z_clip)
 {
@@ -214,7 +215,7 @@ matrix_perspective_yfov(writable_matrix<Sub>& m, E yfov, E aspect, E n, E f,
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_perspective_yfov_LH(writable_matrix<Sub>& m, E yfov, E aspect, E n, E f,
   ZClip z_clip)
 {
@@ -222,14 +223,13 @@ matrix_perspective_yfov_LH(writable_matrix<Sub>& m, E yfov, E aspect, E n, E f,
 }
 
 template<class Sub, class E>
-inline void
+void
 matrix_perspective_yfov_RH(writable_matrix<Sub>& m, E yfov, E aspect, E n, E f,
   ZClip z_clip)
 {
   matrix_perspective_yfov(m, yfov, aspect, n, f, right_handed, z_clip);
 }
-
-}  // namespace cml
+} // namespace cml
 
 #if 0
 // XXX INCOMPLETE XXX
@@ -244,13 +244,13 @@ matrix_perspective_yfov_RH(writable_matrix<Sub>& m, E yfov, E aspect, E n, E f,
  * be adapted accordingly.
  */
 
-template < typename E, class A, class B, class L > void
-matrix_viewport(matrix<E,A,B,L>& m, E left, E right, E bottom,
-    E top, ZClip z_clip, E n = E(0), E f = E(1))
+template<typename E, class A, class B, class L> void
+matrix_viewport(matrix<E, A, B, L>& m, E left, E right, E bottom,
+  E top, ZClip z_clip, E n = E(0), E f = E(1))
 {
-    matrix_orthographic_LH(m, left, right, bottom, top, n, f, z_clip);
-    /* @todo: invert(m), when available */
-    m = inverse(m);
+  matrix_orthographic_LH(m, left, right, bottom, top, n, f, z_clip);
+  /* @todo: invert(m), when available */
+  m = inverse(m);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -269,27 +269,27 @@ matrix_viewport(matrix<E,A,B,L>& m, E left, E right, E bottom,
  * Should this be addressed?
  */
 
-template < typename E, class A, class B, class L > void
+template<typename E, class A, class B, class L> void
 matrix_pick(
-    matrix<E,A,B,L>& m, E pick_x, E pick_y, E pick_width, E pick_height,
-    E viewport_x, E viewport_y, E viewport_width, E viewport_height)
+  matrix<E, A, B, L>& m, E pick_x, E pick_y, E pick_width, E pick_height,
+  E viewport_x, E viewport_y, E viewport_width, E viewport_height)
 {
-    typedef matrix<E,A,B,L> matrix_type;
-    typedef typename matrix_type::value_type value_type;
+  typedef matrix<E, A, B, L> matrix_type;
+  typedef typename matrix_type::value_type value_type;
 
-    /* Checking */
-    detail::CheckMatHomogeneous3D(m);
+  /* Checking */
+  detail::CheckMatHomogeneous3D(m);
 
-    identity_transform(m);
-    
-    value_type inv_width = value_type(1) / pick_width;
-    value_type inv_height = value_type(1) / pick_height;
-    
-    m.set_basis_element(0,0,viewport_width*inv_width);
-    m.set_basis_element(1,1,viewport_height*inv_height);
-    m.set_basis_element(3,0,
-        (viewport_width+value_type(2)*(viewport_x-pick_x))*inv_width);
-    m.set_basis_element(3,1,
-        (viewport_height+value_type(2)*(viewport_y-pick_y))*inv_height);
+  identity_transform(m);
+
+  value_type inv_width = value_type(1) / pick_width;
+  value_type inv_height = value_type(1) / pick_height;
+
+  m.set_basis_element(0, 0, viewport_width * inv_width);
+  m.set_basis_element(1, 1, viewport_height * inv_height);
+  m.set_basis_element(3, 0,
+    (viewport_width + value_type(2) * (viewport_x - pick_x)) * inv_width);
+  m.set_basis_element(3, 1,
+    (viewport_height + value_type(2) * (viewport_y - pick_y)) * inv_height);
 }
 #endif

@@ -1,6 +1,7 @@
 # Clang compiler defaults.
 
 include_guard()
+include(host-functions)
 
 message(STATUS "${PROJECT_NAME}: configuring for ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION} (${CMAKE_CXX_COMPILER_FRONTEND_VARIANT})")
 
@@ -45,7 +46,13 @@ if(MSVC)
   if(PROJECT_IS_TOP_LEVEL)
     list(APPEND _cml_private_cxx_options
       /W4          # Most warnings
+      /MP
     )
+
+    cml_get_host_arch(_arch)
+    if(${_arch} STREQUAL "x64")
+      list(APPEND _cml_private_cxx_options /arch:AVX /clang:-fvectorize)
+    endif()
   endif()
 
   set(_cml_private_exe_link_options /NOIMPLIB)
@@ -72,6 +79,11 @@ else()
       -Wall        # All warnings
       -Wextra
     )
+
+    cml_get_host_arch(_arch)
+    if(${_arch} STREQUAL "x64")
+      list(APPEND _cml_private_cxx_options -march=native -mavx -fvectorize -fassociative-math)
+    endif()
   endif()
 
   list(APPEND _cml_private_cxx_options_release -O2)

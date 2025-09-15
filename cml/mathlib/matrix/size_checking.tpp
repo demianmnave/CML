@@ -10,16 +10,16 @@
 
 namespace cml {
 namespace detail {
-
 /* No-op matrix size checking. */
 template<class Sub>
-inline void
+void
 check_affine_2D(const readable_matrix<Sub>&, any_basis)
-{}
+{
+}
 
 /* Size checking for a row-basis matrix: */
 template<class Sub>
-inline void
+void
 check_affine_2D(const readable_matrix<Sub>& m, row_basis)
 {
   cml::check_minimum_size(m, cml::int_c<3>(), cml::int_c<2>());
@@ -27,7 +27,7 @@ check_affine_2D(const readable_matrix<Sub>& m, row_basis)
 
 /* Size checking for a column-basis matrix: */
 template<class Sub>
-inline void
+void
 check_affine_2D(const readable_matrix<Sub>& m, col_basis)
 {
   cml::check_minimum_size(m, cml::int_c<2>(), cml::int_c<3>());
@@ -35,13 +35,14 @@ check_affine_2D(const readable_matrix<Sub>& m, col_basis)
 
 /* No-op matrix size checking. */
 template<class Sub>
-inline void
+void
 check_affine_3D(const readable_matrix<Sub>&, any_basis)
-{}
+{
+}
 
 /* Size checking for a row-basis matrix: */
 template<class Sub>
-inline void
+void
 check_affine_3D(const readable_matrix<Sub>& m, row_basis)
 {
   cml::check_minimum_size(m, cml::int_c<4>(), cml::int_c<3>());
@@ -49,7 +50,7 @@ check_affine_3D(const readable_matrix<Sub>& m, row_basis)
 
 /* Size checking for a column-basis matrix: */
 template<class Sub>
-inline void
+void
 check_affine_3D(const readable_matrix<Sub>& m, col_basis)
 {
   cml::check_minimum_size(m, cml::int_c<3>(), cml::int_c<4>());
@@ -57,7 +58,7 @@ check_affine_3D(const readable_matrix<Sub>& m, col_basis)
 
 /* Compile-time affine matrix size checking: */
 template<class Sub>
-inline void
+void
 check_affine(const readable_matrix<Sub>&, fixed_size_tag)
 {
   using traits = matrix_traits<Sub>;
@@ -74,7 +75,7 @@ check_affine(const readable_matrix<Sub>&, fixed_size_tag)
 
 /* Run-time affine matrix size checking: */
 template<class Sub>
-inline void
+void
 check_affine(const readable_matrix<Sub>& m, dynamic_size_tag)
 {
   using traits = matrix_traits<Sub>;
@@ -86,11 +87,10 @@ check_affine(const readable_matrix<Sub>& m, dynamic_size_tag)
   int N = is_row_basis<traits>::value ? m.cols() : m.rows();
   cml_require(M == N || M == N + 1, affine_matrix_size_error, /**/);
 }
-
-}  // namespace detail
+} // namespace detail
 
 template<class Sub>
-inline void
+void
 check_affine_2D(const readable_matrix<Sub>& m)
 {
   using tag = basis_tag_of_t<Sub>;
@@ -98,7 +98,7 @@ check_affine_2D(const readable_matrix<Sub>& m)
 }
 
 template<class Sub>
-inline void
+void
 check_affine_3D(const readable_matrix<Sub>& m)
 {
   using tag = basis_tag_of_t<Sub>;
@@ -106,7 +106,7 @@ check_affine_3D(const readable_matrix<Sub>& m)
 }
 
 template<class Sub>
-inline void
+void
 check_affine(const readable_matrix<Sub>& m)
 {
   using size_tag = size_tag_of_t<Sub>;
@@ -115,17 +115,16 @@ check_affine(const readable_matrix<Sub>& m)
 }
 
 template<class Sub>
-inline void
+void
 check_linear_2D(const readable_matrix<Sub>& m)
 {
   cml::check_minimum_size(m, cml::int_c<2>(), cml::int_c<2>());
 }
 
 template<class Sub>
-inline void
+void
 check_linear_3D(const readable_matrix<Sub>& m)
 {
   cml::check_minimum_size(m, cml::int_c<3>(), cml::int_c<3>());
 }
-
-}  // namespace cml
+} // namespace cml

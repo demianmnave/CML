@@ -8,7 +8,6 @@
 #include <cml/common/traits.h>
 
 namespace cml {
-
 /** Indicates a fixed-sized operand.
  *
  * @note Fixed-size vector types define a constant, @c array_size,
@@ -18,7 +17,8 @@ namespace cml {
  * array_cols, containing the number of rows and columns.
  */
 struct fixed_size_tag
-{};
+{
+};
 
 /** Indicates a runtime-sized operand.
  *
@@ -29,13 +29,15 @@ struct fixed_size_tag
  * array_cols, both set to -1.
  */
 struct dynamic_size_tag
-{};
+{
+};
 
 /** Indicates that the vector or matrix type has an unspecified or
  * arbitrary size tag.
  */
 struct any_size_tag
-{};
+{
+};
 
 /** Detect valid size tags.
  *
@@ -81,7 +83,8 @@ template<class T> struct is_fixed_size
 /** Wrapper for enable_if to detect types tagged with fixed_size_tag. */
 template<class Sub, class T = void>
 struct enable_if_fixed_size : std::enable_if<is_fixed_size<Sub>::value, T>
-{};
+{
+};
 
 /** Convenience alias for enable_if_fixed_size. */
 template<class Sub, class T = void>
@@ -97,7 +100,8 @@ template<class T> struct is_dynamic_size
 /** Wrapper for enable_if to detect types tagged with dynamic_size_tag. */
 template<class Sub, class T = void>
 struct enable_if_dynamic_size : std::enable_if<is_dynamic_size<Sub>::value, T>
-{};
+{
+};
 
 /** Convenience alias for enable_if_dynamic_size. */
 template<class Sub, class T = void>
@@ -112,10 +116,10 @@ template<class T> struct is_any_size
 /** Wrapper for enable_if to detect types tagged with any_size_tag. */
 template<class Sub, class T = void>
 struct enable_if_any_size : std::enable_if<is_any_size<Sub>::value, T>
-{};
+{
+};
 
 /** Convenience alias for enable_if_any_size. */
 template<class Sub, class T = void>
 using enable_if_any_size_t = typename enable_if_any_size<Sub, T>::type;
-
-}  // namespace cml
+} // namespace cml

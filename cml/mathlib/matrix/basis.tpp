@@ -11,11 +11,10 @@
 #include <cml/mathlib/matrix/size_checking.h>
 
 namespace cml {
-
 /* 2D basis functions: */
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_set_basis_vector_2D(writable_matrix<Sub1>& m, int i,
   const readable_vector<Sub2>& v)
 {
@@ -28,7 +27,7 @@ matrix_set_basis_vector_2D(writable_matrix<Sub1>& m, int i,
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_set_x_basis_vector_2D(writable_matrix<Sub1>& m,
   const readable_vector<Sub2>& x)
 {
@@ -36,7 +35,7 @@ matrix_set_x_basis_vector_2D(writable_matrix<Sub1>& m,
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_set_y_basis_vector_2D(writable_matrix<Sub1>& m,
   const readable_vector<Sub2>& y)
 {
@@ -44,7 +43,7 @@ matrix_set_y_basis_vector_2D(writable_matrix<Sub1>& m,
 }
 
 template<class Sub1, class SubX, class SubY>
-inline void
+void
 matrix_set_basis_vectors_2D(writable_matrix<Sub1>& m,
   const readable_vector<SubX>& x, const readable_vector<SubY>& y)
 {
@@ -53,7 +52,7 @@ matrix_set_basis_vectors_2D(writable_matrix<Sub1>& m,
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_set_transposed_basis_vector_2D(writable_matrix<Sub1>& m, int i,
   const readable_vector<Sub2>& v)
 {
@@ -66,7 +65,7 @@ matrix_set_transposed_basis_vector_2D(writable_matrix<Sub1>& m, int i,
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_set_transposed_x_basis_vector_2D(writable_matrix<Sub1>& m,
   const readable_vector<Sub2>& x)
 {
@@ -74,7 +73,7 @@ matrix_set_transposed_x_basis_vector_2D(writable_matrix<Sub1>& m,
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_set_transposed_y_basis_vector_2D(writable_matrix<Sub1>& m,
   const readable_vector<Sub2>& y)
 {
@@ -82,7 +81,7 @@ matrix_set_transposed_y_basis_vector_2D(writable_matrix<Sub1>& m,
 }
 
 template<class Sub1, class SubX, class SubY>
-inline void
+void
 matrix_set_transposed_basis_vectors_2D(writable_matrix<Sub1>& m,
   const readable_vector<SubX>& x, const readable_vector<SubY>& y)
 {
@@ -91,7 +90,7 @@ matrix_set_transposed_basis_vectors_2D(writable_matrix<Sub1>& m,
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_basis_vector_2D(const readable_matrix<Sub>& m, int i)
   -> n_basis_vector_of_t<Sub, 2>
 {
@@ -102,7 +101,7 @@ matrix_get_basis_vector_2D(const readable_matrix<Sub>& m, int i)
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_x_basis_vector_2D(const readable_matrix<Sub>& m)
   -> n_basis_vector_of_t<Sub, 2>
 {
@@ -110,7 +109,7 @@ matrix_get_x_basis_vector_2D(const readable_matrix<Sub>& m)
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_y_basis_vector_2D(const readable_matrix<Sub>& m)
   -> n_basis_vector_of_t<Sub, 2>
 {
@@ -118,7 +117,7 @@ matrix_get_y_basis_vector_2D(const readable_matrix<Sub>& m)
 }
 
 template<class Sub, class SubX, class SubY>
-inline void
+void
 matrix_get_basis_vectors_2D(const readable_matrix<Sub>& m,
   writable_vector<SubX>& x, writable_vector<SubY>& y)
 {
@@ -127,7 +126,7 @@ matrix_get_basis_vectors_2D(const readable_matrix<Sub>& m,
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_transposed_basis_vector_2D(const readable_matrix<Sub>& m, int i)
   -> n_basis_vector_of_t<Sub, 2>
 {
@@ -138,7 +137,7 @@ matrix_get_transposed_basis_vector_2D(const readable_matrix<Sub>& m, int i)
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_transposed_x_basis_vector_2D(const readable_matrix<Sub>& m)
   -> n_basis_vector_of_t<Sub, 2>
 {
@@ -146,7 +145,7 @@ matrix_get_transposed_x_basis_vector_2D(const readable_matrix<Sub>& m)
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_transposed_y_basis_vector_2D(const readable_matrix<Sub>& m)
   -> n_basis_vector_of_t<Sub, 2>
 {
@@ -154,7 +153,7 @@ matrix_get_transposed_y_basis_vector_2D(const readable_matrix<Sub>& m)
 }
 
 template<class Sub, class SubX, class SubY>
-inline void
+void
 matrix_get_transposed_basis_vectors_2D(const readable_matrix<Sub>& m,
   writable_vector<SubX>& x, writable_vector<SubY>& y)
 {
@@ -165,7 +164,7 @@ matrix_get_transposed_basis_vectors_2D(const readable_matrix<Sub>& m,
 /* 3D basis functions: */
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_set_basis_vector(writable_matrix<Sub1>& m, int i,
   const readable_vector<Sub2>& v)
 {
@@ -179,7 +178,7 @@ matrix_set_basis_vector(writable_matrix<Sub1>& m, int i,
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_set_x_basis_vector(writable_matrix<Sub1>& m,
   const readable_vector<Sub2>& x)
 {
@@ -187,7 +186,7 @@ matrix_set_x_basis_vector(writable_matrix<Sub1>& m,
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_set_y_basis_vector(writable_matrix<Sub1>& m,
   const readable_vector<Sub2>& y)
 {
@@ -195,7 +194,7 @@ matrix_set_y_basis_vector(writable_matrix<Sub1>& m,
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_set_z_basis_vector(writable_matrix<Sub1>& m,
   const readable_vector<Sub2>& z)
 {
@@ -203,7 +202,7 @@ matrix_set_z_basis_vector(writable_matrix<Sub1>& m,
 }
 
 template<class Sub1, class SubX, class SubY, class SubZ>
-inline void
+void
 matrix_set_basis_vectors(writable_matrix<Sub1>& m,
   const readable_vector<SubX>& x, const readable_vector<SubY>& y,
   const readable_vector<SubZ>& z)
@@ -214,7 +213,7 @@ matrix_set_basis_vectors(writable_matrix<Sub1>& m,
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_set_transposed_basis_vector(writable_matrix<Sub1>& m, int i,
   const readable_vector<Sub2>& v)
 {
@@ -228,7 +227,7 @@ matrix_set_transposed_basis_vector(writable_matrix<Sub1>& m, int i,
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_set_transposed_x_basis_vector(writable_matrix<Sub1>& m,
   const readable_vector<Sub2>& x)
 {
@@ -236,7 +235,7 @@ matrix_set_transposed_x_basis_vector(writable_matrix<Sub1>& m,
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_set_transposed_y_basis_vector(writable_matrix<Sub1>& m,
   const readable_vector<Sub2>& y)
 {
@@ -244,7 +243,7 @@ matrix_set_transposed_y_basis_vector(writable_matrix<Sub1>& m,
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_set_transposed_z_basis_vector(writable_matrix<Sub1>& m,
   const readable_vector<Sub2>& z)
 {
@@ -252,7 +251,7 @@ matrix_set_transposed_z_basis_vector(writable_matrix<Sub1>& m,
 }
 
 template<class Sub1, class SubX, class SubY, class SubZ>
-inline void
+void
 matrix_set_transposed_basis_vectors(writable_matrix<Sub1>& m,
   const readable_vector<SubX>& x, const readable_vector<SubY>& y,
   const readable_vector<SubZ>& z)
@@ -263,7 +262,7 @@ matrix_set_transposed_basis_vectors(writable_matrix<Sub1>& m,
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_basis_vector(const readable_matrix<Sub>& m, int i)
   -> n_basis_vector_of_t<Sub, 3>
 {
@@ -274,7 +273,7 @@ matrix_get_basis_vector(const readable_matrix<Sub>& m, int i)
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_x_basis_vector(const readable_matrix<Sub>& m)
   -> n_basis_vector_of_t<Sub, 3>
 {
@@ -282,7 +281,7 @@ matrix_get_x_basis_vector(const readable_matrix<Sub>& m)
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_y_basis_vector(const readable_matrix<Sub>& m)
   -> n_basis_vector_of_t<Sub, 3>
 {
@@ -290,7 +289,7 @@ matrix_get_y_basis_vector(const readable_matrix<Sub>& m)
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_z_basis_vector(const readable_matrix<Sub>& m)
   -> n_basis_vector_of_t<Sub, 3>
 {
@@ -298,7 +297,7 @@ matrix_get_z_basis_vector(const readable_matrix<Sub>& m)
 }
 
 template<class Sub, class SubX, class SubY, class SubZ>
-inline void
+void
 matrix_get_basis_vectors(const readable_matrix<Sub>& m,
   writable_vector<SubX>& x, writable_vector<SubY>& y, writable_vector<SubZ>& z)
 {
@@ -308,7 +307,7 @@ matrix_get_basis_vectors(const readable_matrix<Sub>& m,
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_transposed_basis_vector(const readable_matrix<Sub>& m, int i)
   -> n_basis_vector_of_t<Sub, 3>
 {
@@ -319,7 +318,7 @@ matrix_get_transposed_basis_vector(const readable_matrix<Sub>& m, int i)
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_transposed_x_basis_vector(const readable_matrix<Sub>& m)
   -> n_basis_vector_of_t<Sub, 3>
 {
@@ -327,7 +326,7 @@ matrix_get_transposed_x_basis_vector(const readable_matrix<Sub>& m)
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_transposed_y_basis_vector(const readable_matrix<Sub>& m)
   -> n_basis_vector_of_t<Sub, 3>
 {
@@ -335,7 +334,7 @@ matrix_get_transposed_y_basis_vector(const readable_matrix<Sub>& m)
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_transposed_z_basis_vector(const readable_matrix<Sub>& m)
   -> n_basis_vector_of_t<Sub, 3>
 {
@@ -343,7 +342,7 @@ matrix_get_transposed_z_basis_vector(const readable_matrix<Sub>& m)
 }
 
 template<class Sub, class SubX, class SubY, class SubZ>
-inline void
+void
 matrix_get_transposed_basis_vectors(const readable_matrix<Sub>& m,
   writable_vector<SubX>& x, writable_vector<SubY>& y, writable_vector<SubZ>& z)
 {
@@ -355,9 +354,8 @@ matrix_get_transposed_basis_vectors(const readable_matrix<Sub>& m,
 /* nD basis functions: */
 
 namespace detail {
-
 template<class Sub>
-inline auto
+auto
 matrix_get_basis_vector(const readable_matrix<Sub>& m, int i, row_basis)
   -> basis_vector_of_t<Sub>
 {
@@ -365,14 +363,13 @@ matrix_get_basis_vector(const readable_matrix<Sub>& m, int i, row_basis)
 }
 
 template<class Sub>
-inline auto
+auto
 matrix_get_basis_vector(const readable_matrix<Sub>& m, int i, col_basis)
   -> basis_vector_of_t<Sub>
 {
   return cml::col(m, i);
 }
-
-}  // namespace detail
+} // namespace detail
 
 template<class Sub>
 auto
@@ -382,5 +379,4 @@ matrix_get_basis_vector_nD(const readable_matrix<Sub>& m, int i)
   using tag = basis_tag_of_t<Sub>;
   return detail::matrix_get_basis_vector(m, i, tag());
 }
-
-}  // namespace cml
+} // namespace cml

@@ -8,7 +8,6 @@
 #include <cml/matrix/readable_matrix.h>
 
 namespace cml {
-
 template<class Sub, class Op> class matrix_unary_node;
 
 /** matrix_unary_node<> traits. */
@@ -57,7 +56,6 @@ class matrix_unary_node : public readable_matrix<matrix_unary_node<Sub, Op>>
   using basis_tag = typename traits_type::basis_tag;
   using layout_tag = typename traits_type::layout_tag;
 
-
   public:
   /** Constant containing the number of rows. */
   static const int array_rows = traits_type::array_rows;
@@ -71,7 +69,6 @@ class matrix_unary_node : public readable_matrix<matrix_unary_node<Sub, Op>>
   /** Constant containing the array layout enumeration value. */
   static const layout_kind array_layout = traits_type::array_layout;
 
-
   public:
   /** Construct from the wrapped sub-expression.  @c sub must be an
    * lvalue reference or rvalue reference type.
@@ -83,7 +80,6 @@ class matrix_unary_node : public readable_matrix<matrix_unary_node<Sub, Op>>
 
   /** Copy constructor. */
   matrix_unary_node(const node_type& other);
-
 
   protected:
   /** @name readable_matrix Interface */
@@ -110,21 +106,19 @@ class matrix_unary_node : public readable_matrix<matrix_unary_node<Sub, Op>>
    * as a copy if Sub is an rvalue reference (temporary), or by const
    * reference if Sub is an lvalue reference.
    */
-  using sub_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const sub_type&,
+  using sub_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const
+    sub_type&,
     sub_type>;
-
 
   protected:
   /** The wrapped subexpression. */
   sub_wrap_type m_sub;
 
-
   private:
   // Not assignable.
   node_type& operator=(const node_type&);
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATRIX_UNARY_NODE_TPP
 #include <cml/matrix/unary_node.tpp>

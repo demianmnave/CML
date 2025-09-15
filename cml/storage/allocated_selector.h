@@ -15,7 +15,6 @@
 #include <cml/storage/compiled_selector.h>
 
 namespace cml {
-
 /* Forward declarations: */
 template<class Allocator = std::allocator<void*>, int Size1 = -1,
   int Size2 = -1, class Tag = void>
@@ -201,7 +200,7 @@ struct is_storage_selector<allocated<Allocator, Size1, Size2, Tag>>
 template<class Allocator1, int R1, int C1, class Tag1, class Allocator2, int R2,
   int C2, class Tag2>
 struct storage_disambiguate<allocated<Allocator1, R1, C1, Tag1>,
-  allocated<Allocator2, R2, C2, Tag2>>
+    allocated<Allocator2, R2, C2, Tag2>>
 {
   /* Rebind the allocators to void* to compare them: */
   using left_traits = std::allocator_traits<Allocator1>;
@@ -243,5 +242,4 @@ struct storage_disambiguate<allocated<Allocator1, R1, C1, Tag1>,
 /** For compatibility with CML1. */
 template<class Allocator = std::allocator<void*>>
 using dynamic = allocated<Allocator>;
-
-}  // namespace cml
+} // namespace cml

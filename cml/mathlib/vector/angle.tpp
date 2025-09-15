@@ -11,9 +11,8 @@
 #include <cml/vector/cross.h>
 
 namespace cml {
-
 template<class Sub1, class Sub2>
-inline auto
+auto
 signed_angle_2D(const readable_vector<Sub1>& v1,
   const readable_vector<Sub2>& v2) -> value_type_trait_promote_t<Sub1, Sub2>
 {
@@ -23,7 +22,7 @@ signed_angle_2D(const readable_vector<Sub1>& v1,
 }
 
 template<class Sub1, class Sub2>
-inline auto
+auto
 unsigned_angle_2D(const readable_vector<Sub1>& v1,
   const readable_vector<Sub2>& v2) -> value_type_trait_promote_t<Sub1, Sub2>
 {
@@ -33,7 +32,7 @@ unsigned_angle_2D(const readable_vector<Sub1>& v1,
 }
 
 template<class Sub1, class Sub2, class Sub3>
-inline auto
+auto
 signed_angle(const readable_vector<Sub1>& v1, const readable_vector<Sub2>& v2,
   const readable_vector<Sub3>& reference)
   -> value_type_trait_promote_t<Sub1, Sub2, Sub3>
@@ -47,7 +46,7 @@ signed_angle(const readable_vector<Sub1>& v1, const readable_vector<Sub2>& v2,
 }
 
 template<class Sub1, class Sub2>
-inline auto
+auto
 unsigned_angle(const readable_vector<Sub1>& v1, const readable_vector<Sub2>& v2)
   -> value_type_trait_promote_t<Sub1, Sub2>
 {
@@ -55,5 +54,4 @@ unsigned_angle(const readable_vector<Sub1>& v1, const readable_vector<Sub2>& v2)
   using value_traits = scalar_traits<value_type>;
   return value_traits::atan2(cross(v1, v2).length(), dot(v1, v2));
 }
-
-}  // namespace cml
+} // namespace cml

@@ -7,18 +7,19 @@
 #endif
 
 namespace cml {
-
 /* fixed_external 'structors: */
 
 template<class E, int S>
 vector<const E, external<S>>::vector()
-: m_data(0)
-{}
+  : m_data(0)
+{
+}
 
 template<class E, int S>
 vector<const E, external<S>>::vector(const_pointer data)
-: m_data(data)
-{}
+  : m_data(data)
+{
+}
 
 template<class E, int S>
 vector<const E, external<S>>::vector(vector_type&& other)
@@ -67,5 +68,4 @@ vector<const E, external<S>>::i_get(int i) const -> immutable_value
 {
   return this->m_data[i];
 }
-
-}  // namespace cml
+} // namespace cml

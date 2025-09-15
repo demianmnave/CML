@@ -7,7 +7,6 @@
 #include <cml/common/traits.h>
 
 namespace cml {
-
 /** Helper to specify real-first quaternion element ordering. */
 struct real_first
 {
@@ -90,5 +89,4 @@ using scalar_first = real_first;
 
 /** For CML1 compatibility. */
 using vector_first = imaginary_first;
-
-}  // namespace cml
+} // namespace cml

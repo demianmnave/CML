@@ -8,7 +8,6 @@
 #include <cml/matrix/fwd.h>
 
 namespace cml {
-
 /** Compute the trace of square matrix @c M.
  *
  * @throws non_square_matrix_error at run-time if the matrix is
@@ -17,8 +16,7 @@ namespace cml {
  */
 template<class Sub>
 auto trace(const readable_matrix<Sub>& M) -> value_type_trait_of_t<Sub>;
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATRIX_TRACE_TPP
 #include <cml/matrix/trace.tpp>

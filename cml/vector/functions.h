@@ -8,7 +8,6 @@
 #include <cml/vector/temporary.h>
 
 namespace cml {
-
 /** Return the squared length of @c v. */
 template<class DerivedT>
 auto length_squared(const readable_vector<DerivedT>& v)
@@ -22,8 +21,7 @@ auto length(const readable_vector<DerivedT>& v)
 /** Return a normalized copy of @c v. */
 template<class DerivedT>
 auto normalize(const readable_vector<DerivedT>& v) -> temporary_of_t<DerivedT>;
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_VECTOR_FUNCTIONS_TPP
 #include <cml/vector/functions.tpp>

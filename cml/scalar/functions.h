@@ -10,10 +10,9 @@
 #include <cml/scalar/traits.h>
 
 namespace cml {
-
 /** Sign (-1, 0, 1) of @c value as type @c T. */
 template<typename T>
-inline T
+constexpr T
 sign(T value)
 {
   return value < T(0) ? (-T(1)) : (value > T(0) ? T(1) : T(0));
@@ -21,7 +20,7 @@ sign(T value)
 
 /** Clamp input value to the range [min, max]. */
 template<typename T>
-inline T
+constexpr T
 clamp(T value, T min, T max)
 {
   return std::max((std::min)(value, max), min);
@@ -29,20 +28,18 @@ clamp(T value, T min, T max)
 
 /** Wrap input value to the range [min,max]. */
 template<typename T>
-inline T
+T
 wrap(T value, T min, T max)
 {
   max -= min;
   value = scalar_traits<T>::fmod(value - min, max);
-  if(value < T(0)) {
-    value += max;
-  }
+  if(value < T(0)) value += max;
   return min + value;
 }
 
 /** Test input value for inclusion in [min, max]. */
 template<typename T>
-inline bool
+constexpr bool
 in_range(T value, T min, T max)
 {
   return !(value < min) && !(value > max);
@@ -50,7 +47,7 @@ in_range(T value, T min, T max)
 
 /** Map input value from [min1, max1] to [min2, max2]. */
 template<typename T>
-inline T
+constexpr T
 map_range(T value, T min1, T max1, T min2, T max2)
 {
   return min2 + ((value - min1) / (max1 - min1)) * (max2 - min2);
@@ -58,7 +55,7 @@ map_range(T value, T min1, T max1, T min2, T max2)
 
 /** Wrap scalar_traits<T>::acos() and clamp argument to [-1, 1]. */
 template<typename T>
-inline T
+T
 acos_safe(T theta)
 {
   return T(scalar_traits<T>::acos(clamp(theta, T(-1), T(1))));
@@ -66,7 +63,7 @@ acos_safe(T theta)
 
 /** Wrap scalar_traits<T>::asin() and clamp argument to [-1, 1]. */
 template<typename T>
-inline T
+T
 asin_safe(T theta)
 {
   return T(scalar_traits<T>::asin(clamp(theta, T(-1), T(1))));
@@ -74,7 +71,7 @@ asin_safe(T theta)
 
 /** Wrap scalar_traits<T>::sqrt() and clamp argument to [0, inf). */
 template<typename T>
-inline T
+T
 sqrt_safe(T value)
 {
   return T(scalar_traits<T>::sqrt(std::max(value, T(0))));
@@ -82,7 +79,7 @@ sqrt_safe(T value)
 
 /** Square a value. */
 template<typename T>
-inline T
+constexpr T
 sqr(T value)
 {
   return value * value;
@@ -90,7 +87,7 @@ sqr(T value)
 
 /** Cube a value. */
 template<typename T>
-inline T
+constexpr T
 cub(T value)
 {
   return value * value * value;
@@ -98,7 +95,7 @@ cub(T value)
 
 /** Inverse square root. */
 template<typename T>
-inline T
+T
 inv_sqrt(T value)
 {
   return T(1) / scalar_traits<T>::sqrt(value);
@@ -106,7 +103,7 @@ inv_sqrt(T value)
 
 /** Convert radians to degrees. */
 template<typename T>
-inline T
+constexpr T
 deg(T theta)
 {
   return theta * constants<T>::deg_per_rad();
@@ -114,7 +111,7 @@ deg(T theta)
 
 /** Convert degrees to radians. */
 template<typename T>
-inline T
+constexpr T
 rad(T theta)
 {
   return theta * constants<T>::rad_per_deg();
@@ -122,11 +119,12 @@ rad(T theta)
 
 /** Uniformly random integer in the range [min, max]. */
 template<typename T>
-inline T
+T
 random_integer(T min, T max)
 {
-  std::default_random_engine gen(std::rand());
-  std::uniform_int_distribution<T> dis(min, max);
+  static std::random_device rd;
+  static std::default_random_engine gen(rd());
+  static std::uniform_int_distribution<T> dis(min, max);
   return dis(gen);
 }
 
@@ -146,11 +144,12 @@ random_polar()
 
 /* Uniformly distributed random real number in the range [min, max] */
 template<typename T>
-inline T
+T
 random_real(T min, T max)
 {
-  std::default_random_engine gen(std::rand());
-  std::uniform_real_distribution<T> dis(min, max);
+  static std::random_device rd;
+  static std::default_random_engine gen(rd());
+  static std::uniform_real_distribution<T> dis(min, max);
   return dis(gen);
 }
 
@@ -163,7 +162,7 @@ random_unit()
 
 /** Squared length in R2. */
 template<typename T>
-inline T
+constexpr T
 length_squared(T x, T y)
 {
   return x * x + y * y;
@@ -171,7 +170,7 @@ length_squared(T x, T y)
 
 /** Squared length in R3. */
 template<typename T>
-inline T
+constexpr T
 length_squared(T x, T y, T z)
 {
   return x * x + y * y + z * z;
@@ -179,7 +178,7 @@ length_squared(T x, T y, T z)
 
 /** Length in R2. */
 template<typename T>
-inline T
+T
 length(T x, T y)
 {
   return scalar_traits<T>::sqrt(length_squared(x, y));
@@ -187,7 +186,7 @@ length(T x, T y)
 
 /** Length in R3. */
 template<typename T>
-inline T
+T
 length(T x, T y, T z)
 {
   return scalar_traits<T>::sqrt(length_squared(x, y, z));
@@ -205,14 +204,14 @@ length(T x, T y, T z)
 /*@{*/
 
 /** Return next, with cycling, in a series of N non-negative integers. */
-inline int
+constexpr int
 next(int i, int N)
 {
   return (i + 1) % N;
 }
 
 /** Return previous, with cycling, in a series of N non-negative integers. */
-inline int
+constexpr int
 prev(int i, int N)
 {
   return i ? (i - 1) : (N - 1);
@@ -250,7 +249,7 @@ cyclic_permutation(int first, int& i, int& j, int& k, int& l)
 
 /** Index of maximum of 2 values. */
 template<typename T>
-inline int
+constexpr int
 index_of_max(T a, T b)
 {
   return a > b ? 0 : 1;
@@ -258,16 +257,16 @@ index_of_max(T a, T b)
 
 /** Index of maximum of 2 values by magnitude. */
 template<typename T>
-inline int
+int
 index_of_max_abs(T a, T b)
 {
-  auto fabs = &scalar_traits<T>::fabs;
+  using fabs = typename scalar_traits<T>::fabs;
   return index_of_max(fabs(a), fabs(b));
 }
 
 /** Index of minimum of 2 values. */
 template<typename T>
-inline int
+constexpr int
 index_of_min(T a, T b)
 {
   return a < b ? 0 : 1;
@@ -275,16 +274,16 @@ index_of_min(T a, T b)
 
 /** Index of minimum of 2 values by magnitude. */
 template<typename T>
-inline int
+int
 index_of_min_abs(T a, T b)
 {
-  auto fabs = &scalar_traits<T>::fabs;
+  using fabs = typename scalar_traits<T>::fabs;
   return index_of_min(fabs(a), fabs(b));
 }
 
 /** Index of maximum of 3 values. */
 template<typename T>
-inline int
+constexpr int
 index_of_max(T a, T b, T c)
 {
   return a > b ? (c > a ? 2 : 0) : (b > c ? 1 : 2);
@@ -292,16 +291,16 @@ index_of_max(T a, T b, T c)
 
 /** Index of maximum of 3 values by magnitude. */
 template<typename T>
-inline int
+int
 index_of_max_abs(T a, T b, T c)
 {
-  auto fabs = &scalar_traits<T>::fabs;
+  using fabs = typename scalar_traits<T>::fabs;
   return index_of_max(fabs(a), fabs(b), fabs(c));
 }
 
 /** Index of minimum of 3 values. */
 template<typename T>
-inline int
+constexpr int
 index_of_min(T a, T b, T c)
 {
   return a < b ? (c < a ? 2 : 0) : (b < c ? 1 : 2);
@@ -309,16 +308,16 @@ index_of_min(T a, T b, T c)
 
 /** Index of minimum of 3 values by magnitude. */
 template<typename T>
-inline int
+int
 index_of_min_abs(T a, T b, T c)
 {
-  auto fabs = &scalar_traits<T>::fabs;
+  using fabs = typename scalar_traits<T>::fabs;
   return index_of_min(fabs(a), fabs(b), fabs(c));
 }
 
 /** Index of maximum of 4 values. */
 template<typename T>
-inline int
+constexpr int
 index_of_max(T a, T b, T c, T d)
 {
   if(a > b) {
@@ -330,16 +329,16 @@ index_of_max(T a, T b, T c, T d)
 
 /** Index of maximum of 4 values by magnitude. */
 template<typename T>
-inline int
+int
 index_of_max_abs(T a, T b, T c, T d)
 {
-  auto fabs = &scalar_traits<T>::fabs;
+  using fabs = typename scalar_traits<T>::fabs;
   return index_of_max(fabs(a), fabs(b), fabs(c), fabs(d));
 }
 
 /** Index of minimum of 3 values. */
 template<typename T>
-inline int
+constexpr int
 index_of_min(T a, T b, T c, T d)
 {
   if(a < b) {
@@ -351,11 +350,10 @@ index_of_min(T a, T b, T c, T d)
 
 /** Index of minimum of 4 values by magnitude. */
 template<typename T>
-inline int
+int
 index_of_min_abs(T a, T b, T c, T d)
 {
-  auto fabs = &scalar_traits<T>::fabs;
+  using fabs = typename scalar_traits<T>::fabs;
   return index_of_min(fabs(a), fabs(b), fabs(c), fabs(d));
 }
-
-}  // namespace cml
+} // namespace cml

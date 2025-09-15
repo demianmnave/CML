@@ -7,7 +7,6 @@
 #include <cml/quaternion/imaginary_node.h>
 
 namespace cml {
-
 /** Return an expression node for the imaginary part of @c q.  @c q is
  * stored by const reference in the node.
  */
@@ -19,8 +18,7 @@ auto imaginary(const readable_quaternion<Sub>& q) -> imaginary_node<const Sub&>;
  */
 template<class Sub>
 auto imaginary(readable_quaternion<Sub>&& q) -> imaginary_node<Sub&&>;
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_QUATERNION_IMAGINARY_OPS_TPP
 #include <cml/quaternion/imaginary_ops.tpp>

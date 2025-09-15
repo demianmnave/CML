@@ -8,13 +8,13 @@
 #include <cml/common/mpl/is_statically_polymorphic.h>
 
 namespace cml {
-
 /** Remove const-volatile and reference types from @c T, but leave array and
  * function pointer types alone.
  */
 template<class T> struct unqualified_type
 {
-  using type = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+  using type = typename std::remove_cv<typename std::remove_reference<
+    T>::type>::type;
 };
 
 /** Convenience alias for unqualified_type. */
@@ -42,7 +42,6 @@ template<class T> struct actual_type_of
   /* The default overload deduces a void return type. */
   template<class U> static auto get_naked_type_of_actual(...) -> void;
 
-
   public:
   /* Deduce the return type of T::actual: */
   using type = cml::if_t<is_statically_polymorphic<naked_type>::value,
@@ -68,7 +67,6 @@ template<class T> struct actual_operand_type_of
   /* Derived type of T: */
   using actual_type = actual_type_of_t<base_type>;
 
-
   public:
   /* Build the reference type: */
   using type = cml::if_t<std::is_rvalue_reference<T>::value, actual_type&&,
@@ -79,5 +77,4 @@ template<class T> struct actual_operand_type_of
 /** Convenience alias for actual_operand_type_of<>. */
 template<class T>
 using actual_operand_type_of_t = typename actual_operand_type_of<T>::type;
-
-}  // namespace cml
+} // namespace cml

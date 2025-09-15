@@ -10,7 +10,6 @@
 /** @defgroup mathlib_frustum Frustum Functions */
 
 namespace cml {
-
 /** @addtogroup mathlib_frustum */
 /*@{*/
 
@@ -76,8 +75,7 @@ void extract_near_frustum_plane(const readable_matrix<Sub>& m, Plane& plane,
   ZClip z_clip);
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_FRUSTUM_TPP
 #include <cml/mathlib/frustum.tpp>

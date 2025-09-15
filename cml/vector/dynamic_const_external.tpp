@@ -9,27 +9,27 @@
 #include <cml/common/exception.h>
 
 namespace cml {
-
 /* dynamic_const_external 'structors: */
 
 template<class E>
 vector<const E, external<>>::vector()
-: m_data(0)
-, m_size(0)
-{}
+  : m_data(0)
+    , m_size(0)
+{
+}
 
 template<class E>
 vector<const E, external<>>::vector(const_pointer data, int size)
-: m_data(data)
-, m_size(size)
+  : m_data(data)
+    , m_size(size)
 {
   cml_require(size >= 0, std::invalid_argument, "size < 0");
 }
 
 template<class E>
 vector<const E, external<>>::vector(int size, const_pointer data)
-: m_data(data)
-, m_size(size)
+  : m_data(data)
+    , m_size(size)
 {
   cml_require(size >= 0, std::invalid_argument, "size < 0");
 }
@@ -90,5 +90,4 @@ vector<const E, external<>>::i_get(int i) const -> immutable_value
 {
   return this->m_data[i];
 }
-
-}  // namespace cml
+} // namespace cml

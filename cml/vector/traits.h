@@ -8,7 +8,6 @@
 #include <cml/vector/type_util.h>
 
 namespace cml {
-
 /** Specializable class wrapping traits for vector<> types. This class is
  * used to simplify static polymorphism by providing a base class the types
  * used by a particular derived class.
@@ -22,5 +21,4 @@ template<class Vector> struct traits_of<Vector, enable_if_vector_t<Vector>>
 {
   using type = vector_traits<Vector>;
 };
-
-}  // namespace cml
+} // namespace cml

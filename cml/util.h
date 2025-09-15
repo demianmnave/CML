@@ -7,10 +7,9 @@
 #include <cml/scalar/functions.h>
 
 namespace cml {
-
 /** Convert horizontal field of view to vertical field of view. */
 template<typename T>
-inline T
+T
 xfov_to_yfov(T xfov, T aspect)
 {
   return T(2
@@ -19,7 +18,7 @@ xfov_to_yfov(T xfov, T aspect)
 
 /** Convert vertical field of view to horizontal field of view. */
 template<typename T>
-inline T
+T
 yfov_to_xfov(T yfov, T aspect)
 {
   return T(2
@@ -28,7 +27,7 @@ yfov_to_xfov(T yfov, T aspect)
 
 /** Convert horizontal zoom to vertical zoom. */
 template<typename T>
-inline T
+T
 xzoom_to_yzoom(T xzoom, T aspect)
 {
   return xzoom * aspect;
@@ -36,7 +35,7 @@ xzoom_to_yzoom(T xzoom, T aspect)
 
 /** Convert vertical zoom to horizontal zoom. */
 template<typename T>
-inline T
+T
 yzoom_to_xzoom(T yzoom, T aspect)
 {
   return yzoom / aspect;
@@ -44,7 +43,7 @@ yzoom_to_xzoom(T yzoom, T aspect)
 
 /** Convert zoom factor to field of view. */
 template<typename T>
-inline T
+T
 zoom_to_fov(T zoom)
 {
   return T(2 * scalar_traits<T>::atan(T(1) / zoom));
@@ -52,10 +51,9 @@ zoom_to_fov(T zoom)
 
 /** Convert field of view to zoom factor. */
 template<typename T>
-inline T
+T
 fov_to_zoom(T fov)
 {
   return T(1) / scalar_traits<T>::tan(fov / 2);
 }
-
-}  // namespace cml
+} // namespace cml

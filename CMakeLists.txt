@@ -13,19 +13,7 @@ cmake_policy(SET CMP0091 NEW) # Enable MSVC ABI selection
 # Enable solution folders globally:
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}/cmake")
-include(build-macros)
-
-# Set the project version:
-cml_version_from_file(
-  ${CMAKE_CURRENT_LIST_DIR}/cml/version.h # Path to version.h
-  "CML_VERSION" # The macro name to find
-  _CML_VERSION_MAJOR # Parsed major version
-  _CML_VERSION_MINOR # Parsed minor version
-  _CML_VERSION_PATCH # Parsed patch version
-  _CML_VERSION # String MM.mm.pp
-)
-project(cml VERSION ${_CML_VERSION} LANGUAGES CXX)
+project(CML VERSION 2.4.0 LANGUAGES CXX)
 message(STATUS "Building ${PROJECT_NAME} ${CML_VERSION}")
 
 if(NOT DEFINED CMAKE_CXX_COMPILER_ID)
@@ -60,6 +48,7 @@ if(NOT DEFINED CML_CXX_STD)
   set(CML_CXX_STD cxx_std_17)
 endif()
 
+list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include(default-paths)
 include(${CMAKE_CXX_COMPILER_ID}-compiler)
 
@@ -71,26 +60,6 @@ if(BUILD_TESTING)
   add_subdirectory(tests)
 endif()
 
-# # Installation and packaging:
-# include(CMakePackageConfigHelpers)
-# write_basic_package_version_file(
-#   ${CMAKE_CURRENT_BINARY_DIR}/cml-config-version.cmake
-#   VERSION ${CML_VERSION}
-#   COMPATIBILITY ExactVersion
-# )
-
-# include(GNUInstallDirs)
-# install(TARGETS cml DESTINATION ${CMAKE_INSTALL_LIBDIR} EXPORT cml-targets)
-# install(EXPORT cml-targets DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cml FILE cml-targets.cmake)
-# install(DIRECTORY cml DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} FILES_MATCHING PATTERN "*")
-# install(FILES
-#   ${CMAKE_CURRENT_BINARY_DIR}/cml-config-version.cmake
-#   cmake/cml-config.cmake
-#   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cml
-# )
-
-# export(EXPORT cml-targets FILE cml-config.cmake)
-
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
@@ -100,12 +69,12 @@ if(NOT DEFINED CML_INSTALL_CMAKEDIR)
 endif()
 
 write_basic_package_version_file(
-    "${CMAKE_BINARY_DIR}/${CML_INSTALL_CMAKEDIR}/cml-config-version.cmake"
+    "${CMAKE_BINARY_DIR}/${CML_INSTALL_CMAKEDIR}/CMLConfigVersion.cmake"
     COMPATIBILITY ExactVersion
     )
 configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cml-config.cmake.in"
-    "${CMAKE_BINARY_DIR}/${CML_INSTALL_CMAKEDIR}/cml-config.cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/CMLConfig.cmake.in"
+    "${CMAKE_BINARY_DIR}/${CML_INSTALL_CMAKEDIR}/CMLConfig.cmake"
     INSTALL_DESTINATION "${CML_INSTALL_CMAKEDIR}"
     )
 
@@ -121,8 +90,8 @@ install(
 
 install(
   FILES
-    "${CMAKE_BINARY_DIR}/${CML_INSTALL_CMAKEDIR}/cml-config.cmake"
-    "${CMAKE_BINARY_DIR}/${CML_INSTALL_CMAKEDIR}/cml-config-version.cmake"
+    "${CMAKE_BINARY_DIR}/${CML_INSTALL_CMAKEDIR}/CMLConfig.cmake"
+    "${CMAKE_BINARY_DIR}/${CML_INSTALL_CMAKEDIR}/CMLConfigVersion.cmake"
   DESTINATION "${CML_INSTALL_CMAKEDIR}"
   COMPONENT "Development"
   )
