@@ -8,7 +8,6 @@
 #include <cml/matrix/readable_matrix.h>
 
 namespace cml {
-
 template<class Sub, class Scalar, class Op> class matrix_scalar_node;
 
 /** matrix_scalar_node<> traits. */
@@ -47,7 +46,7 @@ struct matrix_traits<matrix_scalar_node<Sub, Scalar, Op>>
  */
 template<class Sub, class Scalar, class Op>
 class matrix_scalar_node
-: public readable_matrix<matrix_scalar_node<Sub, Scalar, Op>>
+  : public readable_matrix<matrix_scalar_node<Sub, Scalar, Op>>
 {
   public:
   using node_type = matrix_scalar_node<Sub, Scalar, Op>;
@@ -65,7 +64,6 @@ class matrix_scalar_node
   using basis_tag = typename traits_type::basis_tag;
   using layout_tag = typename traits_type::layout_tag;
 
-
   public:
   /** Take the array row size from the subexpression. */
   static const int array_rows = left_type::array_rows;
@@ -79,7 +77,6 @@ class matrix_scalar_node
   /** Constant containing the array layout enumeration value. */
   static const layout_kind array_layout = traits_type::array_layout;
 
-
   public:
   /** Construct from the wrapped sub-expression and the scalar to apply.
    * @c left and @c right must be lvalue or rvalue references.
@@ -91,7 +88,6 @@ class matrix_scalar_node
 
   /** Copy constructor. */
   matrix_scalar_node(const node_type& other);
-
 
   protected:
   /** @name readable_matrix Interface */
@@ -118,9 +114,9 @@ class matrix_scalar_node
    * stored as a copy if Sub is an rvalue reference (temporary), or by
    * const reference if Sub is an lvalue reference.
    */
-  using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const left_type&,
+  using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const
+    left_type&,
     left_type>;
-
 
   protected:
   /** The matrix operand. */
@@ -129,13 +125,11 @@ class matrix_scalar_node
   /** The scalar operand. */
   right_type m_right;
 
-
   private:
   // Not assignable.
   node_type& operator=(const node_type&);
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATRIX_SCALAR_NODE_TPP
 #include <cml/matrix/scalar_node.tpp>

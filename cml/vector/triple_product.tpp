@@ -10,9 +10,8 @@
 #include <cml/vector/cross.h>
 
 namespace cml {
-
 template<class Sub1, class Sub2, class Sub3>
-inline auto
+auto
 triple_product(const readable_vector<Sub1>& a, const readable_vector<Sub2>& b,
   const readable_vector<Sub3>& c) -> triple_product_promote_t<Sub1, Sub2, Sub3>
 {
@@ -21,5 +20,4 @@ triple_product(const readable_vector<Sub1>& a, const readable_vector<Sub2>& b,
   cml::check_size(c, cml::int_c<3>());
   return cml::dot(a, cross(b, c));
 }
-
-}  // namespace cml
+} // namespace cml

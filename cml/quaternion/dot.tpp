@@ -10,9 +10,8 @@
 #include <cml/quaternion/size_checking.h>
 
 namespace cml {
-
 template<class Sub1, class Sub2>
-inline auto
+auto
 dot(const readable_quaternion<Sub1>& left,
   const readable_quaternion<Sub2>& right)
   -> value_type_trait_promote_t<Sub1, Sub2>
@@ -26,5 +25,4 @@ dot(const readable_quaternion<Sub1>& left,
   return value_type(left.get(0) * right.get(0) + left.get(1) * right.get(1)
     + left.get(2) * right.get(2) + left.get(3) * right.get(3));
 }
-
-}  // namespace cml
+} // namespace cml

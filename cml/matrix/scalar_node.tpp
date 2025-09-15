@@ -7,26 +7,28 @@
 #endif
 
 namespace cml {
-
 /* matrix_scalar_node 'structors: */
 
 template<class Sub, class Scalar, class Op>
 matrix_scalar_node<Sub, Scalar, Op>::matrix_scalar_node(Sub left, Scalar right)
-: m_left(std::move(left))
-, m_right(std::move(right))
-{}
+  : m_left(std::move(left))
+    , m_right(std::move(right))
+{
+}
 
 template<class Sub, class Scalar, class Op>
 matrix_scalar_node<Sub, Scalar, Op>::matrix_scalar_node(node_type&& other)
-: m_left(std::move(other.m_left))
-, m_right(std::move(other.m_right))
-{}
+  : m_left(std::move(other.m_left))
+    , m_right(std::move(other.m_right))
+{
+}
 
 template<class Sub, class Scalar, class Op>
 matrix_scalar_node<Sub, Scalar, Op>::matrix_scalar_node(const node_type& other)
-: m_left(other.m_left)
-, m_right(other.m_right)
-{}
+  : m_left(other.m_left)
+    , m_right(other.m_right)
+{
+}
 
 /* Internal methods: */
 
@@ -53,5 +55,4 @@ matrix_scalar_node<Sub, Scalar, Op>::i_get(int i, int j) const
 {
   return Op().apply(this->m_left.get(i, j), this->m_right);
 }
-
-}  // namespace cml
+} // namespace cml

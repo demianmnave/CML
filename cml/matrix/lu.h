@@ -12,7 +12,6 @@
 #include <cml/matrix/temporary.h>
 
 namespace cml {
-
 /** Sepcializable class to hold results from LU decomposition with partial
  * pivoting.
  */
@@ -29,9 +28,10 @@ struct lu_pivot_result<Matrix, enable_if_fixed_size_t<matrix_traits<Matrix>>>
   int sign;
 
   explicit lu_pivot_result(const Matrix& M)
-  : lu(M)
-  , order()
-  {}
+    : lu(M)
+      , order()
+  {
+  }
 };
 
 /** Results from partial-pivoting LU decomposition of a dynamic-size matrix. */
@@ -43,9 +43,10 @@ struct lu_pivot_result<Matrix, enable_if_dynamic_size_t<matrix_traits<Matrix>>>
   int sign;
 
   explicit lu_pivot_result(const Matrix& M)
-  : lu(M)
-  , order(M.rows())
-  {}
+    : lu(M)
+      , order(M.rows())
+  {
+  }
 };
 
 
@@ -117,8 +118,7 @@ auto lu_solve(const lu_pivot_result<Matrix>& lup,
 template<class Matrix, class XSub, class BSub>
 void lu_solve(const lu_pivot_result<Matrix>& lup, writable_vector<XSub>& x,
   const readable_vector<BSub>& b);
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATRIX_LU_TPP
 #include <cml/matrix/lu.tpp>

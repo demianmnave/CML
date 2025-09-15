@@ -8,7 +8,6 @@
 #include <cml/quaternion/traits.h>
 
 namespace cml {
-
 /* Forward declarations: */
 template<class Sub, class Scalar, class Op> class quaternion_scalar_node;
 template<class Sub> class imaginary_node;
@@ -35,7 +34,6 @@ template<class DerivedT> class readable_quaternion
   using order_type = typename traits_type::order_type;
   using cross_type = typename traits_type::cross_type;
 
-
   public:
   /** Localize the ordering as an enum. */
   enum
@@ -45,7 +43,6 @@ template<class DerivedT> class readable_quaternion
     Y = order_type::Y,
     Z = order_type::Z
   };
-
 
   public:
   /** Return a const reference to the quaternion cast as DerivedT. */
@@ -69,7 +66,6 @@ template<class DerivedT> class readable_quaternion
   /** Return a const reference to the imaginary k coordinate */
   immutable_value z() const;
 
-
   public:
   /** Return the array size.  This is always 4. */
   int size() const;
@@ -79,12 +75,12 @@ template<class DerivedT> class readable_quaternion
 
   /** Return the imaginary part of the quaternion as a vector expression.
      */
-  imaginary_node<const DerivedT&> imaginary() const&;
+  imaginary_node<const DerivedT&> imaginary() const &;
 
   /** Return the imaginary part of the quaternion as a vector expression,
      * moving the source into the node.
      */
-  imaginary_node<DerivedT&&> imaginary() const&&;
+  imaginary_node<DerivedT&&> imaginary() const &&;
 
   /** Return the squared length of the quaternion. */
   value_type length_squared() const;
@@ -98,31 +94,30 @@ template<class DerivedT> class readable_quaternion
   /** Return the normalized quaternion as an expression node. */
   quaternion_scalar_node<const DerivedT&, value_type,
     op::binary_divide<value_type, value_type>>
-  normalize() const&;
+  normalize() const &;
 
   /** Return the normalized quaternion as an expression node, moving the
      * source into the node.
      */
   quaternion_scalar_node<DerivedT&&, value_type,
     op::binary_divide<value_type, value_type>>
-  normalize() const&&;
+  normalize() const &&;
 
   /** Return the conjugate as an expression node. */
-  conjugate_node<const DerivedT&> conjugate() const&;
+  conjugate_node<const DerivedT&> conjugate() const &;
 
   /** Return the conjugate as an expression node, moving the source into
      * the node.
      */
-  conjugate_node<DerivedT&&> conjugate() const&&;
+  conjugate_node<DerivedT&&> conjugate() const &&;
 
   /** Return the inverse as an expression node. */
-  inverse_node<const DerivedT&> inverse() const&;
+  inverse_node<const DerivedT&> inverse() const &;
 
   /** Return the inverse as an expression node, moving the source into
      * the node.
      */
-  inverse_node<DerivedT&&> inverse() const&&;
-
+  inverse_node<DerivedT&&> inverse() const &&;
 
   protected:
   // Use the compiler-generated default constructor:
@@ -134,8 +129,7 @@ template<class DerivedT> class readable_quaternion
   // Use the compiler-generated move constructor:
   readable_quaternion(readable_quaternion&&) = default;
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_QUATERNION_READABLE_QUATERNION_TPP
 #include <cml/quaternion/readable_quaternion.tpp>

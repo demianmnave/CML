@@ -9,36 +9,36 @@
 #include <cml/common/exception.h>
 
 namespace cml {
-
 /* dynamic 'structors: */
 
 template<class E, class A>
 vector<E, dynamic<A>>::vector()
-: m_data(0)
-, m_size(0)
-{}
+  : m_data(0)
+    , m_size(0)
+{
+}
 
 template<class E, class A>
 template<class Int, enable_if_t<std::is_integral<Int>::value>*>
 vector<E, dynamic<A>>::vector(Int size)
-: m_data(0)
-, m_size(0)
+  : m_data(0)
+    , m_size(0)
 {
   this->resize_fast(int(size));
 }
 
 template<class E, class A>
 vector<E, dynamic<A>>::vector(const vector_type& other)
-: m_data(0)
-, m_size(0)
+  : m_data(0)
+    , m_size(0)
 {
   this->assign(other);
 }
 
 template<class E, class A>
 vector<E, dynamic<A>>::vector(vector_type&& other)
-: m_data(0)
-, m_size(0)
+  : m_data(0)
+    , m_size(0)
 {
   this->operator=(std::move(other));
 }
@@ -46,8 +46,8 @@ vector<E, dynamic<A>>::vector(vector_type&& other)
 template<class E, class A>
 template<class Sub>
 vector<E, dynamic<A>>::vector(const readable_vector<Sub>& sub)
-: m_data(0)
-, m_size(0)
+  : m_data(0)
+    , m_size(0)
 {
   this->assign(sub);
 }
@@ -55,8 +55,8 @@ vector<E, dynamic<A>>::vector(const readable_vector<Sub>& sub)
 template<class E, class A>
 template<class Array, enable_if_array_t<Array>*>
 vector<E, dynamic<A>>::vector(const Array& array)
-: m_data(0)
-, m_size(0)
+  : m_data(0)
+    , m_size(0)
 {
   this->assign(array);
 }
@@ -64,8 +64,8 @@ vector<E, dynamic<A>>::vector(const Array& array)
 template<class E, class A>
 template<class Pointer, enable_if_pointer_t<Pointer>*>
 vector<E, dynamic<A>>::vector(const Pointer& array, int size)
-: m_data(0)
-, m_size(0)
+  : m_data(0)
+    , m_size(0)
 {
   this->resize_fast(size);
   this->assign(array);
@@ -74,8 +74,8 @@ vector<E, dynamic<A>>::vector(const Pointer& array, int size)
 template<class E, class A>
 template<class Pointer, enable_if_pointer_t<Pointer>*>
 vector<E, dynamic<A>>::vector(int size, const Pointer& array)
-: m_data(0)
-, m_size(0)
+  : m_data(0)
+    , m_size(0)
 {
   this->resize_fast(size);
   this->assign(array);
@@ -84,8 +84,8 @@ vector<E, dynamic<A>>::vector(int size, const Pointer& array)
 template<class E, class A>
 template<class Other>
 vector<E, dynamic<A>>::vector(std::initializer_list<Other> l)
-: m_data(0)
-, m_size(0)
+  : m_data(0)
+    , m_size(0)
 {
   this->assign(l);
 }
@@ -276,7 +276,7 @@ vector<E, dynamic<A>>::i_get(int i) -> mutable_value
 template<class E, class A>
 template<class Other>
 auto
-vector<E, dynamic<A>>::i_put(int i, const Other& v) &->vector_type&
+vector<E, dynamic<A>>::i_put(int i, const Other& v) & -> vector_type&
 {
   this->m_data[i] = value_type(v);
   return *this;
@@ -290,5 +290,4 @@ vector<E, dynamic<A>>::i_put(int i, const Other& v) && -> vector_type&&
   this->m_data[i] = value_type(v);
   return (vector_type&&) *this;
 }
-
-}  // namespace cml
+} // namespace cml

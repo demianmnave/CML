@@ -8,7 +8,6 @@
 #include <cml/quaternion/readable_quaternion.h>
 
 namespace cml {
-
 template<class Sub> class imaginary_node;
 
 /** imaginary_node<> traits. */
@@ -60,11 +59,9 @@ class imaginary_node : public readable_vector<imaginary_node<Sub>>
   using storage_type = typename traits_type::storage_type;
   using size_tag = typename traits_type::size_tag;
 
-
   public:
   /** The array size constant depends upon the subexpression size. */
   static const int array_size = traits_type::array_size;
-
 
   public:
   /** Construct from the wrapped quaternion expression.  @c sub must be
@@ -77,7 +74,6 @@ class imaginary_node : public readable_vector<imaginary_node<Sub>>
 
   /** Copy constructor. */
   imaginary_node(const node_type& other);
-
 
   protected:
   /** @name readable_vector Interface */
@@ -100,18 +96,16 @@ class imaginary_node : public readable_vector<imaginary_node<Sub>>
    * reference if Sub is an lvalue reference.
    */
   using wrap_type =
-    cml::if_t<std::is_lvalue_reference<Sub>::value, const sub_type&, sub_type>;
+  cml::if_t<std::is_lvalue_reference<Sub>::value, const sub_type&, sub_type>;
 
   /** The wrapped subexpression. */
   wrap_type m_sub;
-
 
   private:
   // Not assignable.
   node_type& operator=(const node_type&);
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_QUATERNION_IMAGINARY_NODE_TPP
 #include <cml/quaternion/imaginary_node.tpp>

@@ -8,19 +8,17 @@
 #endif
 
 namespace cml {
-
 template<class Sub>
-inline auto
+auto
 conjugate(const readable_quaternion<Sub>& q) -> conjugate_node<const Sub&>
 {
   return conjugate_node<const Sub&>(q.actual());
 }
 
 template<class Sub>
-inline auto
+auto
 conjugate(readable_quaternion<Sub>&& q) -> conjugate_node<Sub&&>
 {
   return conjugate_node<Sub&&>((Sub&&) q);
 }
-
-}  // namespace cml
+} // namespace cml

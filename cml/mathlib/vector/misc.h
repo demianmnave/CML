@@ -11,7 +11,6 @@
 /** @defgroup mathlib_vector_misc Miscellaneous Vector Functions */
 
 namespace cml {
-
 /** @addtogroup mathlib_vector_misc */
 /*@{*/
 
@@ -69,8 +68,7 @@ auto manhattan_distance(const readable_vector<Sub1>& v1,
   const readable_vector<Sub2>& v2) -> value_type_trait_promote_t<Sub1, Sub2>;
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_VECTOR_MISC_TPP
 #include <cml/mathlib/vector/misc.tpp>

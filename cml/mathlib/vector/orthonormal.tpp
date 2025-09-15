@@ -12,7 +12,6 @@
 #include <cml/mathlib/vector/misc.h>
 
 namespace cml {
-
 template<class Sub, class XSub, class YSub>
 void
 orthonormal_basis_2D(const readable_vector<Sub>& align,
@@ -77,8 +76,7 @@ orthonormal_basis(const readable_vector<Sub1>& align,
   y = axes[1];
   z = axes[2];
 }
-
-}  // namespace cml
+} // namespace cml
 
 
 #if 0
@@ -103,97 +101,100 @@ orthonormal_basis(const readable_vector<Sub1>& align,
  * In most cases, the default arguments can be ignored, leaving only the three
  * input vectors.
  */
-template < typename E, class A > void
-orthonormalize(vector<E,A>& v0, vector<E,A>& v1, vector<E,A>& v2,
-    size_t stable_axis = 2, size_t num_iter = 0, E s = E(1))
+template<typename E, class A> void
+orthonormalize(vector<E, A>& v0, vector<E, A>& v1, vector<E, A>& v2,
+  size_t stable_axis = 2, size_t num_iter = 0, E s = E(1))
 {
-    /* Checking */
-    detail::CheckVec3(v0);
-    detail::CheckVec3(v1);
-    detail::CheckVec3(v2);
-    detail::CheckIndex3(stable_axis);
+  /* Checking */
+  detail::CheckVec3(v0);
+  detail::CheckVec3(v1);
+  detail::CheckVec3(v2);
+  detail::CheckIndex3(stable_axis);
 
-    typedef vector< E, fixed<3> > vector_type;
-    typedef typename vector_type::value_type value_type;
+  typedef vector<E, fixed<3>> vector_type;
+  typedef typename vector_type::value_type value_type;
 
-    /* Iterative Gram-Schmidt; this step is skipped by default. */
-    
-    for (size_t i = 0; i < num_iter; ++i) {
-        value_type dot01 = dot(v0,v1);
-        value_type dot12 = dot(v1,v2);
-        value_type dot20 = dot(v2,v0);
-        value_type inv_dot00 = value_type(1) / dot(v0,v0);
-        value_type inv_dot11 = value_type(1) / dot(v1,v1);
-        value_type inv_dot22 = value_type(1) / dot(v2,v2);
+  /* Iterative Gram-Schmidt; this step is skipped by default. */
 
-        vector_type temp0 = v0 - s*dot01*inv_dot11*v1 - s*dot20*inv_dot22*v2;
-        vector_type temp1 = v1 - s*dot12*inv_dot22*v2 - s*dot01*inv_dot00*v0;
-        vector_type temp2 = v2 - s*dot20*inv_dot00*v0 - s*dot12*inv_dot11*v1;
-        
-        v0 = temp0;
-        v1 = temp1;
-        v2 = temp2;
-    }
+  for(size_t i = 0; i < num_iter; ++i) {
+    value_type dot01 = dot(v0, v1);
+    value_type dot12 = dot(v1, v2);
+    value_type dot20 = dot(v2, v0);
+    value_type inv_dot00 = value_type(1) / dot(v0, v0);
+    value_type inv_dot11 = value_type(1) / dot(v1, v1);
+    value_type inv_dot22 = value_type(1) / dot(v2, v2);
 
-    /* Final Gram-Schmidt step to ensure orthonormality. If no iterations
-     * have been requested (num_iter = 0), this is the only step. The step
-     * is performed such that the direction of the axis indexed by
-     * 'stable_axis' is unchanged.
-     */
+    vector_type temp0 = v0 - s * dot01 * inv_dot11 * v1 - s * dot20 * inv_dot22
+      * v2;
+    vector_type temp1 = v1 - s * dot12 * inv_dot22 * v2 - s * dot01 * inv_dot00
+      * v0;
+    vector_type temp2 = v2 - s * dot20 * inv_dot00 * v0 - s * dot12 * inv_dot11
+      * v1;
 
-    size_t i, j, k;
-    cyclic_permutation(stable_axis, i, j, k);
-    vector_type v[] = { v0, v1, v2 };
+    v0 = temp0;
+    v1 = temp1;
+    v2 = temp2;
+  }
 
-    v[i].normalize();
-    v[j] = normalize(project_to_hplane(v[j],v[i]));
-    v[k] = normalize(project_to_hplane(project_to_hplane(v[k],v[i]),v[j]));
-    
-    v0 = v[0];
-    v1 = v[1];
-    v2 = v[2];
+  /* Final Gram-Schmidt step to ensure orthonormality. If no iterations
+   * have been requested (num_iter = 0), this is the only step. The step
+   * is performed such that the direction of the axis indexed by
+   * 'stable_axis' is unchanged.
+   */
+
+  size_t i, j, k;
+  cyclic_permutation(stable_axis, i, j, k);
+  vector_type v[] = {v0, v1, v2};
+
+  v[i].normalize();
+  v[j] = normalize(project_to_hplane(v[j], v[i]));
+  v[k] = normalize(project_to_hplane(project_to_hplane(v[k], v[i]), v[j]));
+
+  v0 = v[0];
+  v1 = v[1];
+  v2 = v[2];
 }
 
 /** Orthonormalize 2 basis vectors in R2 */
-template < typename E, class A > void
-orthonormalize(vector<E,A>& v0, vector<E,A>& v1,
-    size_t stable_axis = 0, size_t num_iter = 0, E s = E(1))
+template<typename E, class A> void
+orthonormalize(vector<E, A>& v0, vector<E, A>& v1,
+  size_t stable_axis = 0, size_t num_iter = 0, E s = E(1))
 {
-    typedef vector< E, fixed<2> > vector_type;
-    typedef typename vector_type::value_type value_type;
+  typedef vector<E, fixed<2>> vector_type;
+  typedef typename vector_type::value_type value_type;
 
-    /* Checking */
-    detail::CheckVec2(v0);
-    detail::CheckVec2(v1);
-    detail::CheckIndex2(stable_axis);
+  /* Checking */
+  detail::CheckVec2(v0);
+  detail::CheckVec2(v1);
+  detail::CheckIndex2(stable_axis);
 
-    /* Iterative Gram-Schmidt; this step is skipped by default. */
-    
-    for (size_t i = 0; i < num_iter; ++i) {
-        value_type dot01 = dot(v0,v1);
+  /* Iterative Gram-Schmidt; this step is skipped by default. */
 
-        vector_type temp0 = v0 - (s * dot01 * v1) / dot(v1,v1);
-        vector_type temp1 = v1 - (s * dot01 * v0) / dot(v0,v0);
-        
-        v0 = temp0;
-        v1 = temp1;
-    }
+  for(size_t i = 0; i < num_iter; ++i) {
+    value_type dot01 = dot(v0, v1);
 
-    /* Final Gram-Schmidt step to ensure orthonormality. If no iterations
-     * have been requested (num_iter = 0), this is the only step. The step
-     * is performed such that the direction of the axis indexed by
-     * 'stable_axis' is unchanged.
-     */
+    vector_type temp0 = v0 - (s * dot01 * v1) / dot(v1, v1);
+    vector_type temp1 = v1 - (s * dot01 * v0) / dot(v0, v0);
 
-    size_t i, j;
-    cyclic_permutation(stable_axis, i, j);
-    vector_type v[] = { v0, v1 };
+    v0 = temp0;
+    v1 = temp1;
+  }
 
-    v[i].normalize();
-    v[j] = normalize(project_to_hplane(v[j],v[i]));
-    
-    v0 = v[0];
-    v1 = v[1];
+  /* Final Gram-Schmidt step to ensure orthonormality. If no iterations
+   * have been requested (num_iter = 0), this is the only step. The step
+   * is performed such that the direction of the axis indexed by
+   * 'stable_axis' is unchanged.
+   */
+
+  size_t i, j;
+  cyclic_permutation(stable_axis, i, j);
+  vector_type v[] = {v0, v1};
+
+  v[i].normalize();
+  v[j] = normalize(project_to_hplane(v[j], v[i]));
+
+  v0 = v[0];
+  v1 = v[1];
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -208,24 +209,25 @@ orthonormalize(vector<E,A>& v0, vector<E,A>& v1,
  * basis will likely 'pop' as the alignment vector changes, and so may not be
  * suitable for billboarding or other similar applications.
  */
-template < class VecT, typename E, class A >
-void orthonormal_basis(
-    const VecT& align,
-    vector<E,A>& x,
-    vector<E,A>& y,
-    vector<E,A>& z,
-    bool normalize_align = true,
-    axis_order order = axis_order_zyx)
+template<class VecT, typename E, class A>
+void
+orthonormal_basis(
+  const VecT& align,
+  vector<E, A>& x,
+  vector<E, A>& y,
+  vector<E, A>& z,
+  bool normalize_align = true,
+  axis_order order = axis_order_zyx)
 {
-    /* Checking (won't be necessary with index_of_min_abs() member function */
-    detail::CheckVec3(align);
+  /* Checking (won't be necessary with index_of_min_abs() member function */
+  detail::CheckVec3(align);
 
-    /* @todo: vector member function index_of_min_abs() would clean this up */
-    
-    orthonormal_basis(
-        align,
-        axis_3D(cml::index_of_min_abs(align[0],align[1],align[2])),
-        x, y, z, normalize_align, order
+  /* @todo: vector member function index_of_min_abs() would clean this up */
+
+  orthonormal_basis(
+    align,
+    axis_3D(cml::index_of_min_abs(align[0], align[1], align[2])),
+    x, y, z, normalize_align, order
     );
 }
 
@@ -242,24 +244,25 @@ void orthonormal_basis(
  * are nearly parallel; if this is likely, it should be checked for and
  * handled externally.
  */
-template < class VecT_1, class VecT_2, typename E, class A >
-void orthonormal_basis_axial(
-    const VecT_1& align,
-    const VecT_2& axis,
-    vector<E,A>& x,
-    vector<E,A>& y,
-    vector<E,A>& z,
-    bool normalize_align = true,
-    axis_order order = axis_order_zyx)
+template<class VecT_1, class VecT_2, typename E, class A>
+void
+orthonormal_basis_axial(
+  const VecT_1& align,
+  const VecT_2& axis,
+  vector<E, A>& x,
+  vector<E, A>& y,
+  vector<E, A>& z,
+  bool normalize_align = true,
+  axis_order order = axis_order_zyx)
 {
-    orthonormal_basis(
-        axis,
-        align,
-        x,
-        y,
-        z,
-        normalize_align,
-        detail::swap_axis_order(order));
+  orthonormal_basis(
+    axis,
+    align,
+    x,
+    y,
+    z,
+    normalize_align,
+    detail::swap_axis_order(order));
 }
 
 /** orthonormal_basis_viewplane() builds a basis aligned with a viewplane, as
@@ -268,49 +271,52 @@ void orthonormal_basis_axial(
  *
  * @note The generated basis will always be valid.
  */
-template < class MatT, typename E, class A >
-void orthonormal_basis_viewplane(
-    const MatT& view_matrix,
-    vector<E,A>& x,
-    vector<E,A>& y,
-    vector<E,A>& z,
-    Handedness handedness,
-    axis_order order = axis_order_zyx)
+template<class MatT, typename E, class A>
+void
+orthonormal_basis_viewplane(
+  const MatT& view_matrix,
+  vector<E, A>& x,
+  vector<E, A>& y,
+  vector<E, A>& z,
+  Handedness handedness,
+  axis_order order = axis_order_zyx)
 {
-    typedef MatT matrix_type;
-    typedef typename matrix_type::value_type value_type;
+  typedef MatT matrix_type;
+  typedef typename matrix_type::value_type value_type;
 
-    orthonormal_basis(
-        -(handedness == left_handed ? value_type(1) : value_type(-1)) *
-            matrix_get_transposed_z_basis_vector(view_matrix),
-        matrix_get_transposed_y_basis_vector(view_matrix),
-        x, y, z, false, order
+  orthonormal_basis(
+    -(handedness == left_handed ? value_type(1) : value_type(-1)) *
+    matrix_get_transposed_z_basis_vector(view_matrix),
+    matrix_get_transposed_y_basis_vector(view_matrix),
+    x, y, z, false, order
     );
 }
 
 /** Build a viewplane-oriented basis from a left-handedness view matrix. */
-template < class MatT, typename E, class A >
-void orthonormal_basis_viewplane_LH(
-    const MatT& view_matrix,
-    vector<E,A>& x,
-    vector<E,A>& y,
-    vector<E,A>& z,
-    axis_order order = axis_order_zyx)
+template<class MatT, typename E, class A>
+void
+orthonormal_basis_viewplane_LH(
+  const MatT& view_matrix,
+  vector<E, A>& x,
+  vector<E, A>& y,
+  vector<E, A>& z,
+  axis_order order = axis_order_zyx)
 {
-    orthonormal_basis_viewplane(
-        view_matrix,x,y,z,left_handed,order);
+  orthonormal_basis_viewplane(
+    view_matrix, x, y, z, left_handed, order);
 }
 
 /** Build a viewplane-oriented basis from a right-handedness view matrix. */
-template < class MatT, typename E, class A >
-void orthonormal_basis_viewplane_RH(
-    const MatT& view_matrix,
-    vector<E,A>& x,
-    vector<E,A>& y,
-    vector<E,A>& z,
-    axis_order order = axis_order_zyx)
+template<class MatT, typename E, class A>
+void
+orthonormal_basis_viewplane_RH(
+  const MatT& view_matrix,
+  vector<E, A>& x,
+  vector<E, A>& y,
+  vector<E, A>& z,
+  axis_order order = axis_order_zyx)
 {
-    orthonormal_basis_viewplane(
-        view_matrix,x,y,z,right_handed,order);
+  orthonormal_basis_viewplane(
+    view_matrix, x, y, z, right_handed, order);
 }
 #endif

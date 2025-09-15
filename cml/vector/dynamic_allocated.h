@@ -11,7 +11,6 @@
 #include <cml/vector/vector.h>
 
 namespace cml {
-
 template<class Element, class Allocator>
 struct vector_traits<vector<Element, dynamic<Allocator>>>
 {
@@ -39,7 +38,7 @@ struct vector_traits<vector<Element, dynamic<Allocator>>>
 /** Resizable vector. */
 template<class Element, class Allocator>
 class vector<Element, dynamic<Allocator>>
-: public writable_vector<vector<Element, dynamic<Allocator>>>
+  : public writable_vector<vector<Element, dynamic<Allocator>>>
 {
   protected:
   /** The real allocator type. */
@@ -51,7 +50,6 @@ class vector<Element, dynamic<Allocator>>
   /** Require a stateless allocator. */
   static_assert(std::is_empty<allocator_type>::value,
     "cannot use a stateful allocator for dynamic<> vectors");
-
 
   public:
   using vector_type = vector<Element, dynamic<Allocator>>;
@@ -69,17 +67,14 @@ class vector<Element, dynamic<Allocator>>
   using storage_type = typename traits_type::storage_type;
   using size_tag = typename traits_type::size_tag;
 
-
   public:
   /* Include methods from writable_type: */
   using writable_type::operator[];
   using writable_type::operator=;
 
-
   public:
   /** Constant containing the array size. */
   static const int array_size = traits_type::array_size;
-
 
   public:
   /** Default constructor.
@@ -115,8 +110,8 @@ class vector<Element, dynamic<Allocator>>
   vector(const E0& e0, const Elements&... eN)
   // XXX Should be in vector/dynamic_allocated.tpp, but VC++12 has
   // brain-dead out-of-line template argument matching...
-  : m_data(0)
-  , m_size(0)
+    : m_data(0)
+      , m_size(0)
   {
     this->assign_elements(e0, eN...);
   }
@@ -134,8 +129,8 @@ class vector<Element, dynamic<Allocator>>
   vector(const readable_vector<Sub>& sub, const E0& e0, const Elements&... eN)
   // XXX Should be in vector/fixed_compiled.tpp, but VC++12 has
   // brain-dead out-of-line template argument matching...
-  : m_data(0)
-  , m_size(0)
+    : m_data(0)
+      , m_size(0)
   {
     this->assign(sub, e0, eN...);
   }
@@ -157,7 +152,6 @@ class vector<Element, dynamic<Allocator>>
 
   /** Destructor. */
   ~vector();
-
 
   public:
   /** Return access to the vector data as a raw pointer. */
@@ -188,14 +182,12 @@ class vector<Element, dynamic<Allocator>>
    */
   void resize_fast(int n);
 
-
   public:
   /** Copy assignment. */
   vector_type& operator=(const vector_type& other);
 
   /** Move assignment. */
   vector_type& operator=(vector_type&& other);
-
 
   protected:
   /** No-op for trivially destructible elements
@@ -207,7 +199,6 @@ class vector<Element, dynamic<Allocator>>
    * data.
    */
   void destruct(pointer data, int n, std::false_type);
-
 
   protected:
   /** @name readable_vector Interface */
@@ -249,8 +240,7 @@ class vector<Element, dynamic<Allocator>>
   /** Size of the vector. */
   int m_size;
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_VECTOR_DYNAMIC_ALLOCATED_TPP
 #include <cml/vector/dynamic_allocated.tpp>

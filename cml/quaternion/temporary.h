@@ -11,7 +11,6 @@
 #include <cml/quaternion/quaternion.h>
 
 namespace cml {
-
 /** Deduce a temporary for a quaternion expression. */
 template<class Quaternion>
 struct temporary_of<Quaternion, cml::enable_if_quaternion_t<Quaternion>>
@@ -31,5 +30,4 @@ struct temporary_of<Quaternion, cml::enable_if_quaternion_t<Quaternion>>
   /* Build the temporary: */
   using type = quaternion<value_type, proxy_type, order_type, cross_type>;
 };
-
-}  // namespace cml
+} // namespace cml

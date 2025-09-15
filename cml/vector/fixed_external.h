@@ -14,7 +14,6 @@
 #include <cml/vector/fixed_const_external.h>
 
 namespace cml {
-
 template<class Element, int Size>
 struct vector_traits<vector<Element, external<Size>>>
 {
@@ -42,7 +41,7 @@ struct vector_traits<vector<Element, external<Size>>>
 /** Fixed-length wrapped array pointer as a vector. */
 template<class Element, int Size>
 class vector<Element, external<Size>>
-: public writable_vector<vector<Element, external<Size>>>
+  : public writable_vector<vector<Element, external<Size>>>
 {
   public:
   using vector_type = vector<Element, external<Size>>;
@@ -60,12 +59,10 @@ class vector<Element, external<Size>>
   using storage_type = typename traits_type::storage_type;
   using size_tag = typename traits_type::size_tag;
 
-
   public:
   /* Include methods from writable_type: */
   using writable_type::operator[];
   using writable_type::operator=;
-
 
   public:
   /** Constant containing the array size. */
@@ -73,7 +70,6 @@ class vector<Element, external<Size>>
 
   /** The dimension (same as array_size). */
   static const int dimension = array_size;
-
 
   public:
   /** Default construct with a null pointer. */
@@ -92,7 +88,6 @@ class vector<Element, external<Size>>
   /** Move constructor. */
   vector(vector_type&& other);
 
-
   public:
   /** Return access to the vector data as a raw pointer. */
   pointer data();
@@ -106,7 +101,6 @@ class vector<Element, external<Size>>
   /** Read-only iterator. */
   const_pointer end() const;
 
-
   public:
   /** Copy assignment.
    *
@@ -117,7 +111,6 @@ class vector<Element, external<Size>>
 
   /** Move assignment. */
   vector_type& operator=(vector_type&& other);
-
 
   protected:
   /** @name readable_vector Interface */
@@ -156,8 +149,7 @@ class vector<Element, external<Size>>
   /** Wrapped pointer. */
   pointer m_data;
 };
-
-}  // namespace cml
+} // namespace cml
 
 template<typename E, int Size>
 struct std::tuple_size<cml::vector<E, cml::external<Size>>>

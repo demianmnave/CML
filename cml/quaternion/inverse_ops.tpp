@@ -8,19 +8,17 @@
 #endif
 
 namespace cml {
-
 template<class Sub>
-inline auto
+auto
 inverse(const readable_quaternion<Sub>& q) -> inverse_node<const Sub&>
 {
   return inverse_node<const Sub&>(q.actual());
 }
 
 template<class Sub>
-inline auto
+auto
 inverse(readable_quaternion<Sub>&& q) -> inverse_node<Sub&&>
 {
   return inverse_node<Sub&&>((Sub&&) q);
 }
-
-}  // namespace cml
+} // namespace cml

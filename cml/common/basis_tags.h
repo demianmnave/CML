@@ -8,7 +8,6 @@
 #include <cml/common/traits.h>
 
 namespace cml {
-
 enum basis_kind
 {
   row_basis_c = 1,
@@ -75,7 +74,8 @@ template<class T> struct is_row_basis
 /** Wrapper for enable_if to detect types tagged with row_basis. */
 template<class Sub, class T = void>
 struct enable_if_row_basis : std::enable_if<is_row_basis<Sub>::value, T>
-{};
+{
+};
 
 /** Convenience alias for enable_if_row_basis. */
 template<class Sub, class T = void>
@@ -90,7 +90,8 @@ template<class T> struct is_col_basis
 /** Wrapper for enable_if to detect types tagged with col_basis. */
 template<class Sub, class T = void>
 struct enable_if_col_basis : std::enable_if<is_col_basis<Sub>::value, T>
-{};
+{
+};
 
 /** Convenience alias for enable_if_col_basis. */
 template<class Sub, class T = void>
@@ -105,10 +106,10 @@ template<class T> struct is_any_basis
 /** Wrapper for enable_if to detect types tagged with any_basis. */
 template<class Sub, class T = void>
 struct enable_if_any_basis : std::enable_if<is_any_basis<Sub>::value, T>
-{};
+{
+};
 
 /** Convenience alias for enable_if_any_basis. */
 template<class Sub, class T = void>
 using enable_if_any_basis_t = typename enable_if_any_basis<Sub, T>::type;
-
-}  // namespace cml
+} // namespace cml

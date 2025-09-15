@@ -9,7 +9,6 @@
 #include <cml/vector/vector.h>
 
 namespace cml {
-
 template<class Element, int Size>
 struct vector_traits<vector<const Element, external<Size>>>
 {
@@ -34,7 +33,7 @@ struct vector_traits<vector<const Element, external<Size>>>
 /** Fixed-length wrapped array pointer as a vector. */
 template<class Element, int Size>
 class vector<const Element, external<Size>>
-: public readable_vector<vector<const Element, external<Size>>>
+  : public readable_vector<vector<const Element, external<Size>>>
 {
   public:
   using vector_type = vector<const Element, external<Size>>;
@@ -48,14 +47,12 @@ class vector<const Element, external<Size>>
   using storage_type = typename traits_type::storage_type;
   using size_tag = typename traits_type::size_tag;
 
-
   public:
   /** Constant containing the array size. */
   static const int array_size = traits_type::array_size;
 
   /** The dimension (same as array_size). */
   static const int dimension = array_size;
-
 
   public:
   /** Default construct with a null pointer.
@@ -71,7 +68,6 @@ class vector<const Element, external<Size>>
   /** Move constructor. */
   vector(vector_type&& other);
 
-
   public:
   /** Return const access to the vector data as a raw pointer. */
   const_pointer data() const;
@@ -81,7 +77,6 @@ class vector<const Element, external<Size>>
 
   /** Read-only iterator. */
   const_pointer end() const;
-
 
   protected:
   /** @name readable_vector Interface */
@@ -102,8 +97,7 @@ class vector<const Element, external<Size>>
   /** Wrapped pointer. */
   const_pointer m_data;
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_VECTOR_FIXED_CONST_EXTERNAL_TPP
 #include <cml/vector/fixed_const_external.tpp>

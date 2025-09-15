@@ -11,7 +11,6 @@
 /** @defgroup mathlib_matrix_translation Matrix Translation Functions */
 
 namespace cml {
-
 /** @addtogroup mathlib_matrix_translation */
 /*@{*/
 
@@ -188,8 +187,7 @@ void matrix_translation(writable_matrix<Sub1>& m,
 /*@}*/
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_MATRIX_TRANSLATION_TPP
 #include <cml/mathlib/matrix/translation.tpp>

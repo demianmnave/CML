@@ -8,7 +8,6 @@
 #include <cml/quaternion/readable_quaternion.h>
 
 namespace cml {
-
 template<class Sub, class Scalar, class Op> class quaternion_scalar_node;
 
 /** quaternion_scalar_node<> traits. */
@@ -44,7 +43,7 @@ struct quaternion_traits<quaternion_scalar_node<Sub, Scalar, Op>>
  */
 template<class Sub, class Scalar, class Op>
 class quaternion_scalar_node
-: public readable_quaternion<quaternion_scalar_node<Sub, Scalar, Op>>
+  : public readable_quaternion<quaternion_scalar_node<Sub, Scalar, Op>>
 {
   public:
   using node_type = quaternion_scalar_node<Sub, Scalar, Op>;
@@ -62,11 +61,9 @@ class quaternion_scalar_node
   using order_type = typename traits_type::order_type;
   using cross_type = typename traits_type::cross_type;
 
-
   public:
   /** The array size constant is the same as the subexpression. */
   static const int array_size = traits_type::array_size;
-
 
   public:
   /** Construct from the wrapped sub-expression and the scalar to apply.
@@ -79,7 +76,6 @@ class quaternion_scalar_node
 
   /** Copy constructor. */
   quaternion_scalar_node(const node_type& other);
-
 
   protected:
   /** @name readable_quaternion Interface */
@@ -100,9 +96,9 @@ class quaternion_scalar_node
    * stored as a copy if Sub is an rvalue reference (temporary), or by
    * const reference if Sub is an lvalue reference.
    */
-  using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const left_type&,
+  using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const
+    left_type&,
     left_type>;
-
 
   protected:
   /** The quaternion operand. */
@@ -111,13 +107,11 @@ class quaternion_scalar_node
   /** The scalar operand. */
   right_type m_right;
 
-
   private:
   // Not assignable.
   node_type& operator=(const node_type&);
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_QUATERNION_SCALAR_NODE_TPP
 #include <cml/quaternion/scalar_node.tpp>

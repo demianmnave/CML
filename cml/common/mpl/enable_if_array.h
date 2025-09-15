@@ -7,7 +7,6 @@
 #include <type_traits>
 
 namespace cml {
-
 /** Alias for std::enable_if<T> using std::is_array<T> to determine the
  * boolean value.
  */
@@ -20,5 +19,4 @@ using enable_if_array = typename std::enable_if<std::is_array<Array>::value
  */
 template<class Array>
 using enable_if_array_t = typename enable_if_array<Array>::type;
-
-}  // namespace cml
+} // namespace cml

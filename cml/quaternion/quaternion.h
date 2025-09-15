@@ -9,7 +9,6 @@
 #include <cml/quaternion/order_tags.h>
 
 namespace cml {
-
 /** Specializable class for building quaternions.
  *
  * This class encapsulates the notion of a quaternion.
@@ -32,5 +31,4 @@ namespace cml {
 template<typename Element, class ArrayType = fixed<>,
   class Order = imaginary_first, class Cross = positive_cross>
 class quaternion;
-
-}  // namespace cml
+} // namespace cml

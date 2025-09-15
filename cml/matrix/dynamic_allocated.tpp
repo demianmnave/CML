@@ -11,39 +11,39 @@
 #include <cml/common/exception.h>
 
 namespace cml {
-
 /* dynamic 'structors: */
 
 template<class E, class A, typename BO, typename L>
 matrix<E, dynamic<A>, BO, L>::matrix()
-: m_data(0)
-, m_rows(0)
-, m_cols(0)
-{}
+  : m_data(0)
+    , m_rows(0)
+    , m_cols(0)
+{
+}
 
 template<class E, class A, typename BO, typename L>
 matrix<E, dynamic<A>, BO, L>::matrix(int rows, int cols)
-: m_data(0)
-, m_rows(0)
-, m_cols(0)
+  : m_data(0)
+    , m_rows(0)
+    , m_cols(0)
 {
   this->resize_fast(rows, cols);
 }
 
 template<class E, class A, typename BO, typename L>
 matrix<E, dynamic<A>, BO, L>::matrix(const matrix_type& other)
-: m_data(0)
-, m_rows(0)
-, m_cols(0)
+  : m_data(0)
+    , m_rows(0)
+    , m_cols(0)
 {
   this->assign(other);
 }
 
 template<class E, class A, typename BO, typename L>
 matrix<E, dynamic<A>, BO, L>::matrix(matrix_type&& other)
-: m_data(0)
-, m_rows(0)
-, m_cols(0)
+  : m_data(0)
+    , m_rows(0)
+    , m_cols(0)
 {
   this->operator=(std::move(other));
 }
@@ -51,9 +51,9 @@ matrix<E, dynamic<A>, BO, L>::matrix(matrix_type&& other)
 template<class E, class A, typename BO, typename L>
 template<class Sub>
 matrix<E, dynamic<A>, BO, L>::matrix(const readable_matrix<Sub>& sub)
-: m_data(0)
-, m_rows(0)
-, m_cols(0)
+  : m_data(0)
+    , m_rows(0)
+    , m_cols(0)
 {
   this->assign(sub);
 }
@@ -61,9 +61,9 @@ matrix<E, dynamic<A>, BO, L>::matrix(const readable_matrix<Sub>& sub)
 template<class E, class A, typename BO, typename L>
 template<class Array, enable_if_array_t<Array>*>
 matrix<E, dynamic<A>, BO, L>::matrix(int rows, int cols, const Array& array)
-: m_data(0)
-, m_rows(0)
-, m_cols(0)
+  : m_data(0)
+    , m_rows(0)
+    , m_cols(0)
 {
   this->resize_fast(rows, cols);
   this->assign(array);
@@ -72,9 +72,9 @@ matrix<E, dynamic<A>, BO, L>::matrix(int rows, int cols, const Array& array)
 template<class E, class A, typename BO, typename L>
 template<class Other, int R, int C>
 matrix<E, dynamic<A>, BO, L>::matrix(Other const (&array)[R][C])
-: m_data(0)
-, m_rows(0)
-, m_cols(0)
+  : m_data(0)
+    , m_rows(0)
+    , m_cols(0)
 {
   this->assign(array);
 }
@@ -82,9 +82,9 @@ matrix<E, dynamic<A>, BO, L>::matrix(Other const (&array)[R][C])
 template<class E, class A, typename BO, typename L>
 template<class Pointer, enable_if_pointer_t<Pointer>*>
 matrix<E, dynamic<A>, BO, L>::matrix(int rows, int cols, const Pointer& array)
-: m_data(0)
-, m_rows(0)
-, m_cols(0)
+  : m_data(0)
+    , m_rows(0)
+    , m_cols(0)
 {
   this->resize_fast(rows, cols);
   this->assign(array);
@@ -93,9 +93,9 @@ matrix<E, dynamic<A>, BO, L>::matrix(int rows, int cols, const Pointer& array)
 template<class E, class A, typename BO, typename L>
 template<class Pointer, enable_if_pointer_t<Pointer>*>
 matrix<E, dynamic<A>, BO, L>::matrix(const Pointer& array, int rows, int cols)
-: m_data(0)
-, m_rows(0)
-, m_cols(0)
+  : m_data(0)
+    , m_rows(0)
+    , m_cols(0)
 {
   this->resize_fast(rows, cols);
   this->assign(array);
@@ -329,5 +329,4 @@ matrix<E, dynamic<A>, BO, L>::i_put(int i, int j,
   s_access(*this, i, j, layout_tag()) = value_type(v);
   return (matrix_type&&) *this;
 }
-
-}  // namespace cml
+} // namespace cml

@@ -7,7 +7,6 @@
 #include <cml/quaternion/conjugate_node.h>
 
 namespace cml {
-
 /** Return an expression node for the conjugate part of @c q.  @c q is
  * stored by const reference in the node.
  */
@@ -19,8 +18,7 @@ auto conjugate(const readable_quaternion<Sub>& q) -> conjugate_node<const Sub&>;
  */
 template<class Sub>
 auto conjugate(readable_quaternion<Sub>&& q) -> conjugate_node<Sub&&>;
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_QUATERNION_CONJUGATE_OPS_TPP
 #include <cml/quaternion/conjugate_ops.tpp>

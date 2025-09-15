@@ -12,10 +12,9 @@
 
 namespace cml {
 namespace detail {
-
 /** Matrix-vector pre-multiplication. */
 template<class Sub1, class Sub2>
-inline auto
+auto
 transform_vector_4D(const readable_matrix<Sub1>& m,
   const readable_vector<Sub2>& v, col_basis) -> temporary_of_t<Sub2>
 {
@@ -24,19 +23,18 @@ transform_vector_4D(const readable_matrix<Sub1>& m,
 
 /** Matrix-vector post-multiplication. */
 template<class Sub1, class Sub2>
-inline auto
+auto
 transform_vector_4D(const readable_matrix<Sub1>& m,
   const readable_vector<Sub2>& v, row_basis) -> temporary_of_t<Sub2>
 {
   return v * m;
 }
-
-}  // namespace detail
+} // namespace detail
 
 /* 2D transformations: */
 
 template<class Sub1, class Sub2>
-inline auto
+auto
 transform_vector_2D(const readable_matrix<Sub1>& m,
   const readable_vector<Sub2>& v) -> temporary_of_t<Sub2>
 {
@@ -50,7 +48,7 @@ transform_vector_2D(const readable_matrix<Sub1>& m,
 }
 
 template<class Sub1, class Sub2>
-inline auto
+auto
 transform_point_2D(const readable_matrix<Sub1>& m,
   const readable_vector<Sub2>& v) -> temporary_of_t<Sub2>
 {
@@ -69,7 +67,7 @@ transform_point_2D(const readable_matrix<Sub1>& m,
 /* 3D transformations: */
 
 template<class Sub1, class Sub2>
-inline auto
+auto
 transform_vector(const readable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
   -> temporary_of_t<Sub2>
 {
@@ -89,7 +87,7 @@ transform_vector(const readable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
 }
 
 template<class Sub1, class Sub2>
-inline auto
+auto
 transform_point(const readable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
   -> temporary_of_t<Sub2>
 {
@@ -109,7 +107,7 @@ transform_point(const readable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
 }
 
 template<class Sub1, class Sub2>
-inline auto
+auto
 transform_vector_4D(const readable_matrix<Sub1>& m,
   const readable_vector<Sub2>& v) -> temporary_of_t<Sub2>
 {
@@ -121,7 +119,7 @@ transform_vector_4D(const readable_matrix<Sub1>& m,
 }
 
 template<class Sub1, class Sub2>
-inline auto
+auto
 transform_point_4D(const readable_matrix<Sub1>& m,
   const readable_vector<Sub2>& v) -> temporary_of_t<Sub2>
 {
@@ -148,5 +146,4 @@ transform_point_4D(const readable_matrix<Sub1>& m,
   /* Return projection: */
   return result_type(h[0] / h[3], h[1] / h[3], h[2] / h[3]);
 }
-
-}  // namespace cml
+} // namespace cml

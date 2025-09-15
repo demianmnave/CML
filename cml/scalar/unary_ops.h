@@ -9,7 +9,6 @@
 
 namespace cml {
 namespace op {
-
 /** Unary minus (negation). */
 template<class Scalar> struct unary_minus
 {
@@ -27,21 +26,19 @@ template<class Scalar> struct unary_plus
 
   result_type apply(const value_type& v) const { return +v; }
 };
-
-}  // namespace op
+} // namespace op
 
 /** Convenience alias to create unary_minus from the value_type trait of
  * @c Sub as an unqualified type.
  */
 template<class Sub>
 using unary_minus_t =
-  op::unary_minus<value_type_trait_of_t<actual_type_of_t<Sub>>>;
+op::unary_minus<value_type_trait_of_t<actual_type_of_t<Sub>>>;
 
 /** Convenience alias to create unary_plus from the value_type trait of
  * @c Sub as an unqualified type.
  */
 template<class Sub>
 using unary_plus_t =
-  op::unary_plus<value_type_trait_of_t<actual_type_of_t<Sub>>>;
-
-}  // namespace cml
+op::unary_plus<value_type_trait_of_t<actual_type_of_t<Sub>>>;
+} // namespace cml

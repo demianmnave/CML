@@ -7,28 +7,29 @@
 #endif
 
 namespace cml {
-
 /* matrix_row_node 'structors: */
 
 template<class Sub>
 matrix_row_node<Sub, -1>::matrix_row_node(Sub sub, int row)
-: m_sub(std::move(sub))
-, m_row(row)
+  : m_sub(std::move(sub))
+    , m_row(row)
 {
   cml_require(row >= 0, std::invalid_argument, "row < 0");
 }
 
 template<class Sub>
 matrix_row_node<Sub, -1>::matrix_row_node(node_type&& other)
-: m_sub(std::move(other.m_sub))
-, m_row(other.m_row)
-{}
+  : m_sub(std::move(other.m_sub))
+    , m_row(other.m_row)
+{
+}
 
 template<class Sub>
 matrix_row_node<Sub, -1>::matrix_row_node(const node_type& other)
-: m_sub(other.m_sub)
-, m_row(other.m_row)
-{}
+  : m_sub(other.m_sub)
+    , m_row(other.m_row)
+{
+}
 
 
 /* Internal methods: */
@@ -48,5 +49,4 @@ matrix_row_node<Sub, -1>::i_get(int j) const -> immutable_value
 {
   return this->m_sub.get(this->m_row, j);
 }
-
-}  // namespace cml
+} // namespace cml

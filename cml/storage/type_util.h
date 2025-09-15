@@ -8,7 +8,6 @@
 #include <cml/common/storage_tags.h>
 
 namespace cml {
-
 /** Specializable class to detect storage selectors. */
 template<class T> struct is_storage_selector
 {
@@ -99,6 +98,5 @@ template<class Storage1, class Storage2> struct storage_disambiguate
 /** Convenience alias for storage_disambiguate. */
 template<class Storage1, class Storage2>
 using storage_disambiguate_t =
-  typename storage_disambiguate<Storage1, Storage2>::type;
-
-}  // namespace cml
+typename storage_disambiguate<Storage1, Storage2>::type;
+} // namespace cml

@@ -12,15 +12,15 @@
 #include <cml/vector/binary_ops.h>
 
 namespace cml {
-
 template<class Sub1, class Sub2, enable_if_quaternion_t<Sub1>*,
   enable_if_quaternion_t<Sub2>*>
-inline auto
+auto
 operator*(Sub1&& sub1,
   Sub2&& sub2) -> quaternion_promote_t<actual_operand_type_of_t<decltype(sub1)>,
   actual_operand_type_of_t<decltype(sub2)>>
 {
-  using result_type = quaternion_promote_t<actual_operand_type_of_t<decltype(sub1)>,
+  using result_type = quaternion_promote_t<actual_operand_type_of_t<decltype(
+      sub1)>,
     actual_operand_type_of_t<decltype(sub2)>>;
   using order_type = order_type_trait_of_t<result_type>;
   using cross_type = cross_type_trait_of_t<result_type>;
@@ -51,5 +51,4 @@ operator*(Sub1&& sub1,
   /* Done: */
   return result_type(real, imaginary);
 }
-
-}  // namespace cml
+} // namespace cml

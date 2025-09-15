@@ -9,7 +9,6 @@
 #include <cml/vector/vector.h>
 
 namespace cml {
-
 template<class Element, int Size>
 struct vector_traits<vector<Element, fixed<Size>>>
 {
@@ -37,7 +36,7 @@ struct vector_traits<vector<Element, fixed<Size>>>
 /** Fixed-length vector. */
 template<class Element, int Size>
 class vector<Element, fixed<Size>>
-: public writable_vector<vector<Element, fixed<Size>>>
+  : public writable_vector<vector<Element, fixed<Size>>>
 {
   public:
   using vector_type = vector<Element, fixed<Size>>;
@@ -55,12 +54,10 @@ class vector<Element, fixed<Size>>
   using storage_type = typename traits_type::storage_type;
   using size_tag = typename traits_type::size_tag;
 
-
   public:
   /* Include methods from writable_type: */
   using writable_type::operator[];
   using writable_type::operator=;
-
 
   public:
   /** Constant containing the array size. */
@@ -68,7 +65,6 @@ class vector<Element, fixed<Size>>
 
   /** The dimension (same as array_size). */
   static const int dimension = array_size;
-
 
   public:
   /** Compiler-default constructor.
@@ -130,7 +126,6 @@ class vector<Element, fixed<Size>>
   /** Construct from std::initializer_list. */
   template<class Other> vector(std::initializer_list<Other> l);
 
-
   public:
   /** Return access to the vector data as a raw pointer. */
   pointer data();
@@ -144,14 +139,12 @@ class vector<Element, fixed<Size>>
   /** Read-only iterator. */
   const_pointer end() const;
 
-
   public:
   /** Copy assignment. */
   vector_type& operator=(const vector_type& other);
 
   /** Move assignment. */
   vector_type& operator=(vector_type&& other);
-
 
   protected:
   /** @name readable_vector Interface */
@@ -190,8 +183,7 @@ class vector<Element, fixed<Size>>
   /** Fixed-length array. */
   value_type m_data[Size];
 };
-
-}  // namespace cml
+} // namespace cml
 
 template<typename E, int Size>
 struct std::tuple_size<cml::vector<E, cml::fixed<Size>>>

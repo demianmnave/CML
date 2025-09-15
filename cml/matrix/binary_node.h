@@ -8,7 +8,6 @@
 #include <cml/matrix/promotion.h>
 
 namespace cml {
-
 template<class Sub1, class Sub2, class Op> class matrix_binary_node;
 
 /** matrix_binary_node<> traits. */
@@ -29,7 +28,8 @@ struct matrix_traits<matrix_binary_node<Sub1, Sub2, Op>>
   /* Determine the common storage type for the node, based on the storage
    * types of its subexpressions:
    */
-  using storage_type = matrix_binary_storage_promote_t<storage_type_of_t<left_traits>,
+  using storage_type = matrix_binary_storage_promote_t<storage_type_of_t<
+      left_traits>,
     storage_type_of_t<right_traits>>;
 
   /* Traits and types for the storage: */
@@ -59,7 +59,7 @@ struct matrix_traits<matrix_binary_node<Sub1, Sub2, Op>>
 /** Represents a binary matrix operation in an expression tree. */
 template<class Sub1, class Sub2, class Op>
 class matrix_binary_node
-: public readable_matrix<matrix_binary_node<Sub1, Sub2, Op>>
+  : public readable_matrix<matrix_binary_node<Sub1, Sub2, Op>>
 {
   public:
   using node_type = matrix_binary_node<Sub1, Sub2, Op>;
@@ -77,7 +77,6 @@ class matrix_binary_node
   using basis_tag = typename traits_type::basis_tag;
   using layout_tag = typename traits_type::layout_tag;
 
-
   public:
   /** Constant containing the number of rows. */
   static const int array_rows = traits_type::array_rows;
@@ -90,7 +89,6 @@ class matrix_binary_node
 
   /** Constant containing the matrix basis enumeration value. */
   static const basis_kind matrix_basis = traits_type::matrix_basis;
-
 
   public:
   /** Construct from the wrapped sub-expressions.  Sub1 and Sub2 must be
@@ -108,7 +106,6 @@ class matrix_binary_node
 
   /** Copy constructor. */
   matrix_binary_node(const node_type& other);
-
 
   protected:
   /** @name readable_matrix Interface */
@@ -135,16 +132,17 @@ class matrix_binary_node
    * stored as a copy if Sub1 is an rvalue reference (temporary), or by
    * const reference if Sub1 is an lvalue reference.
    */
-  using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub1>::value, const left_type&,
+  using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub1>::value, const
+    left_type&,
     left_type>;
 
   /** The type used to store the right subexpression.  The expression is
    * stored as a copy if Sub2 is an rvalue reference (temporary), or by
    * const reference if Sub2 is an lvalue reference.
    */
-  using right_wrap_type = cml::if_t<std::is_lvalue_reference<Sub2>::value, const right_type&,
+  using right_wrap_type = cml::if_t<std::is_lvalue_reference<Sub2>::value, const
+    right_type&,
     right_type>;
-
 
   protected:
   /** The wrapped left subexpression. */
@@ -153,13 +151,11 @@ class matrix_binary_node
   /** The wrapped right subexpression. */
   right_wrap_type m_right;
 
-
   private:
   // Not assignable.
   node_type& operator=(const node_type&);
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATRIX_BINARY_NODE_TPP
 #include <cml/matrix/binary_node.tpp>

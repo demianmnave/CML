@@ -10,7 +10,6 @@
 /** @defgroup mathlib_matrix_scale Matrix Scale Functions */
 
 namespace cml {
-
 /** @addtogroup mathlib_matrix_scale */
 /*@{*/
 
@@ -140,8 +139,7 @@ void matrix_inverse_scale(writable_matrix<Sub1>& m,
 /*@}*/
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_MATRIX_SCALE_TPP
 #include <cml/mathlib/matrix/scale.tpp>

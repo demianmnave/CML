@@ -9,12 +9,11 @@
 #include <cml/vector/detail/combined_size_of.h>
 
 namespace cml::detail {
-
 /* check_or_resize for a read-only vector, left, that just forwards to
  * check_same_size.
  */
 template<class Sub, class Other>
-inline void
+void
 check_or_resize(const readable_vector<Sub>& left, const Other& right)
 {
   cml::check_same_size(left, right);
@@ -24,7 +23,7 @@ check_or_resize(const readable_vector<Sub>& left, const Other& right)
  * ensure it has the same size as right.
  */
 template<class Sub, class Other>
-inline auto
+auto
 check_or_resize(writable_vector<Sub>& left, const Other& right)
   -> decltype(left.actual().resize(0), void())
 {
@@ -35,7 +34,7 @@ check_or_resize(writable_vector<Sub>& left, const Other& right)
  * just forwards to check_size.
  */
 template<class Sub, int N>
-inline void
+void
 check_or_resize(const readable_vector<Sub>& sub, int_c<N>)
 {
   cml::check_size(sub, int_c<N>());
@@ -45,7 +44,7 @@ check_or_resize(const readable_vector<Sub>& sub, int_c<N>)
  * just forwards to check_size.
  */
 template<class Sub>
-inline void
+void
 check_or_resize(const readable_vector<Sub>& sub, int N)
 {
   cml::check_size(sub, N);
@@ -55,7 +54,7 @@ check_or_resize(const readable_vector<Sub>& sub, int N)
  * resizes the vector to N.
  */
 template<class Sub, int N>
-inline auto
+auto
 check_or_resize(writable_vector<Sub>& sub, int_c<N>)
   -> decltype(sub.actual().resize(0), void())
 {
@@ -66,7 +65,7 @@ check_or_resize(writable_vector<Sub>& sub, int_c<N>)
  * resizes the vector to N.
  */
 template<class Sub>
-inline auto
+auto
 check_or_resize(writable_vector<Sub>& sub, int N)
   -> decltype(sub.actual().resize(0), void())
 {
@@ -77,7 +76,7 @@ check_or_resize(writable_vector<Sub>& sub, int N)
  * check_same_size.
  */
 template<class Sub, class Other>
-inline void
+void
 check_or_resize(const readable_vector<Sub>& left,
   const readable_vector<Other>& right)
 {
@@ -88,7 +87,7 @@ check_or_resize(const readable_vector<Sub>& left,
  * ensure it has the same size as right.
  */
 template<class Sub, class Other>
-inline auto
+auto
 check_or_resize(writable_vector<Sub>& left, const readable_vector<Other>& right)
   -> decltype(left.actual().resize(0), void())
 {
@@ -99,7 +98,7 @@ check_or_resize(writable_vector<Sub>& left, const readable_vector<Other>& right)
  * other.size() + sizeof(eN):
  */
 template<class Sub, class Other, class... Elements>
-inline void
+void
 check_or_resize(const readable_vector<Sub>& sub,
   const readable_vector<Other>& other, const Elements&... eN)
 {
@@ -110,11 +109,10 @@ check_or_resize(const readable_vector<Sub>& sub,
  * other.size() + sizeof(eN):
  */
 template<class Sub, class Other, class... Elements>
-inline auto
+auto
 check_or_resize(writable_vector<Sub>& sub, const readable_vector<Other>& other,
   const Elements&... eN) -> decltype(sub.actual().resize(0), void())
 {
   sub.actual().resize(combined_size_of(other, eN...));
 }
-
 }

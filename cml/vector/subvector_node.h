@@ -7,7 +7,6 @@
 #include <cml/vector/promotion.h>
 
 namespace cml {
-
 template<class Sub> class subvector_node;
 
 /** subvector_node<> traits. */
@@ -61,11 +60,9 @@ class subvector_node : public readable_vector<subvector_node<Sub>>
   using storage_type = typename traits_type::storage_type;
   using size_tag = typename traits_type::size_tag;
 
-
   public:
   /** The array size constant depends upon the subexpression size. */
   static const int array_size = traits_type::array_size;
-
 
   public:
   /** Construct from the wrapped sub-expression and the element to drop.
@@ -78,7 +75,6 @@ class subvector_node : public readable_vector<subvector_node<Sub>>
 
   /** Copy constructor. */
   subvector_node(const node_type& other);
-
 
   protected:
   /** @name readable_vector Interface */
@@ -100,7 +96,8 @@ class subvector_node : public readable_vector<subvector_node<Sub>>
    * as a copy if Sub is an rvalue reference (temporary), or by const
    * reference if Sub is an lvalue reference.
    */
-  using wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const sub_type&,
+  using wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const
+    sub_type&,
     sub_type>;
 
   /** The wrapped subexpression. */
@@ -109,13 +106,11 @@ class subvector_node : public readable_vector<subvector_node<Sub>>
   /** The element to skip. */
   int m_skip;
 
-
   private:
   // Not assignable.
   node_type& operator=(const node_type&);
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_VECTOR_SUBVECTOR_NODE_TPP
 #include <cml/vector/subvector_node.tpp>

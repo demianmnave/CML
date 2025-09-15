@@ -15,7 +15,7 @@ struct hash<cml::vector<Element, StorageType>>
 {
   using vector_type = cml::vector<Element, StorageType>;
 
-  inline std::size_t operator()(const vector_type& v) const
+  std::size_t operator()(const vector_type& v) const
   {
     std::size_t seed = 0;
     std::hash<cml::value_type_of_t<vector_type>> hasher;
@@ -24,4 +24,4 @@ struct hash<cml::vector<Element, StorageType>>
     return seed;
   }
 };
-}  // namespace std
+} // namespace std

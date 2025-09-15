@@ -7,7 +7,6 @@
 #include <cml/mathlib/matrix/translation.h>
 
 namespace cml {
-
 template<class Sub>
 void
 matrix_invert_RT_only_2D(writable_matrix<Sub>& m)
@@ -49,10 +48,11 @@ matrix_invert_RT(writable_matrix<Sub>& m)
 
   int R = m.rows(), C = m.cols();
   int M;
-  /**/ if(R > C)
-    M = C;               // Rectangular, row basis, e.g. 4x3
-  else if(R < C) M = R;  // Rectangular, col basis, e.g. 3x4
-  else M = R - 1;        // Square, either, e.g. 4x4.
+  /**/
+  if(R > C)
+    M = C;              // Rectangular, row basis, e.g. 4x3
+  else if(R < C) M = R; // Rectangular, col basis, e.g. 3x4
+  else M = R - 1;       // Square, either, e.g. 4x4.
 
   /* Transpose the MxM rotation part of m in-place: */
   for(int i = 0; i < M; ++i) {
@@ -74,5 +74,4 @@ matrix_invert_RT(writable_matrix<Sub>& m)
     m.set_basis_element(M, i, -e);
   }
 }
-
-}  // namespace cml
+} // namespace cml

@@ -13,7 +13,6 @@
 #include <cml/quaternion/readable_quaternion.h>
 
 namespace cml {
-
 /** Base class for writable quaternion types.  Writable quaternions support
  * non-const read-write access to its elements, in addition to read-only
  * access via readable_quaternion.
@@ -47,7 +46,6 @@ class writable_quaternion : public readable_quaternion<DerivedT>
   using mutable_value = typename traits_type::mutable_value;
   using order_type = typename traits_type::order_type;
 
-
   public:
   /* Disambiguate readable_quaternion<> methods: */
   using readable_type::W;
@@ -64,7 +62,6 @@ class writable_quaternion : public readable_quaternion<DerivedT>
   using readable_type::y;
   using readable_type::z;
   using readable_type::w;
-
 
   public:
   /** Return a mutable reference to the quaternion cast as DerivedT. */
@@ -93,7 +90,6 @@ class writable_quaternion : public readable_quaternion<DerivedT>
 
   /** Return a mutable reference to the imaginary k coordinate. */
   mutable_value z();
-
 
   public:
   /** Set the scalar of the quaternion to @c s, and the imaginary
@@ -139,7 +135,6 @@ class writable_quaternion : public readable_quaternion<DerivedT>
   auto set(const E& s, const readable_vector<Sub>& v) && -> enable_if_t<
     are_convertible<value_type, value_type_trait_of_t<Sub>, E>::value,
     DerivedT&&>;
-
 
   public:
   /** Divide the quaternion elements by the length of the quaternion. */
@@ -207,7 +202,6 @@ class writable_quaternion : public readable_quaternion<DerivedT>
    * as a replacement.
    */
   DerivedT&& exp() &&;
-
 
   public:
   /** Assign from a readable_quaternion. */
@@ -296,7 +290,6 @@ class writable_quaternion : public readable_quaternion<DerivedT>
     typename enable_if_convertible<value_type, ScalarT>::type* = nullptr>
   DerivedT&& operator/=(const ScalarT& v) &&;
 
-
   protected:
   /** Assign from a readable_quaternion.
    *
@@ -352,7 +345,6 @@ class writable_quaternion : public readable_quaternion<DerivedT>
   DerivedT& assign_elements(const E0& e0, const E1& e1, const E2& e2,
     const E3& e3);
 
-
   protected:
   // Use the compiler-generated default constructor:
   writable_quaternion() = default;
@@ -366,8 +358,7 @@ class writable_quaternion : public readable_quaternion<DerivedT>
   // Force assignment through operator=(readable_quaternion<>):
   writable_quaternion& operator=(const writable_quaternion&) = delete;
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_QUATERNION_WRITABLE_QUATERNION_TPP
 #include <cml/quaternion/writable_quaternion.tpp>

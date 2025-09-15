@@ -10,7 +10,6 @@
 #include <cml/storage/type_util.h>
 
 namespace cml {
-
 /* Forward declarations: */
 template<int Size1 = -1, int Size2 = -1, class Tag = void> struct compiled;
 
@@ -125,5 +124,4 @@ struct storage_disambiguate<compiled<R1, C1, Tag1>, compiled<R2, C2, Tag2>>
 
 /** For compatibility with CML1. */
 template<int Size1 = -1, int Size2 = -1> using fixed = compiled<Size1, Size2>;
-
-}  // namespace cml
+} // namespace cml

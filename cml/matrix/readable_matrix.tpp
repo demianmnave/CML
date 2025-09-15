@@ -10,7 +10,6 @@
 #include <cml/matrix/detail/determinant.h>
 
 namespace cml {
-
 /* Public methods: */
 
 template<class DT>
@@ -139,5 +138,4 @@ readable_matrix<DT>::basis_size(col_basis) const
 {
   return this->rows();
 }
-
-}  // namespace cml
+} // namespace cml

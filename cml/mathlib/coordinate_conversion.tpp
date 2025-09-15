@@ -11,11 +11,10 @@
 #include <cml/vector/size_checking.h>
 
 namespace cml {
-
 /* To Cartesian: */
 
 template<class Sub, class E0, class E1>
-inline void
+void
 polar_to_cartesian(writable_vector<Sub>& v, E0 radius, E1 theta)
 {
   using theta_traits = scalar_traits<E1>;
@@ -29,14 +28,14 @@ polar_to_cartesian(writable_vector<Sub>& v, E0 radius, E1 theta)
 }
 
 template<class E, class Sub>
-inline void
+void
 polar_to_cartesian(E radius, E theta, writable_vector<Sub>& v)
 {
   polar_to_cartesian(v, radius, theta);
 }
 
 template<class Sub, class E0, class E1, class E2>
-inline void
+void
 cylindrical_to_cartesian(writable_vector<Sub>& v, int axis, E0 radius, E1 theta,
   E2 height)
 {
@@ -62,7 +61,7 @@ cylindrical_to_cartesian(writable_vector<Sub>& v, int axis, E0 radius, E1 theta,
 }
 
 template<class E, class Sub>
-inline void
+void
 cylindrical_to_cartesian(E radius, E theta, E height, int axis,
   writable_vector<Sub>& v)
 {
@@ -70,7 +69,7 @@ cylindrical_to_cartesian(E radius, E theta, E height, int axis,
 }
 
 template<class Sub, class E0, class E1, class E2>
-inline void
+void
 spherical_to_cartesian(writable_vector<Sub>& v, int axis, LatitudeType type,
   E0 radius, E1 theta, E2 phi)
 {
@@ -103,7 +102,7 @@ spherical_to_cartesian(writable_vector<Sub>& v, int axis, LatitudeType type,
 }
 
 template<class E, class Sub>
-inline void
+void
 spherical_to_cartesian(E radius, E theta, E phi, int axis, LatitudeType type,
   writable_vector<Sub>& v)
 {
@@ -113,7 +112,7 @@ spherical_to_cartesian(E radius, E theta, E phi, int axis, LatitudeType type,
 /* From Cartesian: */
 
 template<class Sub, class E0, class E1, class Tol>
-inline void
+void
 cartesian_to_polar(const readable_vector<Sub>& v, E0& radius, E1& theta,
   Tol tolerance)
 {
@@ -130,7 +129,7 @@ cartesian_to_polar(const readable_vector<Sub>& v, E0& radius, E1& theta,
 }
 
 template<class Sub, class E0, class E1>
-inline void
+void
 cartesian_to_polar(const readable_vector<Sub>& v, E0& radius, E1& theta)
 {
   using tolerance_type = value_type_trait_promote_t<Sub, E0, E1>;
@@ -139,7 +138,7 @@ cartesian_to_polar(const readable_vector<Sub>& v, E0& radius, E1& theta)
 }
 
 template<class Sub, class E0, class E1, class E2, class Tol>
-inline void
+void
 cartesian_to_cylindrical(const readable_vector<Sub>& v, int axis, E0& radius,
   E1& theta, E2& height, Tol tolerance)
 {
@@ -166,7 +165,7 @@ cartesian_to_cylindrical(const readable_vector<Sub>& v, int axis, E0& radius,
 }
 
 template<class Sub, class E0, class E1, class E2>
-inline void
+void
 cartesian_to_cylindrical(const readable_vector<Sub>& v, int axis, E0& radius,
   E1& theta, E2& height)
 {
@@ -176,7 +175,7 @@ cartesian_to_cylindrical(const readable_vector<Sub>& v, int axis, E0& radius,
 }
 
 template<class Sub, class E>
-inline void
+void
 cartesian_to_cylindrical(const readable_vector<Sub>& v, E& radius, E& theta,
   E& height, int axis, E tolerance)
 {
@@ -184,7 +183,7 @@ cartesian_to_cylindrical(const readable_vector<Sub>& v, E& radius, E& theta,
 }
 
 template<class Sub, class E0, class E1, class E2, class Tol>
-inline void
+void
 cartesian_to_spherical(const readable_vector<Sub>& v, int axis,
   LatitudeType type, E0& radius, E1& theta, E2& phi, Tol tolerance)
 {
@@ -216,7 +215,7 @@ cartesian_to_spherical(const readable_vector<Sub>& v, int axis,
 }
 
 template<class Sub, class E0, class E1, class E2>
-inline void
+void
 cartesian_to_spherical(const readable_vector<Sub>& v, int axis,
   LatitudeType type, E0& radius, E1& theta, E2& phi)
 {
@@ -226,11 +225,10 @@ cartesian_to_spherical(const readable_vector<Sub>& v, int axis,
 }
 
 template<class Sub, class E>
-inline void
+void
 cartesian_to_spherical(const readable_vector<Sub>& v, E& radius, E& theta,
   E& phi, int axis, LatitudeType type, E tolerance)
 {
   cartesian_to_spherical(v, axis, type, radius, theta, phi, tolerance);
 }
-
-}  // namespace cml
+} // namespace cml

@@ -10,7 +10,6 @@
 /** @defgroup mathlib_matrix_concat Ordered Matrix Concatenation Functions */
 
 namespace cml {
-
 /** @addtogroup mathlib_matrix_concat */
 /*@{*/
 
@@ -31,8 +30,7 @@ auto matrix_concat(const readable_matrix<Sub1>& m1,
   -> matrix_inner_product_promote_t<Sub1, Sub2>;
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_MATRIX_CONCAT_TPP
 #include <cml/mathlib/matrix/concat.tpp>

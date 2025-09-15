@@ -7,7 +7,6 @@
 #endif
 
 namespace cml {
-
 /* fixed 'structors: */
 
 template<class E, class O, class C>
@@ -133,7 +132,7 @@ template<class E, class O, class C>
 template<class Other>
 auto
 quaternion<E, fixed<>, O, C>::i_put(int i,
-  const Other& v) &->quaternion_type&
+  const Other& v) & -> quaternion_type&
 {
   this->m_data[i] = value_type(v);
   return *this;
@@ -148,5 +147,4 @@ quaternion<E, fixed<>, O, C>::i_put(int i,
   this->m_data[i] = value_type(v);
   return (quaternion_type&&) *this;
 }
-
-}  // namespace cml
+} // namespace cml

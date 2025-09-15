@@ -12,21 +12,19 @@
 
 namespace cml::detail {
 namespace {
-
 template<class Matrix>
-inline auto
+auto
 diagonal_product(const Matrix& A) -> value_type_of_t<Matrix>
 {
   auto D = A(0, 0);
   for(int i = 1; i < A.rows(); ++i) D *= A(i, i);
   return D;
 }
-
-}  // namespace
+} // namespace
 
 /** 2x2 determinant implementation. */
 template<class Sub>
-inline auto
+auto
 determinant(const readable_matrix<Sub>& M, int_c<2>)
   -> value_type_trait_of_t<Sub>
 {
@@ -35,7 +33,7 @@ determinant(const readable_matrix<Sub>& M, int_c<2>)
 
 /** 3x3 determinant implementation. */
 template<class Sub>
-inline auto
+auto
 determinant(const readable_matrix<Sub>& M, int_c<3>)
   -> value_type_trait_of_t<Sub>
 {
@@ -46,7 +44,7 @@ determinant(const readable_matrix<Sub>& M, int_c<3>)
 
 /** 4x4 determinant implementation. */
 template<class Sub>
-inline auto
+auto
 determinant(const readable_matrix<Sub>& M, int_c<4>)
   -> value_type_trait_of_t<Sub>
 {
@@ -84,7 +82,7 @@ determinant(const readable_matrix<Sub>& M, int_c<4>)
  * @note It is up to the caller to ensure @c M is a square matrix.
  */
 template<class Sub, int N>
-inline auto
+auto
 determinant(const readable_matrix<Sub>& M, int_c<N>)
   -> value_type_trait_of_t<Sub>
 {
@@ -104,7 +102,7 @@ determinant(const readable_matrix<Sub>& M, int_c<N>)
  * @note It is up to the caller to ensure @c M is a square matrix.
  */
 template<class Sub>
-inline auto
+auto
 determinant(const readable_matrix<Sub>& M, int_c<-1>)
   -> value_type_trait_of_t<Sub>
 {
@@ -113,9 +111,12 @@ determinant(const readable_matrix<Sub>& M, int_c<-1>)
 
   /* Use the small matrix determinant if possible: */
   switch(N) {
-    case 2: return determinant(M, int_c<2>()); break;
-    case 3: return determinant(M, int_c<3>()); break;
-    case 4: return determinant(M, int_c<4>()); break;
+    case 2: return determinant(M, int_c<2>());
+      break;
+    case 3: return determinant(M, int_c<3>());
+      break;
+    case 4: return determinant(M, int_c<4>());
+      break;
   }
 
   temporary_of_t<Sub> A(M);
@@ -125,5 +126,4 @@ determinant(const readable_matrix<Sub>& M, int_c<-1>)
   /* Compute the determinant from the diagonals: */
   return sign * diagonal_product(A);
 }
-
 }

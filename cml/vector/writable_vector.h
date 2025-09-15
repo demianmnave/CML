@@ -12,7 +12,6 @@
 #include <cml/vector/readable_vector.h>
 
 namespace cml {
-
 /** Base class for writable vector types.  Writable vectors support
  * non-const read-write access to its elements, in addition to read-only
  * access via readable_vector.
@@ -45,14 +44,12 @@ class writable_vector : public readable_vector<DerivedT>
   using const_reference = typename traits_type::const_reference;
   using mutable_value = typename traits_type::mutable_value;
 
-
   public:
   /* Disambiguate readable_vector<> methods: */
   using readable_type::actual;
   using readable_type::get;
   using readable_type::normalize;
   using readable_type::operator[];
-
 
   public:
   /** Return a mutable reference to the vector cast as DerivedT. */
@@ -74,7 +71,6 @@ class writable_vector : public readable_vector<DerivedT>
 
   /** Return a mutable reference to element @c i. */
   mutable_value operator[](int i);
-
 
   public:
   /** Divide the vector elements by the length of the vector. */
@@ -153,7 +149,6 @@ class writable_vector : public readable_vector<DerivedT>
   /** Set all elements of a temporary to a specific value. */
   DerivedT&& fill(const_reference v) &&;
 
-
   public:
   /** Assign from a variable list of at least one value. If the vector is
    * resizable, it is resized to exactly accomodate the elements of @c
@@ -164,7 +159,7 @@ class writable_vector : public readable_vector<DerivedT>
    * convertible to value_type.
    */
   template<class E0, class... Elements>
-  auto set(const E0& e0, const Elements&... eN) &->enable_if_t<
+  auto set(const E0& e0, const Elements&... eN) & -> enable_if_t<
     are_convertible<value_type, E0, Elements...>::value, DerivedT&>;
 
   /** Assign a temporary from a variable list of at least one value. If
@@ -299,7 +294,6 @@ class writable_vector : public readable_vector<DerivedT>
     enable_if_convertible_t<value_type, ScalarT>* = nullptr>
   DerivedT&& operator/=(const ScalarT& v) &&;
 
-
   protected:
   /** Assign from a readable_vector.
    *
@@ -360,7 +354,6 @@ class writable_vector : public readable_vector<DerivedT>
    */
   template<class... Elements> DerivedT& assign_elements(const Elements&... eN);
 
-
   protected:
   // Use the compiler-generated default constructor:
   writable_vector() = default;
@@ -371,8 +364,7 @@ class writable_vector : public readable_vector<DerivedT>
   // Use the compiler-generated move constructor:
   writable_vector(writable_vector&&) = default;
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_VECTOR_WRITABLE_VECTOR_TPP
 #include <cml/vector/writable_vector.tpp>

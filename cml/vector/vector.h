@@ -5,7 +5,6 @@
 #pragma once
 
 namespace cml {
-
 /** Specializable class for building vector types.
  *
  * This class encapsulates the notion of a vector.
@@ -19,5 +18,4 @@ namespace cml {
  * @sa scalar_traits
  */
 template<class Element, class StorageType> class vector;
-
-}  // namespace cml
+} // namespace cml

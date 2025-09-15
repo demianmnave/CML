@@ -8,7 +8,6 @@
 #include <cml/scalar/traits.h>
 
 namespace cml {
-
 /** Use C++ type deduction via std::common_type to determine the result of
  * combining N scalars.
  */
@@ -27,6 +26,7 @@ template<class... Subs> struct value_type_promote
 {
   using type = typename scalar_promote<value_type_of_t<Subs>...>::type;
 };
+
 // XXX This could be a template alias, except VC++12 can't grok it.
 // Moreover, without value_type_of_t<Subs>, even this fails to compile...
 
@@ -41,6 +41,7 @@ template<class... Subs> struct value_type_trait_promote
 {
   using type = typename scalar_promote<value_type_trait_of_t<Subs>...>::type;
 };
+
 // XXX This could be a template alias, except VC++12 can't grok it.
 // Moreover, without value_type_trait_of_t<Subs>, even this fails to
 // compile...
@@ -48,6 +49,5 @@ template<class... Subs> struct value_type_trait_promote
 /** Convenience alias for value_type_trait_promote<>::type. */
 template<class... Subs>
 using value_type_trait_promote_t =
-  typename value_type_trait_promote<Subs...>::type;
-
-}  // namespace cml
+typename value_type_trait_promote<Subs...>::type;
+} // namespace cml

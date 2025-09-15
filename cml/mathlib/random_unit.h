@@ -7,7 +7,6 @@
 #include <cml/vector/fwd.h>
 
 namespace cml {
-
 /** @addtogroup mathlib_vector_misc */
 /*@{*/
 
@@ -75,8 +74,7 @@ void random_unit(writable_vector<Sub1>& n, const readable_vector<Sub2>& d,
   const Scalar& a);
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_RANDOM_UNIT_TPP
 #include <cml/mathlib/random_unit.tpp>

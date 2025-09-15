@@ -11,9 +11,8 @@
 #include <cml/vector/cross.h>
 
 namespace cml {
-
 template<class Sub1, class Sub2, class E>
-inline auto
+auto
 rotate_vector(const readable_vector<Sub1>& v, const readable_vector<Sub2>& n,
   const E& angle) -> vector_promote_t<Sub1, Sub2>
 {
@@ -32,5 +31,4 @@ rotate_vector(const readable_vector<Sub1>& v, const readable_vector<Sub2>& n,
   auto cos_angle = angle_traits::cos(angle);
   return cos_angle * (v - parallel) + sin_angle * cross(n, v) + parallel;
 }
-
-}  // namespace cml
+} // namespace cml

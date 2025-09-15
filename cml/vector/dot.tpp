@@ -10,9 +10,8 @@
 #include <cml/vector/size_checking.h>
 
 namespace cml {
-
 template<class Sub1, class Sub2>
-inline auto
+auto
 dot(const readable_vector<Sub1>& left, const readable_vector<Sub2>& right)
   -> value_type_trait_promote_t<Sub1, Sub2>
 {
@@ -25,5 +24,4 @@ dot(const readable_vector<Sub1>& left, const readable_vector<Sub2>& right)
     accum += result_type(left.get(i) * right.get(i));
   return accum;
 }
-
-}  // namespace cml
+} // namespace cml

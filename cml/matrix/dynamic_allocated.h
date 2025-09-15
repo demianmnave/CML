@@ -12,13 +12,12 @@
 #include <cml/matrix/matrix.h>
 
 namespace cml {
-
 template<class Element, class Allocator, typename BasisOrient, typename Layout>
 struct matrix_traits<matrix<Element, dynamic<Allocator>, BasisOrient, Layout>>
 {
   /* The basis must be col_basis or row_basis: */
   static_assert(std::is_same<BasisOrient, row_basis>::value
-      || std::is_same<BasisOrient, col_basis>::value,
+    || std::is_same<BasisOrient, col_basis>::value,
     "invalid basis");
 
   /* Traits and types for the matrix element: */
@@ -61,7 +60,7 @@ struct matrix_traits<matrix<Element, dynamic<Allocator>, BasisOrient, Layout>>
 /** Fixed-size matrix. */
 template<class Element, class Allocator, typename BasisOrient, typename Layout>
 class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
-: public writable_matrix<
+  : public writable_matrix<
     matrix<Element, dynamic<Allocator>, BasisOrient, Layout>>
 {
   protected:
@@ -74,7 +73,6 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
   /** Require a stateless allocator. */
   static_assert(std::is_empty<allocator_type>::value,
     "cannot use a stateful allocator for dynamic<> matrices");
-
 
   public:
   using matrix_type = matrix<Element, dynamic<Allocator>, BasisOrient, Layout>;
@@ -94,12 +92,10 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
   using basis_tag = typename traits_type::basis_tag;
   using layout_tag = typename traits_type::layout_tag;
 
-
   public:
   /* Include methods from writable_type: */
   using writable_type::operator();
   using writable_type::operator=;
-
 
   public:
   /** Constant containing the number of rows. */
@@ -113,7 +109,6 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
 
   /** Constant containing the array layout enumeration value. */
   static const layout_kind array_layout = traits_type::array_layout;
-
 
   public:
   /** Default constructor.
@@ -155,9 +150,9 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
   matrix(RowsT rows, ColsT cols, const E0& e0, const Elements&... eN)
   // XXX Should be in matrix/dynamic_allocated.tpp, but VC++12 has
   // brain-dead out-of-line template argument matching...
-  : m_data(0)
-  , m_rows(0)
-  , m_cols(0)
+    : m_data(0)
+      , m_rows(0)
+      , m_cols(0)
   {
     this->resize_fast(rows, cols);
     this->assign_elements(e0, eN...);
@@ -181,7 +176,6 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
 
   /** Destructor. */
   ~matrix();
-
 
   public:
   /** Return access to the matrix data as a raw pointer. */
@@ -212,14 +206,12 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
    */
   void resize_fast(int rows, int cols);
 
-
   public:
   /** Copy assignment. */
   matrix_type& operator=(const matrix_type& other);
 
   /** Move assignment. */
   matrix_type& operator=(matrix_type&& other);
-
 
   protected:
   /** No-op for trivially destructible elements
@@ -231,7 +223,6 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
    * data.
    */
   void destruct(pointer data, int n, std::false_type);
-
 
   protected:
   /** @name readable_matrix Interface */
@@ -272,7 +263,7 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
   protected:
   /** Row-major access to const or non-const @c M. */
   template<class Matrix>
-  inline static auto s_access(Matrix& M, int i, int j, row_major)
+  static auto s_access(Matrix& M, int i, int j, row_major)
     -> decltype(M.m_data[0])
   {
     return M.m_data[i * M.m_cols + j];
@@ -280,12 +271,11 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
 
   /** Column-major access to const or non-const @c M. */
   template<class Matrix>
-  inline static auto s_access(Matrix& M, int i, int j, col_major)
+  static auto s_access(Matrix& M, int i, int j, col_major)
     -> decltype(M.m_data[0])
   {
     return M.m_data[j * M.m_rows + i];
   }
-
 
   protected:
   /** Dynamic storage. */
@@ -297,8 +287,7 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
   /** Matrix columns. */
   int m_cols;
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATRIX_DYNAMIC_ALLOCATED_TPP
 #include <cml/matrix/dynamic_allocated.tpp>

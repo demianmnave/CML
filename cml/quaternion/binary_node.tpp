@@ -7,29 +7,31 @@
 #endif
 
 namespace cml {
-
 /* quaternion_binary_node 'structors: */
 
 template<class Sub1, class Sub2, class Op>
 quaternion_binary_node<Sub1, Sub2, Op>::quaternion_binary_node(Sub1 left,
   Sub2 right)
-: m_left(std::move(left))
-, m_right(std::move(right))
-{}
+  : m_left(std::move(left))
+    , m_right(std::move(right))
+{
+}
 
 template<class Sub1, class Sub2, class Op>
 quaternion_binary_node<Sub1, Sub2, Op>::quaternion_binary_node(
   node_type&& other)
-: m_left(std::move(other.m_left))
-, m_right(std::move(other.m_right))
-{}
+  : m_left(std::move(other.m_left))
+    , m_right(std::move(other.m_right))
+{
+}
 
 template<class Sub1, class Sub2, class Op>
 quaternion_binary_node<Sub1, Sub2, Op>::quaternion_binary_node(
   const node_type& other)
-: m_left(other.m_left)
-, m_right(other.m_right)
-{}
+  : m_left(other.m_left)
+    , m_right(other.m_right)
+{
+}
 
 
 /* Internal methods: */
@@ -42,5 +44,4 @@ quaternion_binary_node<Sub1, Sub2, Op>::i_get(int i) const -> immutable_value
 {
   return Op().apply(this->m_left.get(i), this->m_right.get(i));
 }
-
-}  // namespace cml
+} // namespace cml

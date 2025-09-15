@@ -12,7 +12,6 @@
 #include <cml/quaternion/size_checking.h>
 
 namespace cml {
-
 /* Public methods: */
 
 template<class DT>
@@ -92,7 +91,7 @@ template<class DT>
 DT&&
 writable_quaternion<DT>::normalize() &&
 {
-  this->normalize();  // Forward to normalize &
+  this->normalize(); // Forward to normalize &
   return (DT&&) *this;
 }
 
@@ -108,7 +107,7 @@ template<class DT>
 DT&&
 writable_quaternion<DT>::zero() &&
 {
-  this->zero();  // Forward to zero &
+  this->zero(); // Forward to zero &
   return (DT&&) *this;
 }
 
@@ -127,7 +126,7 @@ template<class DT>
 DT&&
 writable_quaternion<DT>::identity() &&
 {
-  this->identity();  // Forward to identity &
+  this->identity(); // Forward to identity &
   return (DT&&) *this;
 }
 
@@ -146,7 +145,7 @@ template<class DT>
 DT&&
 writable_quaternion<DT>::conjugate() &&
 {
-  this->conjugate();  // Forward to conjugate &
+  this->conjugate(); // Forward to conjugate &
   return (DT&&) *this;
 }
 
@@ -169,7 +168,7 @@ template<class DT>
 DT&&
 writable_quaternion<DT>::inverse() &&
 {
-  this->inverse();  // Forward to inverse &
+  this->inverse(); // Forward to inverse &
   return (DT&&) *this;
 }
 
@@ -198,7 +197,7 @@ template<class DT>
 DT&&
 writable_quaternion<DT>::log() &&
 {
-  this->log();  // Forward to log &
+  this->log(); // Forward to log &
   return (DT&&) *this;
 }
 
@@ -227,7 +226,7 @@ template<class DT>
 DT&&
 writable_quaternion<DT>::exp() &&
 {
-  this->exp();  // Forward to exp &
+  this->exp(); // Forward to exp &
   return (DT&&) *this;
 }
 
@@ -235,8 +234,8 @@ template<class DT>
 template<class Sub, class E, enable_if_vector_t<Sub>*>
 auto
 writable_quaternion<DT>::
-  set(const readable_vector<Sub>& v, const E& s) & -> enable_if_t<
-    are_convertible<value_type, value_type_trait_of_t<Sub>, E>::value, DT&>
+set(const readable_vector<Sub>& v, const E& s) & -> enable_if_t<
+  are_convertible<value_type, value_type_trait_of_t<Sub>, E>::value, DT&>
 {
   return this->assign(v, s);
 }
@@ -245,8 +244,8 @@ template<class DT>
 template<class E, class Sub, enable_if_vector_t<Sub>*>
 auto
 writable_quaternion<DT>::
-  set(const E& s, const readable_vector<Sub>& v) & -> enable_if_t<
-    are_convertible<value_type, value_type_trait_of_t<Sub>, E>::value, DT&>
+set(const E& s, const readable_vector<Sub>& v) & -> enable_if_t<
+  are_convertible<value_type, value_type_trait_of_t<Sub>, E>::value, DT&>
 {
   return this->assign(v, s);
 }
@@ -255,8 +254,8 @@ template<class DT>
 template<class Sub, class E, enable_if_vector_t<Sub>*>
 auto
 writable_quaternion<DT>::
-  set(const readable_vector<Sub>& v, const E& s) && -> enable_if_t<
-    are_convertible<value_type, value_type_trait_of_t<Sub>, E>::value, DT&&>
+set(const readable_vector<Sub>& v, const E& s) && -> enable_if_t<
+  are_convertible<value_type, value_type_trait_of_t<Sub>, E>::value, DT&&>
 {
   this->assign(v, s);
   return (DT&&) *this;
@@ -266,8 +265,8 @@ template<class DT>
 template<class E, class Sub, enable_if_vector_t<Sub>*>
 auto
 writable_quaternion<DT>::
-  set(const E& s, const readable_vector<Sub>& v) && -> enable_if_t<
-    are_convertible<value_type, value_type_trait_of_t<Sub>, E>::value, DT&&>
+set(const E& s, const readable_vector<Sub>& v) && -> enable_if_t<
+  are_convertible<value_type, value_type_trait_of_t<Sub>, E>::value, DT&&>
 {
   this->assign(v, s);
   return (DT&&) *this;
@@ -522,5 +521,4 @@ writable_quaternion<DT>::assign_elements(const E0& e0, const E1& e1,
   this->put(Z, item_at<Z>(e0, e1, e2, e3));
   return this->actual();
 }
-
-}  // namespace cml
+} // namespace cml

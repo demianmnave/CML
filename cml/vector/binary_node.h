@@ -8,7 +8,6 @@
 #include <cml/vector/promotion.h>
 
 namespace cml {
-
 template<class Sub1, class Sub2, class Op> class vector_binary_node;
 
 /** vector_binary_node<> traits. */
@@ -29,7 +28,8 @@ struct vector_traits<vector_binary_node<Sub1, Sub2, Op>>
   /* Determine the common storage type for the node, based on the storage
    * types of its subexpressions:
    */
-  using storage_type = vector_binary_storage_promote_t<storage_type_of_t<left_traits>,
+  using storage_type = vector_binary_storage_promote_t<storage_type_of_t<
+      left_traits>,
     storage_type_of_t<right_traits>>;
 
   /* Traits and types for the storage: */
@@ -42,7 +42,7 @@ struct vector_traits<vector_binary_node<Sub1, Sub2, Op>>
 /** Represents a binary vector operation in an expression tree. */
 template<class Sub1, class Sub2, class Op>
 class vector_binary_node
-: public readable_vector<vector_binary_node<Sub1, Sub2, Op>>
+  : public readable_vector<vector_binary_node<Sub1, Sub2, Op>>
 {
   public:
   using node_type = vector_binary_node<Sub1, Sub2, Op>;
@@ -58,11 +58,9 @@ class vector_binary_node
   using storage_type = typename traits_type::storage_type;
   using size_tag = typename traits_type::size_tag;
 
-
   public:
   /** Constant containing the array size. */
   static const int array_size = traits_type::array_size;
-
 
   public:
   /** Construct from the wrapped sub-expressions.  Sub1 and Sub2 must be
@@ -80,7 +78,6 @@ class vector_binary_node
 
   /** Copy constructor. */
   vector_binary_node(const node_type& other);
-
 
   protected:
   /** @name readable_vector Interface */
@@ -104,16 +101,17 @@ class vector_binary_node
    * stored as a copy if Sub1 is an rvalue reference (temporary), or by
    * const reference if Sub1 is an lvalue reference.
    */
-  using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub1>::value, const left_type&,
+  using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub1>::value, const
+    left_type&,
     left_type>;
 
   /** The type used to store the right subexpression.  The expression is
    * stored as a copy if Sub2 is an rvalue reference (temporary), or by
    * const reference if Sub2 is an lvalue reference.
    */
-  using right_wrap_type = cml::if_t<std::is_lvalue_reference<Sub2>::value, const right_type&,
+  using right_wrap_type = cml::if_t<std::is_lvalue_reference<Sub2>::value, const
+    right_type&,
     right_type>;
-
 
   protected:
   /** The wrapped left subexpression. */
@@ -122,13 +120,11 @@ class vector_binary_node
   /** The wrapped right subexpression. */
   right_wrap_type m_right;
 
-
   private:
   // Not assignable.
   node_type& operator=(const node_type&);
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_VECTOR_BINARY_NODE_TPP
 #include <cml/vector/binary_node.tpp>

@@ -12,7 +12,6 @@
 #include <cml/matrix/readable_matrix.h>
 
 namespace cml {
-
 /** Base class for writable matrix types.  Writable matrices support
  * non-const read-write access to its elements, in addition to read-only
  * access via readable_matrix.
@@ -47,13 +46,11 @@ class writable_matrix : public readable_matrix<DerivedT>
   using basis_tag = typename traits_type::basis_tag;
   using layout_tag = typename traits_type::layout_tag;
 
-
   public:
   /* Disambiguate readable_matrix<> methods: */
   using readable_type::actual;
   using readable_type::get;
   using readable_type::operator();
-
 
   public:
   /** Return a mutable reference to the matrix cast as DerivedT. */
@@ -70,7 +67,6 @@ class writable_matrix : public readable_matrix<DerivedT>
 
   /** Return a mutable reference to element @c (i,j). */
   mutable_value operator()(int i, int j);
-
 
   public:
   /** Set element @c j of basis vector @c i. */
@@ -170,7 +166,6 @@ class writable_matrix : public readable_matrix<DerivedT>
    * from a temporary.
    */
   DerivedT&& transpose() &&;
-
 
   public:
   /** Assign from a readable_matrix.
@@ -307,7 +302,6 @@ class writable_matrix : public readable_matrix<DerivedT>
     typename enable_if_convertible<value_type, ScalarT>::type* = nullptr>
   DerivedT&& operator/=(const ScalarT& v) &&;
 
-
   protected:
   /** Assign from a readable_matrix.
    *
@@ -383,7 +377,6 @@ class writable_matrix : public readable_matrix<DerivedT>
    */
   template<class... Elements> DerivedT& assign_elements(const Elements&... eN);
 
-
   protected:
   /** Set basis element @c (i,j) for a row-basis matrix. */
   template<class Other>
@@ -392,7 +385,6 @@ class writable_matrix : public readable_matrix<DerivedT>
   /** Set basis element @c (i,j) for a column-basis matrix. */
   template<class Other>
   void set_basis_element(int i, int j, const Other& v, col_basis);
-
 
   protected:
   // Use the compiler-generated default constructor:
@@ -407,8 +399,7 @@ class writable_matrix : public readable_matrix<DerivedT>
   // Force assignment through operator=(readable_matrix<>):
   writable_matrix& operator=(const writable_matrix&) = delete;
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATRIX_WRITABLE_MATRIX_TPP
 #include <cml/matrix/writable_matrix.tpp>

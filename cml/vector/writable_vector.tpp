@@ -12,10 +12,9 @@
 
 namespace cml {
 namespace detail {
-
 /* Terminate the assignment recursion at the final element. */
 template<int I, class Sub, class E0>
-inline void
+void
 assign_elements(writable_vector<Sub>& sub, cml::int_c<I>, const E0& e0)
 {
   sub.put(I, e0);
@@ -25,7 +24,7 @@ assign_elements(writable_vector<Sub>& sub, cml::int_c<I>, const E0& e0)
  * starting from I+1.
  */
 template<int I, class Sub, class E0, class... Es>
-inline void
+void
 assign_elements(writable_vector<Sub>& sub, cml::int_c<I>, const E0& e0,
   const Es&... eN)
 {
@@ -35,7 +34,7 @@ assign_elements(writable_vector<Sub>& sub, cml::int_c<I>, const E0& e0,
 
 /* Set sub(i) to e0: */
 template<class Sub, class E0>
-inline void
+void
 assign_elements(writable_vector<Sub>& sub, int i, const E0& e0)
 {
   sub.put(i, e0);
@@ -43,14 +42,13 @@ assign_elements(writable_vector<Sub>& sub, int i, const E0& e0)
 
 /* Assign the elements of sub from eN starting from index i. */
 template<class Sub, class E0, class... Es>
-inline void
+void
 assign_elements(writable_vector<Sub>& sub, int i, const E0& e0, const Es&... eN)
 {
   sub.put(i, e0);
   assign_elements(sub, i + 1, eN...);
 }
-
-}  // namespace detail
+} // namespace detail
 
 /* Public methods: */
 
@@ -96,7 +94,7 @@ template<class Other>
 DT&&
 writable_vector<DT>::put(int i, const Other& v) &&
 {
-  this->put(i, v);  // Forward to put(...) &
+  this->put(i, v); // Forward to put(...) &
   return (DT&&) *this;
 }
 
@@ -112,7 +110,7 @@ template<class DT>
 DT&&
 writable_vector<DT>::normalize() &&
 {
-  this->normalize();  // Forward to normalize &
+  this->normalize(); // Forward to normalize &
   return (DT&&) *this;
 }
 
@@ -128,7 +126,7 @@ template<class DT>
 DT&&
 writable_vector<DT>::zero() &&
 {
-  this->zero();  // Forward to zero &
+  this->zero(); // Forward to zero &
   return (DT&&) *this;
 }
 
@@ -143,7 +141,7 @@ template<class DT>
 DT&&
 writable_vector<DT>::cardinal(int i) &&
 {
-  this->cardinal(i);  // Forward to cardinal &
+  this->cardinal(i); // Forward to cardinal &
   return (DT&&) *this;
 }
 
@@ -164,7 +162,7 @@ template<class ODT>
 DT&&
 writable_vector<DT>::minimize(const readable_vector<ODT>& other) &&
 {
-  this->minimize(other);  // Forward to minimize &
+  this->minimize(other); // Forward to minimize &
   return (DT&&) *this;
 }
 
@@ -185,7 +183,7 @@ template<class ODT>
 DT&&
 writable_vector<DT>::maximize(const readable_vector<ODT>& other) &&
 {
-  this->maximize(other);  // Forward to maximize &
+  this->maximize(other); // Forward to maximize &
   return (DT&&) *this;
 }
 
@@ -230,8 +228,9 @@ writable_vector<DT>::fill(const_reference v) &&
 template<class DT>
 template<class E0, class... Es>
 auto
-writable_vector<DT>::set(const E0& e0, const Es&... eN) &
-  ->enable_if_t<are_convertible<value_type, E0, Es...>::value, DT&>
+writable_vector<DT>::set(const E0& e0,
+  const Es&... eN) & -> enable_if_t<are_convertible<value_type, E0, Es
+  ...>::value, DT&>
 {
   return this->assign_elements(e0, eN...);
 }
@@ -455,5 +454,4 @@ writable_vector<DT>::assign_elements(const Es&... eN)
   detail::assign_elements(*this, int_c<0>(), eN...);
   return this->actual();
 }
-
-}  // namespace cml
+} // namespace cml

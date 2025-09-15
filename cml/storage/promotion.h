@@ -8,7 +8,6 @@
 #include <cml/storage/selectors.h>
 
 namespace cml {
-
 /** Build a storage type that best represents the combination of @c
  * Storage1 and @c Storage2 into a single type.
  *
@@ -97,6 +96,5 @@ struct storage_promote
 /** Convenience alias for storage_selector_promote. */
 template<class Storage1, class Storage2, bool PreferDynamic = false>
 using storage_promote_t =
-  typename storage_promote<Storage1, Storage2, PreferDynamic>::type;
-
-}  // namespace cml
+typename storage_promote<Storage1, Storage2, PreferDynamic>::type;
+} // namespace cml

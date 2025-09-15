@@ -7,29 +7,31 @@
 #endif
 
 namespace cml {
-
 /* quaternion_scalar_node 'structors: */
 
 template<class Sub, class Scalar, class Op>
 quaternion_scalar_node<Sub, Scalar, Op>::quaternion_scalar_node(Sub left,
   const right_type& right)
-: m_left(std::move(left))
-, m_right(right)
-{}
+  : m_left(std::move(left))
+    , m_right(right)
+{
+}
 
 template<class Sub, class Scalar, class Op>
 quaternion_scalar_node<Sub, Scalar, Op>::quaternion_scalar_node(
   node_type&& other)
-: m_left(std::move(other.m_left))
-, m_right(std::move(other.m_right))
-{}
+  : m_left(std::move(other.m_left))
+    , m_right(std::move(other.m_right))
+{
+}
 
 template<class Sub, class Scalar, class Op>
 quaternion_scalar_node<Sub, Scalar, Op>::quaternion_scalar_node(
   const node_type& other)
-: m_left(other.m_left)
-, m_right(other.m_right)
-{}
+  : m_left(other.m_left)
+    , m_right(other.m_right)
+{
+}
 
 
 /* Internal methods: */
@@ -42,5 +44,4 @@ quaternion_scalar_node<Sub, Scalar, Op>::i_get(int i) const -> immutable_value
 {
   return Op().apply(this->m_left.get(i), this->m_right);
 }
-
-}  // namespace cml
+} // namespace cml

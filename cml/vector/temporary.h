@@ -11,7 +11,6 @@
 #include <cml/vector/vector.h>
 
 namespace cml {
-
 /** Deduce a temporary for a vector expression. */
 template<class Vector>
 struct temporary_of<Vector, cml::enable_if_vector_t<Vector>>
@@ -97,5 +96,4 @@ struct supervector_of
 
 /** Convenience alias for supervector_of. */
 template<class T> using supervector_of_t = typename supervector_of<T>::type;
-
-}  // namespace cml
+} // namespace cml

@@ -8,12 +8,11 @@
 #include <cml/vector/unary_node.h>
 
 namespace cml {
-
 /** Helper function to generate a vector_unary_node from a vector type
  * (i.e. derived from readable_vector<>).
  */
 template<class Op, class Sub, enable_if_vector_t<Sub>* = nullptr>
-inline auto
+auto
 make_vector_unary_node(Sub&& sub)
   -> vector_unary_node<actual_operand_type_of_t<decltype(sub)>, Op>
 {
@@ -27,7 +26,7 @@ make_vector_unary_node(Sub&& sub)
 }
 
 template<class Sub, enable_if_vector_t<Sub>* = nullptr>
-inline auto
+auto
 operator-(Sub&& sub) -> decltype(make_vector_unary_node<unary_minus_t<Sub>>(
   std::forward<Sub>(sub)))
 {
@@ -35,11 +34,10 @@ operator-(Sub&& sub) -> decltype(make_vector_unary_node<unary_minus_t<Sub>>(
 }
 
 template<class Sub, enable_if_vector_t<Sub>* = nullptr>
-inline auto
+auto
 operator+(Sub&& sub)
   -> decltype(make_vector_unary_node<unary_plus_t<Sub>>(std::forward<Sub>(sub)))
 {
   return make_vector_unary_node<unary_plus_t<Sub>>(std::forward<Sub>(sub));
 }
-
-}  // namespace cml
+} // namespace cml

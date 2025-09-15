@@ -10,15 +10,15 @@
 #include <cml/vector/fwd.h>
 
 namespace cml {
-
 /** Exception thrown when run-time size checking is enabled, and the
  * operands of a vector expression have incompatible sizes.
  */
 struct incompatible_vector_size_error : std::runtime_error
 {
   incompatible_vector_size_error()
-  : std::runtime_error("incompatible vector expression sizes")
-  {}
+    : std::runtime_error("incompatible vector expression sizes")
+  {
+  }
 };
 
 /** Exception thrown when run-time size checking is enabled, and the
@@ -27,8 +27,9 @@ struct incompatible_vector_size_error : std::runtime_error
 struct minimum_vector_size_error : std::runtime_error
 {
   minimum_vector_size_error()
-  : std::runtime_error("vector expression too short")
-  {}
+    : std::runtime_error("vector expression too short")
+  {
+  }
 };
 
 /** Exception thrown when run-time size checking is enabled, and the
@@ -37,8 +38,9 @@ struct minimum_vector_size_error : std::runtime_error
 struct vector_size_error : std::runtime_error
 {
   vector_size_error()
-  : std::runtime_error("incorrect vector expression size")
-  {}
+    : std::runtime_error("incorrect vector expression size")
+  {
+  }
 };
 
 /** Exception thrown when run-time size checking is enabled, and the
@@ -47,8 +49,9 @@ struct vector_size_error : std::runtime_error
 struct vector_size_range_error : std::runtime_error
 {
   vector_size_range_error()
-  : std::runtime_error("vector expression size out of range")
-  {}
+    : std::runtime_error("vector expression size out of range")
+  {
+  }
 };
 
 
@@ -210,8 +213,7 @@ void check_size_range(const readable_vector<Sub>& left, int Low, int High);
 template<class Sub, int Low, int High>
 void check_size_range(const readable_vector<Sub>& left, cml::int_c<Low>,
   cml::int_c<High>);
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_VECTOR_SIZE_CHECKING_TPP
 #include <cml/vector/size_checking.tpp>

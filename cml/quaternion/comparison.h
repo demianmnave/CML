@@ -7,7 +7,6 @@
 #include <cml/quaternion/readable_quaternion.h>
 
 namespace cml {
-
 /** Returns true if @c left is lexicographically less than @c right. */
 template<class Sub1, class Sub2>
 bool operator<(const readable_quaternion<Sub1>& left,
@@ -45,8 +44,7 @@ bool operator==(const readable_quaternion<Sub1>& left,
 template<class Sub1, class Sub2>
 bool operator!=(const readable_quaternion<Sub1>& left,
   const readable_quaternion<Sub2>& right);
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_QUATERNION_COMPARISON_TPP
 #include <cml/quaternion/comparison.tpp>

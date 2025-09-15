@@ -11,15 +11,15 @@
 #include <cml/matrix/fwd.h>
 
 namespace cml {
-
 /** Exception thrown when run-time size checking is enabled, and the
  * operands of a matrix expression have incompatible sizes.
  */
 struct incompatible_matrix_size_error : std::runtime_error
 {
   incompatible_matrix_size_error()
-  : std::runtime_error("incompatible matrix expression sizes")
-  {}
+    : std::runtime_error("incompatible matrix expression sizes")
+  {
+  }
 };
 
 /** Exception thrown when run-time size checking is enabled, and the
@@ -28,8 +28,9 @@ struct incompatible_matrix_size_error : std::runtime_error
 struct minimum_matrix_size_error : std::runtime_error
 {
   minimum_matrix_size_error()
-  : std::runtime_error("matrix expression too small")
-  {}
+    : std::runtime_error("matrix expression too small")
+  {
+  }
 };
 
 /** Exception thrown when run-time size checking is enabled, and the
@@ -38,8 +39,9 @@ struct minimum_matrix_size_error : std::runtime_error
 struct matrix_size_error : std::runtime_error
 {
   matrix_size_error()
-  : std::runtime_error("incorrect matrix expression size")
-  {}
+    : std::runtime_error("incorrect matrix expression size")
+  {
+  }
 };
 
 /** Exception thrown when run-time size checking is enabled, and the row
@@ -49,8 +51,9 @@ struct matrix_size_error : std::runtime_error
 struct incompatible_matrix_row_size_error : std::runtime_error
 {
   incompatible_matrix_row_size_error()
-  : std::runtime_error("incompatible matrix row sizes")
-  {}
+    : std::runtime_error("incompatible matrix row sizes")
+  {
+  }
 };
 
 /** Exception thrown when run-time size checking is enabled, and the column
@@ -60,8 +63,9 @@ struct incompatible_matrix_row_size_error : std::runtime_error
 struct incompatible_matrix_col_size_error : std::runtime_error
 {
   incompatible_matrix_col_size_error()
-  : std::runtime_error("incompatible matrix column sizes")
-  {}
+    : std::runtime_error("incompatible matrix column sizes")
+  {
+  }
 };
 
 /** Exception thrown when run-time size checking is enabled, and the
@@ -71,8 +75,9 @@ struct incompatible_matrix_col_size_error : std::runtime_error
 struct incompatible_matrix_inner_size_error : std::runtime_error
 {
   incompatible_matrix_inner_size_error()
-  : std::runtime_error("incompatible matrix inner product size")
-  {}
+    : std::runtime_error("incompatible matrix inner product size")
+  {
+  }
 };
 
 /** Exception thrown when run-time size checking is enabled, and a matrix
@@ -81,8 +86,9 @@ struct incompatible_matrix_inner_size_error : std::runtime_error
 struct non_square_matrix_error : std::runtime_error
 {
   non_square_matrix_error()
-  : std::runtime_error("non-square matrix")
-  {}
+    : std::runtime_error("non-square matrix")
+  {
+  }
 };
 
 
@@ -410,8 +416,7 @@ void check_minimum_size(const readable_matrix<Sub>& left, cml::int_c<R>,
  * CML_NO_RUNTIME_MATRIX_SIZE_CHECKS at compile time.
  */
 template<class Sub> void check_square(const readable_matrix<Sub>& left);
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATRIX_SIZE_CHECKING_TPP
 #include <cml/matrix/size_checking.tpp>

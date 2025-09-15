@@ -7,7 +7,6 @@
 #include <cml/vector/readable_vector.h>
 
 namespace cml {
-
 /** Returns true if @c left is lexicographically less than @c right. */
 template<class Sub1, class Sub2>
 bool operator<(const readable_vector<Sub1>& left,
@@ -45,8 +44,7 @@ bool operator==(const readable_vector<Sub1>& left,
 template<class Sub1, class Sub2>
 bool operator!=(const readable_vector<Sub1>& left,
   const readable_vector<Sub2>& right);
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_VECTOR_COMPARISON_TPP
 #include <cml/vector/comparison.tpp>

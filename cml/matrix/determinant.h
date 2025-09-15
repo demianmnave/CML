@@ -8,7 +8,6 @@
 #include <cml/matrix/fwd.h>
 
 namespace cml {
-
 /** Compute the determinant of square matrix @c M.  For matrices of
  * dimension less than 4, the determinant is computed directly.  For larger
  * matrices, the determinant is computed from the LU decomposition with
@@ -20,8 +19,7 @@ namespace cml {
  */
 template<class Sub>
 auto determinant(const readable_matrix<Sub>& M) -> value_type_trait_of_t<Sub>;
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATRIX_DETERMINANT_TPP
 #include <cml/matrix/determinant.tpp>

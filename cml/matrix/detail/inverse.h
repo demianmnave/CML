@@ -10,10 +10,9 @@
 #include <cml/matrix/writable_matrix.h>
 
 namespace cml::detail {
-
 /** 2x2 inverse implementation. */
 template<class Sub>
-inline void
+void
 inverse(writable_matrix<Sub>& M, int_c<2>)
 {
   /* Compute determinant and inverse: */
@@ -30,7 +29,7 @@ inverse(writable_matrix<Sub>& M, int_c<2>)
 
 /** 3x3 inverse implementation. */
 template<class Sub>
-inline void
+void
 inverse(writable_matrix<Sub>& M, int_c<3>)
 {
   /* Compute cofactors for each entry: */
@@ -63,7 +62,7 @@ inverse(writable_matrix<Sub>& M, int_c<3>)
 
 /** 4x4 inverse implementation. */
 template<class Sub>
-inline void
+void
 inverse(writable_matrix<Sub>& M, int_c<4>)
 {
   /* Common cofactors, rows 0,1: */
@@ -147,13 +146,12 @@ inverse(writable_matrix<Sub>& M, int_c<4>)
 }
 
 namespace {
-
 /** Internal NxN inverse implementation using pivoting. @c row_index, @c
  * col_index, and @c pivoted should be an appropriately sized array (e.g.
  * std::vector<> or std::array<>).
  */
 template<class Sub, class RowIndexArray, class ColIndexArray, class Markers>
-inline void
+void
 inverse_pivot(writable_matrix<Sub>& M, RowIndexArray& row_index,
   ColIndexArray& col_index, Markers& pivoted)
 {
@@ -217,8 +215,7 @@ inverse_pivot(writable_matrix<Sub>& M, RowIndexArray& row_index,
       std::swap(M(j, row_index[i]), M(j, col_index[i]));
   }
 }
-
-}  // namespace
+} // namespace
 
 /** Inverse implementation for statically-sized square matrices with
  * dimension greater than 4, using a pivoting algorithm to compute the
@@ -227,7 +224,7 @@ inverse_pivot(writable_matrix<Sub>& M, RowIndexArray& row_index,
  * @note It is up to the caller to ensure @c M is a square matrix.
  */
 template<class Sub, int N>
-inline void
+void
 inverse(writable_matrix<Sub>& M, int_c<N>)
 {
   /* For tracking pivots */
@@ -247,22 +244,19 @@ inverse(writable_matrix<Sub>& M, int_c<N>)
  * @note It is up to the caller to ensure @c M is a square matrix.
  */
 template<class Sub>
-inline void
+void
 inverse(writable_matrix<Sub>& M, int_c<-1>)
 {
   /* Use small matrix inverse if possible: */
   int N = M.rows();
   switch(N) {
-    case 2:
-      inverse(M, int_c<2>());
+    case 2: inverse(M, int_c<2>());
       return;
       break;
-    case 3:
-      inverse(M, int_c<3>());
+    case 3: inverse(M, int_c<3>());
       return;
       break;
-    case 4:
-      inverse(M, int_c<4>());
+    case 4: inverse(M, int_c<4>());
       return;
       break;
   }
@@ -276,5 +270,4 @@ inverse(writable_matrix<Sub>& M, int_c<-1>)
   /* Call the implementation: */
   inverse_pivot(M, row_index, col_index, pivoted);
 }
-
 }

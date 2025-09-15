@@ -17,7 +17,6 @@
 /** @defgroup mathlib_matrix_rotation Matrix Rotation Functions */
 
 namespace cml {
-
 /** @addtogroup mathlib_matrix_rotation */
 /*@{*/
 
@@ -291,8 +290,7 @@ VectorT matrix_to_euler(const readable_matrix<Sub>& m, euler_order order,
 /*@}*/
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_MATRIX_ROTATION_TPP
 #include <cml/mathlib/matrix/rotation.tpp>

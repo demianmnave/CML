@@ -5,14 +5,15 @@
 #pragma once
 
 namespace cml {
-
 /** Helper to specify v1^v2 multiplication cross. */
 struct positive_cross
-{};
+{
+};
 
 /** Helper to specify v2^v1 multiplication cross. */
 struct negative_cross
-{};
+{
+};
 
 /** Detect valid cross types. */
 template<class Tag> struct is_cross_type
@@ -65,5 +66,4 @@ template<class Tag1, class Tag2> struct cross_type_promote
 /** Convenience alias for cross_type_promote. */
 template<class Tag1, class Tag2>
 using cross_type_promote_t = typename cross_type_promote<Tag1, Tag2>::type;
-
-}  // namespace cml
+} // namespace cml

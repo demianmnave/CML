@@ -7,18 +7,20 @@
 #include <type_traits>
 
 namespace cml {
-
 /** Specify vector storage types. */
 struct vector_storage_tag
-{};
+{
+};
 
 /** Specify matrix storage types. */
 struct matrix_storage_tag
-{};
+{
+};
 
 /** Specify quaternion storage types. */
 struct quaternion_storage_tag
-{};
+{
+};
 
 /** Detect valid storage tags. */
 template<class Tag> struct is_storage_tag
@@ -60,5 +62,4 @@ template<class Storage> struct is_quaternion_storage
   static const bool value =
     std::is_same<storage_tag_of_t<Storage>, quaternion_storage_tag>::value;
 };
-
-}  // namespace cml
+} // namespace cml

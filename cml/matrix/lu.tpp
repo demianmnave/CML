@@ -11,9 +11,8 @@
 #include <cml/matrix/detail/lu.h>
 
 namespace cml {
-
 template<class Sub>
-inline auto
+auto
 lu_pivot(const readable_matrix<Sub>& M) -> lu_pivot_result<temporary_of_t<Sub>>
 {
   cml::check_square(M);
@@ -23,7 +22,7 @@ lu_pivot(const readable_matrix<Sub>& M) -> lu_pivot_result<temporary_of_t<Sub>>
 }
 
 template<class Matrix>
-inline void
+void
 lu_pivot(lu_pivot_result<Matrix>& result)
 {
   cml::check_square(result.lu);
@@ -31,7 +30,7 @@ lu_pivot(lu_pivot_result<Matrix>& result)
 }
 
 template<class Sub>
-inline auto
+auto
 lu(const readable_matrix<Sub>& M) -> temporary_of_t<Sub>
 {
   cml::check_square(M);
@@ -41,7 +40,7 @@ lu(const readable_matrix<Sub>& M) -> temporary_of_t<Sub>
 }
 
 template<class LUSub, class BSub>
-inline auto
+auto
 lu_solve(const readable_matrix<LUSub>& LU, const readable_vector<BSub>& b)
   -> temporary_of_t<BSub>
 {
@@ -52,7 +51,7 @@ lu_solve(const readable_matrix<LUSub>& LU, const readable_vector<BSub>& b)
 }
 
 template<class LUSub, class XSub, class BSub>
-inline void
+void
 lu_solve(const readable_matrix<LUSub>& LU, writable_vector<XSub>& x,
   const readable_vector<BSub>& b)
 {
@@ -89,7 +88,7 @@ lu_solve(const readable_matrix<LUSub>& LU, writable_vector<XSub>& x,
 }
 
 template<class Matrix, class BSub>
-inline auto
+auto
 lu_solve(const lu_pivot_result<Matrix>& lup, const readable_vector<BSub>& b)
   -> temporary_of_t<BSub>
 {
@@ -100,7 +99,7 @@ lu_solve(const lu_pivot_result<Matrix>& lup, const readable_vector<BSub>& b)
 }
 
 template<class Matrix, class XSub, class BSub>
-inline void
+void
 lu_solve(const lu_pivot_result<Matrix>& lup, writable_vector<XSub>& x,
   const readable_vector<BSub>& b)
 {
@@ -138,5 +137,4 @@ lu_solve(const lu_pivot_result<Matrix>& lup, writable_vector<XSub>& x,
 
   /* Done. */
 }
-
-}  // namespace cml
+} // namespace cml

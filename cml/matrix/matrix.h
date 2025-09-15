@@ -8,7 +8,6 @@
 #include <cml/common/layout_tags.h>
 
 namespace cml {
-
 /** Specializable class for building vector types.
  *
  * This class encapsulates the notion of a matrix.
@@ -36,5 +35,4 @@ namespace cml {
 template<typename Element, class StorageType, typename BasisOrient = col_basis,
   typename Layout = row_major>
 class matrix;
-
-}  // namespace cml
+} // namespace cml

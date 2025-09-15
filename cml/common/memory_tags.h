@@ -5,24 +5,27 @@
 #pragma once
 
 namespace cml {
-
 /** Specify a type containing compile-time memory. */
 struct compiled_memory_tag
-{};
+{
+};
 
 /** Specify a type containing allocated memory. */
 struct allocated_memory_tag
-{};
+{
+};
 
 /** Specify a type containing externally referenced memory (pointer,
  * reference, etc.).
  */
 struct external_memory_tag
-{};
+{
+};
 
 /** Specify a type having arbitrary or unspecified memory. */
 struct any_memory_tag
-{};
+{
+};
 
 /** Detect valid memory tags. */
 template<class Tag> struct is_memory_tag
@@ -65,5 +68,4 @@ template<class Storage> struct is_external_memory
   static const bool value =
     std::is_same<memory_tag_of_t<Storage>, external_memory_tag>::value;
 };
-
-}  // namespace cml
+} // namespace cml

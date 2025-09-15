@@ -10,7 +10,6 @@
 /** @defgroup mathlib_quaternion_basis Quaternion Basis Vector Functions */
 
 namespace cml {
-
 /** @addtogroup mathlib_quaternion_basis */
 /*@{*/
 
@@ -51,8 +50,7 @@ void quaternion_get_basis_vectors(const readable_quaternion<Sub>& q, XBasis& x,
   YBasis& y, ZBasis& z);
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_QUATERNION_BASIS_TPP
 #include <cml/mathlib/quaternion/basis.tpp>

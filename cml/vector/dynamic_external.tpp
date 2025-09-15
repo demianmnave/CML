@@ -9,28 +9,27 @@
 #include <cml/common/exception.h>
 
 namespace cml {
-
 /* dynamic_external 'structors: */
 
 template<class E>
 vector<E, external<>>::vector()
-: m_data(0)
-, m_size(0)
+  : m_data(0)
+    , m_size(0)
 {
 }
 
 template<class E>
 vector<E, external<>>::vector(pointer data, int size)
-: m_data(data)
-, m_size(size)
+  : m_data(data)
+    , m_size(size)
 {
   cml_require(size >= 0, std::invalid_argument, "size < 0");
 }
 
 template<class E>
 vector<E, external<>>::vector(int size, pointer data)
-: m_data(data)
-, m_size(size)
+  : m_data(data)
+    , m_size(size)
 {
   cml_require(size >= 0, std::invalid_argument, "size < 0");
 }
@@ -135,7 +134,7 @@ vector<E, external<>>::i_get(int i) -> mutable_value
 template<class E>
 template<class Other>
 auto
-vector<E, external<>>::i_put(int i, const Other& v) &->vector_type&
+vector<E, external<>>::i_put(int i, const Other& v) & -> vector_type&
 {
   this->m_data[i] = value_type(v);
   return *this;
@@ -149,5 +148,4 @@ vector<E, external<>>::i_put(int i, const Other& v) && -> vector_type&&
   this->m_data[i] = value_type(v);
   return (vector_type&&) *this;
 }
-
-}  // namespace cml
+} // namespace cml

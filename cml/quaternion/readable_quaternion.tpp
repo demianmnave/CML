@@ -12,7 +12,6 @@
 #include <cml/quaternion/conjugate_node.h>
 
 namespace cml {
-
 /* Public methods: */
 
 template<class DT>
@@ -80,14 +79,14 @@ readable_quaternion<DT>::real() const -> immutable_value
 
 template<class DT>
 auto
-readable_quaternion<DT>::imaginary() const& -> imaginary_node<const DT&>
+readable_quaternion<DT>::imaginary() const & -> imaginary_node<const DT&>
 {
   return imaginary_node<const DT&>((const DT&) *this);
 }
 
 template<class DT>
 auto
-readable_quaternion<DT>::imaginary() const&& -> imaginary_node<DT&&>
+readable_quaternion<DT>::imaginary() const && -> imaginary_node<DT&&>
 {
   return imaginary_node<DT&&>((DT&&) *this);
 }
@@ -117,7 +116,8 @@ readable_quaternion<DT>::norm() const -> value_type
 
 template<class DT>
 auto
-readable_quaternion<DT>::normalize() const& -> quaternion_scalar_node<const DT&,
+readable_quaternion<DT>::normalize() const & -> quaternion_scalar_node<const DT&
+  ,
   value_type, op::binary_divide<value_type, value_type>>
 {
   return quaternion_scalar_node<const DT&, value_type,
@@ -127,7 +127,7 @@ readable_quaternion<DT>::normalize() const& -> quaternion_scalar_node<const DT&,
 
 template<class DT>
 auto
-readable_quaternion<DT>::normalize() const&& -> quaternion_scalar_node<DT&&,
+readable_quaternion<DT>::normalize() const && -> quaternion_scalar_node<DT&&,
   value_type, op::binary_divide<value_type, value_type>>
 {
   return quaternion_scalar_node<DT&&, value_type,
@@ -136,30 +136,29 @@ readable_quaternion<DT>::normalize() const&& -> quaternion_scalar_node<DT&&,
 
 template<class DT>
 auto
-readable_quaternion<DT>::conjugate() const& -> conjugate_node<const DT&>
+readable_quaternion<DT>::conjugate() const & -> conjugate_node<const DT&>
 {
   return conjugate_node<const DT&>((const DT&) *this);
 }
 
 template<class DT>
 auto
-readable_quaternion<DT>::conjugate() const&& -> conjugate_node<DT&&>
+readable_quaternion<DT>::conjugate() const && -> conjugate_node<DT&&>
 {
   return conjugate_node<DT&&>((DT&&) *this);
 }
 
 template<class DT>
 auto
-readable_quaternion<DT>::inverse() const& -> inverse_node<const DT&>
+readable_quaternion<DT>::inverse() const & -> inverse_node<const DT&>
 {
   return inverse_node<const DT&>((const DT&) *this);
 }
 
 template<class DT>
 auto
-readable_quaternion<DT>::inverse() const&& -> inverse_node<DT&&>
+readable_quaternion<DT>::inverse() const && -> inverse_node<DT&&>
 {
   return inverse_node<DT&&>((DT&&) *this);
 }
-
-}  // namespace cml
+} // namespace cml

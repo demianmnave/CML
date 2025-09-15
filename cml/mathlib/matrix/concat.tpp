@@ -10,10 +10,9 @@
 
 namespace cml {
 namespace detail {
-
 /** Row-basis concatenation. */
 template<class Sub1, class Sub2>
-inline auto
+auto
 matrix_concat(const readable_matrix<Sub1>& m1, const readable_matrix<Sub2>& m2,
   row_basis) -> matrix_inner_product_promote_t<Sub1, Sub2>
 {
@@ -22,17 +21,16 @@ matrix_concat(const readable_matrix<Sub1>& m1, const readable_matrix<Sub2>& m2,
 
 /** Column-basis concatenation. */
 template<class Sub1, class Sub2>
-inline auto
+auto
 matrix_concat(const readable_matrix<Sub1>& m1, const readable_matrix<Sub2>& m2,
   col_basis) -> matrix_inner_product_promote_t<Sub1, Sub2>
 {
   return m2 * m1;
 }
-
-}  // namespace detail
+} // namespace detail
 
 template<class Sub1, class Sub2>
-inline auto
+auto
 matrix_concat(const readable_matrix<Sub1>& m1, const readable_matrix<Sub2>& m2)
   -> matrix_inner_product_promote_t<Sub1, Sub2>
 {
@@ -46,5 +44,4 @@ matrix_concat(const readable_matrix<Sub1>& m1, const readable_matrix<Sub2>& m2)
 
   return detail::matrix_concat(m1, m2, tag());
 }
-
-}  // namespace cml
+} // namespace cml

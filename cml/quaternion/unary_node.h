@@ -8,7 +8,6 @@
 #include <cml/quaternion/readable_quaternion.h>
 
 namespace cml {
-
 template<class Sub, class Op> class quaternion_unary_node;
 
 /** quaternion_unary_node<> traits. */
@@ -40,7 +39,7 @@ struct quaternion_traits<quaternion_unary_node<Sub, Op>>
 /** Represents a unary quaternion operation. */
 template<class Sub, class Op>
 class quaternion_unary_node
-: public readable_quaternion<quaternion_unary_node<Sub, Op>>
+  : public readable_quaternion<quaternion_unary_node<Sub, Op>>
 {
   public:
   using node_type = quaternion_unary_node<Sub, Op>;
@@ -56,11 +55,9 @@ class quaternion_unary_node
   using order_type = typename traits_type::order_type;
   using cross_type = typename traits_type::cross_type;
 
-
   public:
   /** The array size constant is the same as the subexpression. */
   static const int array_size = traits_type::array_size;
-
 
   public:
   /** Construct from the wrapped sub-expression.  @c sub must be an
@@ -73,7 +70,6 @@ class quaternion_unary_node
 
   /** Copy constructor. */
   quaternion_unary_node(const node_type& other);
-
 
   protected:
   /** @name readable_quaternion Interface */
@@ -94,21 +90,19 @@ class quaternion_unary_node
    * as a copy if Sub is an rvalue reference (temporary), or by const
    * reference if Sub is an lvalue reference.
    */
-  using sub_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const sub_type&,
+  using sub_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const
+    sub_type&,
     sub_type>;
-
 
   protected:
   /** The subexpression. */
   sub_wrap_type m_sub;
 
-
   private:
   // Not assignable.
   node_type& operator=(const node_type&);
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_QUATERNION_UNARY_NODE_TPP
 #include <cml/quaternion/unary_node.tpp>

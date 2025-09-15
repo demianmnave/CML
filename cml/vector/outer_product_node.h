@@ -9,7 +9,6 @@
 #include <cml/matrix/promotion.h>
 
 namespace cml {
-
 template<class Sub1, class Sub2> class outer_product_node;
 
 /** outer_product_node<> traits. */
@@ -25,7 +24,8 @@ struct matrix_traits<outer_product_node<Sub1, Sub2>>
   using right_traits = vector_traits<right_type>;
 
   /* Deduce the element type: */
-  using element_traits = scalar_traits<value_type_promote_t<left_traits, right_traits>>;
+  using element_traits = scalar_traits<value_type_promote_t<left_traits,
+    right_traits>>;
   using value_type = typename element_traits::value_type;
   using immutable_value = value_type;
 
@@ -62,7 +62,7 @@ struct matrix_traits<outer_product_node<Sub1, Sub2>>
 /** Represents a vector outer product in an expression tree. */
 template<class Sub1, class Sub2>
 class outer_product_node
-: public readable_matrix<outer_product_node<Sub1, Sub2>>
+  : public readable_matrix<outer_product_node<Sub1, Sub2>>
 {
   public:
   using node_type = outer_product_node<Sub1, Sub2>;
@@ -80,7 +80,6 @@ class outer_product_node
   using basis_tag = typename traits_type::basis_tag;
   using layout_tag = typename traits_type::layout_tag;
 
-
   public:
   /** Constant containing the number of rows. */
   static const int array_rows = traits_type::array_rows;
@@ -93,7 +92,6 @@ class outer_product_node
 
   /** Constant containing the matrix basis enumeration value. */
   static const basis_kind matrix_basis = traits_type::matrix_basis;
-
 
   public:
   /** Construct from the wrapped sub-expressions.  Sub1 and Sub2 must be
@@ -137,16 +135,17 @@ class outer_product_node
    * stored as a copy if Sub1 is an rvalue reference (temporary), or by
    * const reference if Sub1 is an lvalue reference.
    */
-  using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub1>::value, const left_type&,
+  using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub1>::value, const
+    left_type&,
     left_type>;
 
   /** The type used to store the right subexpression.  The expression is
    * stored as a copy if Sub2 is an rvalue reference (temporary), or by
    * const reference if Sub2 is an lvalue reference.
    */
-  using right_wrap_type = cml::if_t<std::is_lvalue_reference<Sub2>::value, const right_type&,
+  using right_wrap_type = cml::if_t<std::is_lvalue_reference<Sub2>::value, const
+    right_type&,
     right_type>;
-
 
   protected:
   /** The wrapped left subexpression. */
@@ -155,13 +154,11 @@ class outer_product_node
   /** The wrapped right subexpression. */
   right_wrap_type m_right;
 
-
   private:
   // Not assignable.
   node_type& operator=(const node_type&);
 };
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_VECTOR_OUTER_PRODUCT_NODE_TPP
 #include <cml/vector/outer_product_node.tpp>

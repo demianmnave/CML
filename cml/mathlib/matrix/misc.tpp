@@ -11,9 +11,8 @@
 #include <cml/mathlib/matrix/size_checking.h>
 
 namespace cml {
-
 template<class Sub>
-inline auto
+auto
 trace_2x2(const readable_matrix<Sub>& m) -> value_type_trait_of_t<Sub>
 {
   cml::check_linear_2D(m);
@@ -21,7 +20,7 @@ trace_2x2(const readable_matrix<Sub>& m) -> value_type_trait_of_t<Sub>
 }
 
 template<class Sub>
-inline auto
+auto
 trace_3x3(const readable_matrix<Sub>& m) -> value_type_trait_of_t<Sub>
 {
   cml::check_linear_3D(m);
@@ -29,7 +28,7 @@ trace_3x3(const readable_matrix<Sub>& m) -> value_type_trait_of_t<Sub>
 }
 
 template<class Sub1, class Sub2>
-inline void
+void
 matrix_skew_symmetric(writable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
 {
   cml::check_linear_3D(m);
@@ -46,7 +45,7 @@ matrix_skew_symmetric(writable_matrix<Sub1>& m, const readable_vector<Sub2>& v)
 }
 
 template<class Sub1, class Scalar>
-inline void
+void
 matrix_skew_symmetric_2D(writable_matrix<Sub1>& m, const Scalar& s)
 {
   cml::check_linear_2D(m);
@@ -55,5 +54,4 @@ matrix_skew_symmetric_2D(writable_matrix<Sub1>& m, const Scalar& s)
   m.set_basis_element(0, 1, s);
   m.set_basis_element(1, 0, -s);
 }
-
-}  // namespace cml
+} // namespace cml

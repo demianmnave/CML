@@ -9,7 +9,6 @@
 /** @defgroup mathlib_vector_rotation Vector Rotation Functions */
 
 namespace cml {
-
 /** @addtogroup mathlib_vector_rotation_3D */
 /*@{*/
 
@@ -25,8 +24,7 @@ auto rotate_vector(const readable_vector<Sub1>& v,
   -> vector_promote_t<Sub1, Sub2>;
 
 /*@}*/
-
-}  // namespace cml
+} // namespace cml
 
 #define __CML_MATHLIB_VECTOR_ROTATION_TPP
 #include <cml/mathlib/vector/rotation.tpp>

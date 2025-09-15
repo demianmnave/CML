@@ -7,7 +7,6 @@
 #include <cml/common/size_tags.h>
 
 namespace cml {
-
 /** Compute a new storage type by changing the size of @c Storage to @c N. */
 template<class Storage, int N> struct resize_storage
 {
@@ -31,5 +30,4 @@ template<class Storage, int R, int C> struct reshape_storage
 /** Convenience alias for reshape_storage. */
 template<class Storage, int R, int C>
 using reshape_storage_t = typename reshape_storage<Storage, R, C>::type;
-
-}  // namespace cml
+} // namespace cml

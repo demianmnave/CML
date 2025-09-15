@@ -8,7 +8,6 @@
 #include <cml/matrix/type_util.h>
 
 namespace cml {
-
 /** Specializable class wrapping traits for matrix<> types. This class
  * is used to simplify static polymorphism by providing a polymorphic base
  * class the types used by a particular derived class.
@@ -22,5 +21,4 @@ template<class Matrix> struct traits_of<Matrix, enable_if_matrix_t<Matrix>>
 {
   using type = matrix_traits<Matrix>;
 };
-
-}  // namespace cml
+} // namespace cml

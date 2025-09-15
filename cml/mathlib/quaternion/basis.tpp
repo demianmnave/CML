@@ -9,7 +9,6 @@
 #include <cml/scalar/functions.h>
 
 namespace cml {
-
 template<class Sub>
 auto
 quaternion_get_basis_vector(const readable_quaternion<Sub>& q, int i)
@@ -73,5 +72,4 @@ quaternion_get_basis_vectors(const readable_quaternion<Sub>& q, XBasis& x,
   y = quaternion_get_y_basis_vector(q);
   z = quaternion_get_z_basis_vector(q);
 }
-
-}  // namespace cml
+} // namespace cml

@@ -5,7 +5,6 @@
 #pragma once
 
 namespace cml {
-
 /** Coordinate system handedness. */
 enum AxisOrientation
 {
@@ -22,5 +21,4 @@ enum ZClip
   z_clip_neg_one,
   z_clip_zero
 };
-
-}  // namespace cml
+} // namespace cml
