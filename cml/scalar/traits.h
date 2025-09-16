@@ -31,69 +31,82 @@ struct default_integral_traits : std::numeric_limits<Scalar>
   using const_reference = value_type const&;
   using mutable_value = reference&;
   using immutable_value = const_reference;
+  using std::numeric_limits<Scalar>::epsilon;
 
   /** @name Basic Functions */
   /*@{*/
 
+  static value_type abs(const value_type& v) { return std::abs(v); }
+
+  static value_type mod(const value_type& v, const value_type& w)
+  {
+    return v % w;
+  }
+
   static value_type fabs(const value_type& v)
   {
-    return (value_type) std::fabs(double(v));
+    return static_cast<value_type>(std::fabs(static_cast<double>(v)));
   }
 
   static value_type fmod(const value_type& v, const value_type& w)
   {
-    return (value_type) std::fmod(double(v), double(w));
+    return static_cast<value_type>(std::fmod(static_cast<double>(v),
+      static_cast<double>(w)));
   }
 
   static constexpr value_type sqrt(const value_type& v)
   {
-    return (value_type) std::sqrt(double(v));
+    return static_cast<value_type>(std::sqrt(static_cast<double>(v)));
   }
 
   static value_type cos(const value_type& v)
   {
-    return (value_type) std::cos(double(v));
+    return static_cast<value_type>(std::cos(static_cast<double>(v)));
   }
 
   static value_type sin(const value_type& v)
   {
-    return (value_type) std::sin(double(v));
+    return static_cast<value_type>(std::sin(static_cast<double>(v)));
   }
 
   static value_type tan(const value_type& v)
   {
-    return (value_type) std::tan(double(v));
+    return static_cast<value_type>(std::tan(static_cast<double>(v)));
   }
 
   static value_type acos(const value_type& v)
   {
-    return (value_type) std::acos(double(v));
+    return static_cast<value_type>(std::acos(static_cast<double>(v)));
   }
 
   static value_type asin(const value_type& v)
   {
-    return (value_type) std::asin(double(v));
+    return static_cast<value_type>(std::asin(static_cast<double>(v)));
   }
 
   static value_type atan(const value_type& v)
   {
-    return (value_type) std::atan(double(v));
+    return static_cast<value_type>(std::atan(static_cast<double>(v)));
   }
 
   static value_type atan2(const value_type& x, const value_type& y)
   {
-    return (value_type) std::atan2(double(x), double(y));
+    return static_cast<value_type>(std::atan2(static_cast<double>(x),
+      static_cast<double>(y)));
   }
 
   static value_type log(const value_type& v)
   {
-    return (value_type) std::log(double(v));
+    return static_cast<value_type>(std::log(static_cast<double>(v)));
   }
 
   static value_type exp(const value_type& v)
   {
-    return (value_type) std::exp(double(v));
+    return static_cast<value_type>(std::exp(static_cast<double>(v)));
   }
+
+  /** Returns 0. */
+  static constexpr Scalar sqrt_epsilon() { return 0; }
 
   /*@}*/
 };
@@ -114,9 +127,17 @@ struct default_floating_point_traits : std::numeric_limits<Scalar>
   using const_reference = value_type const&;
   using mutable_value = reference&;
   using immutable_value = const_reference;
+  using std::numeric_limits<Scalar>::epsilon;
 
   /** @name Basic Functions */
   /*@{*/
+
+  static value_type abs(const value_type& v) { return std::abs(v); }
+
+  static value_type mod(const value_type& v, const value_type& w)
+  {
+    return std::fmod(v, w);
+  }
 
   static value_type fabs(const value_type& v) { return std::fabs(v); }
 
@@ -150,55 +171,48 @@ struct default_floating_point_traits : std::numeric_limits<Scalar>
 
   /*@}*/
 };
-} // namespace detail
+
+}  // namespace detail
 
 
 /** Specializable class aggregating scalar properties. */
 template<typename Scalar, class Enable = void> struct scalar_traits;
 
-/** Specialization of scalar traits for integral types. */
+/** Specialization of scalar_traits<> for integral types. */
 template<typename Scalar>
-struct scalar_traits<Scalar,
-    typename std::enable_if<std::is_integral<Scalar>::value>::type>
-  : detail::default_integral_traits<Scalar>
+struct scalar_traits<Scalar, std::enable_if_t<std::is_integral_v<Scalar>>>
+: detail::default_integral_traits<Scalar>
+{};
+
+/** Specialization of scalar_traits<>::sqrt_epsilon() for generic floating-point types. */
+template<typename Scalar>
+struct scalar_traits<Scalar, std::enable_if_t<std::is_floating_point_v<Scalar>>>
+: detail::default_floating_point_traits<Scalar>
 {
-  /** Returns 0. */
-  static constexpr Scalar sqrt_epsilon() { return 0; }
+  using detail::default_floating_point_traits<Scalar>::sqrt;
+  using detail::default_floating_point_traits<Scalar>::epsilon;
+
+  /** Returns sqrt(numeric_limits<Scalar>::epsilon()). */
+  static Scalar sqrt_epsilon() { return sqrt(epsilon()); }
 };
 
-/** Specialization of scalar_traits for floating-point types. */
-template<typename Scalar>
-struct scalar_traits<Scalar,
-    typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
-  : detail::default_floating_point_traits<Scalar>
-{
-  /** Returns sqrt(numeric_limits<float>::epsilon()). */
-  static constexpr double sqrt_epsilon()
-  {
-    return detail::default_floating_point_traits<Scalar>::sqrt(
-      std::numeric_limits<Scalar>::epsilon());
-  }
-};
-
-/** Specialization of scalar_traits for float. */
+/** Specialization of scalar_traits<>::sqrt_epsilon() for float. */
 template<>
 struct scalar_traits<float> : detail::default_floating_point_traits<float>
 {
-  /** Returns a constant for sqrt(numeric_limits<float>::epsilon()). */
   static constexpr float sqrt_epsilon()
   {
-    return 3.452669831e-4f; // 10 digits
+    return 3.452669831e-4f;  // 10 digits
   }
 };
 
-/** Specialization of scalar_traits for double. */
+/** Specialization of scalar_traits<>::sqrt_epsilon() for double. */
 template<>
 struct scalar_traits<double> : detail::default_floating_point_traits<double>
 {
-  /** Returns a constant for sqrt(numeric_limits<double>::epsilon()). */
   static constexpr double sqrt_epsilon()
   {
-    return 1.49011611938476563e-8; // 18 digits
+    return 1.49011611938476563e-8;  // 18 digits
   }
 };
 
@@ -230,4 +244,5 @@ struct temporary_of<Scalar, cml::enable_if_arithmetic_t<Scalar>>
 {
   using type = cml::value_type_trait_of_t<Scalar>;
 };
-} // namespace cml
+
+}  // namespace cml

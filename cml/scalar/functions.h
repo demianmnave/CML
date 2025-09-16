@@ -10,6 +10,7 @@
 #include <cml/scalar/traits.h>
 
 namespace cml {
+
 /** Sign (-1, 0, 1) of @c value as type @c T. */
 template<typename T>
 constexpr T
@@ -247,113 +248,73 @@ cyclic_permutation(int first, int& i, int& j, int& k, int& l)
 /*@}*/
 
 
-/** Index of maximum of 2 values. */
-template<typename T>
-constexpr int
-index_of_max(T a, T b)
+namespace detail {
+
+/** Base case for index-of based on a binary classifier.
+ *
+ * @note @c Op must induce a partial ordering over @c T.
+ */
+template<typename Op, int I0, int I1, typename T>
+constexpr auto
+index_of_helper(Op f, std::integer_sequence<int, I0, I1>, T x0, T x1) -> int
 {
-  return a > b ? 0 : 1;
+  return f(x0, x1) ? I0 : I1;
 }
 
-/** Index of maximum of 2 values by magnitude. */
-template<typename T>
-int
-index_of_max_abs(T a, T b)
+/** Recursive index-of based on a binary classifier.
+ *
+ * @note @c Op must induce a partial ordering over @c T.
+ */
+template<typename Op, int I0, int I1, typename T, typename... Ts, int... Is>
+constexpr auto
+index_of_helper(Op f, std::integer_sequence<int, I0, I1, Is...>, T x0, T x1,
+  Ts... x) -> int
 {
-  using fabs = typename scalar_traits<T>::fabs;
-  return index_of_max(fabs(a), fabs(b));
+  return f(x0, x1)
+    // Proceed to the next element of Ts with (x0,I0) satisfying f(...):
+    ? index_of_helper(f, std::integer_sequence<int, I0, Is...>{}, x0, x...)
+    // Proceed to the next element of Ts with (x1,I1) satisfying f(...):
+    : index_of_helper(f, std::integer_sequence<int, I1, Is...>{}, x1, x...);
 }
 
-/** Index of minimum of 2 values. */
-template<typename T>
-constexpr int
-index_of_min(T a, T b)
+}  // namespace detail
+
+/** Index of the minimum of N values. */
+template<typename... Ts>
+constexpr auto
+index_of_min(Ts... x) -> int
 {
-  return a < b ? 0 : 1;
+  return detail::index_of_helper(std::less<>(),
+    std::make_integer_sequence<int, sizeof...(Ts)>{}, x...);
 }
 
-/** Index of minimum of 2 values by magnitude. */
-template<typename T>
-int
-index_of_min_abs(T a, T b)
+/** Index of the minimum magnitude of N values. */
+template<typename... Ts>
+constexpr auto
+index_of_min_abs(Ts... x) -> int
 {
-  using fabs = typename scalar_traits<T>::fabs;
-  return index_of_min(fabs(a), fabs(b));
+  return detail::index_of_helper(std::less<>(),
+    std::make_integer_sequence<int, sizeof...(Ts)>{},
+    cml::traits_of_t<decltype(x)>::abs(x)...);
 }
 
-/** Index of maximum of 3 values. */
-template<typename T>
-constexpr int
-index_of_max(T a, T b, T c)
+/** Index of the maximum of N values. */
+template<typename... Ts>
+constexpr auto
+index_of_max(Ts... x) -> int
 {
-  return a > b ? (c > a ? 2 : 0) : (b > c ? 1 : 2);
+  return detail::index_of_helper(std::greater<>(),
+    std::make_integer_sequence<int, sizeof...(Ts)>{}, x...);
 }
 
-/** Index of maximum of 3 values by magnitude. */
-template<typename T>
-int
-index_of_max_abs(T a, T b, T c)
+/** Index of the maximum magnitude of N values. */
+template<typename... Ts>
+constexpr auto
+index_of_max_abs(Ts... x) -> int
 {
-  using fabs = typename scalar_traits<T>::fabs;
-  return index_of_max(fabs(a), fabs(b), fabs(c));
+  return detail::index_of_helper(std::greater<>(),
+    std::make_integer_sequence<int, sizeof...(Ts)>{},
+    cml::traits_of_t<decltype(x)>::abs(x)...);
 }
 
-/** Index of minimum of 3 values. */
-template<typename T>
-constexpr int
-index_of_min(T a, T b, T c)
-{
-  return a < b ? (c < a ? 2 : 0) : (b < c ? 1 : 2);
-}
-
-/** Index of minimum of 3 values by magnitude. */
-template<typename T>
-int
-index_of_min_abs(T a, T b, T c)
-{
-  using fabs = typename scalar_traits<T>::fabs;
-  return index_of_min(fabs(a), fabs(b), fabs(c));
-}
-
-/** Index of maximum of 4 values. */
-template<typename T>
-constexpr int
-index_of_max(T a, T b, T c, T d)
-{
-  if(a > b) {
-    return (c > d) ? ((a > c) ? 0 : 2) : ((a > d) ? 0 : 3);
-  } else {
-    return (c > d) ? ((b > c) ? 1 : 2) : ((b > d) ? 1 : 3);
-  }
-}
-
-/** Index of maximum of 4 values by magnitude. */
-template<typename T>
-int
-index_of_max_abs(T a, T b, T c, T d)
-{
-  using fabs = typename scalar_traits<T>::fabs;
-  return index_of_max(fabs(a), fabs(b), fabs(c), fabs(d));
-}
-
-/** Index of minimum of 3 values. */
-template<typename T>
-constexpr int
-index_of_min(T a, T b, T c, T d)
-{
-  if(a < b) {
-    return (c < d) ? ((a < c) ? 0 : 2) : ((a < d) ? 0 : 3);
-  } else {
-    return (c < d) ? ((b < c) ? 1 : 2) : ((b < d) ? 1 : 3);
-  }
-}
-
-/** Index of minimum of 4 values by magnitude. */
-template<typename T>
-int
-index_of_min_abs(T a, T b, T c, T d)
-{
-  using fabs = typename scalar_traits<T>::fabs;
-  return index_of_min(fabs(a), fabs(b), fabs(c), fabs(d));
-}
-} // namespace cml
+}  // namespace cml
