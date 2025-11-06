@@ -32,7 +32,7 @@ jobs:
         shell: bash
         run: |
           ncore=`nproc`
-          echo "CMAKE_BUILD_PARALLEL_LEVEL=$ncore" >> GITHUB_ENV
+          echo "CMAKE_BUILD_PARALLEL_LEVEL=$ncore" >> $GITHUB_ENV
           echo "CTEST_PARALLEL_LEVEL=$ncore" >> $GITHUB_ENV
       - name: Install prerequisites
         shell: bash
