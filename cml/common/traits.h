@@ -39,5 +39,3 @@ using value_type_trait_of_t = typename value_type_trait_of<T>::type;
 
 /*@}*/
 } // namespace cml
-
-#endif
