@@ -4,7 +4,9 @@
 
 #pragma once
 
+#include <chrono>
+
 namespace cml::testing {
-using usec_t = unsigned long long;
-usec_t usec_time();
+using chrono_t = std::chrono::high_resolution_clock;
+using usec_t = std::chrono::microseconds;
 }  // namespace cml::testing
