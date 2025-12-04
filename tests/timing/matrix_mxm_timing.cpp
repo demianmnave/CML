@@ -56,6 +56,7 @@ main(int argc, const char** argv)
 
   const auto check_time_start = chrono_t::now();
   std::uint_fast64_t errors = 0;
+  int last_error = -1;
   for(int i = 0; i < N; ++i) {
     const auto& A = std::get<2>(rotations[i]);
     const auto& B = out[i].M;
@@ -66,6 +67,7 @@ main(int argc, const char** argv)
           std::abs(cml::detail::get(A, j, k) - cml::detail::get(B, j, k));
         if(diff > 10. * cml::scalar_traits<double>::epsilon()) {
           ++errors;
+          last_error = i;
         }
       }
     }
@@ -74,7 +76,16 @@ main(int argc, const char** argv)
   const auto check_time = check_time_end - check_time_start;
   std::cout
     << std::format("check time ({} pairs): {:%Q} s\n", N, check_time / 1e9);
-  if(errors > 0) std::printf(" Warning: found %llu errors\n", errors);
+  if(errors == 0) return 0;
 
-  return 0;
+  std::cerr << std::format("error: found {} miscalculations\n", errors);
+  {
+    std::cerr << "have:\n" << std::get<0>(rotations[last_error]) << '\n';
+    std::cerr << "    *\n" << std::get<1>(rotations[last_error]) << '\n';
+    std::cerr << "want:\n" << std::get<2>(rotations[last_error]) << '\n';
+    std::cerr << " got:\n" << out[last_error].M << '\n';
+  }
+
+
+  return 1;
 }
