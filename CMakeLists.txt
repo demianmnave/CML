@@ -60,7 +60,7 @@ endif()
 
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include(default-paths)
-include(${CMAKE_CXX_COMPILER_ID}-compiler)
+include(configure-compiler)
 
 # Create the CML interface library:
 add_subdirectory(cml)
