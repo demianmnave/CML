@@ -22,7 +22,7 @@ main(int argc, const char** argv)
     char* a_end = nullptr;
     N = std::strtol(argv[1], &a_end, 10);
   } else {
-    N = 10'000'000;
+    N = 100'000;
   }
 
   if(0 >= N || N == LONG_MAX) {
@@ -45,14 +45,19 @@ main(int argc, const char** argv)
     matrix44d M;
   };
 
+  constexpr auto trials = 1000;
+
   std::vector<data_t> out(N);
-  const auto mxm_time_start = chrono_t::now();
+  auto mxm_time = chrono_t::duration{};
   for(int i = 0; i < N; ++i) {
-    mxm_4x4(out[i].M, std::get<0>(rotations[i]), std::get<1>(rotations[i]));
+    const auto mxm_time_start = chrono_t::now();
+    for(int j = 0; j < trials; ++j) {
+      mxm_4x4(out[i].M, std::get<0>(rotations[i]), std::get<1>(rotations[i]));
+    }
+    const auto mxm_time_end = chrono_t::now();
+    mxm_time += (mxm_time_end - mxm_time_start);
   }
-  const auto mxm_time_end = chrono_t::now();
-  const auto mxm_time = mxm_time_end - mxm_time_start;
-  std::cout << std::format("mxm time ({} pairs): {:%Q} s\n", N, mxm_time / 1e9);
+  std::cout << std::format("mxm time ({} pairs): {:%Q} us\n", N, (mxm_time / 1e3) / N / trials);
 
   const auto check_time_start = chrono_t::now();
   std::uint_fast64_t errors = 0;
