@@ -173,6 +173,29 @@ CATCH_TEST_CASE("fixed-product6")
   CATCH_CHECK(M == X);
 }
 
+CATCH_TEST_CASE("fixed-product7")
+{
+  cml::matrix<double, cml::fixed<3, 3>> M1(1., 1., 2., 2., 3., 3., 3., 3., 4.);
+  cml::matrix33d M2(1., 2., 3., 2., 2., 3., 3., 1., 4.);
+
+  auto M = M1 * M2;
+  CATCH_REQUIRE((std::is_same<decltype(M), cml::matrix33d>::value));
+  CATCH_REQUIRE(M.rows() == 3);
+  CATCH_REQUIRE(M.cols() == 3);
+
+  CATCH_CHECK(M(0, 0) == 9.);
+  CATCH_CHECK(M(0, 1) == 6.);
+  CATCH_CHECK(M(0, 2) == 14.);
+
+  CATCH_CHECK(M(1, 0) == 17.);
+  CATCH_CHECK(M(1, 1) == 13.);
+  CATCH_CHECK(M(1, 2) == 27.);
+
+  CATCH_CHECK(M(2, 0) == 21.);
+  CATCH_CHECK(M(2, 1) == 16.);
+  CATCH_CHECK(M(2, 2) == 34.);
+}
+
 CATCH_TEST_CASE("fixed external-product1")
 {
   double aM1[] = {1., 2., 3., 4.};

@@ -6,7 +6,6 @@
 
 #include <cml/matrix/readable_matrix.h>
 #include <cml/matrix/promotion.h>
-#include <cml/matrix/detail/resize.h>
 
 namespace cml {
 
@@ -18,6 +17,4 @@ auto operator*(Sub1&& sub1, Sub2&& sub2) -> matrix_inner_product_promote_t<
 
 }  // namespace cml
 
-#define __CML_MATRIX_MATRIX_PRODUCT_TPP
 #include <cml/matrix/matrix_product.tpp>
-#undef __CML_MATRIX_MATRIX_PRODUCT_TPP
