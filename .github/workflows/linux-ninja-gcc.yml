@@ -19,9 +19,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - ver: "12"
         - ver: "13"
         - ver: "14"
+        - ver: "15"
     env:
       ENV_COMPILER_VERSION: "-${{ matrix.ver }}"
     name: "(linux-ninja-gcc-s-vcpkg-${{ matrix.ver }})"
@@ -66,7 +66,7 @@ jobs:
         run: |
            preset="linux-ninja-gcc-s-vcpkg"
            echo "Executing workflow $preset for gcc-${{ matrix.ver }} with VCPKG_ROOT @ $VCPKG_ROOT"
-           CC=gcc-15 CXX=g++-15 cmake --workflow --preset=$preset
+           cmake --workflow --preset=$preset
       - name: Generate JUnit test results
         uses: ctrf-io/github-test-reporter@v1
         env:
