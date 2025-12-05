@@ -24,7 +24,7 @@ endfunction()
 
 # Apply:
 #
-#   CML_{PUBLIC,PRIVATE}_CXX_COMPILE_{OPTIONS,DEFINITIONS}
+#   CML_{PUBLIC,PRIVATE}_CXX_{OPTIONS,DEFINITIONS,FEATURES,OPTIONS_{DEBUG,RELEASE}}
 #
 # to the named target if defined. ${InTarget} must already exist as a target.
 #
@@ -33,41 +33,29 @@ endfunction()
 function(cml_target_compile_defaults InTarget)
   cml_get_target_type(${InTarget} _type)
 
-  set(_public PUBLIC)
-  if(${_type} STREQUAL "INTERFACE_LIBRARY")
-    set(_public INTERFACE)
+  if("${_type}" STREQUAL "INTERFACE_LIBRARY")
+    set(_scopes INTERFACE)
+  else()
+    set(_scopes PUBLIC PRIVATE)
   endif()
 
-  if(DEFINED CML_PUBLIC_CXX_OPTIONS)
-    target_compile_options(${InTarget} ${_public} ${CML_PRIVATE_CXX_OPTIONS})
-  endif()
-
-  if(DEFINED CML_PUBLIC_CXX_DEFINITIONS)
-    target_compile_definitions(${InTarget} ${_public} ${CML_PUBLIC_CXX_DEFINITIONS})
-  endif()
-
-  if(DEFINED CML_PUBLIC_CXX_COMPILE_FEATURES)
-	  target_compile_features(${InTarget} ${_public} ${CML_PUBLIC_CXX_COMPILE_FEATURES})
-  endif()
-
-  if(NOT ${_type} STREQUAL "INTERFACE_LIBRARY")
-    if(DEFINED CML_PRIVATE_CXX_OPTIONS)
-        target_compile_options(${InTarget} PRIVATE ${CML_PRIVATE_CXX_OPTIONS})
+  foreach(_scope ${_scopes})
+    if(DEFINED CML_${_scope}_CXX_OPTIONS)
+      target_compile_options(${InTarget} ${_scope} ${CML_${_scope}_CXX_OPTIONS})
     endif()
-
-    if(DEFINED CML_PRIVATE_CXX_OPTIONS_DEBUG)
-        target_compile_options(${InTarget} PRIVATE $<$<CONFIG:Debug>:${CML_PRIVATE_CXX_OPTIONS_DEBUG}>)
+    if(DEFINED CML_${_scope}_CXX_DEFINITIONS)
+      target_compile_definitions(${InTarget} ${_scope} ${CML_${_scope}_CXX_DEFINITIONS})
     endif()
-
-    if(DEFINED CML_PRIVATE_CXX_OPTIONS_RELEASE)
-        target_compile_options(${InTarget} PRIVATE $<$<CONFIG:Release>:${CML_PRIVATE_CXX_OPTIONS_RELEASE}>)
+    if(DEFINED CML_${_scope}_CXX_FEATURES)
+      target_compile_features(${InTarget} ${_scope} ${CML_${_scope}_CXX_FEATURES})
     endif()
-
-    if(DEFINED CML_PRIVATE_CXX_DEFINITIONS)
-        target_compile_definitions(${InTarget} PRIVATE ${CML_PRIVATE_CXX_DEFINITIONS})
+    if(DEFINED CML_${_scope}_CXX_OPTIONS_DEBUG)
+        target_compile_options(${InTarget} ${_scope} $<$<CONFIG:Debug>:${CML_${_scope}_CXX_OPTIONS_DEBUG}>)
     endif()
-  endif()
-
+    if(DEFINED CML_${_scope}_CXX_OPTIONS_RELEASE)
+        target_compile_options(${InTarget} ${_scope} $<$<CONFIG:Release>:${CML_${_scope}_CXX_OPTIONS_RELEASE}>)
+    endif()
+  endforeach()
 endfunction()
 
 function(cml_target_executable_properties_defaults InTarget)
@@ -79,7 +67,7 @@ function(cml_target_executable_properties_defaults InTarget)
 endfunction()
 
 # Apply CML_{PUBLIC,PRIVATE}_EXE_LINK_OPTIONS to the named target if defined.
-# ${InTarget} must already exist as a target.
+# ${InTarget} must already exist as a target and must not be an INTERFACE library.
 #
 # Parameters:
 #   InTarget: (required) string containing the target name
