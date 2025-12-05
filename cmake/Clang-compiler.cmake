@@ -42,20 +42,21 @@ function(cml_configure_compiler)
     if(NOT CML_DISABLE_SIMD)
       #>> Handle SIMD selection:
       #TODO move this to a separate function/macro?
-      if(DEFINED CML_SIMD)
-        set(_cml_simd ${CML_SIMD})
-      else()
-        cml_get_host_arch(_arch)
-        if(${_arch} STREQUAL "x64")
-          set(_cml_simd sse4.2)
+      cml_get_host_arch(_arch)
+      if(_arch STREQUAL "x64")
+        if(DEFINED CML_SIMD)
+          set(_cml_simd ${CML_SIMD})
+        else()
+          set(_cml_simd avx2)
         endif()
-      endif()
 
-      set(_cml_simd_map)
-      list(APPEND _cml_simd_map
-        sse4.2 sse4.2
-        avx2 avx2
-      )
+        set(_cml_simd_map)
+        list(APPEND _cml_simd_map
+          avx2 avx2
+        )
+      else()
+        message(FATAL_ERROR "SIMD is only supported on x64 architecture for Clang-CL")
+      endif()
 
       list(FIND _cml_simd_map ${_cml_simd} _idx)
       if(_idx EQUAL "-1")
@@ -64,7 +65,7 @@ function(cml_configure_compiler)
         math(EXPR _idx "${_idx} + 1")
         list(GET _cml_simd_map ${_idx} _cml_simd_opt)
       endif()
-      list(APPEND _cml_private_cxx_options_release /clang:-m${_cml_simd_opt} /clang:-fvectorize /clang:-fassociative-math)
+      list(APPEND _cml_private_cxx_options_release /clang:-m${_cml_simd_opt} /clang:-fvectorize /clang:-fassociative-math /clang:-mfma)
       #<< Handle SIMD selection:
 
       set(CML_SIMD ${_cml_simd})
@@ -107,18 +108,21 @@ function(cml_configure_compiler)
     if(NOT CML_DISABLE_SIMD)
       #>> Handle SIMD selection:
       #TODO move this to a separate function/macro?
-      if(NOT DEFINED CML_SIMD)
-        cml_get_host_arch(_arch)
-        if(${_arch} STREQUAL "x86_64")
-          set(_cml_simd sse4.2)
-        endif()
-      endif()
 
-      set(_cml_simd_map)
-      list(APPEND _cml_simd_map
-        sse4.2 sse4.2
-        avx2 avx2
-      )
+      #TODO Fix architecture detection for Clang on Darwin
+      cml_get_host_arch(_arch)
+      if(${_arch} STREQUAL "x64")
+        if(NOT DEFINED CML_SIMD)
+          set(_cml_simd avx2)
+        endif()
+
+        set(_cml_simd_map)
+        list(APPEND _cml_simd_map
+          avx2 avx2
+        )
+      else()
+        message(FATAL_ERROR "SIMD is only supported on x64 architecture for Clang")
+      endif()
 
       list(FIND _cml_simd_map ${_cml_simd} _idx)
       if(_idx EQUAL "-1")
@@ -127,13 +131,7 @@ function(cml_configure_compiler)
         math(EXPR _idx "${_idx} + 1")
         list(GET _cml_simd_map ${_idx} _cml_simd_opt)
       endif()
-      list(APPEND _cml_private_cxx_options_release -m${_cml_simd_opt} -fvectorize -fassociative-math)
-      #<< Handle SIMD selection:
-
-      # Ignore -Wpsabi if sse* is enabled:
-      if(_cml_simd_opt MATCHES "^sse.*$")
-        list(APPEND _cml_private_cxx_options_release -Wno-psabi)
-      endif()
+      list(APPEND _cml_private_cxx_options_release -m${_cml_simd_opt} -fvectorize -fassociative-math -mfma)
       #<< Handle SIMD selection:
 
       set(CML_SIMD ${_cml_simd})

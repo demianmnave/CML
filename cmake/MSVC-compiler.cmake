@@ -34,22 +34,23 @@ function(cml_configure_compiler)
   #TODO move this to a separate function/macro?
   if(NOT CML_DISABLE_SIMD)
     #>> Handle SIMD selection:
-    if(DEFINED CML_SIMD)
-      set(_cml_simd ${CML_SIMD})
-    else()
-      cml_get_host_arch(_arch)
-      if(${_arch} STREQUAL "x64")
-        set(_cml_simd "sse4.2")
+    cml_get_host_arch(_arch)
+    if(_arch STREQUAL "x64")
+      if(DEFINED CML_SIMD)
+        set(_cml_simd ${CML_SIMD})
+      else()
+        set(_cml_simd avx2)
       endif()
+
+      set(_cml_simd_map)
+      list(APPEND _cml_simd_map
+        avx2 AVX2
+      )
+    else()
+      message(FATAL_ERROR "SIMD is only supported on x64 architecture for MSVC")
     endif()
 
-    # Note that the compiler default is "SSE2" for MSVC-x64, and it enables SSE4.2:
-    set(_cml_simd_map)
-    list(APPEND _cml_simd_map
-      sse4.2 SSE2
-      avx2 AVX2
-    )
-
+    message(${_cml_simd})
     list(FIND _cml_simd_map ${_cml_simd} _idx)
     if(_idx EQUAL "-1")
       message(FATAL_ERROR "Unknown SIMD type ${_cml_simd}")
