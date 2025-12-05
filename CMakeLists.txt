@@ -2,16 +2,6 @@
 # @@COPYRIGHT@@
 # --------------------------------------------------------------------------
 
-# Build options:
-
-# Build tests if requested:
-option(CML_BUILD_TESTING "Build CML tests" OFF)
-
-# CMAKE_MSVC_RUNTIME_LIBRARY
-if(MSVC AND CML_BUILD_TESTING)
-  cmake_policy(SET CMP0091 NEW)
-endif()
-
 # Set the minimum CMake version:
 cmake_minimum_required(VERSION 3.28)
 
@@ -33,6 +23,23 @@ endif()
 # Standard includes:
 include(CMakeDependentOption)
 
+# Disable SIMD:
+if(NOT DEFINED CML_DISABLE_SIMD)
+  option(CML_DISABLE_SIMD "Disable vectorization (also disables timing tests)" OFF)
+endif()
+
+# Build tests if requested:
+if(NOT DEFINED BUILD_TESTING)
+  option(BUILD_TESTING "Build CML tests" OFF)
+endif()
+
+if(NOT DEFINED BUILD_TIMING)
+  cmake_dependent_option(BUILD_TIMING
+    "Build timing tests (requires SIMD)" OFF 
+    "CML_DISABLE_SIMD" OFF
+  )
+endif()
+
 if(NOT DEFINED BUILD_SHARED_LIBS)
   option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 endif()
@@ -47,10 +54,8 @@ endif()
 if(NOT DEFINED CML_ENABLE_RELATIVE_TEST_PATHS)
   # Force CTest to use relative paths. Primarily for automated testing:
   cmake_dependent_option(CML_ENABLE_RELATIVE_TEST_PATHS
-    "Make test executable paths relative to CMAKE_BINARY_DIR"
-    OFF  # Show and default to OFF if...
-    "BUILD_TESTING"
-    OFF  # Otherwise, default to OFF.
+    "Make test executable paths relative to CMAKE_BINARY_DIR" OFF
+    "BUILD_TESTING" OFF
   )
 endif()
 
