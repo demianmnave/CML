@@ -32,7 +32,7 @@ function(cml_configure_compiler)
     -Wall          # All warnings
     -Wextra
   )
-  list(APPEND _cml_private_cxx_options_release -O3)
+  list(APPEND _cml_private_cxx_options_release -O2)
 
   if(NOT CML_DISABLE_SIMD)
     #>> Handle SIMD selection:
