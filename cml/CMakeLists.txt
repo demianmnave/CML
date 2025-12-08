@@ -414,6 +414,10 @@ target_include_directories(cml INTERFACE
  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
 )
 
+if(CML_DISABLE_SIMD)
+  target_compile_definitions(cml PRIVATE CML_DISABLE_SIMD)
+endif()
+
 # Needs to be separate:
 target_sources(cml PRIVATE ${GENERATED_HEADERS})
 source_group("/" FILES ${GENERATED_HEADERS})

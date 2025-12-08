@@ -10,6 +10,18 @@
   ],
   "configurePresets": [
     {
+      "name": ".timing",
+      "hidden": true,
+      "description": "Build timing executables",
+      "cacheVariables": {
+        "BUILD_TIMING": {
+          "type": "BOOL",
+          "value": true
+        }
+      }
+    },
+
+    {
       "name": "linux-ninja-clang-s",
       "description": "Linux Ninja configuration using clang++-${ENV_COMPILER_VERSION}",
       "inherits": [ ".linux-ninja-clang", ".static", ".testing" ]
@@ -18,13 +30,13 @@
     {
       "name": "linux-ninja-clang-s-vcpkg",
       "description": "Linux Ninja configuration using clang++-${ENV_COMPILER_VERSION} and vcpkg",
-      "inherits": [ ".linux-ninja-clang", ".static", ".vcpkg-linux-any-static", ".testing" ]
+      "inherits": [ ".linux-ninja-clang", ".static", ".vcpkg-linux-any-static", ".testing", ".timing" ]
     },
 
     {
       "name": "linux-ninja-gcc-s-vcpkg",
       "description": "Linux Ninja configuration using g++-${ENV_COMPILER_VERSION} and vcpkg",
-      "inherits": [ ".linux-ninja-gcc", ".static", ".vcpkg-linux-any-static", ".testing" ]
+      "inherits": [ ".linux-ninja-gcc", ".static", ".vcpkg-linux-any-static", ".testing", ".timing" ]
     },
 
     {
@@ -36,19 +48,19 @@
     {
       "name": "windows-ninja-clangcl-mt-s-vcpkg",
       "description": "Windows Ninja configuration using clang-cl.ex and vcpkg",
-      "inherits": [ ".windows-ninja-clangcl", ".static", ".vcpkg-windows-clangcl-static", ".testing" ]
+      "inherits": [ ".windows-ninja-clangcl", ".static", ".vcpkg-windows-clangcl-static", ".testing", ".timing" ]
     },
 
     {
       "name": "windows-msbuild-msvc-17-mt-s-vcpkg",
       "description": "Windows MSBuild configuration using ${MSVC_TOOLSET_VERSION} and vcpkg",
-      "inherits": [ ".windows-msbuild-msvc-17", ".static", ".vcpkg-windows-msvc-static", ".testing" ]
+      "inherits": [ ".windows-msbuild-msvc-17", ".static", ".vcpkg-windows-msvc-static", ".testing", ".timing" ]
     },
 
     {
       "name": "windows-msbuild-clangcl-17-mt-s-vcpkg",
       "description": "Windows MSBuild configuration using ClangCL and vcpkg",
-      "inherits": [ ".windows-msbuild-clangcl-17", ".static", ".vcpkg-windows-clangcl-static", ".testing" ]
+      "inherits": [ ".windows-msbuild-clangcl-17", ".static", ".vcpkg-windows-clangcl-static", ".testing", ".timing" ]
     }
   ],
   "buildPresets": [

@@ -80,6 +80,10 @@ template<class T> struct is_fixed_size
     std::is_same<size_tag_of_t<T>, fixed_size_tag>::value;
 };
 
+/** Helper to detect fixed-size types. */
+template<class T> constexpr auto is_fixed_size_v
+  = is_fixed_size<T>::value;
+
 /** Wrapper for enable_if to detect types tagged with fixed_size_tag. */
 template<class Sub, class T = void>
 struct enable_if_fixed_size : std::enable_if<is_fixed_size<Sub>::value, T>
@@ -96,6 +100,9 @@ template<class T> struct is_dynamic_size
   static const bool value =
     std::is_same<size_tag_of_t<T>, dynamic_size_tag>::value;
 };
+
+/** Helper to detect dynamic-size types. */
+template<class T> constexpr auto is_dynamic_size_v = is_dynamic_size<T>::value;
 
 /** Wrapper for enable_if to detect types tagged with dynamic_size_tag. */
 template<class Sub, class T = void>

@@ -32,6 +32,8 @@ template<class T> struct is_matrix
   static const bool value = type::value;
 };
 
+template<class T> constexpr auto is_matrix_v = is_matrix<T>::value;
+
 /** Wrapper for enable_if to detect matrix types (derived from
  * readable_matrix).
  */

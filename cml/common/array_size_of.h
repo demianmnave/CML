@@ -13,10 +13,10 @@ namespace detail {
  */
 template<class T> struct int_if_integral
 {
-  using type = typename std::conditional<std::is_integral<T>::value, int,
-    T>::type;
+  using type =
+    typename std::conditional<std::is_integral<T>::value, int, T>::type;
 };
-} // namespace detail
+}  // namespace detail
 
 
 /** Specializable compile-time array size. */
@@ -31,7 +31,7 @@ template<class Array, class Enable = void> struct array_cols_of_c;
 /** Compile-time size of an array. */
 template<class Array>
 struct array_size_of_c<Array,
-    typename std::enable_if<std::is_array<Array>::value>::type>
+  typename std::enable_if<std::is_array<Array>::value>::type>
 {
   static const int value = int(std::extent<Array>::value);
 };
@@ -41,7 +41,7 @@ struct array_size_of_c<Array,
  */
 template<class Array>
 struct array_size_of_c<Array,
-    typename std::enable_if<Array::array_size == Array::array_size>::type>
+  typename std::enable_if<Array::array_size == Array::array_size>::type>
 {
   static const int value = Array::array_size;
 };
@@ -52,8 +52,8 @@ auto
 array_size_of(const Array& array) ->
   typename detail::int_if_integral<decltype(array.size())>::type
 {
-  using result_type = typename detail::int_if_integral<decltype(array.size()
-  )>::type;
+  using result_type =
+    typename detail::int_if_integral<decltype(array.size())>::type;
   return result_type(array.size());
 }
 
@@ -71,20 +71,26 @@ array_size_of(const Array&,
  */
 template<class Array>
 struct array_rows_of_c<Array,
-    typename std::enable_if<Array::array_rows == Array::array_rows>::type>
+  typename std::enable_if<Array::array_rows == Array::array_rows>::type>
 {
   static const int value = int(Array::array_rows);
 };
+
+template<class Array>
+constexpr auto array_rows_of_v = array_rows_of_c<Array>::value;
 
 /** Compile-time size of an object implementing an array_cols integral or
  * enum member.
  */
 template<class Array>
 struct array_cols_of_c<Array,
-    typename std::enable_if<Array::array_cols == Array::array_cols>::type>
+  typename std::enable_if<Array::array_cols == Array::array_cols>::type>
 {
   static const int value = int(Array::array_cols);
 };
+
+template<class Array>
+constexpr auto array_cols_of_v = array_cols_of_c<Array>::value;
 
 /** Return the number of rows of @c array if it implements the rows()
  * method.
@@ -105,4 +111,4 @@ array_cols_of(const Array& array) -> decltype(array.cols())
 {
   return array.cols();
 }
-} // namespace cml
+}  // namespace cml
