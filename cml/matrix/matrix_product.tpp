@@ -32,8 +32,7 @@ matrix_product(Result& R, const Sub1& sub1, const Sub2& sub2)
 
 }  // namespace cml::detail
 
-//#ifndef CML_DISABLE_SIMD
-#if 1
+#ifndef CML_DISABLE_SIMD
 #include <simde/hedley.h>
 #include <simde/x86/fma.h>
 #include <cml/matrix/fixed_compiled.h>
