@@ -101,6 +101,9 @@ template<class T> struct is_dynamic_size
     std::is_same<size_tag_of_t<T>, dynamic_size_tag>::value;
 };
 
+/** Helper to detect dynamic-size types. */
+template<class T> constexpr auto is_dynamic_size_v = is_dynamic_size<T>::value;
+
 /** Wrapper for enable_if to detect types tagged with dynamic_size_tag. */
 template<class Sub, class T = void>
 struct enable_if_dynamic_size : std::enable_if<is_dynamic_size<Sub>::value, T>
