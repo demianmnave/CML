@@ -111,7 +111,7 @@ function(cml_configure_compiler)
 
       #TODO Fix architecture detection for Clang on Darwin
       cml_get_host_arch(_arch)
-      if(${_arch} STREQUAL "x64")
+      if(_arch STREQUAL "x86_64")
         if(NOT DEFINED CML_SIMD)
           set(_cml_simd avx2)
         endif()
@@ -121,7 +121,7 @@ function(cml_configure_compiler)
           avx2 avx2
         )
       else()
-        message(FATAL_ERROR "SIMD is only supported on x64 architecture for Clang")
+        message(FATAL_ERROR "SIMD is only supported on x86_64 architecture for Clang")
       endif()
 
       list(FIND _cml_simd_map ${_cml_simd} _idx)
