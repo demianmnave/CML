@@ -11,7 +11,7 @@ namespace cml {
 /** Specializable class to detect storage selectors. */
 template<class T> struct is_storage_selector
 {
-  static const bool value = false;
+  static constexpr bool value = false;
 };
 
 /** Templated helper to determine the storage selector of @c T. @c T must
@@ -51,7 +51,7 @@ template<class T> using proxy_type_of_t = typename proxy_type_of<T>::type;
 
 /** Templated helper to rebind a storage type as vector storage. */
 template<class Storage,
-  typename std::enable_if<is_storage_selector<Storage>::value>::type* = nullptr>
+  std::enable_if_t<is_storage_selector<Storage>::value>* = nullptr>
 struct rebind_vector_storage
 {
   using type = rebind_t<Storage, vector_storage_tag>;
@@ -63,7 +63,7 @@ using rebind_vector_storage_t = typename rebind_vector_storage<T>::type;
 
 /** Templated helper to rebind a storage type as matrix storage. */
 template<class Storage,
-  typename std::enable_if<is_storage_selector<Storage>::value>::type* = nullptr>
+  std::enable_if_t<is_storage_selector<Storage>::value>* = nullptr>
 struct rebind_matrix_storage
 {
   using type = rebind_t<Storage, matrix_storage_tag>;
@@ -75,7 +75,7 @@ using rebind_matrix_storage_t = typename rebind_matrix_storage<T>::type;
 
 /** Templated helper to rebind a storage type as vector storage. */
 template<class Storage,
-  typename std::enable_if<is_storage_selector<Storage>::value>::type* = nullptr>
+  std::enable_if_t<is_storage_selector<Storage>::value>* = nullptr>
 struct rebind_quaternion_storage
 {
   using type = rebind_t<Storage, quaternion_storage_tag>;

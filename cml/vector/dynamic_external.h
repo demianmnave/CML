@@ -29,7 +29,7 @@ template<class Element> struct vector_traits<vector<Element, external<>>>
   /* The vector storage type: */
   using storage_type = rebind_t<external<>, vector_storage_tag>;
   using size_tag = typename storage_type::size_tag;
-  static_assert(std::is_same<size_tag, dynamic_size_tag>::value,
+  static_assert(std::is_same_v<size_tag, dynamic_size_tag>,
     "invalid size tag");
 
   /* Array size (should be -1): */

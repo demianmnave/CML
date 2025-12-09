@@ -17,5 +17,5 @@ std::enable_if<are_convertible<To, Froms...>::value>;
 /** Convenience alias for enable_if_convertible. */
 template<class To, class... Froms>
 using enable_if_convertible_t =
-typename std::enable_if<are_convertible<To, Froms...>::value>::type;
+std::enable_if_t<are_convertible<To, Froms...>::value>;
 } // namespace cml

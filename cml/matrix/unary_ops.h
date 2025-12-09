@@ -17,7 +17,7 @@ make_matrix_unary_node(Sub&& sub)
   -> matrix_unary_node<actual_operand_type_of_t<decltype(sub)>, Op>
 {
   static_assert(
-    std::is_same<decltype(sub), decltype(std::forward<Sub>(sub))>::value,
+    std::is_same_v<decltype(sub), decltype(std::forward<Sub>(sub))>,
     "internal error: unexpected expression type");
 
   /* Deduce the operand type of the subexpression (&, const&, &&): */

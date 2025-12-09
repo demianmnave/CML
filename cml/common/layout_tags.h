@@ -56,9 +56,9 @@ struct any_major
  */
 template<class Tag> struct is_layout_tag
 {
-  static const bool value = std::is_same<Tag, row_major>::value
-    || std::is_same<Tag, col_major>::value
-    || std::is_same<Tag, any_major>::value;
+  static const bool value = std::is_same_v<Tag, row_major>
+    || std::is_same_v<Tag, col_major>
+    || std::is_same_v<Tag, any_major>;
 };
 
 /** Templated helper to determine the layout tag of an expression that

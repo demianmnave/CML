@@ -37,9 +37,9 @@ struct any_basis
 /** Detect valid basis tags. */
 template<class Tag> struct is_basis_tag
 {
-  static const bool value = std::is_same<Tag, row_basis>::value
-    || std::is_same<Tag, col_basis>::value
-    || std::is_same<Tag, any_basis>::value;
+  static const bool value = std::is_same_v<Tag, row_basis>
+    || std::is_same_v<Tag, col_basis>
+    || std::is_same_v<Tag, any_basis>;
 };
 
 /** Templated helper to determine the basis tag of an expression that
@@ -68,7 +68,7 @@ using basis_tag_trait_of_t = typename basis_tag_trait_of<T>::type;
 /** Helper to detect row basis types. */
 template<class T> struct is_row_basis
 {
-  static const bool value = std::is_same<basis_tag_of_t<T>, row_basis>::value;
+  static const bool value = std::is_same_v<basis_tag_of_t<T>, row_basis>;
 };
 
 /** Wrapper for enable_if to detect types tagged with row_basis. */
@@ -84,7 +84,7 @@ using enable_if_row_basis_t = typename enable_if_row_basis<Sub, T>::type;
 /** Helper to detect column basis types. */
 template<class T> struct is_col_basis
 {
-  static const bool value = std::is_same<basis_tag_of_t<T>, col_basis>::value;
+  static const bool value = std::is_same_v<basis_tag_of_t<T>, col_basis>;
 };
 
 /** Wrapper for enable_if to detect types tagged with col_basis. */
@@ -100,7 +100,7 @@ using enable_if_col_basis_t = typename enable_if_col_basis<Sub, T>::type;
 /** Helper to detect arbitrary basis types. */
 template<class T> struct is_any_basis
 {
-  static const bool value = std::is_same<basis_tag_of_t<T>, any_basis>::value;
+  static const bool value = std::is_same_v<basis_tag_of_t<T>, any_basis>;
 };
 
 /** Wrapper for enable_if to detect types tagged with any_basis. */

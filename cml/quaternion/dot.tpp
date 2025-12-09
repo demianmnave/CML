@@ -19,8 +19,8 @@ dot(const readable_quaternion<Sub1>& left,
   using value_type = value_type_trait_promote_t<Sub1, Sub2>;
 
   static_assert(
-    std::is_same<order_type_trait_of_t<Sub1>,
-      order_type_trait_of_t<Sub2>>::value,
+    std::is_same_v<order_type_trait_of_t<Sub1>,
+      order_type_trait_of_t<Sub2>>,
     "mismatched quaternion order types");
   return value_type(left.get(0) * right.get(0) + left.get(1) * right.get(1)
     + left.get(2) * right.get(2) + left.get(3) * right.get(3));

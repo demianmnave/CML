@@ -42,7 +42,7 @@ operator*(Sub1&& sub1,
    * {+/-} is determined by cross_type:
    */
   auto real = sub1[W] * sub2[W] - cml::dot(sub1.imaginary(), sub2.imaginary());
-  auto cross = std::is_same<cross_type, positive_cross>::value
+  auto cross = std::is_same_v<cross_type, positive_cross>
     ? cml::cross(sub1.imaginary(), sub2.imaginary())
     : cml::cross(sub2.imaginary(), sub1.imaginary());
   auto imaginary =

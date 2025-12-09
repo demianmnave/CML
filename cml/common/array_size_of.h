@@ -14,7 +14,7 @@ namespace detail {
 template<class T> struct int_if_integral
 {
   using type =
-    typename std::conditional<std::is_integral<T>::value, int, T>::type;
+  std::conditional_t<std::is_integral_v<T>, int, T>;
 };
 }  // namespace detail
 
@@ -31,9 +31,9 @@ template<class Array, class Enable = void> struct array_cols_of_c;
 /** Compile-time size of an array. */
 template<class Array>
 struct array_size_of_c<Array,
-  typename std::enable_if<std::is_array<Array>::value>::type>
+    std::enable_if_t<std::is_array_v<Array>>>
 {
-  static const int value = int(std::extent<Array>::value);
+  static const int value = int(std::extent_v<Array>);
 };
 
 /** Compile-time size of an object implementing an array_size integral or
@@ -41,7 +41,7 @@ struct array_size_of_c<Array,
  */
 template<class Array>
 struct array_size_of_c<Array,
-  typename std::enable_if<Array::array_size == Array::array_size>::type>
+    std::enable_if_t<Array::array_size == Array::array_size>>
 {
   static const int value = Array::array_size;
 };
@@ -61,7 +61,7 @@ array_size_of(const Array& array) ->
 template<class Array>
 int
 array_size_of(const Array&,
-  typename std::enable_if<std::is_array<Array>::value>::type* = 0)
+  std::enable_if_t<std::is_array_v<Array>>* = 0)
 {
   return int(array_size_of_c<Array>::value);
 }
@@ -71,7 +71,7 @@ array_size_of(const Array&,
  */
 template<class Array>
 struct array_rows_of_c<Array,
-  typename std::enable_if<Array::array_rows == Array::array_rows>::type>
+    std::enable_if_t<Array::array_rows == Array::array_rows>>
 {
   static const int value = int(Array::array_rows);
 };
@@ -84,7 +84,7 @@ constexpr auto array_rows_of_v = array_rows_of_c<Array>::value;
  */
 template<class Array>
 struct array_cols_of_c<Array,
-  typename std::enable_if<Array::array_cols == Array::array_cols>::type>
+    std::enable_if_t<Array::array_cols == Array::array_cols>>
 {
   static const int value = int(Array::array_cols);
 };

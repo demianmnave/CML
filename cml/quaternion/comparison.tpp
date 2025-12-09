@@ -15,8 +15,8 @@ operator<(const readable_quaternion<Sub1>& left,
   const readable_quaternion<Sub2>& right)
 {
   static_assert(
-    std::is_same<order_type_trait_of_t<Sub1>,
-      order_type_trait_of_t<Sub2>>::value,
+    std::is_same_v<order_type_trait_of_t<Sub1>,
+      order_type_trait_of_t<Sub2>>,
     "cannot compare quaternions with different orders");
   for(int i = 0; i < 4; i++) {
     /**/
@@ -36,8 +36,8 @@ operator>(const readable_quaternion<Sub1>& left,
   const readable_quaternion<Sub2>& right)
 {
   static_assert(
-    std::is_same<order_type_trait_of_t<Sub1>,
-      order_type_trait_of_t<Sub2>>::value,
+    std::is_same_v<order_type_trait_of_t<Sub1>,
+      order_type_trait_of_t<Sub2>>,
     "cannot compare quaternions with different orders");
   for(int i = 0; i < 4; i++) {
     /**/
@@ -57,8 +57,8 @@ operator==(const readable_quaternion<Sub1>& left,
   const readable_quaternion<Sub2>& right)
 {
   static_assert(
-    std::is_same<order_type_trait_of_t<Sub1>,
-      order_type_trait_of_t<Sub2>>::value,
+    std::is_same_v<order_type_trait_of_t<Sub1>,
+      order_type_trait_of_t<Sub2>>,
     "cannot compare quaternions with different orders");
   for(int i = 0; i < 4; i++) {
     if(!(left[i] == right[i])) return false; // Not equal.

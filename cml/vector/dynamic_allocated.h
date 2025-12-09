@@ -27,7 +27,7 @@ struct vector_traits<vector<Element, dynamic<Allocator>>>
   /* The vector storage type: */
   using storage_type = rebind_t<allocated<Allocator>, vector_storage_tag>;
   using size_tag = typename storage_type::size_tag;
-  static_assert(std::is_same<size_tag, dynamic_size_tag>::value,
+  static_assert(std::is_same_v<size_tag, dynamic_size_tag>,
     "invalid size tag");
 
   /* Array size (should be -1): */
@@ -48,7 +48,7 @@ class vector<Element, dynamic<Allocator>>
   using allocator_traits = std::allocator_traits<allocator_type>;
 
   /** Require a stateless allocator. */
-  static_assert(std::is_empty<allocator_type>::value,
+  static_assert(std::is_empty_v<allocator_type>,
     "cannot use a stateful allocator for dynamic<> vectors");
 
   public:
@@ -87,7 +87,7 @@ class vector<Element, dynamic<Allocator>>
    *
    * @throws std::invalid_argument if @c size < 0.
    */
-  template<class Int, enable_if_t<std::is_integral<Int>::value>* = nullptr>
+  template<class Int, enable_if_t<std::is_integral_v<Int>>* = nullptr>
   explicit vector(Int size);
 
   /** Copy constructor. */

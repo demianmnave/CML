@@ -96,7 +96,7 @@ class subvector_node : public readable_vector<subvector_node<Sub>>
    * as a copy if Sub is an rvalue reference (temporary), or by const
    * reference if Sub is an lvalue reference.
    */
-  using wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const
+  using wrap_type = cml::if_t<std::is_lvalue_reference_v<Sub>, const
     sub_type&,
     sub_type>;
 

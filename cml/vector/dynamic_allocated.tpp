@@ -19,7 +19,7 @@ vector<E, dynamic<A>>::vector()
 }
 
 template<class E, class A>
-template<class Int, enable_if_t<std::is_integral<Int>::value>*>
+template<class Int, enable_if_t<std::is_integral_v<Int>>*>
 vector<E, dynamic<A>>::vector(Int size)
   : m_data(0)
     , m_size(0)

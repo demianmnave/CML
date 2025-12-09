@@ -52,8 +52,8 @@ template<class... Entries> class type_table
     using first = typename Entry::first;
     using second = typename Entry::second;
     static const bool value =
-      (std::is_same<Ta, first>::value && std::is_same<Tb, second>::value)
-      || (std::is_same<Ta, second>::value && std::is_same<Tb, first>::value);
+      (std::is_same_v<Ta, first> && std::is_same_v<Tb, second>)
+      || (std::is_same_v<Ta, second> && std::is_same_v<Tb, first>);
   };
 
   private:

@@ -12,7 +12,7 @@ namespace cml {
  */
 template<class Pointer>
 using enable_if_pointer = typename std::enable_if<
-  std::is_pointer<Pointer>::value && !std::is_array<Pointer>::value>;
+  std::is_pointer_v<Pointer> && !std::is_array_v<Pointer>>;
 
 /** Alias for std::enable_if<T>::type using std::is_pointer<T> to determine
  * the boolean value.

@@ -52,7 +52,7 @@ template<> struct any_storage<vector_storage_tag>
   using memory_tag = any_memory_tag;
 
   /** Unspecified array size. */
-  static const int array_size = -1;
+  static constexpr int array_size = -1;
 
   /** Rebind to a new vector any_storage<> selector (the template parameter
    * is ignored).
@@ -74,10 +74,10 @@ template<> struct any_storage<matrix_storage_tag>
   using memory_tag = any_memory_tag;
 
   /** Unspecified number of array rows. */
-  static const int array_rows = -1;
+  static constexpr int array_rows = -1;
 
   /** Unspecified number of array columns. */
-  static const int array_cols = -1;
+  static constexpr int array_cols = -1;
 
   /** Rebind to a new matrix any_storage<> selector (the template
    * parameters are ignored).
@@ -99,7 +99,7 @@ template<> struct any_storage<quaternion_storage_tag>
   using memory_tag = any_memory_tag;
 
   /** Unspecified array size. */
-  static const int array_size = -1;
+  static constexpr int array_size = -1;
 
   /** Rebind to a new vector any_storage<> selector (the template parameter
    * is ignored).
@@ -113,14 +113,14 @@ template<> struct any_storage<quaternion_storage_tag>
 /** is_storage_selector for any_storage<>. */
 template<class Tag> struct is_storage_selector<any_storage<Tag>>
 {
-  static const bool value = true;
+  static constexpr bool value = true;
 };
 
 /** Helper to detect any_storage<> types. */
 template<class Storage> struct is_any_storage
 {
-  static const bool value =
-    std::is_same<typename Storage::selector_type, any_storage<>>::value;
+  static constexpr bool value =
+    std::is_same_v<typename Storage::selector_type, any_storage<>>;
 };
 
 /** Helper to disambiguate any_storage<> types. */

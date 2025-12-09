@@ -16,8 +16,8 @@ template<class Element, class Allocator, typename BasisOrient, typename Layout>
 struct matrix_traits<matrix<Element, dynamic<Allocator>, BasisOrient, Layout>>
 {
   /* The basis must be col_basis or row_basis: */
-  static_assert(std::is_same<BasisOrient, row_basis>::value
-    || std::is_same<BasisOrient, col_basis>::value,
+  static_assert(std::is_same_v<BasisOrient, row_basis>
+    || std::is_same_v<BasisOrient, col_basis>,
     "invalid basis");
 
   /* Traits and types for the matrix element: */
@@ -33,7 +33,7 @@ struct matrix_traits<matrix<Element, dynamic<Allocator>, BasisOrient, Layout>>
   /* The matrix storage type: */
   using storage_type = rebind_t<allocated<Allocator>, matrix_storage_tag>;
   using size_tag = typename storage_type::size_tag;
-  static_assert(std::is_same<size_tag, dynamic_size_tag>::value,
+  static_assert(std::is_same_v<size_tag, dynamic_size_tag>,
     "invalid size tag");
 
   /* Array rows (should be -1): */
@@ -71,7 +71,7 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
   using allocator_traits = std::allocator_traits<allocator_type>;
 
   /** Require a stateless allocator. */
-  static_assert(std::is_empty<allocator_type>::value,
+  static_assert(std::is_empty_v<allocator_type>,
     "cannot use a stateful allocator for dynamic<> matrices");
 
   public:
@@ -141,8 +141,8 @@ class matrix<Element, dynamic<Allocator>, BasisOrient, Layout>
     enable_if_t<
 
       /* Avoid implicit conversions, for example, from double: */
-      /**/ std::is_integral<RowsT>::value
-      && std::is_integral<ColsT>::value
+      /**/ std::is_integral_v<RowsT>
+      && std::is_integral_v<ColsT>
 
       /* Require compatible values: */
       && cml::are_convertible<value_type, E0, Elements...>::value>* = nullptr>

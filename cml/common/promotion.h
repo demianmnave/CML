@@ -24,12 +24,12 @@ template<class Tag1, class Tag2> struct size_check_promote
   static_assert(is_size_tag<Tag2>::value, "invalid size tag");
 
   /* Promote to any_size_tag when combined with any other tag: */
-  static const bool is_any = std::is_same<Tag1, any_size_tag>::value
-    || std::is_same<Tag2, any_size_tag>::value;
+  static const bool is_any = std::is_same_v<Tag1, any_size_tag>
+    || std::is_same_v<Tag2, any_size_tag>;
 
   /* Promote to fixed_size_tag when combining two fixed-size expressions: */
-  static const bool is_fixed = std::is_same<Tag1, fixed_size_tag>::value
-    && std::is_same<Tag2, fixed_size_tag>::value;
+  static const bool is_fixed = std::is_same_v<Tag1, fixed_size_tag>
+    && std::is_same_v<Tag2, fixed_size_tag>;
 
   /* Promote to dynamic_size_tag by default if not promoting to
    * any_size_tag or fixed_size_tag:
@@ -56,19 +56,19 @@ template<class Tag1, class Tag2> struct size_tag_promote
   static_assert(is_size_tag<Tag2>::value, "invalid size tag");
 
   /* Fixed-size with any other tag promotes to fixed-size: */
-  static const bool is_fixed = std::is_same<Tag1, fixed_size_tag>::value
-    || std::is_same<Tag2, fixed_size_tag>::value;
+  static const bool is_fixed = std::is_same_v<Tag1, fixed_size_tag>
+    || std::is_same_v<Tag2, fixed_size_tag>;
 
   /* Promote to dynamic if not promoting to fixed, and if at least one of
    * the size tags is dynamic_size_tag:
    */
   static const bool is_dynamic = !is_fixed
-    && (std::is_same<Tag1, dynamic_size_tag>::value
-      || std::is_same<Tag2, dynamic_size_tag>::value);
+    && (std::is_same_v<Tag1, dynamic_size_tag>
+      || std::is_same_v<Tag2, dynamic_size_tag>);
 
   /* Promote to any_size_tag when both are any_size_tag: */
-  static const bool is_any = std::is_same<Tag1, any_size_tag>::value
-    && std::is_same<Tag2, any_size_tag>::value;
+  static const bool is_any = std::is_same_v<Tag1, any_size_tag>
+    && std::is_same_v<Tag2, any_size_tag>;
 
   /* Has to be one of the deduced categories: */
   static_assert(is_fixed || is_dynamic || is_any, "unexpected size tag type");

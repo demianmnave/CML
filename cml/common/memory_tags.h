@@ -30,10 +30,10 @@ struct any_memory_tag
 /** Detect valid memory tags. */
 template<class Tag> struct is_memory_tag
 {
-  static const bool value = std::is_same<Tag, compiled_memory_tag>::value
-    || std::is_same<Tag, allocated_memory_tag>::value
-    || std::is_same<Tag, external_memory_tag>::value
-    || std::is_same<Tag, any_memory_tag>::value;
+  static const bool value = std::is_same_v<Tag, compiled_memory_tag>
+    || std::is_same_v<Tag, allocated_memory_tag>
+    || std::is_same_v<Tag, external_memory_tag>
+    || std::is_same_v<Tag, any_memory_tag>;
 };
 
 /** Templated helper to determine the memory tag of an expression that
@@ -52,20 +52,20 @@ template<class T> using memory_tag_of_t = typename memory_tag_of<T>::type;
 template<class Storage> struct is_compiled_memory
 {
   static const bool value =
-    std::is_same<memory_tag_of_t<Storage>, compiled_memory_tag>::value;
+    std::is_same_v<memory_tag_of_t<Storage>, compiled_memory_tag>;
 };
 
 /** Helper to detect allocated-memory types. */
 template<class Storage> struct is_allocated_memory
 {
   static const bool value =
-    std::is_same<memory_tag_of_t<Storage>, allocated_memory_tag>::value;
+    std::is_same_v<memory_tag_of_t<Storage>, allocated_memory_tag>;
 };
 
 /** Helper to detect external-memory types. */
 template<class Storage> struct is_external_memory
 {
   static const bool value =
-    std::is_same<memory_tag_of_t<Storage>, external_memory_tag>::value;
+    std::is_same_v<memory_tag_of_t<Storage>, external_memory_tag>;
 };
 } // namespace cml

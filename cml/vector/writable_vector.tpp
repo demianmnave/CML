@@ -191,7 +191,7 @@ template<class DT>
 DT&
 writable_vector<DT>::random(const_reference low, const_reference high) &
 {
-  using distribution_type = if_t<std::is_integral<value_type>::value,
+  using distribution_type = if_t<std::is_integral_v<value_type>,
     std::uniform_int_distribution<value_type>,
     std::uniform_real_distribution<value_type>>;
 

@@ -96,7 +96,7 @@ class imaginary_node : public readable_vector<imaginary_node<Sub>>
    * reference if Sub is an lvalue reference.
    */
   using wrap_type =
-  cml::if_t<std::is_lvalue_reference<Sub>::value, const sub_type&, sub_type>;
+  cml::if_t<std::is_lvalue_reference_v<Sub>, const sub_type&, sub_type>;
 
   /** The wrapped subexpression. */
   wrap_type m_sub;
