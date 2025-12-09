@@ -32,6 +32,8 @@ template<class T> struct is_vector
   static const bool value = type::value;
 };
 
+template<class T> constexpr auto is_vector_v = is_vector<T>::value;
+
 /** Wrapper for enable_if to detect vector types (derived from
  * readable_vector).
  */

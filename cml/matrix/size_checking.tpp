@@ -2,9 +2,7 @@
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 
-#ifndef __CML_MATRIX_SIZE_CHECKING_TPP
-#  error "matrix/size_checking.tpp not included correctly"
-#endif
+#pragma once
 
 #include <cml/common/promotion.h>
 #include <cml/vector/readable_vector.h>

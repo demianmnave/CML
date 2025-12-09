@@ -2,11 +2,7 @@
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 
-#ifndef __CML_MATRIX_COMPARISON_TPP
-#  error "matrix/comparison.tpp not included correctly"
-#endif
-
-#include <cml/matrix/size_checking.h>
+#pragma once
 
 namespace cml {
 template<class Sub1, class Sub2>

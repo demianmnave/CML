@@ -4,6 +4,12 @@
 
 #pragma once
 
+#ifndef CML_DISABLE_SIMD
+#include <simde/hedley.h>
+#include <simde/x86/fma.h>
+#include <cml/matrix/matrix.h>
+#endif
+
 #include <cml/matrix/detail/resize.h>
 
 namespace cml::detail {
@@ -33,10 +39,6 @@ matrix_product(Result& R, const Sub1& sub1, const Sub2& sub2)
 }  // namespace cml::detail
 
 #ifndef CML_DISABLE_SIMD
-#include <simde/hedley.h>
-#include <simde/x86/fma.h>
-#include <cml/matrix/fixed_compiled.h>
-
 namespace cml::detail {
 
 /* AVX2 3x3 float row-major matrix product. */
@@ -439,7 +441,7 @@ operator*(Sub1&& sub1, Sub2&& sub2) -> matrix_inner_product_promote_t<
 {
   using result_type = matrix_inner_product_promote_t<actual_type_of_t<Sub1>,
     actual_type_of_t<Sub2>>;
-  check_same_inner_size(std::forward<Sub1>(sub1), std::forward<Sub2>(sub2));
+  cml:: check_same_inner_size(std::forward<Sub1>(sub1), std::forward<Sub2>(sub2));
   result_type R;
   detail::matrix_product(R, std::forward<Sub1>(sub1), std::forward<Sub2>(sub2));
   return R;

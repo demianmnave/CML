@@ -18,7 +18,7 @@
 /* Testing headers: */
 #include "catch_runner.h"
 
-CATCH_TEST_CASE("fixed-product1")
+CATCH_TEST_CASE("fixed product1")
 {
   cml::matrix22d M1(1., 2., 3., 4.);
   cml::matrix22d M2(5., 6., 7., 8.);
@@ -33,7 +33,7 @@ CATCH_TEST_CASE("fixed-product1")
   CATCH_CHECK(M(1, 1) == 50.);
 }
 
-CATCH_TEST_CASE("fixed-product2")
+CATCH_TEST_CASE("fixed product2")
 {
   cml::matrix<double, cml::fixed<3, 2>> M1(1., 1., 2., 2., 3., 3.);
   cml::matrix23d M2(1., 2., 3., 1., 2., 3.);
@@ -53,7 +53,7 @@ CATCH_TEST_CASE("fixed-product2")
   CATCH_CHECK(M(2, 2) == 18.);
 }
 
-CATCH_TEST_CASE("fixed-product3")
+CATCH_TEST_CASE("fixed product3")
 {
   // clang-format off
   cml::matrix44d M1(
@@ -83,7 +83,7 @@ CATCH_TEST_CASE("fixed-product3")
   CATCH_CHECK(M == X);
 }
 
-CATCH_TEST_CASE("fixed-product4")
+CATCH_TEST_CASE("fixed product4")
 {
   // clang-format off
   cml::matrix44d_c M1(
@@ -113,7 +113,7 @@ CATCH_TEST_CASE("fixed-product4")
   CATCH_CHECK(M == X);
 }
 
-CATCH_TEST_CASE("fixed-product5")
+CATCH_TEST_CASE("fixed product5")
 {
   // clang-format off
   cml::matrix44f M1(
@@ -143,7 +143,7 @@ CATCH_TEST_CASE("fixed-product5")
   CATCH_CHECK(M == X);
 }
 
-CATCH_TEST_CASE("fixed-product6")
+CATCH_TEST_CASE("fixed product6")
 {
   // clang-format off
   cml::matrix44f_c M1(
@@ -173,7 +173,7 @@ CATCH_TEST_CASE("fixed-product6")
   CATCH_CHECK(M == X);
 }
 
-CATCH_TEST_CASE("fixed-product7")
+CATCH_TEST_CASE("fixed product7")
 {
   cml::matrix<double, cml::fixed<3, 3>> M1(1., 1., 2., 2., 3., 3., 3., 3., 4.);
   cml::matrix33d M2(1., 2., 3., 2., 2., 3., 3., 1., 4.);

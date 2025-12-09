@@ -2,9 +2,7 @@
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 
-#ifndef __CML_VECTOR_READABLE_VECTOR_TPP
-#  error "vector/readable_vector.tpp not included correctly"
-#endif
+#pragma once
 
 #include <cml/scalar/functions.h>
 #include <cml/scalar/binary_ops.h>
@@ -13,7 +11,6 @@
 #include <cml/vector/size_checking.h>
 
 namespace cml {
-/* Public methods: */
 
 template<class DT>
 const DT&
@@ -101,4 +98,5 @@ readable_vector<DT>::subvector(int i) const && -> subvector_node<DT&&>
 {
   return subvector_node<DT&&>((DT&&) *this, i);
 }
+
 } // namespace cml

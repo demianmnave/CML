@@ -22,6 +22,4 @@ bool operator!=(const readable_matrix<Sub1>& left,
   const readable_matrix<Sub2>& right);
 } // namespace cml
 
-#define __CML_MATRIX_COMPARISON_TPP
 #include <cml/matrix/comparison.tpp>
-#undef __CML_MATRIX_COMPARISON_TPP
