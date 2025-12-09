@@ -12,7 +12,7 @@
 
 using matrix44d = cml::matrix44d;
 
-inline void
+HEDLEY_ALWAYS_INLINE auto
 mxm_4x4(matrix44d& res, const matrix44d& A, const matrix44d& B)
 {
   res = A * B;

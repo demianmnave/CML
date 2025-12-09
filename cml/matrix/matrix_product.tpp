@@ -4,13 +4,11 @@
 
 #pragma once
 
-#ifndef CML_DISABLE_SIMD
-#include <simde/hedley.h>
-#include <simde/x86/fma.h>
-#include <cml/matrix/matrix.h>
-#endif
-
 #include <cml/matrix/detail/resize.h>
+
+#ifndef CML_DISABLE_SIMD
+#include <cml/matrix/detail/simd_primitives.h>
+#endif
 
 namespace cml::detail {
 
@@ -18,6 +16,7 @@ template<class Result, class Sub1, class Sub2>
 auto
 matrix_product_NxN(Result& R, const Sub1& sub1, const Sub2& sub2)
 {
+  // TODO Split into row-major and column-major loop ordering.
   detail::check_or_resize(R, array_rows_of(sub1), array_cols_of(sub2));
   for(int i = 0; i < R.rows(); ++i) {
     for(int j = 0; j < R.cols(); ++j) {
@@ -51,20 +50,10 @@ matrix_product_33(float* R, const float* const A, const float* const B,
   const auto B1 = simde_mm_set_ps(0., B[1 * 3 + 2], B[1 * 3 + 1], B[1 * 3 + 0]);
   const auto B2 = simde_mm_set_ps(0., B[2 * 3 + 2], B[2 * 3 + 1], B[2 * 3 + 0]);
 
-  /* row[0..2] = A[i][0] * B[0][0..2] */
-  auto row0 = simde_mm_mul_ps(simde_mm_set1_ps(A[0 * 3 + 0]), B0);
-  /* row[0..2] += A[i][1] * B[1][0..3] */
-  row0 = simde_mm_fmadd_ps(simde_mm_set1_ps(A[0 * 3 + 1]), B1, row0);
-  /* row[0..2] += A[i][2] * B[2][0..3] */
-  row0 = simde_mm_fmadd_ps(simde_mm_set1_ps(A[0 * 3 + 2]), B2, row0);
-
-  auto row1 = simde_mm_mul_ps(simde_mm_set1_ps(A[1 * 3 + 0]), B0);
-  row1 = simde_mm_fmadd_ps(simde_mm_set1_ps(A[1 * 3 + 1]), B1, row1);
-  row1 = simde_mm_fmadd_ps(simde_mm_set1_ps(A[1 * 3 + 2]), B2, row1);
-
-  auto row2 = simde_mm_mul_ps(simde_mm_set1_ps(A[2 * 3 + 0]), B0);
-  row2 = simde_mm_fmadd_ps(simde_mm_set1_ps(A[2 * 3 + 1]), B1, row2);
-  row2 = simde_mm_fmadd_ps(simde_mm_set1_ps(A[2 * 3 + 2]), B2, row2);
+  /* R[i][0..2] = A[i][0] * B[i][0..2] + ... + A[i][2] * B[i][0..2] */
+  const auto row0 = vxm_13(A + 0*3, B0, B1, B2);
+  const auto row1 = vxm_13(A + 1*3, B0, B1, B2);
+  const auto row2 = vxm_13(A + 2*3, B0, B1, B2);
 
   /* Store only the low 3 elements of each row: */
   const auto mask = simde_mm_set_epi32(0, -1, -1, -1);
@@ -83,20 +72,10 @@ matrix_product_33(float* R, const float* const A, const float* const B,
   const auto A1 = simde_mm_set_ps(0., A[1 * 3 + 2], A[1 * 3 + 1], A[1 * 3 + 0]);
   const auto A2 = simde_mm_set_ps(0., A[2 * 3 + 2], A[2 * 3 + 1], A[2 * 3 + 0]);
 
-  /* col[0..2] = A[0..2][j] * B[j][0] */
-  auto col0 = simde_mm_mul_ps(A0, simde_mm_set1_ps(B[0 * 3 + 0]));
-  /* col[0..2] += A[0..2][j] * B[j][1] */
-  col0 = simde_mm_fmadd_ps(A1, simde_mm_set1_ps(B[0 * 3 + 1]), col0);
-  /* col[0..2] += A[0..2][j] * B[j][2] */
-  col0 = simde_mm_fmadd_ps(A2, simde_mm_set1_ps(B[0 * 3 + 2]), col0);
-
-  auto col1 = simde_mm_mul_ps(A0, simde_mm_set1_ps(B[1 * 3 + 0]));
-  col1 = simde_mm_fmadd_ps(A1, simde_mm_set1_ps(B[1 * 3 + 1]), col1);
-  col1 = simde_mm_fmadd_ps(A2, simde_mm_set1_ps(B[1 * 3 + 2]), col1);
-
-  auto col2 = simde_mm_mul_ps(A0, simde_mm_set1_ps(B[2 * 3 + 0]));
-  col2 = simde_mm_fmadd_ps(A1, simde_mm_set1_ps(B[2 * 3 + 1]), col2);
-  col2 = simde_mm_fmadd_ps(A2, simde_mm_set1_ps(B[2 * 3 + 2]), col2);
+  /* col[0..2][j] = B[0][j]*A[0..2][j] + ... + B[2][j]*A[0..2][j] */
+  const auto col0 = vxm_13(B + 0*3, A0, A1, A2);
+  const auto col1 = vxm_13(B + 1*3, A0, A1, A2);
+  const auto col2 = vxm_13(B + 2*3, A0, A1, A2);
 
   /* Store only the low 3 elements of each col: */
   const auto mask = simde_mm_set_epi32(0, -1, -1, -1);
@@ -110,35 +89,17 @@ static HEDLEY_ALWAYS_INLINE auto
 matrix_product_44(float* R, const float* const A, const float* const B,
   row_major)
 {
-  /* Cache B: */
+  /* Cache rows of B: */
   const auto B0 = simde_mm_loadu_ps(B + (0 << 2));
   const auto B1 = simde_mm_loadu_ps(B + (1 << 2));
   const auto B2 = simde_mm_loadu_ps(B + (2 << 2));
   const auto B3 = simde_mm_loadu_ps(B + (3 << 2));
 
-  /* row[0..3] = A[i][0] * B[0][0..3] */
-  auto row0 = simde_mm_mul_ps(simde_mm_broadcast_ss(A + (0 << 2) + 0), B0);
-  /* row[0..3] += A[i][1] * B[1][0..3] */
-  row0 = simde_mm_fmadd_ps(simde_mm_broadcast_ss(A + (0 << 2) + 1), B1, row0);
-  /* row[0..3] += A[i][2] * B[2][0..3] */
-  row0 = simde_mm_fmadd_ps(simde_mm_broadcast_ss(A + (0 << 2) + 2), B2, row0);
-  /* row[0..3] += A[i][3] * B[3][0..3] */
-  row0 = simde_mm_fmadd_ps(simde_mm_broadcast_ss(A + (0 << 2) + 3), B3, row0);
-
-  auto row1 = simde_mm_mul_ps(simde_mm_broadcast_ss(A + (1 << 2) + 0), B0);
-  row1 = simde_mm_fmadd_ps(simde_mm_broadcast_ss(A + (1 << 2) + 1), B1, row1);
-  row1 = simde_mm_fmadd_ps(simde_mm_broadcast_ss(A + (1 << 2) + 2), B2, row1);
-  row1 = simde_mm_fmadd_ps(simde_mm_broadcast_ss(A + (1 << 2) + 3), B3, row1);
-
-  auto row2 = simde_mm_mul_ps(simde_mm_broadcast_ss(A + (2 << 2) + 0), B0);
-  row2 = simde_mm_fmadd_ps(simde_mm_broadcast_ss(A + (2 << 2) + 1), B1, row2);
-  row2 = simde_mm_fmadd_ps(simde_mm_broadcast_ss(A + (2 << 2) + 2), B2, row2);
-  row2 = simde_mm_fmadd_ps(simde_mm_broadcast_ss(A + (2 << 2) + 3), B3, row2);
-
-  auto row3 = simde_mm_mul_ps(simde_mm_broadcast_ss(A + (3 << 2) + 0), B0);
-  row3 = simde_mm_fmadd_ps(simde_mm_broadcast_ss(A + (3 << 2) + 1), B1, row3);
-  row3 = simde_mm_fmadd_ps(simde_mm_broadcast_ss(A + (3 << 2) + 2), B2, row3);
-  row3 = simde_mm_fmadd_ps(simde_mm_broadcast_ss(A + (3 << 2) + 3), B3, row3);
+  /* R[i][0..3] = A[i][0] * B[i][0..3] + ... + A[i][3] * B[i][0..3] */
+  const auto row0 = vxm_14(A + (0 << 2), B0, B1, B2, B3);
+  const auto row1 = vxm_14(A + (1 << 2), B0, B1, B2, B3);
+  const auto row2 = vxm_14(A + (2 << 2), B0, B1, B2, B3);
+  const auto row3 = vxm_14(A + (3 << 2), B0, B1, B2, B3);
 
   simde_mm_storeu_ps(R + (0 << 2), row0);
   simde_mm_storeu_ps(R + (1 << 2), row1);
@@ -151,35 +112,17 @@ static HEDLEY_ALWAYS_INLINE auto
 matrix_product_44(float* R, const float* const A, const float* const B,
   col_major)
 {
-  /* Cache A: */
+  /* Cache columns A: */
   const auto A0 = simde_mm_loadu_ps(A + (0 << 2));
   const auto A1 = simde_mm_loadu_ps(A + (1 << 2));
   const auto A2 = simde_mm_loadu_ps(A + (2 << 2));
   const auto A3 = simde_mm_loadu_ps(A + (3 << 2));
 
-  /* col[0..3] = A[0..3][j] * B[j][0] */
-  auto col0 = simde_mm_mul_ps(A0, simde_mm_broadcast_ss(B + (0 << 2) + 0));
-  /* col[0..3] += A[0..3][j] * B[j][1] */
-  col0 = simde_mm_fmadd_ps(A1, simde_mm_broadcast_ss(B + (0 << 2) + 1), col0);
-  /* col[0..3] += A[0..3][j] * B[j][2] */
-  col0 = simde_mm_fmadd_ps(A2, simde_mm_broadcast_ss(B + (0 << 2) + 2), col0);
-  /* col[0..3] += A[0..3][j] * B[j][3] */
-  col0 = simde_mm_fmadd_ps(A3, simde_mm_broadcast_ss(B + (0 << 2) + 3), col0);
-
-  auto col1 = simde_mm_mul_ps(A0, simde_mm_broadcast_ss(B + (1 << 2) + 0));
-  col1 = simde_mm_fmadd_ps(A1, simde_mm_broadcast_ss(B + (1 << 2) + 1), col1);
-  col1 = simde_mm_fmadd_ps(A2, simde_mm_broadcast_ss(B + (1 << 2) + 2), col1);
-  col1 = simde_mm_fmadd_ps(A3, simde_mm_broadcast_ss(B + (1 << 2) + 3), col1);
-
-  auto col2 = simde_mm_mul_ps(A0, simde_mm_broadcast_ss(B + (2 << 2) + 0));
-  col2 = simde_mm_fmadd_ps(A1, simde_mm_broadcast_ss(B + (2 << 2) + 1), col2);
-  col2 = simde_mm_fmadd_ps(A2, simde_mm_broadcast_ss(B + (2 << 2) + 2), col2);
-  col2 = simde_mm_fmadd_ps(A3, simde_mm_broadcast_ss(B + (2 << 2) + 3), col2);
-
-  auto col3 = simde_mm_mul_ps(A0, simde_mm_broadcast_ss(B + (3 << 2) + 0));
-  col3 = simde_mm_fmadd_ps(A1, simde_mm_broadcast_ss(B + (3 << 2) + 1), col3);
-  col3 = simde_mm_fmadd_ps(A2, simde_mm_broadcast_ss(B + (3 << 2) + 2), col3);
-  col3 = simde_mm_fmadd_ps(A3, simde_mm_broadcast_ss(B + (3 << 2) + 3), col3);
+  /* col[0..3][j] = B[0][j]*A[0..3][j] + ... + B[3][j]*A[0..3][j] */
+  const auto col0 = vxm_14(B + (0 << 2), A0, A1, A2, A3);
+  const auto col1 = vxm_14(B + (1 << 2), A0, A1, A2, A3);
+  const auto col2 = vxm_14(B + (2 << 2), A0, A1, A2, A3);
+  const auto col3 = vxm_14(B + (3 << 2), A0, A1, A2, A3);
 
   simde_mm_storeu_ps(R + (0 << 2), col0);
   simde_mm_storeu_ps(R + (1 << 2), col1);
@@ -192,7 +135,7 @@ static HEDLEY_ALWAYS_INLINE auto
 matrix_product_33(double* R, const double* const A, const double* const B,
   row_major)
 {
-  /* Cache B: */
+  /* Cache rows of B: */
   const auto B0 =
     simde_mm256_set_pd(0., B[0 * 3 + 2], B[0 * 3 + 1], B[0 * 3 + 0]);
   const auto B1 =
@@ -200,20 +143,10 @@ matrix_product_33(double* R, const double* const A, const double* const B,
   const auto B2 =
     simde_mm256_set_pd(0., B[2 * 3 + 2], B[2 * 3 + 1], B[2 * 3 + 0]);
 
-  /* row[0..2] = A[i][0] * B[0][0..2] */
-  auto row0 = simde_mm256_mul_pd(simde_mm256_set1_pd(A[0 * 3 + 0]), B0);
-  /* row[0..2] += A[i][1] * B[1][0..3] */
-  row0 = simde_mm256_fmadd_pd(simde_mm256_set1_pd(A[0 * 3 + 1]), B1, row0);
-  /* row[0..2] += A[i][2] * B[2][0..3] */
-  row0 = simde_mm256_fmadd_pd(simde_mm256_set1_pd(A[0 * 3 + 2]), B2, row0);
-
-  auto row1 = simde_mm256_mul_pd(simde_mm256_set1_pd(A[1 * 3 + 0]), B0);
-  row1 = simde_mm256_fmadd_pd(simde_mm256_set1_pd(A[1 * 3 + 1]), B1, row1);
-  row1 = simde_mm256_fmadd_pd(simde_mm256_set1_pd(A[1 * 3 + 2]), B2, row1);
-
-  auto row2 = simde_mm256_mul_pd(simde_mm256_set1_pd(A[2 * 3 + 0]), B0);
-  row2 = simde_mm256_fmadd_pd(simde_mm256_set1_pd(A[2 * 3 + 1]), B1, row2);
-  row2 = simde_mm256_fmadd_pd(simde_mm256_set1_pd(A[2 * 3 + 2]), B2, row2);
+  /* R[i][0..2] = A[i][0] * B[i][0..2] + ... + A[i][2] * B[i][0..2] */
+  const auto row0 = vxm_13(A + 0*3, B0, B1, B2);
+  const auto row1 = vxm_13(A + 1*3, B0, B1, B2);
+  const auto row2 = vxm_13(A + 2*3, B0, B1, B2);
 
   /* Store only the low 3 elements of each row: */
   const auto mask = simde_mm256_set_epi64x(0, -1, -1, -1);
@@ -235,20 +168,10 @@ matrix_product_33(double* R, const double* const A, const double* const B,
   const auto A2 =
     simde_mm256_set_pd(0., A[2 * 3 + 2], A[2 * 3 + 1], A[2 * 3 + 0]);
 
-  /* col[0..2] = A[0..2][j] * B[j][0] */
-  auto col0 = simde_mm256_mul_pd(A0, simde_mm256_set1_pd(B[0 * 3 + 0]));
-  /* col[0..2] += A[0..2][j] * B[j][1] */
-  col0 = simde_mm256_fmadd_pd(A1, simde_mm256_set1_pd(B[0 * 3 + 1]), col0);
-  /* col[0..2] += A[0..2][j] * B[j][2] */
-  col0 = simde_mm256_fmadd_pd(A2, simde_mm256_set1_pd(B[0 * 3 + 2]), col0);
-
-  auto col1 = simde_mm256_mul_pd(A0, simde_mm256_set1_pd(B[1 * 3 + 0]));
-  col1 = simde_mm256_fmadd_pd(A1, simde_mm256_set1_pd(B[1 * 3 + 1]), col1);
-  col1 = simde_mm256_fmadd_pd(A2, simde_mm256_set1_pd(B[1 * 3 + 2]), col1);
-
-  auto col2 = simde_mm256_mul_pd(A0, simde_mm256_set1_pd(B[2 * 3 + 0]));
-  col2 = simde_mm256_fmadd_pd(A1, simde_mm256_set1_pd(B[2 * 3 + 1]), col2);
-  col2 = simde_mm256_fmadd_pd(A2, simde_mm256_set1_pd(B[2 * 3 + 2]), col2);
+  /* col[0..2][j] = B[0][j]*A[0..2][j] + ... + B[2][j]*A[0..2][j] */
+  const auto col0 = vxm_13(B + 0*3, A0, A1, A2);
+  const auto col1 = vxm_13(B + 1*3, A0, A1, A2);
+  const auto col2 = vxm_13(B + 2*3, A0, A1, A2);
 
   /* Store only the low 3 elements of each col: */
   const auto mask = simde_mm256_set_epi64x(0, -1, -1, -1);
@@ -262,51 +185,17 @@ static HEDLEY_ALWAYS_INLINE auto
 matrix_product_44(double* R, const double* const A, const double* const B,
   row_major)
 {
-  /* Cache B: */
+  /* Cache rows of B: */
   const auto B0 = simde_mm256_loadu_pd(B + (0 << 2));
   const auto B1 = simde_mm256_loadu_pd(B + (1 << 2));
   const auto B2 = simde_mm256_loadu_pd(B + (2 << 2));
   const auto B3 = simde_mm256_loadu_pd(B + (3 << 2));
 
-  /* row[0..3] = A[i][0] * B[0][0..3] */
-  auto row0 =
-    simde_mm256_mul_pd(simde_mm256_broadcast_sd(A + (0 << 2) + 0), B0);
-  /* row[0..3] += A[i][1] * B[1][0..3] */
-  row0 =
-    simde_mm256_fmadd_pd(simde_mm256_broadcast_sd(A + (0 << 2) + 1), B1, row0);
-  /* row[0..3] += A[i][2] * B[2][0..3] */
-  row0 =
-    simde_mm256_fmadd_pd(simde_mm256_broadcast_sd(A + (0 << 2) + 2), B2, row0);
-  /* row[0..3] += A[i][3] * B[3][0..3] */
-  row0 =
-    simde_mm256_fmadd_pd(simde_mm256_broadcast_sd(A + (0 << 2) + 3), B3, row0);
-
-  auto row1 =
-    simde_mm256_mul_pd(simde_mm256_broadcast_sd(A + (1 << 2) + 0), B0);
-  row1 =
-    simde_mm256_fmadd_pd(simde_mm256_broadcast_sd(A + (1 << 2) + 1), B1, row1);
-  row1 =
-    simde_mm256_fmadd_pd(simde_mm256_broadcast_sd(A + (1 << 2) + 2), B2, row1);
-  row1 =
-    simde_mm256_fmadd_pd(simde_mm256_broadcast_sd(A + (1 << 2) + 3), B3, row1);
-
-  auto row2 =
-    simde_mm256_mul_pd(simde_mm256_broadcast_sd(A + (2 << 2) + 0), B0);
-  row2 =
-    simde_mm256_fmadd_pd(simde_mm256_broadcast_sd(A + (2 << 2) + 1), B1, row2);
-  row2 =
-    simde_mm256_fmadd_pd(simde_mm256_broadcast_sd(A + (2 << 2) + 2), B2, row2);
-  row2 =
-    simde_mm256_fmadd_pd(simde_mm256_broadcast_sd(A + (2 << 2) + 3), B3, row2);
-
-  auto row3 =
-    simde_mm256_mul_pd(simde_mm256_broadcast_sd(A + (3 << 2) + 0), B0);
-  row3 =
-    simde_mm256_fmadd_pd(simde_mm256_broadcast_sd(A + (3 << 2) + 1), B1, row3);
-  row3 =
-    simde_mm256_fmadd_pd(simde_mm256_broadcast_sd(A + (3 << 2) + 2), B2, row3);
-  row3 =
-    simde_mm256_fmadd_pd(simde_mm256_broadcast_sd(A + (3 << 2) + 3), B3, row3);
+  /* R[i][0..3] = A[i][0] * B[i][0..3] + ... + A[i][3] * B[i][0..3] */
+  const auto row0 = vxm_14(A + (0 << 2), B0, B1, B2, B3);
+  const auto row1 = vxm_14(A + (1 << 2), B0, B1, B2, B3);
+  const auto row2 = vxm_14(A + (2 << 2), B0, B1, B2, B3);
+  const auto row3 = vxm_14(A + (3 << 2), B0, B1, B2, B3);
 
   simde_mm256_storeu_pd(R + (0 << 2), row0);
   simde_mm256_storeu_pd(R + (1 << 2), row1);
@@ -319,51 +208,17 @@ static HEDLEY_ALWAYS_INLINE auto
 matrix_product_44(double* R, const double* const A, const double* const B,
   col_major)
 {
-  /* Cache A: */
+  /* Cache columns of A: */
   const auto A0 = simde_mm256_loadu_pd(A + (0 << 2));
   const auto A1 = simde_mm256_loadu_pd(A + (1 << 2));
   const auto A2 = simde_mm256_loadu_pd(A + (2 << 2));
   const auto A3 = simde_mm256_loadu_pd(A + (3 << 2));
 
-  /* col[0..3] = A[0..3][j] * B[j][0] */
-  auto col0 =
-    simde_mm256_mul_pd(A0, simde_mm256_broadcast_sd(B + (0 << 2) + 0));
-  /* col[0..3] += A[0..3][j] * B[j][1] */
-  col0 =
-    simde_mm256_fmadd_pd(A1, simde_mm256_broadcast_sd(B + (0 << 2) + 1), col0);
-  /* col[0..3] += A[0..3][j] * B[j][2] */
-  col0 =
-    simde_mm256_fmadd_pd(A2, simde_mm256_broadcast_sd(B + (0 << 2) + 2), col0);
-  /* col[0..3] += A[0..3][j] * B[j][3] */
-  col0 =
-    simde_mm256_fmadd_pd(A3, simde_mm256_broadcast_sd(B + (0 << 2) + 3), col0);
-
-  auto col1 =
-    simde_mm256_mul_pd(A0, simde_mm256_broadcast_sd(B + (1 << 2) + 0));
-  col1 =
-    simde_mm256_fmadd_pd(A1, simde_mm256_broadcast_sd(B + (1 << 2) + 1), col1);
-  col1 =
-    simde_mm256_fmadd_pd(A2, simde_mm256_broadcast_sd(B + (1 << 2) + 2), col1);
-  col1 =
-    simde_mm256_fmadd_pd(A3, simde_mm256_broadcast_sd(B + (1 << 2) + 3), col1);
-
-  auto col2 =
-    simde_mm256_mul_pd(A0, simde_mm256_broadcast_sd(B + (2 << 2) + 0));
-  col2 =
-    simde_mm256_fmadd_pd(A1, simde_mm256_broadcast_sd(B + (2 << 2) + 1), col2);
-  col2 =
-    simde_mm256_fmadd_pd(A2, simde_mm256_broadcast_sd(B + (2 << 2) + 2), col2);
-  col2 =
-    simde_mm256_fmadd_pd(A3, simde_mm256_broadcast_sd(B + (2 << 2) + 3), col2);
-
-  auto col3 =
-    simde_mm256_mul_pd(A0, simde_mm256_broadcast_sd(B + (3 << 2) + 0));
-  col3 =
-    simde_mm256_fmadd_pd(A1, simde_mm256_broadcast_sd(B + (3 << 2) + 1), col3);
-  col3 =
-    simde_mm256_fmadd_pd(A2, simde_mm256_broadcast_sd(B + (3 << 2) + 2), col3);
-  col3 =
-    simde_mm256_fmadd_pd(A3, simde_mm256_broadcast_sd(B + (3 << 2) + 3), col3);
+  /* col[0..3][j] = B[0][j]*A[0..3][j] + ... + B[3][j]*A[0..3][j] */
+  const auto col0 = vxm_14(B + (0 << 2), A0, A1, A2, A3);
+  const auto col1 = vxm_14(B + (1 << 2), A0, A1, A2, A3);
+  const auto col2 = vxm_14(B + (2 << 2), A0, A1, A2, A3);
+  const auto col3 = vxm_14(B + (3 << 2), A0, A1, A2, A3);
 
   simde_mm256_storeu_pd(R + (0 << 2), col0);
   simde_mm256_storeu_pd(R + (1 << 2), col1);
@@ -441,10 +296,12 @@ operator*(Sub1&& sub1, Sub2&& sub2) -> matrix_inner_product_promote_t<
 {
   using result_type = matrix_inner_product_promote_t<actual_type_of_t<Sub1>,
     actual_type_of_t<Sub2>>;
-  cml:: check_same_inner_size(std::forward<Sub1>(sub1), std::forward<Sub2>(sub2));
+  cml::check_same_inner_size(std::forward<Sub1>(sub1),
+    std::forward<Sub2>(sub2));
   result_type R;
   detail::matrix_product(R, std::forward<Sub1>(sub1), std::forward<Sub2>(sub2));
   return R;
+  // TODO Is there any way to avoid vextractf128 -> R for msvc? (clang fully inlines s_access)
 }
 
 }  // namespace cml
