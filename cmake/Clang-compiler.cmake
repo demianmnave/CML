@@ -35,9 +35,12 @@ function(cml_configure_compiler)
     list(APPEND _cml_private_cxx_options
       /permissive-   # Strict(er) standards conformance
       /W4            # Most warnings
-      /FAs
     )
     list(APPEND _cml_private_exe_link_options /NOIMPLIB)
+
+    # Options to enable assembly output for inspection:
+    list(APPEND CML_ASSEMBLY_OPTIONS /FAs)
+    list(APPEND _defined CML_ASSEMBLY_OPTIONS)
 
     if(NOT CML_DISABLE_SIMD)
       #>> Handle SIMD selection:
@@ -112,7 +115,9 @@ function(cml_configure_compiler)
       #TODO Fix architecture detection for Clang on Darwin
       cml_get_host_arch(_arch)
       if(_arch STREQUAL "x86_64")
-        if(NOT DEFINED CML_SIMD)
+        if(DEFINED CML_SIMD)
+          set(_cml_simd ${CML_SIMD})
+        else()
           set(_cml_simd avx2)
         endif()
 

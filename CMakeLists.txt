@@ -23,7 +23,7 @@ endif()
 # Standard includes:
 include(CMakeDependentOption)
 
-# Disable SIMD:
+# Allow disabling SIMD:
 if(NOT DEFINED CML_DISABLE_SIMD)
   option(CML_DISABLE_SIMD "Disable vectorization (also disables timing tests)" OFF)
 endif()
@@ -66,6 +66,15 @@ endif()
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include(default-paths)
 include(configure-compiler)
+
+# SIMDe is required when SIMD is enabled:
+if(NOT CML_DISABLE_SIMD)
+  set(_hints)
+  if(DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET)
+    list(APPEND _hints HINTS "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
+  endif()
+  find_path(SIMDE_INCLUDE_DIR NAMES "simde/simde-common.h" ${_hints})
+endif()
 
 # Create the CML interface library:
 add_subdirectory(cml)

@@ -27,9 +27,12 @@ function(cml_configure_compiler)
     /MP
     /EHsc
     /bigobj
-    /FAs
   )
   set(_cml_private_exe_link_options /NOIMPLIB /NOEXP /LTCG)
+
+  # Options to enable assembly output for inspection:
+  list(APPEND CML_ASSEMBLY_OPTIONS /FAs)
+  list(APPEND _defined CML_ASSEMBLY_OPTIONS)
 
   #TODO move this to a separate function/macro?
   if(NOT CML_DISABLE_SIMD)
@@ -50,7 +53,6 @@ function(cml_configure_compiler)
       message(FATAL_ERROR "SIMD is only supported on x64 architecture for MSVC")
     endif()
 
-    message(${_cml_simd})
     list(FIND _cml_simd_map ${_cml_simd} _idx)
     if(_idx EQUAL "-1")
       message(FATAL_ERROR "Unknown SIMD type ${_cml_simd}")
