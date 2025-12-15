@@ -5,7 +5,10 @@
 #pragma once
 
 #include <simde/hedley.h>
+#include <cml/vector.h>
 #include <cml/matrix.h>
+
+using vector4d = cml::vector4d;
 
 #ifdef CML_TIMING_ROW_MAJOR
 using matrix44d = cml::matrix44d_r;
@@ -16,7 +19,13 @@ using matrix44d = cml::matrix44d_c;
 #endif
 
 HEDLEY_ALWAYS_INLINE auto
-mxm_4x4(matrix44d& res, const matrix44d& A, const matrix44d& B)
+mxv_4x1(vector4d& x, const matrix44d& M, const vector4d& v)
 {
-  res = A * B;
+  x = M * v;
+}
+
+HEDLEY_ALWAYS_INLINE auto
+mxv_1x4(vector4d& x, const vector4d& v, const matrix44d& M)
+{
+  x = v * M;
 }

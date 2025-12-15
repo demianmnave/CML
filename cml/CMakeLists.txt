@@ -159,8 +159,8 @@ set(vector_HEADERS
   vector/traits.h
   vector/triple_product.h
   vector/triple_product.tpp
-  vector/types.h
   vector/type_util.h
+  vector/types.h
   vector/unary_node.h
   vector/unary_node.tpp
   vector/unary_ops.h
@@ -172,6 +172,7 @@ set(vector_HEADERS
 set(vector_detail_HEADERS
   vector/detail/check_or_resize.h
   vector/detail/combined_size_of.h
+  vector/detail/get.h
   vector/detail/resize.h
 )
 
@@ -232,8 +233,8 @@ set(matrix_HEADERS
   matrix/transpose_node.h
   matrix/transpose_node.tpp
   matrix/transpose_ops.h
-  matrix/types.h
   matrix/type_util.h
+  matrix/types.h
   matrix/unary_node.h
   matrix/unary_node.tpp
   matrix/unary_ops.h
@@ -255,6 +256,7 @@ set(matrix_detail_HEADERS
   matrix/detail/lu.h
   matrix/detail/lu.tpp
   matrix/detail/resize.h
+  matrix/detail/simd_primitives.h
   matrix/detail/transpose.h
 )
 
@@ -302,8 +304,8 @@ set(quaternion_HEADERS
   quaternion/size_checking.h
   quaternion/temporary.h
   quaternion/traits.h
-  quaternion/types.h
   quaternion/type_util.h
+  quaternion/types.h
   quaternion/unary_node.h
   quaternion/unary_node.tpp
   quaternion/unary_ops.h

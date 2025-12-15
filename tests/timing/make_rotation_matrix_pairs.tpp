@@ -2,9 +2,7 @@
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 
-#ifndef _CML_TESTING_MAKE_ROTATION_MATRIX_PAIRS_TPP
-#  error "make_rotation_matrix_pairs.tpp not included correctly"
-#endif
+#pragma once
 
 #include "uniform_random_rotation.h"
 
@@ -14,6 +12,14 @@ template<class Matrix44dT>
 std::vector<std::tuple<Matrix44dT, Matrix44dT, cml::matrix44d>>
 make_rotation_matrix_pairs(int N)
 {
+  using layout = cml::layout_tag_trait_of_t<Matrix44dT>;
+#ifdef CML_TIMING_ROW_MAJOR
+  static_assert(std::is_same_v<layout, cml::row_major>);
+#endif
+#ifdef CML_TIMING_COL_MAJOR
+  static_assert(std::is_same_v<layout, cml::col_major>);
+#endif
+
   std::vector<std::tuple<Matrix44dT, Matrix44dT, cml::matrix44d>> rotations(N);
   std::random_device rd;
   std::mt19937 rng(rd());
