@@ -14,9 +14,9 @@ namespace cml::detail {
 
 template<class Result, class Sub1, class Sub2>
 auto
-matrix_product_NxN(Result& R, const Sub1& sub1, const Sub2& sub2)
+matrix_product_NN(Result& R, const Sub1& sub1, const Sub2& sub2)
 {
-  // TODO Split into row-major and column-major loop ordering.
+  // TODO Implement version for col-major loop ordering.
   detail::check_or_resize(R, array_rows_of(sub1), array_cols_of(sub2));
   for(int i = 0; i < R.rows(); ++i) {
     for(int j = 0; j < R.cols(); ++j) {
@@ -32,7 +32,7 @@ template<class Result, class Sub1, class Sub2>
 auto
 matrix_product(Result& R, const Sub1& sub1, const Sub2& sub2)
 {
-  matrix_product_NxN(R, sub1, sub2);
+  matrix_product_NN(R, sub1, sub2);
 }
 
 }  // namespace cml::detail
@@ -45,15 +45,15 @@ static HEDLEY_ALWAYS_INLINE auto
 matrix_product_33(float* R, const float* const A, const float* const B,
   row_major)
 {
-  /* Cache B: */
+  /* Cache rows of B: */
   const auto B0 = simde_mm_set_ps(0., B[0 * 3 + 2], B[0 * 3 + 1], B[0 * 3 + 0]);
   const auto B1 = simde_mm_set_ps(0., B[1 * 3 + 2], B[1 * 3 + 1], B[1 * 3 + 0]);
   const auto B2 = simde_mm_set_ps(0., B[2 * 3 + 2], B[2 * 3 + 1], B[2 * 3 + 0]);
 
   /* R[i][0..2] = A[i][0] * B[i][0..2] + ... + A[i][2] * B[i][0..2] */
-  const auto row0 = vxm_13(A + 0*3, B0, B1, B2);
-  const auto row1 = vxm_13(A + 1*3, B0, B1, B2);
-  const auto row2 = vxm_13(A + 2*3, B0, B1, B2);
+  const auto row0 = vxm_13_rr(A + 0 * 3, B0, B1, B2);
+  const auto row1 = vxm_13_rr(A + 1 * 3, B0, B1, B2);
+  const auto row2 = vxm_13_rr(A + 2 * 3, B0, B1, B2);
 
   /* Store only the low 3 elements of each row: */
   const auto mask = simde_mm_set_epi32(0, -1, -1, -1);
@@ -67,15 +67,15 @@ static HEDLEY_ALWAYS_INLINE auto
 matrix_product_33(float* R, const float* const A, const float* const B,
   col_major)
 {
-  /* Cache A: */
+  /* Cache columns of A: */
   const auto A0 = simde_mm_set_ps(0., A[0 * 3 + 2], A[0 * 3 + 1], A[0 * 3 + 0]);
   const auto A1 = simde_mm_set_ps(0., A[1 * 3 + 2], A[1 * 3 + 1], A[1 * 3 + 0]);
   const auto A2 = simde_mm_set_ps(0., A[2 * 3 + 2], A[2 * 3 + 1], A[2 * 3 + 0]);
 
   /* col[0..2][j] = B[0][j]*A[0..2][j] + ... + B[2][j]*A[0..2][j] */
-  const auto col0 = vxm_13(B + 0*3, A0, A1, A2);
-  const auto col1 = vxm_13(B + 1*3, A0, A1, A2);
-  const auto col2 = vxm_13(B + 2*3, A0, A1, A2);
+  const auto col0 = vxm_13_rr(B + 0 * 3, A0, A1, A2);
+  const auto col1 = vxm_13_rr(B + 1 * 3, A0, A1, A2);
+  const auto col2 = vxm_13_rr(B + 2 * 3, A0, A1, A2);
 
   /* Store only the low 3 elements of each col: */
   const auto mask = simde_mm_set_epi32(0, -1, -1, -1);
@@ -96,10 +96,10 @@ matrix_product_44(float* R, const float* const A, const float* const B,
   const auto B3 = simde_mm_loadu_ps(B + (3 << 2));
 
   /* R[i][0..3] = A[i][0] * B[i][0..3] + ... + A[i][3] * B[i][0..3] */
-  const auto row0 = vxm_14(A + (0 << 2), B0, B1, B2, B3);
-  const auto row1 = vxm_14(A + (1 << 2), B0, B1, B2, B3);
-  const auto row2 = vxm_14(A + (2 << 2), B0, B1, B2, B3);
-  const auto row3 = vxm_14(A + (3 << 2), B0, B1, B2, B3);
+  const auto row0 = vxm_14_rr(A + (0 << 2), B0, B1, B2, B3);
+  const auto row1 = vxm_14_rr(A + (1 << 2), B0, B1, B2, B3);
+  const auto row2 = vxm_14_rr(A + (2 << 2), B0, B1, B2, B3);
+  const auto row3 = vxm_14_rr(A + (3 << 2), B0, B1, B2, B3);
 
   simde_mm_storeu_ps(R + (0 << 2), row0);
   simde_mm_storeu_ps(R + (1 << 2), row1);
@@ -112,17 +112,17 @@ static HEDLEY_ALWAYS_INLINE auto
 matrix_product_44(float* R, const float* const A, const float* const B,
   col_major)
 {
-  /* Cache columns A: */
+  /* Cache columns of A: */
   const auto A0 = simde_mm_loadu_ps(A + (0 << 2));
   const auto A1 = simde_mm_loadu_ps(A + (1 << 2));
   const auto A2 = simde_mm_loadu_ps(A + (2 << 2));
   const auto A3 = simde_mm_loadu_ps(A + (3 << 2));
 
   /* col[0..3][j] = B[0][j]*A[0..3][j] + ... + B[3][j]*A[0..3][j] */
-  const auto col0 = vxm_14(B + (0 << 2), A0, A1, A2, A3);
-  const auto col1 = vxm_14(B + (1 << 2), A0, A1, A2, A3);
-  const auto col2 = vxm_14(B + (2 << 2), A0, A1, A2, A3);
-  const auto col3 = vxm_14(B + (3 << 2), A0, A1, A2, A3);
+  const auto col0 = vxm_14_rr(B + (0 << 2), A0, A1, A2, A3);
+  const auto col1 = vxm_14_rr(B + (1 << 2), A0, A1, A2, A3);
+  const auto col2 = vxm_14_rr(B + (2 << 2), A0, A1, A2, A3);
+  const auto col3 = vxm_14_rr(B + (3 << 2), A0, A1, A2, A3);
 
   simde_mm_storeu_ps(R + (0 << 2), col0);
   simde_mm_storeu_ps(R + (1 << 2), col1);
@@ -144,9 +144,9 @@ matrix_product_33(double* R, const double* const A, const double* const B,
     simde_mm256_set_pd(0., B[2 * 3 + 2], B[2 * 3 + 1], B[2 * 3 + 0]);
 
   /* R[i][0..2] = A[i][0] * B[i][0..2] + ... + A[i][2] * B[i][0..2] */
-  const auto row0 = vxm_13(A + 0*3, B0, B1, B2);
-  const auto row1 = vxm_13(A + 1*3, B0, B1, B2);
-  const auto row2 = vxm_13(A + 2*3, B0, B1, B2);
+  const auto row0 = vxm_13_rr(A + 0 * 3, B0, B1, B2);
+  const auto row1 = vxm_13_rr(A + 1 * 3, B0, B1, B2);
+  const auto row2 = vxm_13_rr(A + 2 * 3, B0, B1, B2);
 
   /* Store only the low 3 elements of each row: */
   const auto mask = simde_mm256_set_epi64x(0, -1, -1, -1);
@@ -160,7 +160,7 @@ static HEDLEY_ALWAYS_INLINE auto
 matrix_product_33(double* R, const double* const A, const double* const B,
   col_major)
 {
-  /* Cache A: */
+  /* Cache columns of A: */
   const auto A0 =
     simde_mm256_set_pd(0., A[0 * 3 + 2], A[0 * 3 + 1], A[0 * 3 + 0]);
   const auto A1 =
@@ -169,9 +169,9 @@ matrix_product_33(double* R, const double* const A, const double* const B,
     simde_mm256_set_pd(0., A[2 * 3 + 2], A[2 * 3 + 1], A[2 * 3 + 0]);
 
   /* col[0..2][j] = B[0][j]*A[0..2][j] + ... + B[2][j]*A[0..2][j] */
-  const auto col0 = vxm_13(B + 0*3, A0, A1, A2);
-  const auto col1 = vxm_13(B + 1*3, A0, A1, A2);
-  const auto col2 = vxm_13(B + 2*3, A0, A1, A2);
+  const auto col0 = vxm_13_rr(B + 0 * 3, A0, A1, A2);
+  const auto col1 = vxm_13_rr(B + 1 * 3, A0, A1, A2);
+  const auto col2 = vxm_13_rr(B + 2 * 3, A0, A1, A2);
 
   /* Store only the low 3 elements of each col: */
   const auto mask = simde_mm256_set_epi64x(0, -1, -1, -1);
@@ -192,10 +192,10 @@ matrix_product_44(double* R, const double* const A, const double* const B,
   const auto B3 = simde_mm256_loadu_pd(B + (3 << 2));
 
   /* R[i][0..3] = A[i][0] * B[i][0..3] + ... + A[i][3] * B[i][0..3] */
-  const auto row0 = vxm_14(A + (0 << 2), B0, B1, B2, B3);
-  const auto row1 = vxm_14(A + (1 << 2), B0, B1, B2, B3);
-  const auto row2 = vxm_14(A + (2 << 2), B0, B1, B2, B3);
-  const auto row3 = vxm_14(A + (3 << 2), B0, B1, B2, B3);
+  const auto row0 = vxm_14_rr(A + (0 << 2), B0, B1, B2, B3);
+  const auto row1 = vxm_14_rr(A + (1 << 2), B0, B1, B2, B3);
+  const auto row2 = vxm_14_rr(A + (2 << 2), B0, B1, B2, B3);
+  const auto row3 = vxm_14_rr(A + (3 << 2), B0, B1, B2, B3);
 
   simde_mm256_storeu_pd(R + (0 << 2), row0);
   simde_mm256_storeu_pd(R + (1 << 2), row1);
@@ -215,10 +215,10 @@ matrix_product_44(double* R, const double* const A, const double* const B,
   const auto A3 = simde_mm256_loadu_pd(A + (3 << 2));
 
   /* col[0..3][j] = B[0][j]*A[0..3][j] + ... + B[3][j]*A[0..3][j] */
-  const auto col0 = vxm_14(B + (0 << 2), A0, A1, A2, A3);
-  const auto col1 = vxm_14(B + (1 << 2), A0, A1, A2, A3);
-  const auto col2 = vxm_14(B + (2 << 2), A0, A1, A2, A3);
-  const auto col3 = vxm_14(B + (3 << 2), A0, A1, A2, A3);
+  const auto col0 = vxm_14_rr(B + (0 << 2), A0, A1, A2, A3);
+  const auto col1 = vxm_14_rr(B + (1 << 2), A0, A1, A2, A3);
+  const auto col2 = vxm_14_rr(B + (2 << 2), A0, A1, A2, A3);
+  const auto col3 = vxm_14_rr(B + (3 << 2), A0, A1, A2, A3);
 
   simde_mm256_storeu_pd(R + (0 << 2), col0);
   simde_mm256_storeu_pd(R + (1 << 2), col1);
@@ -235,34 +235,35 @@ matrix_product(matrix<Scalar, StorageR, BasisR, Layout>& R,
 {
   using left_type = cml::unqualified_type_t<decltype(sub1)>;
   using right_type = cml::unqualified_type_t<decltype(sub2)>;
-  using left_traits = matrix_traits<left_type>;
-  using right_traits = matrix_traits<right_type>;
-  using left_size_tag = size_tag_of_t<left_traits>;
-  using right_size_tag = size_tag_of_t<right_traits>;
+  using result_type = cml::unqualified_type_t<decltype(R)>;
+  using result_traits = matrix_traits<result_type>;
 
-  if constexpr(std::is_same_v<left_size_tag, fixed_size_tag>
-    && std::is_same_v<right_size_tag, fixed_size_tag>) {
-    constexpr auto rows = left_traits::array_rows == right_traits::array_rows
-      ? left_type::array_rows
+  /* If R is statically sized, then sub1 and sub2 are statically sized: */
+  if constexpr(is_fixed_size_v<result_traits>) {
+    constexpr auto rows =
+      array_rows_of_v<left_type> == array_rows_of_v<right_type>
+      ? array_rows_of_v<left_type>
       : -1;
-    constexpr auto cols = left_traits::array_cols == right_traits::array_cols
-      ? left_type::array_cols
+    constexpr auto cols =
+      array_cols_of_v<left_type> == array_cols_of_v<right_type>
+      ? array_cols_of_v<left_type>
       : -1;
 
     if constexpr(rows == 3 && cols == 3) {
-      detail::check_or_resize(R, rows, cols);
+      cml::check_size(R, rows, cols);
       matrix_product_33(R.data(), sub1.data(), sub2.data(), Layout());
     }
 
     else if constexpr(rows == 4 && cols == 4) {
-      detail::check_or_resize(R, rows, cols);
+      cml::check_size(R, rows, cols);
       matrix_product_44(R.data(), sub1.data(), sub2.data(), Layout());
     }
 
     else
-      matrix_product_NxN(R, sub1, sub2);
+      matrix_product_NN(R, sub1, sub2);
   }
 
+  /* Otherwise, at least one is dynamically sized: */
   else {
     const auto rows =
       array_rows_of(sub1) == array_rows_of(sub2) ? array_rows_of(sub1) : -1;
@@ -280,7 +281,7 @@ matrix_product(matrix<Scalar, StorageR, BasisR, Layout>& R,
     }
 
     else
-      matrix_product_NxN(R, sub1, sub2);
+      matrix_product_NN(R, sub1, sub2);
   }
 }
 
