@@ -67,9 +67,9 @@ cml_add_timing(expr_mxm_c_timing${_suffix} matrix_mxm_timing.cpp expr_mxm.inl)
 target_compile_definitions(expr_mxm_c_timing${_suffix} PRIVATE CML_TIMING_MxM_INL="expr_mxm.inl" CML_TIMING_COL_MAJOR CML_DISABLE_SIMD)
 
 # SIMD expression mxm timing:
-cml_add_timing(expr_simd_mxm_r_timing${_suffix} matrix_mxm_timing.cpp expr_simd_mxm.inl)
+cml_add_timing(expr_simd_mxm_r_timing${_suffix} matrix_mxm_timing.cpp expr_mxm.inl)
 target_compile_definitions(expr_simd_mxm_r_timing${_suffix} PRIVATE CML_TIMING_MxM_INL="expr_mxm.inl" CML_TIMING_ROW_MAJOR)
-cml_add_timing(expr_simd_mxm_c_timing${_suffix} matrix_mxm_timing.cpp expr_simd_mxm.inl)
+cml_add_timing(expr_simd_mxm_c_timing${_suffix} matrix_mxm_timing.cpp expr_mxm.inl)
 target_compile_definitions(expr_simd_mxm_c_timing${_suffix} PRIVATE CML_TIMING_MxM_INL="expr_mxm.inl" CML_TIMING_COL_MAJOR)
 
 # Naive C-array mxv timing:
