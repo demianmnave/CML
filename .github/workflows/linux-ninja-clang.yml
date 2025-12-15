@@ -78,7 +78,7 @@ jobs:
           annotate: true
           summary: true
           use-suite-name: true
-          file-report: true
+          file-report: false
           failed-report: true
           upload-artifact: false
           integrations-config: |
