@@ -418,6 +418,4 @@ void check_minimum_size(const readable_matrix<Sub>& left, cml::int_c<R>,
 template<class Sub> void check_square(const readable_matrix<Sub>& left);
 } // namespace cml
 
-#define __CML_MATRIX_SIZE_CHECKING_TPP
 #include <cml/matrix/size_checking.tpp>
-#undef __CML_MATRIX_SIZE_CHECKING_TPP

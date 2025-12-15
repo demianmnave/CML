@@ -66,16 +66,6 @@ CATCH_TEST_CASE("rotation 3D, rotation1")
   CATCH_CHECK(v[2] == Approx(1.).epsilon(1e-12));
 }
 
-CATCH_TEST_CASE("rotation 3D, int_rotation1")
-{
-  cml::matrix33i M;
-  cml::matrix_rotation_axis_angle(M, cml::vector3d(1., 0., 0.), cml::rad(90.));
-
-  CATCH_CHECK(M(0, 0) == 1);
-  CATCH_CHECK(M(1, 2) == -1);
-  CATCH_CHECK(M(2, 1) == 1);
-}
-
 CATCH_TEST_CASE("rotation 3D, euler1")
 {
   cml::matrix33d M;

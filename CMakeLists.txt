@@ -23,6 +23,23 @@ endif()
 # Standard includes:
 include(CMakeDependentOption)
 
+# Allow disabling SIMD:
+if(NOT DEFINED CML_DISABLE_SIMD)
+  option(CML_DISABLE_SIMD "Disable vectorization (also disables timing tests)" OFF)
+endif()
+
+# Build tests if requested:
+if(NOT DEFINED BUILD_TESTING)
+  option(BUILD_TESTING "Build CML tests" OFF)
+endif()
+
+if(NOT DEFINED BUILD_TIMING)
+  cmake_dependent_option(BUILD_TIMING
+    "Build timing tests (requires SIMD)" OFF 
+    "CML_DISABLE_SIMD" OFF
+  )
+endif()
+
 if(NOT DEFINED BUILD_SHARED_LIBS)
   option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 endif()
@@ -37,10 +54,8 @@ endif()
 if(NOT DEFINED CML_ENABLE_RELATIVE_TEST_PATHS)
   # Force CTest to use relative paths. Primarily for automated testing:
   cmake_dependent_option(CML_ENABLE_RELATIVE_TEST_PATHS
-    "Make test executable paths relative to CMAKE_BINARY_DIR"
-    OFF  # Show and default to OFF if...
-    "BUILD_TESTING"
-    OFF  # Otherwise, default to OFF.
+    "Make test executable paths relative to CMAKE_BINARY_DIR" OFF
+    "BUILD_TESTING" OFF
   )
 endif()
 
@@ -50,7 +65,16 @@ endif()
 
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include(default-paths)
-include(${CMAKE_CXX_COMPILER_ID}-compiler)
+include(configure-compiler)
+
+# SIMDe is required when SIMD is enabled:
+if(NOT CML_DISABLE_SIMD)
+  set(_hints)
+  if(DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET)
+    list(APPEND _hints HINTS "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
+  endif()
+  find_path(SIMDE_INCLUDE_DIR NAMES "simde/simde-common.h" ${_hints})
+endif()
 
 # Create the CML interface library:
 add_subdirectory(cml)

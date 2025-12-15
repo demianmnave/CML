@@ -52,7 +52,7 @@ jobs:
         shell: bash
         run: |
           if [ ! -x "$(command -v clang++-${{ matrix.ver }})" ]; then
-            sudo apt-get install -qqy --no-install-recommends clang++-${{ matrix.ver }}
+            sudo apt-get install -qqy --no-install-recommends clang++-${{ matrix.ver }} clang-tools-${{ matrix.ver }}
           fi
       - uses: actions/checkout@v4
       - uses: lukka/get-cmake@latest
@@ -78,7 +78,7 @@ jobs:
           annotate: true
           summary: true
           use-suite-name: true
-          file-report: true
+          file-report: false
           failed-report: true
           upload-artifact: false
           integrations-config: |

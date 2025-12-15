@@ -11,7 +11,7 @@ namespace cml {
  * removing const, volatile, and reference qualifiers.
  */
 template<class T>
-struct enable_if_arithmetic : std::enable_if<std::is_arithmetic<T>::value>
+struct enable_if_arithmetic : std::enable_if<std::is_arithmetic_v<T>>
 {
 };
 

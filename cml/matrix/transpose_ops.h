@@ -16,7 +16,7 @@ make_matrix_transpose_node(Sub&& sub)
   -> matrix_transpose_node<actual_operand_type_of_t<decltype(sub)>>
 {
   static_assert(
-    std::is_same<decltype(sub), decltype(std::forward<Sub>(sub))>::value,
+    std::is_same_v<decltype(sub), decltype(std::forward<Sub>(sub))>,
     "internal error: unexpected expression type");
 
   /* Deduce the operand type of the subexpression (&, const&, &&): */

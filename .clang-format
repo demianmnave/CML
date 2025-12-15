@@ -28,7 +28,7 @@ BitFieldColonSpacing: Both
 BraceWrapping: 
   AfterCaseLabel: false
   AfterClass: true
-  AfterControlStatement: MultiLine
+  AfterControlStatement: Never
   AfterEnum: true
   AfterFunction: true
   AfterNamespace: false
@@ -69,7 +69,7 @@ IndentCaseBlocks: false
 IndentCaseLabels: true
 IndentExternBlock: NoIndent
 IndentGotoLabels: false
-IndentPPDirectives: AfterHash
+IndentPPDirectives: None
 IndentRequires: true
 IndentWidth: 2
 IndentWrappedFunctionNames: false

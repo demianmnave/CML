@@ -96,9 +96,8 @@ class subvector_node : public readable_vector<subvector_node<Sub>>
    * as a copy if Sub is an rvalue reference (temporary), or by const
    * reference if Sub is an lvalue reference.
    */
-  using wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const
-    sub_type&,
-    sub_type>;
+  using wrap_type =
+    cml::if_t<std::is_lvalue_reference_v<Sub>, const sub_type&, sub_type>;
 
   /** The wrapped subexpression. */
   wrap_type m_sub;
@@ -110,8 +109,6 @@ class subvector_node : public readable_vector<subvector_node<Sub>>
   // Not assignable.
   node_type& operator=(const node_type&);
 };
-} // namespace cml
+}  // namespace cml
 
-#define __CML_VECTOR_SUBVECTOR_NODE_TPP
 #include <cml/vector/subvector_node.tpp>
-#undef __CML_VECTOR_SUBVECTOR_NODE_TPP

@@ -14,8 +14,8 @@ template<class Element, int Rows, int Cols, typename BasisOrient,
 struct matrix_traits<matrix<Element, fixed<Rows, Cols>, BasisOrient, Layout>>
 {
   /* The basis must be col_basis or row_basis: */
-  static_assert(std::is_same<BasisOrient, row_basis>::value
-    || std::is_same<BasisOrient, col_basis>::value,
+  static_assert(std::is_same_v<BasisOrient, row_basis>
+      || std::is_same_v<BasisOrient, col_basis>,
     "invalid basis");
 
   /* Traits and types for the matrix element: */
@@ -31,7 +31,7 @@ struct matrix_traits<matrix<Element, fixed<Rows, Cols>, BasisOrient, Layout>>
   /* The matrix storage type: */
   using storage_type = rebind_t<compiled<Rows, Cols>, matrix_storage_tag>;
   using size_tag = typename storage_type::size_tag;
-  static_assert(std::is_same<size_tag, fixed_size_tag>::value,
+  static_assert(std::is_same_v<size_tag, fixed_size_tag>,
     "invalid size tag");
 
   /* Array rows (should be positive): */
@@ -59,7 +59,7 @@ struct matrix_traits<matrix<Element, fixed<Rows, Cols>, BasisOrient, Layout>>
 template<class Element, int Rows, int Cols, typename BasisOrient,
   typename Layout>
 class matrix<Element, fixed<Rows, Cols>, BasisOrient, Layout>
-  : public writable_matrix<
+: public writable_matrix<
     matrix<Element, fixed<Rows, Cols>, BasisOrient, Layout>>
 {
   public:
@@ -80,12 +80,10 @@ class matrix<Element, fixed<Rows, Cols>, BasisOrient, Layout>
   using basis_tag = typename traits_type::basis_tag;
   using layout_tag = typename traits_type::layout_tag;
 
-  public:
   /* Include methods from writable_matrix: */
   using writable_type::operator();
   using writable_type::operator=;
 
-  public:
   /** Constant containing the number of rows. */
   static const int array_rows = traits_type::array_rows;
 
@@ -98,7 +96,6 @@ class matrix<Element, fixed<Rows, Cols>, BasisOrient, Layout>
   /** Constant containing the array layout enumeration value. */
   static const layout_kind array_layout = traits_type::array_layout;
 
-  public:
   /** Compiler-default constructor.
    *
    * @note The matrix elements are uninitialized.
@@ -148,7 +145,6 @@ class matrix<Element, fixed<Rows, Cols>, BasisOrient, Layout>
   /** Construct from std::initializer_list. */
   template<class Other> matrix(std::initializer_list<Other> l);
 
-  public:
   /** Return access to the matrix data as a raw pointer. */
   pointer data();
 
@@ -161,7 +157,6 @@ class matrix<Element, fixed<Rows, Cols>, BasisOrient, Layout>
   /** Read-only iterator over the elements as a 1D array. */
   const_pointer end() const;
 
-  public:
   /** Copy assignment. */
   matrix_type& operator=(const matrix_type& other);
 
@@ -196,8 +191,7 @@ class matrix<Element, fixed<Rows, Cols>, BasisOrient, Layout>
   mutable_value i_get(int i, int j);
 
   /** Set element @c i. */
-  template<class Other>
-  matrix_type& i_put(int i, int j, const Other& v) &;
+  template<class Other> matrix_type& i_put(int i, int j, const Other& v) &;
 
   /** Set element @c i on a temporary. */
   template<class Other> matrix_type&& i_put(int i, int j, const Other& v) &&;
@@ -224,15 +218,12 @@ class matrix<Element, fixed<Rows, Cols>, BasisOrient, Layout>
 
   protected:
   /** The matrix data type, depending upon the layout. */
-  using matrix_data_type = if_t<array_layout == row_major_c, value_type[Rows][
-      Cols],
-    value_type[Cols][Rows]>;
+  using matrix_data_type = if_t<array_layout == row_major_c,
+    value_type[Rows][Cols], value_type[Cols][Rows]>;
 
   /** Fixed-size array, based on the layout. */
   matrix_data_type m_data;
 };
-} // namespace cml
+}  // namespace cml
 
-#define __CML_MATRIX_FIXED_COMPILED_TPP
 #include <cml/matrix/fixed_compiled.tpp>
-#undef __CML_MATRIX_FIXED_COMPILED_TPP

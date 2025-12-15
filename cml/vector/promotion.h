@@ -52,8 +52,8 @@ template<class Sub1, class Sub2, class Enable = void> struct vector_promote;
 
 template<class Sub1, class Sub2>
 struct vector_promote<Sub1, Sub2,
-    typename std::enable_if<is_vector<Sub1>::value
-      && is_vector<Sub2>::value>::type>
+    std::enable_if_t<is_vector<Sub1>::value
+      && is_vector<Sub2>::value>>
 {
   using left_type = cml::unqualified_type_t<Sub1>;
   using right_type = cml::unqualified_type_t<Sub2>;

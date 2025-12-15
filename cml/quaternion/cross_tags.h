@@ -18,8 +18,8 @@ struct negative_cross
 /** Detect valid cross types. */
 template<class Tag> struct is_cross_type
 {
-  static const bool value = std::is_same<Tag, positive_cross>::value
-    || std::is_same<Tag, negative_cross>::value;
+  static const bool value = std::is_same_v<Tag, positive_cross>
+    || std::is_same_v<Tag, negative_cross>;
 };
 
 /** Templated helper to determine the cross type of an expression that
@@ -56,7 +56,7 @@ template<class Tag1, class Tag2> struct cross_type_promote
 {
   static_assert(is_cross_type<Tag1>::value, "invalid quaternion cross type");
   static_assert(is_cross_type<Tag2>::value, "invalid quaternion cross type");
-  static_assert(std::is_same<Tag1, Tag2>::value,
+  static_assert(std::is_same_v<Tag1, Tag2>,
     "mismatched quaternion cross types");
 
   /* The tags are the same, so use the common type: */

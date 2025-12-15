@@ -24,7 +24,7 @@ struct storage_promote
   /* True if PreferDynamic is false, or if both Storage1 and Storage2 are
    * fixed-size types:
    */
-  static const bool is_fixed = !PreferDynamic
+  static constexpr bool is_fixed = !PreferDynamic
     || (is_fixed_size<Storage1>::value && is_fixed_size<Storage2>::value);
 
   /* Build the symmetric type table for the built-in types, giving
@@ -71,18 +71,18 @@ struct storage_promote
   /* Lookup the storage selector for the passed-in types: */
   using left_selector = typename Storage1::selector_type;
   using right_selector = typename Storage2::selector_type;
-  using result = typename selector_table::template find<left_selector,
-    right_selector>::type;
+  using result =
+    typename selector_table::template find<left_selector, right_selector>::type;
   using selector_type = typename result::type;
   static_assert(result::value, "no common storage selector found");
 
   /* True if the resulting selector matches the left and/or right
    * selectors:
    */
-  static const bool is_left = std::is_same<selector_type, left_selector>::value;
-  static const bool is_right =
-    std::is_same<selector_type, right_selector>::value;
-  static const bool is_same = is_left && is_right;
+  static constexpr bool is_left = std::is_same_v<selector_type, left_selector>;
+  static constexpr bool is_right =
+    std::is_same_v<selector_type, right_selector>;
+  static constexpr bool is_same = is_left && is_right;
   static_assert(is_left || is_right, "unexpected storage_promote result");
 
   /* Determine the final selector type: */
@@ -96,5 +96,5 @@ struct storage_promote
 /** Convenience alias for storage_selector_promote. */
 template<class Storage1, class Storage2, bool PreferDynamic = false>
 using storage_promote_t =
-typename storage_promote<Storage1, Storage2, PreferDynamic>::type;
-} // namespace cml
+  typename storage_promote<Storage1, Storage2, PreferDynamic>::type;
+}  // namespace cml

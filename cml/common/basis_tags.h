@@ -19,27 +19,26 @@ enum basis_kind
 /** Row basis tag. */
 struct row_basis
 {
-  static const basis_kind value = row_basis_c;
+  static constexpr basis_kind value = row_basis_c;
 };
 
 /** Column basis tag. */
 struct col_basis
 {
-  static const basis_kind value = col_basis_c;
+  static constexpr basis_kind value = col_basis_c;
 };
 
 /** Any basis tag. */
 struct any_basis
 {
-  static const basis_kind value = any_basis_c;
+  static constexpr basis_kind value = any_basis_c;
 };
 
 /** Detect valid basis tags. */
 template<class Tag> struct is_basis_tag
 {
-  static const bool value = std::is_same<Tag, row_basis>::value
-    || std::is_same<Tag, col_basis>::value
-    || std::is_same<Tag, any_basis>::value;
+  static const bool value = std::is_same_v<Tag, row_basis>
+    || std::is_same_v<Tag, col_basis> || std::is_same_v<Tag, any_basis>;
 };
 
 /** Templated helper to determine the basis tag of an expression that
@@ -68,14 +67,13 @@ using basis_tag_trait_of_t = typename basis_tag_trait_of<T>::type;
 /** Helper to detect row basis types. */
 template<class T> struct is_row_basis
 {
-  static const bool value = std::is_same<basis_tag_of_t<T>, row_basis>::value;
+  static constexpr bool value = std::is_same_v<basis_tag_of_t<T>, row_basis>;
 };
 
 /** Wrapper for enable_if to detect types tagged with row_basis. */
 template<class Sub, class T = void>
 struct enable_if_row_basis : std::enable_if<is_row_basis<Sub>::value, T>
-{
-};
+{};
 
 /** Convenience alias for enable_if_row_basis. */
 template<class Sub, class T = void>
@@ -84,14 +82,13 @@ using enable_if_row_basis_t = typename enable_if_row_basis<Sub, T>::type;
 /** Helper to detect column basis types. */
 template<class T> struct is_col_basis
 {
-  static const bool value = std::is_same<basis_tag_of_t<T>, col_basis>::value;
+  static constexpr bool value = std::is_same_v<basis_tag_of_t<T>, col_basis>;
 };
 
 /** Wrapper for enable_if to detect types tagged with col_basis. */
 template<class Sub, class T = void>
 struct enable_if_col_basis : std::enable_if<is_col_basis<Sub>::value, T>
-{
-};
+{};
 
 /** Convenience alias for enable_if_col_basis. */
 template<class Sub, class T = void>
@@ -100,16 +97,15 @@ using enable_if_col_basis_t = typename enable_if_col_basis<Sub, T>::type;
 /** Helper to detect arbitrary basis types. */
 template<class T> struct is_any_basis
 {
-  static const bool value = std::is_same<basis_tag_of_t<T>, any_basis>::value;
+  static constexpr bool value = std::is_same_v<basis_tag_of_t<T>, any_basis>;
 };
 
 /** Wrapper for enable_if to detect types tagged with any_basis. */
 template<class Sub, class T = void>
 struct enable_if_any_basis : std::enable_if<is_any_basis<Sub>::value, T>
-{
-};
+{};
 
 /** Convenience alias for enable_if_any_basis. */
 template<class Sub, class T = void>
 using enable_if_any_basis_t = typename enable_if_any_basis<Sub, T>::type;
-} // namespace cml
+}  // namespace cml

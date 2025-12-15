@@ -45,9 +45,9 @@ struct any_size_tag
  */
 template<class Tag> struct is_size_tag
 {
-  static const bool value = std::is_same<Tag, fixed_size_tag>::value
-    || std::is_same<Tag, dynamic_size_tag>::value
-    || std::is_same<Tag, any_size_tag>::value;
+  static const bool value = std::is_same_v<Tag, fixed_size_tag>
+    || std::is_same_v<Tag, dynamic_size_tag>
+    || std::is_same_v<Tag, any_size_tag>;
 };
 
 /** Templated helper to determine the size tag of an expression that
@@ -77,8 +77,12 @@ using size_tag_trait_of_t = typename size_tag_trait_of<T>::type;
 template<class T> struct is_fixed_size
 {
   static const bool value =
-    std::is_same<size_tag_of_t<T>, fixed_size_tag>::value;
+    std::is_same_v<size_tag_of_t<T>, fixed_size_tag>;
 };
+
+/** Helper to detect fixed-size types. */
+template<class T> constexpr auto is_fixed_size_v
+  = is_fixed_size<T>::value;
 
 /** Wrapper for enable_if to detect types tagged with fixed_size_tag. */
 template<class Sub, class T = void>
@@ -94,8 +98,11 @@ using enable_if_fixed_size_t = typename enable_if_fixed_size<Sub, T>::type;
 template<class T> struct is_dynamic_size
 {
   static const bool value =
-    std::is_same<size_tag_of_t<T>, dynamic_size_tag>::value;
+    std::is_same_v<size_tag_of_t<T>, dynamic_size_tag>;
 };
+
+/** Helper to detect dynamic-size types. */
+template<class T> constexpr auto is_dynamic_size_v = is_dynamic_size<T>::value;
 
 /** Wrapper for enable_if to detect types tagged with dynamic_size_tag. */
 template<class Sub, class T = void>
@@ -110,7 +117,7 @@ using enable_if_dynamic_size_t = typename enable_if_dynamic_size<Sub, T>::type;
 /** Helper to detect any-size types. */
 template<class T> struct is_any_size
 {
-  static const bool value = std::is_same<size_tag_of_t<T>, any_size_tag>::value;
+  static const bool value = std::is_same_v<size_tag_of_t<T>, any_size_tag>;
 };
 
 /** Wrapper for enable_if to detect types tagged with any_size_tag. */

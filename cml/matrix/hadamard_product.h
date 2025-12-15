@@ -7,7 +7,7 @@
 #include <cml/matrix/binary_ops.h>
 
 namespace cml {
-/** Elementwise (Hadamard) product of two matrixs. */
+/** Elementwise (Hadamard) product of two matrices. */
 template<class Sub1, class Sub2, enable_if_matrix_t<Sub1>* = nullptr,
   enable_if_matrix_t<Sub2>* = nullptr>
 auto

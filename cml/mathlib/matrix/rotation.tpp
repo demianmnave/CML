@@ -569,7 +569,7 @@ matrix_to_euler(const readable_matrix<Sub>& m, euler_order order, Tol tolerance)
   VectorT v;
   cml::detail::check_or_resize(v, int_c<3>());
   cml::matrix_to_euler(m, v[0], v[1], v[2], order, tolerance);
-  return std::move(v);
+  return v;
 }
 } // namespace detail
 

@@ -26,7 +26,7 @@ template<class T> struct is_statically_polymorphic
    * reference type, std::false_type otherwise.
    */
   using type = cml::if_t<
-    std::is_reference<decltype(get_type_of_actual<T>(0))>::value,
+    std::is_reference_v<decltype(get_type_of_actual<T>(0))>,
     std::true_type, std::false_type>;
 
   /* True or false, depending upon 'type': */

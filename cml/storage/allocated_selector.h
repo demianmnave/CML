@@ -68,7 +68,7 @@ struct allocated<Allocator, -1, -1, vector_storage_tag>
   using memory_tag = allocated_memory_tag;
 
   /** Unspecified array size. */
-  static const int array_size = -1;
+  static constexpr int array_size = -1;
 
   /** Make a partially bound selector with size @c N. */
   template<int N> struct resize
@@ -94,7 +94,7 @@ struct allocated<Allocator, Size, -1, vector_storage_tag>
   using memory_tag = allocated_memory_tag;
 
   /** Constant for the array size. */
-  static const int array_size = Size;
+  static constexpr int array_size = Size;
 
   /** Make a partially bound selector with size @c N. */
   template<int N> struct resize
@@ -115,10 +115,10 @@ struct allocated<Allocator, -1, -1, matrix_storage_tag>
   using memory_tag = allocated_memory_tag;
 
   /** Unspecified array rows. */
-  static const int array_rows = -1;
+  static constexpr int array_rows = -1;
 
   /** Unspecified array columns. */
-  static const int array_cols = -1;
+  static constexpr int array_cols = -1;
 
   /** Make a partially bound selector with size @c R x @c C. */
   template<int R, int C> struct reshape
@@ -144,10 +144,10 @@ struct allocated<Allocator, Size1, Size2, matrix_storage_tag>
   using memory_tag = allocated_memory_tag;
 
   /** Constant for the number of array rows. */
-  static const int array_rows = Size1;
+  static constexpr int array_rows = Size1;
 
   /** Constant for the number of array columns. */
-  static const int array_cols = Size2;
+  static constexpr int array_cols = Size2;
 
   /** Make a partially bound selector with size @c R x @c C. */
   template<int R, int C> struct resize
@@ -173,7 +173,7 @@ struct allocated<Allocator, 4, -1, quaternion_storage_tag>
   using memory_tag = allocated_memory_tag;
 
   /** Constant for the array size. */
-  static const int array_size = 4;
+  static constexpr int array_size = 4;
 
   /** Make a partially bound selector with size @c N. */
   template<int N> struct resize
@@ -187,7 +187,7 @@ struct allocated<Allocator, 4, -1, quaternion_storage_tag>
 template<class Allocator, int Size1, int Size2, class Tag>
 struct is_storage_selector<allocated<Allocator, Size1, Size2, Tag>>
 {
-  static const bool value = true;
+  static constexpr bool value = true;
 };
 
 /** Determine an unbound allocated<> storage type using an allocator that
@@ -209,22 +209,22 @@ struct storage_disambiguate<allocated<Allocator1, R1, C1, Tag1>,
   using right_type = typename right_traits::template rebind_alloc<void*>;
 
   /* True if the unbound allocators are the same: */
-  static const bool is_same = std::is_same<left_type, right_type>::value;
+  static constexpr bool is_same = std::is_same_v<left_type, right_type>;
 
   /* True if the left and/or right allocators are the default: */
-  static const bool left_is_default =
-    std::is_same<left_type, std::allocator<void*>>::value;
-  static const bool right_is_default =
-    std::is_same<right_type, std::allocator<void*>>::value;
+  static constexpr bool left_is_default =
+    std::is_same_v<left_type, std::allocator<void*>>;
+  static constexpr bool right_is_default =
+    std::is_same_v<right_type, std::allocator<void*>>;
 
   /* Prefer the left allocator if it is not the default allocator: */
-  static const bool prefer_left = !left_is_default && right_is_default;
+  static constexpr bool prefer_left = !left_is_default && right_is_default;
 
   /* Prefer the right allocator if it is not the default allocator: */
-  static const bool prefer_right = !right_is_default && left_is_default;
+  static constexpr bool prefer_right = !right_is_default && left_is_default;
 
   /* Use std::allocator<> if the best cannot be determined: */
-  static const bool prefer_default = !(is_same || prefer_left || prefer_right);
+  static constexpr bool prefer_default = !(is_same || prefer_left || prefer_right);
   static_assert(is_same || prefer_left || prefer_right || prefer_default,
     "unexpected storage_disambiguate result");
 

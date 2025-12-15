@@ -31,8 +31,8 @@ struct temporary_of<Vector, cml::enable_if_vector_t<Vector>>
 
 /** Deduce a subvector temporary type for a vector expression. */
 template<class Vector,
-  typename std::enable_if<vector_traits<Vector>::array_size
-    == vector_traits<Vector>::array_size>::type* = nullptr>
+  std::enable_if_t<vector_traits<Vector>::array_size
+    == vector_traits<Vector>::array_size>* = nullptr>
 struct subvector_of
 {
   using vector_type = cml::unqualified_type_t<Vector>;
@@ -65,8 +65,8 @@ template<class T> using subvector_of_t = typename subvector_of<T>::type;
 
 /** Deduce a supervector temporary type for a vector expression. */
 template<class Vector,
-  typename std::enable_if<vector_traits<Vector>::array_size
-    == vector_traits<Vector>::array_size>::type* = nullptr>
+  std::enable_if_t<vector_traits<Vector>::array_size
+    == vector_traits<Vector>::array_size>* = nullptr>
 struct supervector_of
 {
   using vector_type = cml::unqualified_type_t<Vector>;

@@ -89,7 +89,7 @@ void
 random_unit(writable_vector<Sub>& n, RNG& gen)
 {
   using value_type = value_type_trait_of_t<Sub>;
-  static_assert(std::is_floating_point<value_type>::value,
+  static_assert(std::is_floating_point_v<value_type>,
     "floating-point coordinates required");
   cml::check_minimum_size(n, cml::int_c<1>());
 
@@ -124,7 +124,7 @@ random_unit(writable_vector<Sub1>& n, const readable_vector<Sub2>& d,
   const Scalar& a)
 {
   using value_type = value_type_trait_of_t<Sub1>;
-  static_assert(std::is_floating_point<value_type>::value,
+  static_assert(std::is_floating_point_v<value_type>,
     "floating-point coordinates required");
   cml_require(a > 0 && a <= constants<value_type>::pi_over_2(),
     std::invalid_argument, "a must be in (0,90] deg");

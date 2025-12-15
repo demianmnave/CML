@@ -48,7 +48,7 @@ template<class... Entries> class type_map
   template<class T, class Entry> struct match
   {
     using first = typename Entry::first;
-    static const bool value = std::is_same<T, first>::value;
+    static const bool value = std::is_same_v<T, first>;
   };
 
   private:

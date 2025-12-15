@@ -132,7 +132,7 @@ class matrix_binary_node
    * stored as a copy if Sub1 is an rvalue reference (temporary), or by
    * const reference if Sub1 is an lvalue reference.
    */
-  using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub1>::value, const
+  using left_wrap_type = cml::if_t<std::is_lvalue_reference_v<Sub1>, const
     left_type&,
     left_type>;
 
@@ -140,7 +140,7 @@ class matrix_binary_node
    * stored as a copy if Sub2 is an rvalue reference (temporary), or by
    * const reference if Sub2 is an lvalue reference.
    */
-  using right_wrap_type = cml::if_t<std::is_lvalue_reference<Sub2>::value, const
+  using right_wrap_type = cml::if_t<std::is_lvalue_reference_v<Sub2>, const
     right_type&,
     right_type>;
 

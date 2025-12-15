@@ -92,7 +92,7 @@ class matrix_row_node<Sub, -1>
    * as a copy if Sub is an rvalue reference (temporary), or by const
    * reference if Sub is an lvalue reference.
    */
-  using sub_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const
+  using sub_wrap_type = cml::if_t<std::is_lvalue_reference_v<Sub>, const
     sub_type&,
     sub_type>;
 

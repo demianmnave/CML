@@ -11,6 +11,7 @@
 #include <cml/vector/fixed.h>
 #include <cml/vector/external.h>
 #include <cml/vector/dynamic.h>
+#include <cml/vector/comparison.h>
 #include <cml/matrix/fixed.h>
 #include <cml/matrix/external.h>
 #include <cml/matrix/dynamic.h>
@@ -41,6 +42,36 @@ CATCH_TEST_CASE("fixed product2")
   CATCH_REQUIRE(v.size() == 2);
   CATCH_CHECK(v[0] == 23.);
   CATCH_CHECK(v[1] == 34.);
+}
+
+CATCH_TEST_CASE("fixed product3")
+{
+  // clang-format off
+  cml::matrix44d M1(
+    1., 1., 1., 1.,
+    2., 1., 1., 1.,
+    3., 3., 1., 1.,
+    4., 4., 4., 1.
+  );
+
+  cml::vector4d v1(
+    4.,
+    3.,
+    2.,
+    1.
+  );
+
+  cml::vector4d x(
+    10.,
+    14.,
+    24.,
+    37.
+  );
+  // clang-format on
+
+  const auto v = M1 * v1;
+  CATCH_REQUIRE(std::is_same_v<decltype(v), const cml::vector4d>);
+  CATCH_CHECK(v == x);
 }
 
 CATCH_TEST_CASE("fixed external product1")

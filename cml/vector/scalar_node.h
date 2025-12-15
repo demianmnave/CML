@@ -89,7 +89,7 @@ class vector_scalar_node
    * stored as a copy if Sub is an rvalue reference (temporary), or by
    * const reference if Sub is an lvalue reference.
    */
-  using left_wrap_type = cml::if_t<std::is_lvalue_reference<Sub>::value, const
+  using left_wrap_type = cml::if_t<std::is_lvalue_reference_v<Sub>, const
     left_type&,
     left_type>;
 

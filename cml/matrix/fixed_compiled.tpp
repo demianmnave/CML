@@ -2,9 +2,7 @@
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 
-#ifndef __CML_MATRIX_FIXED_COMPILED_TPP
-#  error "matrix/fixed_compiled.tpp not included correctly"
-#endif
+#pragma once
 
 namespace cml {
 /* fixed 'structors: */
@@ -86,11 +84,7 @@ template<class E, int R, int C, typename BO, typename L>
 auto
 matrix<E, fixed<R, C>, BO, L>::operator=(matrix_type&& other) -> matrix_type&
 {
-  for(int i = 0; i < R; ++i)
-    for(int j = 0; j < C; ++j)
-      this->m_data[i][j] = std::move(other.m_data[i][j]);
-  /* Note: the layout doesn't matter here. */
-  return *this;
+  return this->assign(std::forward<matrix_type>(other));
 }
 
 /* Internal methods: */
@@ -143,7 +137,7 @@ auto
 matrix<E, fixed<R, C>, BO, L>::i_put(int i, int j,
   const Other& v) && -> matrix_type&&
 {
-  s_access(*this, i, j, layout_tag()) = value_type(v);
-  return (matrix_type&&) *this;
+  s_access(*this, i, j, layout_tag()) = v;
+  return std::move(*this);
 }
 } // namespace cml

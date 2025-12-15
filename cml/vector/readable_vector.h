@@ -34,7 +34,6 @@ template<class DerivedT> class readable_vector
   using immutable_value = typename traits_type::immutable_value;
   using size_tag = typename traits_type::size_tag;
 
-  public:
   /** @name CML1 Types */
   /*@{*/
 
@@ -44,7 +43,6 @@ template<class DerivedT> class readable_vector
   /*@}*/
 
 
-  public:
   /** Return a const reference to the vector cast as DerivedT. */
   const DerivedT& actual() const;
 
@@ -62,7 +60,6 @@ template<class DerivedT> class readable_vector
   /** Return const element @c i. */
   immutable_value operator[](int i) const;
 
-  public:
   /** Return the squared length of the vector. */
   value_type length_squared() const;
 
@@ -72,22 +69,22 @@ template<class DerivedT> class readable_vector
   /** Return the normalized vector as an expression node. */
   vector_scalar_node<const DerivedT&, value_type,
     op::binary_divide<value_type, value_type>>
-  normalize() const &;
+  normalize() const&;
 
   /** Return the normalized vector as an expression node, moving the
-     * source into the node.
-     */
+   * source into the node.
+   */
   vector_scalar_node<DerivedT&&, value_type,
     op::binary_divide<value_type, value_type>>
-  normalize() const &&;
+  normalize() const&&;
 
   /** Return subvector @c i as an expression node. */
-  subvector_node<const DerivedT&> subvector(int i) const &;
+  subvector_node<const DerivedT&> subvector(int i) const&;
 
   /** Return subvector @c i as an expression node, moving the source
-     * into the node.
-     */
-  subvector_node<DerivedT&&> subvector(int i) const &&;
+   * into the node.
+   */
+  subvector_node<DerivedT&&> subvector(int i) const&&;
 
   protected:
   // Use the compiler-generated default constructor:
@@ -99,8 +96,6 @@ template<class DerivedT> class readable_vector
   // Use the compiler-generated move constructor:
   readable_vector(readable_vector&&) = default;
 };
-} // namespace cml
+}  // namespace cml
 
-#define __CML_VECTOR_READABLE_VECTOR_TPP
 #include <cml/vector/readable_vector.tpp>
-#undef __CML_VECTOR_READABLE_VECTOR_TPP

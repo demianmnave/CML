@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <cml/matrix/writable_matrix.h>
 #include <cml/matrix/size_checking.h>
 
 namespace cml::detail {
@@ -34,7 +33,7 @@ check_or_resize(writable_matrix<Sub1>& left, Other const (&)[Rows][Cols])
   left.actual().resize(Rows, Cols);
 }
 
-/* check_or_resize for a read-only matrix left and constant size RxC that
+/* check_or_resize for a read-only matrix and constant size RxC that
  * just forwards to check_size.
  */
 template<class Sub, int R, int C>
@@ -44,7 +43,7 @@ check_or_resize(const readable_matrix<Sub>& sub, int_c<R>, int_c<C>)
   cml::check_size(sub, int_c<R>(), int_c<C>());
 }
 
-/* check_or_resize for a read-only matrix left and run-time size RxC that
+/* check_or_resize for a read-only matrix and run-time size RxC that
  * just forwards to check_size.
  */
 template<class Sub>
@@ -54,7 +53,7 @@ check_or_resize(const readable_matrix<Sub>& sub, int R, int C)
   cml::check_size(sub, R, C);
 }
 
-/* check_or_resize for a resizable matrix left and compile-time size that
+/* check_or_resize for a resizable matrix and compile-time size that
  * resizes the matrix to RxC.
  */
 template<class Sub, int R, int C>
@@ -65,7 +64,7 @@ check_or_resize(writable_matrix<Sub>& sub, int_c<R>, int_c<C>)
   sub.actual().resize(R, C);
 }
 
-/* check_or_resize for a resizable matrix left and run-time size that
+/* check_or_resize for a resizable matrix and run-time size that
  * resizes the matrix to RxC.
  */
 template<class Sub>
@@ -75,4 +74,4 @@ check_or_resize(writable_matrix<Sub>& sub, int R, int C)
 {
   sub.actual().resize(R, C);
 }
-}
+}  // namespace cml::detail

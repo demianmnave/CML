@@ -20,10 +20,10 @@ make_quaternion_binary_node(Sub1&& sub1, Sub2&& sub2)
     actual_operand_type_of_t<decltype(sub2)>, Op>
 {
   static_assert(
-    std::is_same<decltype(sub1), decltype(std::forward<Sub1>(sub1))>::value,
+    std::is_same_v<decltype(sub1), decltype(std::forward<Sub1>(sub1))>,
     "internal error: unexpected expression type (sub1)");
   static_assert(
-    std::is_same<decltype(sub2), decltype(std::forward<Sub2>(sub2))>::value,
+    std::is_same_v<decltype(sub2), decltype(std::forward<Sub2>(sub2))>,
     "internal error: unexpected expression type (sub2)");
 
   /* Deduce the operand types of the subexpressions (&, const&, &&): */

@@ -11,5 +11,5 @@ namespace cml {
  * takes the type of T.  Otherwise, if_t takes the type of F.
  */
 template<bool B, class T, class F>
-using if_t = typename std::conditional<B, T, F>::type;
+using if_t = std::conditional_t<B, T, F>;
 } // namespace cml

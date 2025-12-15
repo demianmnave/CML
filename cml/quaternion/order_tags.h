@@ -34,8 +34,8 @@ struct imaginary_first
 /** Detect valid order types. */
 template<class Tag> struct is_order_type
 {
-  static const bool value = std::is_same<Tag, real_first>::value
-    || std::is_same<Tag, imaginary_first>::value;
+  static const bool value = std::is_same_v<Tag, real_first>
+    || std::is_same_v<Tag, imaginary_first>;
 };
 
 /** Templated helper to determine the order type of an expression that
@@ -72,7 +72,7 @@ template<class Tag1, class Tag2> struct order_type_promote
 {
   static_assert(is_order_type<Tag1>::value, "invalid quaternion order type");
   static_assert(is_order_type<Tag2>::value, "invalid quaternion order type");
-  static_assert(std::is_same<Tag1, Tag2>::value,
+  static_assert(std::is_same_v<Tag1, Tag2>,
     "mismatched quaternion order types");
 
   /* The tags are the same, so use the common type: */

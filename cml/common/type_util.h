@@ -13,8 +13,8 @@ namespace cml {
  */
 template<class T> struct unqualified_type
 {
-  using type = typename std::remove_cv<typename std::remove_reference<
-    T>::type>::type;
+  using type = std::remove_cv_t<std::remove_reference_t<
+    T>>;
 };
 
 /** Convenience alias for unqualified_type. */
@@ -59,18 +59,18 @@ template<class T> using actual_type_of_t = typename actual_type_of<T>::type;
 template<class T> struct actual_operand_type_of
 {
   private:
-  static_assert(std::is_reference<T>::value, "T is not a reference type");
+  static_assert(std::is_reference_v<T>, "T is not a reference type");
 
   /* Possibly const, non-reference type: */
-  using base_type = typename std::remove_reference<T>::type;
+  using base_type = std::remove_reference_t<T>;
 
   /* Derived type of T: */
   using actual_type = actual_type_of_t<base_type>;
 
   public:
   /* Build the reference type: */
-  using type = cml::if_t<std::is_rvalue_reference<T>::value, actual_type&&,
-    cml::if_t<std::is_const<base_type>::value, const actual_type&,
+  using type = cml::if_t<std::is_rvalue_reference_v<T>, actual_type&&,
+    cml::if_t<std::is_const_v<base_type>, const actual_type&,
       actual_type&>>;
 };
 

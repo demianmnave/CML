@@ -21,10 +21,10 @@ make_quaternion_scalar_node(Sub&& sub,
   actual_operand_type_of_t<decltype(v)>, Op>
 {
   static_assert(
-    std::is_same<decltype(sub), decltype(std::forward<Sub>(sub))>::value,
+    std::is_same_v<decltype(sub), decltype(std::forward<Sub>(sub))>,
     "internal error: unexpected expression type (sub)");
   static_assert(
-    std::is_same<decltype(v), decltype(std::forward<Scalar>(v))>::value,
+    std::is_same_v<decltype(v), decltype(std::forward<Scalar>(v))>,
     "internal error: unexpected expression type (v)");
 
   /* Deduce the operand types of the scalar and the subexpression (&,

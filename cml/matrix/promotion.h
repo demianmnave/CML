@@ -64,8 +64,8 @@ struct matrix_inner_product_promote;
  */
 template<class Sub1, class Sub2>
 struct matrix_inner_product_promote<Sub1, Sub2,
-    typename std::enable_if<is_matrix<Sub1>::value
-      && is_matrix<Sub2>::value>::type>
+    std::enable_if_t<is_matrix<Sub1>::value
+      && is_matrix<Sub2>::value>>
 {
   using left_type = cml::unqualified_type_t<Sub1>;
   using right_type = cml::unqualified_type_t<Sub2>;
@@ -119,8 +119,8 @@ struct matrix_inner_product_promote<Sub1, Sub2,
  */
 template<class Sub1, class Sub2>
 struct matrix_inner_product_promote<Sub1, Sub2,
-    typename std::enable_if<(is_vector<Sub1>::value && is_matrix<Sub2>::value)
-      || (is_matrix<Sub1>::value && is_vector<Sub2>::value)>::type>
+    std::enable_if_t<(is_vector<Sub1>::value && is_matrix<Sub2>::value)
+      || (is_matrix<Sub1>::value && is_vector<Sub2>::value)>>
 {
   using left_type = cml::unqualified_type_t<Sub1>;
   using right_type = cml::unqualified_type_t<Sub2>;
@@ -235,8 +235,8 @@ struct matrix_outer_product_promote;
  */
 template<class Sub1, class Sub2, class Basis, class Layout>
 struct matrix_outer_product_promote<Sub1, Sub2, Basis, Layout,
-    typename std::enable_if<(is_vector<Sub1>::value
-      && is_vector<Sub2>::value)>::type>
+    std::enable_if_t<(is_vector<Sub1>::value
+      && is_vector<Sub2>::value)>>
 {
   using left_type = cml::unqualified_type_t<Sub1>;
   using right_type = cml::unqualified_type_t<Sub2>;
@@ -270,7 +270,7 @@ template<class Sub, class Enable = void> struct row_type_of;
 
 template<class Sub>
 struct row_type_of<Sub,
-    typename std::enable_if<cml::is_matrix<Sub>::value>::type>
+    std::enable_if_t<cml::is_matrix<Sub>::value>>
 {
   /* Matrix traits and types: */
   using matrix_type = cml::unqualified_type_t<Sub>;
@@ -297,7 +297,7 @@ template<class Sub, class Enable = void> struct col_type_of;
 
 template<class Sub>
 struct col_type_of<Sub,
-    typename std::enable_if<cml::is_matrix<Sub>::value>::type>
+    std::enable_if_t<cml::is_matrix<Sub>::value>>
 {
   /* Matrix traits and types: */
   using matrix_type = cml::unqualified_type_t<Sub>;

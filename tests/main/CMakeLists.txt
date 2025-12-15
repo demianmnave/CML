@@ -27,3 +27,6 @@ cml_add_library(cml_test_main INTERFACE
 target_include_directories(cml_test_main INTERFACE
  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
 )
+if(DEFINED SIMDE_INCLUDE_DIR)
+  target_include_directories(cml_test_main INTERFACE ${SIMDE_INCLUDE_DIR})
+endif()

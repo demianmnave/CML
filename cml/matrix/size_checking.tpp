@@ -2,9 +2,7 @@
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 
-#ifndef __CML_MATRIX_SIZE_CHECKING_TPP
-#  error "matrix/size_checking.tpp not included correctly"
-#endif
+#pragma once
 
 #include <cml/common/promotion.h>
 #include <cml/vector/readable_vector.h>
@@ -20,7 +18,7 @@ template<class Sub, class Enable = void> struct inner_cols_of_c;
 /* Use the matrix row size for inner products: */
 template<class Sub>
 struct inner_rows_of_c<Sub,
-    typename std::enable_if<array_rows_of_c<Sub>::value != 0>::type>
+    std::enable_if_t<array_rows_of_c<Sub>::value != 0>>
 {
   static const int value = array_rows_of_c<Sub>::value;
 };
@@ -28,7 +26,7 @@ struct inner_rows_of_c<Sub,
 /* Use the matrix column size for inner products: */
 template<class Sub>
 struct inner_cols_of_c<Sub,
-    typename std::enable_if<array_cols_of_c<Sub>::value != 0>::type>
+    std::enable_if_t<array_cols_of_c<Sub>::value != 0>>
 {
   static const int value = array_cols_of_c<Sub>::value;
 };
@@ -36,7 +34,7 @@ struct inner_cols_of_c<Sub,
 /* The inner product row size for vectors is just the vector size: */
 template<class Sub>
 struct inner_rows_of_c<Sub,
-    typename std::enable_if<array_size_of_c<Sub>::value != 0>::type>
+    std::enable_if_t<array_size_of_c<Sub>::value != 0>>
 {
   static const int value = array_size_of_c<Sub>::value;
 };
@@ -44,7 +42,7 @@ struct inner_rows_of_c<Sub,
 /* The inner product column size for vectors is just the vector size: */
 template<class Sub>
 struct inner_cols_of_c<Sub,
-    typename std::enable_if<array_size_of_c<Sub>::value != 0>::type>
+    std::enable_if_t<array_size_of_c<Sub>::value != 0>>
 {
   static const int value = array_size_of_c<Sub>::value;
 };
