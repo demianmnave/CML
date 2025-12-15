@@ -23,6 +23,4 @@ auto dot(const readable_vector<Sub1>& left, const readable_vector<Sub2>& right)
   -> value_type_trait_promote_t<Sub1, Sub2>;
 } // namespace cml
 
-#define __CML_VECTOR_DOT_TPP
 #include <cml/vector/dot.tpp>
-#undef __CML_VECTOR_DOT_TPP

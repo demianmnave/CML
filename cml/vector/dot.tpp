@@ -2,9 +2,7 @@
  @@COPYRIGHT@@
  *-----------------------------------------------------------------------*/
 
-#ifndef __CML_VECTOR_DOT_TPP
-#  error "vector/dot.tpp not included correctly"
-#endif
+#pragma once
 
 #include <cml/vector/readable_vector.h>
 #include <cml/vector/size_checking.h>

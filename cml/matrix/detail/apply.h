@@ -30,4 +30,4 @@ apply(writable_matrix<Sub>& left, const Other& right, col_major)
     for(int i = 0; i < left.rows(); ++i)
       left.put(i, j, Op().apply(left.get(i, j), get(right, i, j)));
 }
-}
+}  // namespace cml::detail
