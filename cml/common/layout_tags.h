@@ -37,7 +37,7 @@ struct col_major
   using transposed_tag = row_major;
 
   /** Integral identifier. */
-  static const layout_kind value = col_major_c;
+  static constexpr layout_kind value = col_major_c;
 };
 
 /** Arbitrary or unspecified major tag. */
@@ -47,7 +47,7 @@ struct any_major
   using transposed_tag = any_major;
 
   /** Integral identifier. */
-  static const layout_kind value = any_major_c;
+  static constexpr layout_kind value = any_major_c;
 };
 
 /** Detect valid layout tags.
@@ -56,9 +56,8 @@ struct any_major
  */
 template<class Tag> struct is_layout_tag
 {
-  static const bool value = std::is_same_v<Tag, row_major>
-    || std::is_same_v<Tag, col_major>
-    || std::is_same_v<Tag, any_major>;
+  static constexpr bool value = std::is_same_v<Tag, row_major>
+    || std::is_same_v<Tag, col_major> || std::is_same_v<Tag, any_major>;
 };
 
 /** Templated helper to determine the layout tag of an expression that
@@ -83,4 +82,4 @@ template<class T> struct layout_tag_trait_of
 /** Convenience alias for layout_tag_trait_of. */
 template<class T>
 using layout_tag_trait_of_t = typename layout_tag_trait_of<T>::type;
-} // namespace cml
+}  // namespace cml

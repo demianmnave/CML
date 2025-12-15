@@ -13,8 +13,7 @@ namespace detail {
  */
 template<class T> struct int_if_integral
 {
-  using type =
-  std::conditional_t<std::is_integral_v<T>, int, T>;
+  using type = std::conditional_t<std::is_integral_v<T>, int, T>;
 };
 }  // namespace detail
 
@@ -30,10 +29,9 @@ template<class Array, class Enable = void> struct array_cols_of_c;
 
 /** Compile-time size of an array. */
 template<class Array>
-struct array_size_of_c<Array,
-    std::enable_if_t<std::is_array_v<Array>>>
+struct array_size_of_c<Array, std::enable_if_t<std::is_array_v<Array>>>
 {
-  static const int value = int(std::extent_v<Array>);
+  static constexpr int value = int(std::extent_v<Array>);
 };
 
 /** Compile-time size of an object implementing an array_size integral or
@@ -41,10 +39,13 @@ struct array_size_of_c<Array,
  */
 template<class Array>
 struct array_size_of_c<Array,
-    std::enable_if_t<Array::array_size == Array::array_size>>
+  std::enable_if_t<Array::array_size == Array::array_size>>
 {
-  static const int value = Array::array_size;
+  static constexpr int value = Array::array_size;
 };
+
+template<class Array>
+constexpr auto array_size_of_v = array_size_of_c<Array>::value;
 
 /** Return the size of @c array if it implements the size() method. */
 template<class Array>
@@ -59,9 +60,8 @@ array_size_of(const Array& array) ->
 
 /** Return the size of a fixed-length array. */
 template<class Array>
-int
-array_size_of(const Array&,
-  std::enable_if_t<std::is_array_v<Array>>* = 0)
+constexpr int
+array_size_of(const Array&, std::enable_if_t<std::is_array_v<Array>>* = nullptr)
 {
   return int(array_size_of_c<Array>::value);
 }
@@ -71,9 +71,9 @@ array_size_of(const Array&,
  */
 template<class Array>
 struct array_rows_of_c<Array,
-    std::enable_if_t<Array::array_rows == Array::array_rows>>
+  std::enable_if_t<Array::array_rows == Array::array_rows>>
 {
-  static const int value = int(Array::array_rows);
+  static constexpr int value = int(Array::array_rows);
 };
 
 template<class Array>
@@ -84,13 +84,14 @@ constexpr auto array_rows_of_v = array_rows_of_c<Array>::value;
  */
 template<class Array>
 struct array_cols_of_c<Array,
-    std::enable_if_t<Array::array_cols == Array::array_cols>>
+  std::enable_if_t<Array::array_cols == Array::array_cols>>
 {
-  static const int value = int(Array::array_cols);
+  static constexpr int value = int(Array::array_cols);
 };
 
 template<class Array>
 constexpr auto array_cols_of_v = array_cols_of_c<Array>::value;
+
 
 /** Return the number of rows of @c array if it implements the rows()
  * method.
