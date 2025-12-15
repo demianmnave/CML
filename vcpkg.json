@@ -4,7 +4,6 @@
   "builtin-baseline": "120deac3062162151622ca4860575a33844ba10b",
   "dependencies": [
     "catch2",
-
     "simde",
     "vcpkg-cmake",
     "vcpkg-cmake-config"
