@@ -1,5 +1,5 @@
 
-name: windows-msbuild-msvc-17
+name: windows-msbuild-msvc
 on:
   pull_request:
     paths:
@@ -22,19 +22,29 @@ jobs:
         include:
         - ver: "14.40"
           vsver: "17.10"
+          cmake: "3.31.0"
+          preset: "windows-msbuild-msvc-17-mt-s-vcpkg"
         - ver: "14.42"
           vsver: "17.12"
+          cmake: "3.31.0"
+          preset: "windows-msbuild-msvc-17-mt-s-vcpkg"
         - ver: "14.44"
           vsver: "17.14"
+          cmake: "3.31.0"
+          preset: "windows-msbuild-msvc-17-mt-s-vcpkg"
+        - ver: "14.50"
+          vsver: "18.0"
+          cmake: "4.4.0"
+          preset: "windows-msbuild-msvc-18-mt-s-vcpkg"
+        - ver: "14.51"
+          vsver: ""
+          cmake: "4.4.0"
+          preset: "windows-msbuild-msvc-18-mt-s-vcpkg"
     env:
       MSVC_TOOLSET_VERSION: ${{ matrix.ver }}
-    name: "(windows-msbuild-msvc-17-mt-s-vcpkg-${{ matrix.ver }})"
-    # Visual Studio 2022 is only present on the windows-2022 image; windows-latest
-    # has moved on to Visual Studio 2026, which the "Visual Studio 17 2022"
-    # generator cannot use.
-    runs-on: windows-2022
+    name: "(windows-msbuild-msvc-mt-s-vcpkg-${{ matrix.ver }})"
+    runs-on: windows-2025
     steps:
-        # Set the number of CMake build and test jobs
       - name: Set CMake and CTest concurrency
         shell: pwsh
         run: |
@@ -45,41 +55,25 @@ jobs:
       - name: Install MSVC ${{ matrix.ver }}.${{ matrix.vsver }}
         shell: pwsh
         run: |
-          # The CMake generator requires a specific Visual Studio major version, so
-          # every lookup below is restricted to instances of that version. Selecting
-          # "the newest instance" is not sufficient once a later Visual Studio is also
-          # present on the image: the toolset gets installed into the wrong instance
-          # and the generator then reports that it cannot find any instance at all.
-          $vsmajor = [int]("${{ matrix.vsver }}".Split('.')[0])
-          $workload = "Microsoft.VisualStudio.Component.VC.${{ matrix.ver }}.${{ matrix.vsver }}.x86.x64"
-
           Install-Module -Name VSSetup -Force
 
-          $candidates = @(Get-VSSetupInstance -All | Where-Object { $_.InstallationVersion.Major -eq $vsmajor })
-          if($candidates.Count -eq 0) {
-            Write-Error "Could not locate a Visual Studio $($vsmajor) instance on this runner"
-            Exit 1;
+          # Special case for the 14.51 workload in VS 18.6+:
+          $ver = "${{ matrix.ver }}"
+          $vsver = "${{ matrix.vsver }}"
+          if([String]::IsNullOrEmpty($vsver)) {
+            $workload = "Microsoft.VisualStudio.Component.VC.$($ver).x86.x64"
+          } else {
+            $workload = "Microsoft.VisualStudio.Component.VC.$($ver).$($vsver).x86.x64"
           }
 
-          # Install to the newest instance of the required VS version:
-          $vs = $candidates | Sort-Object -Property InstallationVersion -Descending | Select-Object -First 1
-          $vspath = $vs.InstallationPath
+          # Find the installed VS version:
+          $vs = Get-VSSetupInstance | Sort-Object -Property InstallationVersion -Descending | Select-Object -First 1
 
-          # Both CMake and vcpkg pick a toolset by matching the leading "<major>.<minor>"
-          # of the directory names under VC\Tools\MSVC, so test for that directly rather
-          # than for an installer component id. The toolset that ships as the image
-          # default is not offered as a versioned side-by-side component, so requiring
-          # its component id would fail even though the toolset is present.
-          $toolsetroot = Join-Path $vspath 'VC\Tools\MSVC'
-          $prefix = "${{ matrix.ver }}."
-
-          Write-Host "Determining if MSVC ${{ matrix.ver }} is installed for $($vspath)..."
-          $found = @(Get-ChildItem -Path $toolsetroot -Directory -ErrorAction SilentlyContinue `
-                    | Where-Object { $_.Name.StartsWith($prefix) })
-          if($found.Count -gt 0) {
-            Write-Host "... MSVC $($found[0].Name) already installed"
+          # Determine if the required workload is installed:
+          $candidates = $vs.Packages | Where-Object Id -eq $workload
+          if($candidates.Count -eq 1) {
+            Write-Host "Workload $($workload) is already installed"
           } else {
-
             $vsinstaller = 'C:/Program Files (x86)/Microsoft Visual Studio/Installer/vs_installer.exe'
             if(!(Test-Path -Path $vsinstaller)) {
               Write-Error "Could not locate the Visual Studio installer"
@@ -91,26 +85,25 @@ jobs:
               'modify', '--installPath', "`"$vspath`"", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
               '--add', "$($workload)"
 
-            # Should exist now:
-            $found = @(Get-ChildItem -Path $toolsetroot -Directory -ErrorAction SilentlyContinue `
-                      | Where-Object { $_.Name.StartsWith($prefix) })
-            if($found.Count -eq 0) {
+            $vs = Get-VSSetupInstance | Sort-Object -Property InstallationVersion -Descending | Select-Object -First 1
+            $candidates = $vs.Packages | Where-Object Id -eq $workload
+            if($candidates.Count -eq 0) {
               Write-Error "Installation of $($workload) for $($vspath) failed"
               Exit 1;
             }
-            Write-Host "... installed MSVC $($found[0].Name)"
+            Write-Host "Successfully installed workload $($workload)"
           }
       - uses: actions/checkout@v4
       - uses: lukka/get-cmake@latest
         with:
-          cmakeVersion: "~3.31.0"
+          cmakeVersion: "~${{matrix.cmake}}"
       - uses: lukka/run-vcpkg@v11
         with:
           vcpkgJsonGlob: 'vcpkg.json'
       - name: Build and test
         shell: pwsh
         run: |
-           $preset = 'windows-msbuild-msvc-17-mt-s-vcpkg'
+           $preset = "${{matrix.preset}}"
            Write-Host "Executing workflow $($preset) for MSVC $($env:MSVC_TOOLSET_VERSION) with VCPKG_ROOT @ $($env:VCPKG_ROOT)"
            cmake --workflow --preset=$preset
       - name: Generate JUnit test results
@@ -119,7 +112,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           report-path: "ctest.xml"
-          status-check-name: "windows-msbuild-msvc-17-mt-s-${{ matrix.ver }} CTest Report"
+          status-check-name: "${{matrix.preset}}-${{ matrix.ver }} CTest Report"
           status-check: true
           annotate: true
           summary: true
