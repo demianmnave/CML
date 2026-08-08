@@ -48,7 +48,6 @@ jobs:
           $vsmajor = [int]("${{ matrix.vsver }}".Split('.')[0])
           $workload = "Microsoft.VisualStudio.Component.VC.${{ matrix.ver }}.${{ matrix.vsver }}.x86.x64"
 
-          Write-Host "Determining if $($workload) is installed for Visual Studio $($vsmajor)..."
           Install-Module -Name VSSetup -Force
 
           $candidates = @(Get-VSSetupInstance -All | Where-Object { $_.InstallationVersion.Major -eq $vsmajor })
@@ -57,8 +56,24 @@ jobs:
             Exit 1;
           }
 
-          $installed = $candidates | Select-VSSetupInstance -Require "$($workload)"
-          if($null -eq $installed) {
+          # Install to the newest instance of the required VS version:
+          $vs = $candidates | Sort-Object -Property InstallationVersion -Descending | Select-Object -First 1
+          $vspath = $vs.InstallationPath
+
+          # Both CMake and vcpkg pick a toolset by matching the leading "<major>.<minor>"
+          # of the directory names under VC\Tools\MSVC, so test for that directly rather
+          # than for an installer component id. The toolset that ships as the image
+          # default is not offered as a versioned side-by-side component, so requiring
+          # its component id would fail even though the toolset is present.
+          $toolsetroot = Join-Path $vspath 'VC\Tools\MSVC'
+          $prefix = "${{ matrix.ver }}."
+
+          Write-Host "Determining if MSVC ${{ matrix.ver }} is installed for $($vspath)..."
+          $found = @(Get-ChildItem -Path $toolsetroot -Directory -ErrorAction SilentlyContinue `
+                    | Where-Object { $_.Name.StartsWith($prefix) })
+          if($found.Count -gt 0) {
+            Write-Host "... MSVC $($found[0].Name) already installed"
+          } else {
 
             $vsinstaller = 'C:/Program Files (x86)/Microsoft Visual Studio/Installer/vs_installer.exe'
             if(!(Test-Path -Path $vsinstaller)) {
@@ -66,24 +81,19 @@ jobs:
               Exit 1;
             }
 
-            # Install to the newest instance of the required VS version:
-            $vs = $candidates | Sort-Object -Property InstallationVersion -Descending | Select-Object -First 1
-            $vspath = $vs.InstallationPath
             Write-Host "... installing $($workload) for $($vspath)"
             Start-Process -NoNewWindow -Wait -FilePath $vsinstaller -ArgumentList `
               'modify', '--installPath', "`"$vspath`"", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
               '--add', "$($workload)"
 
             # Should exist now:
-            $installed = Get-VSSetupInstance -All `
-              | Where-Object { $_.InstallationVersion.Major -eq $vsmajor } `
-              | Select-VSSetupInstance -Require "$($workload)"
-            if($null -eq $installed) {
+            $found = @(Get-ChildItem -Path $toolsetroot -Directory -ErrorAction SilentlyContinue `
+                      | Where-Object { $_.Name.StartsWith($prefix) })
+            if($found.Count -eq 0) {
               Write-Error "Installation of $($workload) for $($vspath) failed"
               Exit 1;
             }
-          } else {
-            Write-Host "... $($workload) already installed"
+            Write-Host "... installed MSVC $($found[0].Name)"
           }
       - uses: actions/checkout@v4
       - uses: lukka/get-cmake@latest
