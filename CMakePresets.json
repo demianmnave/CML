@@ -46,6 +46,12 @@
     },
 
     {
+      "name": "windows-msbuild-msvc-18-mt-s-vcpkg",
+      "description": "Windows MSBuild configuration using ${MSVC_TOOLSET_VERSION} and vcpkg",
+      "inherits": [ ".windows-msbuild-msvc-18", ".static", ".vcpkg-windows-msvc-static", ".testing" ]
+    },
+
+    {
       "name": "windows-msbuild-clangcl-17-mt-s-vcpkg",
       "description": "Windows MSBuild configuration using ClangCL and vcpkg",
       "inherits": [ ".windows-msbuild-clangcl-17", ".static", ".vcpkg-windows-clangcl-static", ".testing" ]
@@ -63,6 +69,13 @@
       "name": "windows-msbuild-msvc-17-mt-s-vcpkg-release",
       "inherits": [ ".windows" ],
       "configurePreset": "windows-msbuild-msvc-17-mt-s-vcpkg",
+      "inheritConfigureEnvironment": true,
+      "configuration": "Release"
+    },
+    {
+      "name": "windows-msbuild-msvc-18-mt-s-vcpkg-release",
+      "inherits": [ ".windows" ],
+      "configurePreset": "windows-msbuild-msvc-18-mt-s-vcpkg",
       "inheritConfigureEnvironment": true,
       "configuration": "Release"
     },
@@ -93,6 +106,13 @@
       "name": "windows-msbuild-msvc-17-mt-s-vcpkg-test",
       "inherits": [ ".windows", ".junit" ],
       "configurePreset": "windows-msbuild-msvc-17-mt-s-vcpkg",
+      "inheritConfigureEnvironment": true,
+      "configuration": "Release"
+    },
+    {
+      "name": "windows-msbuild-msvc-18-mt-s-vcpkg-test",
+      "inherits": [ ".windows", ".junit" ],
+      "configurePreset": "windows-msbuild-msvc-18-mt-s-vcpkg",
       "inheritConfigureEnvironment": true,
       "configuration": "Release"
     },
@@ -143,6 +163,23 @@
         {
           "type": "test",
           "name": "windows-msbuild-msvc-17-mt-s-vcpkg-test"
+        }
+      ]
+    },
+    {
+      "name": "windows-msbuild-msvc-18-mt-s-vcpkg",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "windows-msbuild-msvc-18-mt-s-vcpkg"
+        },
+        {
+          "type": "build",
+          "name": "windows-msbuild-msvc-18-mt-s-vcpkg-release"
+        },
+        {
+          "type": "test",
+          "name": "windows-msbuild-msvc-18-mt-s-vcpkg-test"
         }
       ]
     },
