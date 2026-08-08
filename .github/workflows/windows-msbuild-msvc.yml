@@ -68,6 +68,7 @@ jobs:
 
           # Find the installed VS version:
           $vs = Get-VSSetupInstance | Sort-Object -Property InstallationVersion -Descending | Select-Object -First 1
+          $vspath = $vs.InstallationPath
 
           # Determine if the required workload is installed:
           $candidates = $vs.Packages | Where-Object Id -eq $workload
