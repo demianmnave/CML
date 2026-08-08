@@ -29,7 +29,10 @@ jobs:
     env:
       MSVC_TOOLSET_VERSION: ${{ matrix.ver }}
     name: "(windows-msbuild-msvc-17-mt-s-vcpkg-${{ matrix.ver }})"
-    runs-on: windows-latest
+    # Visual Studio 2022 is only present on the windows-2022 image; windows-latest
+    # has moved on to Visual Studio 2026, which the "Visual Studio 17 2022"
+    # generator cannot use.
+    runs-on: windows-2022
     steps:
         # Set the number of CMake build and test jobs
       - name: Set CMake and CTest concurrency
@@ -42,12 +45,24 @@ jobs:
       - name: Install MSVC ${{ matrix.ver }}.${{ matrix.vsver }}
         shell: pwsh
         run: |
-          # Determine if the required MSVC version is already installed:
+          # The CMake generator requires a specific Visual Studio major version, so
+          # every lookup below is restricted to instances of that version. Selecting
+          # "the newest instance" is not sufficient once a later Visual Studio is also
+          # present on the image: the toolset gets installed into the wrong instance
+          # and the generator then reports that it cannot find any instance at all.
+          $vsmajor = [int]("${{ matrix.vsver }}".Split('.')[0])
           $workload = "Microsoft.VisualStudio.Component.VC.${{ matrix.ver }}.${{ matrix.vsver }}.x86.x64"
 
-          Write-Host "Determining if $($workload) is installed..."
+          Write-Host "Determining if $($workload) is installed for Visual Studio $($vsmajor)..."
           Install-Module -Name VSSetup -Force
-          $installed = Get-VSSetupInstance -All | Select-VSSetupInstance -Require "$($workload)"
+
+          $candidates = @(Get-VSSetupInstance -All | Where-Object { $_.InstallationVersion.Major -eq $vsmajor })
+          if($candidates.Count -eq 0) {
+            Write-Error "Could not locate a Visual Studio $($vsmajor) instance on this runner"
+            Exit 1;
+          }
+
+          $installed = $candidates | Select-VSSetupInstance -Require "$($workload)"
           if($null -eq $installed) {
 
             $vsinstaller = 'C:/Program Files (x86)/Microsoft Visual Studio/Installer/vs_installer.exe'
@@ -56,8 +71,8 @@ jobs:
               Exit 1;
             }
 
-            # Install to the latest VS version:
-            $vs = Get-VSSetupInstance -All | Sort-Object -Property InstallationVersion -Descending | Select-Object -First 1
+            # Install to the newest instance of the required VS version:
+            $vs = $candidates | Sort-Object -Property InstallationVersion -Descending | Select-Object -First 1
             $vspath = $vs.InstallationPath
             Write-Host "... installing $($workload) for $($vspath)"
             Start-Process -NoNewWindow -Wait -FilePath $vsinstaller -ArgumentList `
@@ -65,7 +80,9 @@ jobs:
               '--add', "$($workload)"
 
             # Should exist now:
-            $installed = Get-VSSetupInstance -All | Select-VSSetupInstance -Require "$($workload)"
+            $installed = Get-VSSetupInstance -All `
+              | Where-Object { $_.InstallationVersion.Major -eq $vsmajor } `
+              | Select-VSSetupInstance -Require "$($workload)"
             if($null -eq $installed) {
               Write-Error "Installation of $($workload) for $($vspath) failed"
               Exit 1;
