@@ -24,26 +24,31 @@ jobs:
           vsver: "17.10"
           cmake: "3.31.0"
           preset: "windows-msbuild-msvc-17-mt-s-vcpkg"
+          winver: "2022"
         - ver: "14.42"
           vsver: "17.12"
           cmake: "3.31.0"
           preset: "windows-msbuild-msvc-17-mt-s-vcpkg"
+          winver: "2022"
         - ver: "14.44"
           vsver: "17.14"
           cmake: "3.31.0"
           preset: "windows-msbuild-msvc-17-mt-s-vcpkg"
+          winver: "2022"
         - ver: "14.50"
           vsver: "18.0"
           cmake: "4.4.0"
           preset: "windows-msbuild-msvc-18-mt-s-vcpkg"
+          winver: "2025"
         - ver: "14.51"
           vsver: ""
           cmake: "4.4.0"
           preset: "windows-msbuild-msvc-18-mt-s-vcpkg"
+          winver: "2025"
     env:
       MSVC_TOOLSET_VERSION: ${{ matrix.ver }}
     name: "(windows-msbuild-msvc-mt-s-vcpkg-${{ matrix.ver }})"
-    runs-on: windows-2025
+    runs-on: windows-${{ matrix.winver }}
     steps:
       - name: Set CMake and CTest concurrency
         shell: pwsh
