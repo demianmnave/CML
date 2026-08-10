@@ -46,6 +46,39 @@
         "MSVC_TOOLSET_VERSION": "14.44",
         "ENV_COMPILER_VERSION": "-14.44"
       }
+    },
+
+    {
+      "name": ".windows-msbuild-msvc-18",
+      "hidden": true,
+      "description": "Use MSVC 14.5x (Visual Studio 18 2026)",
+      "inherits": [ ".common", ".windows" ],
+      "generator": "Visual Studio 18 2026",
+      "cacheVariables": {
+        "CMAKE_GENERATOR_TOOLSET": "v145,version=$env{MSVC_TOOLSET_VERSION}"
+      }
+    },
+
+    {
+      "name": ".windows-msbuild-msvc-18-14.50",
+      "hidden": true,
+      "description": "Use MSVC 14.50 (Visual Studio 18.0 2026)",
+      "inherits": [ ".windows-msbuild-msvc-18" ],
+      "environment": {
+        "MSVC_TOOLSET_VERSION": "14.50",
+        "ENV_COMPILER_VERSION": "-14.50"
+      }
+    },
+
+    {
+      "name": ".windows-msbuild-msvc-18-14.51",
+      "hidden": true,
+      "description": "Use MSVC 14.51 (Visual Studio 18.6 2026)",
+      "inherits": [ ".windows-msbuild-msvc-18" ],
+      "environment": {
+        "MSVC_TOOLSET_VERSION": "14.51",
+        "ENV_COMPILER_VERSION": "-14.51"
+      }
     }
   ]
 }

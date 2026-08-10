@@ -1,7 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
-  "$1": "Baseline vcpkg-root commit hash (2025.08.27)",
-  "builtin-baseline": "120deac3062162151622ca4860575a33844ba10b",
+  "$1": "Baseline vcpkg-root commit hash (2026.07.29)",
+  "$2": "Requires vcpkg-tool >= 2025-10-10, which added v145 (Visual Studio 2026) toolset detection",
+  "builtin-baseline": "c76c06644034521fb761a39f8f52d8e87d1103d5",
   "dependencies": [
     "catch2"
   ]

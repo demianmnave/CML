@@ -1,5 +1,5 @@
 
-name: windows-msbuild-msvc-17
+name: windows-msbuild-msvc
 on:
   pull_request:
     paths:
@@ -22,16 +22,34 @@ jobs:
         include:
         - ver: "14.40"
           vsver: "17.10"
+          cmake: "3.31.0"
+          preset: "windows-msbuild-msvc-17-mt-s-vcpkg"
+          winver: "2022"
         - ver: "14.42"
           vsver: "17.12"
+          cmake: "3.31.0"
+          preset: "windows-msbuild-msvc-17-mt-s-vcpkg"
+          winver: "2022"
         - ver: "14.44"
           vsver: "17.14"
+          cmake: "3.31.0"
+          preset: "windows-msbuild-msvc-17-mt-s-vcpkg"
+          winver: "2022"
+        - ver: "14.50"
+          vsver: "18.0"
+          cmake: "4.4.0"
+          preset: "windows-msbuild-msvc-18-mt-s-vcpkg"
+          winver: "2025"
+        - ver: "14.51"
+          vsver: ""
+          cmake: "4.4.0"
+          preset: "windows-msbuild-msvc-18-mt-s-vcpkg"
+          winver: "2025"
     env:
       MSVC_TOOLSET_VERSION: ${{ matrix.ver }}
-    name: "(windows-msbuild-msvc-17-mt-s-vcpkg-${{ matrix.ver }})"
-    runs-on: windows-latest
+    name: "(windows-msbuild-msvc-mt-s-vcpkg-${{ matrix.ver }})"
+    runs-on: windows-${{ matrix.winver }}
     steps:
-        # Set the number of CMake build and test jobs
       - name: Set CMake and CTest concurrency
         shell: pwsh
         run: |
@@ -42,48 +60,56 @@ jobs:
       - name: Install MSVC ${{ matrix.ver }}.${{ matrix.vsver }}
         shell: pwsh
         run: |
-          # Determine if the required MSVC version is already installed:
-          $workload = "Microsoft.VisualStudio.Component.VC.${{ matrix.ver }}.${{ matrix.vsver }}.x86.x64"
-
-          Write-Host "Determining if $($workload) is installed..."
           Install-Module -Name VSSetup -Force
-          $installed = Get-VSSetupInstance -All | Select-VSSetupInstance -Require "$($workload)"
-          if($null -eq $installed) {
 
+          # Special case for the 14.51 workload in VS 18.6+:
+          $ver = "${{ matrix.ver }}"
+          $vsver = "${{ matrix.vsver }}"
+          if([String]::IsNullOrEmpty($vsver)) {
+            $workload = "Microsoft.VisualStudio.Component.VC.$($ver).x86.x64"
+          } else {
+            $workload = "Microsoft.VisualStudio.Component.VC.$($ver).$($vsver).x86.x64"
+          }
+
+          # Find the installed VS version:
+          $vs = Get-VSSetupInstance | Sort-Object -Property InstallationVersion -Descending | Select-Object -First 1
+          $vspath = $vs.InstallationPath
+
+          # Determine if the required workload is installed:
+          $candidates = $vs.Packages | Where-Object Id -eq $workload
+          if($candidates.Count -eq 1) {
+            Write-Host "Workload $($workload) is already installed"
+          } else {
             $vsinstaller = 'C:/Program Files (x86)/Microsoft Visual Studio/Installer/vs_installer.exe'
             if(!(Test-Path -Path $vsinstaller)) {
               Write-Error "Could not locate the Visual Studio installer"
               Exit 1;
             }
 
-            # Install to the latest VS version:
-            $vs = Get-VSSetupInstance -All | Sort-Object -Property InstallationVersion -Descending | Select-Object -First 1
-            $vspath = $vs.InstallationPath
             Write-Host "... installing $($workload) for $($vspath)"
             Start-Process -NoNewWindow -Wait -FilePath $vsinstaller -ArgumentList `
               'modify', '--installPath', "`"$vspath`"", '--quiet', '--norestart', '--nocache', '--noUpdateInstaller', `
               '--add', "$($workload)"
 
-            # Should exist now:
-            $installed = Get-VSSetupInstance -All | Select-VSSetupInstance -Require "$($workload)"
-            if($null -eq $installed) {
+            $vs = Get-VSSetupInstance | Sort-Object -Property InstallationVersion -Descending | Select-Object -First 1
+            $candidates = $vs.Packages | Where-Object Id -eq $workload
+            if($candidates.Count -eq 0) {
               Write-Error "Installation of $($workload) for $($vspath) failed"
               Exit 1;
             }
-          } else {
-            Write-Host "... $($workload) already installed"
+            Write-Host "Successfully installed workload $($workload)"
           }
       - uses: actions/checkout@v4
       - uses: lukka/get-cmake@latest
         with:
-          cmakeVersion: "~3.31.0"
+          cmakeVersion: "~${{matrix.cmake}}"
       - uses: lukka/run-vcpkg@v11
         with:
           vcpkgJsonGlob: 'vcpkg.json'
       - name: Build and test
         shell: pwsh
         run: |
-           $preset = 'windows-msbuild-msvc-17-mt-s-vcpkg'
+           $preset = "${{matrix.preset}}"
            Write-Host "Executing workflow $($preset) for MSVC $($env:MSVC_TOOLSET_VERSION) with VCPKG_ROOT @ $($env:VCPKG_ROOT)"
            cmake --workflow --preset=$preset
       - name: Generate JUnit test results
@@ -92,7 +118,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           report-path: "ctest.xml"
-          status-check-name: "windows-msbuild-msvc-17-mt-s-${{ matrix.ver }} CTest Report"
+          status-check-name: "${{matrix.preset}}-${{ matrix.ver }} CTest Report"
           status-check: true
           annotate: true
           summary: true
